@@ -844,12 +844,41 @@ char *intelapi_fts_match(const char *q, const char *q_alt) {
  * ORDER BY category, name → JSON array. Columns serialized by sqlite type
  * (INTEGER/REAL → number, TEXT → string, NULL → null) to mirror
  * better-sqlite3's row objects + JSON.stringify. */
-char *api_sources_list(db_handle *db) {
+static char *sources_list_impl(db_handle *db, int limit, int offset, int *total_out);
+char *api_sources_list(db_handle *db) { return sources_list_impl(db, 0, 0, NULL); }
+
+/* The bounded form: {data:[...], page:{limit,offset,total,has_more}}. */
+char *api_sources_list_page(db_handle *db, int limit, int offset) {
+  if (limit <= 0) return api_sources_list(db);
+  if (offset < 0) offset = 0;
+  int total = 0;
+  char *arr = sources_list_impl(db, limit, offset, &total);
+  if (!arr) return NULL;
+  size_t n = strlen(arr) + 160;
+  char *out = malloc(n);
+  if (!out) { free(arr); return NULL; }
+  int shown = 0; { cJSON *j = cJSON_Parse(arr); shown = j ? cJSON_GetArraySize(j) : 0; cJSON_Delete(j); }
+  snprintf(out, n, "{\"data\":%s,\"page\":{\"limit\":%d,\"offset\":%d,\"total\":%d,\"has_more\":%s}}",
+           arr, limit, offset, total, offset + shown < total ? "true" : "false");
+  free(arr);
+  return out;
+}
+
+static char *sources_list_impl(db_handle *db, int limit, int offset, int *total_out) {
   sqlite3_stmt *s;
+  if (total_out) {
+    *total_out = 0;
+    if (sqlite3_prepare_v2(db->h, "SELECT COUNT(*) FROM sources", -1, &s, NULL) == SQLITE_OK) {
+      if (sqlite3_step(s) == SQLITE_ROW) *total_out = sqlite3_column_int(s, 0);
+      sqlite3_finalize(s);
+    }
+  }
   if (sqlite3_prepare_v2(db->h,
-        "SELECT * FROM sources ORDER BY category, name", -1, &s, NULL)
+        "SELECT * FROM sources ORDER BY category, name LIMIT ?1 OFFSET ?2", -1, &s, NULL)
       != SQLITE_OK)
     return NULL;
+  sqlite3_bind_int(s, 1, limit > 0 ? limit : -1);
+  sqlite3_bind_int(s, 2, offset);
   int ncol = sqlite3_column_count(s);
   cJSON *arr = cJSON_CreateArray();
   while (sqlite3_step(s) == SQLITE_ROW) {
@@ -1320,6 +1349,12 @@ char *intelapi_intel_sources_view(db_handle *db, int limit, int offset,
   cJSON *env = cJSON_CreateObject();
   cJSON_AddItemToObject(env, "data", data);
   cJSON_AddItemToObject(env, "meta", meta);
+  { cJSON *pg = cJSON_CreateObject();
+    cJSON_AddNumberToObject(pg, "limit", limit);
+    cJSON_AddNumberToObject(pg, "offset", offset);
+    cJSON_AddNumberToObject(pg, "total", nout);
+    cJSON_AddBoolToObject(pg, "has_more", windowed && offset + shown < nout);
+    cJSON_AddItemToObject(env, "page", pg); }
   char *js = cJSON_PrintUnformatted(env);
   cJSON_Delete(env);
   free(A); free(SR); free(B);

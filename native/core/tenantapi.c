@@ -8,6 +8,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <strings.h>
+#include <pthread.h>
 
 static const char *ctext(sqlite3_stmt *s, int i) {
   return sqlite3_column_type(s, i) == SQLITE_NULL
@@ -97,8 +98,108 @@ static void record_verified_email(sqlite3 *h, const char *user_id, const char *m
   sqlite3_finalize(st);
 }
 
+/* ---- personal workspaces ---------------------------------------------
+ *
+ * tenant_resolve() gives every first-time user a workspace of their own and
+ * makes them its `owner`, so "owner" proves nothing about a platform-level
+ * resource: any account can mint one. `tenants.personal` marks those
+ * auto-provisioned rows. The column is added lazily (the schema file is not
+ * this module's) and existing rows are backfilled by the one name the
+ * provisioner has always used ("<email>'s workspace"). A workspace is treated
+ * as personal while the flag is set AND it still has a single member: once a
+ * second person joins it is a team workspace, whoever created it. */
+static pthread_mutex_t g_personal_mu = PTHREAD_MUTEX_INITIALIZER;
+static int g_personal_ready;
+
+static int tenants_has_personal(sqlite3 *h) {
+  sqlite3_stmt *st; int has = 0;
+  if (sqlite3_prepare_v2(h, "PRAGMA table_info(tenants)", -1, &st, NULL) != SQLITE_OK)
+    return 0;
+  while (sqlite3_step(st) == SQLITE_ROW) {
+    const char *n = (const char *)sqlite3_column_text(st, 1);
+    if (n && !strcmp(n, "personal")) { has = 1; break; }
+  }
+  sqlite3_finalize(st);
+  return has;
+}
+
+static int ensure_personal_column(db_handle *db) {
+  int ok;
+  pthread_mutex_lock(&g_personal_mu);
+  if (g_personal_ready) { pthread_mutex_unlock(&g_personal_mu); return 1; }
+  ok = tenants_has_personal(db->h);
+  if (!ok) {
+    char *em = NULL;
+    sqlite3_exec(db->h, "ALTER TABLE tenants ADD COLUMN personal "
+                        "INTEGER NOT NULL DEFAULT 0", NULL, NULL, &em);
+    sqlite3_free(em);
+    ok = tenants_has_personal(db->h);
+    if (ok)
+      sqlite3_exec(db->h, "UPDATE tenants SET personal=1 "
+                          "WHERE name LIKE '%''s workspace'", NULL, NULL, NULL);
+  }
+  if (ok) g_personal_ready = 1;
+  pthread_mutex_unlock(&g_personal_mu);
+  return ok;
+}
+
+int tenant_is_personal(db_handle *db, const char *tenant_id) {
+  if (!db || !db->h || !tenant_id || !*tenant_id) return 1;      /* fail closed */
+  if (!ensure_personal_column(db)) return 1;
+  sqlite3_stmt *st; int personal = 1;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT t.personal, (SELECT COUNT(*) FROM memberships m "
+        "WHERE m.tenant_id=t.id) FROM tenants t WHERE t.id=?1",
+        -1, &st, NULL) != SQLITE_OK) return 1;
+  sqlite3_bind_text(st, 1, tenant_id, -1, SQLITE_TRANSIENT);
+  if (sqlite3_step(st) == SQLITE_ROW)
+    personal = sqlite3_column_int(st, 0) != 0 && sqlite3_column_int(st, 1) <= 1;
+  sqlite3_finalize(st);
+  return personal;
+}
+
+/* ---- per-request memo ---------------------------------------------------
+ *
+ * The HTTP layer enforces a route's gate before the handler runs, and most
+ * handlers then resolve the same workspace again. tenant_resolve() writes (it
+ * provisions, and refreshes the token's email), so doing it twice per request
+ * is waste. Between tenant_resolve_scope_begin() and the next begin, on THIS
+ * thread, a successful resolution for the same (user, X-Tenant-Id) is returned
+ * from memory. Outside a scope — every worker thread, every test — nothing is
+ * cached and the behaviour is exactly what it was. */
+static __thread int  t_scope;
+static __thread int  t_memo_ok;
+static __thread char t_memo_uid[128];
+static __thread char t_memo_xt[128];
+static __thread tenant_ctx t_memo_ctx;
+
+void tenant_resolve_scope_begin(void) { t_scope = 1; t_memo_ok = 0; }
+void tenant_resolve_scope_end(void)   { t_scope = 0; t_memo_ok = 0; }
+
+static int tenant_resolve_uncached(db_handle *db, const auth_user *u,
+                                   const char *x_tenant_id, tenant_ctx *out);
+
 int tenant_resolve(db_handle *db, const auth_user *u,
                    const char *x_tenant_id, tenant_ctx *out) {
+  if (!u || !u->id[0]) return -401;
+  const char *xt = x_tenant_id ? x_tenant_id : "";
+  if (t_scope && t_memo_ok && !strcmp(t_memo_uid, u->id) &&
+      !strcmp(t_memo_xt, xt)) {
+    *out = t_memo_ctx;
+    return 0;
+  }
+  int rc = tenant_resolve_uncached(db, u, x_tenant_id, out);
+  if (t_scope && rc == 0 && strlen(xt) < sizeof t_memo_xt) {
+    snprintf(t_memo_uid, sizeof t_memo_uid, "%s", u->id);
+    snprintf(t_memo_xt, sizeof t_memo_xt, "%s", xt);
+    t_memo_ctx = *out;
+    t_memo_ok = 1;
+  }
+  return rc;
+}
+
+static int tenant_resolve_uncached(db_handle *db, const auth_user *u,
+                                   const char *x_tenant_id, tenant_ctx *out) {
   if (!u || !u->id[0]) return -401;
   sqlite3 *h = db->h;
   sqlite3_stmt *st;
@@ -252,6 +353,13 @@ int tenant_resolve(db_handle *db, const auth_user *u,
     sqlite3_bind_text(st,1,out->user_id,-1,SQLITE_TRANSIENT);
     sqlite3_bind_text(st,2,tid,-1,SQLITE_TRANSIENT);
     sqlite3_step(st); sqlite3_finalize(st);
+    /* Mark it as the auto-provisioned personal workspace (tenant_is_personal). */
+    if (ensure_personal_column(db) &&
+        sqlite3_prepare_v2(h, "UPDATE tenants SET personal=1 WHERE id=?1",
+                           -1, &st, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(st,1,tid,-1,SQLITE_TRANSIENT);
+      sqlite3_step(st); sqlite3_finalize(st);
+    }
     snprintf(first_tid, sizeof first_tid, "%s", tid);
     snprintf(first_role, sizeof first_role, "owner");
   }

@@ -65,6 +65,7 @@
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
 #include "scheduler.h"
+#include "routes.h"          /* the route table: gates are enforced from it */
 #include <limits.h>
 #include <pthread.h>
 #include <stdlib.h>
@@ -244,6 +245,7 @@ static void fleet_reply_cached(struct mg_connection *c, const char *body, long a
 static void wakeup_reply_big(struct mg_mgr *mgr, unsigned long cid, int status, char *owned);
 static int  worker_admit(void);
 static void worker_release(void);
+static int  worker_spawn(pthread_t *th, void *(*fn)(void *), void *arg);
 typedef enum { SA_DETAIL, SA_SEARCH, SA_COLLECTORS, SA_COLLECTOR, SA_SUMMARY } sa_kind;
 typedef struct {
   struct mg_mgr *mgr; unsigned long cid;
@@ -338,7 +340,7 @@ static void sa_serve(struct mg_connection *c, struct mg_http_message *hm, sa_kin
   }
   if (!worker_admit()) { free(a); reply_busy(c); return; }
   pthread_t th;
-  if (pthread_create(&th, NULL, sa_thread, a) == 0) { pthread_detach(th); return; }
+  if (worker_spawn(&th, sa_thread, a) == 0) { pthread_detach(th); return; }
   worker_release();
   /* thread spawn failed (rare): answer inline on the loop's own handle */
   int st = 200;
@@ -519,10 +521,10 @@ static void run_end(const char *id) {
  * corpus and spends the platform's upstream quota, so a plain signed-in user
  * may not: a platform operator, or the owner/admin of the active workspace.
  * A maintenance pod (collector `_*`) writes the shared database directly and
- * is operator-only: every user owns an auto-provisioned personal workspace in
- * which they are `owner`, and `tenants` carries no marker to tell that from a
- * real one, so the workspace role cannot be trusted for a platform-level
- * resource. A non-operator is also held to a per-user budget (rl_key; NULL =
+ * is operator-only, and the workspace must be a TEAM one: every user owns an
+ * auto-provisioned personal workspace in which they are `owner`
+ * (tenant_is_personal() tells it from a workspace someone else has joined), so
+ * that role cannot be trusted for a platform-level resource. A non-operator is also held to a per-user budget (rl_key; NULL =
  * the caller charges its own). Returns 0 when allowed, else the HTTP status,
  * with the JSON body in `body`. Safe on a worker thread given its own `db`. */
 static int collector_run_gate(db_handle *db, const auth_user *usr,
@@ -546,6 +548,15 @@ static int collector_run_gate(db_handle *db, const auth_user *usr,
   if (strcmp(rtc.role, "owner") != 0 && strcmp(rtc.role, "admin") != 0) {
     snprintf(body, cap, "{\"error\":\"forbidden\",\"detail\":\"running a "
              "collector requires platform operator or workspace owner/admin\"}");
+    return 403;
+  }
+  /* `owner` of an auto-provisioned personal workspace is every user's role in
+   * their own workspace, so it proves nothing here (API-02). Only a TEAM
+   * workspace — one a second person has joined — vouches for its admins. */
+  if (tenant_is_personal(db, rtc.tenant_id)) {
+    snprintf(body, cap, "{\"error\":\"forbidden\",\"detail\":\"running a "
+             "collector requires platform operator or owner/admin of a team "
+             "workspace; a personal workspace does not qualify\"}");
     return 403;
   }
   if (rl_key) {
@@ -999,13 +1010,69 @@ static int worker_cap(void) {
   return cap;
 }
 
-/* Reserve a worker slot. 1 = admitted (caller MUST worker_release()), 0 = full. */
+/* ── per-user fairness (API-08) ────────────────────────────────────────────
+ *
+ * The pool above is global: one signed-in user keeping 16 slow requests in
+ * flight (geocode, a cold /api/data layer, summary?refresh=1) used to turn
+ * every OTHER user's off-loop route into a 503. So each admitted worker is also
+ * charged to the user whose request asked for it, and one user may hold at most
+ * JO_HTTP_USER_WORKERS (default 4, 0 = no per-user cap) at a time; the next
+ * one is a 429, not a 503, because the refusal is about that caller.
+ *
+ * worker_admit() takes no argument, which is deliberate: it is called from 12
+ * places on the loop thread while a request is being dispatched, and the one
+ * request in dispatch is the one to charge — `g_req_uid` is set from the
+ * verified token before any handler runs. The release is the hard part: it is
+ * called from ~25 worker threads that do not know the user. So a worker is
+ * started through worker_spawn(), whose trampoline records the charged slot in
+ * a thread-local, and worker_release() reads it from there. An admit whose
+ * spawn never happens (allocation or thread-creation failure) is released on
+ * the loop thread, where the slot is still `g_wk_pending`. */
+#define WK_USER_SLOTS 32
+static struct { char uid[128]; int n; } g_wk_user[WK_USER_SLOTS];
+static char g_req_uid[128];          /* loop thread only: caller of this request */
+static int  g_wk_pending = -1;       /* loop thread only: slot of the last admit */
+static int  g_wk_refused_user;       /* loop thread only: why admit said no      */
+static __thread int t_wk_slot = -1;  /* worker thread: slot to give back         */
+static __thread int t_wk_worker;     /* 1 on a thread started by worker_spawn    */
+
+static int user_worker_cap(void) {
+  static int cap = -1;
+  if (cap >= 0) return cap;
+  const char *e = getenv("JO_HTTP_USER_WORKERS");
+  cap = (e && *e) ? atoi(e) : 4;
+  if (cap < 0) cap = 0;
+  return cap;
+}
+
+/* Reserve a worker slot. 1 = admitted (caller MUST worker_release()), 0 = full
+ * or this user is at their own cap (reply_busy says which). */
 static int worker_admit(void) {
-  int ok = 0;
+  int ok = 0, slot = -1;
   pthread_mutex_lock(&g_wk_mu);
+  g_wk_refused_user = 0;
   if (g_wk_live < worker_cap()) {
+    int ucap = user_worker_cap();
+    if (g_req_uid[0] && ucap > 0) {
+      int free_slot = -1;
+      for (int i = 0; i < WK_USER_SLOTS; i++) {
+        if (g_wk_user[i].n > 0 && !strcmp(g_wk_user[i].uid, g_req_uid)) { slot = i; break; }
+        if (g_wk_user[i].n == 0 && free_slot < 0) free_slot = i;
+      }
+      if (slot >= 0 && g_wk_user[slot].n >= ucap) {
+        g_wk_refused_user = 1; g_wk_refused++;
+        pthread_mutex_unlock(&g_wk_mu);
+        return 0;
+      }
+      if (slot < 0 && free_slot >= 0) {
+        slot = free_slot;
+        snprintf(g_wk_user[slot].uid, sizeof g_wk_user[slot].uid, "%s", g_req_uid);
+      }
+      if (slot >= 0) g_wk_user[slot].n++;
+    }
     g_wk_live++;
     if (g_wk_live > g_wk_peak) g_wk_peak = g_wk_live;
+    g_wk_pending = slot;
     ok = 1;
   } else {
     g_wk_refused++;
@@ -1017,7 +1084,34 @@ static int worker_admit(void) {
 static void worker_release(void) {
   pthread_mutex_lock(&g_wk_mu);
   if (g_wk_live > 0) g_wk_live--;
+  int slot;
+  if (t_wk_worker) { slot = t_wk_slot; t_wk_slot = -1; }
+  else             { slot = g_wk_pending; g_wk_pending = -1; }
+  if (slot >= 0 && slot < WK_USER_SLOTS && g_wk_user[slot].n > 0) {
+    if (--g_wk_user[slot].n == 0) g_wk_user[slot].uid[0] = 0;
+  }
   pthread_mutex_unlock(&g_wk_mu);
+}
+
+typedef struct { void *(*fn)(void *); void *arg; int slot; } wk_tramp;
+static void *wk_tramp_main(void *vp) {
+  wk_tramp t = *(wk_tramp *) vp;
+  free(vp);
+  t_wk_worker = 1;
+  t_wk_slot = t.slot;
+  return t.fn(t.arg);
+}
+/* pthread_create for a thread that follows a successful worker_admit(): hands
+ * the per-user charge to the thread. On failure nothing is handed over and the
+ * caller's worker_release() gives the pending slot back. */
+static int worker_spawn(pthread_t *th, void *(*fn)(void *), void *arg) {
+  wk_tramp *t = malloc(sizeof *t);
+  if (!t) return 12;                                           /* ENOMEM */
+  t->fn = fn; t->arg = arg; t->slot = g_wk_pending;
+  int rc = pthread_create(th, NULL, wk_tramp_main, t);
+  if (rc != 0) { free(t); return rc; }
+  g_wk_pending = -1;
+  return 0;
 }
 
 /* The refusal. Retry-After is 1 s: these workers are seconds-scale, not
@@ -1027,6 +1121,14 @@ static void reply_busy(struct mg_connection *c) {
   char hb[CORS_HDR_MAX + 96];
   snprintf(hb, sizeof hb,
     "Content-Type: application/json\r\nRetry-After: 1\r\n%s", cors_h(c));
+  if (g_wk_refused_user) {
+    mg_http_reply(c, 429, hb,
+      "{\"error\":\"too_many_requests_in_flight\",\"detail\":\"you already have "
+      "%d long-running requests in flight; this one was refused rather than "
+      "queued behind them\",\"limit\":%d,\"retry_after_sec\":1}\n",
+      user_worker_cap(), user_worker_cap());
+    return;
+  }
   mg_http_reply(c, 503, hb,
     "{\"error\":\"server_busy\",\"detail\":\"too many long-running requests in "
     "flight (%d); this one was refused rather than queued behind them\","
@@ -1083,7 +1185,7 @@ static void reply_busy(struct mg_connection *c) {
 /* How export_offload starts its worker; test_export_stream.c makes it fail to
  * reach the "no worker" refusal without exhausting the machine's threads. */
 #ifndef XS_THREAD_CREATE
-#define XS_THREAD_CREATE(th, fn, arg) pthread_create((th), NULL, (fn), (arg))
+#define XS_THREAD_CREATE(th, fn, arg) worker_spawn((th), (fn), (arg))
 #endif
 #define XS_COMMIT_BYTES 65536u        /* one exportapi/reportapi batch (OB_CAP) */
 #define XS_STALL_SEC    120           /* no drain at all for this long: the peer is gone */
@@ -1538,7 +1640,7 @@ static int ob_offload(struct mg_connection *c, const ob_arg *tmpl) {
     *a = *tmpl;
     a->mgr = c->mgr; a->cid = c->id;
     pthread_t th;
-    if (pthread_create(&th, NULL, ob_thread, a) == 0) {
+    if (worker_spawn(&th, ob_thread, a) == 0) {
       pthread_detach(th);
       return 1;
     }
@@ -1581,6 +1683,7 @@ static int ob_offload(struct mg_connection *c, const ob_arg *tmpl) {
  * variant, and the window. So an operator's payload is never served to a
  * plain user, and a page is never served as the whole list. */
 typedef enum { FLEET_STATUS, FLEET_INTEL_SOURCES } fleet_kind;
+#define FLEET_PAGE_MAX 500    /* rows per page unless an operator passes ?all=1 */
 
 typedef struct {
   struct mg_mgr *mgr; unsigned long cid;
@@ -1606,6 +1709,21 @@ static void fleet_params(struct mg_http_message *hm, fleet_arg *fa) {
   if (mg_http_get_var(&hm->query, "summary", v, sizeof v) > 0) fa->summary = (v[0] == '1');
   if (fa->limit < 0) fa->limit = 0;
   if (fa->offset < 0) fa->offset = 0;
+  /* BOUNDED BY DEFAULT (API-02 / the full-registry dumps). With no ?limit these
+   * two routes used to build every registered source — 16,000+ rows, 20 MB, 8 s
+   * of worker time — for any signed-in user, and a stated limit was honoured
+   * however large. Neither client asks for that any more (they read
+   * ?summary=1, /api/sources/search and /api/status/:id). So: no limit, or a
+   * limit above FLEET_PAGE_MAX, is a page of FLEET_PAGE_MAX rows with
+   * page{limit,offset,total,has_more} saying so. The unbounded form is an
+   * operator's, asked for in so many words: ?all=1. fa->op is the operator
+   * flag the caller set before this call (opgate_check()==0). */
+  { char av[8];
+    int all = mg_http_get_var(&hm->query, "all", av, sizeof av) > 0 && av[0] == '1';
+    if (all && fa->op) fa->limit = 0;
+    else if (!fa->summary && (fa->limit <= 0 || fa->limit > FLEET_PAGE_MAX))
+      fa->limit = FLEET_PAGE_MAX;
+  }
   /* Normalise what the builders ignore BEFORE it reaches the cache key. Both
    * views force limit=0 under ?summary=1 and walk the whole catalogue when
    * limit<=0, so offset (and, under summary, limit) cannot change the body —
@@ -1674,7 +1792,7 @@ static void fleet_serve(struct mg_connection *c, const fleet_arg *tmpl) {
     *a = *tmpl;
     a->mgr = c->mgr; a->cid = c->id;
     pthread_t th;
-    if (pthread_create(&th, NULL, fleet_thread, a) == 0) {
+    if (worker_spawn(&th, fleet_thread, a) == 0) {
       pthread_detach(th);
       return;                  /* reply deferred to MG_EV_WAKEUP */
     }
@@ -1852,7 +1970,7 @@ static void sem_spawn(struct mg_connection *c, struct mg_http_message *hm,
     snprintf(sa->id, sizeof sa->id, "%s", id ? id : "");
     memcpy(sa->qs, hm->query.buf, hm->query.len);
     pthread_t th;
-    if (pthread_create(&th, NULL, sem_thread, sa) == 0) {
+    if (worker_spawn(&th, sem_thread, sa) == 0) {
       pthread_detach(th);
       return;          /* reply deferred to MG_EV_WAKEUP — loop stays free */
     }
@@ -1893,7 +2011,7 @@ static void apv_spawn(struct mg_connection *c, const char *tenant,
     a->pj = pj ? strdup(pj) : NULL;
     a->since = since ? strdup(since) : NULL;
     pthread_t th;
-    if (pthread_create(&th, NULL, apv_thread, a) == 0) { pthread_detach(th); return; }
+    if (worker_spawn(&th, apv_thread, a) == 0) { pthread_detach(th); return; }
     free(a->pj); free(a->since); free(a);
   }
   worker_release();
@@ -2332,6 +2450,63 @@ static void reject_oversize_body(struct mg_connection *c, long long got) {
   c->is_draining = 1;   /* close once the 413 has actually gone out */
 }
 
+/* ── central authorization (core/routes.c) ─────────────────────────────────
+ *
+ * The one place a route's declared gate is enforced. fn() matches the request
+ * against the route table, and after authentication calls this before any
+ * handler runs; the replies are the same JSON shapes the handlers have always
+ * sent, so a client cannot tell which layer refused it. The gate is a floor: a
+ * handler may still demand more (a role for one method, the operator for a
+ * breach uid) and those finer checks stay where they are.
+ *
+ * Returns 1 when it has replied and the caller must return. */
+static int route_gate_enforce(struct mg_connection *c, struct mg_http_message *hm,
+                              const auth_user *usr, const route_row *rt) {
+  switch (rt->gate) {
+    case RG_PUBLIC:
+    case RG_AUTH:
+      return 0;
+    case RG_OPERATOR: {
+      int oc = opgate_check(usr);
+      if (oc == 0) return 0;
+      if (rt->deny403) { reply_json(c, 403, rt->deny403); return 1; }
+      if (oc == -401)
+        reply_json(c, 401, "{\"error\":\"Auth required\"}");
+      else if (oc == -1403)
+        reply_json(c, 403, "{\"error\":\"Platform operator access not configured\"}");
+      else
+        reply_json(c, 403, "{\"error\":\"Platform operator role required\"}");
+      return 1;
+    }
+    case RG_TENANT:
+    case RG_ROLE_ANALYST:
+    case RG_ROLE_ADMIN:
+    case RG_RUN: {
+      struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+      char xtid[128] = {0};
+      if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len] = 0; }
+      if (rt->gate == RG_RUN) {
+        char gb[256];
+        int gs = collector_run_gate(g_db, usr, xtid, 0, NULL, gb, sizeof gb);
+        if (gs) { reply_json(c, gs, gb); return 1; }
+        return 0;
+      }
+      tenant_ctx tc;
+      int tr = tenant_resolve(g_db, usr, xt ? xtid : NULL, &tc);
+      if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return 1; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return 1; }
+      int need = rt->gate == RG_ROLE_ANALYST ? 2 : rt->gate == RG_ROLE_ADMIN ? 3 : 0;
+      if (need && routes_role_rank(tc.role) < need) {
+        reply_json(c, 403, "{\"error\":\"forbidden\"}");
+        return 1;
+      }
+      return 0;
+    }
+  }
+  reply_json(c, 500, "{\"error\":\"server_error\"}");   /* unknown gate: fail closed */
+  return 1;
+}
+
 static void fn(struct mg_connection *c, int ev, void *ev_data) {
   if (ev == MG_EV_POLL) { search_stream_poll(c); xs_on_io(c); return; }
   if (ev == MG_EV_WRITE) { xs_on_io(c); return; }   /* a streamed export drained */
@@ -2421,6 +2596,11 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
   struct mg_http_message *hm = ev_data;
   struct mg_str u = hm->uri;
 
+  /* One request in dispatch: the tenant memo and the per-user worker charge
+   * are scoped to it (tenantapi.h, worker_admit). Both start clean. */
+  tenant_resolve_scope_begin();
+  g_req_uid[0] = 0;
+
   /* CORS (cors.h). The verdict is recorded for every reply this request
    * gets, and with JO_CORS_ORIGINS set an OPTIONS preflight is answered HERE,
    * before the auth gate: a browser never attaches Authorization to a
@@ -2438,8 +2618,21 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     return;
   }
 
+  /* ---- the route table (core/routes.c) ----
+   * Every request under /api/ (and the break-glass mount) is matched against
+   * the table first. The pre-auth handlers below are reachable ONLY through a
+   * PUBLIC row, and after authentication a request that matches no row never
+   * reaches the dispatch chain, so a matcher added to the chain without a row
+   * cannot be served. Unauthenticated callers are told 401 either way: the
+   * 404/405 is decided after the token check, not before it. */
+  const route_row *rt = NULL;
+  route_status rs = ROUTE_NOT_FOUND;
+  if (starts(u, "/api/") || starts(u, "/admin/break-glass"))
+    rs = routes_lookup(hm->method.buf, hm->method.len, u.buf, u.len, &rt);
+  const int pub = rs == ROUTE_OK && rt->gate == RG_PUBLIC;
+
   /* ---- pre-auth ---- */
-  if (eq(u, "/api/health")) {
+  if (pub && eq(u, "/api/health")) {
     char ts[40]; jo_iso_now(ts, sizeof ts);
     char body[96];
     snprintf(body, sizeof body, "{\"status\":\"ok\",\"timestamp\":\"%s\"}", ts);
@@ -2449,7 +2642,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
   /* SSE search stream is pre-auth: EventSource can't send Authorization;
    * the unguessable request_id is the capability (== routes/search.js). */
   { char sid[SSTREAM_ID_MAX];
-    if (seg(u, "/api/search/stream/", "", sid, sizeof sid)) {
+    if (pub && seg(u, "/api/search/stream/", "", sid, sizeof sid)) {
       char skey[64] = {0}, stid[64] = {0};
       if (mg_http_get_var(&hm->query, "key", skey, sizeof skey) <= 0) skey[0] = 0;
       struct mg_str *ah = mg_http_get_header(hm, "Authorization");
@@ -2472,7 +2665,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
   /* /admin/break-glass/\* is mounted OUTSIDE the /api auth gate (it exists
    * precisely for when Supabase auth is down). Only /login is implemented. */
   if (starts(u, "/admin/break-glass")) {
-    if (!eq(u, "/admin/break-glass/login")) { reply_json(c, 404, "{\"error\":\"Not found\"}"); return; }
+    if (!pub || !eq(u, "/admin/break-glass/login")) { reply_json(c, 404, "{\"error\":\"Not found\"}"); return; }
     char ua[512] = {0};
     struct mg_str *h = mg_http_get_header(hm, "User-Agent");
     if (h && h->len < sizeof ua) { memcpy(ua, h->buf, h->len); ua[h->len] = 0; }
@@ -2515,6 +2708,15 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     auth_result r = auth_check(h ? hdr : NULL, &usr);
     if (r != AUTH_ALLOW) { reply_json(c, auth_status(r), auth_body(r)); return; }
     if (usr.break_glass) audit_break_glass_request(c, hm);
+    snprintf(g_req_uid, sizeof g_req_uid, "%s", usr.id);   /* worker_admit charges this */
+
+    /* No row, no route: the chain below is never reached for a path the table
+     * does not name. A row whose method set excludes this method is a 405. */
+    if (rs == ROUTE_NOT_FOUND) { reply_json(c, 404, "{\"error\":\"not_found\"}"); return; }
+    if (rs == ROUTE_METHOD_NOT_ALLOWED) {
+      reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return; }
+    /* THE gate: enforced here, once, from the row. */
+    if (route_gate_enforce(c, hm, &usr, rt)) return;
 
     /* ---- /api/search (port of routes/search.js; stream is pre-auth above) */
     if (eq(u, "/api/search/analyze")) {
@@ -2597,7 +2799,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         if (have_t) snprintf(a->tenant, sizeof a->tenant, "%s", sgt.tenant_id);
         a->expand = ex[0] == '1';
         pthread_t th;
-        if (a->q && pthread_create(&th, NULL, suggest_thread, a) == 0) {
+        if (a->q && worker_spawn(&th, suggest_thread, a) == 0) {
           pthread_detach(th);
           return;        /* reply deferred to MG_EV_WAKEUP — loop stays free */
         }
@@ -2649,10 +2851,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int is_put = (hm->method.len == 3 && memcmp(hm->method.buf, "PUT", 3) == 0) ||
                    (hm->method.len == 4 && memcmp(hm->method.buf, "POST", 4) == 0);
       if (is_put) {
-        int oc = opgate_check(&usr);
-        if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
-        if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
-        if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+        /* operator: enforced by the route table (cadence-set) */
         char b[512] = {0};
         if (hm->body.len && hm->body.len < sizeof b) memcpy(b, hm->body.buf, hm->body.len);
         cadence_policy cur = cadence_get(), np; const char *err = NULL;
@@ -2709,10 +2908,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           return;
         }
         if (hm->method.len == 3 && memcmp(hm->method.buf, "PUT", 3) == 0) {
-          if (opgate_check(&usr) != 0) {
-            reply_json(c, 403, "{\"error\":\"operator_required\"}");
-            return;
-          }
+          /* operator: enforced by the route table (source-settings-put),
+           * which answers with the same {"error":"operator_required"}. */
           char *bdy = NULL;
           if (hm->body.len) { bdy = malloc(hm->body.len + 1);
             if (bdy) { memcpy(bdy, hm->body.buf, hm->body.len);
@@ -2770,7 +2967,17 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
 
     /* GET /api/sources — full source registry/probe rows. */
     if (eq(u, "/api/sources")) {
-      char *body = api_sources_list(g_db);
+      /* Bounded by default (500 rows, page{} in-band); the bare full array is
+       * an operator's, asked for with ?all=1. */
+      char lv[16] = {0}, ov[16] = {0}, av[8] = {0};
+      int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
+      int ho = mg_http_get_var(&hm->query, "offset", ov, sizeof ov);
+      int all = mg_http_get_var(&hm->query, "all", av, sizeof av) > 0 && av[0] == '1'
+                && opgate_check(&usr) == 0;
+      int lim = hl > 0 ? atoi(lv) : 0;
+      if (lim <= 0 || lim > FLEET_PAGE_MAX) lim = FLEET_PAGE_MAX;
+      char *body = all ? api_sources_list(g_db)
+                       : api_sources_list_page(g_db, lim, ho > 0 ? atoi(ov) : 0);
       if (!body) { reply_json(c, 500, "{\"error\":\"Failed to list sources\"}"); return; }
       reply_json(c, 200, body);
       free(body);
@@ -2811,7 +3018,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     if (eq(u, "/api/metrics")) {
       if (hm->method.len != 3 || memcmp(hm->method.buf, "GET", 3) != 0) {
         reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return; }
-      if (breach_gate(c, &usr)) return;     /* the operator gate's own replies */
+      /* operator: enforced by the route table (metrics) */
       char *mb = metricsapi_render(g_db);
       if (!mb) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
       char hb[CORS_HDR_MAX + 96];
@@ -2827,6 +3034,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     if (eq(u, "/api/intel/sources")) {
       fleet_arg fa = {0};
       fa.kind = FLEET_INTEL_SOURCES;
+      fa.op   = (opgate_check(&usr) == 0);      /* only gates ?all=1 here */
       fleet_params(hm, &fa);
       fleet_serve(c, &fa);
       return;
@@ -3035,9 +3243,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int is_del = hm->method.len == 6 && memcmp(hm->method.buf, "DELETE", 6) == 0;
       int oc = opgate_check(&usr);
       if (is_put || is_del) {
-        if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
-        if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
-        if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+        /* operator: enforced by the route table (interval-set) */
         const char *err = NULL; int rc;
         if (is_del) rc = source_interval_clear(g_db, p, &err);
         else {
@@ -3071,10 +3277,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       /* Per-source schedule mode sets server-wide collection cadence (not a
        * per-tenant setting), so it's a platform-operator decision — gate it
        * like /api/admin and /api/db rather than leaving it plain-auth. */
-      int oc = opgate_check(&usr);
-      if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
-      if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
-      if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+      /* operator: enforced by the route table (schedule-set) */
       char b[256] = {0};
       if (hm->body.len && hm->body.len < sizeof b)
         memcpy(b, hm->body.buf, hm->body.len);
@@ -3121,7 +3324,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (hm->method.len != 4 || memcmp(hm->method.buf, "POST", 4) != 0) {
         reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
       }
-      if (breach_gate(c, &usr)) return;      /* same opgate wrapper, same codes */
+      /* operator: enforced by the route table (status-probe) */
       /* Off-loop: this makes a live request to the source's own endpoint at a
        * 10 s timeout, and it writes (probe_* columns + the audit row), so the
        * worker takes its own connection. */
@@ -3149,7 +3352,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (hm->method.len != 4 || memcmp(hm->method.buf, "POST", 4) != 0) {
         reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
       }
-      if (breach_gate(c, &usr)) return;
+      /* operator: enforced by the route table (status-consent) */
       cJSON *jb = hm->body.len ? cJSON_ParseWithLength(hm->body.buf, hm->body.len) : NULL;
       cJSON *jc = jb ? cJSON_GetObjectItem(jb, "consent") : NULL;
       int consent = cJSON_IsBool(jc) ? cJSON_IsTrue(jc) : 0;
@@ -3326,7 +3529,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           return;
         }
         pthread_t th;
-        if (pthread_create(&th, NULL, srcrun_thread, ra) == 0) {
+        if (worker_spawn(&th, srcrun_thread, ra) == 0) {
           pthread_detach(th);
           return;      /* reply deferred to MG_EV_WAKEUP — loop stays free */
         }
@@ -3367,10 +3570,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * (index.js mounts /api/follow with NO requirePlatformOperator); gated
      * here by product decision, same opgate triad as /api/db,/api/admin. */
     if (eq(u, "/api/follow/recent")) {
-      { int oc = opgate_check(&usr);
-        if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
-        if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
-        if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; } }
+      /* operator: enforced by the route table (follow-recent) */
       char lim[16] = {0};
       int hv = mg_http_get_var(&hm->query, "limit", lim, sizeof lim);
       char *body = miscapi_follow_recent(hv > 0 ? atoi(lim) : 500);
@@ -3381,10 +3581,19 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     if (starts(u,"/api/admin/") ||
         eq(u,"/api/db/tables") || starts(u,"/api/db/tables/") ||
         eq(u,"/api/db/scheduler")) {
-      int oc = opgate_check(&usr);
-      if (oc == -401) { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
-      if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
-      if (oc != 0)    { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+      /* operator: enforced by the route table. Every /api/admin/(any) and
+       * /api/db/(any) row is RG_OPERATOR (tests/unit/test_routes.c pins it), and a
+       * path with no row never gets here, so the check that used to open this
+       * block is redundant and gone. */
+
+      /* GET /api/admin/routes — the route table itself: method, path, gate,
+       * where it runs. Answers "which door has which lock" without reading
+       * the chain. */
+      if (eq(u,"/api/admin/routes")) {
+        char *b = routes_json();
+        if (!b) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+        reply_json(c, 200, b); free(b); return;
+      }
 
       /* Roadmap 29 — corpus-wide JA→EN backfill. Deliberately behind the
        * PLATFORM OPERATOR gate, not a tenant owner/admin check: translate_run
@@ -3928,7 +4137,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       ia->mgr = c->mgr; ia->cid = c->id; ia->db = g_db;
       memcpy(ia->qs, hm->query.buf, hm->query.len);
       pthread_t th;
-      if (pthread_create(&th, NULL, iso_thread, ia) == 0) {
+      if (worker_spawn(&th, iso_thread, ia) == 0) {
         pthread_detach(th);
         return;            /* reply deferred to MG_EV_WAKEUP */
       }
@@ -3965,10 +4174,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * datapoints. Breach data is sensitive, so gate it like /api/admin (platform
      * operator). Returns metadata only; leaked secrets never cross this path. */
     if (eq(u,"/api/breach/search")) {
-      int oc = opgate_check(&usr);
-      if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
-      if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
-      if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+      /* operator: enforced by the route table (breach-search) */
       char qv[256]={0}, tv[32]={0}, lv[16]={0}, ov[24]={0};
       int hq = mg_http_get_var(&hm->query,"q",qv,sizeof qv);
       int ht = mg_http_get_var(&hm->query,"type",tv,sizeof tv);
@@ -4003,9 +4209,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
       if (tr != 0)    { reply_tenant_err(c, tr); return; }
-      /* Reads tenant intel, so viewer is not enough. */
-      if (strcmp(tc.role, "viewer") == 0) {
-        reply_json(c, 403, "{\"error\":\"forbidden\"}"); return; }
+      /* Reads tenant intel, so viewer is not enough: the route table
+       * (alerts-preview, RG_ROLE_ANALYST) refuses a viewer with this same
+       * {"error":"forbidden"} before the handler runs. */
       char *bdy = NULL;
       if (hm->body.len) { bdy = malloc(hm->body.len + 1);
         /* Unchecked malloc was a NULL-pointer memcpy on every one of these
@@ -4415,18 +4621,15 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     if (eq(u, "/api/evidence/gc")) {
       if (mg_strcmp(hm->method, mg_str("POST")) != 0) {
         reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return; }
-      int oc = opgate_check(&usr);
-      if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
-      if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
-      if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+      /* operator: enforced by the route table (evidence-gc) */
       char *body = evidence_gc(g_db);
       if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
       audit_write(g_db, "platform", usr.id, "evidence.gc.run", NULL, body);
       reply_json(c, 200, body); free(body); return;
     }
     if (eq(u, "/api/evidence/verify")) {
-      if (opgate_check(&usr) != 0) {
-        reply_json(c, 403, "{\"error\":\"forbidden\"}"); return; }
+      /* operator: enforced by the route table (evidence-verify), which
+       * answers with the same {"error":"forbidden"}. */
       char *body = evidence_verify(g_db);
       if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, 200, body); free(body); return;
@@ -4459,10 +4662,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * every media field NULL") had no answer short of an SSH session.
      * Operator-gated: it is host inventory, not tenant data. */
     if (eq(u, "/api/media/capabilities")) {
-      int oc = opgate_check(&usr);
-      if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
-      if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
-      if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+      /* operator: enforced by the route table (media-capabilities) */
       char *body = media_capabilities();
       if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, 200, body); free(body); return;
@@ -4477,10 +4677,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * below, which would otherwise never see it anyway but the ordering is
      * what makes that obvious. */
     if (eq(u, "/api/camera-stills/capabilities")) {
-      int oc = opgate_check(&usr);
-      if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
-      if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
-      if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+      /* operator: enforced by the route table (camera-stills-capabilities) */
       char *body = camera_stills_capabilities(g_db);
       if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
       reply_json(c, 200, body); free(body); return;
@@ -4658,7 +4855,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         if (hf > 0) snprintf(da->fn, sizeof da->fn, "%s", fnv);
         snprintf(da->ct, sizeof da->ct, "%s", ctv);
         pthread_t th;
-        if (pthread_create(&th, NULL, dm_thread, da) == 0) {
+        if (worker_spawn(&th, dm_thread, da) == 0) {
           pthread_detach(th);
           return;      /* reply deferred to MG_EV_WAKEUP — loop stays free */
         }
@@ -4699,10 +4896,17 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       memcpy(meth, hm->method.buf, ml);
       char qsb[256] = {0};
       if (qs_copy_or_414(c, hm, qsb, sizeof qsb)) { return; }
-      /* The commit is the heavy step (assemble, sha256, extract, evidence
-       * write): off-loop on its own connection. begin/part/status/abort are
-       * short and stay on the shared handle. */
-      if (!strcmp(meth, "POST") && !strcmp(act, "commit")) {
+      /* begin, part and commit run off-loop on their own connection (API-07).
+       * A part is up to 2 MiB written to disk with an fsync and a rename, then
+       * a BEGIN IMMEDIATE that waits on the shared database's busy timeout —
+       * seconds on a loaded box, on the only thread that answers /api/health.
+       * The worker takes its own handle (db_worker_open, see upl_thread), so
+       * its transaction cannot be left open on the shared one, and the part
+       * body is copied for it exactly as the commit's is. status and abort
+       * are single point queries and stay inline. */
+      const int upl_begin = !*act && (!*uid2 || !strcmp(uid2, "begin"));
+      if (!strcmp(meth, "POST") &&
+          (!strcmp(act, "commit") || !strcmp(act, "part") || upl_begin)) {
         if (!worker_admit()) { reply_busy(c); return; }
         upl_arg *ua = calloc(1, sizeof *ua);
         if (ua) ua->body = hm->body.len ? malloc(hm->body.len) : NULL;
@@ -4715,7 +4919,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           snprintf(ua->act, sizeof ua->act, "%s", act);
           snprintf(ua->qs, sizeof ua->qs, "%s", qsb);
           pthread_t th;
-          if (pthread_create(&th, NULL, upl_thread, ua) == 0) {
+          if (worker_spawn(&th, upl_thread, ua) == 0) {
             pthread_detach(th);
             return;    /* reply deferred to MG_EV_WAKEUP — loop stays free */
           }
@@ -4935,12 +5139,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
        * decision; DIVERGES from Node, which mounts /api/keys with NO
        * requirePlatformOperator). /api/tenant-keys* keeps its existing
        * tenant-resolution guard so tenant admins retain BYOK self-service. */
-      if (!starts(u,"/api/tenant-keys")) {
-        int oc = opgate_check(&usr);
-        if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
-        if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
-        if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
-      }
+      /* (the operator gate for the /api/keys family is the route table's: keys / key) */
       struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
       char xtid[128] = {0};
       if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }
@@ -4993,17 +5192,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
        * own header says "requirePlatformAdmin"; nothing implemented that.
        * The whole family is operator-gated here, GET and PUT alike — a write
        * to this store is if anything the more dangerous half. */
-      if (!tenantk) {
-        int oc = opgate_check(&usr);
-        if (oc != 0) {
-          free(bdy);
-          if (oc == -401) reply_json(c,401,"{\"error\":\"Auth required\"}");
-          else if (oc == -1403)
-            reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}");
-          else reply_json(c,403,"{\"error\":\"Platform operator role required\"}");
-          return;
-        }
-      }
+      /* (enforced by the route table: keys / key are RG_OPERATOR, GET and PUT
+       * alike, so this handler no longer repeats the gate.) */
       if (tenantk) body = keysapi_tenant(g_db,&tc,meth,seg,bdy,&status);
       else         body = keysapi_platform(g_db,&tc,meth,seg,bdy,&status);
       free(bdy);
@@ -5365,7 +5555,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       pthread_mutex_unlock(&g_camlock);
 
       pthread_t th;
-      if (pthread_create(&th, NULL, cam_trigger_thread, ta) == 0) {
+      if (worker_spawn(&th, cam_trigger_thread, ta) == 0) {
         pthread_detach(th);
         char b[192];
         snprintf(b, sizeof b,
@@ -5418,7 +5608,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
            * guard for whichever of the two is resized first. */
           if (snprintf(da->id, sizeof da->id, "%s", did) < (int)sizeof da->id) {
             pthread_t th;
-            if (pthread_create(&th, NULL, datarun_thread, da) == 0) {
+            if (worker_spawn(&th, datarun_thread, da) == 0) {
               pthread_detach(th);
               return;    /* reply deferred to MG_EV_WAKEUP — loop stays free */
             }
