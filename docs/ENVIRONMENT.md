@@ -4,7 +4,7 @@
 
 Every variable the native tree reads, found by a static scan of `core/`, `lib/`, `collectors/`, `main.c` and `registry.c` for `getenv("NAME")` and the `env_int`/`env_long`/`env_ll`/`env_double`/`env_days`/`env_pos`/`env_nonempty`/`env_truthy`/`env_str`/`jo_env`/`sanc_env_int` helpers. **Default** is shown only where the call site spells a literal (a blank means the default is computed, handled by the caller, or the variable is optional). Names assembled at runtime are not seen by a text scan.
 
-466 variables. A first-boot subset, with example values, is in `.env.example`.
+467 variables. A first-boot subset, with example values, is in `.env.example`.
 
 | Variable | Default | Read in |
 | --- | --- | --- |
@@ -204,6 +204,7 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_HTTP_BLOCK_PRIVATE` |  | `core/hostgate.c` |
 | `JO_HTTP_MAX_BODY` |  | `core/httpclient.c` |
 | `JO_HTTP_MAX_WORKERS` |  | `core/httpd.c` |
+| `JO_HTTP_USER_WORKERS` |  | `core/httpd.c` |
 | `JO_HUDOC_PAGE_MAX` |  | `collectors/sources/sanc_echr_hudoc.c` |
 | `JO_IMAGE_EMBED_MAX_WALK` | `512` | `core/image_vec.c` |
 | `JO_ISED_MAX_PAGES` |  | `collectors/sources/tsp_ised_spectrum_sites.c` |
