@@ -368,7 +368,8 @@ COLLECTOR("pa_public-finance", "Panama — public finance", NULL, NULL, "grp_pro
 COLLECTOR("pk_anti-corruption", "Pakistan — anti corruption", NULL, NULL, "grp_procurement")  /* 1 src; anti-corruption 1 */
 COLLECTOR("pl_procurement", "Poland — procurement", NULL, NULL, "grp_procurement")  /* 1 src; procurement 1 */
 
-/* Open data portals & statistics: 73 collector(s), 18801 sources */
+/* Open data portals & statistics: 77 collector(s), 25302 sources */
+COLLECTOR("hp3b67_socrata", "socrata (batch 67)", NULL, NULL, "grp_opendata")  /* 4856 src; open-data 4856 */
 COLLECTOR("hp3b66_socrata", "socrata (batch 66)", NULL, NULL, "grp_opendata")  /* 3627 src; open-data 3627 */
 COLLECTOR("hp3b65_ods", "ods (batch 65)", NULL, NULL, "grp_opendata")  /* 2580 src; open-data 2580 */
 COLLECTOR("hp3b64_ods", "ods (batch 64)", NULL, NULL, "grp_opendata")  /* 2575 src; open-data 2575 */
@@ -376,6 +377,8 @@ COLLECTOR("hp3b64_ckands", "ckands (batch 64)", NULL, NULL, "grp_opendata")  /* 
 COLLECTOR("hp3b65_ckands", "ckands (batch 65)", NULL, NULL, "grp_opendata")  /* 2063 src; open-data 2063 */
 COLLECTOR("hp3b66_ckands", "ckands (batch 66)", NULL, NULL, "grp_opendata")  /* 1910 src; open-data 1910 */
 COLLECTOR("hp3b63_euods", "euods (batch 63)", NULL, NULL, "grp_opendata")  /* 1859 src; open-data 1859 */
+COLLECTOR("hp3b67_ckands", "ckands (batch 67)", NULL, NULL, "grp_opendata")  /* 1249 src; open-data 1249 */
+COLLECTOR("hp3b67_ods", "ods (batch 67)", NULL, NULL, "grp_opendata")  /* 377 src; open-data 377 */
 COLLECTOR("europe_data", "European open data", "欧州オープンデータ", NULL, "grp_opendata")  /* 343 src; opendata 343 */
 COLLECTOR("fr_opendata", "France — open data", "フランス オープンデータ", NULL, "grp_opendata")  /* 287 src; opendata 261, government 11, registry 6 */
 COLLECTOR("ch_opendata", "Switzerland — open data", "スイス オープンデータ", NULL, "grp_opendata")  /* 208 src; opendata 208 */
@@ -395,6 +398,7 @@ COLLECTOR("hp3b66_ods", "ods (batch 66)", NULL, NULL, "grp_opendata")  /* 28 src
 COLLECTOR("lv_opendata", "Latvia — opendata", NULL, NULL, "grp_opendata")  /* 24 src; opendata 24 */
 COLLECTOR("it_opendata", "Italy — opendata", NULL, NULL, "grp_opendata")  /* 22 src; opendata 22 */
 COLLECTOR("gb_opendata", "UK — opendata", NULL, NULL, "grp_opendata")  /* 20 src; opendata 20 */
+COLLECTOR("hp3b67_ckanhost", "ckanhost (batch 67)", NULL, NULL, "grp_opendata")  /* 19 src; open-data 19 */
 COLLECTOR("hp3b52_ansd", "ansd (batch 52)", NULL, NULL, "grp_opendata")  /* 14 src; statistics 8, government 3, legal 1 */
 COLLECTOR("hu_opendata", "Hungary — opendata", NULL, NULL, "grp_opendata")  /* 11 src; opendata 11 */
 COLLECTOR("eg_statistics", "Egypt — statistics", NULL, NULL, "grp_opendata")  /* 6 src; statistics 6 */
