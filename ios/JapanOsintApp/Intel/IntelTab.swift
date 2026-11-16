@@ -161,10 +161,10 @@ struct IntelTab: View {
         ZStack {
             NavigationLink(value: src) { EmptyView() }.opacity(0)
             IntelSourceRow(source: src,
-                           needsEntity: pivotIds.contains(src.id),
                            onRunComplete: {
                 Task { await refreshRow(src.id) }
-            })
+            },
+                           needsEntity: pivotIds.contains(src.id))
         }
     }
 
