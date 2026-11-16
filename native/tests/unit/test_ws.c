@@ -149,6 +149,24 @@ int main(void) {
   ok(ws_collect(NULL, NULL, 1000, 1, on_msg, &r) == -1, "NULL url -> -1");
   ok(ws_collect(url, NULL, 1000, 1, NULL, &r) == -1, "NULL callback -> -1");
 
+  printf("-- SSRF floor (no network, works without WS support)\n");
+  /* The SSRF floor (hostgate_url_check) runs before any connect, as for every
+   * http_request(). No network needed: both refusals happen before curl. */
+  {
+    int calls = 0; (void)calls;
+    n = ws_collect("ws://169.254.169.254/latest/meta-data/", NULL, 500, 1, on_msg, &r);
+    ok(n == -1, "ws:// to the cloud metadata address is refused (-1) before any connect");
+    n = ws_collect("wss://metadata.google.internal/", NULL, 500, 1, on_msg, &r);
+    ok(n == -1, "wss:// to a metadata hostname is refused (-1)");
+    setenv("JO_HTTP_BLOCK_PRIVATE", "1", 1);
+    n = ws_collect("ws://127.0.0.1:1/", NULL, 500, 1, on_msg, &r);
+    ok(n == -1 && hostgate_url_check("http://127.0.0.1:1/") != HG_URL_OK,
+       "strict floor (JO_HTTP_BLOCK_PRIVATE=1): ws://127.0.0.1 refused by the check itself");
+    n = ws_collect("ws://10.0.0.5/", NULL, 500, 1, on_msg, &r);
+    ok(n == -1, "strict floor: ws:// to an RFC1918 address refused");
+    unsetenv("JO_HTTP_BLOCK_PRIVATE");
+  }
+
   if (!have_ws) {
     printf("SKIP  libcurl %s has no WebSocket protocol: message-delivery cases not run\n", curl_version());
     n = ws_collect(url, NULL, 500, 1, on_msg, &r);
@@ -217,11 +235,6 @@ int main(void) {
   ok(n == -1, "connection refused -> -1 (distinct from a quiet window's 0)");
   n = ws_collect("http://127.0.0.1:1/", NULL, 500, 1, on_msg, &r);
   ok(n == -1, "non-websocket scheme -> -1");
-  /* TODO(security-observation): ws_collect() performs no hostgate_url_check() and no
-   * http_easy_harden() — a ws:// URL to a loopback/link-local/metadata address is
-   * connected to directly. Today every caller passes a hard-coded collector URL, so
-   * this is latent, not reachable; any future caller that takes a URL from a row or
-   * from user input would bypass the SSRF policy every other fetch path enforces. */
 
   if (g_fail) { printf("%d FAILED\n", g_fail); return 1; }
   printf("all passed\n");

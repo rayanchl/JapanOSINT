@@ -99,18 +99,25 @@ int main(void) {
     respcache_drop(NULL);
     respcache_put(longk, "long");
     b = respcache_get(longk, 5, NULL);
-    /* Keys are stored truncated to 63 chars but compared untruncated, so a key
-     * of 64+ chars never hits. Asserted as the SAFE direction only: it may miss,
-     * it must never return another key's body. TODO(real-bug): either truncate the
-     * lookup key identically or reject over-long keys in put — today an over-long
-     * key silently never caches, and each put of one burns a fresh slot. */
-    ok(b == NULL || !strcmp(b, "long"), "an over-long key never returns a wrong body");
-    ok(b == NULL, "[characterisation] an over-long key is not retrievable (documented defect, see TODO)");
+    ok(b && !strcmp(b, "long"), "an over-long key IS retrievable");
     free(b);
     char k2[200]; memcpy(k2, longk, sizeof k2); k2[100] = 'z';
     respcache_put(k2, "different");
     b = respcache_get(longk, 5, NULL);
-    ok(b == NULL || !strcmp(b, "long"), "two keys sharing a 63-char prefix are not conflated");
+    ok(b && !strcmp(b, "long"), "two keys sharing a 63-char prefix are not conflated");
+    free(b);
+    b = respcache_get(k2, 5, NULL);
+    ok(b && !strcmp(b, "different"), "the second long key (differs at position 100) has its own body");
+    respcache_put(longk, "long2");
+    b = respcache_get(longk, 5, NULL);
+    ok(b && !strcmp(b, "long2"), "re-putting a long key replaces in place (no slot burned)");
+    free(b);
+    respcache_drop(longk);
+    b = respcache_get(longk, 5, NULL);
+    ok(b == NULL, "drop of a long key removes it");
+    free(b);
+    b = respcache_get(k2, 5, NULL);
+    ok(b && !strcmp(b, "different"), "...and only it");
     free(b);
   }
 

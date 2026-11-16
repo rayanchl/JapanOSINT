@@ -21,12 +21,6 @@ static void ok(int c, const char *w) {
   if (!c) g_fail++;
 }
 
-static int g_known = 0;
-static void known_bug(int c, const char *w) {
-  if (c) printf("  ok    (known bug appears FIXED, promote to ok()) %s\n", w);
-  else { printf("KNOWN BUG (TODO)  %s\n", w); g_known++; }
-}
-
 #define CAPN 4096
 typedef struct { char key[CAPN][64]; char title[CAPN][128]; char rtype[CAPN][48]; int n; } cap_t;
 static int cap_emit(intel_sink *s, const intel_item *it) {
@@ -124,15 +118,22 @@ int main(void) {
     n = count_for(NULL, "[{\"id\":1,\"title\":\"a\"}", 4, &ov, &mal, &done, NULL);
     ok(n == 1 && !done, "array never closed: not done (the caller will disclose a truncation notice)");
     n = count_for(NULL, "[1,2,3]", 0, &ov, &mal, &done, NULL);
-    /* BUG in lib/jsonstream.c js_scan(): the "closing bracket" branch does depth-- and only
-     * closes the element when depth reaches 0. For a LAST element that is a scalar or string
-     * (depth 0 when the array's own ']' arrives) depth goes to -1, the element never closes,
-     * `done` never sets, and the final element is lost — the run then files a "never closed"
-     * truncation notice for a complete array. Input: `[1,2,3]` or `["a","b"]`. Object/array
-     * elements are unaffected (their own '}' closes them first). */
-    known_bug(done, "array of scalars/strings: the array closes (done) after its last element");
-    n = count_for(NULL, "[\"a\",\"b\"]", 0, &ov, &mal, &done, NULL);
-    known_bug(done && n == 2, "array of two strings emits both (last string element is currently lost)");
+    /* Regression: a trailing scalar/string element used to take depth to -1 on the array's own ']'. */
+    ok(done, "array of scalars/strings: the array closes (done) after its last element");
+    {
+      /* Both string elements must be SCANNED and handed to the emitter (scanned == 2) and the
+       * array must close. Whether a bare string becomes a record is jsonlist_emit's rule
+       * (it needs an object), not the boundary scan's, so emitted is not asserted here. */
+      static cap_t cap2; memset(&cap2, 0, sizeof cap2);
+      intel_sink sk = { &cap2, cap_emit };
+      js_ctx c2; feed(&c2, &sk, NULL, "[\"a\",\"b\"]", 0);
+      ok(c2.done && c2.scanned == 2, "array of two strings: both elements scanned (incl. the last) and the array closes");
+      free(c2.buf);
+      memset(&cap2, 0, sizeof cap2);
+      feed(&c2, &sk, NULL, "[1,2,3]", 1);
+      ok(c2.done && c2.scanned == 3, "[1,2,3] fed byte by byte: three scalars scanned, array closes");
+      free(c2.buf);
+    }
     n = count_for(NULL, "[{\"id\":1,\"title\":\"a\"}]garbage after the array", 3, &ov, &mal, &done, NULL);
     ok(n == 1 && done, "bytes after the closing ] are drained, not parsed");
     n = count_for(NULL, "", 0, &ov, &mal, &done, NULL);
@@ -210,7 +211,6 @@ int main(void) {
     ok(jsonstream_emit(&sink, "t", "http://169.254.169.254/latest/meta-data", 1000, NULL, "r", "en", "[]") == -1, "cloud metadata address refused -> -1");
   }
 
-  printf("(%d known-bug assertions documented)\n", g_known);
   if (g_fail) { printf("%d FAILED\n", g_fail); return 1; }
   printf("all passed\n");
   return 0;

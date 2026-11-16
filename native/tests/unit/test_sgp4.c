@@ -26,14 +26,6 @@ static void ok(int c, const char *w) {
   printf("%s  %s\n", c ? "  ok  " : "FAIL  ", w);
   if (!c) g_fail++;
 }
-/* A documented defect in the code under test: asserted as the CORRECT value,
- * but a failure is reported as "KNOWN BUG" and does not fail the suite, so the
- * day the source is fixed this line starts saying so. */
-static int g_known = 0;
-static void known_bug(int c, const char *w) {
-  if (c) printf("  ok    (known bug appears FIXED, promote to ok()) %s\n", w);
-  else { printf("KNOWN BUG (TODO)  %s\n", w); g_known++; }
-}
 static int near_(double a, double b, double tol) { return fabs(a - b) <= tol; }
 
 static const char *L1 = "1 00005U 58002B   00179.78495062  .00000023  00000-0  28098-4 0  4753";
@@ -87,18 +79,18 @@ int main(void) {
 
   printf("-- epoch and sidereal time\n");
   /* 2000 day 179.78495062 = June 27 2000 18:50:19 UTC: JD 2451723.28495062 */
-  known_bug(near_(r.jdsatepoch, 2451723.28495062, 1e-6),
+  ok(near_(r.jdsatepoch, 2451723.28495062, 1e-6),
             "TLE epoch -> Julian date (lib/sgp4.c sgp4_jday_epoch is 306 days early: 367L*1/12 + 1 should be the Dec-31 terms 367L*10/12 + 31)");
-  known_bug(near_(sgp4_jday_epoch(2000, 1.0), 2451544.5, 1e-9), "2000 day 1.0 = JD 2451544.5 (Jan 1 0h)");
-  known_bug(near_(sgp4_jday_epoch(1999, 1.0), 2451179.5, 1e-9), "1999 day 1.0 = JD 2451179.5");
+  ok(near_(sgp4_jday_epoch(2000, 1.0), 2451544.5, 1e-9), "2000 day 1.0 = JD 2451544.5 (Jan 1 0h)");
+  ok(near_(sgp4_jday_epoch(1999, 1.0), 2451179.5, 1e-9), "1999 day 1.0 = JD 2451179.5");
   ok(near_(sgp4_jday_epoch(2000, 2.0) - sgp4_jday_epoch(2000, 1.0), 1.0, 1e-12), "epoch is linear in fractional day");
   ok(near_(sgp4_jday_epoch(2001, 1.0) - sgp4_jday_epoch(2000, 1.0), 366.0, 1e-9) , "2000 -> 2001 is 366 days (leap year)");
   ok(near_(sgp4_gstime(2451545.0), 4.894961212823756, 1e-6), "GMST at J2000.0 = 280.46 deg");
   { double g = sgp4_gstime(2451545.0 + 123.456); ok(g >= 0 && g < 2 * PI, "GMST normalised to [0, 2pi)");
     g = sgp4_gstime(2400000.5); ok(g >= 0 && g < 2 * PI, "GMST normalised for a date before J2000 (negative branch)"); }
   /* what a CORRECT gsto would give: GMST(2451723.28495062) = 198.7689 deg */
-  known_bug(near_(r.gsto, 198.76893360 * PI / 180.0, 1e-4), "gsto of the 00005 epoch = 198.77 deg (follows from the epoch JD)");
-  known_bug(near_(sgp4_gstime(r.jdsatepoch), sgp4_gstime(2451723.28495062), 1e-6), "gstime(epoch) consistent");
+  ok(near_(r.gsto, 198.76893360 * PI / 180.0, 1e-4), "gsto of the 00005 epoch = 198.77 deg (follows from the epoch JD)");
+  ok(near_(sgp4_gstime(r.jdsatepoch), sgp4_gstime(2451723.28495062), 1e-6), "gstime(epoch) consistent");
 
   printf("-- geodetic conversion\n");
   { double lon, lat, alt;
@@ -115,7 +107,7 @@ int main(void) {
     double pole[3] = {0.0, 0.0, 7000.0};
     sgp4_geodetic(pole, 0.0, &lon, &lat, &alt);
     ok(near_(lat, 90.0, 1e-6), "exactly over the pole: latitude 90");
-    known_bug(alt > 600 && alt < 700, "exactly over the pole: altitude ~643 km (alt = r/cos(lat) - aC divides 0 by 0 -> -6399 km, a singularity inherited from satellite.js)");
+    ok(alt > 600 && alt < 700, "exactly over the pole: altitude ~643 km (alt = r/cos(lat) - aC divides 0 by 0 -> -6399 km, a singularity inherited from satellite.js)");
     sgp4_propagate(&r, 0, p, v);
     sgp4_geodetic(p, 0.0, &lon, &lat, &alt);
     ok(fabs(lat) < 0.01 && near_(alt, 782.5, 2.0), "sat 00005 at epoch: on the equator, ~782 km over the ellipsoid (radius 7160 km)");
@@ -153,7 +145,6 @@ int main(void) {
     ok(pr != 0 || (isfinite(p[0]) && isfinite(p[1]) && isfinite(p[2])), "decayed orbit: error code or finite output, not NaN with rc=0");
   }
 
-  printf("(%d known-bug assertions documented)\n", g_known);
   if (g_fail) { printf("%d FAILED\n", g_fail); return 1; }
   printf("all passed\n");
   return 0;

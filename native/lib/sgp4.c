@@ -311,7 +311,12 @@ void sgp4_geodetic(const double pos[3], double gmst,
     C = 1.0 / sqrt(1.0 - e2 * sin(lat) * sin(lat));
     lat = atan2(pos[2] + a * C * e2 * sin(lat), r);
   }
-  double alt = r / cos(lat) - a * C;
+  /* r/cos(lat) - aC is 0/0 over a pole (it returned -6399 km there). Poleward
+   * of 45 degrees use the equivalent z/sin(lat) - aC(1-e2), which is exact on
+   * the ellipsoid and well conditioned where sin(lat) is large. */
+  double alt = (fabs(lat) > PI / 4)
+             ? pos[2] / sin(lat) - a * C * (1.0 - e2)
+             : r / cos(lat) - a * C;
   *lon_deg = lon / DEG2RAD;
   *lat_deg = lat / DEG2RAD;
   *alt_km = alt;
