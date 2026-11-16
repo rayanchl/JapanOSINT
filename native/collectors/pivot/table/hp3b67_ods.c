@@ -29,7 +29,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/medailles_reconnaissance_erkenning/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/medailles_reconnaissance_erkenning/records?limit=100&offset=0&order_by=nom",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -47,7 +47,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/commerces-bruxellois-acceptant-la-zinne-monnaie-locale-bruxelloise/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/commerces-bruxellois-acceptant-la-zinne-monnaie-locale-bruxelloise/records?limit=100&offset=0&order_by=index",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -66,7 +66,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/reseaux-sociaux/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/reseaux-sociaux/records?limit=100&offset=0&order_by=url",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -84,7 +84,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bxl_consommation_energetique/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bxl_consommation_energetique/records?limit=100&offset=0&order_by=annee",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -101,7 +101,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bxl_demographie_140306_annee/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bxl_demographie_140306_annee/records?limit=100&offset=0&order_by=da_c_clarations_de_naissance",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -118,13 +118,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/manneken-pis/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/manneken-pis/records?limit=100&offset=0&order_by=fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "fr,nl,en",
     .description = "OpenDataSoft dataset manneken-pis on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -136,13 +136,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/drop-zones-polygones-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/drop-zones-polygones-vbx/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "type_en,id",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset drop-zones-polygones-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -154,13 +155,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/consultations-pour-enfants-kind-en-gezin-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/consultations-pour-enfants-kind-en-gezin-vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset "
       "consultations-pour-enfants-kind-en-gezin-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -173,13 +174,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/academies-neerlandophones-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/academies-neerlandophones-vbx/records?limit=100&offset=0&order_by=address_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset academies-neerlandophones-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -191,7 +192,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/projection-de-levolution-de-la-population-des-seniors-bruxellois/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/projection-de-levolution-de-la-population-des-seniors-bruxellois/records?limit=100&offset=0&order_by=anna_c_e",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -210,13 +211,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/points-postaux0/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/points-postaux0/records?limit=100&offset=0&order_by=name_fr%2Crue_%2Cpostaloperator",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,rue_,type_code",
     .description = "OpenDataSoft dataset points-postaux0 on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -228,7 +229,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/population-par-groupe-de-nationalite-d-origine/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/population-par-groupe-de-nationalite-d-origine/records?limit=100&offset=0&order_by=population_total",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -247,7 +248,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/points-de-collecte-parcs-a-containers-recypark/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/points-de-collecte-parcs-a-containers-recypark/records?limit=100&offset=0&order_by=nom",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -266,13 +267,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-d-electeurs-belges-et-etrangers/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-d-electeurs-belges-et-etrangers/records?limit=100&offset=0&order_by=date",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "type_d_election",
     .description = "OpenDataSoft dataset nombre-d-electeurs-belges-et-etrangers on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -284,13 +285,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/itineraires-cyclables-regionaux-rbc/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/itineraires-cyclables-regionaux-rbc/records?limit=100&offset=0&order_by=ogc_fid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "commune_gemeente,type",
+    .id_keys = "ogc_fid",
     .description = "OpenDataSoft dataset itineraires-cyclables-regionaux-rbc on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -302,13 +304,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/permis-environnement-delivres-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/permis-environnement-delivres-vbx/records?limit=100&offset=0&order_by=categorie_principale_fr%2Ctotal_global%2Cannee",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "categorie_principale_fr,categorie_principale_nl",
     .description = "OpenDataSoft dataset permis-environnement-delivres-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -320,7 +322,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bxl_food_trucks_commerces_ambulants/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bxl_food_trucks_commerces_ambulants/records?limit=100&offset=0&order_by=nom%2Clocatie",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -339,7 +341,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bornes-eau-potable-gratuite-des-gares-sncb-gratis-drinkwatertappunten-van-nmbs-stations/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bornes-eau-potable-gratuite-des-gares-sncb-gratis-drinkwatertappunten-van-nmbs-stations/records?limit=100&offset=0&order_by=taf_tap_code",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -358,13 +360,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/superficies-et-loyers-logements-regie-fonciere-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/superficies-et-loyers-logements-regie-fonciere-vbx/records?limit=100&offset=0&order_by=apparts_studios_surface_totale",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "category_fr,category_nl,category_en",
     .description = "OpenDataSoft dataset "
       "superficies-et-loyers-logements-regie-fonciere-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -378,13 +380,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bornes-d-eau-potable-gerees-par-la-region-drinkwatertappunten-beheerd-door-het-gewest-vivaqua/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bornes-d-eau-potable-gerees-par-la-region-drinkwatertappunten-beheerd-door-het-gewest-vivaqua/records?limit=100&offset=0&order_by=id_vivaqua",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "ifu_type,ref,statistical_sector_fr,statistical_sector_nl",
     .description = "OpenDataSoft dataset "
       "bornes-d-eau-potable-gerees-par-la-region-drinkwatertappunten-beheerd-door-het-gewest-vivaqua "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -398,13 +400,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/surveillance-de-la-qualite-chimique-et-physico-chimique-des-eaux-de-surface-en-r/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/surveillance-de-la-qualite-chimique-et-physico-chimique-des-eaux-de-surface-en-r/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,commune_fr,commune_nl",
     .description = "OpenDataSoft dataset "
       "surveillance-de-la-qualite-chimique-et-physico-chimique-des-eaux-de-surface-en-r "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -418,13 +420,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/codes-postaux-et-codes-ins-communes-belges-20250101/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/codes-postaux-et-codes-ins-communes-belges-20250101/records?limit=100&offset=0&order_by=postal_code%2Crefnis_code",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_commune,commune_fr_nl,region,region_nl",
     .description = "OpenDataSoft dataset "
       "codes-postaux-et-codes-ins-communes-belges-20250101 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -436,13 +438,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/habillages-de-manneken-pis/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/habillages-de-manneken-pis/records?limit=100&offset=0&order_by=reference",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "costume_fr,contexte_fr,contexte_nl,contexte_en",
     .description = "OpenDataSoft dataset habillages-de-manneken-pis on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -454,13 +456,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/salles-de-spectacle-concert/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/salles-de-spectacle-concert/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset salles-de-spectacle-concert on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -472,13 +474,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2024/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2024/records?limit=100&offset=0&order_by=vastgelegd_bedrag_btwi_montant_engage_tvac%2Cbegunstigden_beneficiaires%2Cgunningsdatum_van_de_opdracht_date_d_attribution_du_marche",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "type_overheidsopdracht_type_de_marche_public,stad_brussel_departement_bruxelles_ville_departement,ref_bestek_ref_csc,begunstigden_beneficiaires",
     .description = "OpenDataSoft dataset "
       "marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2024 "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -491,13 +493,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-kiss-and-ride-recencees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-kiss-and-ride-recencees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "zone_fr,zone_nl,zone_en,type_fr",
     .description = "OpenDataSoft dataset "
       "places-de-parking-kiss-and-ride-recencees-par-bruxelles-mobilite-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -510,13 +512,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/zones-de-police-rbc/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/zones-de-police-rbc/records?limit=100&offset=0&order_by=gml_id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,gml_id,inspire_id",
     .description = "OpenDataSoft dataset zones-de-police-rbc on opendata.brussel.be, "
       "a portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -528,13 +530,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/informatiedragers-in-de-nederlandstalige-bibliotheken/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/informatiedragers-in-de-nederlandstalige-bibliotheken/records?limit=100&offset=0&order_by=informatie_dragers",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "informatie_dragers",
     .description = "OpenDataSoft dataset "
       "informatiedragers-in-de-nederlandstalige-bibliotheken on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -547,13 +549,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/monuments-funeraires-du-cimetiere-de-laeken/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/monuments-funeraires-du-cimetiere-de-laeken/records?limit=100&offset=0&order_by=monument",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "monument",
     .description = "OpenDataSoft dataset monuments-funeraires-du-cimetiere-de-laeken "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -565,13 +567,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/surveillance-du-niveau-des-eaux-souterraines-en-rbc/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/surveillance-du-niveau-des-eaux-souterraines-en-rbc/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_gw_ref,naam_gw_ref,nom_gwb_fr,naam_gwb_nl",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "surveillance-du-niveau-des-eaux-souterraines-en-rbc on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -584,13 +587,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2020/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2020/records?limit=100&offset=0&order_by=montant_engage_tvac_vastgelegd_bedrag_btwi%2Cdate_du_marche_datum_van_de_opdracht%2Cbruxelles_ville_departement_stad_brussel_departement",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "bruxelles_ville_departement_stad_brussel_departement,beneficiaires_operateur_economique_a_qui_le_marche_a_ete_attribue_begunstigden_onderneming_aan_wie_d",
     .description = "OpenDataSoft dataset "
       "marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2020 "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -603,13 +606,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/statistiques-sur-les-produits-et-services-delivres-aux-citoyens-par-la-ville-de-/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/statistiques-sur-les-produits-et-services-delivres-aux-citoyens-par-la-ville-de-/records?limit=100&offset=0&order_by=nombre",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "categorie",
     .description = "OpenDataSoft dataset "
       "statistiques-sur-les-produits-et-services-delivres-aux-citoyens-par-la-ville-de- "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -622,13 +625,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/cours-alphabetisation-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/cours-alphabetisation-vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset cours-alphabetisation-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -640,13 +643,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-visiteurs-site-web-ville-de-bruxelles-par-ville-commune-aantal-bezoekers-website-stad-brussel-per-stad-gemeente/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-visiteurs-site-web-ville-de-bruxelles-par-ville-commune-aantal-bezoekers-website-stad-brussel-per-stad-gemeente/records?limit=100&offset=0&order_by=city%2Cactive_users",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "city",
     .description = "OpenDataSoft dataset "
       "nombre-visiteurs-site-web-ville-de-bruxelles-par-ville-commune-aantal-bezoekers-website-stad-brussel-per-stad-gemeente "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -659,13 +662,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/milieux-accueil-petite-enfance-one-kindengezin-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/milieux-accueil-petite-enfance-one-kindengezin-vbx/records?limit=100&offset=0&order_by=address_fr%2Cname_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset "
       "milieux-accueil-petite-enfance-one-kindengezin-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -678,13 +681,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/codes-ins6-des-parties-de-communes-belges-20250101/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/codes-ins6-des-parties-de-communes-belges-20250101/records?limit=100&offset=0&order_by=c_nis6",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "partie_de_commune_fr_nl,commune_fr_nl,region_fr,region_nl",
     .description = "OpenDataSoft dataset "
       "codes-ins6-des-parties-de-communes-belges-20250101 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -698,13 +701,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/entrees-stations-souterraines-metro-premetro-ingangen-ondergrondse-metro-premetro-stations/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/entrees-stations-souterraines-metro-premetro-ingangen-ondergrondse-metro-premetro-stations/records?limit=100&offset=0&order_by=stop_id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "stop_name,station_fr,station_nl,ifu_type",
+    .id_keys = "stop_id",
     .description = "OpenDataSoft dataset "
       "entrees-stations-souterraines-metro-premetro-ingangen-ondergrondse-metro-premetro-stations "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -718,13 +722,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/pandemie-covid-19-statistiques-hospitalisations-traitement-arretees-au-27-juin-2023/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/pandemie-covid-19-statistiques-hospitalisations-traitement-arretees-au-27-juin-2023/records?limit=100&offset=0&order_by=date%2Ccode",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "region",
     .description = "OpenDataSoft dataset "
       "pandemie-covid-19-statistiques-hospitalisations-traitement-arretees-au-27-juin-2023 "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -737,7 +741,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/aires-de-jeux-et-espaces-sportifs-geres-par-la-ville-de-bruxelles/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/aires-de-jeux-et-espaces-sportifs-geres-par-la-ville-de-bruxelles/records?limit=100&offset=0&order_by=elementid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -756,13 +760,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/commerces-recenses-par-hubbrussels-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/commerces-recenses-par-hubbrussels-vbx/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,name_en,address_fr",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset commerces-recenses-par-hubbrussels-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -774,13 +779,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/dogzones/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/dogzones/records?limit=100&offset=0&order_by=_goid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,name_fr_nl,category_fr",
     .description = "OpenDataSoft dataset dogzones on opendata.brussel.be, a portal "
       "new to the tree in batch 67 (own dataset). Explore v2.1 records, "
       "offset paging." },
@@ -793,13 +798,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/auberges-de-jeunesse-recensees-par-hub-brussels/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/auberges-de-jeunesse-recensees-par-hub-brussels/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,name_en,address_fr",
     .description = "OpenDataSoft dataset "
       "auberges-de-jeunesse-recensees-par-hub-brussels on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -812,13 +817,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/defibrillateurs-installes-par-la-ville-de-bruxelles/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/defibrillateurs-installes-par-la-ville-de-bruxelles/records?limit=100&offset=0&order_by=registratienummer%2Cnaam_van_het_gebouw",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "naam_van_het_gebouw,adresse,type,commune",
     .description = "OpenDataSoft dataset "
       "defibrillateurs-installes-par-la-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -830,13 +835,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/cimetieres/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/cimetieres/records?limit=100&offset=0&order_by=commune",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "commune,gemeente,jours_et_heures_d_ouverture,dagen_en_openingsuren",
     .description = "OpenDataSoft dataset cimetieres on opendata.brussel.be, a portal "
       "new to the tree in batch 67 (own dataset). Explore v2.1 records, "
       "offset paging." },
@@ -848,13 +853,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/codes-ins-nis-postaux-belgique/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/codes-ins-nis-postaux-belgique/records?limit=100&offset=0&order_by=postal_code%2Crefnis_code",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_commune,region_fr,region_nl,region_en",
     .description = "OpenDataSoft dataset codes-ins-nis-postaux-belgique on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -866,13 +871,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/thermographie-aerienne-ville-de-bruxelles/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/thermographie-aerienne-ville-de-bruxelles/records?limit=100&offset=0&order_by=producteur",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "producteur,producteur2,producer",
     .description = "OpenDataSoft dataset thermographie-aerienne-ville-de-bruxelles "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -884,13 +889,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/capteurs-de-flux-velos-et-trottinettes-geres-par-bruxelles-mobilite/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/capteurs-de-flux-velos-et-trottinettes-geres-par-bruxelles-mobilite/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "device_name,adresse_fr,adresse_nl,commune",
     .description = "OpenDataSoft dataset "
       "capteurs-de-flux-velos-et-trottinettes-geres-par-bruxelles-mobilite "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -903,13 +908,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/quartiers-du-monitoring-des-quartiers-ibsa-perspective-rbc/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/quartiers-du-monitoring-des-quartiers-ibsa-perspective-rbc/records?limit=100&offset=0&order_by=inspire_id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr_nl,namefre,namedut",
+    .id_keys = "inspire_id",
     .description = "OpenDataSoft dataset "
       "quartiers-du-monitoring-des-quartiers-ibsa-perspective-rbc on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -922,13 +928,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/medecins-generalistes-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/medecins-generalistes-vbx/records?limit=100&offset=0&order_by=google_maps%2Ccategory_fr%2Curl_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "address_fr,address_nl,category_fr,category_nl",
     .description = "OpenDataSoft dataset medecins-generalistes-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -939,13 +945,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/comites-proprete/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/comites-proprete/records?limit=100&offset=0&order_by=nom_du_comite_proprete",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_du_comite_proprete,naam_netheidscomite,nom_de_la_structure_d_accueil,naam_ontvangststructuur",
     .description = "OpenDataSoft dataset comites-proprete on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -957,13 +963,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-visiteurs-vues-par-page-site-web-ville-de-bruxelles-aantal-bezoekers-weergaven-per-pagina-website-stad-brussel/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-visiteurs-vues-par-page-site-web-ville-de-bruxelles-aantal-bezoekers-weergaven-per-pagina-website-stad-brussel/records?limit=100&offset=0&order_by=page_title_and_screen_class%2Cyear",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "page_title_and_screen_class",
     .description = "OpenDataSoft dataset "
       "nombre-visiteurs-vues-par-page-site-web-ville-de-bruxelles-aantal-bezoekers-weergaven-per-pagina-website-stad-brussel "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -976,7 +982,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/mouvement-de-la-population-depuis-1992-ville-de-bruxelles/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/mouvement-de-la-population-depuis-1992-ville-de-bruxelles/records?limit=100&offset=0&order_by=mouvements_depuis_une_autre_commune_belge_immigrations_internes",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -995,13 +1001,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/academies-francophones-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/academies-francophones-vbx/records?limit=100&offset=0&order_by=address_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset academies-francophones-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1013,13 +1019,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/consultations-pour-enfants-one-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/consultations-pour-enfants-one-vbx/records?limit=100&offset=0&order_by=address_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset consultations-pour-enfants-one-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1032,13 +1038,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/lieux_culturels_touristiques_evenementiels_visitbrussels_vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/lieux_culturels_touristiques_evenementiels_visitbrussels_vbx/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "translations_fr_name,translations_nl_name,translations_fr_address_line1,translations_nl_address_line1",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "lieux_culturels_touristiques_evenementiels_visitbrussels_vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1051,13 +1058,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_bureaux_de_police/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_bureaux_de_police/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "src_name_fr,src_name_nl,src_address_nl,address_fr",
     .description = "OpenDataSoft dataset bruxelles_bureaux_de_police on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1069,13 +1076,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-velos-rencensees-par-parking-brussels-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-velos-rencensees-par-parking-brussels-vbx/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "places-de-parking-velos-rencensees-par-parking-brussels-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1088,13 +1096,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2023/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2023/records?limit=100&offset=0&order_by=beneficiaire_begunstigde%2Cmontant_prevu_au_budget_2023_bedrag_voorzien_op_begroting_2023",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_de_la_subvention_naam_van_de_subsidie,l_objet_de_la_subvention_doel_van_de_subsidie,beneficiaire_begunstigde",
     .description = "OpenDataSoft dataset "
       "subsides-ville-de-bruxelles-subsidies-stad-brussel-2023 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1107,13 +1115,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_lieux_culturels/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_lieux_culturels/records?limit=100&offset=0&order_by=description",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description,adresse,adres,lieu",
     .description = "OpenDataSoft dataset bruxelles_lieux_culturels on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1125,13 +1133,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_canisite/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_canisite/records?limit=100&offset=0&order_by=address_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "address_fr,address_nl,type_fr,type_nl",
     .description = "OpenDataSoft dataset bruxelles_canisite on opendata.brussel.be, "
       "a portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -1143,13 +1151,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/stations-villo-bruxelles-rbc/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/stations-villo-bruxelles-rbc/records?limit=100&offset=0&order_by=villo_id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_nl,address_fr",
+    .id_keys = "villo_id",
     .description = "OpenDataSoft dataset stations-villo-bruxelles-rbc on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1161,13 +1170,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/theatres/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/theatres/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset theatres on opendata.brussel.be, a portal "
       "new to the tree in batch 67 (own dataset). Explore v2.1 records, "
       "offset paging." },
@@ -1179,13 +1188,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/toilettes-urinoirs-publics-openbare-toiletten-urinoirs-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/toilettes-urinoirs-publics-openbare-toiletten-urinoirs-vbx/records?limit=100&offset=0&order_by=ref_id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "building_name_fr,building_name_nl,address_modified_fr,address_modified_nl",
+    .id_keys = "ref_id",
     .description = "OpenDataSoft dataset "
       "toilettes-urinoirs-publics-openbare-toiletten-urinoirs-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1198,13 +1208,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_arbres_remarquables/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_arbres_remarquables/records?limit=100&offset=0&order_by=id_arbres_cms",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_fr,nom_nl,nom_la",
+    .id_keys = "id_arbres_cms",
     .description = "OpenDataSoft dataset bruxelles_arbres_remarquables on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1216,13 +1227,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/panneaux-affichage-publicitaire-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/panneaux-affichage-publicitaire-vbx/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "address_fr,address_nl,category_fr,category_nl",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset panneaux-affichage-publicitaire-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1233,13 +1245,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bureaux-de-vote0/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bureaux-de-vote0/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset bureaux-de-vote0 on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -1251,13 +1264,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-livraison-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-livraison-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "zone_fr,zone_nl,zone_en,type_fr",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "places-de-parking-livraison-recensees-par-bruxelles-mobilite-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -1271,13 +1285,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/evolution-moyenne-annuelle-demandeurs-d-emploi-inoccupes-par-commune-genre-niveau-etudes-rbc/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/evolution-moyenne-annuelle-demandeurs-d-emploi-inoccupes-par-commune-genre-niveau-etudes-rbc/records?limit=100&offset=0&order_by=femmes_pc",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "commune,gemeente",
     .description = "OpenDataSoft dataset "
       "evolution-moyenne-annuelle-demandeurs-d-emploi-inoccupes-par-commune-genre-niveau-etudes-rbc "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -1290,7 +1304,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/gares-arrets-de-train-et-departs-temps-reel-treinstations-stopplaatsen-en-realtime-vertrekken/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/gares-arrets-de-train-et-departs-temps-reel-treinstations-stopplaatsen-en-realtime-vertrekken/records?limit=100&offset=0&order_by=taf_tap_code",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -1309,13 +1323,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/logements-passifs-et-basse-energie-regie-fonciere-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/logements-passifs-et-basse-energie-regie-fonciere-vbx/records?limit=100&offset=0&order_by=biens_et_peb_lot",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "biens_et_peb_rue_et_ndeg,biens_et_peb_quartier,biens_et_peb_categorie_de_logement,categorie_en",
     .description = "OpenDataSoft dataset "
       "logements-passifs-et-basse-energie-regie-fonciere-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1328,13 +1342,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/permis-urbanisme-delivres-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/permis-urbanisme-delivres-vbx/records?limit=100&offset=0&order_by=categorie_principale_code%2Cannee",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "categorie_principale_fr,categorie_principale_nl",
     .description = "OpenDataSoft dataset permis-urbanisme-delivres-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1346,13 +1360,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2022/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2022/records?limit=100&offset=0&order_by=nom_du_beneficiaire_de_la_subvention_naam_begunstigde_van_de_subsidie%2Cmontant_prevu_au_budget_2022_bedrag_voorzien_op_begroting_2022",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_du_beneficiaire_de_la_subvention_naam_begunstigde_van_de_subsidie,nom_de_la_subvention_naam_van_de_subsidie,l_objet_de_la_subvention_doel_van_de_subsidie",
     .description = "OpenDataSoft dataset "
       "subsides-ville-de-bruxelles-subsidies-stad-brussel-2022 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1365,13 +1379,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/potagers-collectifs-collectieve-moestuinen/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/potagers-collectifs-collectieve-moestuinen/records?limit=100&offset=0&order_by=_goid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,location_fr,location_nl",
     .description = "OpenDataSoft dataset potagers-collectifs-collectieve-moestuinen "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -1383,13 +1397,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2021/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2021/records?limit=100&offset=0&order_by=montant_engage_tvac_vastgelegd_bedrag_btwi%2Cdate_du_marche_datum_van_de_opdracht%2Cville_de_bruxelles_departement_stad_brussel_departement",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "ville_de_bruxelles_departement_stad_brussel_departement,beneficiaires_operateur_economique_a_qui_le_marche_a_ete_attribue_begunstigden_onderneming_aan_wie_d",
     .description = "OpenDataSoft dataset "
       "marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2021 "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -1402,13 +1416,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/fontaines-ou-pieces-d-eau-voiries-regionales-rbc/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/fontaines-ou-pieces-d-eau-voiries-regionales-rbc/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "fr_name,du_name,commune,ifu_type",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "fontaines-ou-pieces-d-eau-voiries-regionales-rbc on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1421,13 +1436,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/water-bottle-network-of-the-city-of-brussels/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/water-bottle-network-of-the-city-of-brussels/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "water-bottle-network-of-the-city-of-brussels on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1439,13 +1455,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/institutions_europeennes_ue/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/institutions_europeennes_ue/records?limit=100&offset=0&order_by=id_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "adresse_fr_en,adresse_nl,lieu_fr,lieu_nl",
     .description = "OpenDataSoft dataset institutions_europeennes_ue on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1457,13 +1473,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/maisons-des-enfants-huizen-voor-het-kind/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/maisons-des-enfants-huizen-voor-het-kind/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset maisons-des-enfants-huizen-voor-het-kind on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1475,13 +1491,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/panneaux-d-affichage-electoral-de-la-ville-de-bruxelles/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/panneaux-d-affichage-electoral-de-la-ville-de-bruxelles/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "adresse,adres,commune,gemeente",
     .description = "OpenDataSoft dataset "
       "panneaux-d-affichage-electoral-de-la-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1495,13 +1511,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-boxes-securises-velos-et-velos-cargo-geres-par-cycloparking/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-boxes-securises-velos-et-velos-cargo-geres-par-cycloparking/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "places-de-parking-boxes-securises-velos-et-velos-cargo-geres-par-cycloparking "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -1514,13 +1531,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/limites-administratives-des-communes-en-region-de-bruxelles-capitale/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/limites-administratives-des-communes-en-region-de-bruxelles-capitale/records?limit=100&offset=0&order_by=ogc_fid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,inspire_id",
     .description = "OpenDataSoft dataset "
       "limites-administratives-des-communes-en-region-de-bruxelles-capitale "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -1533,7 +1550,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/parcs_et_jardins_publics/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/parcs_et_jardins_publics/records?limit=100&offset=0&order_by=google_maps",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -1551,13 +1568,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/description-des-batiments-de-la-grand-place/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/description-des-batiments-de-la-grand-place/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset description-des-batiments-de-la-grand-place "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -1569,13 +1587,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-2025-ville-de-bruxelles-overheidsopdrachten-2025-stad-brussel/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-2025-ville-de-bruxelles-overheidsopdrachten-2025-stad-brussel/records?limit=100&offset=0&order_by=vastgelegd_bedrag_btwi_montant_engage_tvac%2Cbegunstigden_beneficiaires%2Cref_bestek_ref_csc",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "stad_brussel_departement_bruxelles_ville_departement,type_overheidsopdracht_type_de_marche_public,begunstigden_beneficiaires",
     .description = "OpenDataSoft dataset "
       "marches-publics-2025-ville-de-bruxelles-overheidsopdrachten-2025-stad-brussel "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -1588,13 +1606,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/points-de-collecte-des-huiles-usagees-oliobox-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/points-de-collecte-des-huiles-usagees-oliobox-vbx/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "points-de-collecte-des-huiles-usagees-oliobox-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1607,13 +1626,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/surveillance-de-la-qualite-des-eaux-souterraines-en-rbc/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/surveillance-de-la-qualite-des-eaux-souterraines-en-rbc/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_gw_ref,naam_gw_ref,nom_gwb_fr,naam_gwb_nl",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "surveillance-de-la-qualite-des-eaux-souterraines-en-rbc on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1626,13 +1646,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2023/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2023/records?limit=100&offset=0&order_by=montant_engage_tvac_vastgelegd_bedrag_btwi%2Cdate_du_marche_datum_van_de_opdracht%2Cbruxelles_ville_departement_stad_brussel_departement",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "bruxelles_ville_departement_stad_brussel_departement,beneficiaires_operateur_economique_a_qui_le_marche_a_ete_attribue_begunstigden_onderneming_aan_wie_d",
     .description = "OpenDataSoft dataset "
       "marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2023 "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -1645,13 +1665,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2024/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2024/records?limit=100&offset=0&order_by=nom_du_beneficiaire_de_la_subvention_naam_begunstigde_van_de_subsidie%2Cmontant_prevu_au_budget_2024_bedrag_voorzien_op_begroting_2024",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_du_beneficiaire_de_la_subvention_naam_begunstigde_van_de_subsidie,nom_de_la_subvention_naam_van_de_subsidie,objet_du_subside_doel_van_de_subsidie",
     .description = "OpenDataSoft dataset "
       "subsides-ville-de-bruxelles-subsidies-stad-brussel-2024 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1664,13 +1684,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2019/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2019/records?limit=100&offset=0&order_by=beneficiaire_begunstigde%2Cnumero_bce_kbo_nummer%2Cbudget_2019_begroting_2019",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_du_subside_naam_subsidie,objet_du_subside_doel_van_de_subsidie,beneficiaire_begunstigde",
     .description = "OpenDataSoft dataset "
       "subsides-ville-de-bruxelles-subsidies-stad-brussel-2019 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1683,13 +1703,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/reseau-chiens-admis-de-la-ville-de-bruxelles/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/reseau-chiens-admis-de-la-ville-de-bruxelles/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,address_fr,address_nl,type_fr",
     .description = "OpenDataSoft dataset "
       "reseau-chiens-admis-de-la-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1702,13 +1722,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/parcours_street_art/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/parcours_street_art/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,artist_name,name_nl,name_en",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset parcours_street_art on opendata.brussel.be, "
       "a portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -1721,13 +1742,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/arbres-bomen-vbx-be-bm/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/arbres-bomen-vbx-be-bm/records?limit=100&offset=0&order_by=id%2Cgoogle_maps%2Cpostal_code",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "address_fr,id",
     .description = "OpenDataSoft dataset arbres-bomen-vbx-be-bm on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1739,13 +1760,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-pmr-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-pmr-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "zone_fr,zone_nl,zone_en,type_fr",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "places-de-parking-pmr-recensees-par-bruxelles-mobilite-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1758,13 +1780,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/aide-numerique-sur-le-territoire-de-la-ville-de-bruxelles/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/aide-numerique-sur-le-territoire-de-la-ville-de-bruxelles/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_fr_en,nom_nl,adresse_fr_en,adresse_nl",
     .description = "OpenDataSoft dataset "
       "aide-numerique-sur-le-territoire-de-la-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1777,13 +1799,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-autocars-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-autocars-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "zone_fr,zone_nl,zone_en,type_fr",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "places-de-parking-autocars-recensees-par-bruxelles-mobilite-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -1796,13 +1819,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/menages_rbc_statbel/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/menages_rbc_statbel/records?limit=100&offset=0&order_by=%60grand_total%60%2C%601_menages_d_une_personne%60",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location_fr,location_nl",
     .description = "OpenDataSoft dataset menages_rbc_statbel on opendata.brussel.be, "
       "a portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -1813,13 +1836,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=100&offset=0&order_by=nom_de_la_fresque",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_de_la_fresque,naam_fresco_nl,adresse_fr,adres_nl",
     .description = "OpenDataSoft dataset bruxelles_parcours_bd on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1831,13 +1854,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/points-de-collecte-textiles-vetements-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/points-de-collecte-textiles-vetements-vbx/records?limit=100&offset=0&order_by=address_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "address_fr,address_nl,type_fr,type_nl",
     .description = "OpenDataSoft dataset points-de-collecte-textiles-vetements-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -1849,13 +1872,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bureaux-accueil-primo-arrivants-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bureaux-accueil-primo-arrivants-vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset bureaux-accueil-primo-arrivants-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1867,13 +1890,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/permis-urbanisme-environnement-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/permis-urbanisme-environnement-vbx/records?limit=100&offset=0&order_by=categorie_principale_code%2Ctotal_global%2Cdomaine_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "categorie_principale_nl,categorie_principale_fr",
     .description = "OpenDataSoft dataset permis-urbanisme-environnement-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1885,13 +1908,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/dropzones-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/dropzones-vbx/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "type_en,id",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset dropzones-vbx on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -1903,13 +1927,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/resultats-des-elections-communales-ville-de-bruxelles-depuis-1976/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/resultats-des-elections-communales-ville-de-bruxelles-depuis-1976/records?limit=100&offset=0&order_by=voix",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "parti",
     .description = "OpenDataSoft dataset "
       "resultats-des-elections-communales-ville-de-bruxelles-depuis-1976 "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -1921,7 +1945,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/1970_1981_1991_1992_now_pop_vbx_genre_source_statbel/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/1970_1981_1991_1992_now_pop_vbx_genre_source_statbel/records?limit=100&offset=0&order_by=homme",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -1941,13 +1965,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/salles-de-cinema-et-autres-lieux-de-projection/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/salles-de-cinema-et-autres-lieux-de-projection/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,address_fr,address_nl,category_fr",
     .description = "OpenDataSoft dataset "
       "salles-de-cinema-et-autres-lieux-de-projection on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1961,13 +1985,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/real-time-air-quality-pm10-fine-particulate-matter/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/real-time-air-quality-pm10-fine-particulate-matter/records?limit=100&offset=0&order_by=fid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "ab_name,nom_commune,fid",
+    .id_keys = "fid",
     .description = "OpenDataSoft dataset "
       "real-time-air-quality-pm10-fine-particulate-matter on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1980,13 +2005,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/real-time-air-quality-ozone-o3/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/real-time-air-quality-ozone-o3/records?limit=100&offset=0&order_by=fid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "ab_name,nom_commune,fid",
+    .id_keys = "fid",
     .description = "OpenDataSoft dataset real-time-air-quality-ozone-o3 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1999,13 +2025,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/real-time-air-quality-pm25-fine-particulate-matter/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/real-time-air-quality-pm25-fine-particulate-matter/records?limit=100&offset=0&order_by=fid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "ab_name,nom_commune,fid",
+    .id_keys = "fid",
     .description = "OpenDataSoft dataset "
       "real-time-air-quality-pm25-fine-particulate-matter on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2018,13 +2045,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/disponibilite-en-temps-reel-des-velos-villo-rbc/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/disponibilite-en-temps-reel-des-velos-villo-rbc/records?limit=100&offset=0&order_by=number",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset "
       "disponibilite-en-temps-reel-des-velos-villo-rbc on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2037,7 +2064,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/projection_population_hf_2025_2034_ibsa_par_age/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/projection_population_hf_2025_2034_ibsa_par_age/records?limit=100&offset=0&order_by=total",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -2056,7 +2083,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/2005_2021_pop_vbx_revenus_source_statbel/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/2005_2021_pop_vbx_revenus_source_statbel/records?limit=100&offset=0&order_by=nombre_de_declarations_de_revenus_nets_imposables_nuls",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -2074,13 +2101,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/gebruikers-van-de-nederlandstalige-bibliotheken/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/gebruikers-van-de-nederlandstalige-bibliotheken/records?limit=100&offset=0&order_by=afdeling",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "afdeling",
     .description = "OpenDataSoft dataset "
       "gebruikers-van-de-nederlandstalige-bibliotheken on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2093,13 +2120,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/recycleries-ressourceries-repaircafes-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/recycleries-ressourceries-repaircafes-vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,address_fr,address_nl,type_fr",
     .description = "OpenDataSoft dataset recycleries-ressourceries-repaircafes-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -2111,13 +2138,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2019/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2019/records?limit=100&offset=0&order_by=montant_engage_tvac_vastgelegd_bedrag_btwi%2Cdate_du_marche_datum_van_de_opdracht%2Cbruxelles_ville_departement_stad_brussel_departement",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "bruxelles_ville_departement_stad_brussel_departement,beneficiaires_operateur_economique_a_qui_le_marche_a_ete_attribue_begunstigden_onderneming_aan_wie_d",
     .description = "OpenDataSoft dataset "
       "marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2019 "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -2129,7 +2156,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/suiveurs-des-comptes-twitter/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/suiveurs-des-comptes-twitter/records?limit=100&offset=0&order_by=francais",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -2147,7 +2174,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/ludotheques-en-region-de-bruxelles-capitale/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/ludotheques-en-region-de-bruxelles-capitale/records?limit=100&offset=0&order_by=nom",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -2165,13 +2192,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/uitleningen-en-raadplegingen-in-de-nederlandstalige-bibliotheken/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/uitleningen-en-raadplegingen-in-de-nederlandstalige-bibliotheken/records?limit=100&offset=0&order_by=gebruik",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "gebruik",
     .description = "OpenDataSoft dataset "
       "uitleningen-en-raadplegingen-in-de-nederlandstalige-bibliotheken "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -2184,13 +2211,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/fietsvelo-fietspaden-in-park-bandes-cyclables-dans-les-parcs/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/fietsvelo-fietspaden-in-park-bandes-cyclables-dans-les-parcs/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "commune,type_fr,type_nl,gml_id",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "fietsvelo-fietspaden-in-park-bandes-cyclables-dans-les-parcs on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2203,13 +2231,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/centres-planning-familial-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/centres-planning-familial-vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset centres-planning-familial-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2221,13 +2249,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/patrimoine-artistique-de-voiries-regionales-monuments/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/patrimoine-artistique-de-voiries-regionales-monuments/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "fr_name,du_name,du_ad_1,fr_ad_1",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "patrimoine-artistique-de-voiries-regionales-monuments on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2240,13 +2269,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/etudes-ville-de-bruxelles-studies-stad-brussel-2021/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/etudes-ville-de-bruxelles-studies-stad-brussel-2021/records?limit=100&offset=0&order_by=cout_de_l_etude_tvac_en_euro_kost_van_de_studie_btwi_in_euro%2Cauteur_de_l_etude_personne_morale_ou_physique_a_qui_l_etude_a_ete_confiee_auteur_van_de_studie_recht",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "objet_de_l_etude,bruxelles_departement_brussel_departement,voorwerp_van_de_studie,auteur_de_l_etude_personne_morale_ou_physique_a_qui_l_etude_a_ete_confiee_auteur_van_de_studie_recht",
     .description = "OpenDataSoft dataset "
       "etudes-ville-de-bruxelles-studies-stad-brussel-2021 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2259,7 +2288,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bxl_demo_evolutionpop_tranchesage/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bxl_demo_evolutionpop_tranchesage/records?limit=100&offset=0&order_by=annee",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -2276,13 +2305,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/poubellesintelligentes/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/poubellesintelligentes/records?limit=100&offset=0&order_by=lieu",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "lieu,place,plaats",
     .description = "OpenDataSoft dataset poubellesintelligentes on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2294,7 +2323,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/projection_population_hf_2025_2034_ibsa_par_annee/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/projection_population_hf_2025_2034_ibsa_par_annee/records?limit=100&offset=0&order_by=annee",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -2313,13 +2342,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/maisons-de-repos-pour-personnes-agees-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/maisons-de-repos-pour-personnes-agees-vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset maisons-de-repos-pour-personnes-agees-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -2331,13 +2360,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/points-acces-wifi-gratuit-wifibrussels-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/points-acces-wifi-gratuit-wifibrussels-vbx/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address,category",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset points-acces-wifi-gratuit-wifibrussels-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -2348,13 +2378,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/dechets/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/dechets/records?limit=100&offset=0&order_by=dechets_en_tonnes",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "dechets_en_tonnes,aantal_ton_afval,tons_of_waste",
     .description = "OpenDataSoft dataset dechets on opendata.brussel.be, a portal "
       "new to the tree in batch 67 (own dataset). Explore v2.1 records, "
       "offset paging." },
@@ -2366,13 +2396,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/etudes-ville-de-bruxelles-studies-stad-brussel-2024/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/etudes-ville-de-bruxelles-studies-stad-brussel-2024/records?limit=100&offset=0&order_by=cout_de_l_etude_tvac_en_euro_kost_van_de_studie_btwi_in_euro%2Cauteur_de_l_etude_personne_morale_ou_physique_a_qui_l_etude_a_ete_confiee_auteur_van_de_studie_recht",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "objet_de_l_etude,bruxelles_departement_brussel_departement,voorwerp_van_de_studie,auteur_de_l_etude_personne_morale_ou_physique_a_qui_l_etude_a_ete_confiee_auteur_van_de_studie_recht",
     .description = "OpenDataSoft dataset "
       "etudes-ville-de-bruxelles-studies-stad-brussel-2024 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2385,13 +2415,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/maisons-medicales-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/maisons-medicales-vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset maisons-medicales-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2403,7 +2433,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-deleves-dans-les-ecoles-gerees-par-la-ville-de-bruxelles/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-deleves-dans-les-ecoles-gerees-par-la-ville-de-bruxelles/records?limit=100&offset=0&order_by=enseignement_fondamental_basisonderwijs",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -2423,13 +2453,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/centres-culturels-francophones-et-neerlandophones-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/centres-culturels-francophones-et-neerlandophones-vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset "
       "centres-culturels-francophones-et-neerlandophones-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2442,13 +2472,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-motos-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-motos-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "zone_fr,zone_nl,zone_en,type_fr",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "places-de-parking-motos-recensees-par-bruxelles-mobilite-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2460,13 +2491,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/pharmacies0/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/pharmacies0/records?limit=100&offset=0&order_by=id_shop",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "id_shop",
     .description = "OpenDataSoft dataset pharmacies0 on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -2478,7 +2510,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/prenoms-les-plus-populaires-ville-de-bruxelles/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/prenoms-les-plus-populaires-ville-de-bruxelles/records?limit=100&offset=0&order_by=prenom%2Cannee",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -2496,7 +2528,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/arrets-waterbus/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/arrets-waterbus/records?limit=100&offset=0&order_by=nom",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -2514,7 +2546,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/projection-de-levolution-de-la-population-bruxelloise-avec-soldes/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/projection-de-levolution-de-la-population-bruxelloise-avec-soldes/records?limit=100&offset=0&order_by=anna_c_e",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -2533,13 +2565,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/fontaines-ornementales-gerees-par-la-ville-de-bruxelles/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/fontaines-ornementales-gerees-par-la-ville-de-bruxelles/records?limit=100&offset=0&order_by=id_opendata",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_details_fr,address_fr",
+    .id_keys = "id_opendata",
     .description = "OpenDataSoft dataset "
       "fontaines-ornementales-gerees-par-la-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2552,13 +2585,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bxl_bourgmestres/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bxl_bourgmestres/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_naam_name",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset bxl_bourgmestres on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -2570,13 +2604,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/pompes-a-velo/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/pompes-a-velo/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,commune_gemeente,type_fr",
     .description = "OpenDataSoft dataset pompes-a-velo on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -2588,7 +2622,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/monuments-commemoratifs-de-la-guerre-de-1914-1918/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/monuments-commemoratifs-de-la-guerre-de-1914-1918/records?limit=100&offset=0&order_by=nom",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -2607,13 +2641,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/ifu-water-zones/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/ifu-water-zones/records?limit=100&offset=0&order_by=gml_id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,type_fr,type_nl",
+    .id_keys = "gml_id",
     .description = "OpenDataSoft dataset ifu-water-zones on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -2625,7 +2660,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/citoyens-dhonneur1/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/citoyens-dhonneur1/records?limit=100&offset=0&order_by=nom",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -2643,13 +2678,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-alimentaires-region-bruxelloise/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-alimentaires-region-bruxelloise/records?limit=100&offset=0&order_by=name_nl",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_nl,name_fr,street_source_fr,street_source_nl",
     .description = "OpenDataSoft dataset marches-alimentaires-region-bruxelloise on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2661,13 +2696,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/surveillance-de-la-qualite-biologique-des-eaux-de-surface-en-rbc/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/surveillance-de-la-qualite-biologique-des-eaux-de-surface-en-rbc/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "commune_fr,commune_nl,thematicid,localid",
     .description = "OpenDataSoft dataset "
       "surveillance-de-la-qualite-biologique-des-eaux-de-surface-en-rbc "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -2680,13 +2715,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2021/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2021/records?limit=100&offset=0&order_by=nom_du_beneficiaire_de_la_subvention_naam_begunstigde_van_de_subsidie%2Cmontant_octroye_toegekend_bedrag%2Carticle_budgetaire_begrotingsartikel",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_du_beneficiaire_de_la_subvention_naam_begunstigde_van_de_subsidie,nom_de_la_subvention_naam_van_de_subsidie,l_objet_de_la_subvention_doel_van_de_subsidie",
     .description = "OpenDataSoft dataset "
       "subsides-ville-de-bruxelles-subsidies-stad-brussel-2021 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2699,13 +2734,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/hopitaux-generaux/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/hopitaux-generaux/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset hopitaux-generaux on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -2717,13 +2752,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/arrets-bus-tram-metro-societes-transport-public-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/arrets-bus-tram-metro-societes-transport-public-vbx/records?limit=100&offset=0&order_by=google_maps%2Cgoogle_street_view%2Cname_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,category_fr,category_nl",
     .description = "OpenDataSoft dataset "
       "arrets-bus-tram-metro-societes-transport-public-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2736,13 +2771,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/amenagements-cyclables-par-type-rencenses-par-bruxelles-mobilite/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/amenagements-cyclables-par-type-rencenses-par-bruxelles-mobilite/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "type_fr,type_nl,gml_id",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "amenagements-cyclables-par-type-rencenses-par-bruxelles-mobilite "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -2755,13 +2791,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/capteurs-de-qualite-de-lair-en-belgique/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/capteurs-de-qualite-de-lair-en-belgique/records?limit=100&offset=0&order_by=fid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "ab_name,nom_commune,ab_area_type_of_station,region_fr",
+    .id_keys = "fid",
     .description = "OpenDataSoft dataset capteurs-de-qualite-de-lair-en-belgique on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2773,13 +2810,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/infrastructures-sportives-gerees-par-la-ville-de-bruxelles/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/infrastructures-sportives-gerees-par-la-ville-de-bruxelles/records?limit=100&offset=0&order_by=name_fr%2Curl_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset "
       "infrastructures-sportives-gerees-par-la-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2792,13 +2829,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/demandes-de-permis-environnement-introduites-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/demandes-de-permis-environnement-introduites-vbx/records?limit=100&offset=0&order_by=categorie_principale_fr%2Ccategorie_principale_code%2Cannee",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "categorie_principale_fr,categorie_principale_nl",
     .description = "OpenDataSoft dataset "
       "demandes-de-permis-environnement-introduites-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2811,13 +2848,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/voiries-regionales/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/voiries-regionales/records?limit=100&offset=0&order_by=type%2Croad_manager",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "type",
     .description = "OpenDataSoft dataset voiries-regionales on opendata.brussel.be, "
       "a portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -2829,13 +2866,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/etudes-ville-de-bruxelles-studies-stad-brussel-2022/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/etudes-ville-de-bruxelles-studies-stad-brussel-2022/records?limit=100&offset=0&order_by=cout_de_l_etude_tvac_en_euro_kost_van_de_studie_btwi_in_euro%2Cauteur_de_l_etude_personne_morale_ou_physique_a_qui_l_etude_a_ete_confiee_auteur_van_de_studie_recht",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "objet_de_l_etude,bruxelles_departement_brussel_departement,voorwerp_van_de_studie,auteur_de_l_etude_personne_morale_ou_physique_a_qui_l_etude_a_ete_confiee_auteur_van_de_studie_recht",
     .description = "OpenDataSoft dataset "
       "etudes-ville-de-bruxelles-studies-stad-brussel-2022 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2848,13 +2885,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bibliotheques_publiques_francophones_vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bibliotheques_publiques_francophones_vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset bibliotheques_publiques_francophones_vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2866,13 +2903,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bornes-de-recharge-pour-voitures-electriques-rbc/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bornes-de-recharge-pour-voitures-electriques-rbc/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "operator_name,location_type,connector_type",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "bornes-de-recharge-pour-voitures-electriques-rbc on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2886,13 +2924,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_distributeurs_bancaires/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_distributeurs_bancaires/records?limit=100&offset=0&order_by=google_maps",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "address_fr,address_nl",
     .description = "OpenDataSoft dataset bruxelles_distributeurs_bancaires on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2904,13 +2942,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/pop_vbx_prenoms_naissances/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/pop_vbx_prenoms_naissances/records?limit=100&offset=0&order_by=prenom%2Cfrequence",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "prenom",
     .description = "OpenDataSoft dataset pop_vbx_prenoms_naissances on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2921,13 +2959,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/webcams/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/webcams/records?limit=100&offset=0&order_by=id_reg_iot",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset webcams on opendata.brussel.be, a portal "
       "new to the tree in batch 67 (own dataset). Explore v2.1 records, "
       "offset paging." },
@@ -2939,13 +2977,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_centre_administratif_et_bureaux_de_liaison/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_centre_administratif_et_bureaux_de_liaison/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset "
       "bruxelles_centre_administratif_et_bureaux_de_liaison on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2958,13 +2996,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/stations-carsharing-cambio-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/stations-carsharing-cambio-vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset stations-carsharing-cambio-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2976,13 +3014,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2020/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2020/records?limit=100&offset=0&order_by=le_numero_de_bce_du_beneficiaire_de_la_subvention_kbo_nummer_van_de_begunstigde_van_de_subsidie%2Cmontant_octroye_toegekend_bedrag%2Carticle_budgetaire_begrotingsartikel",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_du_beneficiaire_de_la_subvention_naam_begunstigde_van_de_subsidie,nom_de_la_subvention_naam_van_de_subsidie,l_objet_de_la_subvention_doel_van_de_subsidie",
     .description = "OpenDataSoft dataset "
       "subsides-ville-de-bruxelles-subsidies-stad-brussel-2020 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2994,13 +3032,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_parkings_publics/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_parkings_publics/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,adres_,commune_gemeente",
     .description = "OpenDataSoft dataset bruxelles_parkings_publics on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3012,13 +3050,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bibliotheques_publiques_neerlandophones_vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bibliotheques_publiques_neerlandophones_vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset bibliotheques_publiques_neerlandophones_vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -3030,13 +3068,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/horodateurs-situes-sur-le-territoire-de-la-ville-de-bruxelles/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/horodateurs-situes-sur-le-territoire-de-la-ville-de-bruxelles/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "address_fr,address_nl,parking_zone_fr,parking_zone_nl",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "horodateurs-situes-sur-le-territoire-de-la-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3049,13 +3088,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-poids-lourds-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-poids-lourds-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "zone_fr,zone_nl,zone_en,type_fr",
     .description = "OpenDataSoft dataset "
       "places-de-parking-poids-lourds-recensees-par-bruxelles-mobilite-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -3068,13 +3107,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/points-de-collecte-compost-composts-de-quartier-worms-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/points-de-collecte-compost-composts-de-quartier-worms-vbx/records?limit=100&offset=0&order_by=nom_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_fr,address_fr,address_nl,management_fr",
     .description = "OpenDataSoft dataset "
       "points-de-collecte-compost-composts-de-quartier-worms-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3087,13 +3126,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/etudes-ville-de-bruxelles-studies-stad-brussel-2023/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/etudes-ville-de-bruxelles-studies-stad-brussel-2023/records?limit=100&offset=0&order_by=cout_de_l_etude_tvac_en_euro_kost_van_de_studie_btwi_in_euro%2Cauteur_de_l_etude_personne_morale_ou_physique_a_qui_l_etude_a_ete_confiee_auteur_van_de_studie_recht",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "objet_de_l_etude,bruxelles_departement_brussel_departement,voorwerp_van_de_studie,auteur_de_l_etude_personne_morale_ou_physique_a_qui_l_etude_a_ete_confiee_auteur_van_de_studie_recht",
     .description = "OpenDataSoft dataset "
       "etudes-ville-de-bruxelles-studies-stad-brussel-2023 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3106,13 +3145,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-reservees-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-reservees-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "type_fr,type_nl,type_en,zone_fr",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "places-de-parking-reservees-recensees-par-bruxelles-mobilite-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -3126,13 +3166,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bulles-a-verre-glasbollen/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bulles-a-verre-glasbollen/records?limit=100&offset=0&order_by=google_maps%2Cgoogle_street_view%2Caddress_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "address_fr,address_nl,category_fr,category_nl",
     .description = "OpenDataSoft dataset bulles-a-verre-glasbollen on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3144,13 +3184,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/centres-maisons-de-jeunes-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/centres-maisons-de-jeunes-vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset centres-maisons-de-jeunes-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3162,7 +3202,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-plein-air-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-plein-air-vbx/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -3180,13 +3220,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bornes-mybxl-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bornes-mybxl-vbx/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description_fr,description_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset bornes-mybxl-vbx on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -3198,13 +3238,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2022/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2022/records?limit=100&offset=0&order_by=montant_engage_tvac_vastgelegd_bedrag_btwi%2Cdate_du_marche_datum_van_de_opdracht%2Cbruxelles_ville_departement_stad_brussel_departement",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "bruxelles_ville_departement_stad_brussel_departement,beneficiaires_operateur_economique_a_qui_le_marche_a_ete_attribue_begunstigden_onderneming_aan_wie_d",
     .description = "OpenDataSoft dataset "
       "marches-publics-ville-de-bruxelles-overheidsopdrachten-stad-brussel-2022 "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -3217,13 +3257,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/etudes-ville-de-bruxelles-studies-stad-brussel-2025/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/etudes-ville-de-bruxelles-studies-stad-brussel-2025/records?limit=100&offset=0&order_by=montant_engage_tvac_vastgelegd_bedrag_btwi%2Cbeneficiaires_operateur_economique_a_qui_le_marche_a_ete_attribue_begunstigden_onderneming_aan_wie_d",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "objet_du_marche_voorwerp_van_de_opdracht,bruxelles_ville_departement_stad_brussel_departement,beneficiaires_operateur_economique_a_qui_le_marche_a_ete_attribue_begunstigden_onderneming_aan_wie_d",
     .description = "OpenDataSoft dataset "
       "etudes-ville-de-bruxelles-studies-stad-brussel-2025 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3236,13 +3276,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-visiteurs-site-web-ville-de-bruxelles-par-commune-belgique-aantal-bezoekers-website-stad-brussel-per-gemeente-belgie/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-visiteurs-site-web-ville-de-bruxelles-par-commune-belgique-aantal-bezoekers-website-stad-brussel-per-gemeente-belgie/records?limit=100&offset=0&order_by=municipality%2Cvisitors%2Cyear",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "municipality",
     .description = "OpenDataSoft dataset "
       "nombre-visiteurs-site-web-ville-de-bruxelles-par-commune-belgique-aantal-bezoekers-website-stad-brussel-per-gemeente-belgie "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -3254,13 +3294,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/grands_quartiers_vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/grands_quartiers_vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,name_fr_nl",
     .description = "OpenDataSoft dataset grands_quartiers_vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3273,13 +3313,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/ecoles-devoirs-fr-one-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/ecoles-devoirs-fr-one-vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,address_fr,address_nl,openinghours_fr",
     .description = "OpenDataSoft dataset ecoles-devoirs-fr-one-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3291,13 +3331,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/fontaines-d-eau-potable-gerees-par-la-ville-de-bruxelles/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/fontaines-d-eau-potable-gerees-par-la-ville-de-bruxelles/records?limit=100&offset=0&order_by=id_opendata",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_details_fr,address_details_nl",
+    .id_keys = "id_opendata",
     .description = "OpenDataSoft dataset "
       "fontaines-d-eau-potable-gerees-par-la-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3310,13 +3351,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/capteurs-de-bruit-en-region-de-bruxelles-capitale/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/capteurs-de-bruit-en-region-de-bruxelles-capitale/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "new_nom,nom_commune,gml_id",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "capteurs-de-bruit-en-region-de-bruxelles-capitale on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3329,13 +3371,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/arrets-collecto0/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/arrets-collecto0/records?limit=100&offset=0&order_by=gml_id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "gml_id",
     .description = "OpenDataSoft dataset arrets-collecto0 on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -3347,13 +3390,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/espaces-sportifs-publics-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/espaces-sportifs-publics-vbx/records?limit=100&offset=0&order_by=google_maps%2Cactivities_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset espaces-sportifs-publics-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3365,13 +3408,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/espaces-publics-de-sejour-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/espaces-publics-de-sejour-vbx/records?limit=100&offset=0&order_by=google_maps",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,category_fr,category_nl",
     .description = "OpenDataSoft dataset espaces-publics-de-sejour-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3383,13 +3426,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/demandes-de-permis-urbanisme-introduites-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/demandes-de-permis-urbanisme-introduites-vbx/records?limit=100&offset=0&order_by=categorie_principale_code%2Cannee",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "categorie_principale_fr,categorie_principale_nl",
     .description = "OpenDataSoft dataset "
       "demandes-de-permis-urbanisme-introduites-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3402,13 +3445,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-visiteurs-site-web-ville-de-bruxelles-par-pays-2009-2013-aantal-bezoekers-website-stad-brussel-per-land-2009-2013/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-visiteurs-site-web-ville-de-bruxelles-par-pays-2009-2013-aantal-bezoekers-website-stad-brussel-per-land-2009-2013/records?limit=100&offset=0&order_by=country%2Cyear",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "country",
     .description = "OpenDataSoft dataset "
       "nombre-visiteurs-site-web-ville-de-bruxelles-par-pays-2009-2013-aantal-bezoekers-website-stad-brussel-per-land-2009-2013 "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -3421,13 +3464,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-taxis-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/places-de-parking-taxis-recensees-par-bruxelles-mobilite-vbx/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "zone_fr,zone_nl,zone_en,type_fr",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "places-de-parking-taxis-recensees-par-bruxelles-mobilite-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3440,13 +3484,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bureaux-cpas-bruxelles-vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bureaux-cpas-bruxelles-vbx/records?limit=100&offset=0&order_by=name_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,address_fr,address_nl",
     .description = "OpenDataSoft dataset bureaux-cpas-bruxelles-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3458,13 +3502,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/pandemie-covid-19-statistiques-mondiales-arretees-au-31-mars-2023/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/pandemie-covid-19-statistiques-mondiales-arretees-au-31-mars-2023/records?limit=100&offset=0&order_by=total_for_month%2Cdate%2Czone",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "sub_zone,zone,category",
     .description = "OpenDataSoft dataset "
       "pandemie-covid-19-statistiques-mondiales-arretees-au-31-mars-2023 "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -3477,13 +3521,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/pistes-cyclables-marquees/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/pistes-cyclables-marquees/records?limit=100&offset=0&order_by=gid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "type_fr,type_nl",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset pistes-cyclables-marquees on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3494,7 +3539,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_musees/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/bruxelles_musees/records?limit=100&offset=0&order_by=nom",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -3512,13 +3557,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/ppas/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/ppas/records?limit=100&offset=0&order_by=cityref%2Cnamefr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "namefr,namedut",
     .description = "OpenDataSoft dataset ppas on opendata.brussel.be, a portal new "
       "to the tree in batch 67 (own dataset). Explore v2.1 records, "
       "offset paging." },
@@ -3530,13 +3575,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-visiteurs-site-web-ville-de-bruxelles-par-pays-aantal-bezoekers-website-stad-brussel-per-land/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/nombre-visiteurs-site-web-ville-de-bruxelles-par-pays-aantal-bezoekers-website-stad-brussel-per-land/records?limit=100&offset=0&order_by=country%2Cyear",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "country",
     .description = "OpenDataSoft dataset "
       "nombre-visiteurs-site-web-ville-de-bruxelles-par-pays-aantal-bezoekers-website-stad-brussel-per-land "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -3549,13 +3594,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/distributeurs_graines_contraceptives_pigeons_vbx/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/distributeurs_graines_contraceptives_pigeons_vbx/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "address_fr,address_nl",
     .description = "OpenDataSoft dataset "
       "distributeurs_graines_contraceptives_pigeons_vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3568,13 +3613,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2025/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/subsides-ville-de-bruxelles-subsidies-stad-brussel-2025/records?limit=100&offset=0&order_by=le_numero_de_bce_du_beneficiaire_de_la_subvention_kbo_nummer_van_de_begunstigde_van_de_subsidie%2Cmontant_prevu_au_budget_bedrag_voorzien_op_begroting%2Carticle_budgetaire_begrotings_artikel",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nom_du_beneficiaire_de_la_subvention_naam_begunstigde_van_de_subsidie,nom_de_la_subvention_naam_van_de_subsidie,objet_du_subside_doel_van_de_subsidie",
     .description = "OpenDataSoft dataset "
       "subsides-ville-de-bruxelles-subsidies-stad-brussel-2025 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3587,7 +3632,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/population-ville-de-bruxelles-par-classe-dage-genre-nationalite-etat-civil/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/population-ville-de-bruxelles-par-classe-dage-genre-nationalite-etat-civil/records?limit=100&offset=0&order_by=total_country%2Cage_class%2Cmarital_status_fr",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -3606,13 +3651,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/maisons-de-quartier-ville-de-bruxelles-buurthuizen-stad-brussel/records?limit=100&offset=0",
+    .url = "https://opendata.brussel.be/api/explore/v2.1/catalog/datasets/maisons-de-quartier-ville-de-bruxelles-buurthuizen-stad-brussel/records?limit=100&offset=0&order_by=id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_fr,name_nl,name_en,address_fr",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "maisons-de-quartier-ville-de-bruxelles-buurthuizen-stad-brussel "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -3624,13 +3670,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-cubberla-creek/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-cubberla-creek/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset flood-study-cubberla-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3642,13 +3688,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2014-2015/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2014-2015/records?limit=100&offset=0&order_by=site_no",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "site_name,location_description",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2014-2015 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -3660,13 +3706,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/suburb-name-text-lookup/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/suburb-name-text-lookup/records?limit=100&offset=0&order_by=index",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "suburb_proper,suburb_upper,suburb_lower,suburb_proper_ods_admin_divisions",
     .description = "OpenDataSoft dataset suburb-name-text-lookup on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3678,13 +3724,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2013-2014/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2013-2014/records?limit=100&offset=0&order_by=site_no",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "site_name,location_description",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2013-2014 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -3697,13 +3743,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2016-2017/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2016-2017/records?limit=100&offset=0&order_by=site_no",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "site_name,location_description",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2016-2017 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -3716,13 +3762,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/superseded-flood-study-lota-creek-oct-2014/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/superseded-flood-study-lota-creek-oct-2014/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset superseded-flood-study-lota-creek-oct-2014 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
       "batch 67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3734,13 +3780,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-airport-sub-model/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-airport-sub-model/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-airport-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -3752,7 +3798,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2020/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2020/records?limit=100&offset=0&order_by=GlobalID",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -3770,13 +3816,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-enoggera-sub-model/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-enoggera-sub-model/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-enoggera-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -3788,7 +3834,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2022/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2022/records?limit=100&offset=0&order_by=area_of_bl%2Cblock_no",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -3805,13 +3851,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2025/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2025/records?limit=100&offset=0&order_by=globalid_1",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "parkname,locality",
     .description = "OpenDataSoft dataset planned-burns-2025 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3822,13 +3868,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2023/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2023/records?limit=100&offset=0&order_by=FID",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "FID",
     .description = "OpenDataSoft dataset planned-burns-2023 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3839,13 +3886,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-wolston-creek/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-wolston-creek/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset flood-study-wolston-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3857,13 +3904,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2022-2023/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2022-2023/records?limit=100&offset=0&order_by=site_no",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "site_name,location_description",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2022-2023 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -3876,13 +3923,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-upper-bulimba-sub-model/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-upper-bulimba-sub-model/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-upper-bulimba-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -3895,13 +3942,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2018-2019/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2018-2019/records?limit=100&offset=0&order_by=site_no",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "site_name,location_description",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2018-2019 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -3913,13 +3960,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/structures-culvert/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/structures-culvert/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "assetid,planno",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset structures-culvert on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3931,13 +3979,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-middle-bulimba-sub-model/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-middle-bulimba-sub-model/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-middle-bulimba-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -3950,13 +3998,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-coastal-hazard-overlay-sea-level-rise/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-coastal-hazard-overlay-sea-level-rise/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-coastal-hazard-overlay-sea-level-rise "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
       "batch 67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3968,13 +4017,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-air-quality-corridor-overlay-tunnel-ventilation-stack-buffer/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-air-quality-corridor-overlay-tunnel-ventilation-stack-buffer/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
     .description = "OpenDataSoft dataset "
       "cp14-transport-air-quality-corridor-overlay-tunnel-ventilation-stack-buffer "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -3987,13 +4036,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-ltip-other-plans-stormwater-backflow-prevention-device/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-ltip-other-plans-stormwater-backflow-prevention-device/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,ltip_id",
     .description = "OpenDataSoft dataset "
       "cp14-ltip-other-plans-stormwater-backflow-prevention-device on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4006,13 +4055,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-neighbourhood-plan-indicative-precinct/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-neighbourhood-plan-indicative-precinct/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description,lp,lp_prec,lp_prec_code",
     .description = "OpenDataSoft dataset cp14-neighbourhood-plan-indicative-precinct "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
       "batch 67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4024,13 +4073,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-key-civic-space-and-iconic-vista-overlay/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-key-civic-space-and-iconic-vista-overlay/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
     .description = "OpenDataSoft dataset "
       "cp14-key-civic-space-and-iconic-vista-overlay on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4044,13 +4093,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-critical-infrastructure-movement-network-overlay-assets-infrastructure-move/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-critical-infrastructure-movement-network-overlay-assets-infrastructure-move/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
     .description = "OpenDataSoft dataset "
       "cp14-critical-infrastructure-movement-network-overlay-assets-infrastructure-move "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4063,13 +4112,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-air-quality-corridor-overlay-tunnel-ventilation-stack/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-air-quality-corridor-overlay-tunnel-ventilation-stack/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
     .description = "OpenDataSoft dataset "
       "cp14-transport-air-quality-corridor-overlay-tunnel-ventilation-stack "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4082,7 +4131,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-extractive-resources-overlay-mining-tenement/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-extractive-resources-overlay-mining-tenement/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -4101,13 +4150,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-critical-infrastructure-movement-network-overlay-routes/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-critical-infrastructure-movement-network-overlay-routes/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-critical-infrastructure-movement-network-overlay-routes on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4120,13 +4170,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-ltip-other-plans-stormwater-natural-channel-areas/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-ltip-other-plans-stormwater-natural-channel-areas/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,ltip_id,ltip_cattype",
     .description = "OpenDataSoft dataset "
       "cp14-ltip-other-plans-stormwater-natural-channel-areas on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4140,13 +4190,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-airport-environs-overlay-bird-bat-strike-zone-public-safety-bird-bat-strike/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-airport-environs-overlay-bird-bat-strike-zone-public-safety-bird-bat-strike/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
     .description = "OpenDataSoft dataset "
       "cp14-airport-environs-overlay-bird-bat-strike-zone-public-safety-bird-bat-strike "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4159,13 +4209,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-pullen-pullen-sub-model/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-pullen-pullen-sub-model/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-pullen-pullen-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4179,13 +4229,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-active-and-public-transport-future-ferry-terminal-new-and-upgrade/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-active-and-public-transport-future-ferry-terminal-new-and-upgrade/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id,suburb_reference",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-active-and-public-transport-future-ferry-terminal-new-and-upgrade "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4198,13 +4248,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-existing-land-acquisition/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-existing-land-acquisition/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-stormwater-existing-land-acquisition on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4217,13 +4268,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-air-quality-corridor-overlay-transport-air-quality-corridor-a/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-air-quality-corridor-overlay-transport-air-quality-corridor-a/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "cat_desc,ovl_cat,ovl2_desc,ovl2_cat",
     .description = "OpenDataSoft dataset "
       "cp14-transport-air-quality-corridor-overlay-transport-air-quality-corridor-a "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4236,13 +4287,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-existing-natural-bioretention-swale/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-existing-natural-bioretention-swale/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id,lgip_grid_mapref",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-stormwater-existing-natural-bioretention-swale on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4255,7 +4306,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-service-catchments-transport-road-network/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-service-catchments-transport-road-network/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -4273,13 +4324,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-history/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-history/records?limit=100&offset=0&order_by=globalid_1",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "parkname",
     .description = "OpenDataSoft dataset planned-burns-history on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4290,13 +4341,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2017/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2017/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "fuel_type,burn_type,globalid,parkname",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset planned-burns-2017 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4307,13 +4359,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2018/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2018/records?limit=100&offset=0&order_by=FID",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "FID",
     .description = "OpenDataSoft dataset planned-burns-2018 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4326,13 +4379,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-regional-infrastructure-corridors-substations-major-tport-infras-clem-7/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-regional-infrastructure-corridors-substations-major-tport-infras-clem-7/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description,cat_desc,ovl_cat,ovl2_desc",
     .description = "OpenDataSoft dataset "
       "cp14-regional-infrastructure-corridors-substations-major-tport-infras-clem-7 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4344,13 +4397,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2019/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2019/records?limit=100&offset=0&order_by=FID",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "FID",
     .description = "OpenDataSoft dataset planned-burns-2019 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4362,13 +4416,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2024-2025/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2024-2025/records?limit=100&offset=0&order_by=site_no",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "site_name,location_description",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2024-2025 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4381,13 +4435,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/industry-employment-by-usual-resident-employment/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/industry-employment-by-usual-resident-employment/records?limit=100&offset=0&order_by=code_2%2Csc2_2021",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "name_2,name_1,sa2_name,sa3_name",
     .description = "OpenDataSoft dataset "
       "industry-employment-by-usual-resident-employment on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4399,7 +4453,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/e-mobility-trip-numbers/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/e-mobility-trip-numbers/records?limit=100&offset=0&order_by=trips_e_scooters",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -4417,13 +4471,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-lower-bulimba-sub-model/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-lower-bulimba-sub-model/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-lower-bulimba-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4436,13 +4490,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-catchment-catchment-areas/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-catchment-catchment-areas/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset waterway-catchment-catchment-areas on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4454,13 +4509,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-waterway-corridors-overlay-brisbane-river-corridor-section-boundary/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-waterway-corridors-overlay-brisbane-river-corridor-section-boundary/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description,ovl2_desc,ovl2_cat",
     .description = "OpenDataSoft dataset "
       "cp14-waterway-corridors-overlay-brisbane-river-corridor-section-boundary "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4473,13 +4528,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-existing-natural-channel-areas/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-existing-natural-channel-areas/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-stormwater-existing-natural-channel-areas on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4492,13 +4548,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-ltip-other-plans-stormwater-sqid/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-ltip-other-plans-stormwater-sqid/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,ltip_id",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-ltip-other-plans-stormwater-sqid on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4509,13 +4566,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-cabbage-tree-creek/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-cabbage-tree-creek/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset flood-study-cabbage-tree-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4527,13 +4584,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-water-resource-catchments-overlay/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-water-resource-catchments-overlay/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
     .description = "OpenDataSoft dataset cp14-water-resource-catchments-overlay on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4544,13 +4601,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/street-names-with-suburbs/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/street-names-with-suburbs/records?limit=100&offset=0&order_by=index",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "street_name,street_type,street_suffix,suburb",
     .description = "OpenDataSoft dataset street-names-with-suburbs on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4562,13 +4619,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-ltip-comm-purposes-network-overlay-park-point-specific-location/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-ltip-comm-purposes-network-overlay-park-point-specific-location/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,ltip_id,suburb_reference",
     .description = "OpenDataSoft dataset "
       "cp14-ltip-comm-purposes-network-overlay-park-point-specific-location "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4580,13 +4637,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2015/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2015/records?limit=100&offset=0&order_by=locality%2Carea",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "locality,area,reserve,suburb",
     .description = "OpenDataSoft dataset planned-burns-2015 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4598,13 +4655,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2015-2016/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2015-2016/records?limit=100&offset=0&order_by=site_no",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "site_name,location_description",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2015-2016 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4617,13 +4674,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2021-2022/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2021-2022/records?limit=100&offset=0&order_by=site_no",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "site_name,location_description",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2021-2022 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4636,13 +4693,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-waterway-corridors-overlay-waterway-centreline/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-waterway-corridors-overlay-waterway-centreline/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-waterway-corridors-overlay-waterway-centreline on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4655,13 +4713,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2023-2024/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2023-2024/records?limit=100&offset=0&order_by=site_no",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "site_name,location_description",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2023-2024 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4674,13 +4732,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/corporate-website-analytics-top-100-search-terms/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/corporate-website-analytics-top-100-search-terms/records?limit=100&offset=0&order_by=total_users%2Csearch_term%2Cdate",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "search_term",
     .description = "OpenDataSoft dataset "
       "corporate-website-analytics-top-100-search-terms on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4693,13 +4751,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-road-hierarchy-overlay-primary-freight-route/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-road-hierarchy-overlay-primary-freight-route/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-road-hierarchy-overlay-primary-freight-route on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4711,13 +4770,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-perrin-creek/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-perrin-creek/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset flood-study-perrin-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4728,13 +4787,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/electoral-boundaries-federal/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/electoral-boundaries-federal/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "electorate",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset electoral-boundaries-federal on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4746,13 +4806,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-bicycle-network-overlay/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-bicycle-network-overlay/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-bicycle-network-overlay on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4763,13 +4824,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-bookings-historical/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-bookings-historical/records?limit=100&offset=0&order_by=park_number%2Cevent_date%2Cend_time",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "park_name,park_name_list,application_service_type,park_number",
     .description = "OpenDataSoft dataset park-bookings-historical on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4781,13 +4842,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-air-quality-corridor-overlay-high-volume-intersection/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-air-quality-corridor-overlay-high-volume-intersection/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-transport-air-quality-corridor-overlay-high-volume-intersection "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4800,13 +4862,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-air-quality-corridor-overlay-transport-routes/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-air-quality-corridor-overlay-transport-routes/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-transport-air-quality-corridor-overlay-transport-routes on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4818,13 +4881,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-brighton-creek/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-brighton-creek/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset flood-study-brighton-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4837,13 +4900,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-biodiversity-areas-overlay-matters-of-state-environ-significance-mses-area/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-biodiversity-areas-overlay-matters-of-state-environ-significance-mses-area/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-biodiversity-areas-overlay-matters-of-state-environ-significance-mses-area "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4856,13 +4920,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-active-frontages-in-residential-zones-overlay/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-active-frontages-in-residential-zones-overlay/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-active-frontages-in-residential-zones-overlay on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4875,13 +4940,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/vegetation-2015-regional-ecosystems-pre-clearing/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/vegetation-2015-regional-ecosystems-pre-clearing/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "vegetation-2015-regional-ecosystems-pre-clearing on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4893,13 +4959,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/grants-recipients/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/grants-recipients/records?limit=100&offset=0&order_by=index",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "organisation_recipient,project",
     .description = "OpenDataSoft dataset grants-recipients on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4911,13 +4977,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-citycycle-membership-and-trip-numbers/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-citycycle-membership-and-trip-numbers/records?limit=100&offset=0&order_by=month",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "month",
     .description = "OpenDataSoft dataset "
       "brisbane-citycycle-membership-and-trip-numbers on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4930,13 +4996,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-ltip-other-plans-stormwater-pipe-relief/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-ltip-other-plans-stormwater-pipe-relief/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,ltip_id",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-ltip-other-plans-stormwater-pipe-relief on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4949,13 +5016,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-airport-environs-overlay-aviation-facilities-airport-boundary/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-airport-environs-overlay-aviation-facilities-airport-boundary/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
     .description = "OpenDataSoft dataset "
       "cp14-airport-environs-overlay-aviation-facilities-airport-boundary "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4968,13 +5035,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-wolston-sandy-sub-model/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-wolston-sandy-sub-model/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-wolston-sandy-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4987,13 +5054,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-awareness-area-identified-for-review-creek/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-awareness-area-identified-for-review-creek/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "source",
     .description = "OpenDataSoft dataset "
       "flood-awareness-area-identified-for-review-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -5006,13 +5073,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-noise-corridor-overlay-state-controlled-road-centreline/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-noise-corridor-overlay-state-controlled-road-centreline/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-transport-noise-corridor-overlay-state-controlled-road-centreline "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -5025,13 +5093,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-industrial-amenity-overlay/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-industrial-amenity-overlay/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-industrial-amenity-overlay on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5043,13 +5112,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/street-tree-landscape-character-precincts/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/street-tree-landscape-character-precincts/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset street-tree-landscape-character-precincts "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
       "batch 67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5061,13 +5131,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-existing-sqid-areas/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-existing-sqid-areas/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-stormwater-existing-sqid-areas on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -5080,13 +5151,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-norman-sub-model/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-norman-sub-model/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-norman-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -5099,13 +5170,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-biodiversity-areas-overlay-biodiversity-areas/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-biodiversity-areas-overlay-biodiversity-areas/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-biodiversity-areas-overlay-biodiversity-areas on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -5117,13 +5189,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-toowong-creek/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-toowong-creek/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset flood-study-toowong-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5135,7 +5207,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-catchment-basin-areas/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-catchment-basin-areas/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -5153,13 +5225,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-significant-landscape-tree-overlay/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-significant-landscape-tree-overlay/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-significant-landscape-tree-overlay on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5171,13 +5244,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-landslide-overlay/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-landslide-overlay/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-landslide-overlay on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5189,13 +5263,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-waterway-corridors-overlay-waterway-corridors/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-waterway-corridors-overlay-waterway-corridors/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-waterway-corridors-overlay-waterway-corridors on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -5208,13 +5283,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-neighbourhood-plan-sub-precincts/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-neighbourhood-plan-sub-precincts/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "lp_sub_prec",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-neighbourhood-plan-sub-precincts on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5225,13 +5301,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/green-events/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/green-events/records?limit=100&offset=0&order_by=web_link",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location,formatteddatetime",
     .description = "OpenDataSoft dataset green-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5242,7 +5318,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/bikeway-counts/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/bikeway-counts/records?limit=100&offset=0&order_by=date",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -5259,13 +5335,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/electoral-boundaries-state/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/electoral-boundaries-state/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "electorate",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset electoral-boundaries-state on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5278,13 +5355,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-airport-environs-overlay-procedures-for-air-nav-services-aircraft-operation/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-airport-environs-overlay-procedures-for-air-nav-services-aircraft-operation/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description,elevation",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-airport-environs-overlay-procedures-for-air-nav-services-aircraft-operation "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -5296,13 +5374,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-hemmant-lytton/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-hemmant-lytton/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset flood-study-hemmant-lytton on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5314,13 +5392,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-road-hierarchy-overlay-road-hierarchy/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-road-hierarchy-overlay-road-hierarchy/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description,route_type",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-road-hierarchy-overlay-road-hierarchy "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
       "batch 67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5331,13 +5410,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-albany-creek/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-albany-creek/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset flood-study-albany-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5348,13 +5427,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/property-boundaries-holding/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/property-boundaries-holding/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "feat_name,alias_name,shire_name,locality",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset property-boundaries-holding on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5366,13 +5446,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-awareness-historic-brisbane-river-and-creek-floods-feb-2022/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-awareness-historic-brisbane-river-and-creek-floods-feb-2022/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "source_name,source_type",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "flood-awareness-historic-brisbane-river-and-creek-floods-feb-2022 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -5385,13 +5466,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-potential-and-actual-acid-sulfate-soils/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-potential-and-actual-acid-sulfate-soils/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-potential-and-actual-acid-sulfate-soils on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -5404,13 +5486,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/protected-vegetation-natural-assets-local-law-2003-significant-native-vegetation/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/protected-vegetation-natural-assets-local-law-2003-significant-native-vegetation/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "category",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "protected-vegetation-natural-assets-local-law-2003-significant-native-vegetation "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -5423,13 +5506,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/protected-vegetation-natural-assets-local-law-2003-council-vegetation/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/protected-vegetation-natural-assets-local-law-2003-council-vegetation/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "protected-vegetation-natural-assets-local-law-2003-council-vegetation "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -5442,13 +5526,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/protected-vegetation-natural-assets-local-law-2003-waterway-and-wetland-vegetati/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/protected-vegetation-natural-assets-local-law-2003-waterway-and-wetland-vegetati/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "category",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "protected-vegetation-natural-assets-local-law-2003-waterway-and-wetland-vegetati "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -5460,13 +5545,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/gold-events/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/gold-events/records?limit=100&offset=0&order_by=web_link",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location,formatteddatetime",
     .description = "OpenDataSoft dataset gold-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5477,13 +5562,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/creative-events/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/creative-events/records?limit=100&offset=0&order_by=web_link",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location,formatteddatetime",
     .description = "OpenDataSoft dataset creative-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5495,13 +5580,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2012-2013/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2012-2013/records?limit=100&offset=0&order_by=site_no",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "site_name,location_description",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2012-2013 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -5515,13 +5600,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-parks-and-comm-facilities-future-park-upgrade-specific-location/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-parks-and-comm-facilities-future-park-upgrade-specific-location/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id,suburb_reference",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-parks-and-comm-facilities-future-park-upgrade-specific-location "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -5533,7 +5619,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/library-checkouts-2023/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/library-checkouts-2023/records?limit=100&offset=0&order_by=item_id%2Ctitle%2Cauthor",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -5550,13 +5636,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-awareness-river/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-awareness-river/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "flood_type",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset flood-awareness-river on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5568,13 +5655,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-projection-area/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-projection-area/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "sa2_name11",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-lgip-projection-area on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5586,13 +5674,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-flood-overlay-creek-waterway-flood-planning-area/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-flood-overlay-creek-waterway-flood-planning-area/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-flood-overlay-creek-waterway-flood-planning-area on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -5606,13 +5695,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-parks-and-comm-facilities-future-park-acquisition-specific-locati/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-parks-and-comm-facilities-future-park-acquisition-specific-locati/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id,lgip_grid_mapref",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-parks-and-comm-facilities-future-park-acquisition-specific-locati "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -5624,13 +5714,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/parking-sign-locations/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/parking-sign-locations/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "street,assetid,sapbusid,globalid",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset parking-sign-locations on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5641,13 +5732,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/films-events/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/films-events/records?limit=100&offset=0&order_by=web_link",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location,formatteddatetime,subject,venue",
     .description = "OpenDataSoft dataset films-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5658,13 +5749,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/stormwater-manhole-existing/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/stormwater-manhole-existing/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "assetid,planno,mhnolineno",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset stormwater-manhole-existing on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5676,7 +5768,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waste-transfer-stations/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waste-transfer-stations/records?limit=100&offset=0&order_by=name",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -5693,7 +5785,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/library-checkouts-2025/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/library-checkouts-2025/records?limit=100&offset=0&order_by=item_id%2Ctitle%2Ccall_number",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -5711,13 +5803,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-parks-and-comm-facilities-existing-trunk-park/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-parks-and-comm-facilities-existing-trunk-park/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id,editors_note1",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-parks-and-comm-facilities-existing-trunk-park on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -5730,13 +5823,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-airport-environs-overlay-australian-noise-exposure-forecast-anef/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-airport-environs-overlay-australian-noise-exposure-forecast-anef/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
     .description = "OpenDataSoft dataset "
       "cp14-airport-environs-overlay-australian-noise-exposure-forecast-anef "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -5748,13 +5841,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/community-recycling-hub-locations/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/community-recycling-hub-locations/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset community-recycling-hub-locations on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5766,13 +5860,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-commercial-character-building-overlay/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-commercial-character-building-overlay/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-commercial-character-building-overlay "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
       "batch 67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5784,13 +5879,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/stormwater-end-structures-existing/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/stormwater-end-structures-existing/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "assetid,planno",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset stormwater-end-structures-existing on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5801,13 +5897,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/gold-kids-events/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/gold-kids-events/records?limit=100&offset=0&order_by=web_link",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location,formatteddatetime",
     .description = "OpenDataSoft dataset gold-kids-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5818,13 +5914,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/mob-events/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/mob-events/records?limit=100&offset=0&order_by=web_link",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location,formatteddatetime",
     .description = "OpenDataSoft dataset mob-events on www.data.brisbane.qld.gov.au, "
       "a portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -5835,13 +5931,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/sealed-plan-boundaries/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/sealed-plan-boundaries/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "lotplan,plan",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset sealed-plan-boundaries on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5853,13 +5950,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-future-culvert/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-future-culvert/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id,lgip_grid_mapref",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-lgip-pfti-stormwater-future-culvert on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5870,13 +5968,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/street-tree-species/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/street-tree-species/records?limit=100&offset=0&order_by=index",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "common_name,botanical_name",
     .description = "OpenDataSoft dataset street-tree-species on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5888,13 +5986,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-active-and-public-transport-future-bikeway/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-active-and-public-transport-future-bikeway/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id,lgip_grid_mapref",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-active-and-public-transport-future-bikeway on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -5906,13 +6005,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-kedron-brook/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-kedron-brook/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset flood-study-kedron-brook on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5924,13 +6023,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-traditional-building-character-overlay/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-traditional-building-character-overlay/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-traditional-building-character-overlay "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
       "batch 67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5942,13 +6042,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/bne-food-trucks-locations/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/bne-food-trucks-locations/records?limit=100&offset=0&order_by=site_id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "site_id",
     .description = "OpenDataSoft dataset bne-food-trucks-locations on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5959,13 +6060,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/business-events/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/business-events/records?limit=100&offset=0&order_by=web_link",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location,formatteddatetime,subject,bookings",
     .description = "OpenDataSoft dataset business-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5977,13 +6078,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/traffic-cctv-cameras/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/traffic-cctv-cameras/records?limit=100&offset=0&order_by=key",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "street_name,key,suburb,suburb_list",
     .description = "OpenDataSoft dataset traffic-cctv-cameras on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5995,13 +6096,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-city-core-frame-parking-area-boundary/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-city-core-frame-parking-area-boundary/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
     .description = "OpenDataSoft dataset cp14-city-core-frame-parking-area-boundary "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
       "batch 67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6013,13 +6114,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-active-and-public-transport-future-green-bridge/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-active-and-public-transport-future-green-bridge/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id,lgip_grid_mapref",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-active-and-public-transport-future-green-bridge "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -6032,7 +6133,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-awareness-area-identified-for-review-overland-flow/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-awareness-area-identified-for-review-overland-flow/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -6051,13 +6152,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-noise-corridor-overlay/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-noise-corridor-overlay/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-transport-noise-corridor-overlay on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6069,7 +6171,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/parking-occupancy-forecasting-2023-2024/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/parking-occupancy-forecasting-2023-2024/records?limit=100&offset=0&order_by=date%2Chour%2Cmobile_zone",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -6086,13 +6188,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/music-events/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/music-events/records?limit=100&offset=0&order_by=web_link",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location,formatteddatetime",
     .description = "OpenDataSoft dataset music-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6104,13 +6206,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/telemetry-sensors-rainfall-and-stream-heights-metadata/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/telemetry-sensors-rainfall-and-stream-heights-metadata/records?limit=100&offset=0&order_by=sensor_id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location_name,sensor_type,sensor_id",
+    .id_keys = "sensor_id",
     .description = "OpenDataSoft dataset "
       "telemetry-sensors-rainfall-and-stream-heights-metadata on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -6123,13 +6226,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "street,parking_restriction_type,assetid,sapbusid",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset disability-permit-parking-locations on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6140,13 +6244,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/public-art/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/public-art/records?limit=100&offset=0&order_by=index",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "item_title,item_title_list,description,location",
     .description = "OpenDataSoft dataset public-art on www.data.brisbane.qld.gov.au, "
       "a portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -6158,7 +6262,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/bne-food-trucks-historical-bookings/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/bne-food-trucks-historical-bookings/records?limit=100&offset=0&order_by=title%2Clocation_id%2Cvehicle_id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -6175,13 +6279,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-botanic-gardens-events/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-botanic-gardens-events/records?limit=100&offset=0&order_by=web_link",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location,formatteddatetime",
     .description = "OpenDataSoft dataset brisbane-botanic-gardens-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6192,13 +6296,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-parking-meters/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-parking-meters/records?limit=100&offset=0&order_by=meter_no",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "street,category,tar_zone,loc_desc",
     .description = "OpenDataSoft dataset brisbane-parking-meters on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6209,7 +6313,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/library-checkouts-branch-date-2015-2019/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/library-checkouts-branch-date-2015-2019/records?limit=100&offset=0&order_by=item_id%2Cauthor%2Ccheckout_library",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -6227,7 +6331,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-priority-infrastructure-area/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-priority-infrastructure-area/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -6245,13 +6349,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waste-collection-days-collection-days/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waste-collection-days-collection-days/records?limit=100&offset=0&order_by=property_id%2Cunit_number%2Chouse_number",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "street_name,street_name_list,zone",
     .description = "OpenDataSoft dataset waste-collection-days-collection-days on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6262,13 +6366,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/suburb-boundaries/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/suburb-boundaries/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "suburb_name,suburb_name_list",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset suburb-boundaries on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6280,13 +6385,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/road-restrictions/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/road-restrictions/records?limit=100&offset=0&order_by=restriction_id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description,restriction_type,structure_owner,restriction_id",
+    .id_keys = "restriction_id",
     .description = "OpenDataSoft dataset road-restrictions on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6297,7 +6403,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/library-checkouts-2024/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/library-checkouts-2024/records?limit=100&offset=0&order_by=item_id%2Ctitle%2Ccall_number",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -6315,13 +6421,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-transport-future-road-intersection-project/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-transport-future-road-intersection-project/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id,suburb_reference",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-transport-future-road-intersection-project on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -6333,7 +6440,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/library-checkouts-2020-2022/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/library-checkouts-2020-2022/records?limit=100&offset=0&order_by=item_id%2Ctitle%2Ccall_number",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -6351,13 +6458,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-awareness-brisbane-river-creek-and-storm-tide-1-percent-annual-chance/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-awareness-brisbane-river-creek-and-storm-tide-1-percent-annual-chance/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "flood-awareness-brisbane-river-creek-and-storm-tide-1-percent-annual-chance "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -6369,13 +6477,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/bike-repair-stations/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/bike-repair-stations/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location,suburb",
     .description = "OpenDataSoft dataset bike-repair-stations on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6386,13 +6494,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-city-council-events/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-city-council-events/records?limit=100&offset=0&order_by=web_link",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location,formatteddatetime,subject,bookings",
     .description = "OpenDataSoft dataset brisbane-city-council-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6403,13 +6511,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/parking-clearways/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/parking-clearways/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "category",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset parking-clearways on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6420,13 +6529,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-bus-stops/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-bus-stops/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "nearest_cross_street,description,bus_stop_type,streetname",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset brisbane-bus-stops on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6438,13 +6548,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-future-sqid/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-future-sqid/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id,lgip_grid_mapref",
     .description = "OpenDataSoft dataset cp14-lgip-pfti-stormwater-future-sqid on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6456,13 +6566,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-heritage-overlay-state-heritage-area/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-heritage-overlay-state-heritage-area/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-heritage-overlay-state-heritage-area "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
       "batch 67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6474,13 +6585,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-network-key/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-network-key/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "area_type,apt_mapnum,pcf_mapnum,rd_mapnum",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-lgip-network-key on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6492,13 +6604,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-city-plan-2014-qpp-codes/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-city-plan-2014-qpp-codes/records?limit=100&offset=0&order_by=flag_code",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description,flag_code",
     .description = "OpenDataSoft dataset brisbane-city-plan-2014-qpp-codes on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6509,13 +6621,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/community-lease-locations/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/community-lease-locations/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "lease_name",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset community-lease-locations on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6526,13 +6639,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/detail-plan-areas-sewer/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/detail-plan-areas-sewer/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset detail-plan-areas-sewer on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6544,13 +6658,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-noise-corridor-overlay-brisbane-road-centreline/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-transport-noise-corridor-overlay-brisbane-road-centreline/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-transport-noise-corridor-overlay-brisbane-road-centreline "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -6562,13 +6677,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/acid-sulfate-soils-areas/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/acid-sulfate-soils-areas/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset acid-sulfate-soils-areas on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6579,13 +6695,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-zoning-overlay/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-zoning-overlay/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "lvl2_zone,zone_prec_desc,zone_prec,zone_code",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-zoning-overlay on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6597,13 +6714,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-future-rehabilitation/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-lgip-pfti-stormwater-future-rehabilitation/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "project_description,project_type,lgip_id,lgip_cattype",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-stormwater-future-rehabilitation on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -6616,13 +6733,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-extractive-resources-key-resource-area-resource-processing-area/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-extractive-resources-key-resource-area-resource-processing-area/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
     .description = "OpenDataSoft dataset "
       "cp14-extractive-resources-key-resource-area-resource-processing-area "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -6634,13 +6751,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/grants-program-summary/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/grants-program-summary/records?limit=100&offset=0&order_by=index",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "description",
     .description = "OpenDataSoft dataset grants-program-summary on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6652,13 +6769,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/commercial-vehicle-loading-zones/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/commercial-vehicle-loading-zones/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "street,parking_restriction_type,assetid,sapbusid",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset commercial-vehicle-loading-zones on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6670,13 +6788,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/traffic-management-signal-locations/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/traffic-management-signal-locations/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "areanum,globalid",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset traffic-management-signal-locations on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6688,13 +6807,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/bne-food-trucks-vehicles/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/bne-food-trucks-vehicles/records?limit=100&offset=0&order_by=vehicle_id",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "vehicle_id",
     .description = "OpenDataSoft dataset bne-food-trucks-vehicles on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6706,13 +6826,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-drinking-fountain-tap-locations/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/park-drinking-fountain-tap-locations/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "park_name,sap_functional_location,item_description,item_type",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset park-drinking-fountain-tap-locations on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6723,13 +6844,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/council-cabs-schedule/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/council-cabs-schedule/records?limit=100&offset=0&order_by=suburb%2Cdestination",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "suburb,suburb_list",
     .description = "OpenDataSoft dataset council-cabs-schedule on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6741,13 +6862,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-dwelling-house-character-overlay/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/cp14-dwelling-house-character-overlay/records?limit=100&offset=0&order_by=objectid",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-dwelling-house-character-overlay on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6759,13 +6881,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/telemetry-sensors-rainfall-and-stream-heights-observations/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/telemetry-sensors-rainfall-and-stream-heights-observations/records?limit=100&offset=0&order_by=gauge%2Cmeasured_text",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "location_name,location_name_description,location_id_description,sensor_type",
     .description = "OpenDataSoft dataset "
       "telemetry-sensors-rainfall-and-stream-heights-observations on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -6778,7 +6900,7 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/telemetry-sensors-rainfall-and-stream-heights/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/telemetry-sensors-rainfall-and-stream-heights/records?limit=100&offset=0&order_by=measured",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
@@ -6796,13 +6918,14 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2021/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/planned-burns-2021/records?limit=100&offset=0&order_by=FID",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "FID",
     .description = "OpenDataSoft dataset planned-burns-2021 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6813,13 +6936,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-nundah-creek/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-nundah-creek/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset flood-study-nundah-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6831,13 +6954,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/superseded-flood-study-bulimba-creek-oct-2014/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/superseded-flood-study-bulimba-creek-oct-2014/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset "
       "superseded-flood-study-bulimba-creek-oct-2014 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -6850,13 +6973,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-tingalpa-res-east-sub-model/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-tingalpa-res-east-sub-model/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-tingalpa-res-east-sub-model "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -6869,13 +6992,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-jindalee-sub-model/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-jindalee-sub-model/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-jindalee-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -6888,13 +7011,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/superseded-flood-study-kedron-brook-sep-2014/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/superseded-flood-study-kedron-brook-sep-2014/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset "
       "superseded-flood-study-kedron-brook-sep-2014 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -6907,13 +7030,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2019-2020/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/waterway-health-recreational-enterococci-monitoring-results-2019-2020/records?limit=100&offset=0&order_by=site_no",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "site_name,location_description",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2019-2020 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -6926,13 +7049,13 @@ static const hp_source HP3B67_ODS[] = {
     .record_type = "dataset-record",
     .tags = "\"ods\",\"opendatasoft\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-tingalpa-res-west-sub-model/records?limit=100&offset=0",
+    .url = "https://www.data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/flood-study-citywide-overland-flow-tingalpa-res-west-sub-model/records?limit=100&offset=0&order_by=attribute",
     .array_path = "results",
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
     .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .title_keys = "attribute_description,attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-tingalpa-res-west-sub-model "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "

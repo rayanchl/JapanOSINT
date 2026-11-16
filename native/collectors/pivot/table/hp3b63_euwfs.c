@@ -94,21 +94,22 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=50: page 0 50 features / 8.4 MB / 10 s, page 1 50 features / 23.8 MB, ids disjoint. */
   { .id = "JO63_EUWFS_6715C5F57C", .name = "service.pdok.nl — Buurten [wijkenbuurten:buurten]",
     .name_ja = "service.pdok.nl — Buurten [wijkenbuurten:buurten]",
     .category = "geospatial", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://service.pdok.nl/cbs/wijkenbuurten/2023/wfs/v1_0?service=WFS&version=2.0.0&request=GetFeature&typenames=wijkenbuurten%3Abuurten&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://service.pdok.nl/cbs/wijkenbuurten/2023/wfs/v1_0?service=WFS&version=2.0.0&request=GetFeature&typenames=wijkenbuurten%3Abuurten&outputFormat=application%2Fjson&count=50&startIndex=0",
+    .page_size = 50,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'wijkenbuurten:buurten' ('Buurten') from "
       "the Netherlands national/regional geoportal service.pdok.nl. "
@@ -187,6 +188,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "2026-11-14. Enumerated from the server's own GetCapabilities. "
       "Each feature carries its geometry and attributes." },
 
+  /* 2026-11-16: the OGC proxy answers 400 InvalidParameterValue to outputFormat=application/json; GetCapabilities lists 'application/json; subtype=geojson' for this type. Measured with it: 396 of 396 features in one page, properties.KN distinct on all 396 (a feature carries no top-level id here, so id_keys=id matched nothing). */
   { .id = "JO63_EUWFS_7DD66E5ECB", .name = "www.wfs.nrw.de — DVG1 Kreisangehörige Kommunen und kreisfreie "
       "Städte [dvg:nw_dvg1_gem]",
     .name_ja = "www.wfs.nrw.de — DVG1 Kreisangehörige Kommunen und kreisfreie Städte [dvg:nw_dvg1_gem]",
@@ -194,12 +196,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg1_gem&outputFormat=application%2Fjson&count=1000",
+    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg1_gem&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=1000",
+    .id_keys = "properties.KN",
+    .title_keys = "properties.GN,properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
+    .timeout_ms = 120000,
     .array_path = "features",
-    .id_keys = "id",
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'dvg:nw_dvg1_gem' ('DVG1 Kreisangehörige "
       "Kommunen und kreisfreie Städte') from the Germany "
       "national/regional geoportal www.wfs.nrw.de. GetFeature as "
@@ -234,21 +236,22 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=50: page 0 50 features / 10.6 MB / 12 s, page 1 50 features / 21.7 MB, ids disjoint. */
   { .id = "JO63_EUWFS_C8F18034F3", .name = "service.pdok.nl — Wijken [wijkenbuurten:wijken]",
     .name_ja = "service.pdok.nl — Wijken [wijkenbuurten:wijken]",
     .category = "geospatial", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://service.pdok.nl/cbs/wijkenbuurten/2023/wfs/v1_0?service=WFS&version=2.0.0&request=GetFeature&typenames=wijkenbuurten%3Awijken&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://service.pdok.nl/cbs/wijkenbuurten/2023/wfs/v1_0?service=WFS&version=2.0.0&request=GetFeature&typenames=wijkenbuurten%3Awijken&outputFormat=application%2Fjson&count=50&startIndex=0",
+    .page_size = 50,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'wijkenbuurten:wijken' ('Wijken') from the "
       "Netherlands national/regional geoportal service.pdok.nl. "
@@ -302,6 +305,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: the OGC proxy answers 400 InvalidParameterValue to outputFormat=application/json; GetCapabilities lists 'application/json; subtype=geojson' for this type. Measured with it: 53 of 53 features in one page, properties.KN distinct on all 53 (a feature carries no top-level id here, so id_keys=id matched nothing). */
   { .id = "JO63_EUWFS_3C5BFE23A5", .name = "www.wfs.nrw.de — DVG1 Kreise und kreisfreie Städte "
       "[dvg:nw_dvg1_krs]",
     .name_ja = "www.wfs.nrw.de — DVG1 Kreise und kreisfreie Städte [dvg:nw_dvg1_krs]",
@@ -309,12 +313,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg1_krs&outputFormat=application%2Fjson&count=1000",
+    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg1_krs&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=1000",
+    .id_keys = "properties.KN",
+    .title_keys = "properties.GN,properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
+    .timeout_ms = 120000,
     .array_path = "features",
-    .id_keys = "id",
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'dvg:nw_dvg1_krs' ('DVG1 Kreise und "
       "kreisfreie Städte') from the Germany national/regional geoportal "
       "www.wfs.nrw.de. GetFeature as GeoJSON, the layer's numberMatched "
@@ -324,21 +328,22 @@ static const hp_source HP3B63_EUWFS[] = {
       "key, so this row reads one page (count=1000) and discloses the "
       "remainder rather than paging." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=50: page 0 50 features / 10.6 MB / 12 s, page 1 50 features / 24.9 MB, ids disjoint. */
   { .id = "JO63_EUWFS_5B33FF8EDC", .name = "service.pdok.nl — Gemeenten [wijkenbuurten:gemeenten]",
     .name_ja = "service.pdok.nl — Gemeenten [wijkenbuurten:gemeenten]",
     .category = "geospatial", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://service.pdok.nl/cbs/wijkenbuurten/2023/wfs/v1_0?service=WFS&version=2.0.0&request=GetFeature&typenames=wijkenbuurten%3Agemeenten&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://service.pdok.nl/cbs/wijkenbuurten/2023/wfs/v1_0?service=WFS&version=2.0.0&request=GetFeature&typenames=wijkenbuurten%3Agemeenten&outputFormat=application%2Fjson&count=50&startIndex=0",
+    .page_size = 50,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'wijkenbuurten:gemeenten' ('Gemeenten') "
       "from the Netherlands national/regional geoportal "
@@ -393,18 +398,19 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: the OGC proxy answers 400 InvalidParameterValue to outputFormat=application/json; GetCapabilities lists 'application/json; subtype=geojson' for this type. Measured with it: 5 of 5 features in one page, properties.KN distinct on all 5 (a feature carries no top-level id here, so id_keys=id matched nothing). */
   { .id = "JO63_EUWFS_EFC8D39E5A", .name = "www.wfs.nrw.de — DVG1 Regierungsbezirke [dvg:nw_dvg1_rbz]",
     .name_ja = "www.wfs.nrw.de — DVG1 Regierungsbezirke [dvg:nw_dvg1_rbz]",
     .category = "geospatial", .portal = "https://www.wfs.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg1_rbz&outputFormat=application%2Fjson&count=1000",
+    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg1_rbz&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=1000",
+    .id_keys = "properties.KN",
+    .title_keys = "properties.GN,properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
+    .timeout_ms = 120000,
     .array_path = "features",
-    .id_keys = "id",
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'dvg:nw_dvg1_rbz' ('DVG1 "
       "Regierungsbezirke') from the Germany national/regional geoportal "
       "www.wfs.nrw.de. GetFeature as GeoJSON, the layer's numberMatched "
@@ -457,18 +463,19 @@ static const hp_source HP3B63_EUWFS[] = {
       "2026-11-14. Enumerated from the server's own GetCapabilities. "
       "Each feature carries its geometry and attributes." },
 
+  /* 2026-11-16: the OGC proxy answers 400 InvalidParameterValue to outputFormat=application/json; GetCapabilities lists 'application/json; subtype=geojson' for this type. Measured with it: 1 of 1 features in one page, properties.KN distinct on all 1 (a feature carries no top-level id here, so id_keys=id matched nothing). */
   { .id = "JO63_EUWFS_9B4B346B9B", .name = "www.wfs.nrw.de — DVG1 Landesgrenze NRW [dvg:nw_dvg1_bld]",
     .name_ja = "www.wfs.nrw.de — DVG1 Landesgrenze NRW [dvg:nw_dvg1_bld]",
     .category = "geospatial", .portal = "https://www.wfs.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg1_bld&outputFormat=application%2Fjson&count=1000",
+    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg1_bld&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=1000",
+    .id_keys = "properties.KN",
+    .title_keys = "properties.GN,properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
+    .timeout_ms = 120000,
     .array_path = "features",
-    .id_keys = "id",
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'dvg:nw_dvg1_bld' ('DVG1 Landesgrenze NRW') "
       "from the Germany national/regional geoportal www.wfs.nrw.de. "
       "GetFeature as GeoJSON, the layer's numberMatched was 1 on "
@@ -547,6 +554,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: the OGC proxy answers 400 InvalidParameterValue to outputFormat=application/json; GetCapabilities lists 'application/json; subtype=geojson' for this type. Measured with it: 396 of 396 features in one page, properties.KN distinct on all 396 (a feature carries no top-level id here, so id_keys=id matched nothing). */
   { .id = "JO63_EUWFS_67E8378D0C", .name = "www.wfs.nrw.de — DVG2 Kreisangehörige Kommunen und kreisfreie "
       "Städte [dvg:nw_dvg2_gem]",
     .name_ja = "www.wfs.nrw.de — DVG2 Kreisangehörige Kommunen und kreisfreie Städte [dvg:nw_dvg2_gem]",
@@ -554,12 +562,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg2_gem&outputFormat=application%2Fjson&count=1000",
+    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg2_gem&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=1000",
+    .id_keys = "properties.KN",
+    .title_keys = "properties.GN,properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
+    .timeout_ms = 120000,
     .array_path = "features",
-    .id_keys = "id",
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'dvg:nw_dvg2_gem' ('DVG2 Kreisangehörige "
       "Kommunen und kreisfreie Städte') from the Germany "
       "national/regional geoportal www.wfs.nrw.de. GetFeature as "
@@ -640,6 +648,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: the OGC proxy answers 400 InvalidParameterValue to outputFormat=application/json; GetCapabilities lists 'application/json; subtype=geojson' for this type. Measured with it: 53 of 53 features in one page, properties.KN distinct on all 53 (a feature carries no top-level id here, so id_keys=id matched nothing). */
   { .id = "JO63_EUWFS_F1314ABEBA", .name = "www.wfs.nrw.de — DVG2 Kreise und kreisfreie Städte "
       "[dvg:nw_dvg2_krs]",
     .name_ja = "www.wfs.nrw.de — DVG2 Kreise und kreisfreie Städte [dvg:nw_dvg2_krs]",
@@ -647,12 +656,12 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg2_krs&outputFormat=application%2Fjson&count=1000",
+    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg2_krs&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=1000",
+    .id_keys = "properties.KN",
+    .title_keys = "properties.GN,properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
+    .timeout_ms = 120000,
     .array_path = "features",
-    .id_keys = "id",
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'dvg:nw_dvg2_krs' ('DVG2 Kreise und "
       "kreisfreie Städte') from the Germany national/regional geoportal "
       "www.wfs.nrw.de. GetFeature as GeoJSON, the layer's numberMatched "
@@ -711,18 +720,19 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: the OGC proxy answers 400 InvalidParameterValue to outputFormat=application/json; GetCapabilities lists 'application/json; subtype=geojson' for this type. Measured with it: 5 of 5 features in one page, properties.KN distinct on all 5 (a feature carries no top-level id here, so id_keys=id matched nothing). */
   { .id = "JO63_EUWFS_6A4296C9F7", .name = "www.wfs.nrw.de — DVG2 Regierungsbezirke [dvg:nw_dvg2_rbz]",
     .name_ja = "www.wfs.nrw.de — DVG2 Regierungsbezirke [dvg:nw_dvg2_rbz]",
     .category = "geospatial", .portal = "https://www.wfs.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg2_rbz&outputFormat=application%2Fjson&count=1000",
+    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg2_rbz&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=1000",
+    .id_keys = "properties.KN",
+    .title_keys = "properties.GN,properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
+    .timeout_ms = 120000,
     .array_path = "features",
-    .id_keys = "id",
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'dvg:nw_dvg2_rbz' ('DVG2 "
       "Regierungsbezirke') from the Germany national/regional geoportal "
       "www.wfs.nrw.de. GetFeature as GeoJSON, the layer's numberMatched "
@@ -874,18 +884,19 @@ static const hp_source HP3B63_EUWFS[] = {
       "GetCapabilities. Each feature carries its geometry and "
       "attributes." },
 
+  /* 2026-11-16: the OGC proxy answers 400 InvalidParameterValue to outputFormat=application/json; GetCapabilities lists 'application/json; subtype=geojson' for this type. Measured with it: 1 of 1 features in one page, properties.KN distinct on all 1 (a feature carries no top-level id here, so id_keys=id matched nothing). */
   { .id = "JO63_EUWFS_67C00F89DB", .name = "www.wfs.nrw.de — DVG2 Landesgrenze NRW [dvg:nw_dvg2_bld]",
     .name_ja = "www.wfs.nrw.de — DVG2 Landesgrenze NRW [dvg:nw_dvg2_bld]",
     .category = "geospatial", .portal = "https://www.wfs.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg2_bld&outputFormat=application%2Fjson&count=1000",
+    .url = "https://www.wfs.nrw.de/geobasis/wfs_nw_dvg?service=WFS&version=2.0.0&request=GetFeature&typenames=dvg%3Anw_dvg2_bld&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=1000",
+    .id_keys = "properties.KN",
+    .title_keys = "properties.GN,properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
+    .timeout_ms = 120000,
     .array_path = "features",
-    .id_keys = "id",
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'dvg:nw_dvg2_bld' ('DVG2 Landesgrenze NRW') "
       "from the Germany national/regional geoportal www.wfs.nrw.de. "
       "GetFeature as GeoJSON, the layer's numberMatched was 1 on "
@@ -1165,6 +1176,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=100: page 0 100 features / 11.9 MB / 14 s, page 1 100 features / 16.1 MB, ids disjoint. */
   { .id = "JO63_EUWFS_BFBE690BCC", .name = "service.pdok.nl — gemeente_niet_gegeneraliseerd "
       "[gebiedsindelingen:gemeente_niet_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — gemeente_niet_gegeneraliseerd [gebiedsindelingen:gemeente_niet_gegeneraliseerd]",
@@ -1172,15 +1184,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://service.pdok.nl/cbs/gebiedsindelingen/2023/wfs/v1_0?service=WFS&version=2.0.0&request=GetFeature&typenames=gebiedsindelingen%3Agemeente_niet_gegeneraliseerd&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://service.pdok.nl/cbs/gebiedsindelingen/2023/wfs/v1_0?service=WFS&version=2.0.0&request=GetFeature&typenames=gebiedsindelingen%3Agemeente_niet_gegeneraliseerd&outputFormat=application%2Fjson&count=100&startIndex=0",
+    .page_size = 100,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type "
       "'gebiedsindelingen:gemeente_niet_gegeneraliseerd' "
@@ -3011,6 +3023,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "startIndex without a primary key, so this row reads one page "
       "(count=1000) and discloses the remainder rather than paging." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 4.4 MB / 3 s, page 1 10 features / 4.5 MB, ids disjoint; numberMatched 332 needs 34 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_D9004C66B6", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Arrondissement "
       "[ADMINEXPRESS-COG.2021:arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Arrondissement [ADMINEXPRESS-COG.2021:arrondissement]",
@@ -3018,15 +3031,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2021%3Aarrondissement&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2021%3Aarrondissement&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
+    .page_max = 37,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2021:arrondissement' "
       "('ADMINEXPRESS COG 2021 Arrondissement') from the France "
@@ -3180,6 +3194,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "startIndex without a primary key, so this row reads one page "
       "(count=1000) and discloses the remainder rather than paging." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=250: page 0 250 features / 26.7 MB / 7 s, page 1 250 features / 27.4 MB, ids disjoint. */
   { .id = "JO63_EUWFS_054A01334D", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Canton "
       "[ADMINEXPRESS-COG.2021:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Canton [ADMINEXPRESS-COG.2021:canton]",
@@ -3187,15 +3202,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2021%3Acanton&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2021%3Acanton&outputFormat=application%2Fjson&count=250&startIndex=0",
+    .page_size = 250,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2021:canton' "
       "('ADMINEXPRESS COG 2021 Canton') from the France "
@@ -3945,6 +3960,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 9.7 MB / 4 s, page 1 10 features / 7.8 MB, ids disjoint. */
   { .id = "JO63_EUWFS_109F90EC58", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Département "
       "[ADMINEXPRESS-COG.2021:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Département [ADMINEXPRESS-COG.2021:departement]",
@@ -3952,15 +3968,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2021%3Adepartement&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2021%3Adepartement&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2021:departement' "
       "('ADMINEXPRESS COG 2021 Département') from the France "
@@ -4039,6 +4055,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=100: page 0 100 features / 16.2 MB / 5 s, page 1 100 features / 15.6 MB, ids disjoint. */
   { .id = "JO63_EUWFS_98E2EF97A3", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 EPCI "
       "[ADMINEXPRESS-COG.2021:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 EPCI [ADMINEXPRESS-COG.2021:epci]",
@@ -4046,15 +4063,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2021%3Aepci&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2021%3Aepci&outputFormat=application%2Fjson&count=100&startIndex=0",
+    .page_size = 100,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2021:epci' ('ADMINEXPRESS "
       "COG 2021 EPCI') from the France national/regional geoportal "
@@ -4275,6 +4292,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 4.4 MB / 4 s, page 1 10 features / 4.5 MB, ids disjoint; numberMatched 332 needs 34 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_2C2010CF59", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Arrondissement "
       "[ADMINEXPRESS-COG.2022:arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Arrondissement [ADMINEXPRESS-COG.2022:arrondissement]",
@@ -4282,15 +4300,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2022%3Aarrondissement&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2022%3Aarrondissement&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
+    .page_max = 37,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2022:arrondissement' "
       "('ADMINEXPRESS COG 2022 Arrondissement') from the France "
@@ -4512,6 +4531,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=250: page 0 250 features / 26.7 MB / 6 s, page 1 250 features / 27.5 MB, ids disjoint. */
   { .id = "JO63_EUWFS_260906F832", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Canton "
       "[ADMINEXPRESS-COG.2022:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Canton [ADMINEXPRESS-COG.2022:canton]",
@@ -4519,15 +4539,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2022%3Acanton&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2022%3Acanton&outputFormat=application%2Fjson&count=250&startIndex=0",
+    .page_size = 250,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2022:canton' "
       "('ADMINEXPRESS COG 2022 Canton') from the France "
@@ -4892,6 +4912,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 11.5 MB / 4 s, page 1 10 features / 6.2 MB, ids disjoint. */
   { .id = "JO63_EUWFS_B59F35B313", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Collectivité territoriale "
       "[ADMINEXPRESS-COG.2022:collectivite_territoriale]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Collectivité territoriale [ADMINEXPRESS-COG.2022:collectivite_territoriale]",
@@ -4899,15 +4920,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2022%3Acollectivite_territoriale&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2022%3Acollectivite_territoriale&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type "
       "'ADMINEXPRESS-COG.2022:collectivite_territoriale' ('ADMINEXPRESS "
@@ -5271,6 +5292,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 9.7 MB / 4 s, page 1 10 features / 7.8 MB, ids disjoint. */
   { .id = "JO63_EUWFS_5B8458D57B", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Département "
       "[ADMINEXPRESS-COG.2022:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Département [ADMINEXPRESS-COG.2022:departement]",
@@ -5278,15 +5300,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2022%3Adepartement&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2022%3Adepartement&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2022:departement' "
       "('ADMINEXPRESS COG 2022 Département') from the France "
@@ -5390,6 +5412,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=25: page 0 25 features / 6.2 MB / 3 s, page 1 25 features / 2.7 MB, ids disjoint; numberMatched 1266 needs 51 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_EE758AA101", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 EPCI "
       "[ADMINEXPRESS-COG.2022:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 EPCI [ADMINEXPRESS-COG.2022:epci]",
@@ -5397,15 +5420,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2022%3Aepci&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2022%3Aepci&outputFormat=application%2Fjson&count=25&startIndex=0",
+    .page_size = 25,
+    .timeout_ms = 120000,
+    .page_max = 54,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2022:epci' ('ADMINEXPRESS "
       "COG 2022 EPCI') from the France national/regional geoportal "
@@ -5610,6 +5634,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "2026-11-14. Enumerated from the server's own GetCapabilities. "
       "Each feature carries its geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 4.4 MB / 3 s, page 1 10 features / 4.5 MB, ids disjoint; numberMatched 333 needs 34 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_011A725CBF", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 Arrondissement "
       "[ADMINEXPRESS-COG.2023:arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Arrondissement [ADMINEXPRESS-COG.2023:arrondissement]",
@@ -5617,15 +5642,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2023%3Aarrondissement&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2023%3Aarrondissement&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
+    .page_max = 37,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2023:arrondissement' "
       "('ADMINEXPRESS COG 2023 Arrondissement') from the France "
@@ -5754,6 +5780,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=250: page 0 250 features / 30.0 MB / 8 s, page 1 250 features / 31.6 MB, ids disjoint. */
   { .id = "JO63_EUWFS_321441C9D1", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 Canton "
       "[ADMINEXPRESS-COG.2023:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Canton [ADMINEXPRESS-COG.2023:canton]",
@@ -5761,15 +5788,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2023%3Acanton&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2023%3Acanton&outputFormat=application%2Fjson&count=250&startIndex=0",
+    .page_size = 250,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2023:canton' "
       "('ADMINEXPRESS COG 2023 Canton') from the France "
@@ -6134,6 +6161,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 11.2 MB / 4 s, page 1 10 features / 6.6 MB, ids disjoint. */
   { .id = "JO63_EUWFS_6F4D384695", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 Collectivité territoriale "
       "[ADMINEXPRESS-COG.2023:collectivite_territoriale]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Collectivité territoriale [ADMINEXPRESS-COG.2023:collectivite_territoriale]",
@@ -6141,15 +6169,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2023%3Acollectivite_territoriale&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2023%3Acollectivite_territoriale&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type "
       "'ADMINEXPRESS-COG.2023:collectivite_territoriale' ('ADMINEXPRESS "
@@ -6343,6 +6371,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "primary key, so this row reads one page (count=1000) and "
       "discloses the remainder rather than paging." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 9.6 MB / 4 s, page 1 10 features / 7.8 MB, ids disjoint. */
   { .id = "JO63_EUWFS_9FF6DD5AB0", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 Département "
       "[ADMINEXPRESS-COG.2023:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Département [ADMINEXPRESS-COG.2023:departement]",
@@ -6350,15 +6379,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2023%3Adepartement&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2023%3Adepartement&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2023:departement' "
       "('ADMINEXPRESS COG 2023 Département') from the France "
@@ -6415,6 +6444,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=100: page 0 100 features / 15.5 MB / 5 s, page 1 100 features / 17.3 MB, ids disjoint. */
   { .id = "JO63_EUWFS_327D9C006C", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 EPCI "
       "[ADMINEXPRESS-COG.2023:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 EPCI [ADMINEXPRESS-COG.2023:epci]",
@@ -6422,15 +6452,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2023%3Aepci&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2023%3Aepci&outputFormat=application%2Fjson&count=100&startIndex=0",
+    .page_size = 100,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2023:epci' ('ADMINEXPRESS "
       "COG 2023 EPCI') from the France national/regional geoportal "
@@ -6580,6 +6610,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 4.4 MB / 3 s, page 1 10 features / 4.4 MB, ids disjoint; numberMatched 333 needs 34 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_B2A321E98F", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Arrondissement "
       "[ADMINEXPRESS-COG.2024:arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Arrondissement [ADMINEXPRESS-COG.2024:arrondissement]",
@@ -6587,15 +6618,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2024%3Aarrondissement&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2024%3Aarrondissement&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
+    .page_max = 37,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2024:arrondissement' "
       "('ADMINEXPRESS COG 2024 Arrondissement') from the France "
@@ -6747,6 +6779,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=250: page 0 250 features / 30.0 MB / 7 s, page 1 250 features / 31.6 MB, ids disjoint. */
   { .id = "JO63_EUWFS_34FC0BA6F8", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Canton "
       "[ADMINEXPRESS-COG.2024:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Canton [ADMINEXPRESS-COG.2024:canton]",
@@ -6754,15 +6787,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2024%3Acanton&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2024%3Acanton&outputFormat=application%2Fjson&count=250&startIndex=0",
+    .page_size = 250,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2024:canton' "
       "('ADMINEXPRESS COG 2024 Canton') from the France "
@@ -7011,6 +7044,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 11.1 MB / 4 s, page 1 10 features / 6.6 MB, ids disjoint. */
   { .id = "JO63_EUWFS_51F197375B", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Collectivité territoriale "
       "[ADMINEXPRESS-COG.2024:collectivite_territoriale]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Collectivité territoriale [ADMINEXPRESS-COG.2024:collectivite_territoriale]",
@@ -7018,15 +7052,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2024%3Acollectivite_territoriale&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2024%3Acollectivite_territoriale&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type "
       "'ADMINEXPRESS-COG.2024:collectivite_territoriale' ('ADMINEXPRESS "
@@ -7294,6 +7328,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "primary key, so this row reads one page (count=1000) and "
       "discloses the remainder rather than paging." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 9.6 MB / 4 s, page 1 10 features / 7.8 MB, ids disjoint. */
   { .id = "JO63_EUWFS_5BD2296B50", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Département "
       "[ADMINEXPRESS-COG.2024:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Département [ADMINEXPRESS-COG.2024:departement]",
@@ -7301,15 +7336,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2024%3Adepartement&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2024%3Adepartement&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2024:departement' "
       "('ADMINEXPRESS COG 2024 Département') from the France "
@@ -7390,6 +7425,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "reads one page (count=1000) and discloses the remainder rather "
       "than paging." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=100: page 0 100 features / 15.2 MB / 5 s, page 1 100 features / 17.2 MB, ids disjoint. */
   { .id = "JO63_EUWFS_327656C3B7", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 EPCI "
       "[ADMINEXPRESS-COG.2024:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 EPCI [ADMINEXPRESS-COG.2024:epci]",
@@ -7397,15 +7433,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2024%3Aepci&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2024%3Aepci&outputFormat=application%2Fjson&count=100&startIndex=0",
+    .page_size = 100,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2024:epci' ('ADMINEXPRESS "
       "COG 2024 EPCI') from the France national/regional geoportal "
@@ -7577,6 +7613,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 7.0 MB / 4 s, page 1 10 features / 4.5 MB, ids disjoint; numberMatched 333 needs 34 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_FBE1DB35A5", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Arrondissement "
       "[ADMINEXPRESS-COG.2025:arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Arrondissement [ADMINEXPRESS-COG.2025:arrondissement]",
@@ -7584,15 +7621,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2025%3Aarrondissement&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2025%3Aarrondissement&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
+    .page_max = 37,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2025:arrondissement' "
       "('ADMINEXPRESS COG 2025 Arrondissement') from the France "
@@ -7744,6 +7782,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=100: page 0 100 features / 13.3 MB / 5 s, page 1 100 features / 12.5 MB, ids disjoint; numberMatched 2056 needs 21 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_B5D00F7FE5", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Canton "
       "[ADMINEXPRESS-COG.2025:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Canton [ADMINEXPRESS-COG.2025:canton]",
@@ -7751,15 +7790,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2025%3Acanton&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2025%3Acanton&outputFormat=application%2Fjson&count=100&startIndex=0",
+    .page_size = 100,
+    .timeout_ms = 120000,
+    .page_max = 24,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2025:canton' "
       "('ADMINEXPRESS COG 2025 Canton') from the France "
@@ -7790,26 +7830,25 @@ static const hp_source HP3B63_EUWFS[] = {
       "startIndex without a primary key, so this row reads one page "
       "(count=1000) and discloses the remainder rather than paging." },
 
+  /* 2026-11-16: count=1000 exceeded the 64 MB body ceiling. This GeoServer type has no primary key: the feature id is generated per REQUEST (the same record came back as fid-...-315c and then fid-...-3156), so id_keys=id re-keyed every record on every run; properties.id is the record's own number (500 distinct of 500). startIndex is refused bare (400) and honoured with sortBy=id: offsets 0 and 3 answer ids 62-64 and 65-67, offset 0 re-read answers 62-64 again. count=500 measured 35.8 MB, so 250; numberMatched 7,229 needs 29 pages. */
   { .id = "JO63_EUWFS_3E5310E218", .name = "si.icnf.pt — cont_aquaticas [snimar:cont_aquaticas]",
     .name_ja = "si.icnf.pt — cont_aquaticas [snimar:cont_aquaticas]",
     .category = "geospatial", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://si.icnf.pt/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=snimar%3Acont_aquaticas&outputFormat=application%2Fjson&count=1000",
+    .url = "https://si.icnf.pt/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=snimar%3Acont_aquaticas&outputFormat=application%2Fjson&count=250&startIndex=0&sortBy=id",
+    .id_keys = "properties.id",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 250,
+    .page_zero_based = 1,
+    .page_max = 32,
+    .timeout_ms = 120000,
     .array_path = "features",
-    .id_keys = "id",
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
-    .description = "WFS 2.0 feature type 'snimar:cont_aquaticas' ('cont_aquaticas') "
-      "from the Portugal national/regional geoportal si.icnf.pt. "
-      "GetFeature as GeoJSON, the layer's numberMatched was 7229 on "
-      "2026-11-14. Enumerated from the server's own GetCapabilities. "
-      "Each feature carries its geometry and attributes. NOTE: "
-      "GeoServer refuses startIndex without a primary key, so this row "
-      "reads one page (count=1000) and discloses the remainder rather "
-      "than paging." },
+    .title_keys = "properties.local,properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
+    .description = "WFS 2.0 feature type 'snimar:cont_aquaticas' ('cont_aquaticas') from the Portugal national/regional geoportal si.icnf.pt. GetFeature as GeoJSON, the layer's numberMatched was 7229 on 2026-11-14. Enumerated from the server's own GetCapabilities. Each feature carries its geometry and attributes. Paged by startIndex under sortBy=id (measured 2026-11-16)." },
 
   { .id = "JO63_EUWFS_9FF8A4BF36", .name = "geoservizi.regione.liguria.it — 2013 - Distribuzione degli "
       "incidenti [M2590:L10110]",
@@ -8649,6 +8688,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=5: page 0 5 features / 5.7 MB / 3 s, page 1 5 features / 13.1 MB, ids disjoint; numberMatched 103 needs 21 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_72BDA8E45E", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Collectivité territoriale "
       "[ADMINEXPRESS-COG.2025:collectivite_territoriale]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Collectivité territoriale [ADMINEXPRESS-COG.2025:collectivite_territoriale]",
@@ -8656,15 +8696,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2025%3Acollectivite_territoriale&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2025%3Acollectivite_territoriale&outputFormat=application%2Fjson&count=5&startIndex=0",
+    .page_size = 5,
+    .timeout_ms = 120000,
+    .page_max = 24,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type "
       "'ADMINEXPRESS-COG.2025:collectivite_territoriale' ('ADMINEXPRESS "
@@ -8887,6 +8928,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 9.4 MB / 4 s, page 1 10 features / 7.8 MB, ids disjoint. */
   { .id = "JO63_EUWFS_E8E17958CB", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Département "
       "[ADMINEXPRESS-COG.2025:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Département [ADMINEXPRESS-COG.2025:departement]",
@@ -8894,15 +8936,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2025%3Adepartement&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2025%3Adepartement&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2025:departement' "
       "('ADMINEXPRESS COG 2025 Département') from the France "
@@ -8978,6 +9020,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "startIndex without a primary key, so this row reads one page "
       "(count=1000) and discloses the remainder rather than paging." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=100: page 0 100 features / 15.1 MB / 5 s, page 1 100 features / 19.7 MB, ids disjoint. */
   { .id = "JO63_EUWFS_44CF56D105", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 EPCI "
       "[ADMINEXPRESS-COG.2025:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 EPCI [ADMINEXPRESS-COG.2025:epci]",
@@ -8985,15 +9028,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2025%3Aepci&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2025%3Aepci&outputFormat=application%2Fjson&count=100&startIndex=0",
+    .page_size = 100,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2025:epci' ('ADMINEXPRESS "
       "COG 2025 EPCI') from the France national/regional geoportal "
@@ -9026,6 +9069,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=1: page 0 1 features / 1.1 MB / 3 s, page 1 1 features / 28.3 MB, ids disjoint; numberMatched 18 needs 18 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_0DAE57E887", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Région "
       "[ADMINEXPRESS-COG.2025:region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Région [ADMINEXPRESS-COG.2025:region]",
@@ -9033,15 +9077,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2025%3Aregion&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2025%3Aregion&outputFormat=application%2Fjson&count=1&startIndex=0",
+    .page_size = 1,
+    .timeout_ms = 120000,
+    .page_max = 21,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2025:region' "
       "('ADMINEXPRESS COG 2025 Région') from the France "
@@ -9140,6 +9185,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 6.3 MB / 3 s, page 1 10 features / 3.5 MB, ids disjoint; numberMatched 333 needs 34 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_9AC38A194D", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Arrondissement , édition "
       "2026-01-01 [ADMINEXPRESS-COG.2026:arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Arrondissement , édition 2026-01-01 [ADMINEXPRESS-COG.2026:arrondissement]",
@@ -9147,15 +9193,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2026%3Aarrondissement&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2026%3Aarrondissement&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
+    .page_max = 37,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2026:arrondissement' "
       "('ADMINEXPRESS COG 2026 Arrondissement , édition 2026-01-01') "
@@ -9282,6 +9329,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "startIndex without a primary key, so this row reads one page "
       "(count=1000) and discloses the remainder rather than paging." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=10: page 0 10 features / 3.5 MB / 3 s, page 1 10 features / 1.2 MB, ids disjoint; numberMatched 2056 needs 206 pages, page_max leaves headroom (capped at 200, the cycle reads the rest). */
   { .id = "JO63_EUWFS_67A4BD0D1D", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Canton , édition "
       "2026-01-01 [ADMINEXPRESS-COG.2026:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Canton , édition 2026-01-01 [ADMINEXPRESS-COG.2026:canton]",
@@ -9289,15 +9337,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2026%3Acanton&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2026%3Acanton&outputFormat=application%2Fjson&count=10&startIndex=0",
+    .page_size = 10,
+    .timeout_ms = 120000,
+    .page_max = 200,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2026:canton' "
       "('ADMINEXPRESS COG 2026 Canton , édition 2026-01-01') from the "
@@ -9906,6 +9955,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=5: page 0 5 features / 9.4 MB / 4 s, page 1 5 features / 2.9 MB, ids disjoint; numberMatched 103 needs 21 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_087A60829D", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Collectivité territoriale "
       ", édition 2026-01-01 "
       "[ADMINEXPRESS-COG.2026:collectivite_territoriale]",
@@ -9914,15 +9964,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2026%3Acollectivite_territoriale&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2026%3Acollectivite_territoriale&outputFormat=application%2Fjson&count=5&startIndex=0",
+    .page_size = 5,
+    .timeout_ms = 120000,
+    .page_max = 24,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type "
       "'ADMINEXPRESS-COG.2026:collectivite_territoriale' ('ADMINEXPRESS "
@@ -10100,6 +10151,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=5: page 0 5 features / 9.2 MB / 4 s, page 1 5 features / 10.7 MB, ids disjoint; numberMatched 101 needs 21 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_FF0E2181F3", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Département , édition "
       "2026-01-01 [ADMINEXPRESS-COG.2026:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Département , édition 2026-01-01 [ADMINEXPRESS-COG.2026:departement]",
@@ -10107,15 +10159,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2026%3Adepartement&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2026%3Adepartement&outputFormat=application%2Fjson&count=5&startIndex=0",
+    .page_size = 5,
+    .timeout_ms = 120000,
+    .page_max = 24,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2026:departement' "
       "('ADMINEXPRESS COG 2026 Département , édition 2026-01-01') from "
@@ -10171,6 +10224,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=100: page 0 100 features / 15.1 MB / 5 s, page 1 100 features / 19.7 MB, ids disjoint. */
   { .id = "JO63_EUWFS_1666F20899", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 EPCI , édition 2026-01-01 "
       "[ADMINEXPRESS-COG.2026:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 EPCI , édition 2026-01-01 [ADMINEXPRESS-COG.2026:epci]",
@@ -10178,15 +10232,15 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2026%3Aepci&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2026%3Aepci&outputFormat=application%2Fjson&count=100&startIndex=0",
+    .page_size = 100,
+    .timeout_ms = 120000,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2026:epci' ('ADMINEXPRESS "
       "COG 2026 EPCI , édition 2026-01-01') from the France "
@@ -10265,6 +10319,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "primary key, so this row reads one page (count=1000) and "
       "discloses the remainder rather than paging." },
 
+  /* 2026-11-16: count=1000 was one page over the engine's 64 MB body ceiling (or its 45 s timeout), reported as a transport failure. Measured at count=1: page 0 1 features / 13.5 MB / 4 s, page 1 1 features / 3.0 MB, ids disjoint; numberMatched 18 needs 18 pages, page_max leaves headroom. */
   { .id = "JO63_EUWFS_1AA9A8EA1D", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Région , édition "
       "2026-01-01 [ADMINEXPRESS-COG.2026:region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Région , édition 2026-01-01 [ADMINEXPRESS-COG.2026:region]",
@@ -10272,15 +10327,16 @@ static const hp_source HP3B63_EUWFS[] = {
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2026%3Aregion&outputFormat=application%2Fjson&count=1000&startIndex=0",
+    .url = "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typenames=ADMINEXPRESS-COG.2026%3Aregion&outputFormat=application%2Fjson&count=1&startIndex=0",
+    .page_size = 1,
+    .timeout_ms = 120000,
+    .page_max = 21,
     .array_path = "features",
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,
-    .page_size = 1000,
     .page_zero_based = 1,
-    .timeout_ms = 45000,
     .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ADMINEXPRESS-COG.2026:region' "
       "('ADMINEXPRESS COG 2026 Région , édition 2026-01-01') from the "
