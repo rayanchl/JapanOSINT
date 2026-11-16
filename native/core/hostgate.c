@@ -433,6 +433,34 @@ int hostgate_acquire(const char *url, int max_wait_ms) {
   }
 }
 
+/* How long until `host` would grant a slot, WITHOUT taking one or waiting -
+ * the scheduler's dispatch question ("is this host ready right now?"). 0 means
+ * an acquire would succeed at once: an unknown host, an exempt one, a disabled
+ * gate, or a slot whose gap, penalty and concurrency all allow a start. When
+ * only the in-flight cap blocks, nothing says when a slot frees, so it answers
+ * HG_PEEK_BUSY_MS rather than a guess at a duration. Read-only: unlike
+ * slot_for() it never claims or evicts a slot, so asking about 85,000 hosts
+ * cannot push a live one out of the table. */
+#define HG_PEEK_BUSY_MS 100
+long hostgate_peek_ready_ms(const char *host) {
+  if (!host || !*host) return 0;
+  cfg_once();
+  if (g_max_conc == 0 && g_min_gap_ms == 0) return 0;
+  if (!strcmp(host, "localhost") || !strcmp(host, "127.0.0.1") ||
+      !strcmp(host, "::1")) return 0;
+  pthread_mutex_lock(&g_mu);
+  hg_slot *s = slot_lookup(host);
+  long ms = 0;
+  if (s) {
+    long long now = mono_ms();
+    long long ready = slot_ready_at(s);
+    if (ready > now) ms = (long)(ready - now);
+    else if (g_max_conc > 0 && s->in_flight >= g_max_conc) ms = HG_PEEK_BUSY_MS;
+  }
+  pthread_mutex_unlock(&g_mu);
+  return ms;
+}
+
 void hostgate_release(const char *url) {
   char host[HG_HOSTLEN];
   if (!url_host(url, host, sizeof host)) return;

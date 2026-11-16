@@ -25,6 +25,9 @@ typedef struct {
   long global_sec;   /* >0: every scheduled row runs at this interval */
   long min_sec;      /* >0: no scheduled row runs more often than this */
   long max_sec;      /* >0: no scheduled row runs less often than this */
+  long realtime_max_sec; /* >0: a row DECLARED at or below this is exempt from
+                          * global_sec (min/max still clamp it); 0 = no exemption.
+                          * Compiled default 300 (audit ENG-17). */
 } cadence_policy;
 
 /* Load the policy from the database (creating app_settings if it is missing),
@@ -36,8 +39,15 @@ void cadence_init(db_handle *db);
  * entity pivot or a pod that is not scheduled) is returned unchanged. */
 long cadence_apply(long declared);
 
-/* "declared" | "global" | "clamped" for a row declaring `declared`. */
+/* The same for a row whose pre-policy interval `base` can differ from what it
+ * declared (an adaptive row's freshness measurement). The real-time exemption
+ * is decided on `declared`; the result is `base` clamped, else the global. */
+long cadence_apply_row(long declared, long base);
+
+/* "declared" | "global" | "clamped" | "realtime" for a row declaring `declared`
+ * ("realtime" = a global interval is set and this row is exempt from it). */
 const char *cadence_mode_for(long declared);
+const char *cadence_mode_for_row(long declared, long base);
 
 cadence_policy cadence_get(void);
 /* Where the current policy came from: "db" | "env" | "default". */
@@ -49,7 +59,7 @@ unsigned cadence_generation(void);
  * rejected field (a static string). who may be NULL. */
 int cadence_set(db_handle *db, const cadence_policy *p, const char *who, const char **err);
 
-/* Parse {"global_interval_sec":N,"min_interval_sec":N,"max_interval_sec":N}
+/* Parse {"global_interval_sec":N,"min_interval_sec":N,"max_interval_sec":N,"realtime_max_sec":N}
  * onto `base` (fields absent from the body keep base's value). Returns 0 or
  * -1 with *err set. */
 int cadence_parse(const char *json, const cadence_policy *base, cadence_policy *out, const char **err);

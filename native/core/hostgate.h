@@ -55,6 +55,13 @@ int  hostgate_acquire(const char *url, int max_wait_ms);
 void hostgate_set_cancel(volatile int *flag);
 int hostgate_cancelled(void);
 
+/* Non-blocking, non-claiming: milliseconds until `host` (a lowercase hostname,
+ * as hostgate_url_host yields) would grant a slot; 0 = an acquire would
+ * succeed now (also for an unknown, exempt or ungated host). Lets the
+ * scheduler leave a queued source whose host is not ready and take another,
+ * instead of parking a worker inside hostgate_acquire. */
+long hostgate_peek_ready_ms(const char *host);
+
 /* Releases the slot taken by a hostgate_acquire that returned 1. */
 void hostgate_release(const char *url);
 

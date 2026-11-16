@@ -2531,6 +2531,18 @@ scheduled rows main held by the time this merged); and the policy holds
 the 22 real-time feeds (`wolfx-eew` 10 s, `jma-tsunami` 60 s) at six hours
 until each is given its own interval.
 
+**Real-time rows are exempt from the GLOBAL interval** (2026-11-16, audit
+ENG-17): the policy field `sched.realtime_max_sec` (default 300, `0` disables,
+`JO_SCHED_REALTIME_MAX_SEC` bootstraps an empty database, edited through the
+same `PUT /api/sources/cadence` as `realtime_max_sec`) exempts a scheduled row
+whose DECLARED interval is at or below it from `global_interval_sec`, so
+`wolfx-eew` (10 s) and `jma-tsunami` (60 s) no longer run every six hours. It is
+decided on the declared value, never on an adaptive measurement; the min/max
+clamps still apply and a per-source override still wins. The pages show
+`policy: "realtime"`, `--schedule` prints basis `realtime-exempt`, and the
+runs/day estimate counts the rows (`realtime_exempt_rows`). A policy saved
+before the key existed reads as the default, not as off.
+
 What a choice costs is in the response, measured over the registry, not
 guessed: `estimate.runs_per_day_declared` against
 `estimate.runs_per_day_effective`. Measured 2026-10-20 on 19,954 scheduled
