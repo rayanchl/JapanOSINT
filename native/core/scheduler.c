@@ -1963,7 +1963,14 @@ void scheduler_loop(db_handle *db) {
    * upstream politeness (hostgate) and sqlite write contention, not cores. 8
    * is the conservative default for a first deploy; raise it once the
    * heartbeat below shows a standing backlog. 1 = the old serial behaviour. */
-  int workers = (int)env_long("JO_SCHED_WORKERS", 8, 1, 32);
+  /* DEFAULT 24 (2026-11-16, audit ENG-18). The scheduling audit measured a lap
+   * of the fleet at ~18 h with 8 workers and left 24 unmeasured for write
+   * contention. Measured on the UNBATCHED sink, 300 s boots from fresh copies
+   * of one database, other builds competing for the machine: 8 workers 217 runs
+   * (0.72/s), 24 workers 363 runs (1.21/s), and at 24 zero failed= emits and
+   * zero SQLITE_BUSY lines. The 1.7x (not 3x) gain is the boot ramp, hostgate
+   * pacing and shared egress, not the database. The clamp stays 1-32. */
+  int workers = (int)env_long("JO_SCHED_WORKERS", 24, 1, 32);
   /* The pods are few, mostly short, and must never wait on the fleet. Two, so
    * one long LLM-bound pod (repair, enrichment) cannot hold the WAL
    * checkpoint or retention behind it. */
