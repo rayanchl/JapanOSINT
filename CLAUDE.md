@@ -2512,7 +2512,8 @@ pinned in `test_sched_backoff.c` / `test_sched_pool.c`:
 
 Two numbers it measured that are decisions rather than defects: at a mean run
 of 6.2 s (uniform sample of 400) the default 8 workers lap the fleet in about
-18 h, so **the 6 h policy needs `JO_SCHED_WORKERS=24`**; and the policy holds
+18 h, so **the 6 h policy needs `JO_SCHED_WORKERS=24`** (27 on the 90,907
+scheduled rows main held by the time this merged); and the policy holds
 the 22 real-time feeds (`wolfx-eew` 10 s, `jma-tsunami` 60 s) at six hours
 until each is given its own interval.
 

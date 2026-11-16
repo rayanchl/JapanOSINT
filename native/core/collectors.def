@@ -67,9 +67,8 @@ COLLECTOR("grp_unassigned", "Unassigned — add to core/collectors.def", "未分
           "Collectors the registry carries that collectors.def does not list yet. Should be empty.", NULL)
 
 /* ── collectors (parent = group) ─────────────────────────────────────── */
-/* Government & public administration: 128 collector(s), 27508 sources */
+/* Government & public administration: 127 collector(s), 24638 sources */
 COLLECTOR("frgov_mairies", "France — mairies (municipal councils)", "フランス — 市町村役場", "Town halls (mairies, mairies déléguées) from the service-public.fr local directory; municipal news feeds.", "grp_government")  /* 6442 src; local-gov 6442 */
-COLLECTOR("hp3b63_cn", "China — government website notices (batch 63)", NULL, NULL, "grp_government")  /* 2870 src; government 2870 */
 COLLECTOR("hp3b44_usgov", "United States — local governments: cities, counties, townships, tribes, districts (batch 44)", NULL, NULL, "grp_government")  /* 2072 src; government 2072 */
 COLLECTOR("hp3b44_ukgov", "United Kingdom — councils, parish & town councils (batch 44)", NULL, NULL, "grp_government")  /* 1726 src; government 1726 */
 COLLECTOR("hp3b47_wdgov", "Worldwide — government agencies and ministries, from Wikidata (batch 47)", NULL, NULL, "grp_government")  /* 1559 src; government 1559 */
@@ -360,8 +359,17 @@ COLLECTOR("pa_public-finance", "Panama — public finance", NULL, NULL, "grp_pro
 COLLECTOR("pk_anti-corruption", "Pakistan — anti corruption", NULL, NULL, "grp_procurement")  /* 1 src; anti-corruption 1 */
 COLLECTOR("pl_procurement", "Poland — procurement", NULL, NULL, "grp_procurement")  /* 1 src; procurement 1 */
 
-/* Open data portals & statistics: 75 collector(s), 4381 sources */
+/* Open data portals & statistics: 86 collector(s), 25862 sources */
+COLLECTOR("hp3b67_socrata", "socrata (batch 67)", NULL, NULL, "grp_opendata")  /* 4856 src; open-data 4856 */
+COLLECTOR("hp3b66_socrata", "socrata (batch 66)", NULL, NULL, "grp_opendata")  /* 3627 src; open-data 3627 */
+COLLECTOR("hp3b65_ods", "ods (batch 65)", NULL, NULL, "grp_opendata")  /* 2580 src; open-data 2580 */
+COLLECTOR("hp3b64_ods", "ods (batch 64)", NULL, NULL, "grp_opendata")  /* 2575 src; open-data 2575 */
+COLLECTOR("hp3b64_ckands", "ckands (batch 64)", NULL, NULL, "grp_opendata")  /* 2197 src; open-data 2197 */
+COLLECTOR("hp3b65_ckands", "ckands (batch 65)", NULL, NULL, "grp_opendata")  /* 2063 src; open-data 2063 */
+COLLECTOR("hp3b66_ckands", "ckands (batch 66)", NULL, NULL, "grp_opendata")  /* 1910 src; open-data 1910 */
 COLLECTOR("hp3b63_euods", "Europe — OpenDataSoft open-data datasets (batch 63)", NULL, NULL, "grp_opendata")  /* 1859 src; open-data 1859 */
+COLLECTOR("hp3b67_ckands", "ckands (batch 67)", NULL, NULL, "grp_opendata")  /* 1249 src; open-data 1249 */
+COLLECTOR("hp3b67_ods", "ods (batch 67)", NULL, NULL, "grp_opendata")  /* 377 src; open-data 377 */
 COLLECTOR("europe_data", "European open data", "欧州オープンデータ", NULL, "grp_opendata")  /* 343 src; opendata 343 */
 COLLECTOR("fr_opendata", "France — open data", "フランス オープンデータ", NULL, "grp_opendata")  /* 287 src; opendata 261, government 11, registry 6 */
 COLLECTOR("ch_opendata", "Switzerland — open data", "スイス オープンデータ", NULL, "grp_opendata")  /* 208 src; opendata 208 */
@@ -383,10 +391,12 @@ COLLECTOR("ro_opendata", "Romania — opendata", NULL, NULL, "grp_opendata")  /*
 COLLECTOR("uk_opendata", "UK — opendata", NULL, NULL, "grp_opendata")  /* 34 src; opendata 34 */
 COLLECTOR("ie_opendata", "Ireland — opendata", NULL, NULL, "grp_opendata")  /* 32 src; opendata 32 */
 COLLECTOR("hp3_portals", "Open-data portal catalogues — SF, Ireland, Hawaii (hp3)", NULL, NULL, "grp_opendata")  /* 30 src; government 27, transport 2, energy 1 */
+COLLECTOR("hp3b66_ods", "ods (batch 66)", NULL, NULL, "grp_opendata")  /* 28 src; open-data 28 */
 COLLECTOR("hp3b34_socratacat", "Socrata portals — dataset catalogue search (batch 34)", NULL, NULL, "grp_opendata")  /* 24 src; government 24 */
 COLLECTOR("lv_opendata", "Latvia — opendata", NULL, NULL, "grp_opendata")  /* 24 src; opendata 24 */
 COLLECTOR("it_opendata", "Italy — opendata", NULL, NULL, "grp_opendata")  /* 22 src; opendata 22 */
 COLLECTOR("gb_opendata", "UK — opendata", NULL, NULL, "grp_opendata")  /* 20 src; opendata 20 */
+COLLECTOR("hp3b67_ckanhost", "ckanhost (batch 67)", NULL, NULL, "grp_opendata")  /* 19 src; open-data 19 */
 COLLECTOR("hp3_gov", "Open-data catalogues — GovData, data.gouv.fr, data.europa.eu (hp3)", NULL, NULL, "grp_opendata")  /* 16 src; government 11, legal 3, economy 1 */
 COLLECTOR("hp3b52_ansd", "Senegal — ANSD statistics (batch 52)", NULL, NULL, "grp_opendata")  /* 14 src; statistics 8, government 3, legal 1 */
 COLLECTOR("hu_opendata", "Hungary — opendata", NULL, NULL, "grp_opendata")  /* 11 src; opendata 11 */
@@ -664,13 +674,14 @@ COLLECTOR("marketplace", "Marketplaces", "マーケットプレイス", NULL, "g
 COLLECTOR("classifieds", "Classifieds", "クラシファイド広告", NULL, "grp_social")  /* 2 src;  2 */
 COLLECTOR("np_people", "Nepal — people", NULL, NULL, "grp_social")  /* 1 src; people 1 */
 
-/* Geospatial & mapping: 29 collector(s), 19801 sources */
+/* Geospatial & mapping: 30 collector(s), 20652 sources */
 COLLECTOR("hp3b62_eu", "Europe — municipal & regional ArcGIS layers (batch 62)", NULL, NULL, "grp_geo")  /* 4535 src; geospatial 2936, infrastructure 910, transport 337 */
 COLLECTOR("hp3b61_us", "United States — municipal & county ArcGIS layers (batch 61)", NULL, NULL, "grp_geo")  /* 3908 src; infrastructure 1358, geospatial 829, safety 816 */
 COLLECTOR("hp3b59_jpgis", "Japan — municipal & prefectural ArcGIS layers (batch 59)", NULL, NULL, "grp_geo")  /* 2543 src; geospatial 954, safety 620, infrastructure 445 */
 COLLECTOR("hp3b60_us", "United States — city & county ArcGIS layers (batch 60)", NULL, NULL, "grp_geo")  /* 2495 src; infrastructure 945, safety 652, geospatial 476 */
 COLLECTOR("hp3b58_arcgis", "ArcGIS layers — agency GIS servers: EEA air quality, FEMA, state agencies (batch 58)", NULL, NULL, "grp_geo")  /* 1584 src; environment 890, geospatial 694 */
 COLLECTOR("hp3b60_eu", "Europe — council & municipal ArcGIS layers (batch 60)", NULL, NULL, "grp_geo")  /* 1264 src; geospatial 523, infrastructure 401, environment 117 */
+COLLECTOR("hp3b64_derest", "derest (batch 64)", NULL, NULL, "grp_geo")  /* 851 src; geospatial 851 */
 COLLECTOR("hp3b61_jp", "Japan — prefectural & city GIS ArcGIS layers (batch 61)", NULL, NULL, "grp_geo")  /* 761 src; geospatial 370, safety 204, infrastructure 109 */
 COLLECTOR("hp3b58_arcgis2", "ArcGIS layers — county & state GIS servers, set 2 (batch 58)", NULL, NULL, "grp_geo")  /* 713 src; geospatial 713 */
 COLLECTOR("hp3b58_arcgis3", "ArcGIS layers — state environment & natural-resources servers, set 3 (batch 58)", NULL, NULL, "grp_geo")  /* 650 src; geospatial 650 */

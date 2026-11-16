@@ -1,0 +1,24 @@
+JapanOSINT
+Copyright (c) 2026 the JapanOSINT repository owner. All rights reserved.
+
+This software and its source code are proprietary and confidential.
+
+No licence is granted to any person to use, copy, modify, merge, publish,
+distribute, sublicense or sell copies of this software, in whole or in part,
+without the prior written permission of the copyright holder.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
+
+Third-party components
+----------------------
+This repository vendors third-party code under its own licences; see
+native/third_party/README.md. In particular Mongoose (native/third_party/
+mongoose.*) is licensed by Cesanta under GPLv2 or a commercial licence. This
+software is therefore for the copyright holder's private use only: it must not
+be distributed, in source or binary form, unless Mongoose is first replaced or
+commercially licensed, or the whole is released under terms compatible with
+the GPLv2.

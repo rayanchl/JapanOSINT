@@ -23,10 +23,17 @@ const KEYS = {
   pkceNonce: 'osint:auth:pkce-nonce',
   pkceStarted: 'osint:auth:pkce-started',
   oauthReturn: 'osint:auth:oauth-return',
+  // "Keep me signed in on this device" (a non-secret '1' flag, localStorage).
+  keep: 'osint:auth:keep',
 };
 
 /** A social sign-in must come back within this long to be completed. */
 export const OAUTH_FLOW_TTL_MS = 10 * 60 * 1000;
+
+/** The access token lives in this variable and nowhere else: not in
+ *  localStorage, not in sessionStorage. A reload drops it and the next request
+ *  (or bootstrap) obtains a fresh one with the refresh token. */
+let accessInMemory = null;
 
 function lsGet(k) { try { return window.localStorage.getItem(k); } catch { return null; } }
 function ssGet(k) { try { return window.sessionStorage.getItem(k); } catch { return null; } }
@@ -48,9 +55,15 @@ function lsSet(k, v) {
   } catch { /* private mode / quota */ }
 }
 
+function ssRemove(k) { try { window.sessionStorage.removeItem(k); } catch { /* private mode */ } }
+
 export const sessionStore = {
-  get accessToken() { return lsGet(KEYS.access); },
-  get refreshToken() { return lsGet(KEYS.refresh); },
+  get accessToken() { return accessInMemory; },
+  /** Persisted refresh token: localStorage if the user chose to stay signed
+   *  in on this device, else this tab's sessionStorage. */
+  get refreshToken() { return lsGet(KEYS.refresh) || ssGet(KEYS.refresh); },
+  get keepSignedIn() { return lsGet(KEYS.keep) === '1'; },
+  setKeepSignedIn(v) { lsSet(KEYS.keep, v ? '1' : null); },
   get tenantId() { return lsGet(KEYS.tenant); },
   get onboardingCompleted() { return lsGet(KEYS.onboarded) === '1'; },
   get supabaseURL() { return lsGet(KEYS.supabaseURL) || import.meta.env?.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL; },
@@ -58,8 +71,34 @@ export const sessionStore = {
   get pkceVerifier() { return lsGet(KEYS.pkce); },
   get oauthReturn() { return lsGet(KEYS.oauthReturn); },
 
-  setTokens(access, refresh) { lsSet(KEYS.access, access); lsSet(KEYS.refresh, refresh); },
-  clearTokens() { lsSet(KEYS.access, null); lsSet(KEYS.refresh, null); },
+  /** Access token -> memory only. Refresh token -> localStorage when
+   *  keepSignedIn, else sessionStorage; never both. */
+  setTokens(access, refresh) {
+    accessInMemory = access || null;
+    if (!refresh) { lsSet(KEYS.refresh, null); ssRemove(KEYS.refresh); return; }
+    if (sessionStore.keepSignedIn) { lsSet(KEYS.refresh, refresh); ssRemove(KEYS.refresh); }
+    else { ssSet(KEYS.refresh, refresh); lsSet(KEYS.refresh, null); }
+  },
+  /** Clears BOTH storages (and the legacy access key) and the memory copy. */
+  clearTokens() {
+    accessInMemory = null;
+    lsSet(KEYS.access, null); lsSet(KEYS.refresh, null); lsSet(KEYS.keep, null);
+    ssRemove(KEYS.access); ssRemove(KEYS.refresh);
+  },
+  /**
+   * One-time upgrade of a session written by an older build, which kept the
+   * access token (and the refresh token) in localStorage. A stored session is
+   * treated as "keep me signed in" so nobody is signed out by the upgrade;
+   * the access token is moved into memory and removed from storage.
+   */
+  migrateLegacySession() {
+    const legacyAccess = lsGet(KEYS.access);
+    if (legacyAccess == null) return false;
+    if (!accessInMemory) accessInMemory = legacyAccess;
+    lsSet(KEYS.access, null);
+    if (lsGet(KEYS.refresh)) lsSet(KEYS.keep, '1');
+    return true;
+  },
   setTenantId(id) { lsSet(KEYS.tenant, id); },
   setOnboardingCompleted(v) { lsSet(KEYS.onboarded, v ? '1' : null); },
   setSupabaseConfig(url, anon) { lsSet(KEYS.supabaseURL, url); lsSet(KEYS.supabaseAnon, anon); },
@@ -99,6 +138,8 @@ export const sessionStore = {
     ssSet(KEYS.pkceNonce, null);
   },
 };
+
+sessionStore.migrateLegacySession();
 
 export function supabaseClient() {
   return createSupabaseAuth({ projectURL: sessionStore.supabaseURL, anonKey: sessionStore.supabaseAnonKey });
