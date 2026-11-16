@@ -1,5 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import apiUrl from '../../utils/apiUrl.js';
+import { useApi } from '../../hooks/useApi.js';
+import { usePagedList } from '../../hooks/usePagedList.js';
+import { useAuthOptional } from '../../auth/AuthContext.jsx';
+import { PagedFooter } from '../ui/kit.jsx';
 import { relativeTime } from '../../utils/time.js';
 import StatusBadge from '../ui/StatusBadge';
 import LoadingSpinner from '../ui/LoadingSpinner';
@@ -15,9 +19,19 @@ const FILTERS = [
   { key: 'degraded', label: 'Degraded' },
   { key: 'offline', label: 'Offline' },
   { key: 'pending', label: 'Pending' },
-  { key: 'gated', label: 'Gated' },
-  { key: 'missingKey', label: 'Missing key' },
+  { key: 'gated', label: 'Gated / needs key' },
 ];
+
+/* The panel pages through the server's own search instead of downloading
+ * every registered source: each filter is a query the server answers. */
+const FILTER_QUERY = {
+  working: 'health=ok&status=online',
+  online: 'status=online',
+  degraded: 'status=degraded',
+  offline: 'status=offline',
+  pending: 'status=pending',
+  gated: 'health=gated',
+};
 
 function prettyJson(str) {
   if (!str) return '';
@@ -127,7 +141,9 @@ function ProbeDetail({ api }) {
   );
 }
 
-function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
+function ApiRowBody({ api, expanded, onToggle, onApiUpdate }) {
+  const auth = useAuthOptional();
+  const isOperator = Boolean(auth?.isPlatformAdmin);
   const [pinging, setPinging] = useState(false);
   const [consentBusy, setConsentBusy] = useState(false);
   const [actionError, setActionError] = useState(null);
@@ -296,7 +312,10 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
               </div>
             </div>
           )}
-          {api.requiresKey && (
+          {api.requiresKey && !isOperator && (
+            <div className="pt-1 text-[10px] text-osint-muted">Ping and scheduled probing are operator actions (read-only for you).</div>
+          )}
+          {api.requiresKey && isOperator && (
             <div className="pt-1 flex flex-wrap items-center gap-2">
               <button
                 type="button"
@@ -354,79 +373,56 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
   );
 }
 
+/* One search-result row. Collapsed it shows what the search carries; opening
+ * it reads that ONE source's status row (GET /api/status/:id) — the probe
+ * request/response, env vars and consent that the list never needed. */
+function adaptRow(row) {
+  const need = row.health?.credentials_required || [];
+  return {
+    id: row.id, name: row.name || row.id, nameJa: row.name_ja, status: row.status || 'pending',
+    gated: row.health?.state === 'gated', requiresKey: need.length > 0, configured: false,
+    envVars: [], missingVars: need, category: row.category, type: row.type, description: row.description,
+  };
+}
+
+function ApiRow({ row, expanded, onToggle }) {
+  const full = useApi(expanded ? `/api/status/${encodeURIComponent(row.id)}` : null);
+  const [upd, setUpd] = useState(null);
+  const api = upd || full.data || adaptRow(row);
+  const have = Boolean(upd || full.data);
+  return (
+    <>
+      <ApiRowBody api={api} expanded={expanded && have} onToggle={onToggle} onApiUpdate={(u) => setUpd({ ...(full.data || adaptRow(row)), ...u })} />
+      {expanded && !have && (
+        <div className="text-[10px] text-osint-muted px-2 pb-1">
+          {full.error ? `Could not load this source's status row: ${full.error.message}` : 'Loading this source…'}
+        </div>
+      )}
+    </>
+  );
+}
+
 export default function SourcesPanel({ onClose }) {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
+  const [searchApplied, setSearchApplied] = useState('');
   const [expandedId, setExpandedId] = useState(null);
   // Tabs: sources | discovery | follow | tables | scheduler
   const [tab, setTab] = useState('sources');
 
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      try {
-        const res = await fetch(apiUrl('/api/status'));
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        if (!cancelled) {
-          setData(json);
-          setError(null);
-        }
-      } catch (err) {
-        if (!cancelled) setError(err.message || 'Failed to load');
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-    load();
-    const t = setInterval(load, 30_000);
-    return () => {
-      cancelled = true;
-      clearInterval(t);
-    };
-  }, []);
-
-  const filtered = useMemo(() => {
-    if (!data) return [];
-    const q = search.trim().toLowerCase();
-    return data.apis
-      .filter((a) => {
-        if (filter === 'working') {
-          return !a.gated && a.status === 'online' && (!a.requiresKey || a.configured);
-        }
-        if (filter === 'online') return !a.gated && a.status === 'online';
-        if (filter === 'degraded') return !a.gated && a.status === 'degraded';
-        if (filter === 'offline') return !a.gated && a.status === 'offline';
-        if (filter === 'pending') return !a.gated && a.status === 'pending';
-        if (filter === 'gated') return a.gated;
-        if (filter === 'missingKey') return a.requiresKey && !a.configured;
-        return true;
-      })
-      .filter((a) => {
-        if (!q) return true;
-        return (
-          a.name.toLowerCase().includes(q) ||
-          a.id.toLowerCase().includes(q) ||
-          (a.category && a.category.toLowerCase().includes(q))
-        );
-      })
-      .sort((a, b) => {
-        const rank = (x) => {
-          if (x.requiresKey && !x.configured) return 6;
-          if (x.gated) return 4;
-          if (x.status === 'online') return 0;
-          if (x.status === 'degraded') return 1;
-          if (x.status === 'offline') return 2;
-          if (x.status === 'pending') return 3;
-          return 5;
-        };
-        const r = rank(a) - rank(b);
-        return r !== 0 ? r : a.name.localeCompare(b.name);
-      });
-  }, [data, filter, search]);
+  // Counters only (?summary=1): the whole catalogue is never downloaded.
+  const sum = useApi('/api/status?summary=1', { poll: 30_000 });
+  const data = sum.data;
+  const loading = sum.loading;
+  const error = sum.error ? (sum.error.message || 'Failed to load') : null;
+  const path = useMemo(() => {
+    const parts = [];
+    if (FILTER_QUERY[filter]) parts.push(FILTER_QUERY[filter]);
+    if (searchApplied) parts.push(`q=${encodeURIComponent(searchApplied)}`);
+    return `/api/sources/search${parts.length ? `?${parts.join('&')}` : ''}`;
+  }, [filter, searchApplied]);
+  const list = usePagedList(path, { pageSize: 50, enabled: tab === 'sources' });
+  const filtered = list.rows;
 
   const summary = data?.summary;
 
@@ -537,10 +533,12 @@ export default function SourcesPanel({ onClose }) {
 
       <div className="px-3 py-2 border-b border-osint-border/40 space-y-2 flex-shrink-0">
         <input
-          type="text"
-          placeholder="Search sources…"
+          type="search"
+          aria-label="Search sources"
+          placeholder="Search sources (press Enter)…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') setSearchApplied(search.trim()); }}
           className="w-full bg-osint-bg/60 border border-osint-border rounded px-2 py-1 text-xs text-osint-text placeholder:text-osint-muted/70 focus:outline-none focus:border-neon-cyan/50"
         />
         <div className="flex flex-wrap gap-1">
@@ -548,6 +546,7 @@ export default function SourcesPanel({ onClose }) {
             <button
               key={f.key}
               type="button"
+              aria-pressed={filter === f.key}
               onClick={() => setFilter(f.key)}
               className={`px-2 py-0.5 rounded text-[10px] border transition-colors ${
                 filter === f.key
@@ -576,37 +575,33 @@ export default function SourcesPanel({ onClose }) {
             {data && ' — the rows below are the last successful fetch, not current.'}
           </div>
         )}
-        {data && filtered.length === 0 && (
+        {list.loading && filtered.length === 0 && (
+          <div className="flex items-center justify-center py-6"><LoadingSpinner /></div>
+        )}
+        {list.error && (
+          <div className="text-status-offline text-xs px-2 py-3">Failed to search sources: {list.error.message}</div>
+        )}
+        {list.loaded && !list.error && filtered.length === 0 && (
           <div className="text-osint-muted text-xs px-2 py-4 text-center">
             No sources match the current filter.
           </div>
         )}
-        {data &&
-          filtered.map((api) => (
-            <ApiRow
-              key={api.id}
-              api={api}
-              expanded={expandedId === api.id}
-              onToggle={() =>
-                setExpandedId((id) => (id === api.id ? null : api.id))
-              }
-              onApiUpdate={(updated) =>
-                setData((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        apis: prev.apis.map((a) => (a.id === updated.id ? { ...a, ...updated } : a)),
-                      }
-                    : prev,
-                )
-              }
-            />
-          ))}
+        {filtered.map((row) => (
+          <ApiRow
+            key={row.id}
+            row={row}
+            expanded={expandedId === row.id}
+            onToggle={() => setExpandedId((id) => (id === row.id ? null : row.id))}
+          />
+        ))}
+        {filtered.length > 0 && (
+          <PagedFooter shown={filtered.length} total={list.total} hasMore={list.hasMore} busy={list.loadingMore} onMore={list.loadMore} error={list.moreError} noun="sources" />
+        )}
       </div>
 
       {data && (
         <div className="px-3 py-1.5 border-t border-osint-border/40 text-[10px] text-osint-muted flex items-center justify-between flex-shrink-0">
-          <span>Auto-refresh 30s</span>
+          <span>Counters refresh every 30 s</span>
           <span className="font-mono">
             Updated {relativeTime(data.timestamp)}
           </span>

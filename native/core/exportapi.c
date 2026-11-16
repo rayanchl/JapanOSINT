@@ -39,6 +39,7 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
+#include "../lib/jocore.h"   /* jo_iso_now */
 
 /* ── output stream: bounded batches through the caller's writer ─────────── */
 
@@ -118,20 +119,6 @@ static const ecol COLS_ALERT_EVENTS[] = {
 static const char *ctext(sqlite3_stmt *s, int i) {
   return sqlite3_column_type(s, i) == SQLITE_NULL
            ? NULL : (const char *)sqlite3_column_text(s, i);
-}
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 static void stamp_now(char *buf, size_t n) {          /* filename-safe */
   time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
@@ -671,17 +658,34 @@ static void build_case_sql(const eparams *p, const ecol *cols, int ncol,
 
 /* ── per-row emitters ───────────────────────────────────────────────────── */
 
+/* A cell that begins with = + - @ TAB or CR is a FORMULA to Excel and
+ * LibreOffice, and feed content is upstream-controlled (API-09). OWASP's
+ * remedy: prefix a single quote, which the spreadsheet swallows. A leading
+ * quote also forces the field into quotes below only when it needs them for
+ * RFC 4180 reasons; TAB and CR already do (CR) or are harmless inside a
+ * plain field. */
+static int csv_formula_start(const char *v) {
+  return v[0] == '=' || v[0] == '+' || v[0] == '-' || v[0] == '@' ||
+         v[0] == '\t' || v[0] == '\r';
+}
 static int csv_needs_quote(const char *v) {
   for (const char *p = v; *p; p++)
     if (*p == ',' || *p == '"' || *p == '\n' || *p == '\r') return 1;
   return 0;
 }
 /* RFC 4180 field: quote when it contains a comma, quote or newline; double
- * every embedded quote. NULL → an empty (unquoted) field. */
-static int csv_field(ostream *o, const char *v) {
+ * every embedded quote. NULL → an empty (unquoted) field. `guard` != 0 marks
+ * a TEXT cell, which gets the formula prefix; numbers and the header row do
+ * not (a negative number is not an attack, and must stay a number). */
+static int csv_field_g(ostream *o, const char *v, int guard) {
   if (!v) return o->broken;
-  if (!csv_needs_quote(v)) return ob_s(o, v);
+  const int pre = guard && csv_formula_start(v);
+  if (!csv_needs_quote(v)) {
+    if (pre && ob_put(o, "'", 1)) return 1;
+    return ob_s(o, v);
+  }
   if (ob_put(o, "\"", 1)) return 1;
+  if (pre && ob_put(o, "'", 1)) return 1;
   const char *start = v;
   for (const char *p = v; ; p++) {
     if (*p == '"') {
@@ -695,6 +699,7 @@ static int csv_field(ostream *o, const char *v) {
   }
   return ob_put(o, "\"", 1);
 }
+static int csv_field(ostream *o, const char *v) { return csv_field_g(o, v, 0); }
 
 static int csv_row(ostream *o, sqlite3_stmt *s, const ecol *cols, int ncol) {
   for (int i = 0; i < ncol; i++) {
@@ -704,7 +709,11 @@ static int csv_row(ostream *o, sqlite3_stmt *s, const ecol *cols, int ncol) {
       if (ob_s(o, sqlite3_column_int(s, i) ? "true" : "false")) return 1;
       continue;
     }
-    if (csv_field(o, ctext(s, i))) return 1;
+    /* Only a TEXT-typed value of a non-numeric column is guarded: a
+     * CT_NUM / INTEGER / FLOAT cell such as -5 is data, not a formula. */
+    int guard = cols[i].type != CT_NUM &&
+                sqlite3_column_type(s, i) == SQLITE_TEXT;
+    if (csv_field_g(o, ctext(s, i), guard)) return 1;
   }
   return ob_s(o, "\r\n");
 }
@@ -1016,7 +1025,7 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
 
   /* ── epilogue ── */
   if (!o->broken) {
-    char ts[40]; iso_now(ts, sizeof ts);
+    char ts[40]; jo_iso_now(ts, sizeof ts);
     if (f == F_CSV) {
       if (incomplete) {
         char note[416];

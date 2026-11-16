@@ -50,16 +50,23 @@ void keyqual_seal(keyqual *q) {
   q->sealed = 1;
 }
 
-/* occurrences of `s` in the sorted v[0..n) */
+/* occurrences of `s` in the sorted v[0..n): two binary searches (first index
+ * with v[i] >= s, first with v[i] > s). The count used to be a linear walk
+ * over the run of equal keys, called per record, so a feed repeating one key
+ * 200,000 times cost ~4e10 comparisons. */
 static int occurrences(char **v, int n, const char *s) {
   int lo = 0, hi = n;                       /* first index with v[i] >= s */
   while (lo < hi) {
     int mid = lo + (hi - lo) / 2;
     if (strcmp(v[mid], s) < 0) lo = mid + 1; else hi = mid;
   }
-  int c = 0;
-  while (lo + c < n && strcmp(v[lo + c], s) == 0) c++;
-  return c;
+  int first = lo;
+  hi = n;                                   /* first index with v[i] > s */
+  while (lo < hi) {
+    int mid = lo + (hi - lo) / 2;
+    if (strcmp(v[mid], s) <= 0) lo = mid + 1; else hi = mid;
+  }
+  return lo - first;
 }
 
 int keyqual_count(keyqual *q, const char *base) {

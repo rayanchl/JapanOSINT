@@ -11,7 +11,7 @@ import { savedStore } from '../../store/savedStore.js';
 const realFetch = globalThis.fetch;
 const auth = createSupabaseAuth({ projectURL: 'https://proj.supabase.test', anonKey: 'anon' });
 
-beforeEach(() => { localStorage.clear(); sessionStorage.clear(); });
+beforeEach(() => { localStorage.clear(); sessionStorage.clear(); sessionStore.clearTokens(); });
 afterEach(() => { globalThis.fetch = realFetch; vi.restoreAllMocks(); });
 
 describe('completeOAuth', () => {
@@ -117,5 +117,68 @@ describe('per-account local data', () => {
     expect(savedStore.all().length).toBe(1);
     claimLocalData('bob');
     expect(savedStore.all()).toEqual([]);
+  });
+});
+
+describe('token storage (WEB-13)', () => {
+  const dump = (st) => JSON.stringify(Object.keys(st).map((k) => [k, st.getItem(k)]));
+
+  it('default mode: access token in memory only, refresh token in sessionStorage, nothing in localStorage', () => {
+    sessionStore.setTokens('ACCESS-1', 'REFRESH-1');
+    expect(sessionStore.accessToken).toBe('ACCESS-1');
+    expect(sessionStore.refreshToken).toBe('REFRESH-1');
+    expect(localStorage.length).toBe(0);
+    expect(dump(sessionStorage)).not.toContain('ACCESS-1');
+    expect(dump(sessionStorage)).toContain('REFRESH-1');
+  });
+
+  it('opt-in mode persists only the refresh token, in localStorage', () => {
+    sessionStore.setKeepSignedIn(true);
+    sessionStore.setTokens('ACCESS-2', 'REFRESH-2');
+    expect(dump(localStorage)).toContain('REFRESH-2');
+    expect(dump(localStorage)).not.toContain('ACCESS-2');
+    expect(dump(sessionStorage)).not.toContain('ACCESS-2');
+    expect(dump(sessionStorage)).not.toContain('REFRESH-2');
+    expect(sessionStore.accessToken).toBe('ACCESS-2');
+  });
+
+  it('a rotated refresh token stays in the chosen store and never duplicates', () => {
+    sessionStore.setTokens('A', 'R1');
+    sessionStore.setTokens('A2', 'R2');
+    expect(sessionStore.refreshToken).toBe('R2');
+    expect(localStorage.length).toBe(0);
+  });
+
+  it('migrates a legacy localStorage session once: access to memory, session kept signed in', () => {
+    localStorage.setItem('osint:auth:access', 'OLD-ACCESS');
+    localStorage.setItem('osint:auth:refresh', 'OLD-REFRESH');
+    expect(sessionStore.migrateLegacySession()).toBe(true);
+    expect(localStorage.getItem('osint:auth:access')).toBeNull();
+    expect(sessionStore.accessToken).toBe('OLD-ACCESS');
+    expect(sessionStore.refreshToken).toBe('OLD-REFRESH');
+    expect(sessionStore.keepSignedIn).toBe(true);
+    // Later rotations stay in localStorage (the user is not logged out) and still no access token there.
+    sessionStore.setTokens('NEW-ACCESS', 'NEW-REFRESH');
+    expect(dump(localStorage)).toContain('NEW-REFRESH');
+    expect(dump(localStorage)).not.toContain('ACCESS');
+    expect(sessionStore.migrateLegacySession()).toBe(false);
+  });
+
+  it('sign-out / session death clears both storages and memory', () => {
+    sessionStore.setKeepSignedIn(true);
+    sessionStore.setTokens('A', 'R');
+    sessionStorage.setItem('osint:auth:refresh', 'stray-tab-copy');
+    sessionStore.clearTokens();
+    expect(sessionStore.accessToken).toBeNull();
+    expect(sessionStore.refreshToken).toBeNull();
+    expect(sessionStore.keepSignedIn).toBe(false);
+    expect(localStorage.getItem('osint:auth:refresh')).toBeNull();
+    expect(sessionStorage.getItem('osint:auth:refresh')).toBeNull();
+  });
+
+  it('a new tab (empty sessionStorage) in default mode has no session to refresh', () => {
+    sessionStore.setTokens('A', 'R');
+    sessionStorage.clear();
+    expect(sessionStore.refreshToken).toBeNull();
   });
 });

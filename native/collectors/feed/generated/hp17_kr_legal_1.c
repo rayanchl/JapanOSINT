@@ -51,10 +51,29 @@ static const hp_source T[] = {
     .collector = "kr_legal", .category = "legal",
     .description = "Local-government ordinances: id, 자치법규ID, 자치법규명, 자치법규일련번호, 지자체기관명 (the specific city/gu that enacted it, e.g. 서울특별시 송파구), 자치법규종류, 시행일자 and detail link. Ties regulatory action to a named Korean local authority.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"kr\",\"legal\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "ko",
-    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=ordin&type=JSON&query=%EC%84%9C%EC%9A%B8",
+    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC={key}&target=ordin&type=JSON&query=%EC%84%9C%EC%9A%B8",
     .array_path = "ordinsearch.law",
-    .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC=test&target=ordin&MST={v}&type=JSON", .detail_key = "자치법규일련번호",
+    .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC={key}&target=ordin&MST={v}&type=JSON", .detail_key = "자치법규일련번호",
     .page_walk = 1,
+    .key_env = "KR_LAW_GO_KR_OC",
+    .interval = 43200, .free_tier = 1 },
+
+  /* kr-treaties moved here from vsrc17_kr_legal_1.c (a VJSON row has no
+   * credential gate). 2026-11-14: law.go.kr answers OC=test with a 215-byte
+   * HTTP-200 "사용자 정보 검증에 실패" body — the OC must be a registered user id
+   * with the caller's IP registered — so the row stored nothing at rc=0. It is
+   * key-gated now ($KR_LAW_GO_KR_OC) and reports GATED. Identity and array are
+   * unchanged from the VJSON row (default keys, trtysearch.trty). */
+  { .id = "kr-treaties",
+    .name = "Korea — treaty register search",
+    .name_ja = "Korea — treaty register search",
+    .collector = "kr_legal", .category = "legal",
+    .description = "Treaties Korea is party to: id, 조약명 (naming the counterparty state), 서명일자, 조약번호, 조약구분코드 (bilateral/multilateral) and 관보게제일자 (official gazette publication date). Bilateral instruments behind Korean trade and investment relationships. Requires a law.go.kr OPEN API user id (OC) in $KR_LAW_GO_KR_OC with the server IP registered.",
+    .record_type = "legal-record", .tags = "\"kr\",\"legal\",\"batch17\",\"high-penetrancy\"", .lang = "ko",
+    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC={key}&target=trty&type=JSON&query=%ED%86%B5%EC%83%81",
+    .array_path = "trtysearch.trty",
+    .page_walk = 1,
+    .key_env = "KR_LAW_GO_KR_OC",
     .interval = 43200, .free_tier = 1 },
 
 };

@@ -3,8 +3,8 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { LuRefreshCw, LuMapPin, LuFileText, LuAtSign, LuBell, LuX } from 'react-icons/lu';
 import { api } from '../../api/client.js';
-import { useApi } from '../../hooks/useApi.js';
 import { Page, Card, Button, Input, Field, Segmented, ErrorNotice, EmptyState, LoadingState, CopyButton, cx } from '../ui/kit.jsx';
+import Typeahead from '../ui/Typeahead.jsx';
 import { fmtAbs } from '../../utils/time.js';
 
 /**
@@ -132,15 +132,9 @@ export default function TimelinePage() {
     finally { setLoadingMore(false); }
   };
 
-  // Source catalogue for the filter; falls back to sources seen in events.
-  const srcCat = useApi('/api/intel/sources');
-  const sourceOptions = useMemo(() => {
-    const list = Array.isArray(srcCat.data?.data) ? srcCat.data.data : [];
-    if (list.length) return list.map((s) => ({ id: s.id, name: s.name || s.id }));
-    const seen = new Map();
-    for (const e of events) if (e.source_id && !seen.has(e.source_id)) seen.set(e.source_id, e.source_id);
-    return [...seen.entries()].map(([id, name]) => ({ id, name }));
-  }, [srcCat.data, events]);
+  // The source filter is a typeahead on the server's search: the catalogue is
+  // never loaded (it was /api/intel/sources, every source, to fill a <select>).
+  const [sourceLabel, setSourceLabel] = useState('');
 
   const totals = meta?.totals || buckets.reduce((a, b) => ({ intel: a.intel + (b.intel || 0), mentions: a.mentions + (b.mentions || 0), alerts: a.alerts + (b.alerts || 0) }), { intel: 0, mentions: 0, alerts: 0 });
   const notes = [...(meta?.notes || []), ...(meta?.listNotes || [])].filter((v, i, a) => a.indexOf(v) === i);
@@ -163,10 +157,10 @@ export default function TimelinePage() {
           <Field label="Window"><Segmented value={windowSel} onChange={(v) => { setWindowSel(v); setFocused(null); }} options={WINDOWS} /></Field>
           <Field label="Histogram"><Segmented value={bucket} onChange={(v) => { setBucket(v); setFocused(null); }} options={[{ value: 'hour', label: 'Hourly' }, { value: 'day', label: 'Daily' }]} /></Field>
           <Field label="Source">
-            <select value={source} onChange={(e) => setSource(e.target.value)} className="px-2 py-1 rounded-md bg-osint-bg border border-osint-border text-xs text-osint-text max-w-[240px]">
-              <option value="">All sources</option>
-              {sourceOptions.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-            </select>
+            <Typeahead label="Source" value={source} valueLabel={sourceLabel} clearLabel="All sources" placeholder="All sources — type to search"
+              onChange={(v, o) => { setSource(v); setSourceLabel(o?.label || ''); }}
+              pathFor={(t) => `/api/sources/search?limit=20&has_items=1${t ? `&q=${encodeURIComponent(t)}` : '&sort=items&desc=1'}`}
+              pick={(j) => (Array.isArray(j?.data) ? j.data : []).map((r) => ({ value: r.id, label: r.name || r.id, sub: r.id }))} />
           </Field>
           {caseId && (
             <Field label="Case scope">
@@ -185,8 +179,7 @@ export default function TimelinePage() {
             {!win && <span className="text-xs text-neon-red pb-2">Since must be before until.</span>}
           </div>
         )}
-        {srcCat.error && <div className="text-[11px] text-osint-muted">Source catalogue unavailable ({srcCat.error.message}); the filter lists only sources seen in loaded events.</div>}
-        {win && (
+                {win && (
           <div className="text-[11px] text-osint-muted font-mono">
             {fmtAbs(win.since)} → {fmtAbs(win.until)} JST
             {meta?.since && meta?.until && !focused && <> · server resolved {meta.since} → {meta.until}</>}

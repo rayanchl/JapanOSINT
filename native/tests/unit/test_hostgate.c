@@ -227,6 +227,35 @@ static void test_first_request_never_waits(void) {
   g_clock_skew_ms = saved;
 }
 
+/* 8b. A cancelled run does not sit in the gate. The second request to a
+ * 30 s-gap host would wait ~30 s (and up to HG_OVERRIDE_MAX_WAIT_MS); with the
+ * thread's cancel flag raised it returns at once and takes no slot, and with
+ * the flag cleared the thread waits again as before. */
+static void test_cancel_leaves_the_gate(void) {
+  reset_table();
+  long long saved = g_clock_skew_ms;
+  g_clock_skew_ms = 0;
+  g_clock_skew_ms = 5 - mono_ms();
+  assert(hostgate_acquire("https://old.reddit.com/r/x.json", 0) == 1);
+  hostgate_release("https://old.reddit.com/r/x.json");
+  volatile int cancel = 1;
+  hostgate_set_cancel(&cancel);
+  assert(hostgate_cancelled());
+  struct timespec a, b;
+  clock_gettime(CLOCK_MONOTONIC, &a);
+  assert(hostgate_acquire("https://old.reddit.com/r/y.json", 30000) == 0);
+  clock_gettime(CLOCK_MONOTONIC, &b);
+  long el = (long)((b.tv_sec - a.tv_sec) * 1000 + (b.tv_nsec - a.tv_nsec) / 1000000);
+  assert(el < 500);
+  hg_slot *s = lookup("old.reddit.com");
+  assert(s && s->in_flight == 0 && s->waiters == 0);
+  cancel = 0;
+  assert(!hostgate_cancelled());
+  hostgate_set_cancel(NULL);
+  assert(!hostgate_cancelled());
+  g_clock_skew_ms = saved;
+}
+
 /* 9. hostgate_pace_ms answers from the configured table even when it is the
  * first hostgate call of the process (main calls it before anything else),
  * and JO_HOST_MIN_GAP_OVERRIDES entries are trimmed and lowercased. */
@@ -340,6 +369,38 @@ static void test_peek_ready(void) {
   printf("  peek: unknown 0, gap, in-flight cap, penalty, override - nothing claimed\n");
 }
 
+/* ENG-15: the metadata ranges and the IPv6 forms that embed an IPv4 address
+ * are judged at the FLOOR (non-strict), by the address they embed. */
+static void test_floor_address_classes(void) {
+  unsetenv("JO_HTTP_BLOCK_PRIVATE");
+  /* floor: blocked even when not strict */
+  assert(hostgate_addr_check("100.100.100.200", 0) == HG_URL_PRIVATE);
+  /* the rest of CGNAT (Tailscale's range) is strict-only, like RFC1918 */
+  assert(hostgate_addr_check("100.64.0.1", 0) == HG_URL_OK);
+  assert(hostgate_addr_check("100.127.255.254", 0) == HG_URL_OK);
+  assert(hostgate_addr_check("100.63.0.1", 0) == HG_URL_OK);
+  assert(hostgate_addr_check("100.128.0.1", 0) == HG_URL_OK);
+  assert(hostgate_addr_check("192.0.0.192", 0) == HG_URL_PRIVATE);
+  assert(hostgate_addr_check("192.0.1.1", 0) == HG_URL_OK);
+  assert(hostgate_addr_check("64:ff9b::a9fe:a9fe", 0) == HG_URL_PRIVATE);   /* 169.254.169.254 */
+  assert(hostgate_addr_check("2002:a9fe:a9fe::1", 0) == HG_URL_PRIVATE);   /* 6to4 of it */
+  assert(hostgate_addr_check("::a9fe:a9fe", 0) == HG_URL_PRIVATE);         /* v4-compatible */
+  assert(hostgate_addr_check("::ffff:169.254.169.254", 0) == HG_URL_PRIVATE);
+  /* embedded private address: strict only, like the bare v4 */
+  assert(hostgate_addr_check("64:ff9b::a00:5", 0) == HG_URL_OK);           /* 10.0.0.5 */
+  assert(hostgate_addr_check("64:ff9b::a00:5", 1) == HG_URL_PRIVATE);
+  assert(hostgate_addr_check("2002:7f00:1::", 1) == HG_URL_PRIVATE);       /* 127.0.0.1 */
+  assert(hostgate_addr_check("2002:7f00:1::", 0) == HG_URL_OK);
+  /* embedded PUBLIC address stays reachable */
+  assert(hostgate_addr_check("64:ff9b::808:808", 1) == HG_URL_OK);         /* 8.8.8.8 */
+  assert(hostgate_addr_check("2002:808:808::1", 1) == HG_URL_OK);
+  assert(hostgate_addr_check("2606:4700:4700::1111", 1) == HG_URL_OK);
+  /* unchanged: loopback v6 is strict-only, unspecified is floor */
+  assert(hostgate_addr_check("::1", 0) == HG_URL_OK);
+  assert(hostgate_addr_check("::1", 1) == HG_URL_PRIVATE);
+  assert(hostgate_addr_check("::", 0) == HG_URL_PRIVATE);
+}
+
 int main(void) {
   setenv("JO_HOST_MIN_GAP_OVERRIDES",
          " Padded.Example = 700 ,\tTABBED.example\t=900,plain.example=300", 1);
@@ -353,7 +414,9 @@ int main(void) {
   test_penalty_reaches_a_parked_waiter();
   test_first_request_never_waits();
   test_peek_ready();
+  test_cancel_leaves_the_gate();
   test_camera_policy();
+  test_floor_address_classes();
   printf("test_hostgate: OK\n");
   return 0;
 }

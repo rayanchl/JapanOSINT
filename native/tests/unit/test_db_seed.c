@@ -191,6 +191,20 @@ int main(void) {
   ok(*name == 0, "JO_DB_RESEED=0 is not a force (it reads as unset)");
   unsetenv("JO_DB_RESEED");
 
+  printf("-- 6. schema version stamp (PRAGMA user_version)\n");
+  ok(db_user_version(&db) == JO_SCHEMA_VERSION, "db_open stamped user_version");
+  {
+    char sql[64];
+    snprintf(sql, sizeof sql, "PRAGMA user_version=%d;", JO_SCHEMA_VERSION + 1);
+    sqlite3_exec(db.h, sql, NULL, NULL, NULL);
+    db_handle db2 = {0};
+    const char *path = getenv("JO_DB");
+    ok(path && db_open(&db2, path, NULL) != 0 && db2.h == NULL,
+       "a database from a NEWER schema is refused at open");
+    snprintf(sql, sizeof sql, "PRAGMA user_version=%d;", JO_SCHEMA_VERSION);
+    sqlite3_exec(db.h, sql, NULL, NULL, NULL);
+  }
+
   db_close(&db);
   printf(fails ? "\nFAILED (%d)\n" : "\nall passed\n", fails);
   return fails ? 1 : 0;

@@ -14,6 +14,10 @@ struct IntelSourceItemsView: View {
     @State private var error: String?
     @State private var searchText = ""
     @State private var running = false
+    /// The search text the list was last loaded for, and a counter that lets a
+    /// slow answer to an OLD query be dropped instead of overwriting a newer one.
+    @State private var lastLoadedSearch = ""
+    @State private var reloadToken = 0
 
     @State private var showFilters = false
     @State private var selectedLanguages: Set<String> = []
@@ -98,12 +102,14 @@ struct IntelSourceItemsView: View {
         // that pushing into this view doesn't have to animate the parent's
         // searchable away — the top bar stays clean and snappy.
         .safeAreaInset(edge: .bottom) { searchFooter }
-        .onChange(of: searchText) { _, _ in
-            // Debounce-ish: small delay so we don't refetch on every keystroke.
-            Task {
-                try? await Task.sleep(for: .milliseconds(250))
-                await reload()
-            }
+        // One debounced reload per search text. `.task(id:)` cancels the
+        // previous task when the text changes, so a burst of keystrokes sends
+        // one request, not one per keystroke (the old Task-per-keystroke let an
+        // older response overwrite a newer one).
+        .task(id: searchText) {
+            if searchText == lastLoadedSearch { return }
+            do { try await Task.sleep(for: .milliseconds(250)) } catch { return }
+            await reload()
         }
         // Both are server-side post-passes, so flipping either has to refetch —
         // otherwise the toggle reads as "on" over a list that never asked for it.
@@ -324,13 +330,18 @@ struct IntelSourceItemsView: View {
 
     private func reload() async {
         loading = true
-        defer { loading = false }
+        reloadToken += 1
+        let token = reloadToken
+        let queried = searchText
+        lastLoadedSearch = queried
+        defer { if token == reloadToken { loading = false } }
         do {
             let env = try await apiClient.api
-                .intelItems(source: source.id, q: searchText.isEmpty ? nil : searchText,
+                .intelItems(source: source.id, q: queried.isEmpty ? nil : queried,
                             limit: 50, cursor: nil,
                             collapse: collapseDuplicates,
                             langView: langView.isEmpty ? nil : langView)
+            guard token == reloadToken else { return }   // a newer query is in flight
             items = env.data
             nextCursor = env.page?.next_cursor
             // Only mirror the unfiltered first page into the cache —
@@ -356,7 +367,7 @@ struct IntelSourceItemsView: View {
             await reload()
         } catch {
             // Keep existing items, but tell the user the run didn't kick off.
-            self.error = "Run failed: \(error.localizedDescription)"
+            self.error = "Run: \(API.runFailureMessage(error))"
             Haptics.error()
         }
     }

@@ -1,0 +1,56 @@
+# systemd unit for the native server. Install:
+#   useradd --system --home-dir /var/lib/japanosint --shell /usr/sbin/nologin japanosint
+#   install -d -o japanosint -g japanosint /var/lib/japanosint
+#   cp deploy/japanosint.service /etc/systemd/system/ && systemctl daemon-reload
+#   edit /etc/japanosint.env (copy .env.example; secrets belong there, mode 0600)
+#   systemctl enable --now japanosint
+# ExecStart assumes the checkout (and its build) lives in /opt/japanosint: the
+# binary bakes its checkout path in at compile time (JO_REPO_ROOT).
+[Unit]
+Description=JapanOSINT server and scheduler
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=japanosint
+Group=japanosint
+WorkingDirectory=/opt/japanosint/native
+EnvironmentFile=-/etc/japanosint.env
+Environment=JO_DB=/var/lib/japanosint/japanmap.db
+ExecStart=/opt/japanosint/native/bin/japanosint --serve
+Restart=on-failure
+RestartSec=5
+# The server handles SIGTERM with a graceful shutdown.
+TimeoutStopSec=60
+LimitNOFILE=65536
+
+# Sandboxing. The server fetches from the network and writes its DB, evidence
+# and uploads; it needs nothing else. ffmpeg runs a network namespace of its own
+# (core/netjail.c) and so needs CLONE_NEWUSER/NEWNET: do not set
+# RestrictNamespaces=yes or PrivateUsers=yes without testing camera decode.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+AmbientCapabilities=
+UMask=0077
+ReadWritePaths=/var/lib/japanosint
+# evidence/uploads resolve under <repo root>/data; point it at the state dir:
+#   ln -s /var/lib/japanosint /opt/japanosint/data
+
+[Install]
+WantedBy=multi-user.target

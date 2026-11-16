@@ -349,6 +349,8 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
+**The count measured on 2026-11-14 is 85,767** (batches 58–63 landed after the text below was written; `make source-count` and `tools/registry-floor.txt` are authoritative, and the figures below are dated history).
+
 **The registered count is 61,527** (2026-10-30, `make source-count`, both
 floors re-recorded from that build): 57,905 plus **batch 57's 3,622 Japanese
 rows** — eight beats in `collectors/pivot/table/hp3b57_*.c`, every one measured

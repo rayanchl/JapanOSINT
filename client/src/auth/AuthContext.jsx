@@ -66,11 +66,19 @@ export function AuthProvider({ children }) {
   }, []);
 
   const bootstrap = useCallback(async () => {
-    if (!sessionStore.onboardingCompleted || !sessionStore.accessToken) {
+    // The access token is memory-only, so after a reload there is none: a
+    // persisted refresh token is enough to try. In a fresh tab with the
+    // default (tab-only) mode there is neither, and the user signs in again.
+    if (!sessionStore.onboardingCompleted || !(sessionStore.accessToken || sessionStore.refreshToken)) {
       setGate(GATE.onboarding);
       return;
     }
     setConnectionStalled(false);
+    if (!sessionStore.accessToken) {
+      const first = await coalescedRefresh();
+      if (first === REFRESH.transient) { setConnectionStalled(true); return; }
+      if (first === REFRESH.invalid) { sessionStore.clearTokens(); setGate(GATE.onboarding); return; }
+    }
     try {
       const m = await meWithTimeout(6000);
       adopt(m);
@@ -120,7 +128,8 @@ export function AuthProvider({ children }) {
     setGate(GATE.onboarding);
   }), []);
 
-  const establish = useCallback(async (session) => {
+  const establish = useCallback(async (session, keep) => {
+    if (keep !== undefined) sessionStore.setKeepSignedIn(Boolean(keep));
     sessionStore.setTokens(session.access_token, session.refresh_token);
     const m = await api.get('/api/me');
     adopt(m);
@@ -128,20 +137,22 @@ export function AuthProvider({ children }) {
     return m;
   }, [adopt, probeOperator]);
 
-  const signIn = useCallback(async (email, password) => {
+  const signIn = useCallback(async (email, password, { keep = false } = {}) => {
     const s = await supabaseClient().signIn(email, password);
-    return establish(s);
+    return establish(s, keep);
   }, [establish]);
 
-  const signUp = useCallback(async (email, password) => {
+  const signUp = useCallback(async (email, password, { keep = false } = {}) => {
     const r = await supabaseClient().signUp(email, password);
-    if (r.kind === 'session') return establish(r.session);
+    if (r.kind === 'session') return establish(r.session, keep);
     throw new AuthError(200, 'Check your inbox to confirm your email, then sign in.');
   }, [establish]);
 
   /** Social sign-in. Leaves the page for the provider; `/auth/callback`
    *  finishes the PKCE exchange and calls `completeOAuthCallback`. */
-  const startOAuth = useCallback(async (provider) => {
+  const startOAuth = useCallback(async (provider, { keep = false } = {}) => {
+    // The page navigates away; remember the choice across the round trip.
+    sessionStore.setKeepSignedIn(keep);
     const pkce = await makePkcePair();
     sessionStore.beginOAuthFlow(pkce.verifier);
     sessionStore.setOauthReturn(window.location.pathname + window.location.search);
@@ -210,7 +221,7 @@ export function AuthProvider({ children }) {
       memberships: me?.memberships ?? [],
       role,
       canManageWorkspace: role === 'owner' || role === 'admin',
-      hasSession: Boolean(sessionStore.accessToken),
+      hasSession: Boolean(sessionStore.accessToken || sessionStore.refreshToken),
       signIn, signUp, startOAuth, completeOAuthCallback, signOut, switchTenant,
       completeOnboarding, retryBootstrap, refreshMe,
     };
