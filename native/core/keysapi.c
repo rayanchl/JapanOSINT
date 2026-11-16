@@ -1,4 +1,5 @@
 #include "keysapi.h"
+#include "httpclient.h"
 #include "credtab.h"
 #include "audit.h"
 #include "auth.h"
@@ -88,7 +89,11 @@ static int b64_decode(const char *in, unsigned char *out, int outcap) {
 
 /* ── api-keys.json overlay (apiKeysStore.js) ──────────────────────────── */
 static void overlay_path(char *p, size_t n) {
-  snprintf(p, n, "%s/data/api-keys.json", JO_REPO_ROOT);
+  /* $JO_API_KEYS_FILE relocates the overlay (tests, containers with a
+   * read-only tree); unset, it is data/api-keys.json under the repo root. */
+  const char *f = getenv("JO_API_KEYS_FILE");
+  if (f && *f) snprintf(p, n, "%s", f);
+  else snprintf(p, n, "%s/data/api-keys.json", JO_REPO_ROOT);
 }
 static cJSON *overlay_read(void) {
   char p[1024]; overlay_path(p, sizeof p);
@@ -301,9 +306,27 @@ char *keysapi_platform(db_handle *db, const tenant_ctx *t, const char *method,
     cJSON *jb = (body&&*body)?cJSON_Parse(body):NULL;
     cJSON *jv = jb?cJSON_GetObjectItem(jb,"value"):NULL;
     const char *val = (jv&&cJSON_IsString(jv))?jv->valuestring:"";
+    /* SEC_CONTACT is sent in a User-Agent header: refuse a value SEC would
+     * 403 (no address) or that could inject a header (CR/LF), here, at set
+     * time, rather than discovering it as a failed run. */
+    if (val[0] && strcmp(name,"SEC_CONTACT")==0) {
+      const char *why=NULL;
+      if (http_contact_check(val,&why)!=0) {
+        char m[200]; snprintf(m,sizeof m,"Invalid SEC_CONTACT: %s",why?why:"rejected");
+        if (jb) cJSON_Delete(jb);
+        cJSON_Delete(ov); return jerr(st,400,m);
+      }
+    }
+    int had_overlay = cJSON_HasObjectItem(ov,name);
     cJSON_DeleteItemFromObject(ov,name);          /* clear */
     if (val[0]) cJSON_AddStringToObject(ov,name,val);  /* set when non-empty */
     overlay_write(ov);
+    /* Collectors see the overlay only through the process environment
+     * (keysapi_apply_overlay_env, at boot). Mirror a PUT there too so a key
+     * set from the Keys screen takes effect without a restart; clearing an
+     * overlay value unsets only a value that came from the overlay. */
+    if (val[0]) setenv(name,val,1);
+    else if (had_overlay) unsetenv(name);
     if (jb) cJSON_Delete(jb);
     cJSON *o=cJSON_CreateObject();
     cJSON_AddStringToObject(o,"name",name);

@@ -87,6 +87,31 @@ int http_request_max(http_client *c, const char *method, const char *url,
 
 void http_response_free(http_response *r);
 
+/* ── Hosts that need a configured CREDENTIAL before any request is sent ──────
+ * SEC (www/data/efts.sec.gov) answers 403 to a User-Agent with no `@` contact
+ * address, so its agent (core/host_agents.def, HA_SEC) is built at run time
+ * from the deployment's SEC_CONTACT — a credential like an API key: the Keys
+ * screen (data/api-keys.json, mirrored into the process environment), or the
+ * environment; $SEC_CONTACT_UA replaces the whole string.
+ *
+ * http_host_needs_credential(url): the credential's NAME ("SEC_CONTACT") when
+ *   url's host is such a host and no valid value is configured, else NULL.
+ *   http_request() REFUSES such a request without touching the network.
+ * http_credential_refusal(): the name of a credential whose absence made a
+ *   request on THIS thread refuse since the last http_credential_refusal_reset()
+ *   — sticky, so an engine or the scheduler reading it after the run still sees
+ *   it. The scheduler resets it before each run and files the gated notice.
+ * http_contact_check(v, &why): 0 when v is an acceptable contact — an address
+ *   (`@` with a local part and a dotted domain), alone or inside a full
+ *   User-Agent string, and no control character (CR/LF = header injection);
+ *   else -1 with a one-sentence reason in *why. Used at set time by keysapi.
+ * http_contact_ua(buf,n,&why): the resolved SEC agent, or -1. */
+const char *http_host_needs_credential(const char *url);
+const char *http_credential_refusal(void);
+void        http_credential_refusal_reset(void);
+int         http_contact_check(const char *v, const char **why);
+int         http_contact_ua(char *buf, size_t n, const char **why);
+
 /* Why the most recent attempt made by http_request() ON THE CALLING THREAD
  * failed: HTTP_TE_NONE when it completed an exchange (any status),
  * HTTP_TE_CONNECT when nothing answered (refused, unresolvable, or the connect

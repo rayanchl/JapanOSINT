@@ -48,6 +48,7 @@
 #include "core/content_change.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "_credential_notice.inc"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -238,6 +239,15 @@ static char *sfd_fetch_norm(const source_ctx *ctx, const char *const *hdrs,
 static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return -1;
   if (!jo_looks_like_keyword(ctx->entity)) return 0;
+  /* SEC refuses a User-Agent with no contact address, so with SEC_CONTACT
+   * unset every request is a certain 403: say so as data (rule 1's gated
+   * note), spend no request, and return 0 like every key-gated sibling. */
+  if (http_host_needs_credential("https://data.sec.gov/"))
+    return jo_needs_credential(sink, "SEC_RISK_FACTOR_DIFF", "SEC risk-factor diff",
+                               (const char *[]){ "SEC_CONTACT", NULL },
+                               "https://data.sec.gov/",
+                               "an e-mail address SEC can reach, set from the "
+                               "Keys screen or the environment");
 
   const char *const *hdrs = SEC_HEADERS;
 

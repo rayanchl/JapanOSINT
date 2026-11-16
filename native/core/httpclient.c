@@ -374,22 +374,97 @@ static int host_agent_index(const char *url) {
   return -1;
 }
 
-/* The agent a kind puts on the wire. One function, because a kind whose string
- * an operator may replace must resolve the same way wherever it is read — the
- * table dump, the override accessor and the request builder. HA_SEC is that
- * case: SEC asks every client to declare a mailbox someone answers, so a
- * deployment that is not this repository announces its own through
- * $SEC_CONTACT_UA. Before this the variable was read inside
- * collectors/sources/sec_filing_diff.c, which the per-host table then
- * overruled by design — an operator knob a later change silently defeated,
- * the shape $JO_PAGE_MAX was in until 2026-10-22. */
+/* ── SEC_CONTACT: a credential the User-Agent is built from ──────────────────
+ * HA_SEC's table string carries a %CONTACT% placeholder. The value comes from
+ * $SEC_CONTACT_UA (a full agent string, kept for compatibility, wins) else
+ * $SEC_CONTACT — an address or a full agent string — which keysapi mirrors
+ * from data/api-keys.json into the environment at boot and on every PUT, so
+ * the Keys screen and the environment resolve through one getenv. */
+int http_contact_check(const char *v, const char **why) {
+  static const char *w;
+  if (!why) why = &w;
+  if (!v || !*v) { *why = "empty"; return -1; }
+  size_t n = strlen(v);
+  if (n > 256) { *why = "longer than 256 characters"; return -1; }
+  for (size_t i = 0; i < n; i++) {
+    unsigned char c = (unsigned char)v[i];
+    if (c < 0x20 || c == 0x7f) {
+      *why = "contains a control character (CR/LF would inject a header)";
+      return -1;
+    }
+  }
+  for (size_t i = 0; i < n; i++) {
+    if (v[i] != '@') continue;
+    size_t l = i, r = i + 1;
+    while (l > 0 && (isalnum((unsigned char)v[l - 1]) || strchr("._%+-", v[l - 1]))) l--;
+    while (r < n && (isalnum((unsigned char)v[r]) || strchr(".-", v[r]))) r++;
+    if (l == i) continue;                       /* no local part */
+    const char *dom = v + i + 1;
+    size_t dl = r - (i + 1);
+    const char *dot = dl ? memchr(dom, '.', dl) : NULL;
+    if (dl >= 3 && dot && dot != dom && dom[dl - 1] != '.') return 0;
+  }
+  *why = "must contain an e-mail address (user@example.org) - SEC refuses a "
+         "User-Agent without one";
+  return -1;
+}
+
+static const char *trim_span(const char *v, size_t *len) {
+  while (*v && isspace((unsigned char)*v)) v++;
+  size_t n = strlen(v);
+  while (n && isspace((unsigned char)v[n - 1])) n--;
+  *len = n;
+  return v;
+}
+
+int http_contact_ua(char *buf, size_t cap, const char **why) {
+  static const char *w;
+  if (!why) why = &w;
+  const char *full = getenv("SEC_CONTACT_UA"), *val = getenv("SEC_CONTACT");
+  int from_full = full && *full;
+  const char *src = from_full ? full : val;
+  if (!src || !*src) { *why = "SEC_CONTACT is not configured"; return -1; }
+  size_t n; const char *t = trim_span(src, &n);
+  char tmp[300];
+  if (n == 0 || n >= sizeof tmp) { *why = n ? "longer than 256 characters" : "empty"; return -1; }
+  memcpy(tmp, t, n); tmp[n] = 0;
+  if (http_contact_check(tmp, why) != 0) return -1;
+  int bare = !from_full && !strpbrk(tmp, " \t()/");
+  if (bare) snprintf(buf, cap, "JapanOSINT/1.0 research (%s)", tmp);
+  else snprintf(buf, cap, "%s", tmp);
+  return 0;
+}
+
+static __thread char g_ua_buf[400];
+static __thread const char *g_cred_refusal;
+
+/* The credential a kind needs before it may be used, or NULL. */
+static const char *host_agent_credential(host_agent_kind k) {
+  return k == HA_SEC ? "SEC_CONTACT" : NULL;
+}
+
+/* The agent a kind puts on the wire; NULL when the kind needs a credential
+ * that is not (validly) configured. One function, because a kind whose string
+ * an operator supplies must resolve the same way wherever it is read — the
+ * table dump, the override accessor and the request builder. */
 static const char *host_agent_ua(host_agent_kind k) {
-  if (k == HA_SEC) {
-    const char *env = getenv("SEC_CONTACT_UA");
-    if (env && *env) return env;
+  if (host_agent_credential(k)) {
+    if (http_contact_ua(g_ua_buf, sizeof g_ua_buf, NULL) != 0) return NULL;
+    return g_ua_buf;
   }
   return HOST_AGENT_STRING[k];
 }
+
+const char *http_host_needs_credential(const char *url) {
+  int i = host_agent_index(url);
+  if (i < 0) return NULL;
+  host_agent_kind k = HOST_AGENTS[i].kind;
+  const char *c = host_agent_credential(k);
+  return (c && !host_agent_ua(k)) ? c : NULL;
+}
+
+const char *http_credential_refusal(void) { return g_cred_refusal; }
+void http_credential_refusal_reset(void) { g_cred_refusal = NULL; }
 
 int http_browser_host(const char *url) {
   int i = host_agent_index(url);
@@ -405,7 +480,10 @@ void http_host_agents_dump(FILE *out) {
   fprintf(out, "host\tkind\tuser_agent\textra_headers\n");
   for (size_t i = 0; i < sizeof HOST_AGENTS / sizeof *HOST_AGENTS; i++) {
     host_agent_kind k = HOST_AGENTS[i].kind;
-    fprintf(out, "%s\t%s\t%s\t", HOST_AGENTS[i].host, HOST_AGENT_NAME[k], host_agent_ua(k));
+    const char *ua = host_agent_ua(k);
+    if (ua) fprintf(out, "%s\t%s\t%s\t", HOST_AGENTS[i].host, HOST_AGENT_NAME[k], ua);
+    else    fprintf(out, "%s\t%s\t(unset: %s)\t", HOST_AGENTS[i].host,
+                    HOST_AGENT_NAME[k], host_agent_credential(k));
     if (k == HA_BROWSER)
       for (const char *const *x = BROWSER_EXTRA_HEADERS; *x; x++)
         fprintf(out, "%s%s", x == BROWSER_EXTRA_HEADERS ? "" : " | ", *x);
@@ -704,8 +782,12 @@ static int do_once(http_client *c, const char *method, const char *url,
     curl_easy_setopt(e, CURLOPT_CONNECTTIMEOUT_MS, ct);
   }
   curl_easy_setopt(e, CURLOPT_ACCEPT_ENCODING, "");
-  curl_easy_setopt(e, CURLOPT_USERAGENT,
-                   ha >= 0 ? host_agent_ua(HOST_AGENTS[ha].kind) : JO_USER_AGENT);
+  {
+    /* http_request() refuses a credential-less SEC host before getting here,
+     * so a NULL agent cannot occur; the fallback is the engine's own. */
+    const char *ua = ha >= 0 ? host_agent_ua(HOST_AGENTS[ha].kind) : NULL;
+    curl_easy_setopt(e, CURLOPT_USERAGENT, ua ? ua : JO_USER_AGENT);
+  }
   curl_easy_setopt(e, CURLOPT_NOSIGNAL, 1L);
   if (c->share) curl_easy_setopt(e, CURLOPT_SHARE, c->share);
   if (hl) curl_easy_setopt(e, CURLOPT_HTTPHEADER, hl);
@@ -786,6 +868,20 @@ int http_request(http_client *c, const char *method, const char *url,
    * a stored override transparently rewrites this outbound URL for every
    * collector with no per-collector edits. No-op unless an override matches. */
   const char *eff = url_override_apply(url);
+  /* A host that needs a configured credential (SEC_CONTACT) is refused here,
+   * before any network, with a distinct named reason the engine and the
+   * scheduler disclose as "needs <credential>" - a request is a certain 403. */
+  {
+    const char *need = http_host_needs_credential(eff ? eff : url);
+    if (need) {
+      g_cred_refusal = need;
+      g_last_te = HTTP_TE_OTHER;
+      fprintf(stderr, "[http] refused %s: %s is not configured (SEC returns "
+                      "403 to a User-Agent without a contact address)\n",
+              eff ? eff : url, need);
+      return 1;
+    }
+  }
   /* An override is proposed by the LLM maintenance pod, so the new host is not
    * necessarily the one the collector's credentials were issued to. Sending
    * this source's API key to a host somebody else nominated is credential

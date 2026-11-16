@@ -30,29 +30,26 @@ HOST_AGENT_KIND(HA_RCORP,       "RCorp-feeds/1.0 (+https://github.com/RCorp; fee
 HOST_AGENT_KIND(HA_COMPAT,      "Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)")
 HOST_AGENT_KIND(HA_BROWSER,     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36")
 /* SEC asks every automated client to declare a contact it can reach, and
- * refuses the repo URL and any github.com address. The repository owner's
- * decision of 2026-10-24: SEC gets his address. Measured 2026-10-24 (data.sec.gov
- * companyfacts / www.sec.gov Archives daily-index / efts.sec.gov search):
+ * refuses the repo URL and any github.com address. Measured 2026-10-24
+ * (data.sec.gov companyfacts / www.sec.gov Archives daily-index / efts.sec.gov
+ * search):
  *     engine agent (repo URL)                       403 / 403 / 403
  *     HA_CONTACT                                    200 / 403 / 200
- *     "JapanOSINT/1.0 research (<owner address>)"   200 / 200 / 200
- * Seven rows sent this address in their own headers; six others sent
- * contact@japanosint.local or osint@example.org, which are not addresses
- * anyone reads. One entry per host now makes every SEC request say the same.
+ *     "JapanOSINT/1.0 research (<contact>)"         200 / 200 / 200
+ * and a second reading (company_tickers.json, the xbrl frames endpoint) showed
+ * the filter wants an `@` address, enforced per path and not per host.
  *
- * Two sessions measured this host family on the same day and agree on the
- * remedy. The second reading, against company_tickers.json and the xbrl
- * frames endpoint: the engine agent 403 on both, and `OSINTsaas/1.0
- * (contact@example.com)`, `JapanOSINT/1.0 (<owner address>)` and a bare
- * `JapanOSINT <owner address>` all 200 — so what the filter wants is an `@`
- * address, and the HA_CONTACT line above shows it is enforced per path, not
- * per host. The agent kept is this one, which passed all three hosts.
- * `contact@example.com` is what sec_edgar.c and sec_filing_diff.c had carried
- * since they were written: it passes the filter and is not a contact route,
- * which is the one thing SEC's policy actually asks for. $SEC_CONTACT_UA
- * replaces this string for the SEC hosts (host_agent_ua() in httpclient.c), so
- * another deployment announces its own address instead of this one. */
-HOST_AGENT_KIND(HA_SEC,         "JapanOSINT/1.0 research (rayanchouialkessal@gmail.com)")
+ * THE CONTACT IS A CREDENTIAL, NOT A CONSTANT (2026-11-16). The string below
+ * is a template: %CONTACT% is replaced at run time by the deployment's own
+ * address, configured as SEC_CONTACT exactly like an API key (the Keys screen,
+ * data/api-keys.json, or the environment), and $SEC_CONTACT_UA replaces the
+ * whole string. host_agent_ua() in httpclient.c resolves it in ONE place for
+ * the table dump, the request builder and tools/probe_hp_batch.py. With no
+ * valid contact configured NO request is sent to these hosts (a 403 is
+ * certain) and every SEC source reports "needs SEC_CONTACT" as a
+ * collector-status-notice, the way a key-gated source does. The repository no
+ * longer carries anyone's address. */
+HOST_AGENT_KIND(HA_SEC,         "JapanOSINT/1.0 research (%CONTACT%)")
 
 /* ── token and contact-URL blocks (was UA_OVERRIDE) ────────────────────── */
   HOST_AGENT("data.humdata.org", HA_RCORP)

@@ -27,6 +27,7 @@
 #include "lib/feedlib.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
+#include "_credential_notice.inc"
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
@@ -457,6 +458,15 @@ static int emit_filings_array(intel_sink *sink, const char *entity,
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *query = ctx->entity;
   if (!query || !*query) return -1;
+  /* SEC refuses a User-Agent with no contact address, so with SEC_CONTACT
+   * unset every request is a certain 403: say so as data (rule 1's gated
+   * note), spend no request, and return 0 like every key-gated sibling. */
+  if (http_host_needs_credential("https://data.sec.gov/"))
+    return jo_needs_credential(sink, "SEC_EDGAR_SEARCH", "SEC EDGAR",
+                               (const char *[]){ "SEC_CONTACT", NULL },
+                               "https://data.sec.gov/",
+                               "an e-mail address SEC can reach, set from the "
+                               "Keys screen or the environment");
 
   int is_cik = 1;
   for (int i = 0; query[i]; i++)

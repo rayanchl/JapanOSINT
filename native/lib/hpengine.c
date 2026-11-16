@@ -4561,6 +4561,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   const hp_source *s = hp_lookup(ctx->source_id);
   if (!s) return -1;
   const char *e = ctx->entity;
+  http_credential_refusal_reset();   /* this run's refusals only (httpclient.h) */
 
   /* Two ways in. A pivot run carries an entity. A SCHEDULED run does not, and
    * used to fall straight out of this early return — which meant a row that set
@@ -5930,7 +5931,18 @@ date_step_back:
    * notice making exactly the confusion it exists to prevent. Such a run is
    * the honest empty rule 1 asks for — rc=0, no records, and the bytes and
    * request count on the run line showing it went and looked. */
-  if (out == 0 && (first_status != 200 || st.unreadable) && !first_nodata) {
+  if (out == 0 && http_credential_refusal()) {
+    /* The HTTP client refused the request because a host-level credential
+     * (SEC_CONTACT: SEC 403s a User-Agent with no contact address) is not
+     * configured. That is GATED, exactly as a key_env row is, not a fetch
+     * failure: one status notice naming the credential, no request spent. */
+    jo_needs_credential(sink, s->id, s->name ? s->name : s->id,
+                        (const char *[]){ http_credential_refusal(), NULL },
+                        s->url,
+                        "an e-mail address SEC can reach, set from the Keys "
+                        "screen or the environment — SEC answers 403 to a "
+                        "User-Agent without one");
+  } else if (out == 0 && (first_status != 200 || st.unreadable) && !first_nodata) {
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "source_id", s->id);
     cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
