@@ -70,6 +70,7 @@ function AuthStep({ onDone }) {
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState(null);
   const [showServer, setShowServer] = useState(false);
+  const [keep, setKeep] = useState(false);
   // Ask the project which providers are actually enabled, so a button is
   // never offered for a provider that would only answer with an error.
   // null = not known (request failed) → every provider is shown, with a note.
@@ -85,8 +86,8 @@ function AuthStep({ onDone }) {
     e.preventDefault();
     setBusy(true); setError(null); setNotice(null);
     try {
-      if (mode === 'signin') await auth.signIn(email.trim(), password);
-      else await auth.signUp(email.trim(), password);
+      if (mode === 'signin') await auth.signIn(email.trim(), password, { keep });
+      else await auth.signUp(email.trim(), password, { keep });
       onDone();
     } catch (err) {
       if (err?.status === 200) setNotice(err.message);
@@ -110,6 +111,16 @@ function AuthStep({ onDone }) {
         <Field label="Password">
           <Input type="password" autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} placeholder="••••••••" />
         </Field>
+        <label className="flex items-start gap-2 text-xs text-osint-text cursor-pointer">
+          <input type="checkbox" className="mt-0.5" checked={keep} onChange={(e) => setKeep(e.target.checked)} />
+          <span>
+            Keep me signed in on this device
+            <span className="block text-[11px] text-osint-muted">
+              Off (default): you stay signed in only while this tab is open; a new tab or a closed browser asks you to sign in again.
+              On: a refresh token is kept in this browser until you sign out. Only tick it on a device you trust.
+            </span>
+          </span>
+        </label>
         {error && <ErrorNotice error={error} title="Sign-in failed" />}
         {notice && <div className="text-xs text-accent border border-accent/40 bg-accent/10 rounded px-3 py-2">{notice}</div>}
         <Button type="submit" variant="primary" size="lg" busy={busy} className="w-full">
@@ -135,7 +146,7 @@ function AuthStep({ onDone }) {
           <button
             key={p.id}
             type="button"
-            onClick={() => auth.startOAuth(p.id).catch((err) => setError(err))}
+            onClick={() => auth.startOAuth(p.id, { keep }).catch((err) => setError(err))}
             className="flex items-center justify-center gap-2 rounded-md py-2 text-sm font-medium transition-opacity hover:opacity-90"
             style={{ background: p.bg, color: p.fg, border: p.border ? '1px solid #d0d5dd' : '1px solid transparent' }}
           >
