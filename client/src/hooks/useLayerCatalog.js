@@ -2,14 +2,19 @@ import { useEffect, useState } from 'react';
 import apiUrl from '../utils/apiUrl.js';
 import { buildCatalog } from './layerCatalog.js';
 import { LAYER_DEFINITIONS } from './layerDefinitions.js';
+import { sessionStore } from '../auth/session.js';
 
 // One fetch of GET /api/layers per page load, shared by every consumer
 // (map page, layer panel, source dashboard). Stale-while-revalidate against
 // sessionStorage like useMapLayers' collection cache: a cached copy renders
 // immediately and a background refresh replaces it when the server answers.
-const SS_KEY = 'useLayerCatalog:v2';
+// Keyed by the active tenant, and wiped on sign-out (clearLayerCatalogCache),
+// so the next account in this tab never renders the previous one's taxonomy.
+const SS_KEY_BASE = 'useLayerCatalog:v2';
+const ssKey = () => `${SS_KEY_BASE}:${sessionStore.tenantId || 'none'}`;
 
 let cachedServerLayers = null;   // last good array from the server (or storage)
+let cachedForKey = null;         // the storage key (tenant) that array belongs to
 let catalogError = null;         // last fetch failure message, if any
 let inflight = null;             // Promise for the current fetch
 let fetchedThisLoad = false;     // one revalidation per page load, not per mount
@@ -18,7 +23,7 @@ const listeners = new Set();
 function readSession() {
   if (typeof window === 'undefined' || !window.sessionStorage) return null;
   try {
-    const raw = sessionStorage.getItem(SS_KEY);
+    const raw = sessionStorage.getItem(ssKey());
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : null;
@@ -27,7 +32,7 @@ function readSession() {
 
 function writeSession(arr) {
   if (typeof window === 'undefined' || !window.sessionStorage) return;
-  try { sessionStorage.setItem(SS_KEY, JSON.stringify(arr)); } catch { /* quota */ }
+  try { sessionStorage.setItem(ssKey(), JSON.stringify(arr)); } catch { /* quota */ }
 }
 
 function notify() { for (const fn of listeners) fn(); }
@@ -38,6 +43,8 @@ function notify() { for (const fn of listeners) fn(); }
  * that must decide "which endpoint do I fetch" can await it and fall back.
  */
 export function loadServerLayers({ force = false } = {}) {
+  // A different tenant than the one the cached copy was read for: drop it.
+  if (cachedServerLayers && cachedForKey !== ssKey()) { cachedServerLayers = null; fetchedThisLoad = false; }
   if (inflight) return inflight;
   if (cachedServerLayers && !force) return Promise.resolve(cachedServerLayers);
   inflight = (async () => {
@@ -48,6 +55,7 @@ export function loadServerLayers({ force = false } = {}) {
       const arr = Array.isArray(body) ? body : (Array.isArray(body?.layers) ? body.layers : null);
       if (!arr) throw new Error('unexpected /api/layers shape');
       cachedServerLayers = arr;
+      cachedForKey = ssKey();
       catalogError = null;
       fetchedThisLoad = true;
       writeSession(arr);
@@ -62,6 +70,20 @@ export function loadServerLayers({ force = false } = {}) {
     }
   })();
   return inflight;
+}
+
+/** Sign-out / account change: forget the cached taxonomy, in memory and in storage. */
+export function clearLayerCatalogCache() {
+  cachedServerLayers = null; cachedForKey = null; fetchedThisLoad = false;
+  if (typeof window === 'undefined' || !window.sessionStorage) return;
+  try {
+    const drop = [];
+    for (let i = 0; i < sessionStorage.length; i += 1) {
+      const k = sessionStorage.key(i);
+      if (k && k.startsWith(SS_KEY_BASE)) drop.push(k);
+    }
+    drop.forEach((k) => sessionStorage.removeItem(k));
+  } catch { /* storage unavailable */ }
 }
 
 /** Test hook: reset module state. */
@@ -92,7 +114,7 @@ export default function useLayerCatalog() {
   const [state, setState] = useState(() => {
     if (!cachedServerLayers) {
       const fromSession = readSession();
-      if (fromSession) cachedServerLayers = fromSession;
+      if (fromSession) { cachedServerLayers = fromSession; cachedForKey = ssKey(); }
     }
     return snapshot();
   });

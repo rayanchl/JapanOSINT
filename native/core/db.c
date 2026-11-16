@@ -502,6 +502,25 @@ static void ensure_parent_dir(const char *path) {
 
 static void alert_events_unique_migrate(db_handle *db);   /* below db_open */
 
+/* Schema version stamped into `PRAGMA user_version` (audit OPS-05). Bump it
+ * when a change to schema.sql or the boot migrations below is one an OLDER
+ * binary must not run against (a column it does not know, a re-keyed table).
+ * It is a gate, not a migration list: migrations remain the idempotent
+ * ensure_column() and the *_migrate() passes. A database stamped by a NEWER binary is
+ * refused at open, before any statement touches it. 0 = a database from before
+ * stamping existed, which is stamped on its first successful open. */
+#define JO_SCHEMA_VERSION 1
+
+static int db_user_version(db_handle *db) {
+  sqlite3_stmt *st = NULL;
+  int v = -1;
+  if (sqlite3_prepare_v2(db->h, "PRAGMA user_version;", -1, &st, NULL) == SQLITE_OK) {
+    if (sqlite3_step(st) == SQLITE_ROW) v = sqlite3_column_int(st, 0);
+    sqlite3_finalize(st);
+  }
+  return v;
+}
+
 int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   const char *dbp = db_path ? db_path
     : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/data/japanmap.db");
@@ -519,6 +538,17 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   }
   /* Mirror database.js: WAL + sane pragmas. */
   db_apply_pragmas(db->h);
+
+  int file_ver = db_user_version(db);
+  if (file_ver > JO_SCHEMA_VERSION) {
+    fprintf(stderr, "[db] REFUSING to open %s: its schema version is %d but this "
+                    "binary only understands up to %d. Run a newer build, or "
+                    "restore a backup made by this one.\n",
+            dbp, file_ver, JO_SCHEMA_VERSION);
+    sqlite3_close_v2(db->h);
+    db->h = NULL;
+    return 1;
+  }
 
   char *schema = slurp(scp);
   if (!schema) {
@@ -699,6 +729,17 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * boot cost stays bounded on a large corpus instead of growing with it. */
   sqlite3_exec(db->h, "PRAGMA analysis_limit=1000;", NULL, NULL, NULL);
   sqlite3_exec(db->h, "PRAGMA optimize;", NULL, NULL, NULL);
+
+  /* Every migration above succeeded (each failure path returned). Stamp now,
+   * never earlier, so a half-migrated file keeps its old version. */
+  if (file_ver != JO_SCHEMA_VERSION) {
+    char pv[48];
+    snprintf(pv, sizeof pv, "PRAGMA user_version=%d;", JO_SCHEMA_VERSION);
+    if (sqlite3_exec(db->h, pv, NULL, NULL, NULL) == SQLITE_OK)
+      fprintf(stderr, "[db] schema version %d -> %d\n", file_ver, JO_SCHEMA_VERSION);
+    else
+      fprintf(stderr, "[db] could not stamp schema version: %s\n", sqlite3_errmsg(db->h));
+  }
 
   fprintf(stderr, "[db] opened %s, schema applied (%d objects)\n",
           dbp, db_object_count(db));

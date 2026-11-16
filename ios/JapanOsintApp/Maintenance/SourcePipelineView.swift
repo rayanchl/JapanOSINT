@@ -169,6 +169,11 @@ struct SourcePipelineView: View {
             }
             .padding(.horizontal, Space.md)
             .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: Radius.md))
+            if runs.count > 12 {
+                Text("Showing the latest 12 of \(runs.count) runs")
+                    .font(.caption2)
+                    .foregroundStyle(theme.textMuted)
+            }
         }
     }
 
@@ -215,7 +220,7 @@ struct SourcePipelineView: View {
         rerunning = true; defer { rerunning = false }
         actionError = nil
         do { _ = try await apiClient.api.intelRunSource(sourceId); Haptics.success(); await load() }
-        catch { actionError = "Re-run failed: \(error.localizedDescription)"; Haptics.error() }
+        catch { actionError = "Re-run: \(API.runFailureMessage(error))"; Haptics.error() }
     }
 
     private func clearQuarantine() async {

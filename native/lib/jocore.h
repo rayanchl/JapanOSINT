@@ -396,9 +396,15 @@ static inline void jo_iso_now(char *o, size_t n) {
   gettimeofday(&tv, NULL);
   struct tm tm;
   gmtime_r(&tv.tv_sec, &tm);
-  char base[32];
-  strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &tm);
-  snprintf(o, n, "%s.%03dZ", base, (int)(tv.tv_usec / 1000));
+  /* Every field is reduced to its printed width so the compiler can see the
+   * 24 characters fit: with a strftime'd base and a bare %03d, every caller
+   * with a small buffer drew -Wformat-truncation, which is why fifteen files
+   * in core/ each carried a private copy of this function until 2026-11-14. */
+  snprintf(o, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 
 /* `days` before now as a bare ISO date (UTC) — the `from=` half of every

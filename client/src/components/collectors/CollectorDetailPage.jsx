@@ -13,6 +13,41 @@ import { HealthBar, CollectorCard } from './CollectorsPage.jsx';
  * rename), its children in collectors.def, and its sources paged from the
  * same search the Sources page uses, restricted to this key. */
 
+/* Hoisted to module scope: defined inside the page they were new component
+ * types on every render, so React unmounted and remounted every table row
+ * (losing scroll and focus) each time the page re-rendered. */
+function SourceRow({ s }) {
+  return (
+  <tr className="border-b border-osint-border/40 hover:bg-white/5">
+    <td className="px-3 py-2"><Pill tone={statusTone(s.status)}>{s.status || 'pending'}</Pill></td>
+    <td className="px-3 py-2 min-w-[220px]">
+      <Link to={`/console/sources/${encodeURIComponent(s.id)}`} className="text-osint-text hover:text-accent">{s.name || s.id}</Link>
+      {s.name_ja && s.name_ja !== s.name && <span className="ml-2 text-osint-muted">{s.name_ja}</span>}
+      <div className="font-mono text-[10px] text-osint-muted truncate max-w-[360px]" title={s.id}>{s.id}{s.category ? ` · ${s.category}` : ''}{s.host ? ` · ${s.host}` : ''}</div>
+    </td>
+    <td className="px-3 py-2 font-mono text-[11px] text-osint-muted">{s.engine} · {s.kind}</td>
+    <td className="px-3 py-2 font-mono text-[11px] text-osint-muted">{fmtInterval(s.interval)}</td>
+    <td className="px-3 py-2 text-right font-mono text-neon-green">{fmtCount(s.item_count)}</td>
+    <td className="px-3 py-2 font-mono text-[11px] text-osint-muted" title={s.last_fetched || 'never'}>{s.last_fetched ? relativeTime(s.last_fetched) : 'never'}</td>
+    <td className="px-3 py-2">{s.trust?.rated ? <Pill tone={gradeTone(s.trust.grade)}>{s.trust.grade}</Pill> : <span className="text-osint-muted text-[10px]">unrated</span>}</td>
+  </tr>
+  );
+}
+
+function SourceTable({ items }) {
+  return (
+  <Card padded={false} className="overflow-x-auto">
+    <table className="w-full text-xs">
+      <caption className="sr-only">Sources of this collector</caption>
+      <thead><tr className="border-b border-osint-border text-osint-muted uppercase tracking-wider text-left">
+        <th scope="col" className="px-3 py-2">Status</th><th scope="col" className="px-3 py-2">Source</th><th scope="col" className="px-3 py-2">Engine · kind</th><th scope="col" className="px-3 py-2">Interval</th><th scope="col" className="px-3 py-2 text-right">Items</th><th scope="col" className="px-3 py-2">Last fetched</th><th scope="col" className="px-3 py-2">Grade</th>
+      </tr></thead>
+      <tbody>{items.map((s) => <SourceRow key={s.id} s={s} />)}</tbody>
+    </table>
+  </Card>
+  );
+}
+
 export default function CollectorDetailPage() {
   const { key } = useParams();
   const [sp, setSp] = useSearchParams();
@@ -63,37 +98,11 @@ export default function CollectorDetailPage() {
   }
   if (!c) return null;
 
-  const Row = ({ s }) => (
-    <tr key={s.id} className="border-b border-osint-border/40 hover:bg-white/5">
-      <td className="px-3 py-2"><Pill tone={statusTone(s.status)}>{s.status || 'pending'}</Pill></td>
-      <td className="px-3 py-2 min-w-[220px]">
-        <Link to={`/console/sources/${encodeURIComponent(s.id)}`} className="text-osint-text hover:text-accent">{s.name || s.id}</Link>
-        {s.name_ja && s.name_ja !== s.name && <span className="ml-2 text-osint-muted">{s.name_ja}</span>}
-        <div className="font-mono text-[10px] text-osint-muted truncate max-w-[360px]" title={s.id}>{s.id}{s.category ? ` · ${s.category}` : ''}{s.host ? ` · ${s.host}` : ''}</div>
-      </td>
-      <td className="px-3 py-2 font-mono text-[11px] text-osint-muted">{s.engine} · {s.kind}</td>
-      <td className="px-3 py-2 font-mono text-[11px] text-osint-muted">{fmtInterval(s.interval)}</td>
-      <td className="px-3 py-2 text-right font-mono text-neon-green">{fmtCount(s.item_count)}</td>
-      <td className="px-3 py-2 font-mono text-[11px] text-osint-muted" title={s.last_fetched || 'never'}>{s.last_fetched ? relativeTime(s.last_fetched) : 'never'}</td>
-      <td className="px-3 py-2">{s.trust?.rated ? <Pill tone={gradeTone(s.trust.grade)}>{s.trust.grade}</Pill> : <span className="text-osint-muted text-[10px]">unrated</span>}</td>
-    </tr>
-  );
-  const Table = ({ items }) => (
-    <Card padded={false} className="overflow-x-auto">
-      <table className="w-full text-xs">
-        <thead><tr className="border-b border-osint-border text-osint-muted uppercase tracking-wider text-left">
-          <th className="px-3 py-2">Status</th><th className="px-3 py-2">Source</th><th className="px-3 py-2">Engine · kind</th><th className="px-3 py-2">Interval</th><th className="px-3 py-2 text-right">Items</th><th className="px-3 py-2">Last fetched</th><th className="px-3 py-2">Grade</th>
-        </tr></thead>
-        <tbody>{items.map((s) => <Row key={s.id} s={s} />)}</tbody>
-      </table>
-    </Card>
-  );
-
   return (
     <Page wide
       title={<span className="flex items-center gap-2 flex-wrap">{c.label || c.key}{c.label_ja && <span className="text-sm text-osint-muted font-normal">{c.label_ja}</span>}{isGroup && <Pill tone="accent" mono={false}>group of {fmtCount(children.length)} collectors</Pill>}</span>}
       subtitle={<span className="flex flex-wrap items-center gap-x-2"><Link to="/console/collectors" className="hover:text-accent">← all collectors</Link><span>·</span><span className="font-mono">{c.key}</span>{!isGroup && c.group && <><span>·</span><span>in <Link to={`/console/collectors/${encodeURIComponent(c.group)}`} className="text-accent hover:underline">{c.group_label || c.group}</Link></span></>}</span>}
-      actions={<Button size="sm" onClick={() => head.reload()} title="Reload"><LuRefreshCw size={12} /></Button>}
+      actions={<Button size="sm" onClick={() => head.reload()} title="Reload" aria-label="Reload"><LuRefreshCw size={12} /></Button>}
     >
       {c.description && <p className="text-xs text-osint-muted -mt-2">{c.description}</p>}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
@@ -125,7 +134,7 @@ export default function CollectorDetailPage() {
       )}
 
       <form onSubmit={(e) => { e.preventDefault(); set({ q: draft.trim() }); }} className="flex flex-wrap items-center gap-2">
-        <Input className="flex-1 min-w-[200px]" placeholder="search within this collector…" value={draft} onChange={(e) => setDraft(e.target.value)} />
+        <Input className="flex-1 min-w-[200px]" aria-label="Search within this collector" placeholder="search within this collector…" value={draft} onChange={(e) => setDraft(e.target.value)} />
         <Button type="submit">Search</Button>
         <Segmented value={sort} onChange={(v) => set({ sort: v })} options={[{ value: 'name', label: 'name' }, { value: 'id', label: 'id' }, { value: 'items', label: 'items' }, { value: 'fetched', label: 'fetched' }, { value: 'grade', label: 'grade' }]} />
       </form>
@@ -136,12 +145,12 @@ export default function CollectorDetailPage() {
           {[...grouped.buckets.entries()].map(([p, items]) => (
             <div key={p}>
               <div className="text-[10px] uppercase tracking-wider text-osint-muted mb-1">prefix <span className="font-mono text-osint-text">{p}</span> · {fmtCount(items.length)} shown</div>
-              <Table items={items} />
+              <SourceTable items={items} />
             </div>
           ))}
-          {grouped.rest.length > 0 && <div><div className="text-[10px] uppercase tracking-wider text-osint-muted mb-1">other · {fmtCount(grouped.rest.length)} shown</div><Table items={grouped.rest} /></div>}
+          {grouped.rest.length > 0 && <div><div className="text-[10px] uppercase tracking-wider text-osint-muted mb-1">other · {fmtCount(grouped.rest.length)} shown</div><SourceTable items={grouped.rest} /></div>}
         </div>
-      ) : rows.length > 0 && <Table items={rows} />}
+      ) : rows.length > 0 && <SourceTable items={rows} />}
       {rows.length > 0 && <PagedFooter shown={rows.length} total={page?.total} hasMore={page?.has_more} busy={more.busy} onMore={loadMore} error={more.error} noun="sources" />}
     </Page>
   );

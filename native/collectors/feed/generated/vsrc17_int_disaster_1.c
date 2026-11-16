@@ -13,7 +13,10 @@
  * At 1000 it is 8 pages and reaches the end. The 7,621 rows carry 5,738
  * distinct document ids: the API's ordering=id queryset repeats a document once
  * per related row, and those repeats are byte-identical, so storing 5,738 is
- * correct dedupe, not loss. */
+ * correct dedupe, not loss. Re-measured 2026-11-14: count=7,708 walked whole
+ * (8 pages): 5,811 distinct ids AND 5,811 distinct whole records, zero ids with
+ * differing bodies — so 7,708 emitted / 5,811 stored is the upstream's own
+ * byte-identical repeats. Do not re-key. */
 VJSON(ifrc_go_appeal_document, "ifrc-go-appeal-document", "IFRC GO — appeal documents", "IFRC GO — appeal documents",
   "int_disaster", "disaster",
   "https://goadmin.ifrc.org/api/v2/appeal_document/?limit=1000&format=json&ordering=id",

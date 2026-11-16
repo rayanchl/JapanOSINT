@@ -200,9 +200,18 @@ static int xml_unescape_put(xb *b, const char *s, size_t n) {
 /* Text of every <t> inside [p,end) concatenated, skipping <rPh> (phonetic
  * runs). Serves <si> (plain or rich text) and <is> (inline string) alike. */
 static int collect_t(xb *b, const char *p, const char *end) {
+  /* The next <rPh> is searched for ONCE and re-searched only after the scan
+   * position has passed it: searching the rest of the <si> on every <t> was
+   * quadratic in the number of runs (an <si> of 60,000 `<r><t>a</t></r>` cost
+   * 70 s). Once a search finds none there is none further on, because p only
+   * advances. */
+  const char *lt = NULL; int searched = 0;
   for (;;) {
     const char *body; int self;
-    const char *lt = find_tag(p, end, "rPh", &body, &self);
+    if (!searched || (lt && lt < p)) {
+      lt = find_tag(p, end, "rPh", &body, &self);
+      searched = 1;
+    }
     const char *tlt = find_tag(p, end, "t", &body, &self);
     if (!tlt) return 0;
     if (lt && lt < tlt) {                          /* skip the phonetic run */
@@ -328,6 +337,26 @@ static void parse_ref(const char *r, unsigned *col, unsigned *row) {
   *col = c; *row = rr;
 }
 
+/* Output-byte ceiling (LIB-01). The cell ceiling counts cells, and a cell can
+ * be a reference to ONE shared string of a megabyte, so 3,000 cells of a
+ * 1,898-byte workbook produced 3 GB of CSV. Measured in pass 1 from the
+ * encoded size of each referenced string, before any output is built. */
+static size_t max_bytes(void) {
+  const char *e = getenv("JO_XLSX_MAX_BYTES");
+  if (e && *e) { long long v = atoll(e); if (v > 0) return (size_t)v; }
+  return (size_t)512 << 20;
+}
+
+/* Bytes `s` occupies as one CSV cell (quote doubling and the wrapping quotes
+ * included, delimiter not). */
+static size_t csv_cell_cost(const char *s) {
+  size_t n = strlen(s);
+  if (!strpbrk(s, ",\"\r\n")) return n;
+  size_t q = 0;
+  for (const char *p = s; *p; p++) if (*p == '"') q++;
+  return n + q + 2;
+}
+
 static size_t max_cells(void) {
   const char *e = getenv("JO_XLSX_MAX_CELLS");
   if (e && *e) { long long v = atoll(e); if (v > 0) return (size_t)v; }
@@ -352,7 +381,8 @@ static int csv_put_cell(xb *b, const char *s) {
  * built; with `out` set it writes the CSV. Same code both times so the two
  * cannot disagree about where a cell lands. Returns 0, or -1 with err set. */
 static int walk_sheet(const char *sx, size_t sn, char **shared, int nshared,
-                      xb *out, unsigned *max_row, unsigned *max_col,
+                      const size_t *shared_cost, xb *out, unsigned *max_row,
+                      unsigned *max_col, size_t *est_bytes,
                       char *err, size_t errn) {
   const char *end = sx + sn;
   const char *body; int self;
@@ -363,6 +393,7 @@ static int walk_sheet(const char *sx, size_t sn, char **shared, int nshared,
   if (!sdend) sdend = end;
 
   unsigned cur_row = 0, mrow = 0, mcol = 0;
+  size_t bytes = 0;                       /* pass 1: upper bound of the CSV */
   const char *p = body;
   xb cell = {0};
   for (;;) {
@@ -397,6 +428,28 @@ static int walk_sheet(const char *sx, size_t sn, char **shared, int nshared,
       const char *cend = cself ? cbody : find_close(cbody, rend, "c");
       if (!cend) cend = rend;
 
+      if (!out && !cself) {
+        /* Pass 1: what this cell will cost in the CSV. A shared string is
+         * counted by its (precomputed) encoded size per REFERENCE; any other
+         * cell by twice its raw span (quote doubling is the worst case). */
+        const char *vb; int vself;
+        if (!strcmp(type, "inlineStr")) bytes += 2 * (size_t)(cend - cbody) + 2;
+        else {
+          const char *v = find_tag(cbody, cend, "v", &vb, &vself);
+          if (v && !vself) {
+            const char *vc = find_close(vb, cend, "v");
+            if (!vc) vc = cend;
+            if (!strcmp(type, "s")) {
+              char ib[32]; size_t il = (size_t)(vc - vb);
+              if (il >= sizeof ib) il = sizeof ib - 1;
+              memcpy(ib, vb, il); ib[il] = 0;
+              long idx = strtol(ib, NULL, 10);
+              if (idx >= 0 && idx < nshared) bytes += shared_cost[idx];
+            } else bytes += 2 * (size_t)(vc - vb) + 2;
+          }
+        }
+      }
+      if (!out) bytes += 1;                 /* the delimiter / newline */
       if (out) {
         /* Pad the gap so the column index survives: a value in C7 with no
          * A7/B7 must still be the third cell of line 7. */
@@ -448,7 +501,7 @@ static int walk_sheet(const char *sx, size_t sn, char **shared, int nshared,
     p = rself ? rbody : rend + 1;
   }
   free(cell.p);
-  if (!out) { *max_row = mrow; *max_col = mcol; }
+  if (!out) { *max_row = mrow; *max_col = mcol; if (est_bytes) *est_bytes = bytes; }
   return 0;
 oom:
   free(cell.p);
@@ -572,7 +625,26 @@ int xlsx_to_csv(const char *body, size_t len, int sheet_index,
    * answer is the whole sheet or a refusal — never a shortened table that
    * looks complete. */
   unsigned mrow = 0, mcol = 0;
-  int rc = walk_sheet(sx, sn, shared, nshared, NULL, &mrow, &mcol, err, errn);
+  size_t est = 0;
+  size_t *scost = nshared > 0 ? malloc((size_t)nshared * sizeof *scost) : NULL;
+  if (nshared > 0 && !scost) {
+    seterr(err, errn, "out of memory", NULL, NULL);
+    free_shared(shared, nshared); free(sx); return -1;
+  }
+  for (int i = 0; i < nshared; i++) scost[i] = csv_cell_cost(shared[i]);
+  int rc = walk_sheet(sx, sn, shared, nshared, scost, NULL, &mrow, &mcol, &est, err, errn);
+  if (rc == 0) {
+    size_t bceil = max_bytes();
+    /* + one delimiter per grid cell for the padding of short rows. */
+    size_t grid = (size_t)mrow * (size_t)mcol;
+    if (est + grid > bceil || est + grid < est) {
+      char a[64], b[64];
+      snprintf(a, sizeof a, "~%llu bytes", (unsigned long long)est + (unsigned long long)grid);
+      snprintf(b, sizeof b, "%zu", bceil);
+      seterr(err, errn, "sheet exceeds JO_XLSX_MAX_BYTES: %s > %s — refused, not truncated", a, b);
+      rc = -1;
+    }
+  }
   if (rc == 0) {
     size_t ceiling = max_cells();
     if ((size_t)mrow * (size_t)mcol > ceiling) {
@@ -586,12 +658,13 @@ int xlsx_to_csv(const char *body, size_t len, int sheet_index,
   }
   if (rc == 0) {
     xb out = {0};
-    rc = walk_sheet(sx, sn, shared, nshared, &out, &mrow, &mcol, err, errn);
+    rc = walk_sheet(sx, sn, shared, nshared, scost, &out, &mrow, &mcol, NULL, err, errn);
     if (rc == 0) {
       if (!out.p) { out.p = strdup(""); if (!out.p) rc = -1; }
       if (rc == 0) { *csv_out = out.p; if (csv_len) *csv_len = out.n; }
     } else free(out.p);
   }
+  free(scost);
   free_shared(shared, nshared);
   free(sx);
   return rc;

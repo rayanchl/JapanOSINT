@@ -173,17 +173,49 @@ static void add_sampler_defaults(cJSON *b) {
   cJSON_AddNumberToObject(b, "min_p", env_double("LLM_MIN_P", 0.05));
 }
 
-/* See llm.h. Cached per process: n_ctx is fixed for the life of a
- * llama-server, and this is called on a request path. */
+/* See llm.h. Cached PER SERVER (base_url): the interactive/suggest client and
+ * the main analysis server have different n_ctx, and the first caller's value
+ * used to become everybody's. n_ctx is fixed for the life of a llama-server, so
+ * a known value is kept; an UNKNOWN one (server still loading at boot, a 2 s
+ * timeout) is retried after LLM_CTX_RETRY_SEC instead of being remembered for
+ * the life of the process. The /props request runs outside the mutex. */
+#define LLM_CTX_RETRY_SEC 60
+#define LLM_CTX_SLOTS 8
+typedef struct { char url[256]; int ctx; long asked; int used; } ctx_slot;
+
+static long mono_sec(void) {
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  return (long)ts.tv_sec;
+}
+
 size_t llm_ctx_chars(llm_client *c, int reserve_tokens) {
-  static int cached_ctx = -1;                 /* -1 = not asked, 0 = unknown */
+  static ctx_slot slots[LLM_CTX_SLOTS];
+  static int next_evict;
   static pthread_mutex_t mu = PTHREAD_MUTEX_INITIALIZER;
+  const char *base = c && c->base_url ? c->base_url : "http://127.0.0.1:8080";
+  long now = mono_sec();
+  int ask = 0, ctx = 0, si = -1;
   pthread_mutex_lock(&mu);
-  if (cached_ctx < 0) {
-    cached_ctx = 0;
+  for (int i = 0; i < LLM_CTX_SLOTS; i++)
+    if (slots[i].used && strcmp(slots[i].url, base) == 0) { si = i; break; }
+  if (si < 0) {
+    for (int i = 0; i < LLM_CTX_SLOTS && si < 0; i++) if (!slots[i].used) si = i;
+    if (si < 0) { si = next_evict; next_evict = (next_evict + 1) % LLM_CTX_SLOTS; }
+    memset(&slots[si], 0, sizeof slots[si]);
+    snprintf(slots[si].url, sizeof slots[si].url, "%s", base);
+    slots[si].used = 1;
+    ask = 1;
+  } else if (slots[si].ctx <= 0 && now - slots[si].asked >= LLM_CTX_RETRY_SEC) {
+    ask = 1;
+  }
+  if (ask) slots[si].asked = now;      /* concurrent callers see "unknown" meanwhile */
+  ctx = slots[si].ctx;
+  pthread_mutex_unlock(&mu);
+  if (ask) {
+    int got = 0;
     char url[512];
-    snprintf(url, sizeof url, "%s/props",
-             c && c->base_url ? c->base_url : "http://127.0.0.1:8080");
+    snprintf(url, sizeof url, "%s/props", base);
     http_response r = {0};
     /* Short timeout and no retry: this is a hint, not the work. A server that
      * will not answer /props in two seconds leaves the caller on its default. */
@@ -196,20 +228,22 @@ size_t llm_ctx_chars(llm_client *c, int reserve_tokens) {
          * started with, which it may divide across parallel slots. */
         const cJSON *g = cJSON_GetObjectItem(j, "default_generation_settings");
         const cJSON *n = g ? cJSON_GetObjectItem(g, "n_ctx") : NULL;
-        if (cJSON_IsNumber(n) && n->valueint > 0) cached_ctx = n->valueint;
+        if (cJSON_IsNumber(n) && n->valueint > 0) got = n->valueint;
         cJSON_Delete(j);
       }
     }
     http_response_free(&r);
-    if (cached_ctx > 0)
-      fprintf(stderr, "[llm] %s reports n_ctx=%d tokens per slot\n",
-              c && c->base_url ? c->base_url : "(default)", cached_ctx);
+    if (got > 0)
+      fprintf(stderr, "[llm] %s reports n_ctx=%d tokens per slot\n", base, got);
     else
-      fprintf(stderr, "[llm] could not read n_ctx from /props — prompt budgets "
-                      "stay on their built-in defaults\n");
+      fprintf(stderr, "[llm] could not read n_ctx from %s/props — prompt budgets "
+                      "stay on their built-in defaults (retry in %d s)\n",
+              base, LLM_CTX_RETRY_SEC);
+    pthread_mutex_lock(&mu);
+    if (slots[si].used && strcmp(slots[si].url, base) == 0) slots[si].ctx = got;
+    pthread_mutex_unlock(&mu);
+    ctx = got;
   }
-  int ctx = cached_ctx;
-  pthread_mutex_unlock(&mu);
   if (ctx <= 0) return 0;                     /* unknown: caller keeps its own */
   if (reserve_tokens < 0) reserve_tokens = 0;
   int usable = ctx - reserve_tokens;

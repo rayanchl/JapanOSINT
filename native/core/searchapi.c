@@ -127,6 +127,8 @@ static int owner_matches(db_handle *db, const char *id, const char *tenant_id) {
   return ok;
 }
 
+#define SEARCH_QUERY_MAX_BYTES (16u * 1024u)
+
 char *searchapi_analyze(db_handle *db, const char *tenant_id,
                         const char *user_id, const char *query, int max_rounds,
                         int *out_status) {
@@ -136,6 +138,14 @@ char *searchapi_analyze(db_handle *db, const char *tenant_id,
   if (!tenant_id || !*tenant_id) { if (out_status) *out_status = 500; return NULL; }
   while (*query == ' ' || *query == '\t' || *query == '\n' || *query == '\r') query++;
   if (!*query) return NULL;
+  /* The query is persisted (search_run_owners), echoed into progress, written
+   * to search history and handed to the LLM and the collector fan-out, so a
+   * 2.5 MiB body was 2.5 MiB of each. Same 16 KiB ceiling as search_history
+   * (API-14); 413 so the caller can tell it from "no query". */
+  if (strlen(query) > SEARCH_QUERY_MAX_BYTES) {
+    if (out_status) *out_status = 413;
+    return NULL;
+  }
 
   /* max_rounds was guarded only by "> 0", so {"max_rounds":2147483647} was
    * accepted verbatim: pipeline.c's phase-2 loop (`while (need_more && round <

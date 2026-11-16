@@ -1,5 +1,6 @@
 #include "rss_atom.h"
 #include "jocore.h"     /* jo_strcasestr: portable case-insensitive search */
+#include "osintemit.h"  /* jo_shape_notice: a disclosure as data, not a log line */
 #include "../core/httpclient.h"
 #include "feedlib.h"   /* feed_url_host_is_jp: the one .jp host gate */
 #include "csv.h"       /* csv_decode_sjis */
@@ -21,9 +22,21 @@ static char *dup_n(const char *s, size_t n) {
 
 /* Find first <tag ...>...</tag> inside [from,end); returns inner text
  * (malloc'd, CDATA-stripped, a few entities decoded) or NULL. *after set to
- * end of close tag. Case-insensitive tag match, namespace-agnostic suffix. */
-static char *tag_text(const char *from, const char *end, const char *tag,
-                      const char **after) {
+ * end of close tag. Case-insensitive tag match.
+ *
+ * Which element counts as "the" tag (LIB-05). The unprefixed element wins:
+ * `<media:description>` and `<atom:link rel="self"/>` are other vocabularies'
+ * elements that merely share a local name, and taking the first match of ANY
+ * prefix returned the media blurb as the description and the empty
+ * `<atom:link/>` as the link (the real <link> was never examined, so the item's
+ * uid fell to a title hash). So: pass 1 reads unprefixed elements only; a
+ * self-closing one is skipped and the scan goes on. Only when pass 1 finds
+ * nothing does pass 2 accept a prefixed element (`<dc:date>`, `<content:encoded>`
+ * exist precisely because the unprefixed form is absent). A tag that is only
+ * ever self-closing still answers "" as before. */
+static char *tag_text_pass(const char *from, const char *end, const char *tag,
+                           const char **after, int want_prefixed, int *saw_self,
+                           const char **self_after) {
   size_t tl = strlen(tag);
   for (const char *p = from; p && p < end; p++) {
     if (*p != '<') continue;
@@ -32,17 +45,21 @@ static char *tag_text(const char *from, const char *end, const char *tag,
     /* match tag possibly with ns prefix: <(...:)?tag[ >/] */
     const char *nameend = q;
     while (nameend < end && *nameend != ' ' && *nameend != '>' &&
-           *nameend != '/' && *nameend != '\t' && *nameend != '\n') nameend++;
-    size_t namelen = (size_t)(nameend - q);
+           *nameend != '/' && *nameend != '\t' && *nameend != '\n' &&
+           *nameend != '\r') nameend++;
     const char *base = q;
     for (const char *c = q; c < nameend; c++) if (*c == ':') base = c + 1;
     size_t baselen = (size_t)(nameend - base);
-    if (baselen != tl || strncasecmp(base, tag, tl) != 0) {
-      (void)namelen; continue;
-    }
+    if (baselen != tl || strncasecmp(base, tag, tl) != 0) continue;
+    if ((base != q) != want_prefixed) continue;
+    size_t openlen = (size_t)(nameend - q);
     const char *gt = memchr(q, '>', (size_t)(end - q));
     if (!gt) return NULL;
-    if (gt[-1] == '/') { if (after) *after = gt + 1; return dup_n("", 0); }
+    if (gt[-1] == '/') {
+      if (!*saw_self) { *saw_self = 1; if (self_after) *self_after = gt + 1; }
+      p = gt;                               /* skip it and keep scanning */
+      continue;
+    }
     const char *content = gt + 1;
     /* find matching close </...tag> */
     char close[64]; snprintf(close, sizeof close, "</");
@@ -53,9 +70,11 @@ static char *tag_text(const char *from, const char *end, const char *tag,
       if (lt + 1 < end && lt[1] == '/') {
         const char *cn = lt + 2, *ce = cn;
         while (ce < end && *ce != '>') ce++;
-        const char *cb = cn;
-        for (const char *c = cn; c < ce; c++) if (*c == ':') cb = c + 1;
-        if ((size_t)(ce - cb) == tl && strncasecmp(cb, tag, tl) == 0) {
+        /* The close tag must be the open tag's own name, prefix included, or
+         * a nested `<media:title>` would end a `<title>` early. */
+        const char *cz = ce;
+        while (cz > cn && (cz[-1] == ' ' || cz[-1] == '\t' || cz[-1] == '\r' || cz[-1] == '\n')) cz--;
+        if ((size_t)(cz - cn) == openlen && strncasecmp(cn, q, openlen) == 0) {
           size_t len = (size_t)(lt - content);
           char *raw = dup_n(content, len);
           if (after) *after = ce + 1;
@@ -82,6 +101,18 @@ static char *tag_text(const char *from, const char *end, const char *tag,
     return NULL;
   }
   return NULL;
+}
+
+static char *tag_text(const char *from, const char *end, const char *tag,
+                      const char **after) {
+  int saw_self = 0; const char *self_after = NULL;
+  char *r = tag_text_pass(from, end, tag, after, 0, &saw_self, &self_after);
+  if (!r) r = tag_text_pass(from, end, tag, after, 1, &saw_self, &self_after);
+  if (!r && saw_self) {                      /* only ever self-closing: "" as before */
+    if (after) *after = self_after;
+    return dup_n("", 0);
+  }
+  return r;
 }
 
 /* An attribute value inside the tag [p,gt): whitespace-anchored so `hreflang=`
@@ -193,8 +224,17 @@ static char *rfc822_to_iso(const char *in) {
   while (*in == ' ' || *in == '\t') in++;
   /* Already ISO-8601 (starts with 4 digits then '-')? Keep as-is. */
   if (strlen(in) >= 5 && isdigit((unsigned char)in[0]) && isdigit((unsigned char)in[1]) &&
-      isdigit((unsigned char)in[2]) && isdigit((unsigned char)in[3]) && in[4] == '-')
+      isdigit((unsigned char)in[2]) && isdigit((unsigned char)in[3]) && in[4] == '-') {
+    /* Passed through, but only a real ISO date: "2026-99-99 garbage" used to
+     * go into the TEXT-ordered published_at column unchecked. */
+    int yy, mo, dd, h2 = 0, m2 = 0;
+    int got = sscanf(in, "%4d-%2d-%2d", &yy, &mo, &dd);
+    if (got != 3 || mo < 1 || mo > 12 || dd < 1 || dd > 31) return NULL;
+    if (in[10] == 'T' || in[10] == 't' || in[10] == ' ') {
+      if (sscanf(in + 11, "%2d:%2d", &h2, &m2) != 2 || h2 > 23 || m2 > 59) return NULL;
+    } else if (in[10] != 0) return NULL;
     return strdup(in);
+  }
 
   const char *p = in;
   const char *comma = strchr(p, ',');       /* skip the optional "Fri, " */
@@ -213,6 +253,15 @@ static char *rfc822_to_iso(const char *in) {
   int m = 0;
   for (int i = 0; i < 12; i++) if (!strcasecmp(mon, RFC822_MON[i])) { m = i + 1; break; }
   if (!m || day < 1 || day > 31 || year < 1000) return NULL;
+  /* Fields out of range are not a time: ss/mi used to run to 99 and the result
+   * was written as a date the column then sorted wrongly. A day the month does
+   * not have is no better. */
+  if (hh < 0 || hh > 23 || mi < 0 || mi > 59 || ss < 0 || ss > 60) return NULL;
+  {
+    static const int mdays[12] = {31,29,31,30,31,30,31,31,30,31,30,31};
+    if (day > mdays[m - 1]) return NULL;
+    if (m == 2 && day == 29 && !((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)) return NULL;
+  }
   if (year < 100) year += (year < 70) ? 2000 : 1900;   /* 2-digit years */
 
   /* shift to UTC */
@@ -248,21 +297,7 @@ static char *rfc822_to_iso(const char *in) {
  * the DB_ERROR verdict. Fixing the 240-byte truncation stopped us CREATING bad
  * UTF-8; this stops us STORING what upstream already sent. */
 static int is_utf8(const char *s, size_t n) {
-  const unsigned char *p = (const unsigned char *)s;
-  for (size_t i = 0; i < n; ) {
-    unsigned char c = p[i];
-    size_t need;
-    if (c < 0x80) { i++; continue; }
-    else if ((c & 0xE0) == 0xC0) need = 1;
-    else if ((c & 0xF0) == 0xE0) need = 2;
-    else if ((c & 0xF8) == 0xF0) need = 3;
-    else return 0;
-    if (i + need >= n) return 0;
-    for (size_t k = 1; k <= need; k++)
-      if ((p[i + k] & 0xC0) != 0x80) return 0;
-    i += need + 1;
-  }
-  return 1;
+  return csv_is_utf8(s, n);      /* the one strict validator: overlongs and surrogates are not UTF-8 */
 }
 
 /* Latin-1 → UTF-8. Every byte maps to a code point, so this cannot fail; it is
@@ -527,6 +562,7 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
     free(keys);
   }
   int item_idx = -1;
+  int skipped_noid = 0;     /* items with no guid, link or title: no key to store under */
 
   for (;;) {
     /* next <item ...>/<entry ...> block. Require a delimiter after the name
@@ -588,9 +624,15 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
        * truncation produced syntactically invalid JSON (cut mid-base64, no
        * closing quote/brace) that no consumer could cJSON_Parse. */
       char *props = NULL;
-      if (guid && *guid) {
+      char *pub_iso = pub ? rfc822_to_iso(pub) : NULL;
+      /* A date string that is not a date does not go into the TEXT-ordered
+       * published_at column; it is kept verbatim in the properties instead, so
+       * nothing is lost and nothing sorts wrongly. */
+      int pub_bad = pub && *pub && !pub_iso;
+      if ((guid && *guid) || pub_bad) {
         cJSON *pj = cJSON_CreateObject();
-        cJSON_AddStringToObject(pj, "guid", guid);
+        if (guid && *guid) cJSON_AddStringToObject(pj, "guid", guid);
+        if (pub_bad) cJSON_AddStringToObject(pj, "published_raw", pub);
         props = cJSON_PrintUnformatted(pj);
         cJSON_Delete(pj);
       }
@@ -607,7 +649,6 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
         }
         memcpy(summ, desc, L); summ[L] = 0;
       }
-      char *pub_iso = pub ? rfc822_to_iso(pub) : NULL;
       intel_item item = {0};
       item.remote_key = rk;
       item.title = title; item.body = desc;
@@ -615,7 +656,7 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
       item.link = link; item.author = author;
       item.lang = lang ? lang : "ja";
       /* normalised to ISO-8601 UTC so this column sorts as one format */
-      item.published_at = pub_iso ? pub_iso : pub;
+      item.published_at = pub_iso;   /* NULL when unparseable: see published_raw */
       item.record_type = "article";
       item.properties_json = props ? props : "{}";
       item.tags_json = tags_json;
@@ -623,9 +664,28 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
       free(pub_iso);
       free(props);
       free(rk);
-    }
+    } else skipped_noid++;
     free(title); free(desc); free(link); free(pub); free(guid); free(author);
     cur = blkend + strlen(closeTag);
+  }
+  /* Items that carried no guid, no link and no title have nothing to key a
+   * record on and were skipped — in silence until now (rule 2). The count is
+   * disclosed as data. Nothing is invented for them. */
+  if (skipped_noid > 0) {
+    cJSON *pp = cJSON_CreateObject();
+    if (pp) {
+      cJSON_AddNumberToObject(pp, "items_skipped", skipped_noid);
+      cJSON_AddNumberToObject(pp, "items_scanned", scanned);
+      cJSON_AddStringToObject(pp, "endpoint", url);
+      cJSON_AddStringToObject(pp, "reason",
+        "items with no guid, no link and no title have no key to store a record under");
+      char t[256];
+      snprintf(t, sizeof t, "%s skipped %d of %d feed items that carried no guid, link or title",
+               ctx->source_id ? ctx->source_id : "rss", skipped_noid, scanned);
+      jo_shape_notice(sink, ctx->source_id, "items-skipped-no-identity", t, pp, NULL);
+    }
+    fprintf(stderr, "[rss] %s skipped %d items with no guid/link/title (disclosed)\n",
+            ctx->source_id ? ctx->source_id : url, skipped_noid);
   }
   /* The cap left real items on the table. Per docs/SOURCE_EXHAUSTIVENESS.md a
    * shortfall is reported as DATA — the stderr line this used to be is not a

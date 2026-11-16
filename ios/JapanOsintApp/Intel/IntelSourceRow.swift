@@ -6,6 +6,9 @@ struct IntelSourceRow: View {
     let source: IntelSource
     /// Fires after a successful manual Run so the parent can refresh.
     var onRunComplete: (() -> Void)? = nil
+    /// An entity pivot only answers for an entity, so running it from here
+    /// would do nothing; its Run button says where to run it instead.
+    var needsEntity: Bool = false
 
     @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var registry: LayerRegistry
@@ -85,6 +88,10 @@ struct IntelSourceRow: View {
     }
 
     private func runNow() async {
+        if needsEntity {
+            runError = "Entity pivot: open it under Sources and run it with an entity"
+            return
+        }
         running = true
         runError = nil
         defer { running = false }
@@ -92,7 +99,7 @@ struct IntelSourceRow: View {
             _ = try await apiClient.api.intelRunSource(source.id)
             onRunComplete?()
         } catch {
-            runError = error.localizedDescription
+            runError = API.runFailureMessage(error)
         }
     }
 }

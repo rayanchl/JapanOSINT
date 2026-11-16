@@ -54,6 +54,11 @@ char *sourceapi_search(db_handle *db, const sourceapi_query *q);
 
 /* GET /api/collectors — every collector key with its tallies. Never NULL. */
 char *sourceapi_collectors(db_handle *db);
+/* Same, with an optional case-insensitive substring filter `q` on the
+ * collector key / label / label_ja (NULL or "" = every collector). The
+ * `groups` block stays the whole fold; meta.total counts the rows shown and
+ * meta.collectors_total the unfiltered count. */
+char *sourceapi_collectors_q(db_handle *db, const char *q);
 
 /* GET /api/collectors/:key — the collector's header, its id-prefix groups and
  * its sources (a search page restricted to the key, honouring q/limit/offset).
