@@ -389,10 +389,10 @@ fuzz-build:
 
 fuzz-smoke: fuzz-build
 	@set -e; for t in zipread xlsx csv htmlparse rss_atom; do \
-	  mkdir -p $(FUZZ_DIR)/corpus-$$t; \
+	  mkdir -p $(FUZZ_DIR)/corpus-$$t tests/fuzz/crashes; \
 	  echo "--- fuzz_$$t ($(FUZZ_SECS)s) ---"; \
-	  ASAN_OPTIONS=detect_leaks=0 $(FUZZ_DIR)/fuzz_$$t -max_total_time=$(FUZZ_SECS) -timeout=10 \
-	    -rss_limit_mb=2048 -print_final_stats=1 $(FUZZ_DIR)/corpus-$$t; \
+	  ASAN_OPTIONS=detect_leaks=0 $(FUZZ_DIR)/fuzz_$$t -max_total_time=$(FUZZ_SECS) -timeout=10 -artifact_prefix=tests/fuzz/crashes/$$t- \
+	    -rss_limit_mb=2048 -print_final_stats=1 $(FUZZ_DIR)/corpus-$$t tests/fuzz/corpus/$$t; \
 	done
 
 # docs/ENVIRONMENT.md is generated from the source (audit OPS-06); this fails
