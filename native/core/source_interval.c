@@ -186,12 +186,14 @@ long source_interval_default(const sched_state *st, const source_def *d) {
    * triage (60 s) and log retention each ran once at boot and then every six
    * hours. A pod keeps the interval it declares. */
   if (sched_is_pod(d)) return d->update_interval_sec;
-  return cadence_apply(sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
+  return cadence_apply_row(d->update_interval_sec,
+                           sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
 }
 
 const char *source_interval_policy_mode(const sched_state *st, const source_def *d) {
   if (!d || sched_is_pod(d)) return "declared";
-  return cadence_mode_for(sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
+  return cadence_mode_for_row(d->update_interval_sec,
+                              sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
 }
 
 char *source_interval_json(db_handle *db, const char *id, int can_write) {

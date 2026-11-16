@@ -289,6 +289,57 @@ static void test_camera_policy(void) {
   assert(hostgate_camera_url_check("http://192.168.1.10/", 0) == HG_URL_PRIVATE);
 }
 
+/* 7. hostgate_peek_ready_ms: the scheduler's non-blocking "is this host ready?"
+ * (host-aware dispatch). It must answer without taking a slot, claiming one,
+ * or waiting - and agree with what acquire() would do. */
+static void test_peek_ready(void) {
+  reset_table();
+  hostgate_stats_t st0, st1;
+  /* unknown host: nothing to wait for, and asking creates nothing */
+  hostgate_stats(&st0);
+  assert(hostgate_peek_ready_ms("peek-unknown.example") == 0);
+  assert(hostgate_peek_ready_ms("") == 0 && hostgate_peek_ready_ms(NULL) == 0);
+  assert(hostgate_peek_ready_ms("localhost") == 0 && hostgate_peek_ready_ms("127.0.0.1") == 0);
+  hostgate_stats(&st1);
+  assert(st1.hosts == st0.hosts && "a peek claimed a slot");
+  assert(lookup("peek-unknown.example") == NULL);
+
+  /* a granted start opens the gap: the peek reports it, then it closes */
+  const char *u = "https://peek-a.example/x";
+  assert(hostgate_acquire(u, 1000) == 1);
+  long ms = hostgate_peek_ready_ms("peek-a.example");
+  assert(ms > 0 && ms <= g_min_gap_ms && "gap not reported");
+  hostgate_release(u);
+  assert(hostgate_peek_ready_ms("peek-a.example") > 0 && "release does not reopen the gap");
+  g_clock_skew_ms += g_min_gap_ms + 1;
+  assert(hostgate_peek_ready_ms("peek-a.example") == 0);
+  hostgate_stats(&st1);
+  assert(st1.inflight == 0 && "peeking left something in flight");
+
+  /* the in-flight cap alone blocks: no duration is knowable, a short one is given */
+  const char *v = "https://peek-b.example/x";
+  for (int k = 0; k < g_max_conc; k++) {
+    assert(hostgate_acquire(v, 1000) == 1);
+    g_clock_skew_ms += g_min_gap_ms + 1;
+  }
+  assert(hostgate_peek_ready_ms("peek-b.example") == HG_PEEK_BUSY_MS);
+  hostgate_release(v);
+  assert(hostgate_peek_ready_ms("peek-b.example") == 0);
+  for (int k = 1; k < g_max_conc; k++) hostgate_release(v);
+
+  /* a server-requested penalty is reported as time remaining */
+  hostgate_penalize("https://peek-c.example/x", 5000);
+  ms = hostgate_peek_ready_ms("peek-c.example");
+  assert(ms > 4000 && ms <= 5000);
+
+  /* an override host (reddit.com, 30 s) reports its long gap */
+  assert(hostgate_acquire("https://old.reddit.com/r/x", 1000) == 1);
+  hostgate_release("https://old.reddit.com/r/x");
+  ms = hostgate_peek_ready_ms("old.reddit.com");
+  assert(ms > 25000 && ms <= 30000);
+  printf("  peek: unknown 0, gap, in-flight cap, penalty, override - nothing claimed\n");
+}
+
 int main(void) {
   setenv("JO_HOST_MIN_GAP_OVERRIDES",
          " Padded.Example = 700 ,\tTABBED.example\t=900,plain.example=300", 1);
@@ -301,6 +352,7 @@ int main(void) {
   test_penalize();
   test_penalty_reaches_a_parked_waiter();
   test_first_request_never_waits();
+  test_peek_ready();
   test_camera_policy();
   printf("test_hostgate: OK\n");
   return 0;

@@ -596,6 +596,7 @@ static void sources_row_record(db_handle *db, const char *id, const char *status
   sqlite3_finalize(s);
 }
 static volatile int *sched_cancel_slot(const char *id);
+static void sched_host_learn(const source_def *d, const char *host);
 
 /* ── house rule 1 for EVERY collector, not only the declarative engine ────
  *
@@ -874,6 +875,12 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   }
   unsigned long long bytes_in = http_client_bytes_in(http);
   int requests = http_client_request_count(http);
+  /* The host this source really talks to, learned for host-aware dispatch
+   * (sched_host_learn): the registry cannot know it for a bespoke collector. */
+  if (!entity && hosts > 0 && d->collector && d->collector[0] != '_') {
+    const char *h0 = http_client_host_at(http, 0, NULL, NULL);
+    if (h0) sched_host_learn(d, h0);
+  }
   http_client_free(http);
 
   /* The run's verdict, computed ONCE and used twice: here, to decide whether
@@ -896,10 +903,30 @@ int scheduler_run_source(db_handle *db, const source_def *d,
    * own, and it is the one that reaches the 32 rows in 10,252 whose host
    * answered with a maintenance page. Both require that the run left NOTHING
    * behind, which is what makes this a disclosure rather than a second status. */
+  int disclosed = 0;
   if (real_collector && cs.n == 0 && cs.notices == 0 &&
-      (strcmp(run_st, "ok") != 0 || rc < 0))
+      (strcmp(run_st, "ok") != 0 || rc < 0)) {
     sched_disclose_fetch_failure(&sink, d, entity, rc, hosts, hosts_ok,
                                  hosts_failed, bytes_in, requests, run_why);
+    disclosed = 1;
+  }
+  /* ENG-07: a refusal the scheduler had to disclose is not a record OF the
+   * source. The disclosure goes through the counting sink, so cs.n and the
+   * stored distinct-uid count both include it (the run line says records=1
+   * stored=1, deliberately, as hpengine's does) - but the health surfaces must
+   * not read that one row as the source delivering something. Without this a
+   * run whose every host answered (run_status() "ok") stored the disclosure,
+   * read records=1, and so read 'online', reset consecutive_empties and left
+   * nothing for the EMPTY_RESULTSET counter to count. */
+  char disc_why[256]; disc_why[0] = '\0';
+  if (disclosed) {
+    if (run_why) snprintf(disc_why, sizeof disc_why, "%s", run_why);
+    else snprintf(disc_why, sizeof disc_why,
+                  "collector returned non-zero (rc=%d) with every host answering "
+                  "(%llu bytes): a refusal served as a success, or a failure code "
+                  "on a quiet run - see its collector-fetch-failure record",
+                  rc, bytes_in);
+  }
   /* Read the distinct-row count BEFORE the sink is freed — it lives in the
    * sink_state that free() is about to release. */
   int stored_exact = 1;
@@ -973,9 +1000,16 @@ int scheduler_run_source(db_handle *db, const source_def *d,
     anomaly_detect(db, d->id, flid, status, (int)cs.n, duration_ms);
     fetch_log_set_stored(db, flid, stored, stored_exact);
     fetch_log_set_bytes(db, flid, bytes_in);
-    sources_row_record(db, d->id, status, stored >= 0 ? stored_data : cs.n,
-                       duration_ms, why);
-    if (!entity) sched_state_record(db, d, status, cs.n);
+    /* The run's DATA records: the disclosure above is subtracted, so a
+     * disclosed refusal reads 'degraded' (ok, stored nothing) with its reason
+     * in the status column - never 'online' - and counts toward
+     * consecutive_empties. run_status() above is untouched: fetch_log and the
+     * red/green verdict stay exactly what they were. */
+    long data_records = (stored >= 0 ? stored_data : cs.n) - (disclosed ? 1 : 0);
+    if (data_records < 0) data_records = 0;
+    sources_row_record(db, d->id, status, data_records, duration_ms,
+                       why ? why : (disclosed ? disc_why : NULL));
+    if (!entity) sched_state_record(db, d, status, data_records);
   }
   return rc;
 }
@@ -1079,6 +1113,8 @@ typedef struct {
   int          idx[SCHED_QCAP];      /* registry indices awaiting a worker    */
   double       key[SCHED_QCAP];      /* sched_priority() at push time         */
   unsigned long seq[SCHED_QCAP];     /* push order: equal keys run first-in-first-out */
+  time_t       force_at[SCHED_QCAP]; /* host-aware pop: taken regardless of its host after this */
+  unsigned     skips[SCHED_QCAP];    /* pops that passed this entry over for a busy host */
   int          count;
   int          workers;              /* threads serving this lane             */
   long         dropped;              /* enqueues refused because it was full  */
@@ -1099,6 +1135,25 @@ typedef struct {
   time_t      *next;
   time_t      *due;
   unsigned long pushes;
+  /* The due-time heap: (due time, source) pairs, min first. A pair is VALID
+   * only while next[i] still equals its time; every change of next[i] pushes a
+   * fresh pair (plan_set) and the stale one is dropped when it surfaces, so
+   * the dispatcher's per-tick cost is the number of rows that came due, not
+   * the size of the registry. */
+  struct sched_due { time_t t; int i; } *heap;
+  size_t       hn, hcap;
+  int          heap_lost;            /* a push could not allocate: rebuild from next[] */
+  /* Rows that are due and had no queue room, per lane, oldest first. They
+   * STAY due (next[i] unchanged); dflag[i] marks membership so a row is
+   * deferred once, not once per heap pair. */
+  struct { int *a; size_t head, n, cap; } def[LANE_N];
+  char        *dflag;
+  /* Runs between q_pop and q_done: the watchdog's whole working set, so it no
+   * longer walks the registry once a second. */
+  int         *act;
+  int         *actpos;               /* source -> position in act[] + 1, 0 = none */
+  int          nact;
+  int         *held;                 /* source -> host id counted in flight, 0 = none */
   /* ctx->cancel for a claimed or pooled run. Written only under `mu`, with
    * __atomic stores; read by collectors through a volatile pointer. */
   volatile int *cancel;
@@ -1113,6 +1168,7 @@ static sched_queue g_q = {
 static const source_def **g_all;
 static int            g_n;
 static int            g_deadline_sec = 0;
+static long           g_cancel_cap_sec = 900;   /* JO_SCHED_CANCEL_MAX_SEC */
 /* The file the dispatcher's connection is on; every worker attaches to the
  * same one (NULL = db_attach's default, i.e. JO_DB). */
 static char           g_db_path[1024];
@@ -1127,6 +1183,19 @@ static atomic_int     g_shutdown = 0;
 static atomic_int     g_inflight = 0;
 static atomic_int     g_ready = 0;
 static atomic_long    g_attach_failures = 0;
+
+#define SCHED_HOSTS_MAX 65000
+#define SCHED_HTAB      (1 << 17)
+static int    *g_hid;           /* per source: its host id                     */
+static int    *g_htab;          /* open-addressing table of host ids           */
+static char  **g_hname;         /* host id -> hostname                         */
+static int    *g_hinfl;         /* host id -> workers running a source on it   */
+static int    *g_hcap;          /* host id -> in-flight cap                    */
+static int     g_nh;
+static int     g_host_cap_default = 2;
+static unsigned g_skip_max = 1000;
+static atomic_long g_skip_pops, g_forced_pops;
+
 
 static int lane_of(const source_def *d) {
   return sched_is_pod(d) ? LANE_MAINT : LANE_COLLECT;
@@ -1146,11 +1215,193 @@ static int sched_pool_init(const source_def **all, int n) {
   g_q.due     = calloc((size_t)(n > 0 ? n : 1), sizeof(time_t));
   g_q.cancel  = calloc((size_t)n, sizeof(int));
   g_state     = calloc((size_t)n, sizeof(sched_state));
+  g_q.dflag   = calloc((size_t)(n > 0 ? n : 1), 1);
+  g_q.act     = calloc((size_t)(n > 0 ? n : 1), sizeof(int));
+  g_q.actpos  = calloc((size_t)(n > 0 ? n : 1), sizeof(int));
+  g_q.held    = calloc((size_t)(n > 0 ? n : 1), sizeof(int));
+  g_hid       = calloc((size_t)(n > 0 ? n : 1), sizeof(int));
+  g_htab      = calloc((size_t)SCHED_HTAB, sizeof(int));
+  g_hname     = calloc((size_t)SCHED_HOSTS_MAX + 1, sizeof(char *));
+  g_hinfl     = calloc((size_t)SCHED_HOSTS_MAX + 1, sizeof(int));
+  g_hcap      = calloc((size_t)SCHED_HOSTS_MAX + 1, sizeof(int));
+  g_nh        = 0;
+  g_host_cap_default = (int)env_long("JO_SCHED_HOST_INFLIGHT", 2, 1, 64);
+  g_skip_max  = (unsigned)env_long("JO_SCHED_HOST_SKIP_MAX", 1000, 1, 1000000);
   if (!g_q.running || !g_q.claimed || !g_q.started || !g_q.warned ||
-      !g_q.next || !g_q.due || !g_q.cancel || !g_state)
+      !g_q.next || !g_q.due || !g_q.cancel || !g_state || !g_q.dflag ||
+      !g_q.act || !g_q.actpos || !g_q.held || !g_hid || !g_htab || !g_hname ||
+      !g_hinfl || !g_hcap)
     return -1;
   atomic_store(&g_ready, 1);
   return 0;
+}
+
+/* ── host-aware dispatch ────────────────────────────────────────────────
+ * A worker that pops a source whose host is not ready used to park inside
+ * hostgate_acquire - up to 300 s for an override host - and 615 news.google.com
+ * rows at a 1.5 s gap could hold all 8 workers for a quarter of an hour while
+ * the rest of the queue waited. The dispatcher now knows a source's host and
+ * leaves a queued entry whose host is busy or not ready (hostgate's gap or a
+ * server-requested penalty) where it is, taking the next eligible one.
+ *
+ * The registry does not know the host of a bespoke collector, so it is LEARNED
+ * at run time (the first host the run contacted, sched_host_learn) and seeded
+ * before the first run from the row's portal url - a hint only: a wrong hint
+ * can delay an entry, never lose or reorder it permanently, because an entry
+ * skipped JO_SCHED_HOST_SKIP_MAX times, or queued longer than its interval, is
+ * taken regardless (and then waits in hostgate_acquire exactly as before).
+ *
+ * All of it under g_q.mu. Host ids are 1-based; 0 = unknown host. */
+static unsigned host_hash(const char *h) {
+  unsigned x = 2166136261u;
+  for (; *h; h++) { x ^= (unsigned char)*h; x *= 16777619u; }
+  return x;
+}
+
+/* The id for `host`, creating it; 0 when the table is full. Caller holds g_q.mu. */
+static int host_intern(const char *host) {
+  if (!g_htab || !host || !*host) return 0;
+  size_t k = host_hash(host) & (SCHED_HTAB - 1);
+  for (;;) {
+    int id = g_htab[k];
+    if (!id) break;
+    if (!strcmp(g_hname[id], host)) return id;
+    k = (k + 1) & (SCHED_HTAB - 1);
+  }
+  if (g_nh >= SCHED_HOSTS_MAX) return 0;
+  char *nm = strdup(host);
+  if (!nm) return 0;
+  int id = ++g_nh;
+  g_hname[id] = nm;
+  /* One worker at a time on a host that paces itself (a gap of a second or
+   * more: reddit 30 s, news.google.com 1.5 s) - a second would only wait out
+   * the gap inside hostgate_acquire, which is the parking this avoids. */
+  g_hcap[id] = hostgate_pace_ms(host) >= 1000 ? 1 : g_host_cap_default;
+  g_htab[k] = id;
+  return id;
+}
+
+static int host_is_loopback(const char *h) {
+  return !strcmp(h, "localhost") || !strcmp(h, "127.0.0.1") || !strcmp(h, "::1");
+}
+
+static void sched_host_learn(const source_def *d, const char *host) {
+  if (!atomic_load(&g_ready) || !host || !*host || host_is_loopback(host)) return;
+  int i = registry_index(d->id);
+  if (i < 0 || i >= g_n) return;
+  pthread_mutex_lock(&g_q.mu);
+  int id = host_intern(host);
+  if (id) g_hid[i] = id;
+  pthread_mutex_unlock(&g_q.mu);
+}
+
+/* Before any run has taught us, take a scheduled row's portal url as its host
+ * (a hint: source_def.url is the human-facing page, usually on the API's host). */
+static void sched_hosts_seed(void) {
+  pthread_mutex_lock(&g_q.mu);
+  for (int i = 0; i < g_n; i++) {
+    const source_def *d = g_all[i];
+    if (d->update_interval_sec <= 0 || sched_is_pod(d) || !d->url ||
+        strncmp(d->url, "http", 4) != 0) continue;
+    char h[128];
+    if (!hostgate_url_host(d->url, h, sizeof h) || host_is_loopback(h)) continue;
+    int id = host_intern(h);
+    if (id) g_hid[i] = id;
+  }
+  pthread_mutex_unlock(&g_q.mu);
+}
+
+/* 1 when source `i` should not be started now: its host already has its cap of
+ * workers, or hostgate says the host's next slot is not yet. Caller holds g_q.mu. */
+static int host_blocked(int i) {
+  int id = g_hid ? g_hid[i] : 0;
+  if (!id) return 0;
+  if (g_hinfl[id] >= g_hcap[id]) return 1;
+  return hostgate_peek_ready_ms(g_hname[id]) > 0;
+}
+
+/* ── the due-time heap (see sched_queue) ─────────────────────────────────── */
+typedef struct sched_due sched_due;
+
+static void heap_sift_down(size_t k) {
+  size_t n = g_q.hn;
+  sched_due v = g_q.heap[k];
+  for (;;) {
+    size_t c = 2 * k + 1;
+    if (c >= n) break;
+    if (c + 1 < n && g_q.heap[c + 1].t < g_q.heap[c].t) c++;
+    if (g_q.heap[c].t >= v.t) break;
+    g_q.heap[k] = g_q.heap[c];
+    k = c;
+  }
+  g_q.heap[k] = v;
+}
+
+static int heap_reserve(size_t want) {
+  if (want <= g_q.hcap) return 1;
+  size_t nc = g_q.hcap ? g_q.hcap : 1024;
+  while (nc < want) nc *= 2;
+  sched_due *nh = realloc(g_q.heap, nc * sizeof *nh);
+  if (!nh) return 0;
+  g_q.heap = nh; g_q.hcap = nc;
+  return 1;
+}
+
+static void heap_push(time_t t, int i) {
+  if (!heap_reserve(g_q.hn + 1)) { g_q.heap_lost = 1; return; }
+  size_t k = g_q.hn++;
+  while (k > 0) {
+    size_t p = (k - 1) / 2;
+    if (g_q.heap[p].t <= t) break;
+    g_q.heap[k] = g_q.heap[p];
+    k = p;
+  }
+  g_q.heap[k].t = t; g_q.heap[k].i = i;
+}
+
+static sched_due heap_pop(void) {
+  sched_due top = g_q.heap[0];
+  g_q.hn--;
+  if (g_q.hn > 0) { g_q.heap[0] = g_q.heap[g_q.hn]; heap_sift_down(0); }
+  return top;
+}
+
+/* Rebuild from next[]: every scheduled row, one pair each. O(n), run at boot,
+ * when stale pairs outnumber live rows 4:1, and after an allocation failure. */
+static void heap_rebuild(void) {
+  g_q.hn = 0; g_q.heap_lost = 0;
+  if (!heap_reserve((size_t)g_n + 16)) { g_q.heap_lost = 1; return; }
+  for (int i = 0; i < g_n; i++)
+    if (g_all[i]->update_interval_sec > 0) {
+      g_q.heap[g_q.hn].t = g_q.next[i]; g_q.heap[g_q.hn].i = i; g_q.hn++;
+    }
+  for (size_t k = g_q.hn / 2; k-- > 0;) heap_sift_down(k);
+}
+
+/* THE way next[i] changes. Caller holds g_q.mu. */
+static void plan_set(int i, time_t t) {
+  g_q.next[i] = t;
+  if (g_all[i]->update_interval_sec <= 0) return;      /* on demand: never due */
+  heap_push(t, i);
+  if (g_q.hn > 4 * (size_t)g_n + 4096) heap_rebuild();
+}
+
+static void defer_add(int ln, int i) {                  /* caller holds g_q.mu */
+  if (g_q.dflag[i]) return;
+  if (g_q.def[ln].head > 4096 && g_q.def[ln].head * 2 > g_q.def[ln].n) {
+    memmove(g_q.def[ln].a, g_q.def[ln].a + g_q.def[ln].head,
+            (g_q.def[ln].n - g_q.def[ln].head) * sizeof(int));
+    g_q.def[ln].n -= g_q.def[ln].head;
+    g_q.def[ln].head = 0;
+  }
+  if (g_q.def[ln].n == g_q.def[ln].cap) {
+    size_t nc = g_q.def[ln].cap ? g_q.def[ln].cap * 2 : 1024;
+    int *na = realloc(g_q.def[ln].a, nc * sizeof(int));
+    if (!na) return;                  /* stays in next[]; the heap pair is gone, so rebuild */
+    g_q.def[ln].a = na; g_q.def[ln].cap = nc;
+  }
+  g_q.def[ln].a[g_q.def[ln].n++] = i;
+  g_q.dflag[i] = 1;
 }
 
 static void set_cancel(int i, int v) {           /* caller holds g_q.mu */
@@ -1208,7 +1459,7 @@ static void sched_publish(const source_def *d, const sched_state *st, time_t now
    * is due again at once, not at 150 s); a manual run from now. */
   time_t last = (g_q.started[i] && g_q.due[i]) ? g_q.due[i] : now;
   time_t nd = sched_next_due(st, &g_pol, d, last);
-  if (nd > 0) g_q.next[i] = nd;
+  if (nd > 0) plan_set(i, nd);
   pthread_mutex_unlock(&g_q.mu);
 }
 
@@ -1227,6 +1478,9 @@ static int q_push(int i, double key) {
     L->idx[L->count] = i;
     L->key[L->count] = key;
     L->seq[L->count] = g_q.pushes++;
+    L->skips[L->count] = 0;
+    long iv = sched_row_interval(&g_state[i], g_all[i]);
+    L->force_at[L->count] = time(NULL) + (time_t)(iv > 0 ? iv : 1);
     L->count++;
     pthread_cond_signal(&L->cv);
     r = 1;
@@ -1235,26 +1489,63 @@ static int q_push(int i, double key) {
   return r;
 }
 
-/* Next index for lane `ln`, or -1 once shutdown has begun. */
+/* Next index for lane `ln`, or -1 once shutdown has begun.
+ *
+ * Lowest key first among the entries whose host can take a run NOW (see the
+ * host-aware dispatch note). An entry whose host is busy stays queued and the
+ * next eligible one is taken; one skipped JO_SCHED_HOST_SKIP_MAX times, or
+ * queued past its own interval, is taken anyway so nothing starves. When every
+ * queued entry waits on a busy host the worker sleeps - woken by any run
+ * finishing, else every 200 ms for a gap to elapse - instead of parking inside
+ * hostgate_acquire. The maintenance lane is not host-aware (pods reach no
+ * upstream). */
 static int q_pop(int ln) {
   sched_lane *L = &g_q.lane[ln];
+  unsigned char blk[SCHED_QCAP];       /* 1 = skippable, 2 = blocked but forced */
+  int best;
   pthread_mutex_lock(&g_q.mu);
-  while (L->count == 0 && !atomic_load(&g_shutdown))
-    pthread_cond_wait(&L->cv, &g_q.mu);
-  if (atomic_load(&g_shutdown)) { pthread_mutex_unlock(&g_q.mu); return -1; }
-  int best = 0;
-  for (int k = 1; k < L->count; k++)
-    if (L->key[k] < L->key[best] ||
-        (L->key[k] == L->key[best] && L->seq[k] < L->seq[best])) best = k;
+  for (;;) {
+    while (L->count == 0 && !atomic_load(&g_shutdown))
+      pthread_cond_wait(&L->cv, &g_q.mu);
+    if (atomic_load(&g_shutdown)) { pthread_mutex_unlock(&g_q.mu); return -1; }
+    time_t now = time(NULL);
+    best = -1;
+    for (int k = 0; k < L->count; k++) {
+      blk[k] = 0;
+      if (ln == LANE_COLLECT && host_blocked(L->idx[k]))
+        blk[k] = (L->skips[k] < g_skip_max && now < L->force_at[k]) ? 1 : 2;
+      if (blk[k] == 1) continue;
+      if (best < 0 || L->key[k] < L->key[best] ||
+          (L->key[k] == L->key[best] && L->seq[k] < L->seq[best])) best = k;
+    }
+    if (best >= 0) break;
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+    ts.tv_nsec += 200L * 1000000L;
+    if (ts.tv_nsec >= 1000000000L) { ts.tv_sec++; ts.tv_nsec -= 1000000000L; }
+    pthread_cond_timedwait(&L->cv, &g_q.mu, &ts);
+  }
+  int passed = 0;
+  for (int k = 0; k < L->count; k++)
+    if (blk[k] == 1) { L->skips[k]++; passed = 1; }
+  if (passed) atomic_fetch_add(&g_skip_pops, 1);
+  if (blk[best] == 2) atomic_fetch_add(&g_forced_pops, 1);
   int i = L->idx[best];
   /* swap-remove: order inside the array carries no meaning, the key does */
   L->count--;
   L->idx[best] = L->idx[L->count];
   L->key[best] = L->key[L->count];
   L->seq[best] = L->seq[L->count];
+  L->force_at[best] = L->force_at[L->count];
+  L->skips[best] = L->skips[L->count];
   g_q.started[i] = time(NULL);
   g_q.warned[i]  = 0;
   set_cancel(i, 0);
+  int hid = ln == LANE_COLLECT ? g_hid[i] : 0;
+  g_q.held[i] = hid;
+  if (hid) g_hinfl[hid]++;
+  g_q.actpos[i] = ++g_q.nact;                 /* position + 1 */
+  g_q.act[g_q.nact - 1] = i;
   pthread_mutex_unlock(&g_q.mu);
   return i;
 }
@@ -1263,6 +1554,20 @@ static void q_done(int i) {
   pthread_mutex_lock(&g_q.mu);
   g_q.running[i] = 0;
   g_q.started[i] = 0;
+  if (g_q.actpos[i]) {
+    int pos = g_q.actpos[i] - 1, last = g_q.act[g_q.nact - 1];
+    g_q.act[pos] = last;
+    g_q.actpos[last] = pos + 1;
+    g_q.actpos[i] = 0;
+    g_q.nact--;
+  }
+  int hid = g_q.held[i];
+  g_q.held[i] = 0;
+  if (hid && g_hinfl[hid] > 0) {
+    g_hinfl[hid]--;
+    /* a worker may be asleep because this host was at its cap */
+    pthread_cond_broadcast(&g_q.lane[LANE_COLLECT].cv);
+  }
   pthread_mutex_unlock(&g_q.mu);
 }
 
@@ -1350,27 +1655,34 @@ void scheduler_stop_background(int wait_ms) {
 }
 
 /* Sources that have outrun the deadline are reported, and once a run has
- * also outrun its OWN interval its cancel flag is set. Cancellation is
+ * outrun its cancel window its cancel flag is set. Cancellation is
  * COOPERATIVE: only the sources and pods that poll ctx->cancel stop early (the
  * WAL pod between TRUNCATE attempts, the retention pod between batches, the
- * hpengine walkers between pages — which disclose the cut as a truncation
- * notice). There is no safe hard kill — cancelling a thread mid-transaction
- * would corrupt exactly what the per-worker connection is there to protect —
+ * hpengine walkers between pages - which disclose the cut as a truncation
+ * notice). There is no safe hard kill - cancelling a thread mid-transaction
+ * would corrupt exactly what the per-worker connection is there to protect -
  * so a source that never polls keeps its slot until its own HTTP timeouts end
  * it, and keeps being reported once a minute. The real containment is still
  * the pool (an overrun costs one slot, not the fleet). Before this, the flag
  * the collectors poll was a local nobody else could reach, so the deadline
  * only ever logged.
  *
- * WHY NOT CANCEL AT THE DEADLINE ITSELF. The deadline is one number (300 s)
- * for a fleet whose legitimate run times reach many minutes — a daily bulk
- * page walk can take longer than 300 s every single time. Cancelling it there
- * would cut the same walk at the same page on every run, forever: a disclosed
- * discard, but a permanent one (house rule 2). A run that has outlasted its
- * own interval is different — skip-if-running is already costing it whole
- * cycles — so that is when the flag is set: max(deadline, interval). */
+ * THE CANCEL WINDOW IS BOUNDED, NOT THE CADENCE. The deadline is one number
+ * (300 s) for a fleet whose legitimate run times reach many minutes - a daily
+ * bulk page walk can take longer than 300 s every single time, and cancelling
+ * it AT the deadline would cut the same walk at the same page on every run,
+ * forever (house rule 2). So the window was the row's own interval:
+ * max(deadline, interval). Under the compiled global 6 h cadence that made it
+ * SIX HOURS for every row, which is no cancellation at all: a handful of long
+ * walks (data.qld.gov.au is ~72 minutes) could hold a meaningful share of an
+ * 8-worker pool for the whole of it. The window is now
+ * max(deadline, min(interval, JO_SCHED_CANCEL_MAX_SEC)) - a fast row is still
+ * not cancelled inside its own interval, and no row's window exceeds the cap
+ * (default 900 s) whatever the cadence policy says. An operator who sets
+ * JO_SCHED_DEADLINE_SEC above the cap has chosen a longer window and gets it. */
 static long cancel_after(int i) {
   long iv = sched_row_interval(&g_state[i], g_all[i]);   /* the row's cadence as it runs, not the declared one */
+  if (iv > g_cancel_cap_sec) iv = g_cancel_cap_sec;
   return iv > g_deadline_sec ? iv : g_deadline_sec;
 }
 
@@ -1378,7 +1690,9 @@ static void watchdog_scan(void) {
   if (g_deadline_sec <= 0) return;
   time_t now = time(NULL);
   pthread_mutex_lock(&g_q.mu);
-  for (int i = 0; i < g_n; i++) {
+  /* Only the runs in flight - a handful - not the whole registry. */
+  for (int a = 0; a < g_q.nact; a++) {
+    int i = g_q.act[a];
     if (!g_q.started[i]) continue;
     long over = (long)(now - g_q.started[i]);
     if (over <= g_deadline_sec) continue;
@@ -1392,10 +1706,11 @@ static void watchdog_scan(void) {
       int asked = __atomic_load_n((int *)&g_q.cancel[i], __ATOMIC_ACQUIRE);
       g_q.warned[i] = now;
       fprintf(stderr, "[sched] WARN %s has held a worker slot for %lds "
-                      "(deadline %ds, interval %ds)%s\n", g_all[i]->id, over,
+                      "(deadline %ds, interval %ds, cancel window %lds)%s\n", g_all[i]->id, over,
               g_deadline_sec, (int)sched_row_interval(&g_state[i], g_all[i]),
-              first ? " — cancel requested"
-                    : asked ? " — still running after cancel" : "");
+              cancel_after(i),
+              first ? " - cancel requested"
+                    : asked ? " - still running after cancel" : "");
     }
   }
   pthread_mutex_unlock(&g_q.mu);
@@ -1488,6 +1803,113 @@ static void boot_skip_set(db_handle *db, char *skip, int n) {
   }
 }
 
+/* The cadence policy or a per-source interval changed: a row whose next due
+ * time is further away than its NEW spacing is pulled in to now + spacing, so
+ * a faster cadence takes effect within one interval and a slower one lets the
+ * already-planned run happen and then stretches. A row under a health hold
+ * keeps it - an edit to one source's interval must not re-probe every
+ * quarantined source. The one place the whole registry is still walked, and
+ * only on a change. Returns how many rows moved. */
+static long sched_replan(time_t now) {
+  long pulled = 0;
+  pthread_mutex_lock(&g_q.mu);
+  for (int i = 0; i < g_n; i++) {
+    long e = sched_next_delay(&g_state[i], &g_pol, g_all[i]);
+    if (e <= 0 || sched_hold_until(&g_state[i], &g_pol) > now) continue;
+    if (g_q.next[i] > now + (time_t)e) { plan_set(i, now + (time_t)e); pulled++; }
+  }
+  pthread_mutex_unlock(&g_q.mu);
+  return pulled;
+}
+
+/* One dispatcher tick: collect the rows that are due, queue as many as the
+ * lanes have room for, and re-plan each. Returns how many due rows are still
+ * waiting for room (they STAY due).
+ *
+ * The cost is the number of rows that came due, not the size of the registry:
+ * the heap's top says at once whether anything is, and a tick with nothing due
+ * is a lock and a comparison. It was a walk over every registered row - 93,000
+ * of them - once a second. Deferred rows are served first (they are the
+ * oldest), then the heap in due order, so a standing backlog drains most
+ * overdue first rather than in registry order. `cand` has room for
+ * SCHED_QCAP * LANE_N rows. */
+static int sched_tick(db_handle *db, time_t now, int *cand) {
+  int nc = 0, deferred = 0;
+  pthread_mutex_lock(&g_q.mu);
+  if (g_q.heap_lost) heap_rebuild();
+  int room[LANE_N];
+  for (int ln = 0; ln < LANE_N; ln++) room[ln] = SCHED_QCAP - g_q.lane[ln].count;
+  /* 1. rows deferred by an earlier tick */
+  for (int ln = 0; ln < LANE_N; ln++) {
+    while (g_q.def[ln].head < g_q.def[ln].n && room[ln] > 0) {
+      int i = g_q.def[ln].a[g_q.def[ln].head++];
+      g_q.dflag[i] = 0;
+      const source_def *d = g_all[i];
+      if (d->update_interval_sec <= 0 || g_q.next[i] > now) continue;   /* re-planned meanwhile */
+      if (g_q.running[i]) {
+        plan_set(i, now + (time_t)sched_next_delay(&g_state[i], &g_pol, d));
+        continue;
+      }
+      room[ln]--;
+      cand[nc++] = i;
+    }
+    if (g_q.def[ln].head == g_q.def[ln].n) g_q.def[ln].head = g_q.def[ln].n = 0;
+  }
+  /* 2. rows that came due */
+  while (g_q.hn > 0 && g_q.heap[0].t <= now) {
+    sched_due e = heap_pop();
+    int i = e.i;
+    if (g_q.next[i] != e.t || g_q.dflag[i]) continue;                  /* stale pair */
+    const source_def *d = g_all[i];
+    if (d->update_interval_sec <= 0) continue;
+    if (g_q.running[i]) {
+      /* Still queued, in flight or claimed: that run is this cycle's
+       * refresh. Look again one spacing on; its outcome re-plans it. */
+      plan_set(i, now + (time_t)sched_next_delay(&g_state[i], &g_pol, d));
+      continue;
+    }
+    int ln = lane_of(d);
+    if (room[ln] <= 0) { defer_add(ln, i); continue; }
+    room[ln]--;
+    cand[nc++] = i;
+  }
+  for (int ln = 0; ln < LANE_N; ln++)
+    deferred += (int)(g_q.def[ln].n - g_q.def[ln].head);
+  pthread_mutex_unlock(&g_q.mu);
+  for (int c = 0; c < nc; c++) {
+    int i = cand[c];
+    const source_def *d = g_all[i];
+    pthread_mutex_lock(&g_q.mu);
+    sched_state st = g_state[i];
+    time_t was_due = g_q.next[i];
+    pthread_mutex_unlock(&g_q.mu);
+    /* The row's cadence under every mechanism (sched_row_interval): backoff
+     * doubles from it and the overdue ratio is measured against it. */
+    long base = sched_row_interval(&st, d);
+    time_t then;
+    if (sched_row_benched(db, d->id)) {
+      then = now + (time_t)base;            /* search_only or benched: look again */
+    } else {
+      double overdue = (double)(now - was_due) / (double)(base > 0 ? base : 1);
+      if (q_push(i, sched_priority(&st, source_trust_score(db, d->id), overdue)) < 0) {
+        pthread_mutex_lock(&g_q.mu);        /* stays due */
+        defer_add(lane_of(d), i);
+        deferred++;
+        pthread_mutex_unlock(&g_q.mu);
+        continue;
+      }
+      /* Provisional - planned from the state before the run, and corrected
+       * from its outcome by sched_publish. */
+      then = now + (time_t)sched_state_interval(&st, &g_pol, base);
+    }
+    pthread_mutex_lock(&g_q.mu);
+    g_q.due[i] = now;
+    plan_set(i, then);
+    pthread_mutex_unlock(&g_q.mu);
+  }
+  return deferred;
+}
+
 void scheduler_loop(db_handle *db) {
   int n = registry_count();
   sched_policy_load(&g_pol);
@@ -1528,6 +1950,9 @@ void scheduler_loop(db_handle *db) {
   g_q.lane[LANE_COLLECT].workers = workers;
   g_q.lane[LANE_MAINT].workers   = mworkers;
   g_deadline_sec = (int)env_long("JO_SCHED_DEADLINE_SEC", 300, 0, INT_MAX);   /* 0 = watchdog off */
+  /* The ceiling on the interval-based part of a run's cancel window, whatever
+   * the cadence policy makes a row's interval - see cancel_after(). */
+  g_cancel_cap_sec = env_long("JO_SCHED_CANCEL_MAX_SEC", 900, 1, INT_MAX);
 
   time_t now0 = time(NULL);
   /* Stagger first runs so the fleet doesn't storm upstreams at boot (many do
@@ -1571,6 +1996,12 @@ void scheduler_loop(db_handle *db) {
   }
   free(skip);
   free(hold);
+  /* The plan is in next[]; the heap is built from it once, here, and kept
+   * current by plan_set() from then on. */
+  pthread_mutex_lock(&g_q.mu);
+  heap_rebuild();
+  pthread_mutex_unlock(&g_q.mu);
+  sched_hosts_seed();
   fprintf(stderr, "[sched] boot ramp: %d scheduled source(s) start within %lds, "
                   "%d pod(s) within %lds (stagger %lds, ramp cap %lds); %d not "
                   "due yet keep their own time\n",
@@ -1589,7 +2020,7 @@ void scheduler_loop(db_handle *db) {
                   "worker(s)\n", n, workers, mworkers);
 
   unsigned long tick = 0;
-  int cursor = 0, deferred = 0;
+  int deferred = 0;
   unsigned cad_gen = cadence_generation();
   unsigned ovr_gen = source_interval_generation();
   for (;;) {
@@ -1600,78 +2031,16 @@ void scheduler_loop(db_handle *db) {
      * row whose next due time is further away than its NEW spacing is pulled
      * in to now + spacing, so a faster cadence takes effect within one
      * interval and a slower one lets the already-planned run happen and then
-     * stretches. A row under a health hold keeps it — an edit to one
-     * source's interval must not re-probe every quarantined source. */
+     * stretches. A row under a health hold keeps it - an edit to one
+     * source's interval must not re-probe every quarantined source. This is
+     * the one place the whole registry is still walked, and only on a change. */
     if (cadence_generation() != cad_gen || source_interval_generation() != ovr_gen) {
       cad_gen = cadence_generation();
       ovr_gen = source_interval_generation();
-      long pulled = 0;
-      pthread_mutex_lock(&g_q.mu);
-      for (int i = 0; i < n; i++) {
-        long e = sched_next_delay(&g_state[i], &g_pol, g_all[i]);
-        if (e <= 0 || sched_hold_until(&g_state[i], &g_pol) > now) continue;
-        if (next[i] > now + (time_t)e) { next[i] = now + (time_t)e; pulled++; }
-      }
-      pthread_mutex_unlock(&g_q.mu);
+      long pulled = sched_replan(now);
       fprintf(stderr, "[sched] cadence changed (policy or a per-source interval): %ld row(s) re-planned\n", pulled);
     }
-    /* Pick this tick's due rows, never more than the lanes have room for. A
-     * row that does not fit STAYS DUE: it used to lose the whole cycle, and
-     * since the boot ramp makes ~92 rows a second due against a queue of
-     * 2,048, most of an 83,000-row fleet lost it — then came due together
-     * again one interval later and lost the next one, the same rows each
-     * time because the walk is in registry order. The walk now starts where
-     * the last tick ran out of room, so a standing backlog is served round
-     * robin, and a deferred row's overdue ratio (which the priority reads)
-     * finally grows. On-demand sources (interval <= 0) are the pipeline's. */
-    int nc = 0, first_deferred = -1;
-    deferred = 0;
-    pthread_mutex_lock(&g_q.mu);
-    int room[LANE_N];
-    for (int ln = 0; ln < LANE_N; ln++) room[ln] = SCHED_QCAP - g_q.lane[ln].count;
-    for (int k = 0; k < n; k++) {
-      int i = cursor + k < n ? cursor + k : cursor + k - n;
-      const source_def *d = g_all[i];
-      if (d->update_interval_sec <= 0 || now < next[i]) continue;
-      if (g_q.running[i]) {
-        /* Still queued, in flight or claimed: that run is this cycle's
-         * refresh. Look again one spacing on; its outcome re-plans it. */
-        next[i] = now + (time_t)sched_next_delay(&g_state[i], &g_pol, d);
-        continue;
-      }
-      int ln = lane_of(d);
-      if (room[ln] <= 0) { deferred++; if (first_deferred < 0) first_deferred = i; continue; }
-      room[ln]--;
-      cand[nc++] = i;
-    }
-    pthread_mutex_unlock(&g_q.mu);
-    if (first_deferred >= 0) cursor = first_deferred;
-    for (int c = 0; c < nc; c++) {
-      int i = cand[c];
-      const source_def *d = g_all[i];
-      pthread_mutex_lock(&g_q.mu);
-      sched_state st = g_state[i];
-      time_t was_due = next[i];
-      pthread_mutex_unlock(&g_q.mu);
-      /* The row's cadence under every mechanism (sched_row_interval): backoff
-       * doubles from it and the overdue ratio is measured against it. */
-      long base = sched_row_interval(&st, d);
-      time_t then;
-      if (sched_row_benched(db, d->id)) {
-        then = now + (time_t)base;            /* search_only or benched: look again */
-      } else {
-        double overdue = (double)(now - was_due) / (double)(base > 0 ? base : 1);
-        if (q_push(i, sched_priority(&st, source_trust_score(db, d->id), overdue)) < 0)
-          continue;                           /* stays due */
-        /* Provisional — planned from the state before the run, and corrected
-         * from its outcome by sched_publish. */
-        then = now + (time_t)sched_state_interval(&st, &g_pol, base);
-      }
-      pthread_mutex_lock(&g_q.mu);
-      g_q.due[i] = now;
-      next[i] = then;
-      pthread_mutex_unlock(&g_q.mu);
-    }
+    deferred = sched_tick(db, now, cand);
     watchdog_scan();
     /* Once a minute: how much of the pool is busy, how deep the backlog is,
      * and how often the host gate had to make a worker wait. Without this the
@@ -1688,6 +2057,25 @@ void scheduler_loop(db_handle *db) {
         if (g_state[i].quarantined) quar++;
         else if (g_state[i].backoff_until > now) backed++;
       }
+      /* Per-host in flight: how many workers are running a source whose host
+       * is known, how many hosts that is, and the three busiest. */
+      long h_infl = 0; int h_busy = 0;
+      int top_id[3] = {0, 0, 0};
+      for (int h = 1; h <= g_nh; h++) {
+        if (g_hinfl[h] <= 0) continue;
+        h_infl += g_hinfl[h]; h_busy++;
+        for (int t = 0; t < 3; t++)
+          if (!top_id[t] || g_hinfl[h] > g_hinfl[top_id[t]]) {
+            for (int u = 2; u > t; u--) top_id[u] = top_id[u - 1];
+            top_id[t] = h; break;
+          }
+      }
+      char top[256]; top[0] = '\0';
+      for (int t = 0; t < 3 && top_id[t]; t++) {
+        size_t have = strlen(top);
+        snprintf(top + have, sizeof top - have, "%s%s:%d", have ? "," : "",
+                 g_hname[top_id[t]], g_hinfl[top_id[t]]);
+      }
       pthread_mutex_unlock(&g_q.mu);
       /* `backed_off`/`quarantined`, then the maintenance lane, are APPENDED so
        * the existing parsers of this line keep matching (same reason `stored=`
@@ -1695,9 +2083,12 @@ void scheduler_loop(db_handle *db) {
       fprintf(stderr, "[sched] busy=%d/%d queued=%d | hostgate inflight=%ld "
                       "waited=%ld over_budget=%ld | backed_off=%d quarantined=%d"
                       " | maint busy=%d/%d queued=%d | attach_failures=%ld"
-                      " | deferred=%d\n",
+                      " | deferred=%d | hosts busy=%d inflight=%ld top=%s"
+                      " skip_pops=%ld forced=%ld\n",
               busy, workers, queued, inflight, waits, timeouts, backed, quar,
-              mbusy, mworkers, mqueued, atomic_load(&g_attach_failures), deferred);
+              mbusy, mworkers, mqueued, atomic_load(&g_attach_failures), deferred,
+              h_busy, h_infl, top[0] ? top : "-",
+              atomic_load(&g_skip_pops), atomic_load(&g_forced_pops));
     }
     sleep(1);
   }

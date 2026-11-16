@@ -376,8 +376,11 @@ int main(int argc, char **argv) {
         const char *basis = !sched ? "on-demand" : ov > 0 ? "override"
                           : st.quarantined ? "quarantine-probe"
                           : st.consecutive_failures > 0 ? "backoff"
-                          : pod ? "declared" : strcmp(cadence_mode_for(base), "declared")
-                          ? cadence_mode_for(base)
+                          : pod ? "declared"
+                          : !strcmp(cadence_mode_for_row(d->update_interval_sec, base), "realtime")
+                          ? "realtime-exempt"   /* declared <= sched.realtime_max_sec: the global interval does not apply */
+                          : strcmp(cadence_mode_for_row(d->update_interval_sec, base), "declared")
+                          ? cadence_mode_for_row(d->update_interval_sec, base)
                           : base != d->update_interval_sec ? "measured" : "declared";
         time_t due = sched_next_due(&st, &pol, d, st.last_run);
         printf("%s\t%s\t%s\t%d\t%d\t%ld\t%ld\t%ld\t%s\t%d\t%ld\t",

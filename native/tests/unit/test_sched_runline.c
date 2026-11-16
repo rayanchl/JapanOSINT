@@ -219,6 +219,21 @@ static long db_fetch_failures(db_handle *db, const char *id, char **props) {
   return n;
 }
 
+/* The sources row a run leaves behind: status, records_count, error_message. */
+static void sources_row(db_handle *db, const char *id, char *status, size_t sn,
+                        long *records, char *err, size_t en) {
+  sqlite3_stmt *s;
+  assert(sqlite3_prepare_v2(db->h, "SELECT status,records_count,error_message"
+                            " FROM sources WHERE id=?1", -1, &s, NULL) == SQLITE_OK);
+  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  assert(sqlite3_step(s) == SQLITE_ROW);
+  snprintf(status, sn, "%s", (const char *)sqlite3_column_text(s, 0));
+  *records = sqlite3_column_int64(s, 1);
+  const char *e = (const char *)sqlite3_column_text(s, 2);
+  snprintf(err, en, "%s", e ? e : "");
+  sqlite3_finalize(s);
+}
+
 int main(void) {
   const char *dbp = getenv("JO_DB");
   if (!dbp || !*dbp) { fprintf(stderr, "set JO_DB to a scratch path\n"); return 2; }
@@ -401,6 +416,45 @@ int main(void) {
     assert(strstr(props, "\"hosts_answered\":1") && strstr(props, "\"run_rc\":-1"));
     free(props); }
   free(l);
+  /* 3g-ii. ENG-07: the disclosure is not a record of the source. The run line
+   * still says records=1 stored=1 (the convention hpengine's notice set), but
+   * the sources row must read 'degraded' - never 'online' - with the
+   * disclosure's reason in the status column, and records_count 0. fetch_log's
+   * verdict is run_status()'s and stays "ok": that classifier is untouched. */
+  {
+    char st[32], er[512]; long rec = -1;
+    sources_row(&db, D_ANSFAIL.id, st, sizeof st, &rec, er, sizeof er);
+    printf("  sources row: status=%s records_count=%ld error=%.90s\n", st, rec, er);
+    assert(!strcmp(st, "degraded") && "a disclosed refusal read online");
+    assert(rec == 0 && "the disclosure was counted as a record of the source");
+    assert(strstr(er, "non-zero") && strstr(er, "every host answering") &&
+           strstr(er, "collector-fetch-failure") && "no reason in the status column");
+    sqlite3_stmt *fs;
+    assert(sqlite3_prepare_v2(db.h, "SELECT status FROM fetch_log WHERE source_id=?1"
+                              " ORDER BY id DESC LIMIT 1", -1, &fs, NULL) == SQLITE_OK);
+    sqlite3_bind_text(fs, 1, D_ANSFAIL.id, -1, SQLITE_TRANSIENT);
+    assert(sqlite3_step(fs) == SQLITE_ROW);
+    assert(!strcmp((const char *)sqlite3_column_text(fs, 0), "ok") &&
+           "run_status() is the only red/green classifier and must be untouched");
+    sqlite3_finalize(fs);
+    /* ...and it counts toward consecutive_empties, run after run (it used to
+     * reset the counter, because the disclosure made records=1). */
+    sched_state ss;
+    assert(sched_state_load_one(&db, D_ANSFAIL.id, &ss) > 0);
+    assert(ss.consecutive_empties == 1 && ss.consecutive_failures == 0);
+    free(run_line(&db, &D_ANSFAIL, cap));
+    assert(sched_state_load_one(&db, D_ANSFAIL.id, &ss) > 0);
+    assert(ss.consecutive_empties == 2 && "EMPTY_RESULTSET counter does not grow");
+    sources_row(&db, D_ANSFAIL.id, st, sizeof st, &rec, er, sizeof er);
+    assert(!strcmp(st, "degraded") && rec == 0);
+
+    /* a refusal that is ALSO a red run (no host answered) stays offline, with
+     * the same zero records_count */
+    sources_row(&db, D_SILENT.id, st, sizeof st, &rec, er, sizeof er);
+    assert(!strcmp(st, "offline") && rec == 0 && er[0] &&
+           "an error run must read offline with its reason");
+    assert(sched_state_load_one(&db, D_SILENT.id, &ss) > 0 && ss.consecutive_failures >= 1);
+  }
 
   /* 3h. …and the control: the SAME answering host with a collector that says
    * rc=0 is an honest empty and stays silent. Without this, 3g's trigger could
@@ -413,6 +467,13 @@ int main(void) {
   assert(db_fetch_failures(&db, D_ANSEMPTY.id, NULL) == 0 &&
          "an honest empty from an answering host was reported as a failure");
   free(l);
+  {
+    /* also 'degraded' (ok, stored nothing) - but with NO reason, because there
+     * is nothing wrong to say: the one thing separating it from 3g */
+    char st[32], er[512]; long rec = -1;
+    sources_row(&db, D_ANSEMPTY.id, st, sizeof st, &rec, er, sizeof er);
+    assert(!strcmp(st, "degraded") && rec == 0 && er[0] == '\0');
+  }
 
   unlink(cap);
   db_close(&db);
