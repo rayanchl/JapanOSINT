@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 #include <time.h>
+#include "../lib/jocore.h"   /* jo_iso_now */
 
 /* ── `stored`: how many DISTINCT rows a run actually left behind ──────────
  *
@@ -176,20 +177,6 @@ static int seen_add(sink_state *st, const char *uid) {
   return 1;
 }
 
-static void iso_now(char *b, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(b, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year+1900) % 10000u, (unsigned)(tm.tm_mon+1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec/1000) % 1000u);
-}
 
 /* Exact Node upsert: INSERT … ON CONFLICT(uid) DO UPDATE, preserving
  * DERIVED geometry across re-runs.
@@ -202,6 +189,28 @@ static void iso_now(char *b, size_t n) {
  * the coordinate, and the item would silently drop off the map again. A
  * collector that DOES supply geometry still wins: excluded.lat is checked
  * first, because a real upstream coordinate outranks an inferred one. */
+/* A re-fetched record whose TRANSLATED text changed must not keep the English
+ * rendering of the old text, nor stay marked translated (translate.c selects
+ * only rows with translated_at IS NULL, so the stale translation would be
+ * shown beside the new Japanese for good). When title, body or summary differ
+ * from what is stored, clear the *_en columns and the translation state so
+ * the row is pending again (translate_failed back to 0 also lifts the -1
+ * "not Japanese" sentinel and a burned retry count, both of which judged the
+ * OLD text). Judged on the text itself rather than content_hash: a row
+ * stored before the hash existed has none, and a properties-only change leaves
+ * the translation valid. fts_write() wipes `keywords` on every rewrite and
+ * translate_fts_resync restores it from the *_en columns, which are now empty
+ * until the retranslation lands. */
+#define TR_TEXT_CHANGED \
+  "(intel_items.title IS NOT excluded.title OR intel_items.body IS NOT excluded.body" \
+  " OR intel_items.summary IS NOT excluded.summary)"
+#define TR_STALE_SET \
+ "  title_en=CASE WHEN " TR_TEXT_CHANGED " THEN NULL ELSE intel_items.title_en END,"   \
+ "  body_en=CASE WHEN " TR_TEXT_CHANGED " THEN NULL ELSE intel_items.body_en END,"     \
+ "  summary_en=CASE WHEN " TR_TEXT_CHANGED " THEN NULL ELSE intel_items.summary_en END," \
+ "  translated_at=CASE WHEN " TR_TEXT_CHANGED " THEN NULL ELSE intel_items.translated_at END," \
+ "  translate_failed=CASE WHEN " TR_TEXT_CHANGED " THEN 0 ELSE intel_items.translate_failed END,"
+
 static const char *SQL_UPSERT =
  "INSERT INTO intel_items"
  " (uid,source_id,title,body,summary,link,author,language,published_at,"
@@ -215,6 +224,7 @@ static const char *SQL_UPSERT =
  "  link=excluded.link, author=excluded.author, language=excluded.language,"
  "  published_at=excluded.published_at, fetched_at=excluded.fetched_at,"
  "  tags=excluded.tags, properties=excluded.properties,"
+ TR_STALE_SET
  "  lat=CASE WHEN excluded.lat IS NOT NULL THEN excluded.lat"
  "          WHEN intel_items.geom_source IN ('llm','exif') THEN intel_items.lat"
  "          ELSE excluded.lat END,"
@@ -515,7 +525,7 @@ static int emit(struct intel_sink *self, const intel_item *it) {
     return -1;
   }
 
-  char fetched[40]; iso_now(fetched, sizeof fetched);
+  char fetched[40]; jo_iso_now(fetched, sizeof fetched);
   int has_geo = it->has_geo;
   const char *geom_src = has_geo ? "native" : NULL;
   unsigned char ch[CONTENT_HASH_LEN];

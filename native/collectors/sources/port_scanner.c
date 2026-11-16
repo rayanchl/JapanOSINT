@@ -38,21 +38,53 @@ static int host_allowed(const char *host, const char *sid) {
   return 0;
 }
 
-/* check_port: non-blocking connect + select, verbatim. */
-static int check_port(const char *host, int port, int timeout_ms) {
-  struct sockaddr_in addr;
-  memset(&addr, 0, sizeof addr);
-  addr.sin_family = AF_INET;
-  addr.sin_port = htons((uint16_t)port);
-  struct hostent *he = gethostbyname(host);
-  if (he) memcpy(&addr.sin_addr, he->h_addr_list[0], (size_t)he->h_length);
-  else if (inet_pton(AF_INET, host, &addr.sin_addr) <= 0) return 0;
+/* Resolve ONCE and judge the address we will actually connect to (LIB-11).
+ * hostgate_host_check() resolves with getaddrinfo, and check_port() then
+ * resolved AGAIN with gethostbyname for every port — a name answering a public
+ * address to the check and 127.0.0.1 to the connect (DNS rebinding) walked
+ * straight past the "strict" gate. Now one getaddrinfo answer is judged
+ * address by address with the same strict ruleset, and connect() goes to that
+ * judged sockaddr, so there is no second lookup to rebind. gethostbyname was
+ * also IPv4-only and not thread-safe. Any blocked address refuses the whole
+ * name, as hostgate_host_check does. */
+static int resolve_judged(const char *host, struct sockaddr_storage *ss,
+                          socklen_t *sl) {
+  struct addrinfo hints, *res = NULL, *ai;
+  memset(&hints, 0, sizeof hints);
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+  if (getaddrinfo(host, NULL, &hints, &res) != 0 || !res) return 0;
+  int have = 0;
+  for (ai = res; ai; ai = ai->ai_next) {
+    char ip[INET6_ADDRSTRLEN] = "";
+    if (ai->ai_family == AF_INET)
+      inet_ntop(AF_INET, &((struct sockaddr_in *)ai->ai_addr)->sin_addr, ip, sizeof ip);
+    else if (ai->ai_family == AF_INET6)
+      inet_ntop(AF_INET6, &((struct sockaddr_in6 *)ai->ai_addr)->sin6_addr, ip, sizeof ip);
+    else continue;
+    if (hostgate_addr_check(ip, 1) != HG_URL_OK) { freeaddrinfo(res); return 0; }
+    if (!have && ai->ai_addrlen <= sizeof *ss) {
+      memcpy(ss, ai->ai_addr, ai->ai_addrlen);
+      *sl = (socklen_t)ai->ai_addrlen;
+      have = 1;
+    }
+  }
+  freeaddrinfo(res);
+  return have;
+}
 
-  int sock = socket(AF_INET, SOCK_STREAM, 0);
+/* check_port: non-blocking connect + select to the pre-judged address. */
+static int check_port(const struct sockaddr_storage *base, socklen_t salen,
+                      int port, int timeout_ms) {
+  struct sockaddr_storage addr = *base;
+  if (addr.ss_family == AF_INET) ((struct sockaddr_in *)&addr)->sin_port = htons((uint16_t)port);
+  else ((struct sockaddr_in6 *)&addr)->sin6_port = htons((uint16_t)port);
+
+  int sock = socket(addr.ss_family, SOCK_STREAM, 0);
   if (sock < 0) return 0;
   int flags = fcntl(sock, F_GETFL, 0);
   fcntl(sock, F_SETFL, flags | O_NONBLOCK);
-  int res = connect(sock, (struct sockaddr *)&addr, sizeof addr);
+  int res = connect(sock, (struct sockaddr *)&addr, salen);
   if (res < 0) {
     if (errno == EINPROGRESS) {
       fd_set fds;
@@ -132,9 +164,15 @@ static int run_ports(const source_ctx *ctx, intel_sink *sink) {
   };
   int np = (int)(sizeof common_ports / sizeof common_ports[0]);
 
+  struct sockaddr_storage target; socklen_t tlen = 0;
+  if (!resolve_judged(host, &target, &tlen)) {
+    fprintf(stderr, "[%s] refusing %s: no address that clears the strict gate\n",
+            ctx->source_id ? ctx->source_id : "PORT_SCANNER", host);
+    return -1;
+  }
   int emitted = 0;
   for (int i = 0; i < np; i++)
-    if (check_port(host, common_ports[i], 1000))
+    if (check_port(&target, tlen, common_ports[i], 1000))
       emitted += emit_open_port(sink, host, common_ports[i], port_names[i]);
 
   (void)emitted;

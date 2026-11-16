@@ -692,6 +692,29 @@ static const hp_source T[] = {
     .id_keys = "id", .title_keys = "name", .interval = 3600, .page_max = 3,
     .record_type = "t-numcur", .free_tier = 1, .description = "d" },
 
+  /* LIB-03: an upstream-supplied URL on another host is followed without the
+   * row's credentials; a relative next link is resolved against the page. */
+  { .id = "T_XHOST", .name = "next link to another host",
+    .url = "https://x.test/xh?per_page=2", .interval = 3600,
+    .headers = { "Authorization: Bearer SECRET", NULL },
+    .array_path = "items", .next_path = "next", .id_keys = "id", .title_keys = "name",
+    .page_max = 3, .record_type = "t-xhost", .free_tier = 1, .description = "d" },
+  { .id = "T_RELNEXT", .name = "relative next link",
+    .url = "https://x.test/rel/list?p=1", .interval = 3600,
+    .headers = { "Authorization: Bearer SECRET", NULL },
+    .array_path = "items", .next_path = "next", .id_keys = "id", .title_keys = "name",
+    .page_max = 3, .record_type = "t-relnext", .free_tier = 1, .description = "d" },
+  { .id = "T_WHOLEDET", .name = "whole-URL detail hop on another host",
+    .url = "https://x.test/wd", .interval = 3600,
+    .headers = { "Authorization: Bearer SECRET", NULL },
+    .array_path = "items", .id_keys = "id", .title_keys = "name",
+    .detail_url = "{v}", .detail_key = "u", .detail_max = 2,
+    .record_type = "t-wholedet", .free_tier = 1, .description = "d" },
+  /* LIB-08: ids beyond 2^53 are distinct records. */
+  { .id = "T_BIGID", .name = "int64 ids", .url = "https://x.test/big", .interval = 3600,
+    .array_path = "items", .id_keys = "id", .title_keys = "name",
+    .record_type = "t-bigid", .free_tier = 1, .description = "d" },
+
   /* `comma` is the obvious spelling of the default and nothing accepted it:
    * the engine took the first character of an unrecognised value, so 87 rows
    * split their files on the letter **c**. Both fixture bodies below contain
@@ -5137,6 +5160,58 @@ int main(void) {
   rc = run_source("T_NEXT_NUM", "");
   ok(rc == 0 && cap_count("t-nextnum", NULL) == 3 && g_ncalls == 3,
      "39: a numeric next_path cursor walks on (after=2, after=3) instead of stopping at page 1");
+
+
+  /* LIB-03a. A next link naming ANOTHER host is followed, but without the
+   * row's Authorization header. */
+  fx_reset();
+  fx_add("evil.test/steal", 200, "{\"items\":[{\"id\":2,\"name\":\"b\"}]}");
+  fx_add("x.test/xh", 200, "{\"items\":[{\"id\":1,\"name\":\"a\"}],\"next\":\"http://evil.test/steal\"}");
+  g_ncap = 0;
+  rc = run_source("T_XHOST", NULL);
+  ok(g_ncalls == 2 && strstr(g_call_hdrs[0], "Authorization: Bearer SECRET") != NULL,
+     "LIB-03a: page 1 carries the row's Authorization header");
+  ok(g_ncalls == 2 && !strstr(g_call_hdrs[1], "SECRET") && !strstr(g_call_hdrs[1], "Authorization"),
+     "LIB-03a: the cross-host next page is fetched WITHOUT the row's credentials");
+  ok(strstr(g_last_url, "evil.test/steal") != NULL && g_ncap == 2,
+     "LIB-03a: the cross-host page is still followed (no data is dropped)");
+  /* control: a same-host absolute next link keeps the credentials */
+  fx_reset();
+  fx_add("/xh2", 200, "{\"items\":[{\"id\":2,\"name\":\"b\"}]}");
+  fx_add("x.test/xh?", 200, "{\"items\":[{\"id\":1,\"name\":\"a\"}],\"next\":\"https://X.test/xh2\"}");
+  rc = run_source("T_XHOST", NULL);
+  ok(g_ncalls == 2 && strstr(g_call_hdrs[1], "Authorization: Bearer SECRET") != NULL,
+     "LIB-03b control: a same-host next link (case-insensitive) keeps the credentials");
+
+  /* LIB-03c. A relative next link is resolved against the page URL. */
+  fx_reset();
+  fx_add("/rel/list?p=2", 200, "{\"items\":[{\"id\":2,\"name\":\"b\"}]}");
+  fx_add("/rel/list?p=1", 200, "{\"items\":[{\"id\":1,\"name\":\"a\"}],\"next\":\"/rel/list?p=2\"}");
+  g_ncap = 0;
+  rc = run_source("T_RELNEXT", NULL);
+  ok(g_ncalls == 2 && strstr(g_last_url, "https://x.test/rel/list?p=2") != NULL && g_ncap == 2 &&
+     strstr(g_call_hdrs[1], "Authorization: Bearer SECRET") != NULL,
+     "LIB-03c: a relative next link resolves to the same origin (and keeps credentials there)");
+
+  /* LIB-03d. A "{v}"-whole detail URL on another host gets no credentials. */
+  fx_reset();
+  fx_add("http://evil.test/x", 200, "{\"role\":\"r\"}");
+  fx_add("x.test/wd", 200, "{\"items\":[{\"id\":1,\"name\":\"a\",\"u\":\"http://evil.test/x\"}]}");
+  g_ncap = 0;
+  rc = run_source("T_WHOLEDET", NULL);
+  ok(g_ncalls == 2 && !strstr(g_call_hdrs[1], "SECRET"),
+     "LIB-03d: a record-supplied detail URL on another host is fetched without the row's headers");
+
+  /* LIB-08. Two int64 ids that differ in the last digit are two records. */
+  fx_reset();
+  fx_add("x.test/big", 200,
+         "{\"items\":[{\"id\":1234567890123456781,\"name\":\"a\"},{\"id\":1234567890123456782,\"name\":\"b\"},"
+         "{\"id\":\"1234567890123456783\",\"name\":\"c\"},{\"id\":42,\"name\":\"d\"}]}");
+  g_ncap = 0;
+  rc = run_source("T_BIGID", NULL);
+  ok(rc == 0 && cap_count("t-bigid", NULL) == 4 &&
+     g_cap_ids_has("1234567890123456781") && g_cap_ids_has("1234567890123456782") && g_cap_ids_has("42"),
+     "LIB-08: ids beyond 2^53 keep their exact digits and stay distinct records");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

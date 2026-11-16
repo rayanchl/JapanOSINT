@@ -24,6 +24,27 @@
 static const char *AW_UA =
   "User-Agent: JapanOSINT/1.0 (mailto:osint@example.org)";
 
+/* Author-list joiner with NO cap (LIB-20). The arXiv, PubMed and OpenLibrary
+ * emitters kept the first 20 authors in a 1,024-byte buffer and dropped the
+ * rest in silence (rule 2); a consortium paper lists hundreds. The list grows
+ * to what the upstream sent, and `authors_total` in the record states how many
+ * there were. */
+typedef struct { char *p; size_t len, cap; int n; } aw_join;
+static void aw_join_add(aw_join *j, const char *s) {
+  if (!s || !*s) return;
+  size_t need = j->len + strlen(s) + 3;
+  if (need > j->cap) {
+    size_t nc = need * 2 + 256;
+    char *t = (char *)realloc(j->p, nc);
+    if (!t) return;
+    j->p = t; j->cap = nc;
+  }
+  if (j->n) { memcpy(j->p + j->len, ", ", 2); j->len += 2; }
+  memcpy(j->p + j->len, s, strlen(s) + 1);
+  j->len += strlen(s);
+  j->n++;
+}
+
 /* ---- Crossref ----------------------------------------------------------- */
 /* Crossref work title/author arrays are arrays-of-strings / arrays-of-objects. */
 static char *aw_crossref_first_str(const cJSON *arr) {
@@ -242,23 +263,18 @@ static int run_arxiv(const source_ctx *ctx, intel_sink *sink, const char *enc) {
     bc = blk; char *pub   = jo_tag_inner(&bc, "published");
 
     /* authors: repeated <author><name>..</name></author> */
-    char authors[1024]; authors[0] = 0; size_t alen = 0; int an = 0;
+    aw_join aj = {0};
     const char *ap = blk;
-    while (an < 20) {
+    for (;;) {
       const char *nm_open = strstr(ap, "<name>");
       if (!nm_open) break;
       const char *nc = nm_open;
       char *nm = jo_tag_inner(&nc, "name");
       ap = nc;
-      if (nm && nm[0]) {
-        size_t need = alen + strlen(nm) + 3;
-        if (need < sizeof authors) {
-          if (an) { strcpy(authors + alen, ", "); alen += 2; }
-          strcpy(authors + alen, nm); alen += strlen(nm); an++;
-        }
-      }
+      if (nm && nm[0]) aw_join_add(&aj, nm);
       free(nm);
     }
+    const char *authors = aj.p; int an = aj.n;
 
     if (title || id) {
       /* collapse whitespace/newlines in title */
@@ -266,7 +282,8 @@ static int run_arxiv(const source_ctx *ctx, intel_sink *sink, const char *enc) {
 
       cJSON *data = cJSON_CreateObject();
       if (title) cJSON_AddStringToObject(data, "title", title);
-      if (an)    cJSON_AddStringToObject(data, "authors", authors);
+      if (an)    { cJSON_AddStringToObject(data, "authors", authors);
+                   cJSON_AddNumberToObject(data, "authors_total", an); }
       if (summ)  cJSON_AddStringToObject(data, "abstract", summ);
       if (id)    cJSON_AddStringToObject(data, "arxiv_url", id);
       cJSON_AddStringToObject(data, "source", "arXiv");
@@ -295,6 +312,7 @@ static int run_arxiv(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       free(bj); free(pj);
     }
     free(id); free(title); free(summ); free(pub);
+    free(aj.p);
     free(blk);
     cur = eend + 8;
   }
@@ -311,24 +329,22 @@ static int aw_emit_pubmed(intel_sink *sink, const cJSON *doc, const char *uid) {
   const char *pubdate = jo_sv(doc, "pubdate");
 
   /* authors[] → array of objects with "name" */
-  char authors[1024]; authors[0] = 0; size_t alen = 0; int an = 0;
+  aw_join aj = {0};
   const cJSON *au = cJSON_GetObjectItem(doc, "authors");
   if (cJSON_IsArray(au)) {
     const cJSON *a;
     cJSON_ArrayForEach(a, au) {
       const char *nm = jo_sv(a, "name");
       if (!nm) continue;
-      size_t need = alen + strlen(nm) + 3;
-      if (need >= sizeof authors) break;
-      if (an) { strcpy(authors + alen, ", "); alen += 2; }
-      strcpy(authors + alen, nm); alen += strlen(nm);
-      if (++an >= 20) break;
+      aw_join_add(&aj, nm);
     }
   }
+  const char *authors = aj.p; int an = aj.n;
 
   cJSON *data = cJSON_CreateObject();
   if (title)   cJSON_AddStringToObject(data, "title", title);
-  if (an)      cJSON_AddStringToObject(data, "authors", authors);
+  if (an)    { cJSON_AddStringToObject(data, "authors", authors);
+               cJSON_AddNumberToObject(data, "authors_total", an); }
   if (source)  cJSON_AddStringToObject(data, "journal", source);
   if (pubdate) cJSON_AddStringToObject(data, "pubdate", pubdate);
   if (uid)     cJSON_AddStringToObject(data, "pmid", uid);
@@ -358,7 +374,7 @@ static int aw_emit_pubmed(intel_sink *sink, const cJSON *doc, const char *uid) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"PUBMED\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(pj); free(aj.p);
   return rc >= 0 ? 1 : 0;
 }
 static int run_pubmed(const source_ctx *ctx, intel_sink *sink, const char *enc) {
@@ -424,23 +440,21 @@ static int aw_emit_openlibrary(intel_sink *sink, const cJSON *d) {
   const cJSON *fpy = cJSON_GetObjectItem(d, "first_publish_year");
 
   /* author_name[] array of strings */
-  char authors[1024]; authors[0] = 0; size_t alen = 0; int an = 0;
+  aw_join aj = {0};
   const cJSON *au = cJSON_GetObjectItem(d, "author_name");
   if (cJSON_IsArray(au)) {
     const cJSON *a;
     cJSON_ArrayForEach(a, au) {
       if (!cJSON_IsString(a) || !a->valuestring) continue;
-      size_t need = alen + strlen(a->valuestring) + 3;
-      if (need >= sizeof authors) break;
-      if (an) { strcpy(authors + alen, ", "); alen += 2; }
-      strcpy(authors + alen, a->valuestring); alen += strlen(a->valuestring);
-      if (++an >= 20) break;
+      aw_join_add(&aj, a->valuestring);
     }
   }
+  const char *authors = aj.p; int an = aj.n;
 
   cJSON *data = cJSON_CreateObject();
   if (title) cJSON_AddStringToObject(data, "title", title);
-  if (an)    cJSON_AddStringToObject(data, "authors", authors);
+  if (an)    { cJSON_AddStringToObject(data, "authors", authors);
+               cJSON_AddNumberToObject(data, "authors_total", an); }
   if (fpy && cJSON_IsNumber(fpy)) cJSON_AddNumberToObject(data, "first_publish_year", fpy->valuedouble);
   if (key)   cJSON_AddStringToObject(data, "openlibrary_key", key);
   cJSON_AddStringToObject(data, "source", "OpenLibrary");
@@ -468,7 +482,7 @@ static int aw_emit_openlibrary(intel_sink *sink, const cJSON *d) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OPENLIBRARY\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(pj); free(aj.p);
   return rc >= 0 ? 1 : 0;
 }
 static int run_openlibrary(const source_ctx *ctx, intel_sink *sink, const char *enc) {

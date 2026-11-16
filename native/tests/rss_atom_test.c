@@ -81,8 +81,16 @@ void registry_add(const source_def *d) { (void)d; }
 /* ── a sink that counts ─────────────────────────────────────────────────── */
 static int g_emitted = 0;
 static char g_last_rtype[64];
+static char g_link[256], g_desc[256], g_pub[64], g_rk[256], g_pubprops[256];
+static int g_notices = 0;
 static int emit_count(intel_sink *s, const intel_item *it) {
   (void)s;
+  if (it->record_type && strstr(it->record_type, "notice")) { g_notices++; return 0; }
+  snprintf(g_link, sizeof g_link, "%s", it->link ? it->link : "(null)");
+  snprintf(g_desc, sizeof g_desc, "%s", it->body ? it->body : "(null)");
+  snprintf(g_pub, sizeof g_pub, "%s", it->published_at ? it->published_at : "(null)");
+  snprintf(g_rk, sizeof g_rk, "%s", it->remote_key ? it->remote_key : "(null)");
+  snprintf(g_pubprops, sizeof g_pubprops, "%s", it->properties_json ? it->properties_json : "");
   g_emitted++;
   snprintf(g_last_rtype, sizeof g_last_rtype, "%s",
            it->record_type ? it->record_type : "");
@@ -90,7 +98,7 @@ static int emit_count(intel_sink *s, const intel_item *it) {
 }
 
 static int run(const char *body, long status) {
-  g_body = body; g_status = status; g_emitted = 0; g_last_rtype[0] = 0;
+  g_body = body; g_status = status; g_emitted = 0; g_last_rtype[0] = 0; g_notices = 0;
   intel_sink sink = { .ctx = NULL, .emit = emit_count };
   source_ctx ctx = { 0 };
   ctx.source_id = "RSS_TEST";
@@ -161,6 +169,36 @@ int main(void) {
   rc = run(RSS_TWO, 404);
   ok(rc == -1, "5: a non-2xx is a failed fetch");
 
+
+  /* LIB-05. The unprefixed element wins; a foreign-namespace element that
+   * shares a local name, and a self-closing one, are not the item's own. */
+  rc = run("<rss><channel><item><atom:link rel=\"self\" href=\"http://x/self\"/>"
+           "<title>T</title><link>http://real/1</link>"
+           "<media:description>MEDIA</media:description><description>REAL</description>"
+           "</item></channel></rss>", 200);
+  ok(rc == 1 && !strcmp(g_link, "http://real/1") && !strcmp(g_desc, "REAL") &&
+     !strcmp(g_rk, "http://real/1"),
+     "LIB-05: unprefixed <link>/<description> win over <atom:link/> and <media:description>");
+  rc = run("<rss><channel><item><title>T2</title><dc:date>2026-01-02T03:04:05Z</dc:date>"
+           "<link>http://real/2</link></item></channel></rss>", 200);
+  ok(rc == 1 && !strcmp(g_pub, "2026-01-02T03:04:05Z"),
+     "LIB-05 control: a prefixed element is still used when no unprefixed one exists");
+
+  /* LIB-15. Items with no guid, link or title are disclosed, not silently dropped. */
+  rc = run("<rss><channel><item><description>only a body</description></item>"
+           "<item><title>kept</title><link>http://real/3</link></item></channel></rss>", 200);
+  ok(rc == 1 && g_notices == 1, "LIB-15: one item skipped for having no key -> one notice");
+  rc = run(RSS_TWO, 200);
+  ok(rc == 2 && g_notices == 0, "LIB-15 control: a feed with no skipped item files no notice");
+
+  /* LIB-15b. A date that is not a date is not written into published_at. */
+  rc = run("<rss><channel><item><title>bad</title><link>http://real/4</link>"
+           "<pubDate>Tue, 21 Oct 2025 07:99:99 GMT</pubDate></item></channel></rss>", 200);
+  ok(rc == 1 && !strcmp(g_pub, "(null)") && strstr(g_pubprops, "published_raw"),
+     "LIB-15b: mi/ss out of range -> no published_at, raw text kept in properties");
+  rc = run("<rss><channel><item><title>iso</title><link>http://real/5</link>"
+           "<pubDate>2026-99-99 garbage</pubDate></item></channel></rss>", 200);
+  ok(rc == 1 && !strcmp(g_pub, "(null)"), "LIB-15b: a bogus 'dddd-' string is not passed through");
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
 }

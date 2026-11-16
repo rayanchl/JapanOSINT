@@ -303,6 +303,17 @@ char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
   else if (sk.len == 0) why = "upstream returned no bytes";
   else if (strncasecmp(upstream_ct, "image/", 6) != 0)
     why = "upstream did not return an image";
+  /* SVG is an active document (script, external references) and this route
+   * would serve it from the API's own origin; a camera frame is a raster.
+   * Refused with its own status — the refusal says nothing about the
+   * upstream the caller did not already choose (API-17). */
+  if (!why && strncasecmp(upstream_ct, "image/svg", 9) == 0) {
+    fprintf(stderr, "[camera-proxy] %s: refused image/svg+xml\n", url);
+    free(url);
+    free(sk.buf);
+    if (status) *status = 415;
+    return errj("unsupported media type");
+  }
   if (why) {
     fprintf(stderr, "[camera-proxy] %s: %s\n", url, why);
     free(url);

@@ -1,4 +1,5 @@
 #include "dbexplorerapi.h"
+#include "../source.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <stdio.h>
@@ -177,54 +178,28 @@ char *dbexplorer_table(db_handle *db, const char *name, int limit, int offset,
   char *j=cJSON_PrintUnformatted(o); cJSON_Delete(o); return j;
 }
 
-/* minimal 5-field cron -> next datetime after now (UTC). Supports a star,
- * a star-slash-step, and plain numbers in each field — enough for the 3
- * fixed jobs (0 star/2 star star star ; 15 star star star star ; 30 ...). */
-static int fld_match(const char *f, int v) {
-  if (!strcmp(f,"*")) return 1;
-  if (!strncmp(f,"*/",2)) { int n=atoi(f+2); return n>0 && (v%n)==0; }
-  return atoi(f)==v;
-}
-static void cron_next_iso(const char *cron, char *out, size_t n) {
-  char c[64]; snprintf(c,sizeof c,"%s",cron);
-  char *sv=NULL;                     /* strtok_r: HTTP thread, see operatorgate.c */
-  char *mi=strtok_r(c," ",&sv), *ho=strtok_r(NULL," ",&sv), *dm=strtok_r(NULL," ",&sv),
-       *mo=strtok_r(NULL," ",&sv), *dw=strtok_r(NULL," ",&sv);
-  if (!mi||!ho||!dm||!mo||!dw){ snprintf(out,n,"null"); return; }
-  time_t t=time(NULL); t -= t%60; t += 60;       /* start next minute */
-  for (int i=0;i<366*24*60;i++,t+=60){
-    struct tm g; gmtime_r(&t,&g);
-    if (fld_match(mi,g.tm_min)&&fld_match(ho,g.tm_hour)&&
-        fld_match(dm,g.tm_mday)&&fld_match(mo,g.tm_mon+1)&&
-        fld_match(dw,g.tm_wday)){
-      strftime(out,n,"%Y-%m-%dT%H:%M:%S.000Z",&g); return;
-    }
-  }
-  snprintf(out,n,"null");
-}
+/* The background jobs this page lists are the registry's own maintenance pods
+ * (collector name beginning with `_`, interval > 0) — what the scheduler's
+ * maintenance lane really runs. This used to be three hard-coded cron strings
+ * left from the Node server ("source-probe every 2 hours" …) with a next_run
+ * computed from them: jobs that do not exist, on a schedule nothing follows.
+ * A pod's runs are not written to fetch_log or source_sched_state, so last_run
+ * and next_run are null rather than derived from anything. */
 char *dbexplorer_scheduler(db_handle *db) {
-  const char *CR[3]={"0 */2 * * *","15 * * * *","30 * * * *"};
-  const char *ID[3]={"source-probe","camera-discovery","transport-discovery"};
-  const char *DE[3]={"Probe every source's health endpoint every 2 hours",
-    "Re-run camera discovery hourly at :15","Re-run transport fan-out hourly at :30"};
-  char lastp[64]={0}; sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(db->h,"SELECT MAX(timestamp) FROM fetch_log",-1,&s,NULL)==SQLITE_OK
-      && sqlite3_step(s)==SQLITE_ROW && sqlite3_column_type(s,0)!=SQLITE_NULL)
-    snprintf(lastp,sizeof lastp,"%s",(const char*)sqlite3_column_text(s,0));
-  sqlite3_finalize(s);
+  sqlite3_stmt *s;
   cJSON *jobs=cJSON_CreateArray();
-  for (int i=0;i<3;i++){
+  const source_def **all=registry_all();
+  for (int i=0,n=registry_count();i<n;i++){
+    const source_def *d=all[i];
+    if (!d||!d->collector||d->collector[0]!='_'||d->update_interval_sec<=0) continue;
     cJSON *j=cJSON_CreateObject();
-    cJSON_AddStringToObject(j,"id",ID[i]);
-    cJSON_AddStringToObject(j,"cron",CR[i]);
-    cJSON_AddStringToObject(j,"description",DE[i]);
-    /* only source-probe has a DB-derivable last_run; camera/transport last
-     * run is in-process scheduler state, not tracked in C → null. */
-    if (i==0 && lastp[0]) cJSON_AddStringToObject(j,"last_run",lastp);
-    else cJSON_AddNullToObject(j,"last_run");
-    char nx[40]; cron_next_iso(CR[i],nx,sizeof nx);
-    if (!strcmp(nx,"null")) cJSON_AddNullToObject(j,"next_run");
-    else cJSON_AddStringToObject(j,"next_run",nx);
+    char every[48]; snprintf(every,sizeof every,"every %ld s",(long)d->update_interval_sec);
+    cJSON_AddStringToObject(j,"id",d->id);
+    cJSON_AddStringToObject(j,"cron",every);
+    cJSON_AddStringToObject(j,"description",
+      d->description&&*d->description?d->description:(d->name?d->name:d->id));
+    cJSON_AddNullToObject(j,"last_run");
+    cJSON_AddNullToObject(j,"next_run");
     cJSON_AddItemToArray(jobs,j);
   }
   cJSON *src=cJSON_CreateArray();

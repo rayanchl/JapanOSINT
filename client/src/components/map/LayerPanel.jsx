@@ -6,6 +6,7 @@ import {
   categoryLabel,
   classifyLayerData,
   truncationNotice,
+  loadProgress,
 } from '../../hooks/layerCatalog.js';
 
 // Modality badge: the server's declaration, verbatim. `null` is shown as
@@ -95,6 +96,7 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
   const window = state.temporalWindow || null;
   const truncation = isActive ? truncationNotice(featureData) : null;
   const stillLoading = !!featureData?._meta?.client_loading;
+  const progress = isActive ? loadProgress(featureData) : null;
 
   return (
     <div className={`layer-toggle px-3 py-2 ${isActive ? 'active' : ''}`}>
@@ -156,6 +158,9 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
 
       {/* In-band statement of a bounded view (house rule 2): the map is
         * drawing N of the M records the server holds. */}
+      {progress && (
+        <div className="ml-10 mt-1 text-[10px] text-accent" data-testid="load-progress" role="status">{progress}</div>
+      )}
       {truncation && (
         <div className="ml-10 mt-1 text-[10px] text-amber-400/80" data-testid="truncation-notice">
           {truncation}{stillLoading ? ' — loading the rest…' : ''}

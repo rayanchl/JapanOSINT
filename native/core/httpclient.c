@@ -146,6 +146,22 @@ static size_t body_ceiling(void) {
   return g_body_ceiling_once;
 }
 
+/* Strict mode for ONE request on THIS thread, set by http_request_strict() and
+ * restored when it returns — same shape and same thread-local reasoning as
+ * g_body_ceiling_once. It is for a destination somebody OTHER than the
+ * collector author chose (an alert webhook, an image URL scraped from an
+ * upstream item): the strict address ruleset applies to the URL and to the
+ * connected address, and redirects are not followed at all, so a 302 cannot
+ * walk the request somewhere the caller never judged. */
+static __thread int g_strict_once;
+/* With g_strict_once: 1 = redirects ARE followed (each hop re-judged by the
+ * strict per-connection check), 0 = none followed. */
+static __thread int g_strict_follow;
+
+/* Where the last do_once() on this thread was told to go next, when it was
+ * asked not to follow redirects (CURLINFO_REDIRECT_URL, always absolute). */
+static __thread char g_redirect_url[2048];
+
 typedef struct { char *buf; size_t len, cap; int over; } sbuf;
 
 static size_t on_data(void *ptr, size_t sz, size_t nm, void *ud) {
@@ -174,11 +190,16 @@ static size_t on_data(void *ptr, size_t sz, size_t nm, void *ud) {
 #if LIBCURL_VERSION_NUM >= 0x075000            /* 7.80.0: CURLOPT_PREREQFUNCTION */
 static int on_prereq(void *ud, char *conn_primary_ip, char *conn_local_ip,
                      int conn_primary_port, int conn_local_port) {
-  (void)ud; (void)conn_local_ip; (void)conn_primary_port; (void)conn_local_port;
+  (void)conn_local_ip; (void)conn_primary_port; (void)conn_local_port;
   /* The FLOOR as configured, not a hardcoded 0: with JO_HTTP_BLOCK_PRIVATE=1
    * the operator asked for RFC1918/loopback to be refused, and a hostname is
-   * only ever caught here (url_check() sees a name, not an address). */
-  if (hostgate_addr_check_floor(conn_primary_ip) != HG_URL_OK) {
+   * only ever caught here (url_check() sees a name, not an address).
+   * A non-NULL `ud` is http_request_strict(): the strict ruleset whatever the
+   * floor is set to, so a name that rebinds to loopback/RFC1918 after the
+   * caller's own check is refused here. */
+  int bad = ud ? hostgate_addr_check(conn_primary_ip, 1)
+               : hostgate_addr_check_floor(conn_primary_ip);
+  if (bad != HG_URL_OK) {
     fprintf(stderr, "[http] blocked connection to %s (private/link-local)\n",
             conn_primary_ip ? conn_primary_ip : "?");
     return CURL_PREREQFUNC_ABORT;
@@ -218,8 +239,13 @@ void http_easy_harden(void *curl_easy) {
  * a 30 s Retry-After is 3e10 µs. */
 static void sleep_ms(long ms) {
   if (ms <= 0) return;
-  struct timespec ts = { (time_t)(ms / 1000), (long)(ms % 1000) * 1000000L };
-  while (nanosleep(&ts, &ts) != 0 && errno == EINTR) {}
+  /* In slices, so a cancelled run does not sleep out a 30 s Retry-After. */
+  while (ms > 0 && !hostgate_cancelled()) {
+    long step = ms > 200 ? 200 : ms;
+    struct timespec ts = { (time_t)(step / 1000), (long)(step % 1000) * 1000000L };
+    while (nanosleep(&ts, &ts) != 0 && errno == EINTR) {}
+    ms -= step;
+  }
 }
 
 /* Header names that must not follow a URL rewrite onto a different host. */
@@ -574,6 +600,11 @@ int http_last_transport_error(void) { return g_last_te; }
 static __thread int g_last_tls = HTTP_TLS_NONE;
 
 int http_last_tls_cause(void) { return g_last_tls; }
+/* Both are per-THREAD and a scheduler worker outlives the run it is on, so a
+ * run that made no request used to read the previous source's cause back out
+ * of them and print it in its own fetch-failure notice. The scheduler clears
+ * them at the start of every run. */
+void http_reset_last_error(void) { g_last_te = HTTP_TE_NONE; g_last_tls = HTTP_TLS_NONE; }
 
 const char *http_tls_cause_label(int cause) {
   switch (cause) {
@@ -719,8 +750,9 @@ static int tls_cause_of(CURLcode rc, long verify, const char *msg) {
 static int do_once(http_client *c, const char *method, const char *url,
                    const char *const *headers, const char *body,
                    size_t body_len, int timeout_ms, http_response *out,
-                   long *retry_after_ms) {
+                   long *retry_after_ms, int nofollow) {
   *retry_after_ms = -1;
+  g_redirect_url[0] = 0;
   g_last_te = HTTP_TE_OTHER;            /* every early refusal below is "other" */
   g_last_tls = HTTP_TLS_NONE;           /* nothing below this is a TLS verdict */
   /* Defensive: a NULL client/method/url must never segfault the process.
@@ -732,7 +764,8 @@ static int do_once(http_client *c, const char *method, const char *url,
    * dial) is what stops file:/gopher: and the cloud metadata range from ever
    * being reachable through a collector URL, an LLM-proposed override, or a
    * redirect target we were handed. */
-  { int gk = hostgate_url_check(url);
+  { int gk = g_strict_once ? hostgate_url_check_strict(url)
+                           : hostgate_url_check(url);
     if (gk != HG_URL_OK) {
       fprintf(stderr, "[http] refused %s: %s\n", url, hostgate_url_reason(gk));
       out->status = 0; out->body = NULL; out->body_len = 0; return 1;
@@ -767,6 +800,10 @@ static int do_once(http_client *c, const char *method, const char *url,
   ebuf[0] = 0;
   curl_easy_setopt(e, CURLOPT_ERRORBUFFER, ebuf);
   http_easy_harden(e);
+  if (nofollow) curl_easy_setopt(e, CURLOPT_FOLLOWLOCATION, 0L);
+#if LIBCURL_VERSION_NUM >= 0x075000
+  if (g_strict_once) curl_easy_setopt(e, CURLOPT_PREREQDATA, (void *)1);
+#endif
   /* Belt to the write-callback's braces: when the server DOES advertise a
    * length, refuse before a single byte is transferred. */
   if (b.cap) curl_easy_setopt(e, CURLOPT_MAXFILESIZE_LARGE, (curl_off_t)b.cap);
@@ -811,7 +848,8 @@ static int do_once(http_client *c, const char *method, const char *url,
    * spend 30 s on the network can spend some of it queueing. Fails open, so a
    * saturated host degrades to "as rude as before", never to a fetch error. */
   int gated = hostgate_acquire(url, timeout_ms > 0 ? timeout_ms : 30000);
-  CURLcode rc = curl_easy_perform(e);
+  /* A cancelled run makes no request: the gate returned without a slot. */
+  CURLcode rc = hostgate_cancelled() ? CURLE_ABORTED_BY_CALLBACK : curl_easy_perform(e);
   if (gated) hostgate_release(url);
   long code = 0;
   curl_easy_getinfo(e, CURLINFO_RESPONSE_CODE, &code);
@@ -840,6 +878,12 @@ static int do_once(http_client *c, const char *method, const char *url,
       g_last_tls = tls_cause_of(rc, verify, ebuf);
     }
   }
+  if (nofollow && rc == CURLE_OK) {
+    char *loc = NULL;
+    if (curl_easy_getinfo(e, CURLINFO_REDIRECT_URL, &loc) == CURLE_OK && loc &&
+        strlen(loc) < sizeof g_redirect_url)
+      strcpy(g_redirect_url, loc);
+  }
   if (hl) curl_slist_free_all(hl);
   curl_easy_cleanup(e);
   *retry_after_ms = hs.retry_after_ms;
@@ -858,6 +902,88 @@ static int do_once(http_client *c, const char *method, const char *url,
   out->body = b.buf ? b.buf : calloc(1, 1);
   out->body_len = b.len;
   return 0;
+}
+
+/* One logical request with redirects handled HERE when the request must not
+ * let libcurl follow them: a strict request follows none, and a request that
+ * carries a credential header follows manually so the credential can be
+ * dropped when a hop changes host. libcurl strips only `Authorization:` (and
+ * Cookie) from a custom header list on a cross-host redirect, so an
+ * `X-API-Key:` was sent to whatever host a 302 named. Each hop goes through
+ * do_once(), so it gets the same URL check, per-host gate and connection
+ * check as the first. Otherwise this is exactly do_once(). */
+static int do_follow(http_client *c, const char *method, const char *url,
+                     const char *const *headers, const char *body,
+                     size_t body_len, int timeout_ms, http_response *out,
+                     long *retry_after_ms) {
+  int has_cred = 0;
+  for (const char *const *h = headers; h && *h; ++h)
+    if (header_is_credential(*h)) { has_cred = 1; break; }
+  int strict_nf = g_strict_once && !g_strict_follow;
+  int nofollow = strict_nf || has_cred;
+  int hard = do_once(c, method, url, headers, body, body_len, timeout_ms, out,
+                     retry_after_ms, nofollow);
+  if (!nofollow || strict_nf || hard) return hard;
+
+  const char *const *hdrs = headers;
+  const char **stripped = NULL;
+  char cur[2048];
+  if (strlen(url) >= sizeof cur) return hard;
+  strcpy(cur, url);
+  const char *m = method;
+  const char *b = body;
+  size_t bl = body_len;
+  for (int hop = 0;; hop++) {
+    long st = out->status;
+    if (!(st == 301 || st == 302 || st == 303 || st == 307 || st == 308) ||
+        !g_redirect_url[0])
+      break;                                    /* not a redirect: done */
+    if (hop >= 5) {                             /* libcurl's MAXREDIRS, same */
+      fprintf(stderr, "[http] %s: too many redirects\n", url);
+      http_response_free(out);
+      free(stripped);
+      return 1;
+    }
+    char next[2048];
+    strcpy(next, g_redirect_url);
+    if (hdrs && *hdrs && !hostgate_same_host(cur, next)) {
+      size_t nh = 0;
+      while (hdrs[nh]) nh++;
+      const char **ns = malloc((nh + 1) * sizeof *ns);
+      if (!ns) {                                /* fail closed, as the override path */
+        fprintf(stderr, "[http] refusing redirect to %s: cannot build a "
+                        "credential-free header list\n", next);
+        http_response_free(out);
+        free(stripped);
+        return 1;
+      }
+      size_t n = 0;
+      int dropped = 0;
+      for (size_t i = 0; i < nh; i++) {
+        if (header_is_credential(hdrs[i])) { dropped++; continue; }
+        ns[n++] = hdrs[i];
+      }
+      ns[n] = NULL;
+      free(stripped);
+      stripped = ns;
+      hdrs = (const char *const *)stripped;
+      if (dropped)
+        fprintf(stderr, "[http] dropped %d auth header(s): redirect changed "
+                        "host\n", dropped);
+    }
+    /* libcurl's own method rewrite for the three historic redirects. */
+    if ((st == 301 || st == 302 || st == 303) && strcmp(m, "GET") != 0 &&
+        strcmp(m, "HEAD") != 0) {
+      m = "GET"; b = NULL; bl = 0;
+    }
+    if (c) c->bytes_in += (unsigned long long)out->body_len;
+    http_response_free(out);
+    hard = do_once(c, m, next, hdrs, b, bl, timeout_ms, out, retry_after_ms, 1);
+    if (hard) { free(stripped); return hard; }
+    strcpy(cur, next);
+  }
+  free(stripped);
+  return hard;
 }
 
 int http_request(http_client *c, const char *method, const char *url,
@@ -935,8 +1061,8 @@ int http_request(http_client *c, const char *method, const char *url,
   for (;;) {
     http_response r = {0};
     long ra_ms = -1;
-    int hard = do_once(c, method, url, headers, body, body_len, timeout_ms, &r,
-                       &ra_ms);
+    int hard = do_follow(c, method, url, headers, body, body_len, timeout_ms, &r,
+                         &ra_ms);
     /* Every attempt's body counts, retried ones included: transfer is what
      * the upstream sent us, not what we kept. */
     if (c) { c->bytes_in += (unsigned long long)r.body_len; c->requests++; }   /* NULL client: do_once answered a hard failure */
@@ -999,6 +1125,34 @@ int http_request_max(http_client *c, const char *method, const char *url,
   int rc = http_request(c, method, url, headers, body, body_len,
                         timeout_ms, retries, out);
   g_body_ceiling_once = prev;
+  return rc;
+}
+
+/* Standing per-thread ceiling for every request until it is set back — the
+ * scheduler wraps one source's whole run in it, so the operator's per-source
+ * `http_body_ceiling_bytes` reaches the hpengine and VJSON rows that never
+ * read ctx->body_ceiling. Same variable, same clamp by an explicit
+ * $JO_HTTP_MAX_BODY as http_request_max(). Returns the previous value. */
+size_t http_body_ceiling_set(size_t max_body) {
+  size_t prev = g_body_ceiling_once;
+  g_body_ceiling_once = max_body;
+  return prev;
+}
+
+/* http_request() under the strict ruleset for this one call. See
+ * g_strict_once / g_strict_follow. Restored on every exit path for the reason
+ * http_request_max() restores its ceiling here. */
+int http_request_strict(http_client *c, const char *method, const char *url,
+                        const char *const *headers, const char *body,
+                        size_t body_len, int timeout_ms, int retries,
+                        int follow_redirects, http_response *out) {
+  int prev = g_strict_once, prev_f = g_strict_follow;
+  g_strict_once = 1;
+  g_strict_follow = follow_redirects ? 1 : 0;
+  int rc = http_request(c, method, url, headers, body, body_len,
+                        timeout_ms, retries, out);
+  g_strict_once = prev;
+  g_strict_follow = prev_f;
   return rc;
 }
 

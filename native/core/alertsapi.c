@@ -14,6 +14,7 @@
 #include <math.h>
 #include <time.h>
 #include <sys/time.h>
+#include "../lib/jocore.h"   /* jo_iso_now */
 
 /* ── authorization ─────────────────────────────────────────────────────────
  * This file had NONE. Every route ran at the caller's mere authenticated-ness,
@@ -175,17 +176,6 @@ static char *b64url_decode(const char *in) {
   return out;
 }
 
-/* Node's new Date().toISOString(), same modulo-clamped spelling intelapi.c
- * uses so -Wformat-truncation can prove the 24 chars fit. */
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
 
 /* Read one parameter out of a raw "a=1&b=2" query string into out[], anchored
  * on a parameter boundary so "limit" cannot be matched inside "xlimit".
@@ -259,7 +249,7 @@ static char *events_envelope(cJSON *arr, long total, int lim,
   if (total < 0) cJSON_AddNullToObject(page, "total");
   else           cJSON_AddNumberToObject(page, "total", (double)total);
 
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddItemToObject(meta, "filters", filters);
@@ -350,10 +340,18 @@ static char *one_rule(db_handle *db, const char *tid, const char *id,
   return out;
 }
 
+/* Rules one workspace may hold. */
+#define ALERT_RULES_MAX_PER_TENANT 500
+
 /* validateRule → fills *name,*pred,*chans (owned by caller via root),
  * enabled, dedup, storm. Returns NULL ok, else an error message. */
+/* `nbuf` receives the trimmed name (*name points into it) and `ebuf` any
+ * formatted error: both are the CALLER's, because the function-local statics
+ * they replaced were shared by every thread that validated a rule at once and
+ * returned a pointer another call could overwrite. */
 static const char *validate_rule(cJSON *b, const char **name, int *enabled,
-    cJSON **predicate, cJSON **channels, long *dedup, long *storm) {
+    cJSON **predicate, cJSON **channels, long *dedup, long *storm,
+    char *nbuf, size_t ncap, char *ebuf, size_t ecap) {
   if (!b || !cJSON_IsObject(b)) return "body required";
   cJSON *jn = cJSON_GetObjectItem(b, "name");
   const char *nm = (jn && cJSON_IsString(jn)) ? jn->valuestring : "";
@@ -363,8 +361,7 @@ static const char *validate_rule(cJSON *b, const char **name, int *enabled,
   while (nl && (nm[nl-1]==' '||nm[nl-1]=='\t'||nm[nl-1]=='\n'||nm[nl-1]=='\r')) nl--;
   if (nl == 0) return "name required";
   if (nl > 200) return "name too long";
-  static char nbuf[256];
-  snprintf(nbuf, sizeof nbuf, "%.*s", (int)nl, nm);
+  snprintf(nbuf, ncap, "%.*s", (int)nl, nm);
   *name = nbuf;
 
   cJSON *pred = cJSON_GetObjectItem(b, "predicate");
@@ -458,14 +455,14 @@ static const char *validate_rule(cJSON *b, const char **name, int *enabled,
     const char *tys = (ty && cJSON_IsString(ty)) ? ty->valuestring : NULL;
     if (!tys || (strcmp(tys,"email")!=0 && strcmp(tys,"webhook")!=0)) {
       cJSON_Delete(*predicate);
-      static char eb[64]; snprintf(eb,sizeof eb,"invalid channel type: %s",
-        tys?tys:"undefined"); return eb;
+      snprintf(ebuf,ecap,"invalid channel type: %.40s",
+        tys?tys:"undefined"); return ebuf;
     }
     cJSON *tg = cJSON_GetObjectItem(ch,"target");
     if (!tg || !cJSON_IsString(tg)) {
       cJSON_Delete(*predicate);
-      static char eb[64]; snprintf(eb,sizeof eb,"channel %s missing target",tys);
-      return eb;
+      snprintf(ebuf,ecap,"channel %s missing target",tys);
+      return ebuf;
     }
     if (strcmp(tys,"email")==0) {
       /* /^[^\s@]+@[^\s@]+\.[^\s@]+$/ */
@@ -490,10 +487,9 @@ static const char *validate_rule(cJSON *b, const char **name, int *enabled,
       int gr = hostgate_url_check_strict(t);
       if (gr != HG_URL_OK) {
         cJSON_Delete(*predicate);
-        static char gb[128];
-        snprintf(gb, sizeof gb, "webhook target rejected: %s",
+        snprintf(ebuf, ecap, "webhook target rejected: %s",
                  hostgate_url_reason(gr));
-        return gb;
+        return ebuf;
       }
       cJSON *se = cJSON_GetObjectItem(ch,"secret");
       if (!se || !cJSON_IsString(se) || strlen(se->valuestring) < 16) {
@@ -557,8 +553,29 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
     }
     if (is_post) {
       const char *nm; int en; cJSON *pred=NULL,*chans=NULL; long dd,ss;
-      const char *e = validate_rule(jb,&nm,&en,&pred,&chans,&dd,&ss);
+      char nmb[256], emb[192];
+      const char *e = validate_rule(jb,&nm,&en,&pred,&chans,&dd,&ss,
+                                    nmb,sizeof nmb,emb,sizeof emb);
       if (e) { if (jb) cJSON_Delete(jb); return err(st,400,e); }
+      /* Every ingest evaluates every rule, so an analyst creating rules
+       * without bound is a cost on everyone (API-14). Generous, compiled. */
+      {
+        long have = 0;
+        sqlite3_stmt *cs = NULL;
+        if (sqlite3_prepare_v2(db->h,
+              "SELECT COUNT(*) FROM alert_rules WHERE tenant_id=?1", -1, &cs, NULL)
+            == SQLITE_OK) {
+          sqlite3_bind_text(cs,1,tid,-1,SQLITE_TRANSIENT);
+          if (sqlite3_step(cs)==SQLITE_ROW) have = (long)sqlite3_column_int64(cs,0);
+        }
+        sqlite3_finalize(cs);
+        if (have >= ALERT_RULES_MAX_PER_TENANT) {
+          cJSON_Delete(pred); cJSON_Delete(chans);
+          if (jb) cJSON_Delete(jb);
+          return err(st,409,"alert rule limit reached for this workspace "
+                            "(delete a rule before creating another)");
+        }
+      }
       char nid[37]; uuid4(nid);
       char *pj=cJSON_PrintUnformatted(pred), *cj=cJSON_PrintUnformatted(chans);
       cJSON_Delete(pred); cJSON_Delete(chans);
@@ -661,7 +678,9 @@ char *alertsapi(db_handle *db, const char *tid, const char *uid,
       sqlite3_finalize(s);
 
       const char *nm; int en; cJSON *pred=NULL,*chans=NULL; long dd,ssv;
-      const char *e = validate_rule(merged,&nm,&en,&pred,&chans,&dd,&ssv);
+      char nmb[256], emb[192];
+      const char *e = validate_rule(merged,&nm,&en,&pred,&chans,&dd,&ssv,
+                                    nmb,sizeof nmb,emb,sizeof emb);
       if (e) { cJSON_Delete(merged); if(jb)cJSON_Delete(jb); return err(st,400,e); }
       char *pj=cJSON_PrintUnformatted(pred), *cj=cJSON_PrintUnformatted(chans);
       cJSON_Delete(pred); cJSON_Delete(chans); cJSON_Delete(merged);

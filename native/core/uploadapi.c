@@ -516,6 +516,9 @@ static int blob_present_for(db_handle *db, const char *item_uid) {
   return present;
 }
 
+/* Open (uncommitted, unexpired) uploads one workspace may hold at once. */
+#define UP_MAX_OPEN_PER_TENANT 64
+
 /* ── POST /api/uploads/begin ──────────────────────────────────────────────── */
 
 static char *h_begin(db_handle *db, const tenant_ctx *t,
@@ -567,6 +570,30 @@ static char *h_begin(db_handle *db, const tenant_ctx *t,
   int has_ct = ct_valid((jc && cJSON_IsString(jc)) ? jc->valuestring : NULL,
                         ct, sizeof ct);
   cJSON_Delete(b);
+
+  /* Each open upload may declare up to up_max_bytes() of scratch space for a
+   * TTL of days, so a workspace's open-upload count bounds its scratch use
+   * (API-14). Stale ones the gc has not reaped yet are not counted. */
+  {
+    long long open_n = 0;
+    char idle[32];
+    snprintf(idle, sizeof idle, "-%lld seconds", up_ttl_sec());
+    sqlite3_stmt *cs = NULL;
+    if (sqlite3_prepare_v2(db->h,
+          "SELECT COUNT(*) FROM uploads WHERE tenant_id=?1 AND status='open' "
+          "AND created_at > datetime('now', ?2)", -1, &cs, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(cs, 1, t->tenant_id, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(cs, 2, idle, -1, SQLITE_TRANSIENT);
+      if (sqlite3_step(cs) == SQLITE_ROW) open_n = sqlite3_column_int64(cs, 0);
+    }
+    sqlite3_finalize(cs);
+    if (open_n >= UP_MAX_OPEN_PER_TENANT) {
+      cJSON *m = cJSON_CreateObject();
+      cJSON_AddNumberToObject(m, "open_uploads", (double)open_n);
+      cJSON_AddNumberToObject(m, "max_open_uploads", (double)UP_MAX_OPEN_PER_TENANT);
+      return err_meta(st, 429, "too_many_open_uploads", m);
+    }
+  }
 
   char id[37];
   uuid4(id);

@@ -178,9 +178,13 @@ struct JapanOsintApp: App {
         }
     }
 
-    /// Consume queued share items. URL/text start a search; images are left
-    /// queued because the on-device media pipeline (roadmap 27) isn't present
-    /// yet — dropping what the user shared would be worse than deferring it.
+    /// Consume ONE queued share item per call. `showSearch` can show only one
+    /// query, so looping over several made the last one win and silently
+    /// dropped the others from view. The first URL/text item starts a search
+    /// and is removed; every other item (further URLs/text, and images — the
+    /// on-device media pipeline, roadmap 27, isn't present yet) stays queued
+    /// and is picked up by the next drain (next foreground or share-URL open),
+    /// so nothing the user shared is discarded.
     @MainActor
     private func drainShareQueue() {
         for item in ShareQueue.pending() {
@@ -188,6 +192,7 @@ struct JapanOsintApp: App {
             case .url, .text:
                 mapNav.showSearch(item.value)
                 ShareQueue.remove(item)
+                return
             case .image:
                 continue
             }

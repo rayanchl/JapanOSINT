@@ -1,4 +1,4 @@
-"""Validate discovered feed URLs live and write batch-44 manifest rows.
+r"""Validate discovered feed URLs live and write batch-44 manifest rows.
 argv: discovery.tsv registered_urls.txt out.txt ID_PREFIX beat_tag
 Each candidate is fetched once, classified by its root element (Atom / RSS 1.0
 RDF / RSS 2.0), its records counted at the ELEMENT START (<item[\s>], never a

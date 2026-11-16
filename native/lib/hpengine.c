@@ -18,7 +18,9 @@
 #include "jocore.h"      /* jo_memmem: memmem() is not declared without _GNU_SOURCE */
 #include "../core/httpclient.h"
 #include "../third_party/cJSON.h"
+#include "jsonbig.h"      /* exact integers beyond 2^53: ids must not collide */
 #include <ctype.h>
+#include <limits.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -222,21 +224,119 @@ static void hp_vars_free(hp_vars *v) {
   memset(v, 0, sizeof *v);
 }
 
-/* host part of "https://a.b/c", "user@a.b" or a bare host. */
+/* host part of "https://a.b/c", "user@a.b" or a bare host.
+ *
+ * The userinfo '@' counts only INSIDE the authority — before the first '/',
+ * '?' or '#' that ends it. It used to be the first '@' anywhere after the
+ * scheme, so "http://evil.test/x?e=a@good.com" read as host "good.com": the
+ * resume-position host check (and any host comparison built on this) could be
+ * walked past by a query string. */
 static char *hp_host_of(const char *s) {
   if (!s) return NULL;
   const char *p = strstr(s, "://");
   p = p ? p + 3 : s;
-  const char *at = strchr(p, '@');
-  if (at) p = at + 1;
+  size_t alen = 0;                              /* authority length */
+  while (p[alen] && p[alen] != '/' && p[alen] != '?' && p[alen] != '#') alen++;
+  const char *at = NULL;
+  for (size_t i = 0; i < alen; i++) if (p[i] == '@') at = p + i;   /* the LAST one: userinfo may not hold '@', a host never does */
+  if (at) { alen -= (size_t)(at + 1 - p); p = at + 1; }
   size_t n = 0;
-  while (p[n] && p[n] != '/' && p[n] != '?' && p[n] != ':' && p[n] != ' ') n++;
+  if (p[0] == '[') {                            /* IPv6 literal */
+    while (n < alen && p[n] != ']') n++;
+    if (n < alen) n++;
+  } else {
+    while (n < alen && p[n] != ':' && p[n] != ' ') n++;
+  }
   if (!n) return NULL;
   char *out = malloc(n + 1);
   if (!out) return NULL;
   memcpy(out, p, n);
   out[n] = 0;
   return out;
+}
+
+/* Same host, case-insensitively. Two NULLs are NOT the same host: an
+ * unparseable URL is never "safe to send credentials to". */
+static int hp_same_host(const char *a, const char *b) {
+  char *ha = hp_host_of(a), *hb = hp_host_of(b);
+  int same = ha && hb && strcasecmp(ha, hb) == 0;
+  free(ha); free(hb);
+  return same;
+}
+
+/* Resolve `ref` against the page it was published on (RFC 3986, enough of it).
+ * An absolute http(s) URL passes through; "//host/p", "/p", "?q" and a
+ * relative path are resolved. A next link of "/api?page=2" used to be handed
+ * to the HTTP client as written, which fails, and the walk then ended as a
+ * "failed page" with the data behind it unread. NULL when `ref` is not a URL
+ * reference at all (the caller then keeps what it had). */
+static char *hp_resolve_url(const char *base, const char *ref) {
+  if (!ref || !*ref) return NULL;
+  if (!strncasecmp(ref, "http://", 7) || !strncasecmp(ref, "https://", 8))
+    return strdup(ref);
+  if (!base) return NULL;
+  const char *sch = strstr(base, "://");
+  if (!sch) return NULL;
+  size_t schlen = (size_t)(sch - base) + 3;               /* "https://" */
+  const char *auth_end = base + schlen;
+  while (*auth_end && *auth_end != '/' && *auth_end != '?' && *auth_end != '#') auth_end++;
+  size_t cap = strlen(base) + strlen(ref) + 8;
+  char *out = malloc(cap);
+  if (!out) return NULL;
+  if (ref[0] == '/' && ref[1] == '/') {                   /* protocol-relative */
+    snprintf(out, cap, "%.*s%s", (int)(sch - base) + 1, base, ref);
+    return out;
+  }
+  if (ref[0] == '/') {                                    /* same origin */
+    snprintf(out, cap, "%.*s%s", (int)(auth_end - base), base, ref);
+    return out;
+  }
+  if (ref[0] == '?') {                                    /* same path, new query */
+    const char *q = auth_end;
+    while (*q && *q != '?' && *q != '#') q++;
+    snprintf(out, cap, "%.*s%s", (int)(q - base), base, ref);
+    return out;
+  }
+  if (ref[0] == '#') { free(out); return NULL; }
+  {                                                       /* "scheme:" of something we do not speak */
+    size_t k = 0;
+    while (ref[k] && (isalnum((unsigned char)ref[k]) || ref[k] == '+' || ref[k] == '-' || ref[k] == '.')) k++;
+    if (ref[k] == ':' && k > 0) { free(out); return NULL; }
+  }
+  {                                                       /* relative path */
+    const char *pe = auth_end;
+    while (*pe && *pe != '?' && *pe != '#') pe++;
+    const char *ls = pe;                                  /* last '/' of the path */
+    while (ls > auth_end && ls[-1] != '/') ls--;
+    size_t dirlen = (size_t)(ls - base);                  /* through the '/' */
+    if (ls == auth_end) {                                 /* path-less base */
+      snprintf(out, cap, "%.*s/%s", (int)(auth_end - base), base, ref);
+    } else snprintf(out, cap, "%.*s%s", (int)dirlen, base, ref);
+    /* collapse "./" and "../" in the path part */
+    char *path = out + (auth_end - base);
+    char *w = path, *r = path;
+    while (*r && *r != '?' && *r != '#') {
+      if (!strncmp(r, "/./", 3)) { r += 2; continue; }
+      if (!strncmp(r, "/../", 4)) {
+        r += 3;
+        if (w > path) { w--; while (w > path && *w != '/') w--; }
+        continue;
+      }
+      *w++ = *r++;
+    }
+    memmove(w, r, strlen(r) + 1);
+  }
+  return out;
+}
+
+/* Remove a secret (raw or percent-encoded) from a URL, in place. Used when an
+ * upstream-supplied URL points at another host: our key is the ROW's, not that
+ * host's, and must not travel with the request. */
+static void hp_strip_secret(char *url, const char *secret) {
+  if (!url || !secret || !*secret) return;
+  size_t sl = strlen(secret);
+  char *at;
+  while ((at = strstr(url, secret))) memmove(at, at + sl, strlen(at + sl) + 1);
 }
 
 static char *hp_user_of(const char *s) {
@@ -990,8 +1090,13 @@ static const char *hp_scalar_str(const cJSON *v, char *buf, size_t cap) {
   if (cJSON_IsString(v)) return v->valuestring[0] ? v->valuestring : NULL;
   if (cJSON_IsNumber(v)) {
     double d = v->valuedouble;
-    if (d == (double)(long long)d) snprintf(buf, cap, "%lld", (long long)d);
-    else                           snprintf(buf, cap, "%.10g", d);
+    /* Range-check BEFORE the cast: (long long)d is undefined outside long
+     * long's range (an upstream only has to send 1e308), as lib/jsonlist.c
+     * already guards. (double)LLONG_MAX is 2^63, so `<` excludes it. */
+    if (d >= (double)LLONG_MIN && d < (double)LLONG_MAX && d == (double)(long long)d)
+      snprintf(buf, cap, "%lld", (long long)d);
+    else
+      snprintf(buf, cap, "%.10g", d);
     return buf[0] ? buf : NULL;
   }
   if (cJSON_IsBool(v)) { snprintf(buf, cap, "%s", cJSON_IsTrue(v) ? "true" : "false"); return buf; }
@@ -1305,6 +1410,10 @@ typedef struct {
    * XML/CSV/HTML. NULL-ended. hptest 2b (a POST row: no engine content type
    * on the hop), 2c (a GET row that declares one: kept) and the UK_CQC case. */
   const char *const *detail_hdrs;
+  /* The row's own expanded URL: the host everything this run is ENTITLED to
+   * send the row's credentials to. An upstream-supplied URL (a next link, a
+   * "{v}"-whole detail URL) on any other host is followed without them. */
+  const char *home_url;
 } hp_run_state;
 
 /* 0 = no cap (every record). A row's non-zero max_items is its author's
@@ -1488,8 +1597,26 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
    * UK_CQC_PROVIDERS' Ocp-Apim-Subscription-Key; 26 rows with headers and a
    * detail_url) or needs a UA the firewall accepts (sec.gov) got 401/403/500,
    * and each record carried _detail_error with the run green. */
+  /* A "{v}"-whole hop's URL came out of the UPSTREAM's record, so its host is
+   * the upstream's choice, not the row author's. On any host but the row's own
+   * it is followed WITHOUT the row's headers (token, key) and with the row's
+   * key stripped from the URL — a record naming http://evil.test/x must not be
+   * handed the Authorization header. A URL the author's template builds keeps
+   * its headers: its host was written by the author. */
+  const char *const *dhdrs = st->detail_hdrs;
+  static const char *const no_cred_hdrs[] = { "Accept: application/json", NULL };
+  if (whole && st->home_url && !hp_same_host(st->home_url, url)) {
+    dhdrs = no_cred_hdrs;
+    if (st->vars && st->vars->key && *st->vars->key) {
+      char *enc = hp_urlenc(st->vars->key);
+      hp_strip_secret(url, st->vars->key);
+      if (enc) { hp_strip_secret(url, enc); free(enc); }
+    }
+    fprintf(stderr, "[hp:%s] detail URL is on another host than the row's — "
+                    "fetched without the row's headers or key: %s\n", s->id, url);
+  }
   http_response hr = {0};
-  int rc = http_request(st->ctx->http, "GET", url, st->detail_hdrs, NULL, 0,
+  int rc = http_request(st->ctx->http, "GET", url, dhdrs, NULL, 0,
                         s->timeout_ms > 0 ? s->timeout_ms : HP_HTTP_TIMEOUT,
                         0, &hr);
   if (rc == 0 && hr.status == 200 && hr.body) {
@@ -1498,7 +1625,7 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
     char *dutf8 = hp_body_to_utf8(s, url, hr.body, hr.body_len);
     char *djp = hp_jsonp_inner(dutf8 ? dutf8 : hr.body);
     cJSON *doc = s->detail_html_kv ? NULL
-                                   : cJSON_Parse(djp ? djp : dutf8 ? dutf8 : hr.body);
+                                   : jo_json_parse(djp ? djp : dutf8 ? dutf8 : hr.body);
     int kv = s->detail_html_kv ? hp_html_kv(dutf8 ? dutf8 : hr.body, flat) : 0;
     free(djp);
     free(dutf8);
@@ -2198,7 +2325,7 @@ static char *hp_jsonp_inner(const char *body) {
 static int hp_run_json(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
   char *jsonp = hp_jsonp_inner(body);                  /* see hp_jsonp_inner */
-  cJSON *doc = cJSON_Parse(jsonp ? jsonp : body);
+  cJSON *doc = jo_json_parse(jsonp ? jsonp : body);
   free(jsonp);
   if (!doc) {
     /* A 200 that is really a refusal. Only the words a rate limiter puts in a
@@ -2500,7 +2627,10 @@ static int hp_run_json(hp_run_state *st, const char *body) {
    * continues instead of stopping at page 1. */
   if (s->next_path && !st->next_url) {
     cJSON *nx = hp_path(doc, s->next_path);
-    if (nx && cJSON_IsString(nx) && nx->valuestring[0])
+    if (nx && cJSON_IsString(nx) && nx->valuestring[0] &&
+        /* a 16+ digit integer that jo_json_quote_bigints() turned into text is
+         * still a NUMBER cursor: without a next_tmpl it is not a URL */
+        !(!(s->next_tmpl && *s->next_tmpl) && strspn(nx->valuestring, "-0123456789") == strlen(nx->valuestring) && strlen(nx->valuestring) >= 16))
       st->next_url = strdup(nx->valuestring);
     /* A NUMERIC cursor. `cJSON_IsString` alone was blind to it, which is the
      * same defect this engine already records for identifier FIELDS ("SEC's
@@ -2529,8 +2659,10 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     else if (nx && cJSON_IsNumber(nx) && s->next_tmpl && *s->next_tmpl) {
       char nb[64];
       double v = nx->valuedouble;
-      if (v == (double)(long long)v) snprintf(nb, sizeof nb, "%lld", (long long)v);
-      else                           snprintf(nb, sizeof nb, "%.17g", v);
+      if (v >= (double)LLONG_MIN && v < (double)LLONG_MAX && v == (double)(long long)v)
+        snprintf(nb, sizeof nb, "%lld", (long long)v);
+      else
+        snprintf(nb, sizeof nb, "%.17g", v);
       st->next_url = strdup(nb);
     }
   }
@@ -3003,9 +3135,15 @@ static void hp_xml_flatten(const char *p, const char *end, const char *prefix,
     if (!gt) break;
     hp_buf_add(&own, &own_n, &own_cap, " ", 1);          /* the child's place */
     /* The repeat index: 0 for the first child of this name, then 1, 2 … */
+    /* Once the property bound is reached every further element is DROPPED
+     * (and counted) and its key is never used, so the per-name counter is not
+     * consulted at all: with N distinct sibling names the scan below was O(N^2)
+     * for keys nobody reads. */
     int occ = 0, i = 0;
-    for (; i < nseen; i++) if (!strcmp(seen[i].name, name)) { occ = ++seen[i].n; break; }
-    if (i == nseen) {
+    int capped = x->nfields >= HP_MAX_PROPS;
+    if (!capped)
+      for (; i < nseen; i++) if (!strcmp(seen[i].name, name)) { occ = ++seen[i].n; break; }
+    if (!capped && i == nseen) {
       if (nseen == cseen) {
         int nc = cseen ? cseen * 2 : 16;
         struct hp_xml_seen *g = realloc(seen, (size_t)nc * sizeof *g);
@@ -4876,7 +5014,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   int pw_repeat = 0;      /* the server's next link pointed at this page  */
 
   hp_run_state st = { .s = s, .ctx = ctx, .sink = sink, .vars = &vars,
-                      .detail_hdrs = detail_hdrs,
+                      .detail_hdrs = detail_hdrs, .home_url = url,
                       .url = url, .emitted = 0,
                       .deep_left = hp_detail_budget(s),
                       .pw = page_walk, .declared_total = -1,
@@ -5027,6 +5165,13 @@ dated_restart:;
    * more exists: a next link or cursor it published (next_path), or
    * jsonlist_next_page()'s decision for a page_walk row. */
   int next_evidence = 0;
+  /* An upstream-supplied URL on ANOTHER host than the row's own (a next link,
+   * a cursor spent through a "{v}" template, jsonlist's published link) is
+   * followed WITHOUT the row's headers, body or key. Before, the walk sent the
+   * row's Authorization header and POST body to whatever host the response
+   * named. `xhost` is set where the next URL is chosen, below. */
+  const char *xhost_hdrs[2] = { s->mode == HP_JSON ? "Accept: application/json" : NULL, NULL };
+  int xhost = 0;
   for (int page = 0; page < page_max && page_url; page++) {
     st.page = page + 1;
     st.url  = page_url;
@@ -5052,10 +5197,13 @@ dated_restart:;
     }
 
     http_response hr = {0};
-    if (page > 0 && s->page_delay_ms > 0)          /* see hpengine.h */
-      usleep((useconds_t)s->page_delay_ms * 1000);
-    const char *req_body = page_body ? page_body : body;
-    const char *const *req_hdrs = page > 0 ? later_hdrs : hdrs;
+    if (page > 0 && s->page_delay_ms > 0) {        /* see hpengine.h */
+      /* in slices: a cancelled walk must not sleep out its pacing */
+      for (long left = s->page_delay_ms; left > 0 && !(ctx->cancel && *ctx->cancel); left -= 200)
+        usleep((useconds_t)(left > 200 ? 200 : left) * 1000);
+    }
+    const char *req_body = xhost ? NULL : (page_body ? page_body : body);
+    const char *const *req_hdrs = xhost ? xhost_hdrs : (page > 0 ? later_hdrs : hdrs);
     /* A later page gets five retries (0.25, 0.5, 1, 2, 4 s backoff on a 5xx,
      * a 429 or a dropped connection), not one: a 2,000-page walk that dies on
      * one transient 500 discards everything after it. Three (1.75 s) was not
@@ -5074,7 +5222,8 @@ dated_restart:;
               "— retrying once with Cache-Control: no-cache\n", s->id, page + 1);
       http_response_free(&hr);
       hr = (http_response){0};
-      rc = http_request(ctx->http, req_body ? "POST" : "GET", page_url, nocache_hdrs,
+      rc = http_request(ctx->http, req_body ? "POST" : "GET", page_url,
+                        xhost ? xhost_hdrs : nocache_hdrs,
                         req_body, req_body ? strlen(req_body) : 0,
                         s->timeout_ms > 0 ? s->timeout_ms : HP_HTTP_TIMEOUT,
                         1, &hr);
@@ -5230,28 +5379,57 @@ dated_restart:;
       break;
     }
     if (zip_body && s->zip_all_entries) {
-      int nent = zip_entry_count(hr.body, hr.body_len);
-      st.sh_zip_entries = nent > 0 ? nent : 0;
-      for (int zi = 0; zi < nent; zi++) {
-        char zname[512]; size_t zn = 0;
-        char *one = zip_entry_at(hr.body, hr.body_len, zi, zname, sizeof zname, &zn);
-        if (!one) {
-          st.sh_zip_entries_failed++;
-          size_t w = strlen(st.sh_zip_failed);
-          if (w + 24 < sizeof st.sh_zip_failed)
-            snprintf(st.sh_zip_failed + w, sizeof st.sh_zip_failed - w,
-                     "%s#%d", w ? "; " : "", zi);
-          continue;
+      /* ONE walk of the central directory (zip_iter), not zip_entry_at(i) per
+       * member, which restarts from entry 0 each time: 19,165 members was 183
+       * million directory-record parses. ZIP64 archives (>65,535 members, or
+       * members past 4 GiB) are read through the ZIP64 records; whatever the
+       * directory declares and the walk could not reach is counted as
+       * unreadable and disclosed below, never skipped silently. */
+      zip_iter zit;
+      int zi = 0;
+      long long nent_walked = 0;
+      if (zip_iter_open(&zit, hr.body, hr.body_len) == 0) {
+        char zname[512]; size_t zn = 0; char *one = NULL; int zrc;
+        while ((zrc = zip_iter_next(&zit, zname, sizeof zname, &one, &zn)) != 0) {
+          zi = (int)(zit.walked - 1);
+          nent_walked++;
+          if (zrc < 0 || !one) {
+            st.sh_zip_entries_failed++;
+            size_t w = strlen(st.sh_zip_failed);
+            if (w + 24 < sizeof st.sh_zip_failed)
+              snprintf(st.sh_zip_failed + w, sizeof st.sh_zip_failed - w,
+                       "%s#%d", w ? "; " : "", zi);
+            continue;
+          }
+          /* A member that is a directory entry, or empty, is not a record. */
+          if (zn == 0 || zname[strlen(zname) - 1] == '/') { free(one); continue; }
+          char *eutf8 = hp_body_to_utf8(s, page_url, one, zn);
+          const char *eb = eutf8 ? eutf8 : one;
+          if (s->mode == HP_NDJSON) hp_run_ndjson(&st, eb);
+          else                      hp_run_json(&st, eb);
+          free(eutf8);
+          free(one);
         }
-        /* A member that is a directory entry, or empty, is not a record. */
-        if (zn == 0 || zname[strlen(zname) - 1] == '/') { free(one); continue; }
-        char *eutf8 = hp_body_to_utf8(s, page_url, one, zn);
-        const char *eb = eutf8 ? eutf8 : one;
-        if (s->mode == HP_NDJSON) hp_run_ndjson(&st, eb);
-        else                      hp_run_json(&st, eb);
-        free(eutf8);
-        free(one);
+        if (zit.declared > (unsigned long long)nent_walked) {
+          /* The directory declared more members than it could be walked to:
+           * those are unread, and said so (the failed list names where the
+           * walk stopped). */
+          long long missing = (long long)(zit.declared - (unsigned long long)nent_walked);
+          st.sh_zip_entries_failed += (int)(missing > 0x7fffffff ? 0x7fffffff : missing);
+          size_t w = strlen(st.sh_zip_failed);
+          if (w + 40 < sizeof st.sh_zip_failed)
+            snprintf(st.sh_zip_failed + w, sizeof st.sh_zip_failed - w,
+                     "%s#%lld+ (directory not walkable)", w ? "; " : "", nent_walked);
+        }
+        nent_walked = nent_walked > (long long)zit.declared ? nent_walked : (long long)zit.declared;
+      } else {
+        fprintf(stderr, "[hp:%s] body is a ZIP but its central directory could not "
+                        "be read (truncated or not an archive); zip_all_entries "
+                        "reads NOTHING\n", s->id);
+        if (page == 0) hard_error = 1;
       }
+      int nent = nent_walked > 0x7fffffff ? 0x7fffffff : (int)nent_walked;
+      st.sh_zip_entries = nent > 0 ? nent : 0;
       if (nent > 0 && st.sh_zip_entries_failed >= nent && page == 0) hard_error = 1;
       out = st.emitted;
       free(unz);
@@ -5487,6 +5665,25 @@ dated_restart:;
       }
       st.pw_next = NULL;
     }
+    /* Where the continuation points. A relative link is resolved against the
+     * page it came from (it used to be requested as written, failed, and ended
+     * the walk as a "failed page"); a link to another host is followed
+     * without the row's credentials. */
+    if (nextp) {
+      char *abs = hp_resolve_url(page_url, nextp);
+      if (abs) { free(nextp); nextp = abs; }
+      xhost = !hp_same_host(st.home_url, nextp);
+      if (xhost) {
+        if (vars.key && *vars.key) {
+          char *kenc = hp_urlenc(vars.key);
+          hp_strip_secret(nextp, vars.key);
+          if (kenc) { hp_strip_secret(nextp, kenc); free(kenc); }
+        }
+        fprintf(stderr, "[hp:%s] next page is on another host than the row's — "
+                        "followed without the row's headers, body or key: %s\n",
+                s->id, nextp);
+      }
+    }
     free(prev_url);
     prev_url = page_url;
     page_url = nextp;
@@ -5605,7 +5802,7 @@ date_step_back:
     /* Exactly the initialiser at the top of hp_run: a field left out here
      * would run the stepped-back date with that guarantee switched off. */
     st = (hp_run_state){ .s = s, .ctx = ctx, .sink = sink, .vars = &vars,
-                         .detail_hdrs = detail_hdrs,
+                         .detail_hdrs = detail_hdrs, .home_url = url,
                          .url = url, .emitted = 0,
                          .deep_left = hp_detail_budget(s),
                          .pw = page_walk, .declared_total = -1,

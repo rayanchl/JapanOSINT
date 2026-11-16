@@ -6,6 +6,7 @@ import { useApi } from '../../hooks/useApi.js';
 import { useMoreRows } from '../../hooks/usePagedList.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import ThresholdsTab from './ThresholdsTab.jsx';
+import RunControl from '../sources/RunControl.jsx';
 import {
   Page, Section, Row, Card, Pill, Button, Input, Field, Segmented, Sheet, Toggle,
   ConfirmDialog, ErrorNotice, EmptyState, LoadingState, BoundNote, PagedFooter, KV, Spinner, cx, toast,
@@ -427,6 +428,9 @@ function AnomalyCard({ a, busy, onRequeue }) {
 function SourcePipelineSheet({ sourceId, onClose }) {
   const { data: p, error, loading, reload } = useApi(sourceId ? `/api/admin/maintenance/source/${encodeURIComponent(sourceId)}` : null, { deps: [sourceId] });
   const src = useApi(sourceId ? `/api/sources/${encodeURIComponent(sourceId)}` : null, { deps: [sourceId] });
+  // The source's kind decides how it is run (RunControl): pivots need an entity,
+  // pods cannot be run at all. Read from the same detail route the source pages use.
+  const kindInfo = useApi(sourceId ? `/api/sources/${encodeURIComponent(sourceId)}/detail` : null, { deps: [sourceId] });
   const [busy, setBusy] = useState(new Set());
   const [actError, setActError] = useState(null);
   const [confirmCapture, setConfirmCapture] = useState(false);
@@ -450,7 +454,9 @@ function SourcePipelineSheet({ sourceId, onClose }) {
     <Sheet open onClose={onClose} title={sourceId} width="max-w-3xl" footer={<Button onClick={onClose}>Close</Button>}>
       <div className="space-y-4">
         <div className="flex flex-wrap gap-2">
-          <Button size="sm" busy={busy.has('run')} onClick={() => act('run', () => api.post(`/api/intel/sources/${encodeURIComponent(sourceId)}/run`), 'Collector run finished')}><LuPlay size={12} /> Re-run collector</Button>
+          {kindInfo.data?.registry?.kind
+            ? <RunControl compact label="Re-run collector" source={{ id: sourceId, kind: kindInfo.data.registry.kind }} onDone={() => { reload({ silent: true }); src.reload({ silent: true }); }} />
+            : <span className="text-[10px] text-osint-muted">{kindInfo.loading ? 'checking how this source is run…' : 'Run is unavailable: the source kind could not be read.'}</span>}
           {s?.quarantine?.active && <Button size="sm" busy={busy.has('q')} onClick={() => act('q', () => api.post(`/api/admin/sources/${encodeURIComponent(sourceId)}/unquarantine`), 'Quarantine cleared')}><LuLockOpen size={12} /> Clear quarantine</Button>}
           <Button size="sm" variant="ghost" onClick={() => { reload(); src.reload(); }}><LuRefreshCw size={12} /> Refresh</Button>
         </div>
@@ -579,7 +585,8 @@ function StepCard({ n, title, hint, children }) {
 }
 
 function BreachTab() {
-  const status = useApi('/api/status');
+  // Counters only; breach source ids come from the server's category search.
+  const status = useApi('/api/status?summary=1');
   const jobsQ = useApi('/api/admin/breach/jobs');
   const jobs = jobsQ.data?.jobs || [];
   const busyAny = jobs.some(isRunning);
@@ -611,12 +618,10 @@ function BreachTab() {
   const [confirmIngest, setConfirmIngest] = useState(false);
 
   const summary = status.data?.summary;
-  const breachSources = useMemo(() => (status.data?.apis || []).filter((s) => s.category === 'breach'), [status.data]);
-  const suggestions = useMemo(() => {
-    const q = sourceId.toLowerCase();
-    const pool = q ? breachSources.filter((s) => s.id.toLowerCase().includes(q) || (s.name || '').toLowerCase().includes(q)) : breachSources;
-    return pool.slice(0, 25);
-  }, [breachSources, sourceId]);
+  const [sugQ, setSugQ] = useState('');
+  useEffect(() => { const t = setTimeout(() => setSugQ(sourceId.trim()), 250); return () => clearTimeout(t); }, [sourceId]);
+  const sugResp = useApi(`/api/sources/search?category=breach&limit=25${sugQ ? `&q=${encodeURIComponent(sugQ)}` : ''}`, { deps: [sugQ] });
+  const suggestions = useMemo(() => (Array.isArray(sugResp.data?.data) ? sugResp.data.data : []), [sugResp.data]);
   const fetchBusy = jobs.some((j) => j.kind === 'fetch' && isRunning(j));
   const ingestBusy = jobs.some((j) => j.kind === 'ingest' && isRunning(j));
 

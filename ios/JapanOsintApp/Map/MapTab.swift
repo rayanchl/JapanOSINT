@@ -776,14 +776,42 @@ struct MapTab: View {
             Spacer()
 
             let heat = heatmapRecordCount
-            Text(heat > 0
-                 ? "\(visibleFeatures.count) features · \(heat.formatted()) in heatmap"
-                 : "\(visibleFeatures.count) features")
+            Text(featureCountText(heat: heat))
                 .font(.caption2)
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
+                .lineLimit(2)
+                .multilineTextAlignment(.trailing)
         }
         .padding(.horizontal, 4)
+    }
+
+    /// "N shown" with, when they differ, how many are loaded and how many the
+    /// server holds: the server caps a layer response (`_meta.truncated`, with
+    /// `records_available` stating the total) and the map thins what it draws
+    /// to the per-layer limits in Settings. Nothing is dropped silently.
+    private func featureCountText(heat: Int) -> String {
+        let shown = visibleFeatures.count
+        var loaded = 0
+        var held = 0
+        var truncated = false
+        for id in settings.activeLayerIds {
+            let n = featuresByLayer[id]?.count ?? 0
+            loaded += n
+            held += max(n, stats.available[id] ?? n)
+            if stats.truncatedLayers.contains(id) { truncated = true }
+        }
+        var text = "\(shown.formatted()) shown"
+        if loaded > shown {
+            text += " of \(loaded.formatted()) loaded (in view, within your per-layer limit)"
+        }
+        if held > loaded || truncated {
+            text += held > loaded
+                ? " · server holds \(held.formatted())"
+                : " · server response truncated"
+        }
+        if heat > 0 { text += " · \(heat.formatted()) in heatmap" }
+        return text
     }
 
     private func reverseCard(_ coord: CLLocationCoordinate2D) -> some View {
@@ -1001,7 +1029,9 @@ struct MapTab: View {
             stats.record(
                 layerId: id,
                 total: cached.features.count,
-                bySource: extractBySource(cached.meta?["bySource"]?.value)
+                bySource: extractBySource(cached.meta?["bySource"]?.value),
+                available: extractInt(cached.meta?["records_available"]?.value),
+                truncated: (cached.meta?["truncated"]?.value as? Bool) == true
             )
             errorMessage = nil
             layerLoadState.removeValue(forKey: id)
@@ -1032,7 +1062,9 @@ struct MapTab: View {
             stats.record(
                 layerId: id,
                 total: fc.features.count,
-                bySource: extractBySource(fc.meta?["bySource"]?.value)
+                bySource: extractBySource(fc.meta?["bySource"]?.value),
+                available: extractInt(fc.meta?["records_available"]?.value),
+                truncated: (fc.meta?["truncated"]?.value as? Bool) == true
             )
             errorMessage = nil
             await holdLoadingFloor(startedAt: startedAt)
@@ -1063,6 +1095,13 @@ struct MapTab: View {
             else if let n = v as? NSNumber { out[k] = n.intValue }
         }
         return out.isEmpty ? nil : out
+    }
+
+    /// `_meta.records_available` arrives as Int or Double.
+    private func extractInt(_ value: Any?) -> Int? {
+        if let n = value as? Int { return n }
+        if let d = value as? Double { return Int(d) }
+        return nil
     }
 
     private func holdLoadingFloor(startedAt: Date) async {

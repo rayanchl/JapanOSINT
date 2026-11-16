@@ -121,6 +121,10 @@ int main(void) {
   printf("  unchanged re-fetch does not re-qualify for the embed delta: ok\n");
 
   /* ── 3: changed re-fetch ───────────────────────────────────────────── */
+  /* ENG-09: the row carries a finished translation of the OLD text. */
+  sql("UPDATE intel_items SET title_en='Tokyo observation point',"
+      " body_en='body text', summary_en='sum', translated_at='2026-01-01T00:00:00Z',"
+      " translate_failed=1 WHERE uid='t-src|k1'");
   usleep(5000);
   k = intel_sink_make(&db, "t-src", NULL);
   assert(put(&k, "k1", "大阪の観測点", "本文テキスト") == 0);
@@ -136,6 +140,29 @@ int main(void) {
               "'\"大阪\"'", NULL) == 1 && "the new text is searchable");
   assert(int1("SELECT count(*) FROM intel_items_fts", NULL) == 1 && "old FTS row gone");
   printf("  changed re-fetch: full write, re-indexed: ok\n");
+  /* ENG-09: changed text => the stale English is cleared and the row is
+   * pending for translate.c again (translated_at NULL, retry count reset). */
+  assert(!text1("SELECT title_en FROM intel_items WHERE uid=?1", U));
+  assert(!text1("SELECT body_en FROM intel_items WHERE uid=?1", U));
+  assert(!text1("SELECT summary_en FROM intel_items WHERE uid=?1", U));
+  assert(!text1("SELECT translated_at FROM intel_items WHERE uid=?1", U));
+  assert(int1("SELECT translate_failed FROM intel_items WHERE uid=?1", U) == 0);
+  assert(int1("SELECT count(*) FROM intel_items WHERE uid=?1 AND "
+              "translated_at IS NULL AND translate_failed >= 0 AND "
+              "translate_failed < 3", U) == 1 && "pending for translate.c");
+  /* ...and a re-fetch whose text did NOT change leaves a translation alone. */
+  sql("UPDATE intel_items SET title_en='Osaka observation point',"
+      " translated_at='2026-01-02T00:00:00Z' WHERE uid='t-src|k1'");
+  k = intel_sink_make(&db, "t-src", NULL);
+  assert(put(&k, "k1", "大阪の観測点", "本文テキスト") == 0);
+  intel_sink_free(&k);
+  {
+    char *te = text1("SELECT title_en FROM intel_items WHERE uid=?1", U);
+    assert(te && strcmp(te, "Osaka observation point") == 0);
+    free(te);
+    assert(text1("SELECT translated_at FROM intel_items WHERE uid=?1", U));
+  }
+  printf("  changed text clears the translation, unchanged keeps it: ok\n");
 
   /* ── 4: self-heal of a missing FTS row ─────────────────────────────── */
   sql("DELETE FROM intel_items_fts WHERE uid='t-src|k1'");
