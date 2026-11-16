@@ -20,4 +20,10 @@ typedef int (*ws_on_msg)(const char *data, size_t len, void *ud);
 int ws_collect(const char *url, const char *const *headers,
                int window_ms, int max_msgs, ws_on_msg cb, void *ud);
 
+/* Messages the LAST ws_collect() on this thread dropped for exceeding
+ * $JO_WS_MAX_MSG_BYTES (default 16 MB). They were never delivered, so a
+ * caller that wants to disclose a shortfall (rule 2) reads this after the
+ * call. */
+int ws_last_oversize_dropped(void);
+
 #endif

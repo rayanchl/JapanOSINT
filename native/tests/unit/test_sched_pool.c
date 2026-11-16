@@ -100,8 +100,21 @@ static void test_boot_offset(void) {
   assert(sched_boot_offset(999, 1000, 8, 0, 900, 3600) == 0);
 }
 
+/* a wall-clock step is told apart from time passing: both clocks advancing
+ * together is not a step, slew under 5 s is not a step, and a jump either way
+ * is reported with its sign so the plan can be shifted by it */
+static void test_clock_step(void) {
+  assert(sched_clock_step(1000, 1001, 50, 51) == 0);          /* one ordinary tick */
+  assert(sched_clock_step(1000, 1601, 50, 651) == 0);         /* ten minutes passed on both */
+  assert(sched_clock_step(1000, 1004, 50, 51) == 0);          /* 3 s of slew */
+  assert(sched_clock_step(1000, 4601, 50, 51) == 3600);       /* set an hour forward */
+  assert(sched_clock_step(1000, 401, 50, 51) == -600);        /* set ten minutes back */
+  assert(sched_clock_step(1000, 1000 + 28800, 50, 50 + 28800) == 0);  /* slept 8 h on a boot-time clock: overdue, not a step */
+}
+
 int main(void) {
   test_boot_offset();
+  test_clock_step();
 
   const char *dbp = getenv("JO_DB");
   if (!dbp || !*dbp) { fprintf(stderr, "set JO_DB to a scratch path\n"); return 2; }

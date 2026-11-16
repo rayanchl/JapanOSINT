@@ -204,6 +204,12 @@ private struct AuthStep: View {
     @State private var error: String?
     @State private var showServer = false
 
+    /// A release build ships with NO backend URL (`BuildConfig`), so the field
+    /// below is required before anything can be signed in to.
+    private var backendMissing: Bool {
+        settings.backendBaseURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
     var body: some View {
         Group {
             Text(isSignUp ? "Create account" : "Sign in").font(.largeTitle.bold())
@@ -236,7 +242,7 @@ private struct AuthStep: View {
                 }.frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .disabled(busy || email.isEmpty || password.isEmpty)
+            .disabled(busy || backendMissing || email.isEmpty || password.isEmpty)
 
             Button(isSignUp ? "Have an account? Sign in"
                             : "Need an account? Create one") {
@@ -291,8 +297,8 @@ private struct AuthStep: View {
                     )
                 }
                 .buttonStyle(.plain)
-                .disabled(busy)
-                .opacity(busy ? 0.6 : 1)
+                .disabled(busy || backendMissing)
+                .opacity((busy || backendMissing) ? 0.6 : 1)
             }
 
             // Backend server field — reachable BEFORE sign-in, since auth's
@@ -318,8 +324,13 @@ private struct AuthStep: View {
             .buttonStyle(.plain)
             .accessibilityLabel(showServer ? "Hide server settings" : "Show server settings")
 
-            if showServer {
+            if showServer || backendMissing {
                 VStack(alignment: .leading, spacing: 6) {
+                    if backendMissing {
+                        Text("Enter your backend URL to continue — this build has no default server.")
+                            .font(.caption)
+                            .foregroundStyle(theme.warning)
+                    }
                     Text("Backend URL").font(.caption2).foregroundStyle(theme.textMuted)
                     TextField("http://host.local:4000", text: $settings.backendBaseURL)
                         .textContentType(.URL)
@@ -372,7 +383,7 @@ private struct IntroPowerStep: View {
     var body: some View {
         Group {
             Text("Japan, fully mapped").font(.largeTitle.bold())
-            Text("Live OSINT from 100+ collectors — flights, ships, trains, cameras, cyber threats and more — fused onto one tactical map that updates in real time.")
+            Text("Live OSINT from hundreds of collectors and tens of thousands of sources — flights, ships, trains, cameras, cyber threats and more — fused onto one tactical map that updates in real time.")
                 .foregroundStyle(theme.textMuted)
 
             AnimatedMapMock()
@@ -629,6 +640,12 @@ private struct IntroLayersStep: View {
         "twitter-geo", "vending-machines", "tabelog-restaurants", "bluesky-jetstream-jp",
     ]
 
+    /// The server's own layer count (`GET /api/layers`), not a number baked
+    /// into the copy; a generic word until the list has loaded.
+    private var layerCountText: String {
+        registry.layers.isEmpty ? "the" : String(registry.layers.count)
+    }
+
     @State private var highlight = 0
     private let timer = Timer.publish(every: 0.8, on: .main, in: .common).autoconnect()
     private let cols = Array(repeating: GridItem(.flexible(), spacing: 12), count: 4)
@@ -636,7 +653,7 @@ private struct IntroLayersStep: View {
     var body: some View {
         Group {
             Text("Exploit every layer").font(.largeTitle.bold())
-            Text("Stack and cross-reference 100+ intelligence layers. Toggle any on, fuse the signals, and the map turns raw OSINT into answers.")
+            Text("Stack and cross-reference \(layerCountText) intelligence layers. Toggle any on, fuse the signals, and the map turns raw OSINT into answers.")
                 .foregroundStyle(theme.textMuted)
 
             LazyVGrid(columns: cols, spacing: 14) {

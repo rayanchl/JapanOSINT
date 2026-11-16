@@ -1,0 +1,595 @@
+<title>JapanOSINT Codebase Audit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* layout: one reading column of sections, a sticky section rail on wide screens, wide tables/diagrams scroll in their own box */
+:root{
+  --bg:#f6f7f8; --panel:#ffffff; --ink:#16212b; --muted:#566573; --line:#d3dae0; --soft:#e9edf0;
+  --accent:#0b6e6e; --accent-soft:#d9eeec;
+  --crit:#a3182b; --high:#b4530a; --med:#7a6a00; --low:#4a6072; --ok:#1f7a45;
+  --crit-bg:#fbe4e7; --high-bg:#fdebd8; --med-bg:#f6f0c4; --low-bg:#e4eaef; --ok-bg:#dcf1e3;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#10161b; --panel:#182028; --ink:#e3e9ee; --muted:#93a2af; --line:#2c3a46; --soft:#202b34;
+  --accent:#4fc4bd; --accent-soft:#143a3a;
+  --crit:#ff8b98; --high:#ffb066; --med:#e3d063; --low:#9db3c4; --ok:#6fd398;
+  --crit-bg:#4a1820; --high-bg:#4a2b0c; --med-bg:#3d370d; --low-bg:#25323d; --ok-bg:#143a24;
+  color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#10161b; --panel:#182028; --ink:#e3e9ee; --muted:#93a2af; --line:#2c3a46; --soft:#202b34;
+  --accent:#4fc4bd; --accent-soft:#143a3a;
+  --crit:#ff8b98; --high:#ffb066; --med:#e3d063; --low:#9db3c4; --ok:#6fd398;
+  --crit-bg:#4a1820; --high-bg:#4a2b0c; --med-bg:#3d370d; --low-bg:#25323d; --ok-bg:#143a24;
+  color-scheme:dark }
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
+@media(min-width:1020px){.wrap{grid-template-columns:190px minmax(0,1fr)}}
+nav.rail{display:none}
+@media(min-width:1020px){nav.rail{display:block;position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;font-size:13px}}
+nav.rail a{display:block;padding:5px 0 5px 10px;color:var(--muted);text-decoration:none;border-left:2px solid var(--line)}
+nav.rail a:hover,nav.rail a:focus-visible{color:var(--accent);border-left-color:var(--accent)}
+main{display:flex;flex-direction:column;gap:44px;min-width:0}
+h1{font-family:var(--cond);font-size:34px;line-height:1.1;margin:0;text-wrap:balance}
+h2{font-family:var(--cond);font-size:23px;margin:0 0 4px;text-wrap:balance}
+h3{font-size:15px;font-weight:600;margin:0}
+p{margin:0;max-width:72ch}
+section{display:flex;flex-direction:column;gap:14px;min-width:0}
+.lede{color:var(--muted);max-width:74ch}
+.meta{font-family:var(--mono);font-size:12px;color:var(--muted)}
+code,.mono{font-family:var(--mono);font-size:.88em}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.facts div{background:var(--panel);padding:12px 14px}
+.facts b{display:block;font-family:var(--cond);font-size:26px;font-variant-numeric:tabular-nums;line-height:1.15}
+.facts span{font-size:12.5px;color:var(--muted)}
+.scroll{overflow-x:auto;border:1px solid var(--line);background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--soft);vertical-align:top}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;background:var(--soft);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:1px 7px;border-radius:3px;white-space:nowrap}
+.critical{background:var(--crit-bg);color:var(--crit)}.high{background:var(--high-bg);color:var(--high)}
+.medium{background:var(--med-bg);color:var(--med)}.low{background:var(--low-bg);color:var(--low)}
+.okp{background:var(--ok-bg);color:var(--ok)}.fixedp{background:var(--accent-soft);color:var(--accent)}
+figure{margin:0;display:flex;flex-direction:column;gap:8px}
+figure .scroll{padding:10px}
+figcaption{font-size:13px;color:var(--muted);max-width:80ch}
+svg{display:block;max-width:100%;height:auto;min-width:860px;color:var(--ink);font-family:var(--sans)}
+svg .b{fill:var(--panel);stroke:var(--line);stroke-width:1.2}
+svg .g{fill:var(--soft);stroke:var(--line);stroke-width:1}
+svg .l{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+svg .w{fill:var(--high-bg);stroke:var(--high);stroke-width:1.5}
+svg text{fill:currentColor;font-size:12px}
+svg .t{font-weight:600;font-size:12.5px}
+svg .s{font-size:10.5px;fill:var(--muted)}
+svg .a{stroke:currentColor;stroke-width:1.2;fill:none}
+svg .al{font-size:10.5px;fill:var(--muted)}
+svg .la{fill:var(--accent);font-weight:600;font-size:10.5px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border:1.5px solid var(--line);vertical-align:-2px;margin-right:5px}
+.legend i.l{background:var(--accent-soft);border-color:var(--accent)}.legend i.w{background:var(--high-bg);border-color:var(--high)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters button{font:inherit;font-size:13px;padding:4px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:3px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.filters button:focus-visible,.filters input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.filters input{font:inherit;font-size:13px;padding:5px 9px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:3px;min-width:0;flex:1 1 180px;max-width:280px}
+.fix{color:var(--muted)}
+.where{font-family:var(--mono);font-size:11.5px;color:var(--muted);word-break:break-word}
+.plan{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+.plan>div{background:var(--panel);padding:14px 16px;display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
+@media(min-width:760px){.plan>div{grid-template-columns:170px minmax(0,1fr)}}
+.plan h3 small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+.plan ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.note{border-left:3px solid var(--accent);padding:2px 0 2px 12px;color:var(--muted);max-width:78ch;font-size:14px}
+a{color:var(--accent)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.two>div{min-width:0;display:flex;flex-direction:column;gap:8px}
+</style>
+
+<div class="wrap">
+<nav class="rail" aria-label="Sections">
+  <a href="#summary">Summary</a><a href="#tests">Tests run</a><a href="#sources">Collectors and sources</a>
+  <a href="#system">System organigram</a><a href="#llm">LLM usage and pods</a><a href="#usability">Site and iOS usability</a>
+  <a href="#classification">Classification redone</a><a href="#issues">All issues</a><a href="#choices">Bad choices</a><a href="#plan">Plan</a>
+</nav>
+<main>
+
+<section id="summary">
+  <p class="meta">rayanchl/JapanOSINT · branch claude/peaceful-ritchie-i7e0hj · measured 2026-11-14 on a fresh build</p>
+  <h1>JapanOSINT codebase audit</h1>
+  <p class="lede">Nine parallel reviewers read the server, engines, web client, iOS app and tooling; the binary was built, every static gate was run, and a stratified sample of live sources was run through the real engine. The registry and the engines are in good shape. The scheduler, the clients and a handful of authorization paths are not sized or gated for the 85,767 sources the tree now holds.</p>
+  <div class="facts">
+    <div><b>85,767</b><span>registered sources (CLAUDE.md still says 61,527)</span></div>
+    <div><b>654</b><span>collectors in 23 groups</span></div>
+    <div><b>83,530</b><span>scheduled, 2,237 on-demand pivots, 22 pods</span></div>
+    <div><b id="f-total">–</b><span>issues listed below</span></div>
+    <div><b id="f-ch">–</b><span>critical or high with no fix yet</span></div>
+    <div><b>10 / 10</b><span>static and offline gates pass</span></div>
+  </div>
+  <h3>The five things to fix first</h3>
+  <div class="scroll"><table>
+    <tr><th>What</th><th>Why it matters</th><th>Ref</th></tr>
+    <tr><td>The 6 h cadence default also retimes the maintenance pods</td><td>WAL checkpoint (declared 5 min), embedding backfill (2 min), triage, repair and the enricher all run every 6 hours on an unmodified install. Embedding coverage cannot keep up and the WAL can grow for 6 hours.</td><td class="mono">ENG-02 <span class="pill fixedp">fixed</span></td></tr>
+    <tr><td>A full scheduler queue drops a run and still pushes it one interval out</td><td>The queue holds 2,048 entries; the 15-minute boot ramp pushes about 83,000 rows at 8 workers. Dropped rows wait another 6 hours and meet the same burst.</td><td class="mono">ENG-01 <span class="pill fixedp">fixed</span></td></tr>
+    <tr><td>Entity pivots cannot be run by a user, and "Run now" on one reports success</td><td>The run route passes no entity, the engine returns quietly, and both clients print "ran: 0 new rows". 2,237 sources are reachable only through the LLM router.</td><td class="mono">WEB-01 IOS-05 <span class="pill fixedp">fixed</span> (iOS half not compiled)</td></tr>
+    <tr><td>iOS downloads the whole registry on every open and has a "Run all" button</td><td>An unpaged <code>/api/status</code> is roughly 100 MB at this registry size against a 120 s timeout; "Run all" posts a run for every source with no confirmation.</td><td class="mono">IOS-01..04 <span class="pill fixedp">written, not compiled</span></td></tr>
+    <tr><td>Authorization gaps on three routes</td><td>Pinning <code>breach:&lt;id&gt;</code> into a case bypasses the breach gate; <code>GET /api/data/&lt;id&gt;</code> lets any signed-in user run any collector or pod; webhooks are SSRF-checked only when saved.</td><td class="mono">API-01 ENG-04 <span class="pill fixedp">fixed</span> API-02 <span class="pill medium">partly</span></td></tr>
+  </table></div>
+  <p class="note"><b>Fix pass, 2026-11-14.</b> Seven agents then worked through the list by area, on top of the merged scheduling branch. <span id="f-fixed"></span> Every issue in the table now carries its status, and "open or partial only" filters to what is left. The server builds with 0 warnings under the new hardening flags; the engine tests, source gates, the full unit suite and the web client's tests pass. The iOS changes are written but were never compiled, because there is no Swift toolchain on this machine: CI's iOS job is their first real check. Left to you by design: the licence file and Mongoose decision, your address in the SEC user agent, cutting CLAUDE.md, moving docs out of git, cadence for the real-time feeds and the worker count.</p>
+  <p class="note">How to read confidence: findings marked <span class="pill okp">verified</span> were re-read in the code by the lead after the reviewer reported them, or reproduced under a sanitizer. The rest were read end to end by one reviewer and not exercised against a running server. Nothing here was fixed except the collector classification.</p>
+</section>
+
+<section id="tests">
+  <h2>What was run</h2>
+  <div class="two">
+    <div>
+      <h3>Build and gates</h3>
+      <div class="scroll"><table>
+        <tr><th>Check</th><th>Result</th></tr>
+        <tr><td>Full build, <code>-Wall -Wextra</code>, 1,889 objects</td><td><span class="pill okp">pass</span> 0 warnings</td></tr>
+        <tr><td><code>lint-sources</code></td><td><span class="pill okp">pass</span> 85,767 source defs</td></tr>
+        <tr><td><code>source-floor</code>, <code>registry-floor</code></td><td><span class="pill okp">pass</span> 0 duplicates, 0 dropped, 0 never-runs</td></tr>
+        <tr><td><code>audit-sources</code> strict set</td><td><span class="pill okp">pass</span> 386 files, 0 findings</td></tr>
+        <tr><td><code>collectors-def-check</code></td><td><span class="pill okp">pass</span> 654 collectors, 0 unassigned</td></tr>
+        <tr><td><code>hptest</code>, <code>pagewalktest</code>, <code>htmlparsetest</code>, <code>rsstest</code>, <code>authtest</code></td><td><span class="pill okp">pass</span></td></tr>
+        <tr><td>Web client: <code>vitest</code> and <code>vite build</code></td><td><span class="pill okp">pass</span> 200 tests; main bundle 2.8 MB</td></tr>
+        <tr><td><code>test_sourceapi</code> after reclassification</td><td><span class="pill okp">pass</span></td></tr>
+        <tr><td>Full <code>make unit</code>, TSan, ASan, iOS build</td><td>not run here (CI covers them)</td></tr>
+      </table></div>
+    </div>
+    <div>
+      <h3>Live source sample</h3>
+      <p id="sweep-lede" class="lede">Two scheduled sources drawn at random from each of the 585 non-pod collectors, plus the collectors that hold only one, run through the real binary against a scratch database.</p>
+      <div class="scroll"><table id="sweep"><tr><th>Verdict</th><th>Rows</th><th>Meaning</th></tr></table></div>
+      <p class="note" id="sweep-note"></p>
+    </div>
+  </div>
+</section>
+
+<section id="sources">
+  <h2>Collectors and sources architecture</h2>
+  <p class="lede">Every source is one <code>source_def</code> registered by a constructor at load. Four authoring mechanisms produce them; one scheduler and one dispatcher run them; one HTTP client and one sink sit under all of them.</p>
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 1040 560" role="img" aria-label="How a source is defined, scheduled, fetched and stored">
+      <defs><marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="currentColor"/></marker></defs>
+      <text x="10" y="18" class="s">HOW A SOURCE IS DEFINED</text>
+      <rect class="b" x="10" y="26" width="240" height="62"/><text x="20" y="46" class="t">hpengine tables</text><text x="20" y="62" class="s">~71,760 rows in 387 files</text><text x="20" y="77" class="s">declarative row: url, keys, paging</text>
+      <rect class="b" x="262" y="26" width="240" height="62"/><text x="272" y="46" class="t">Macro fleet (VJSON, VRSS, VGEO…)</text><text x="272" y="62" class="s">~7,470 rows in 462 generated files</text><text x="272" y="77" class="s">one line per verified feed</text>
+      <rect class="b" x="514" y="26" width="240" height="62"/><text x="524" y="46" class="t">Hand-written collectors</text><text x="524" y="62" class="s">~1,260 in 973 files</text><text x="524" y="77" class="s">own run(): sockets, websocket, SGP4…</text>
+      <rect class="b" x="766" y="26" width="264" height="62"/><text x="776" y="46" class="t">Pods (collector name starts with _)</text><text x="776" y="62" class="s">22 rows: 12 in collectors/pod, rest in core/</text><text x="776" y="77" class="s">write their own tables, not records</text>
+      <path class="a" d="M130 88V112" marker-end="url(#ar)"/><path class="a" d="M382 88V112" marker-end="url(#ar)"/><path class="a" d="M634 88V112" marker-end="url(#ar)"/><path class="a" d="M898 88V112" marker-end="url(#ar)"/>
+      <rect class="g" x="10" y="114" width="1020" height="46"/><text x="20" y="134" class="t">registry.c</text><text x="20" y="150" class="s">85,767 source_def · 131,072 slots · hash index by id · reports DUPLICATE, NEVER-RUNS, OVERFLOW</text>
+      <text x="700" y="134" class="s">collector key → 23 groups (core/collectors.def, generated)</text><text x="700" y="150" class="s">default key for an hp row is its table file name</text>
+      <path class="a" d="M200 160V192" marker-end="url(#ar)"/><text x="208" y="180" class="al">interval &gt; 0 (83,530)</text>
+      <path class="a" d="M560 160V192" marker-end="url(#ar)"/><text x="568" y="180" class="al">interval 0 + entity token (2,237)</text>
+      <rect class="w" x="10" y="194" width="400" height="74"/><text x="20" y="214" class="t">scheduler.c</text><text x="20" y="230" class="s">collect lane 8 workers · maintenance lane 2 workers (pods)</text><text x="20" y="245" class="s">interval = per-source override, else cadence policy(measured or declared)</text><text x="20" y="260" class="s">queue 2,048 · boot ramp 900 s · backoff · resume token per source</text>
+      <rect class="b" x="430" y="194" width="300" height="74"/><text x="440" y="214" class="t">osint_dispatch.c</text><text x="440" y="230" class="s">runs a pivot with an entity, for a search run</text><text x="440" y="245" class="s">id resolved exactly, by case fold, near match,</text><text x="440" y="260" class="s">or service_vec embedding</text>
+      <rect class="b" x="750" y="194" width="280" height="74"/><text x="760" y="214" class="t">HTTP routes that run a source</text><text x="760" y="230" class="s">POST /api/intel/sources/:id/run (no entity)</text><text x="760" y="245" class="s">GET /api/data/:id (runs on a cache miss)</text><text x="760" y="260" class="s">POST /api/search/analyze (LLM picks pivots)</text>
+      <path class="a" d="M210 268V300" marker-end="url(#ar)"/><path class="a" d="M580 268V300" marker-end="url(#ar)"/><path class="a" d="M890 268V300" marker-end="url(#ar)"/>
+      <rect class="g" x="10" y="302" width="1020" height="40"/><text x="20" y="326" class="t">run(ctx, sink)</text><text x="130" y="326" class="s">ctx carries entity, http client, llm client, db, cancel flag, resume_in / resume_out, body ceiling</text>
+      <path class="a" d="M260 342V372" marker-end="url(#ar)"/><text x="268" y="362" class="al">fetch and parse</text>
+      <path class="a" d="M800 342V372" marker-end="url(#ar)"/><text x="808" y="362" class="al">emit(record or notice)</text>
+      <rect class="b" x="10" y="374" width="500" height="80"/><text x="20" y="394" class="t">Engines and parsers (native/lib)</text><text x="20" y="410" class="s">hpengine: JSON, HTML, CSV, XML, XLSX, NDJSON, record-jar · detail hops · date windows</text><text x="20" y="425" class="s">jsonlist · geojson · rss_atom · pagewalk (four separate page walkers)</text><text x="20" y="440" class="s">csv · xlsx · zipread · htmlparse · datetok · seenset · overpass · sgp4 · ws</text>
+      <rect class="b" x="530" y="374" width="500" height="80"/><text x="540" y="394" class="t">intel sink (core/intel.c), the one write path</text><text x="540" y="410" class="s">uid = source|key · upsert · content hash · FTS5 with MeCab · simhash · alert rules</text><text x="540" y="425" class="s">counts emitted, stored (distinct uid), notices, failed → run line and fetch_log</text><text x="540" y="440" class="s">one BEGIN…COMMIT per record</text>
+      <path class="a" d="M260 454V484" marker-end="url(#ar)"/>
+      <path class="a" d="M780 454V484" marker-end="url(#ar)"/>
+      <rect class="b" x="10" y="486" width="500" height="64"/><text x="20" y="506" class="t">httpclient.c (libcurl)</text><text x="20" y="522" class="s">host_agents.def: 416 hosts, 6 agent kinds · hostgate: pacing, 8 per-host gaps, SSRF floor</text><text x="20" y="537" class="s">catrust: 7 extra intermediates · 64 MB body ceiling · TLS cause named on failure</text>
+      <rect class="b" x="530" y="486" width="500" height="64"/><text x="540" y="506" class="t">SQLite (WAL)</text><text x="540" y="522" class="s">intel_items + FTS · fetch_log · sources · source_sched_state</text><text x="540" y="537" class="s">notices: fetch-failure, truncation, shape, status (key needed)</text>
+    </svg>
+    </div>
+    <figcaption>A source is one registry row whatever wrote it. The scheduler box is highlighted because both high-severity engine findings live there: the queue is smaller than one ramp burst, and the cadence policy applies to pods as well as feeds.</figcaption>
+  </figure>
+
+  <div class="two">
+    <div>
+      <h3>Sources with special machinery</h3>
+      <div class="scroll"><table>
+        <tr><th>Feature</th><th>Where</th></tr>
+        <tr><td>Raw sockets and DNS/TLS probes</td><td class="where">port_scanner.c (_probe lane, kept out of the LLM menu), dns_records.c, ssl_analyzer.c, reverse_dns.c, email_validator.c</td></tr>
+        <tr><td>Websocket streams</td><td class="where">certstream_jp.c, bluesky_jetstream_jp.c via lib/ws.c (own curl handle, bypasses host policy)</td></tr>
+        <tr><td>Satellite propagation (SGP4)</td><td class="where">satellite_tracking.c + lib/sgp4.c</td></tr>
+        <tr><td>Overpass (OpenStreetMap)</td><td class="where">98 collector files via lib/overpass.c</td></tr>
+        <tr><td>ffmpeg and cameras</td><td class="where">camera_stills.c, media.c, ffmpeg.c inside netjail.c (per-child proxy, network namespace)</td></tr>
+        <tr><td>Streamed large JSON</td><td class="where">VJSONBIG (5 rows) via lib/jsonstream.c, ua_bulk_registers.c</td></tr>
+        <tr><td>Whole-container reads</td><td class="where">zip_all_entries (1 row), xlsx_sheet_all (1), index_url (15)</td></tr>
+        <tr><td>Detail hop per record</td><td class="where">619 hp rows; 1,000 hops or 120 s per run</td></tr>
+        <tr><td>Cycle over a collection</td><td class="where">page_resume on 19,666 rows; window_days on 49</td></tr>
+        <tr><td>Self-tuning interval</td><td class="where">adaptive_interval on 25,846 rows</td></tr>
+        <tr><td>API keys</td><td class="where">167 hp rows over 74 env vars (OPENALEX_API_KEY 58); 167 more names in bespoke collectors</td></tr>
+        <tr><td>Browser profile hosts</td><td class="where">15 HA_BROWSER of 416 hosts in host_agents.def; SEC gets a contact agent</td></tr>
+        <tr><td>Direct SQLite from a collector</td><td class="where">33 files: wayback_jp.c, gtfs_jp.c, jp_corpus_lookup.c, twitter_geo.c, transport_cluster_runner.c</td></tr>
+        <tr><td>Breach corpus</td><td class="where">pod/breach_corpus.c, breach_index.c (bloom + bigfile)</td></tr>
+      </table></div>
+    </div>
+    <div>
+      <h3>Vendored and linked</h3>
+      <div class="scroll"><table>
+        <tr><th>Dependency</th><th>Role</th></tr>
+        <tr><td>SQLite amalgamation + sqlite-vec</td><td>storage, FTS5, vec0 vector tables</td></tr>
+        <tr><td>Mongoose 7.21</td><td>HTTP server, single event loop. GPLv2 or commercial; no licence decision recorded</td></tr>
+        <tr><td>cJSON 1.7.18</td><td>all JSON</td></tr>
+        <tr><td>libcurl, OpenSSL, zlib</td><td>outbound HTTP, TLS, inflate</td></tr>
+        <tr><td>MeCab</td><td>Japanese segmentation for FTS (core/fts.c only)</td></tr>
+        <tr><td>ffmpeg / ffprobe binaries</td><td>camera stills, media analysis</td></tr>
+        <tr><td>llama-server ×3</td><td>generation :8080, suggest :8081, embeddings :8082; optional vision sidecar</td></tr>
+      </table></div>
+      <h3>Definition mechanisms, measured</h3>
+      <div class="scroll"><table>
+        <tr><th>Macro</th><th>Rows</th><th>Built on</th></tr>
+        <tr><td>hp table row</td><td class="n">~71,760</td><td>lib/hpengine.c</td></tr>
+        <tr><td>VJSON (+KEYED, IDKEYS, PREP, BIG)</td><td class="n">4,645</td><td>lib/jsonlist.c</td></tr>
+        <tr><td>VRSS</td><td class="n">1,907</td><td>lib/rss_atom.c</td></tr>
+        <tr><td>VGEO (+IDKEYS)</td><td class="n">768</td><td>lib/geojson.c</td></tr>
+        <tr><td>VCSV, VNCBI</td><td class="n">148</td><td>lib/csv.c</td></tr>
+        <tr><td>REGISTER_SOURCE by hand</td><td class="n">~1,260</td><td>feedlib, pagewalk, bespoke</td></tr>
+        <tr><td>Not attributable by grep</td><td class="n">~5,000</td><td>loops in shared .inc files</td></tr>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<section id="system">
+  <h2>Whole-system organigram</h2>
+  <p class="lede">One process. One HTTP event loop, a scheduler with two lanes, one SQLite file, and up to three model servers reached through a per-server queue. Teal marks every place a model is called.</p>
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 1040 640" role="img" aria-label="Processes, threads, storage, pods and model calls of the JapanOSINT server">
+      <rect class="b" x="10" y="10" width="170" height="50"/><text x="20" y="30" class="t">Web client</text><text x="20" y="46" class="s">React + Vite, 129 files</text>
+      <rect class="b" x="10" y="70" width="170" height="50"/><text x="20" y="90" class="t">iOS app</text><text x="20" y="106" class="s">SwiftUI, 151 files</text>
+      <path class="a" d="M180 35H226" marker-end="url(#ar)"/><path class="a" d="M180 95H226" marker-end="url(#ar)"/><text x="20" y="134" class="al">both: REST + SSE</text>
+      <rect class="w" x="228" y="10" width="330" height="110"/><text x="238" y="30" class="t">httpd.c — Mongoose event loop (1 thread)</text><text x="238" y="46" class="s">~151 route matchers in one if-chain, 5,245 lines</text><text x="238" y="61" class="s">auth.c: JWT, JWKS refresher thread, break-glass</text><text x="238" y="76" class="s">tenant resolve · operator gate · audit hash chain</text><text x="238" y="91" class="s">slow routes: one detached thread each, cap 16</text><text x="238" y="106" class="s">many handlers still run SQLite inline on the loop</text>
+      <path class="a" d="M558 40H604" marker-end="url(#ar)"/>
+      <rect class="b" x="606" y="10" width="424" height="110"/><text x="616" y="30" class="t">API modules (core/*api.c)</text><text x="616" y="46" class="s">search · intel · semantic · sources · collectors · status · entities</text><text x="616" y="61" class="s">alerts · watchlists · AOI · cases · reports · export · uploads · evidence</text><text x="616" y="76" class="s">cameras · media · transit · isochrone · geocode · breach</text><text x="616" y="91" class="s">members · keys · audit · admin: thresholds, maintenance, repairs</text><text x="616" y="106" class="s">no route table: gates are repeated at ~60 call sites</text>
+
+      <rect class="l" x="606" y="140" width="424" height="92"/><text x="616" y="160" class="t">Search run (searchapi.c → pipeline.c), own thread</text><text x="616" y="176" class="la">LLM analysis → dispatch pivots → LLM phase 2 → LLM synthesis</text><text x="616" y="191" class="s">few-shot pick, service routing and record ranking use embeddings</text><text x="616" y="206" class="s">query fenced as untrusted · progress streamed over SSE</text><text x="616" y="221" class="s">4 search slots globally · suggest box on its own model server</text>
+      <path class="a" d="M818 120V138" marker-end="url(#ar)"/>
+
+      <rect class="b" x="10" y="140" width="270" height="92"/><text x="20" y="160" class="t">scheduler.c</text><text x="20" y="176" class="s">dispatch thread, ticks every second over all rows</text><text x="20" y="191" class="s">collect lane: 8 workers → 83,508 feeds</text><text x="20" y="206" class="s">maintenance lane: 2 workers → pods</text><text x="20" y="221" class="s">cadence.c policy · source_interval override</text>
+      <rect class="b" x="300" y="140" width="286" height="92"/><text x="310" y="160" class="t">Collectors (native/collectors)</text><text x="310" y="176" class="s">hpengine · macro fleet · hand-written</text><text x="310" y="191" class="s">httpclient → hostgate → upstreams</text><text x="310" y="206" class="s">emit → intel sink</text><text x="310" y="221" class="s">pivots also get an llm client in ctx</text>
+      <path class="a" d="M280 186H298" marker-end="url(#ar)"/>
+      <path class="a" d="M606 186H588" marker-end="url(#ar)"/>
+
+      <rect class="g" x="10" y="270" width="700" height="78"/><text x="20" y="290" class="t">SQLite, one file, WAL — ~149 tables</text><text x="20" y="306" class="s">intel_items + FTS5 (MeCab) · sources · fetch_log · source_sched_state · entities · alerts · cases · tenants · audit_events</text><text x="20" y="321" class="s">vec0 indexes: intel_vec_v2 · service_vec · entity_vec · fewshot_vec · anomaly_vec · image_vec · alert_rule_vec</text><text x="20" y="336" class="s">gtfs_* (transit) · breach_* · camera_* · media_* · app_settings · settings_thresholds</text>
+      <path class="a" d="M443 232V268" marker-end="url(#ar)"/><text x="451" y="256" class="al">upsert per record</text>
+      <path class="a" d="M612 120V130H596V268" marker-end="url(#ar)"/><text x="600" y="262" class="al">reads, writes</text>
+
+      <rect class="l" x="730" y="270" width="300" height="78"/><text x="740" y="290" class="t">llm_worker.c — one thread per server URL</text><text x="740" y="306" class="s">interactive lane drains first, then background</text><text x="740" y="321" class="s">queue 64 · wait ≤ 4× timeout · no retry after timeout</text><text x="740" y="336" class="s">llmcache · prompts.c fences untrusted text</text>
+      <path class="a" d="M880 232V268" marker-end="url(#ar)"/>
+      <path class="a" d="M880 348V376" marker-end="url(#ar)"/>
+      <rect class="l" x="730" y="378" width="300" height="92"/><text x="740" y="398" class="t">Model servers (llama-server)</text><text x="740" y="414" class="s">LLM_BASE_URL :8080 generation</text><text x="740" y="429" class="s">LLM_SUGGEST_BASE_URL :8081 small model</text><text x="740" y="444" class="s">JO_EMBED_URL / JO_EMBED_QUERY_URL :8082</text><text x="740" y="459" class="s">JO_VISION_EMBED_URL image sidecar (plain HTTP)</text>
+
+      <text x="10" y="372" class="s">PODS ON THE MAINTENANCE LANE (declared interval)</text>
+      <rect class="l" x="10" y="380" width="168" height="40"/><text x="18" y="397" class="t">embedding-backfill</text><text x="18" y="412" class="s">120 s · embeds → intel_vec_v2</text>
+      <rect class="l" x="186" y="380" width="168" height="40"/><text x="194" y="397" class="t">translate</text><text x="194" y="412" class="s">600 s · JA→EN, fenced</text>
+      <rect class="l" x="362" y="380" width="168" height="40"/><text x="370" y="397" class="t">llm-enricher</text><text x="370" y="412" class="s">300 s · entities, merge judge</text>
+      <rect class="l" x="538" y="380" width="172" height="40"/><text x="546" y="397" class="t">anomaly-triage</text><text x="546" y="412" class="s">60 s · classify, fenced</text>
+      <rect class="l" x="10" y="428" width="168" height="40"/><text x="18" y="445" class="t">collector-repair</text><text x="18" y="460" class="s">120 s · proposes URL, unfenced</text>
+      <rect class="l" x="186" y="428" width="168" height="40"/><text x="194" y="445" class="t">_svec_index · _entity_vec</text><text x="194" y="460" class="s">900 s / 600 s · embeds</text>
+      <rect class="l" x="362" y="428" width="168" height="40"/><text x="370" y="445" class="t">_image_embed</text><text x="370" y="460" class="s">600 s · vision sidecar</text>
+      <rect class="b" x="538" y="428" width="172" height="40"/><text x="546" y="445" class="t">simhash-backfill</text><text x="546" y="460" class="s">300 s</text>
+      <rect class="b" x="10" y="476" width="168" height="40"/><text x="18" y="493" class="t">wal-checkpoint</text><text x="18" y="508" class="s">300 s · TRUNCATE the WAL</text>
+      <rect class="b" x="186" y="476" width="168" height="40"/><text x="194" y="493" class="t">log-retention</text><text x="194" y="508" class="s">3600 s · prunes logs</text>
+      <rect class="b" x="362" y="476" width="168" height="40"/><text x="370" y="493" class="t">camera-stills · refframe</text><text x="370" y="508" class="s">300 s / 3600 s · ffmpeg</text>
+      <rect class="b" x="538" y="476" width="172" height="40"/><text x="546" y="493" class="t">media-analyze</text><text x="546" y="508" class="s">900 s · ffmpeg, OCR command</text>
+      <rect class="b" x="10" y="524" width="168" height="40"/><text x="18" y="541" class="t">camera-geocode</text><text x="18" y="556" class="s">300 s</text>
+      <rect class="b" x="186" y="524" width="168" height="40"/><text x="194" y="541" class="t">entity-stats</text><text x="194" y="556" class="s">900 s · co-occurrence</text>
+      <rect class="b" x="362" y="524" width="168" height="40"/><text x="370" y="541" class="t">content-change · upload-gc</text><text x="370" y="556" class="s">900 s</text>
+      <rect class="b" x="538" y="524" width="172" height="40"/><text x="546" y="541" class="t">breach-corpus</text><text x="546" y="556" class="s">86,400 s · _breach lane key</text>
+      <path class="a" d="M360 378V350" marker-end="url(#ar)"/><text x="368" y="368" class="al">each pod polls its own watermark table</text>
+
+      <rect class="b" x="730" y="490" width="300" height="74"/><text x="740" y="510" class="t">Other threads</text><text x="740" y="526" class="s">alert_deliver (webhooks, email) · alert_eval sweep</text><text x="740" y="541" class="s">evidence GC · translate backfill · breach jobs</text><text x="740" y="556" class="s">netjail proxy per ffmpeg child · 33 pthread_create sites</text>
+      <rect class="g" x="10" y="584" width="1020" height="44"/><text x="20" y="604" class="t">After each embedding batch (embed_hook_register)</text><text x="20" y="620" class="s">stories and novelty · semantic alert rules — never an embed call on the ingest path. Similarity cut-offs: 11 keys in core/thresholds.c, editable live.</text>
+    </svg>
+    </div>
+    <figcaption>There is no staged ingest pipeline: the sink writes a record, and independent pods pick it up later from their own watermark tables. <code>pipeline.c</code> is the search-run orchestrator. The HTTP box is highlighted because every authorization finding traces back to gates repeated by hand in that one if-chain.</figcaption>
+  </figure>
+  <div class="legend"><span><i class="l"></i>calls a model (chat or embedding)</span><span><i class="w"></i>where the high-severity findings concentrate</span><span><i></i>no model involved</span></div>
+</section>
+
+<section id="llm">
+  <h2>Every LLM call site</h2>
+  <div class="scroll"><table>
+    <tr><th>Where</th><th>Asks the model to</th><th>Server and lane</th><th>Untrusted text fenced</th><th>If the model is down</th></tr>
+    <tr><td class="where">pipeline.c:791</td><td>Analyse a query: extract entities, pick pivot sources (JSON schema, few-shot)</td><td>generation, interactive</td><td>yes (query)</td><td>stage error, falls back to corpus lookup</td></tr>
+    <tr><td class="where">pipeline.c:913</td><td>Phase 2: choose follow-up sources from first results</td><td>generation, interactive</td><td>yes</td><td>run continues without the round</td></tr>
+    <tr><td class="where">pipeline.c:1011, 1203</td><td>Synthesis of a run's results</td><td>generation, interactive</td><td>yes</td><td>error note, no prose</td></tr>
+    <tr><td class="where">searchapi.c:233</td><td>Search suggestions (retrieval first, model second)</td><td>suggest</td><td>not established</td><td>empty list</td></tr>
+    <tr><td class="where">sourceapi_summary.c:312</td><td>Summarise one source from measured facts</td><td>suggest</td><td>not established</td><td>status code plus the facts</td></tr>
+    <tr><td class="where">translate.c:677</td><td>Translate title, body, summary JA→EN into the FTS keywords column</td><td>generation, background (pod)</td><td>yes</td><td>items retried later, not charged</td></tr>
+    <tr><td class="where">entity_enrich.c:96, 547</td><td>Extract entities (grammar) and judge merge candidates</td><td>generation, background (pod)</td><td>not established</td><td>items left for next tick</td></tr>
+    <tr><td class="where">pod/anomaly_triage.c:420</td><td>Classify a collector anomaly, with past triages as memory</td><td>LLM_TRIAGE_MODEL, background</td><td>yes</td><td>left untriaged</td></tr>
+    <tr><td class="where">pod/collector_repair.c:525, 740</td><td>Propose a repair (a new URL) for a failing source; a second call sanity-checks the sample</td><td>LLM_REPAIR_MODEL, background</td><td><b>no</b> (ENG-03)</td><td>no repair filed</td></tr>
+    <tr><td class="where">embed_pod.c</td><td>Embed new and changed records</td><td>embeddings (writer)</td><td>n/a</td><td>tick skipped</td></tr>
+    <tr><td class="where">semsearchapi.c:226, entityapi.c:508, alert_eval.c:1348, alert_sem.c:142, service_vec.c:806, osint_dispatch.c:217, suggest.c:65, fewshot.c:160, prompt_rank.c, relevance.c, jp_corpus_lookup.c:317</td><td>Embed a query: semantic search, hybrid entity search, semantic alert rules, source routing, few-shot selection, record ranking</td><td>embeddings (query)</td><td>n/a</td><td>each falls back to its lexical behaviour; semantic search answers 503</td></tr>
+    <tr><td class="where">image_vec.c</td><td>Embed camera and media images</td><td>vision sidecar over plain HTTP</td><td>n/a</td><td>pod idle</td></tr>
+  </table></div>
+  <p class="note">All chat and embedding calls funnel through one worker thread per server URL, so the background pods and an interactive search share one serialized generation server and only lane priority protects the user. Five files call the embedding client directly instead of going through <code>qembed.c</code>.</p>
+</section>
+
+<section id="usability">
+  <h2>Can every source be used from the site and from iOS?</h2>
+  <div class="scroll"><table>
+    <tr><th>Need</th><th>Web</th><th>iOS</th></tr>
+    <tr><td>Find any of the 85,767 sources</td><td><span class="pill okp">yes</span> server search, facets, paging. Collector and category dropdowns list only the top 80 and 60.</td><td><span class="pill critical">no</span> downloads the full status dump, searches id and name on the device</td></tr>
+    <tr><td>Browse the 23 groups and 654 collectors</td><td><span class="pill okp">yes</span></td><td><span class="pill medium">partly</span> rebuilt on the device from the full dump</td></tr>
+    <tr><td>Open a source: mechanism, schedule, health, runs, credentials</td><td><span class="pill okp">yes</span> older runs unreachable (link carries no token)</td><td><span class="pill high">thin</span> one card from the list row</td></tr>
+    <tr><td>See fetch-failure, truncation and shape notices</td><td><span class="pill okp">yes</span></td><td><span class="pill medium">no</span> shown as ordinary findings</td></tr>
+    <tr><td>See a source's records</td><td><span class="pill okp">yes</span> paged</td><td><span class="pill okp">yes</span> paged</td></tr>
+    <tr><td>Run a scheduled feed now</td><td><span class="pill okp">yes</span> button also shown to people the server will refuse</td><td><span class="pill medium">yes</span> long runs always read "failed" at 120 s</td></tr>
+    <tr><td>Run an entity pivot with an entity you choose</td><td><span class="pill high">no</span></td><td><span class="pill high">no</span></td></tr>
+    <tr><td>Find a pivot by meaning (<code>/api/sources/semantic</code>)</td><td><span class="pill medium">no UI</span></td><td><span class="pill medium">no UI</span></td></tr>
+    <tr><td>Per-source settings and interval</td><td><span class="pill okp">yes</span> operator</td><td><span class="pill medium">no</span></td></tr>
+    <tr><td>System-wide cadence policy</td><td><span class="pill medium">yes</span> edit button gated on a flag that does not exist</td><td><span class="pill medium">no</span></td></tr>
+    <tr><td>Pods</td><td><span class="pill okp">visible</span> run correctly hidden</td><td><span class="pill medium">not distinguished</span> from feeds</td></tr>
+    <tr><td>On the map</td><td colspan="2">Only sources that store records with coordinates. Neither client says which layer a source feeds, or that a source without coordinates never appears. iOS caps layers without saying how many of how many.</td></tr>
+  </table></div>
+  <p class="note">The gap both clients share is on the server: <code>POST /api/intel/sources/:id/run</code> takes no entity and calls <code>scheduler_run_source(db, d, NULL)</code>. Adding an <code>entity</code> field, and answering 422 <code>needs_entity</code> without one, makes all 2,237 pivots usable and removes the false "ran: 0 new rows".</p>
+</section>
+
+<section id="classification">
+  <h2>Collector classification, redone</h2>
+  <p class="lede">The grouping is generated by <code>tools/gen_collectors_def.py</code>. The changes are in that script and the regenerated <code>core/collectors.def</code>; no source, URL or category was touched. 20 collectors holding 10,423 sources (12.2% of the registry) moved, and 211 collectors got a human label in place of a file name.</p>
+  <div class="two">
+    <div>
+      <h3>Groups before and after</h3>
+      <div class="scroll"><table id="grp"><tr><th>Group</th><th>Sources before</th><th>After</th><th>Share</th></tr></table></div>
+    </div>
+    <div>
+      <h3>What moved and why</h3>
+      <div class="scroll"><table>
+        <tr><th>Collectors</th><th>Sources</th><th>Move</th></tr>
+        <tr><td>Five ArcGIS layer beats (<span class="mono">hp3b61_us, hp3b60_us, hp3b58_arcgis, hp3b53, hp3b46</span>)</td><td class="n">8,441</td><td>Infrastructure, Environment, Government, Transport → Geospatial. They had been filed by a 34–56% dominant category while eight sibling layer beats were already Geospatial.</td></tr>
+        <tr><td><span class="mono">hp3b57_jpedu</span></td><td class="n">1,160</td><td>Education → Science. 1,151 are universities, which the script's own rule keeps under Science.</td></tr>
+        <tr><td>Nine CKAN and Socrata catalogue beats</td><td class="n">560</td><td>Government, Infrastructure → Open data</td></tr>
+        <tr><td><span class="mono">hp3b22_breachcat</span></td><td class="n">91</td><td>Cyber → Legal (87 are GDPRhub decisions)</td></tr>
+        <tr><td><span class="mono">seasia_gov, sasia_gov</span></td><td class="n">89</td><td>Government → Media (65–72% news outlets)</td></tr>
+        <tr><td><span class="mono">hp3b28_jpindustry, hp3b19_media</span></td><td class="n">82</td><td>Corporate, Media → Government (labour bureau notices; FOI portals)</td></tr>
+      </table></div>
+      <h3>Still wrong, and not fixable by moving a collector</h3>
+      <div class="scroll"><table>
+        <tr><th>Problem</th><th>Sources</th></tr>
+        <tr><td>ArcGIS layer collectors mix parcels, hydrants, flood zones and schools in one key; needs a per-row split by each layer's stored category</td><td class="n">~19,000</td></tr>
+        <tr><td>78 collectors whose dominant category is under 60%</td><td class="n">19,221</td></tr>
+        <tr><td><span class="mono">hp3b48_igo</span> mixes intergovernmental bodies with game studios and company blogs</td><td class="n">494</td></tr>
+        <tr><td>Government is still 32% and is genuinely government sites; only a body-type split of <span class="mono">hp3b44_usgov</span>, <span class="mono">hp3b47_wdgov</span>, <span class="mono">government</span> reduces it</td><td class="n">5,136</td></tr>
+      </table></div>
+    </div>
+  </div>
+  <p class="note">One decision is yours: universities sit under Science by the script's existing rule. If Education should hold them, four collectors move (about 1,500 sources).</p>
+</section>
+
+<section id="issues">
+  <h2>All issues</h2>
+  <div class="filters" role="group" aria-label="Filter issues">
+    <span id="sevbtns"></span><span id="areabtns"></span>
+    <button type="button" id="openonly" aria-pressed="false">open or partial only</button>
+    <input id="q" type="search" placeholder="Filter by text or id" aria-label="Filter by text or id">
+    <span class="meta" id="count"></span>
+  </div>
+  <div class="scroll"><table id="iss"><thead><tr><th>ID</th><th>Severity</th><th>Issue</th><th>Suggested fix</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section id="choices">
+  <h2>Structural choices that keep producing bugs</h2>
+  <div class="scroll"><table>
+    <tr><th>Choice</th><th>What it costs</th><th>Better shape</th></tr>
+    <tr><td>Routes are an if-chain with gates repeated at ~60 call sites</td><td>Every authorization bug found is "one door of N forgot the gate". Routes cannot be enumerated with their gate.</td><td>A route table: path, method, declared gate (public, auth, tenant, role, operator), handler, on-loop or worker. Enforce centrally.</td></tr>
+    <tr><td>One transaction per record through a single SQLite writer</td><td>The code measures 132.9 KB of WAL per rewritten record; 10 workers, the HTTP loop and the alert thread share one writer lock.</td><td>One transaction per run or per page; the sink already knows the run boundary.</td></tr>
+    <tr><td>The collector name carries behaviour</td><td>A leading underscore selects the scheduler lane, hides the row from the LLM menu and exempts it from the pivot rule. The cadence policy forgot the same prefix (ENG-02).</td><td>An explicit <code>kind</code> field on <code>source_def</code>: feed, pivot, pod.</td></tr>
+    <tr><td>Four page walkers and three declared-total lists</td><td>CLAUDE.md records the same fix landing in one copy and missing the others four times.</td><td>One walker in <code>pagewalk.c</code> that hpengine, jsonlist and geojson all call.</td></tr>
+    <tr><td>Scheduler is not host-aware</td><td>Workers block inside the per-host gate. 615 news.google.com rows at a 1.5 s gap can park all 8 workers for about 15 minutes.</td><td>Skip a queued row whose host is gated and take the next; count in-flight per host in the dispatcher.</td></tr>
+    <tr><td>274 environment variables read in place, 126 documented</td><td>Each module has a private <code>env_int</code>. Nobody can list the configuration.</td><td>One table (name, type, default, bounds, doc), as <code>thresholds.c</code> already does for 11 keys; generate the docs from it.</td></tr>
+    <tr><td>CLAUDE.md is 324 KB (about 80,000 tokens) and its headline count is wrong</td><td>Loaded into every agent session. It stops at batch 57 and 61,527; the tree is at batch 63 and 85,767.</td><td>Keep the rules and "where things live" under 10 KB; move dated measurement history to docs/.</td></tr>
+    <tr><td>Clients written for about 1,700 sources</td><td>iOS and five web screens fetch the whole registry.</td><td>Use the paged endpoints that already exist; make the unpaged dumps operator-only or remove them.</td></tr>
+    <tr><td>The table file name is the collector</td><td>253 collectors had labels like "eu (batch 62)"; one key holds 4,535 unrelated layers.</td><td>Generators emit <code>.collector</code> per row from the measured publisher class.</td></tr>
+    <tr><td>No schema version, no deployment artefact, no hardening flags, no licence file</td><td>Migrations are column probes; the network-facing binary has no stack protector, FORTIFY or PIE; Mongoose's licence is undecided.</td><td><code>PRAGMA user_version</code> with ordered migrations; Dockerfile or systemd unit; hardening flags; LICENSE and third-party notices.</td></tr>
+  </table></div>
+</section>
+
+<section id="plan">
+  <h2>Plan</h2>
+  <div class="plan">
+    <div><h3>1. Stop the bleeding<small>small, contained changes</small></h3><ul>
+      <li>Done on this branch: scheduler fixes merged and extended. <span class="mono">ENG-01 02 06 11 12 13 19 20 LIB-17</span></li>
+      <li>Decide the two settings it left to you: overrides for the 22 real-time feeds, and the worker count (8 gives an 18-hour lap). <span class="mono">ENG-17 ENG-18</span></li>
+      <li>Scope the case-pin lookup to the tenant and refuse <code>breach:</code> uids for non-operators. <span class="mono">API-01</span></li>
+      <li>Gate <code>GET /api/data/:id</code>: no pods, operator or real workspace role, single-flight. <span class="mono">API-02</span></li>
+      <li>Re-check webhook targets strictly at delivery, no redirects, do not store response bytes. <span class="mono">ENG-04 API-03</span></li>
+      <li>Fence the repair pod's prompts; same-host URL swaps only without an operator. <span class="mono">ENG-03</span></li>
+      <li>Remove "Run all" on iOS; fix the cadence button flag on web. <span class="mono">IOS-04 WEB-02</span></li>
+    </ul></div>
+    <div><h3>2. Make every source usable<small>one server change, two client refactors</small></h3><ul>
+      <li>Server: <code>POST /api/intel/sources/:id/run {entity}</code>; 422 <code>needs_entity</code> for a pivot without one; make long runs a job the client polls. <span class="mono">WEB-01 IOS-05 IOS-06</span></li>
+      <li>Web: a Pivots view (kind filter, semantic finder, entity box); replace the five full-registry loads with the paged search; typeahead for collectors. <span class="mono">WEB-03 05 07 08</span></li>
+      <li>iOS: move the dashboard and Intel tab to <code>/api/sources/search</code>, <code>/api/collectors</code> and <code>/api/status?summary=1</code>; add detail, notices, runs, settings; ask the server who is an operator. <span class="mono">IOS-01..03 07 11 13</span></li>
+      <li>Return the resolved map layer and geocoded count in source detail; say when a source cannot be on the map. <span class="mono">WEB-09 IOS-08</span></li>
+    </ul></div>
+    <div><h3>3. Harden<small>before any public deployment</small></h3><ul>
+      <li>Parser fixes from the sanitizer reproductions, then libFuzzer harnesses for zip, xlsx, csv, html, rss in CI. <span class="mono">LIB-* OPS-07b</span></li>
+      <li>Hardening flags in the Makefile. <span class="mono">OPS-02</span></li>
+      <li>Invite and membership fixes; owners protected from admins; 403 on a foreign <code>X-Tenant-Id</code>. <span class="mono">API-04 05 06 13</span></li>
+      <li>Strip credential headers on cross-host redirects; reset per-thread error state per run. <span class="mono">ENG-05 06</span></li>
+      <li>Move the inline-on-loop routes to workers; add a query deadline; per-user in-flight caps. <span class="mono">API-07 08</span></li>
+      <li>LICENSE, third-party notices, a decision on Mongoose. <span class="mono">OPS-03</span></li>
+    </ul></div>
+    <div><h3>4. Restructure<small>removes whole classes of bug</small></h3><ul>
+      <li>Route table with declared gates.</li>
+      <li>Batch the sink's writes per run; measure WAL per run before and after.</li>
+      <li>Host-aware dispatch; a heap by due time instead of a walk over every row each second.</li>
+      <li><code>kind</code> on <code>source_def</code>; one page walker.</li>
+      <li>Per-row collector split for the ArcGIS beats and the mixed bags (about 19,000 sources).</li>
+      <li>Cut CLAUDE.md to rules; correct the count; central env table; schema versioning; Dockerfile.</li>
+    </ul></div>
+    <div><h3>5. Re-measure<small>after 1 and 2 land</small></h3><ul>
+      <li>Boot the scheduler at full registry size and read the heartbeat line: queued, busy, dropped.</li>
+      <li>Re-run the live sample with a longer kill line so the SLOW rows get a verdict.</li>
+      <li>Label pairs for the six similarity cut-offs that sit below the unrelated band.</li>
+    </ul></div>
+  </div>
+</section>
+</main>
+</div>
+
+<script>
+const SEV=["critical","high","medium","low"];
+const AREAS={ENG:"Engine",API:"API and security",LIB:"Parsers",WEB:"Web client",IOS:"iOS",OPS:"Build and repo",SRC:"Sources",DOC:"Docs"};
+// [id, severity, verified(1/0), title, where, fix]
+const ISS=[
+["ENG-01","high",1,"A full scheduler queue drops the run and still advances its due time by a whole interval","core/scheduler.c:1029, 1152-1162, 1593","Do not advance next[] on a drop; retry within seconds; scale the ramp with row count; report dropped in /api/status.",1],
+["ENG-02","high",1,"The 6 h cadence default retimes maintenance pods (WAL checkpoint, embedding backfill, triage, repair, enricher, simhash)","core/cadence.c:107-114; core/scheduler.c:280-292","Exempt collectors starting with _ from cadence_apply, or give pods their own policy.",1],
+["ENG-03","high",0,"Repair pod sends upstream bytes to the model unfenced and auto-merges the URL it proposes as a live override, any host","collectors/pod/collector_repair.c:316, 706-718, 103-112, 836-862","Fence bundle and sample; allow same-host swaps only; cross-domain needs an operator.",1],
+["ENG-04","high",0,"Webhook SSRF check runs once at save; delivery uses the lenient floor and follows redirects (DNS rebinding reaches loopback and private ranges)","core/alertsapi.c:491; core/alert_deliver.c:163; core/hostgate.c:511-541","Strict check at delivery, redirects off, do not store response bytes.",1],
+["ENG-05","medium",0,"Custom credential headers (X-API-Key and similar) survive a cross-host redirect","core/httpclient.c:193, 671","Follow redirects manually when a credential header is present and drop it on a host change.",1],
+["ENG-06","medium",0,"A fetch-failure notice can report the previous source's transport or TLS error (thread-local never reset per run)","core/scheduler.c:631-692; core/httpclient.c:490","Reset at the start of scheduler_run_source; print only when hosts > 0.",1],
+["ENG-07","medium",0,"A refusal page with every host answering reads online, records_count 1, and never backs off","core/scheduler.c:87-96, 842-860, 934","Do not count the scheduler's own disclosure as a record; treat a disclosed failure as a failure for backoff.","partly fixed: the empties streak no longer resets on the scheduler's own disclosure; the run still reads online, which is a documented decision"],
+["ENG-08","medium",0,"llm_ctx_chars caches a failed /props read for the process lifetime and shares one value across servers","core/llm.c:178-218","Cache per base URL with a retry TTL; do the HTTP outside the mutex.",1],
+["ENG-09","medium",0,"A re-fetched record whose text changed keeps its old English translation and stays marked translated","core/intel.c:205-232; core/translate.c:160","Clear translated_at and *_en in the upsert when content_hash changes.",1],
+["ENG-10","medium",0,"The per-source body-ceiling setting does nothing for hpengine and VJSON rows; only two bespoke collectors read it","core/scheduler.c:798; lib/hpengine.c; lib/jsonlist.c","Apply the ceiling around d->run in the scheduler so every engine inherits it.",1],
+["ENG-11","low",0,"A resume token of 1,024 bytes or more is dropped, so a long-URL cycle restarts from page 1 every run","core/scheduler.c:378-409","Raise the cap to 4096+ or return an error the collector can disclose.",1],
+["ENG-12","low",0,"Backoff lags one cycle; quarantine triggers on failure 13, not 12","core/scheduler.c:1583-1594","Recompute next[] after the worker refreshes state.",1],
+["ENG-13","low",0,"Concurrent per-source interval writes can leave the cache stale","core/source_interval.c:47-148","One mutex around write plus reload.",1],
+["ENG-14","low",0,"Missing TLS intermediates bundle fails silently when the repo path does not resolve","core/catrust.c:9-69","Log the count loaded; warn on absence when a no_local_issuer is seen.",1],
+["ENG-15","low",0,"SSRF floor misses 100.64/10, 192.0.0/24 and embedded-IPv4 IPv6 forms (cloud metadata addresses)","core/hostgate.c:511-535","Add them to the always-blocked class.",1],
+["ENG-16","low",0,"Static error buffers returned from the alert-rule validator","core/alertsapi.c:462-474","Return constants or copies.",1],
+["API-01","high",1,"Pinning breach:<id> into a case as an intel_item bypasses the breach gate and the tenant filter; cleartext lands in the case snapshot","core/casesapi.c:431-434; core/intelapi.c:194","Use the tenant-scoped lookup; refuse breach: uids for non-operators; reject client snapshots for breach refs.",1],
+["API-02","medium",1,"GET /api/data/<id> lets any signed-in user run any collector or maintenance pod; the /run owner gate is satisfied by everyone's personal workspace","core/httpd.c:5071-5107, 2993-3025; core/tenantapi.c:190","Refuse pods; require operator or a non-personal workspace role; single-flight.","pods are refused on /api/data and a cold layer takes the run gate with single-flight; a personal workspace cannot be told from a team one, so ordinary collectors keep the owner/admin gate"],
+["API-03","medium",0,"Webhook delivery follows redirects and returns the first 120 response bytes through the deliveries API","core/alert_deliver.c:146-190","See ENG-04.",1],
+["API-04","medium",0,"Invite claim matches the stored users.email but trusts the current token's verified flag","core/tenantapi.c:67-160","Match on the token's own email claim; refresh users.email on login.",1],
+["API-05","medium",0,"Inviting an existing user adds whichever account claims that email, verified or not","core/tenantapi.c:569-587","Add immediately only for a verified email; otherwise queue the invite.",1],
+["API-06","medium",0,"A workspace admin can demote or remove owners","core/tenantapi.c:645-700","Only an owner (or self) may alter an owner membership.",1],
+["API-07","medium",0,"Heavy work runs inline on the event loop with no query deadline: layer geojson, transit, relevance search, docmeta, upload commit","core/httpd.c:2943, 5111, 2766, 4366, 4397","Move to workers; add a progress-handler deadline for loop-side queries.","layer geojson, transit, relevance search, docmeta and upload commit moved off the event loop; upload begin and part stay inline; no query deadline"],
+["API-08","medium",0,"No per-user fairness on the 16 worker slots, 4 search slots or the LLM; summary?refresh=1 forces a model run for anyone","core/httpd.c:920-980, 3588; core/sourceapi_summary.c:318","Per-user in-flight caps and rate limits; refresh for operators only.","summary refresh is operator-only; no per-user in-flight cap (the worker admit path has no user id)"],
+["API-09","low",0,"CSV export allows spreadsheet formula injection from scraped text","core/exportapi.c:674-710","Prefix cells starting with = + - @ with an apostrophe.",1],
+["API-10","low",0,"Platform API-key overlay written world-readable in plaintext; write errors swallowed","core/keysapi.c:111-120","Mode 0600, fsync, check results, return 500 on failure.",1],
+["API-11","low",0,"Break-glass login: a TOTP code is reusable within its window; per-IP limiter collapses behind a proxy and can be exhausted","core/keysapi.c:560-585; core/ratelimit.c:45-76","Track the last accepted step; trusted forwarded IP; global ceiling.","a used TOTP step is refused; the per-IP limiter design is unchanged"],
+["API-12","low",0,"POST /api/data/cameras/trigger is plain-auth and fans out 16 scrapers","core/httpd.c:4982-5058","Gate like /run.",1],
+["API-13","low",0,"An unknown X-Tenant-Id silently falls back to the user's first workspace","core/tenantapi.c:174-214","403 for a non-member id.",1],
+["API-14","low",0,"No caps on open uploads per tenant, search query length, or alert rules per tenant","core/uploadapi.c:517; core/searchapi.c:130; core/alertsapi.c","Per-tenant quotas.",1],
+["API-15","low",0,"A signed JWT with no aud claim skips the audience check","core/auth.c:602-617","Require aud when an audience is configured.",1],
+["API-16","low",0,"Media pod fetches image URLs from scraped items at the lenient SSRF floor","core/media.c:2030","Use the strict camera policy.",1],
+["API-17","low",0,"Camera proxy serves any intel item's image URL and echoes image/svg+xml","core/cameraproxy.c:177-262","Restrict to camera rows; refuse SVG or add a sandbox CSP.","SVG is refused with 415; any item with an image URL can still be proxied"],
+["WEB-01","high",1,"Run now on an entity pivot reports success and fetches nothing; no way to supply an entity","client SourceDetailPage.jsx:231, 275; core/httpd.c:1821; lib/hpengine.c:4573","Entity input for pivots; server accepts {entity} and answers 422 needs_entity without one.",1],
+["WEB-02","high",1,"Cadence Change button gated on auth.isPlatformOperator, which AuthContext never exports","client SourcesListPage.jsx:73; AuthContext.jsx:206","Use isPlatformAdmin.",1],
+["WEB-03","high",0,"Five screens load the whole registry unpaged: IntelPage, IntelSourceItemsPage, Timeline source select, SourcesPanel (every 30 s), Admin and ApiKeys via /api/status","client IntelPage.jsx:30; IntelSourceItemsPage.jsx:16; TimelinePage.jsx:136; SourcesPanel.jsx:371","Use /api/sources/search, /detail and ?summary=1.",1],
+["WEB-04","medium",0,"The all-runs link is a browser navigation to an API route and carries no token; older runs are unreachable","client SourceDetailPage.jsx:412","Fetch /logs through the API client and page it in place.",1],
+["WEB-05","medium",0,"Settings › Source scheduling downloads every source to show 60","client SettingsPage.jsx:218-243","Page it from the server or fold it into source detail.","Settings pages from the server; the API-keys 'used by' list shows only sources still waiting on a key"],
+["WEB-06","medium",0,"Operator-only actions are offered to everyone and fail with a 403 toast","client SourceDetailPage.jsx:275; SourcesPanel.jsx:301; SettingsPage.jsx:277","Gate on the role the server enforces; show a read-only note otherwise.",1],
+["WEB-07","medium",0,"No UI for /api/sources/semantic or /categories; a pivot cannot be found by meaning or chosen directly","core/httpd.c:2464, 2468","Pivots tab with semantic finder and entity box.",1],
+["WEB-08","medium",0,"Collector and category filters list only the top 80 and 60; 574 collectors cannot be picked there","core/sourceapi.c:735; client SourcesListPage.jsx:104","Typeahead on /api/collectors.",1],
+["WEB-09","medium",0,"Source detail says map layer: none for sources that are on curated layers; nothing says a source without coordinates cannot be mapped","client SourceDetailPage.jsx:367; core/sourceapi.c:534","Return the resolved layer and geocoded count.",1],
+["WEB-10","low",0,"Map layers can hold up to 2 million features in the browser with no per-layer progress","client useMapLayers.js:15-20","Show N of M; bound by viewport on the server.",1],
+["WEB-11","low",0,"Client-only layers call the legacy /api/data/<slug>, which can run a collector on a GET","client useMapLayers.js:256; layerDefinitions.js","Fail a test when a client layer has no server layer; drop the fallback.",1],
+["WEB-12","low",0,"/api/follow/recent is a permanent 501 and is called on every Follow panel open","client useCollectorFollowStream.js:114; core/miscapi.c:423","Remove the call or implement it.",1],
+["WEB-13","medium",0,"Access and refresh tokens are kept in localStorage","client auth/session.js:52-62","Refresh token in memory or an httpOnly cookie."],
+["WEB-14","low",0,"A 401 with no refresh token never prompts re-login","client auth/session.js:181","Signal session loss in that branch.",1],
+["WEB-15","low",0,"Layer catalogue cached in sessionStorage without a user or tenant key","client useLayerCatalog.js:10","Key by tenant or clear on sign-out.",1],
+["WEB-16","low",0,"Row and Table components defined inside CollectorDetailPage remount on every render","client CollectorDetailPage.jsx:66, 81","Hoist to module scope.",1],
+["WEB-17","low",0,"No aria attributes or labels on the source, collector, intel and settings screens","client components/sources, collectors","Labels, scope, aria-label on icon buttons.",1],
+["WEB-18","low",0,"Main bundle is 2.8 MB because the map page is imported eagerly","client App.jsx:9","lazy() the map page.",1],
+["WEB-19","low",0,"Status summary polled every 30 s and stats every 60 s even when the tab is hidden","client SourcesListPage.jsx:69; useDataSources.js:39","Pause when hidden.",1],
+["WEB-20","low",0,"No test covers Run now, the cadence gate, or the screens that load the full registry","client sourcePages.test.jsx","Add those tests.",1],
+["IOS-01","critical",0,"Dashboard downloads the full /api/status (every source) on each open and refresh, against a 120 s timeout","ios SourceDashboardTab.swift:621; API.swift:217","/api/status?summary=1, /api/collectors, /api/sources/search with paging.",3],
+["IOS-02","critical",0,"Main-actor work over every row on each state change, including one chart dot per source and an O(n²) settings form","ios SourceDashboardTab.swift:234-445; SourceScheduleSettingsView.swift:30-75","Goes away with server paging; meanwhile counts not dots, lazy lists, dictionary lookup.",3],
+["IOS-03","critical",0,"Intel tab downloads all of /api/intel/sources and rewrites every row in SwiftData on the main actor, again after each Run tap","ios IntelTab.swift:314; Persistence/IntelCache.swift:11-42","Page the catalogue; refresh one row after a run.",3],
+["IOS-04","critical",0,"Run all sources posts a run for every registered source with no confirmation and swallowed errors","ios IntelTab.swift:329-366","Remove, or scope to one collector with a count confirmation.",3],
+["IOS-05","high",1,"Run now on a pivot reports ran: 0 new rows although nothing ran","ios SourceDashboardTab.swift:891; core/httpd.c:1821","Same server change as WEB-01; disable Run for pivots until then.",3],
+["IOS-06","high",0,"Long runs always show failed: the client timeout is 120 s despite comments saying none","ios API.swift:34-38, 112-117","Make the run a job the client polls.",3],
+["IOS-07","high",0,"Operator access is hardcoded to one email address in the app","ios Auth/PlatformAdmin.swift:12","Ask the server, as the web client does.",3],
+["IOS-08","high",0,"Map layers are capped at 10,000 by the server and decimated to 500 on the device with no N of M shown","ios MapTab.swift:819-872, 1004; core/dataapi.c:287","Read _meta; show the counts; page with /api/layers/:id/geojson.",3],
+["IOS-09","high",1,"Restart server button reports success; the server answers 501","ios API.swift:492; AdminPanel.swift:208; core/httpd.c:3186","Remove the control or surface the 501.",3],
+["IOS-10","medium",0,"Item uid is not percent-encoded in three routes (uids contain | and :)","ios API.swift:366, 372, 378","Encode as similarItems already does.",3],
+["IOS-11","medium",0,"Fetch-failure and shape notices render as ordinary findings","ios Models.swift:720-725","Match collector-*-notice plus collector-fetch-failure; show the reason fields.",3],
+["IOS-12","medium",0,"Dashboard has no filter for kind, engine or pending; pods are not distinguished","ios SourceDashboardTab.swift:30","Take facets from /api/sources/search.",3],
+["IOS-13","medium",0,"Source detail has no notices, run history, data shape, settings or interval","ios SourceDashboardTab.swift:756-855","Mirror the web source page.",3],
+["IOS-14","medium",0,"waitsForConnectivity delays the offline screen by up to two minutes","ios API.swift:39","Turn it off or override per request.",3],
+["IOS-15","medium",0,"Per-source item search never cancels the previous request; an older response can overwrite a newer one","ios IntelSourceItemsView.swift:102-107","task(id:) with a debounce.",3],
+["IOS-16","medium",0,"API keys and Breach screens pull the full status dump to decorate a view","ios ApiKeysView.swift:300; BreachCorpusView.swift:480","Filtered search or summary.","written, not compiled. 'Used by' lists only sources still waiting on that key"],
+["IOS-17","low",0,"Widgets and Share extension are not targets in the project; that code never compiles","ios project.pbxproj; EXTENSION_TARGETS_TODO.md","Add the targets or delete the code and plist entries.","written, not compiled. The share queue drain is fixed; the Widgets and Share targets still do not exist in the project"],
+["IOS-18","low",0,"SSE search stream sends the bearer token without the origin guard other requests use","ios API.swift:815-820","Reuse the guard.",3],
+["IOS-19","low",0,"Release default backend is a developer machine's hostname over plain http","ios BuildConfig.swift:24-29","Empty default, required at first launch.",3],
+["IOS-20","low",0,"Stale copy and hardcoded lists: 100+ collectors, thresholds never measured, showcase layer ids","ios OnboardingFlow.swift:375, 614; SimilarityThresholdsView.swift:49","Read counts from the server.","written, not compiled. Copy updated; only the layer count comes from the server because onboarding runs before sign-in"],
+["IOS-21","low",0,"A force unwrap on scenes.first and a few unlabelled fixed limits (200 alerts, 200 cases, 12 runs)","ios Auth/OAuth.swift:162; AlertEventsView.swift:144","Guard; label the bounds.","written, not compiled. Force unwrap guarded; the Intel item list still has no total to show"],
+["OPS-01","high",0,"CLAUDE.md is 324 KB (about 80,000 tokens) and loads into every agent session","CLAUDE.md","Keep rules under 10 KB; move history to docs/."],
+["OPS-02","high",0,"No hardening flags: no stack protector, FORTIFY_SOURCE, PIE or RELRO","native/Makefile:40","Add them, vendored objects included.",1],
+["OPS-03","high",0,"No LICENSE; Mongoose (GPLv2 or commercial) vendored with no decision; no third-party notices","repo root; native/third_party","Add LICENSE and notices; decide on Mongoose."],
+["OPS-04","medium",0,"A personal email address is committed in functional code and 16 docs files","native/core/host_agents.def:55","Recorded as the owner's decision; consider a role mailbox."],
+["OPS-05","high",0,"No schema version and no deployment artefact","native/core/db.c:61-73","PRAGMA user_version with ordered migrations; Dockerfile or systemd unit; scheduled backup.",1],
+["OPS-06","medium",0,"274 distinct environment variables; about 126 documented; .env.example has 5 lines","native/","Generate an env table from the source and check it in CI.",1],
+["OPS-07","medium",0,"About 48 of 141 core and lib modules are included by no test (zipread, jsonstream, sgp4, bloom, ws among them)","native/tests/unit","Tests for parsers and API handlers first."],
+["OPS-07b","medium",0,"Nothing is fuzzed although the engines parse untrusted HTML, XML, CSV, ZIP, XLSX and JSON","native/tests","libFuzzer harnesses, 60 s in CI under ASan.","five harnesses, a make target and a CI job added; never linked with libFuzzer here (runtime missing), each ran clean under ASan on a sample"],
+["OPS-08","medium",0,"CI has no ESLint and no test of the Python tools; one tool emits a SyntaxWarning","ci.yml; tools/build_feed_manifest.py:4","Add lint, py_compile and self-tests.","py_compile and a tool self-test added to CI, SyntaxWarning fixed; no ESLint because the client has no config or dependency"],
+["OPS-09","low",0,"A report-only CI step with continue-on-error hides 104 untriaged rows","ci.yml:208","Triage or delete.",1],
+["OPS-10","low",0,"Two 6 MB JSON fixtures and a __pycache__ file are tracked","native/tests/contract","Generate fixtures; untrack the cache.",1],
+["OPS-11","medium",0,"docs/ is 743 files and 125 MB; each batch is stored as a manifest and as generated C","docs/","Move manifests and sweep TSVs to release assets or LFS."],
+["OPS-12","low",0,"Build is 1,889 objects with several 5–9 MB tables; no compiler cache in CI","native/Makefile","ccache; compile data tables at -O1 -g0.","ccache added to the main build and ASan jobs only"],
+["OPS-13","low",0,"Tooling overlap: five paging audits and three emit audits with separate CLIs; 56 Python files live under docs/","native/tools","One CLI with subcommands and a shared scratch-DB helper."],
+["OPS-14","low",0,"No metrics endpoint; logs are stderr lines only","core/httpd.c","Prometheus-style /metrics: runs, failures, queue depth, drops.",1],
+["OPS-15","low",0,"Vendored libraries have no version or provenance notes","native/third_party","README with versions, hashes, update steps.",1],
+["DOC-01","medium",1,"CLAUDE.md states 61,527 sources and stops at batch 57; the binary registers 85,767 and the tree is at batch 63","CLAUDE.md; tools/registry-floor.txt","Correct the headline; the floors are already right.",1],
+["DOC-02","low",0,"Client and iOS threshold screens say no cut-off has been measured; they were measured on 2026-10-23","client ThresholdsTab.jsx:95; ios SimilarityThresholdsView.swift:49","Update the copy.",1],
+["ARC-01","medium",0,"lib/ws.c and lib/jsonstream.c open their own curl handles and bypass the per-host agent table and pacing","lib/ws.c:19; lib/jsonstream.c:244","Route through http_request or share one policy hook.","websocket buffer bounded and policy checks added; callers do not yet disclose dropped oversize frames"],
+["ARC-02","low",0,"core/intel.c hand-rolls a seen-set although lib/seenset.c exists","core/intel.c:141-154","Use the library.","not changed: lib/seenset is not a drop-in (no ceiling or exact-count flag)"],
+["ARC-03","low",0,"A test fixture source (geojson-file, _test) ships in the production registry","collectors/pod/geojson_file.c","Build it only for tests.","not changed: gating the fixture needs a lint change and both floors re-recorded"],
+["ARC-04","low",0,"The LLM routing menu is the first K source ids in link order when embeddings are down; hand-written pivots sit at the tail","core/osint_dispatch.c:421-530","Order the fallback menu by trust or usage.",1],
+["LIB-01","high",1,"A 1.9 KB .xlsx expands to a 3 GB CSV: the cell ceiling counts cells, not bytes, so one large shared string reused across cells passes it (reproduced)","lib/xlsx.c walk_sheet","Cap total output bytes in pass 1.",1],
+["LIB-02","high",1,"html_table_parse is quadratic on repeated or nested <table> when table_must misses: 560 KB takes 60 s of CPU (reproduced)","lib/htmlparse.c ~436","Single pass with a stack; bound candidate tables.",1],
+["LIB-03","high",1,"hpengine follows an upstream-supplied next link or detail URL to another host with the row's Authorization header attached; relative next links are not resolved (reproduced with a stub)","lib/hpengine.c:5443, 1474, 226","Resolve relative links; require the same host, or drop row headers and key parameters, for any upstream-supplied URL. Check jsonlist and pagewalk too.",1],
+["LIB-04","medium",1,"csv_decode_sjis uses SHIFT_JIS, not CP932: ㈱ ① 髙 make the decode fail and the whole body is stored as raw bytes (reproduced). hpengine already uses CP932; rss_atom, feedlib and six collectors do not","lib/csv.c; lib/rss_atom.c:403; lib/feedlib.c:81","Decode as CP932; keep the converted prefix on a truncated tail.",1],
+["LIB-05","medium",1,"RSS tag lookup takes the first match in any namespace: <atom:link/> yields an empty link, <media:description> beats <description> (reproduced)","lib/rss_atom.c tag_text","Prefer the unprefixed element; skip self-closing matches.",1],
+["LIB-06","medium",1,"CSV header naming is quadratic in column count: a 160 KB header takes 17 s under ASan; duplicate header names lose the second column (reproduced)","lib/csv.c csv_name_rows","Iterate by next pointers; disambiguate duplicate names.",1],
+["LIB-07","low",1,"xlsx shared-string collection is quadratic: a 2.4 KB file takes 70 s (reproduced)","lib/xlsx.c collect_t","Search for rPh once.",1],
+["LIB-08","medium",1,"64-bit ids sent as JSON numbers lose precision in cJSON, so distinct ids collapse to one uid and detail hops ask for the wrong id (reproduced)","lib/hpengine.c:987, 1466; lib/jsonlist.c:149","Keep the raw number text for integers above 2^53.",1],
+["LIB-09","low",1,"An overlong UTF-8 NUL truncates a normalised entity key, so two different names can collide (reproduced)","lib/jpnorm.c; lib/utf8.h","Reject overlongs, surrogates and code points above U+10FFFF.",1],
+["LIB-10","low",0,"keyqual counts occurrences linearly on every call: quadratic on a feed that repeats one key","lib/keyqual.c","Store counts.",1],
+["LIB-11","low",0,"Raw-socket collectors resolve the name again after the SSRF check (DNS rebinding)","collectors/sources/port_scanner.c, email_validator.c, ssl_analyzer.c","Resolve once, judge the address, connect to it.",1],
+["LIB-12","low",0,"email_validator builds its lookup URL unencoded and reads one recv per SMTP reply","collectors/sources/email_validator.c ~195","Encode; read to the final reply line.",1],
+["LIB-13","low",0,"Unguarded double to long long casts remain in hpengine although jsonlist fixed the same defect","lib/hpengine.c:987, 2526","Range-check before the cast.",1],
+["LIB-14","low",0,"Numeric HTML entities out of range are silently dropped","lib/htmlparse.c:354","Use the checked decoder hpengine already has.",1],
+["LIB-15","low",0,"RSS items with no guid, link or title are skipped with no notice; loose date validation","lib/rss_atom.c","File a notice with the count.",1],
+["LIB-16","low",0,"zipread: no ZIP64 or >65,535 entries; all-entries read re-walks the directory per member; allocation sized by the declared length","lib/zipread.c","Walk once; disclose unreachable members.",1],
+["LIB-17","low",0,"A date format ending in a literal :NN has it consumed as a day offset","lib/datetok.c","Only treat a signed suffix as an offset.",1],
+["LIB-18","low",0,"Websocket client: unbounded fragment buffer, no SSRF check, no agent policy","lib/ws.c","Bound the buffer; share the HTTP policy hook.",1],
+["LIB-19","low",0,"Many same-named XML siblings in one record are indexed quadratically","lib/hpengine.c","Keep a per-name counter.",1],
+["LIB-20","low",0,"academic_world caps author lists at 20 without disclosure","collectors/sources/academic_world.c","Remove the cap or disclose it.",1],
+["ENG-17","medium",1,"22 real-time feeds (earthquake early warning declared at 10 s, tsunami, train and flight positions) run once every 6 hours under the default cadence; nothing ships with an exception","core/cadence.c; measured by the scheduling audit","Owner decision: ship per-source overrides for the real-time rows, or let a row declare itself exempt."],
+["ENG-18","medium",1,"The fleet cannot keep the 6 h cadence at the default 8 workers: one lap of 83,511 sources takes about 18 hours (mean run 6.2 s over a 400-source sample); 24 workers are needed","measured by the scheduling audit, docs/source-scheduling-audit-2026-11-14.md on its branch","Raise JO_SCHED_WORKERS after measuring database write contention at 24."],
+["ENG-19","low",1,"No sleep on the fetch path checks the cancel flag, so a cancelled run can stay parked up to 300 s in the host gate","core/hostgate.c; core/httpclient.c:219, 883; lib/hpengine.c page_delay_ms","Pass the cancel flag into the waits and wake on it.",1],
+["ENG-20","low",1,"The database explorer reports hard-coded cron strings as each job's next run; they do not come from the real scheduler","core/dbexplorerapi.c:218-227","Read next due from the scheduler's own functions, or drop the field.",1],
+["ARC-05","low",1,"About 22 private copies of an ISO-timestamp helper and about 10 of a monotonic-milliseconds helper across core/, although lib/jocore.h has jo_iso_now","native/core, native/collectors/pod","Replace with the shared helper.","partly fixed: 15 of the 22 timestamp copies replaced by the shared helper; 7 write a different format and stay; the clock helpers are untouched"],
+["OPS-16","low",1,"test_source_interval.c closes the database twice at the end (on the scheduling branch, lines 134 and 136)","native/tests/unit/test_source_interval.c","Remove the second close.",1],
+["SRC-01","medium",1,"Three hand-written collectors fetch 99–227 KB and store nothing with no notice: bird-flu-outbreaks, real-estate, phone-scam-hotspots (live run)","native/collectors/sources","Read the bodies; the pages likely changed shape. Return non-zero so the scheduler discloses it.",1],
+["SRC-02","medium",1,"Four Korean law rows (kr-supreme-court-precedents, kr-constitutional-court-decisions, kr-local-ordinances, kr-treaties) each receive a 215-byte answer and store nothing silently (live run)","native/collectors","Read the 215 bytes: probably an API-key or parameter error served as 200.","the four rows now ask for KR_LAW_GO_KR_OC and report that they need it; 14 other rows still carry the test key"],
+["SRC-03","low",1,"ifrc-go-appeal-document loses 1,897 of 7,708 records to uid collisions (live run)","native/collectors","Measure the key against the upstream before changing it.",4],
+["SRC-04","low",1,"Seven more sampled rows store nothing in silence (two arxiv category feeds, usaspending federal-account detail, an Aragon CKAN org, three batch rows)","sweep.tsv","Re-run alone; an empty arXiv category on a weekend is an honest empty.","five are honest empties; two (a cookie wall and a removed ArcGIS layer) still fail without a disclosure, which needs an engine change"],
+["SRC-05","low",1,"92 of 1,053 sampled rows did not finish in 90 s under 16 parallel jobs","sweep.tsv","Re-run at a 300 s kill line; long walks also hold scheduler workers (see ENG-01)."],
+];
+const GRP=[["Government",28358,27508],["Geospatial",11360,19801],["News and media",7492,7573],["Companies and markets",5106,5032],["Open data and statistics",3821,4381],["Health, food, agriculture",3921,3921],["Science and academia",2537,3697],["Education and schools",3893,2733],["Law and courts",1941,2032],["Culture and archives",1543,1543],["Environment and hazards",2982,1398],["Cyber threat intelligence",1321,1230],["Infrastructure and energy",7527,1117],["Social and web",926,926],["Crime, policing, defense",901,901],["Transport",757,593],["Investigation pivots",322,322],["Cameras and sensors",313,313],["Telecom and networks",270,270],["Space",208,208],["Procurement and aid",187,187],["Sanctions",61,61],["Internal pods",20,20]];
+const SWEEP=[["OK",829,"fetched, emitted and stored real records"],["SLOW",92,"hit my 90 s kill line at 16 parallel jobs on 4 cores; unmeasured, not failed"],["FETCH_FAILED",79,"disclosed refusal: 27 TLS handshakes cut by this container's egress, 12 HTTP 503, 9 HTTP 403, rest transport"],["COLLISION",24,"some records share a uid; 22 lose under 5%"],["GATED",14,"needs an API key and says so"],["EMITS_NOTHING",14,"stored nothing and filed no notice"],["WINDOW_EMPTY",1,"date-window row read from a fresh database"]];
+const SWEEPNOTE="1,053 sources, 1,831,419 records emitted and 1,803,560 stored. 79% work end to end from this container. Of the collision gap, 25,095 are one Greek register that repeats 233 titles byte for byte (already documented) and 1,897 are ifrc-go-appeal-document, which is worth a look. Failures seen from one container on one day are a reading of this path, not a verdict on the source.";
+
+const fmt=n=>n.toLocaleString("en-US");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+document.getElementById("grp").insertAdjacentHTML("beforeend",GRP.map(g=>`<tr><td>${g[0]}</td><td class="n">${fmt(g[1])}</td><td class="n">${g[1]===g[2]?fmt(g[2]):"<b>"+fmt(g[2])+"</b>"}</td><td class="n">${(g[2]/857.67).toFixed(1)}%</td></tr>`).join(""));
+document.getElementById("sweep").insertAdjacentHTML("beforeend",SWEEP.map(r=>`<tr><td><span class="mono">${r[0]}</span></td><td class="n">${fmt(r[1])}</td><td>${r[2]}</td></tr>`).join(""));
+document.getElementById("sweep-note").textContent=SWEEPNOTE; if(!SWEEPNOTE)document.getElementById("sweep-note").hidden=true;
+document.getElementById("f-total").textContent=ISS.length;
+{const f=ISS.filter(i=>i[6]===1).length,w=ISS.filter(i=>i[6]===3).length,pp=ISS.filter(i=>typeof i[6]==="string").length,o=ISS.filter(i=>!i[6]).length;document.getElementById("f-fixed").textContent=`Of ${ISS.length} issues: ${f} fixed, ${w} written but not compiled (iOS), ${pp} partly fixed or deliberately unchanged, ${o} open.`}
+document.getElementById("f-ch").textContent=ISS.filter(i=>(i[1]==="critical"||i[1]==="high")&&!i[6]).length;
+let sev=new Set(),area=new Set(),openOnly=false;
+function btns(host,keys,label,set){host.innerHTML=keys.map(k=>`<button type="button" aria-pressed="false" data-k="${k}">${label(k)}</button>`).join(" ");
+  host.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const k=b.dataset.k;set.has(k)?set.delete(k):set.add(k);b.setAttribute("aria-pressed",set.has(k));draw()})}
+btns(document.getElementById("sevbtns"),SEV,k=>k+" "+ISS.filter(i=>i[1]===k).length,sev);
+btns(document.getElementById("areabtns"),Object.keys(AREAS).filter(a=>ISS.some(i=>i[0].startsWith(a))),k=>AREAS[k],area);
+const ob=document.getElementById("openonly");ob.addEventListener("click",()=>{openOnly=!openOnly;ob.setAttribute("aria-pressed",openOnly);draw()});
+const q=document.getElementById("q");q.addEventListener("input",draw);
+function draw(){const t=q.value.trim().toLowerCase();
+  const rows=ISS.filter(i=>(!sev.size||sev.has(i[1]))&&(!openOnly||!i[6]||typeof i[6]==='string')&&(!area.size||area.has(i[0].split("-")[0]))&&(!t||i.join(" ").toLowerCase().includes(t)))
+    .sort((a,b)=>SEV.indexOf(a[1])-SEV.indexOf(b[1]));
+  document.querySelector("#iss tbody").innerHTML=rows.map(i=>`<tr><td class="mono" style="white-space:nowrap">${i[0]}</td><td><span class="pill ${i[1]}">${i[1]}</span>${i[2]?' <span class="pill okp">verified</span>':''}${i[6]===1?' <span class="pill fixedp">fixed</span>':i[6]===3?' <span class="pill fixedp">written, not compiled</span>':i[6]===4?' <span class="pill okp">checked, no defect</span>':typeof i[6]==='string'&&i[6].startsWith('not changed')?' <span class="pill low">not changed</span>':i[6]?' <span class="pill medium">partly fixed</span>':' <span class="pill low">open</span>'}</td><td>${esc(i[3])}<div class="where">${esc(i[4])}</div></td><td class="fix">${esc(i[5])}${typeof i[6]==='string'?'<div class="where">'+esc(i[6])+'</div>':''}</td></tr>`).join("")||`<tr><td colspan="4">No issue matches these filters.</td></tr>`;
+  document.getElementById("count").textContent=rows.length+" of "+ISS.length+" shown"}
+draw();
+</script>

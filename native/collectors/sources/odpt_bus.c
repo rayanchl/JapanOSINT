@@ -6,6 +6,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,8 +40,18 @@ static cJSON *odpt_get(http_client *http, const char *rdf, const char *tok) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *tok = odpt_tok();
   if (!tok) {
-    fprintf(stderr, "[odpt-bus] gated (no ODPT token)\n");
-    return 0;
+    /* 2026-11-16: this was a bare stderr line and `return 0`, so the run read
+     * `records=0 stored=0 bytes=0 requests=0` — rule 1's invisible nothing —
+     * while odpt-train, gated on the SAME three variables, stored a notice.
+     * Same helper, same names in the order odpt_tok() tries them. Measured the
+     * same day: both ODPT bases answer a keyless odpt:Bus with HTTP 403
+     * "Require acl:consumerKey." */
+    static const char *const envs[] = { "ODPT_TOKEN", "ODPT_CONSUMER_KEY",
+                                        "ODPT_CHALLENGE_TOKEN", NULL };
+    return jo_needs_credential(sink, "odpt-bus",
+        "ODPT v4 odpt:Bus (realtime bus positions)",
+        envs, "https://api.odpt.org/api/v4/odpt:Bus",
+        "free consumer key at developer.odpt.org (or the challenge token)");
   }
   cJSON *rows = odpt_get(ctx->http, "odpt:Bus", tok);
 

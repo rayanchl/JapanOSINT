@@ -414,7 +414,7 @@ int sched_state_load_one(db_handle *db, const char *id, sched_state *st) {
  * The column is on source_sched_state because that table is already one row
  * per scheduled source with the same lifetime. A row that is not scheduled has
  * no resume position by construction: only this path sets the callbacks. */
-#define SCHED_RESUME_MAX 1024
+#define SCHED_RESUME_MAX 8192
 
 static int sched_resume_load(db_handle *db, const char *id, char *out, size_t cap) {
   if (out && cap) out[0] = 0;
@@ -828,6 +828,9 @@ int scheduler_run_source(db_handle *db, const source_def *d,
    * answer from the start of the result set for the entity it was just asked
    * about — resuming there would hand back page 37 of whatever the previous
    * caller asked. source.h says this; here is where it is true. */
+  /* A worker thread carries the last transport/TLS verdict of whatever it ran
+   * before; clear it so this run's disclosure can only name its own. */
+  http_reset_last_error();
   char resume_tok[SCHED_RESUME_MAX];
   if (!entity && sched_resume_load(db, d->id, resume_tok, sizeof resume_tok))
     ctx.resume_in = resume_tok;
@@ -849,7 +852,16 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   /* Same thread-local pattern for content-change detection (roadmap 26): the
    * httpclient hook needs a db_handle and source_id it cannot otherwise see. */
   content_change_scope_begin(db, d->id);
+  hostgate_set_cancel(cancel);
+  /* The operator's per-source ceiling applies to EVERY engine's requests, not
+   * only to the collectors that read ctx.body_ceiling: hpengine and VJSON rows
+   * never do, so the setting was a no-op for them. Restored on return — a
+   * worker thread outlives the run, and a leaked ceiling would widen the next
+   * source's fetch. An explicit $JO_HTTP_MAX_BODY still clamps it. */
+  size_t prev_ceiling = http_body_ceiling_set(ctx.body_ceiling);
   int rc = d->run(&ctx, &sink);
+  http_body_ceiling_set(prev_ceiling);
+  hostgate_set_cancel(NULL);
   content_change_scope_end();
   evidence_scope_end();
   clock_gettime(CLOCK_MONOTONIC, &t1);
@@ -896,6 +908,13 @@ int scheduler_run_source(db_handle *db, const source_def *d,
    * own, and it is the one that reaches the 32 rows in 10,252 whose host
    * answered with a maintenance page. Both require that the run left NOTHING
    * behind, which is what makes this a disclosure rather than a second status. */
+  /* What the COLLECTOR emitted, read before our own disclosure goes through
+   * the same counting sink. The disclosure is a record on the run line (the
+   * convention hp rows set), but it is not evidence the feed had rows: counted
+   * into the empties streak it reset consecutive_empties on every run of a
+   * source that was being refused with a success status, so the one counter
+   * meant to show "empty for 200 runs" read 0 for exactly those sources. */
+  long collector_records = cs.n;
   if (real_collector && cs.n == 0 && cs.notices == 0 &&
       (strcmp(run_st, "ok") != 0 || rc < 0))
     sched_disclose_fetch_failure(&sink, d, entity, rc, hosts, hosts_ok,
@@ -975,7 +994,7 @@ int scheduler_run_source(db_handle *db, const source_def *d,
     fetch_log_set_bytes(db, flid, bytes_in);
     sources_row_record(db, d->id, status, stored >= 0 ? stored_data : cs.n,
                        duration_ms, why);
-    if (!entity) sched_state_record(db, d, status, cs.n);
+    if (!entity) sched_state_record(db, d, status, collector_records);
   }
   return rc;
 }
@@ -1066,6 +1085,7 @@ static int sched_row_benched(db_handle *db, const char *id) {
  * already true — it is the reason this port is a pool and not a rewrite.  */
 
 #define SCHED_QCAP 2048
+#define SCHED_WORKERS_DEFAULT 8
 #define SCHED_RT_RESERVE 64        /* queue slots only a real-time row may take */
 
 enum { LANE_COLLECT = 0, LANE_MAINT = 1, LANE_N = 2 };
@@ -1454,6 +1474,39 @@ void scheduler_running_summary(char *buf, size_t cap, const char *exclude_id) {
  * one instant). ramp <= 0 disables the compression; stag <= 0 disables the
  * ramp altogether. Politeness per upstream is hostgate's job, which is what
  * makes a tighter ramp safe. */
+/* ── the wall clock can step; the plan must not ────────────────────────────
+ *
+ * Every due time here is a wall-clock time_t, because the health state it is
+ * planned from (backoff_until, last_probe, last run) is persisted as one. So
+ * an NTP correction or an operator setting the date used to move the whole
+ * plan: a step BACK of N seconds froze the fleet for N seconds, and a step
+ * FORWARD made every source due at once and tripped the watchdog on every
+ * running one.
+ *
+ * The dispatcher compares the wall clock's progress with a clock that cannot
+ * be set (CLOCK_BOOTTIME where there is one — it counts a suspended machine's
+ * sleep, so a laptop that slept eight hours is correctly eight hours overdue —
+ * else CLOCK_MONOTONIC). A difference of SCHED_CLOCK_STEP_MIN or more is a
+ * step, and every time in the plan is shifted by it, so what was due in ten
+ * minutes is still due in ten minutes. Smaller differences are slew and tick
+ * rounding, and are left alone. */
+#define SCHED_CLOCK_STEP_MIN 5
+
+long sched_clock_step(time_t wall_prev, time_t wall_now,
+                      long long steady_prev, long long steady_now) {
+  long long d = ((long long)wall_now - (long long)wall_prev) - (steady_now - steady_prev);
+  return (d >= SCHED_CLOCK_STEP_MIN || d <= -SCHED_CLOCK_STEP_MIN) ? (long)d : 0;
+}
+
+static long long sched_steady_sec(void) {
+  struct timespec ts;
+#ifdef CLOCK_BOOTTIME
+  if (clock_gettime(CLOCK_BOOTTIME, &ts) == 0) return (long long)ts.tv_sec;
+#endif
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  return (long long)ts.tv_sec;
+}
+
 long sched_boot_offset(int k, int m, int workers, long stag, long ramp,
                        long interval) {
   if (stag <= 0 || k <= 0 || m <= 1) return 0;
@@ -1521,7 +1574,7 @@ void scheduler_loop(db_handle *db) {
    * upstream politeness (hostgate) and sqlite write contention, not cores. 8
    * is the conservative default for a first deploy; raise it once the
    * heartbeat below shows a standing backlog. 1 = the old serial behaviour. */
-  int workers = (int)env_long("JO_SCHED_WORKERS", 8, 1, 32);
+  int workers = (int)env_long("JO_SCHED_WORKERS", SCHED_WORKERS_DEFAULT, 1, 128);
   /* The pods are few, mostly short, and must never wait on the fleet. Two, so
    * one long LLM-bound pod (repair, enrichment) cannot hold the WAL
    * checkpoint or retention behind it. */
@@ -1590,12 +1643,32 @@ void scheduler_loop(db_handle *db) {
                   "worker(s)\n", n, workers, mworkers);
 
   unsigned long tick = 0;
+  time_t wall_prev = time(NULL);
+  long long steady_prev = sched_steady_sec();
   int cursor = 0, deferred = 0;
   unsigned cad_gen = cadence_generation();
   unsigned ovr_gen = source_interval_generation();
   for (;;) {
     if (atomic_load(&g_shutdown)) { sleep(1); continue; }
     time_t now = time(NULL);
+    long long steady = sched_steady_sec();
+    long step = sched_clock_step(wall_prev, now, steady_prev, steady);
+    wall_prev = now; steady_prev = steady;
+    if (step) {
+      pthread_mutex_lock(&g_q.mu);
+      for (int i = 0; i < n; i++) {
+        if (next[i])          next[i]          += step;
+        if (g_q.due[i])       g_q.due[i]       += step;
+        if (g_q.started[i])   g_q.started[i]   += step;
+        if (g_q.warned[i])    g_q.warned[i]    += step;
+        if (g_state[i].backoff_until) g_state[i].backoff_until += step;
+        if (g_state[i].last_probe)    g_state[i].last_probe    += step;
+        if (g_state[i].last_run)      g_state[i].last_run      += step;
+      }
+      pthread_mutex_unlock(&g_q.mu);
+      fprintf(stderr, "[sched] the wall clock stepped %+lds; the plan moved with it "
+                      "(no source was made due or held back by the step)\n", step);
+    }
     /* The cadence policy changed (PUT /api/sources/cadence), or a per-source
      * interval was set or cleared (PUT/DELETE /api/sources/:id/interval): a
      * row whose next due time is further away than its NEW spacing is pulled

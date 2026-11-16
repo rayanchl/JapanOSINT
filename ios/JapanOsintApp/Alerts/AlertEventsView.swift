@@ -58,6 +58,11 @@ struct AlertEventsView: View {
             ForEach(events) { ev in
                 row(ev)
             }
+            if events.count >= 200 {
+                Text("Showing the latest 200 firings; older ones are not loaded.")
+                    .font(.caption2)
+                    .foregroundStyle(theme.textMuted)
+            }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)

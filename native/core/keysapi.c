@@ -15,6 +15,10 @@
 #include <ctype.h>
 #include <time.h>
 #include <pthread.h>
+#include <errno.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #ifndef JO_REPO_ROOT
 #define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
@@ -76,11 +80,14 @@ static int b64_decode(const char *in, unsigned char *out, int outcap) {
   static pthread_once_t once = PTHREAD_ONCE_INIT;
   pthread_once(&once, b64_rev_init);
   int *rev = b64_rev;
-  int val=0,bits=-8,o=0;
+  /* Unsigned accumulator: `val<<6` on a signed int overflows (undefined
+   * behaviour) once enough characters have been shifted in; only the low
+   * bits are ever read, so wrapping modulo 2^32 is exactly what is wanted. */
+  unsigned val=0; int bits=-8,o=0;
   for (const char *p=in; *p; p++) {
     if (*p=='=' ) break;
     int c=rev[(unsigned char)*p]; if (c<0) continue;
-    val=(val<<6)|c; bits+=6;
+    val=(val<<6)|(unsigned)c; bits+=6;
     if (bits>=0){ if(o<outcap) out[o++]=(unsigned char)((val>>bits)&0xFF); bits-=8; }
   }
   return o;
@@ -108,13 +115,33 @@ static cJSON *overlay_read(void) {
   if (!j || !cJSON_IsObject(j)) { cJSON_Delete(j); j=cJSON_CreateObject(); }
   return j;
 }
-static void overlay_write(cJSON *o) {
+/* The overlay holds PLAINTEXT third-party API keys: created 0600 (fopen would
+ * give 0666 & ~umask), and every step is checked — a full disk or a failed
+ * rename used to answer 200 `set:true` for a key that was never saved.
+ * Returns 0 on success, -1 on any failure (the temp file is removed). */
+static int overlay_write(cJSON *o) {
   char p[1024], tmp[1056]; overlay_path(p, sizeof p);
   snprintf(tmp, sizeof tmp, "%s.tmp", p);
   char *txt = cJSON_Print(o);            /* pretty, like JSON.stringify(,,2) */
-  FILE *f = fopen(tmp, "wb");
-  if (f) { fwrite(txt, 1, strlen(txt), f); fclose(f); rename(tmp, p); }
+  if (!txt) return -1;
+  int rc = -1;
+  int fd = open(tmp, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+  if (fd >= 0) {
+    (void)fchmod(fd, 0600);              /* a pre-existing temp keeps its mode */
+    size_t n = strlen(txt), off = 0;
+    int ok = 1;
+    while (off < n) {
+      ssize_t w = write(fd, txt + off, n - off);
+      if (w < 0) { if (errno == EINTR) continue; ok = 0; break; }
+      off += (size_t)w;
+    }
+    if (ok && fsync(fd) != 0) ok = 0;
+    if (close(fd) != 0) ok = 0;
+    if (ok && rename(tmp, p) == 0) rc = 0;
+    if (rc != 0) unlink(tmp);
+  }
   free(txt);
+  return rc;
 }
 /* resolved value: overlay non-empty string wins, else process env. */
 static const char *resolved_env(cJSON *ov, const char *name) {
@@ -303,7 +330,11 @@ char *keysapi_platform(db_handle *db, const tenant_ctx *t, const char *method,
     const char *val = (jv&&cJSON_IsString(jv))?jv->valuestring:"";
     cJSON_DeleteItemFromObject(ov,name);          /* clear */
     if (val[0]) cJSON_AddStringToObject(ov,name,val);  /* set when non-empty */
-    overlay_write(ov);
+    if (overlay_write(ov) != 0) {
+      if (jb) cJSON_Delete(jb);
+      cJSON_Delete(ov);
+      return jerr(st,500,"Could not save the key overlay");
+    }
     if (jb) cJSON_Delete(jb);
     cJSON *o=cJSON_CreateObject();
     cJSON_AddStringToObject(o,"name",name);
@@ -612,8 +643,21 @@ char *keysapi_breakglass(db_handle *db, const char *body,
    * CRYPTO_memcmp exists to close (see auth.c's verify_hs256 for the same
    * reasoning against the JWT HMAC). Both sides are fixed 6-digit strings
    * validated above, so comparing 6 bytes is safe. */
+  long matched_step=0;
   for (int d=-1; d<=1 && !valid; d++){ char e[7]; totp_at(key,klen,step+d,e);
-    if (CRYPTO_memcmp(e,code,6)==0) valid=1; }
+    if (CRYPTO_memcmp(e,code,6)==0) { valid=1; matched_step=step+d; } }
+  /* A TOTP code is single-use (RFC 6238 §5.2): remember the newest step ever
+   * accepted and refuse that step or any older one, so a code that was
+   * shoulder-surfed or logged is not a reusable 90 s operator login. The
+   * ±1-step window still tolerates clock skew; it just cannot be replayed. */
+  if (valid) {
+    static pthread_mutex_t bg_mu = PTHREAD_MUTEX_INITIALIZER;
+    static long bg_last_step = 0;
+    pthread_mutex_lock(&bg_mu);
+    if (matched_step <= bg_last_step) valid = 0;
+    else bg_last_step = matched_step;
+    pthread_mutex_unlock(&bg_mu);
+  }
 
   /* Audit every attempt, through the chained writer under the 'platform'
    * tenant. This was a raw INSERT that left the chain columns NULL — the one

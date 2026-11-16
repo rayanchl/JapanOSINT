@@ -6,7 +6,6 @@ import AppShell from './components/shell/AppShell.jsx';
 import ConsoleHubPage from './components/shell/ConsoleHubPage.jsx';
 import OnboardingFlow from './components/auth/OnboardingFlow.jsx';
 import AuthCallback from './components/auth/AuthCallback.jsx';
-import MapPage from './components/map/MapPage';
 import SearchPage from './components/search/SearchPage';
 import EntitiesPage from './components/entities/EntitiesPage';
 import EntityProfile from './components/entities/EntityProfile';
@@ -18,6 +17,7 @@ import { Button, LoadingState, Page, EmptyState } from './components/ui/kit.jsx'
 import { ServerSettings } from './components/auth/OnboardingFlow.jsx';
 
 const lazy = (loader) => React.lazy(loader);
+const MapPage = lazy(() => import('./components/map/MapPage'));
 const IntelPage = lazy(() => import('./components/intel/IntelPage.jsx'));
 const SourcesListPage = lazy(() => import('./components/sources/SourcesListPage.jsx'));
 const SourceDetailPage = lazy(() => import('./components/sources/SourceDetailPage.jsx'));

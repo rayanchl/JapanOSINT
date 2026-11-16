@@ -21,11 +21,21 @@ enum BuildConfig {
     /// (resolves on-LAN via mDNS; covered by Info.plist NSAllowsLocalNetworking).
     /// Both stay editable on the onboarding "Connect" page / in Settings for
     /// self-host + real backends.
+    ///
+    /// A RELEASE build ships with no backend URL at all (empty): baking one
+    /// developer's hostname into the binary pointed every install at that
+    /// machine over plain http. The onboarding "Connect" field is required
+    /// until a URL is entered (OnboardingFlow `AuthStep.backendMissing`).
+    /// DEBUG builds keep the development defaults above.
     static let backendBaseURL: String = {
+        #if DEBUG
         #if os(macOS)
         return "http://127.0.0.1:4000"
         #else
         return "http://Rayans-MacBook-Pro.local:4000"
+        #endif
+        #else
+        return ""
         #endif
     }()
 

@@ -46,7 +46,40 @@ char *zip_entry_at(const char *buf, size_t len, int index,
  * four bytes inside COMPRESSED data, so a one-entry archive could be reported
  * as holding more. Returns -1 when no EOCD record is found (a truncated or
  * non-ZIP body), in which case the count is unknown, not 1. A ZIP64 archive
- * stores 0xFFFF here and is reported as 65535, which is still "more than one". */
+ * reports the count from its ZIP64 end-of-directory record (clamped to INT_MAX). */
 int zip_entry_count(const char *buf, size_t len);
+
+/* One-pass iteration over every member (central-directory order). Use this to
+ * read an archive whose ENTRIES ARE THE COLLECTION; zip_entry_at(i) re-walks
+ * the directory from the start each call.
+ *
+ *   zip_iter it;
+ *   if (zip_iter_open(&it, buf, len) == 0) {
+ *     char name[512]; char *data; size_t n; int rc;
+ *     while ((rc = zip_iter_next(&it, name, sizeof name, &data, &n)) != 0) {
+ *       if (rc < 0) { ... a member that cannot be read: disclose it ... continue; }
+ *       ... use data ...; free(data);
+ *     }
+ *     // it.declared entries were declared, it.walked were reached
+ *   }
+ *
+ * zip_iter_next returns 1 with the member's bytes (caller frees), -1 for a
+ * member whose framing is intact but whose bytes cannot be produced
+ * (unsupported compression, truncated, will not inflate, or ZIP64 numbers the
+ * directory does not carry) — `name_out` still holds its name — and 0 at the
+ * end of the walkable directory. ZIP64 archives (more than 65,535 entries, or
+ * members over 4 GiB) are read through the ZIP64 end-of-directory record and
+ * extra fields; `walked < declared` at the end means part of the directory
+ * could not be walked and those members are unread. */
+typedef struct {
+  const char *buf; size_t len;
+  size_t p, cd_end;
+  unsigned long long declared;   /* entries the archive says it holds */
+  unsigned long long walked;     /* entries reached so far */
+  int zip64, done;
+} zip_iter;
+int zip_iter_open(zip_iter *it, const char *buf, size_t len);
+int zip_iter_next(zip_iter *it, char *name_out, size_t name_n,
+                  char **data, size_t *out_len);
 
 #endif

@@ -419,6 +419,27 @@ static int catalogue_budget_chars(void) {
   return 12288;
 }
 
+/* The ORDER in which entity pivots are offered when the menu is bounded.
+ * The bounded menu keeps the FIRST K, and the registry's link order puts the
+ * hand-written pivots (collector "osint_<category>": DNS_RECORDS, DOMAIN_WHOIS,
+ * JP_CORPUS_LOOKUP …) at the tail, so they were the first dropped while the
+ * ~tens of thousands of generated rows beside them filled the budget. They come
+ * first now, each group in registry order. Used by BOTH the printed catalogue
+ * and the schema enum, because "the first N" must be the same N in both. When
+ * nothing is cut the order is immaterial. Returns the pivot count; `idx` must
+ * hold registry_count() ints. */
+static int pivot_order(int *idx) {
+  const source_def **all = registry_all();
+  int n = registry_count(), k = 0;
+  for (int pass = 0; pass < 2; pass++)
+    for (int i = 0; i < n; i++) {
+      if (!is_entity_pivot(all[i])) continue;
+      int hand = all[i]->collector && !strncmp(all[i]->collector, "osint_", 6);
+      if ((pass == 0) == hand) idx[k++] = i;
+    }
+  return k;
+}
+
 char *osint_services_list_bounded(osint_catalogue_note *note) {
   const source_def **all = registry_all();
   int n = registry_count();
@@ -437,12 +458,13 @@ char *osint_services_list_bounded(osint_catalogue_note *note) {
 
   size_t cap = 4096, len = 0;
   char *buf = malloc(cap);
-  if (!buf) return NULL;
+  int *order = malloc((size_t)(n > 0 ? n : 1) * sizeof *order);
+  if (!buf || !order) { free(buf); free(order); return NULL; }
   buf[0] = 0;
   int shown = 0;
-  for (int i = 0; i < n; i++) {
-    const source_def *d = all[i];
-    if (!is_entity_pivot(d)) continue;
+  int norder = pivot_order(order);
+  for (int oi = 0; oi < norder; oi++) {
+    const source_def *d = all[order[oi]];
     /* Stop on the budget rather than half-writing a line: a truncated service
      * id is a name that does not exist, and the model would route to it. */
     size_t need = strlen(d->id) + 2;
@@ -461,9 +483,10 @@ char *osint_services_list_bounded(osint_catalogue_note *note) {
     } else {
       sl_append(&buf, &len, &cap, "\n");
     }
-    if (!buf) return NULL;   /* OOM mid-build */
+    if (!buf) { free(order); return NULL; }   /* OOM mid-build */
     shown++;
   }
+  free(order);
 
   /* Say it IN the prompt. The model is told what it is not being shown, so it
    * routes knowing the menu is partial instead of assuming it saw everything —
@@ -471,9 +494,10 @@ char *osint_services_list_bounded(osint_catalogue_note *note) {
   char banner[384];
   if (shown < total)
     snprintf(banner, sizeof banner,
-      "\n[CATALOGUE BOUNDED: showing the first %d of %d registered "
-      "entity-pivot services in registry order%s. Services not listed here "
-      "still exist and can be reached; recommend from what is listed.]\n",
+      "\n[CATALOGUE BOUNDED: showing %d of %d registered entity-pivot "
+      "services (hand-written pivots first, then registry order)%s. Services "
+      "not listed here are NOT available for this answer: recommend only from "
+      "what is listed.]\n",
       shown, total, with_desc ? "" : ", as bare ids with descriptions omitted "
                                      "so that every service stays listed");
   else if (!with_desc)
@@ -499,8 +523,8 @@ char *osint_services_list(void) { return osint_services_list_bounded(NULL); }
 /* cJSON array of the entity-pivot service ids the schema enum may contain.
  *
  * `limit` > 0 takes the FIRST `limit` of them, which is exactly the set
- * osint_services_list_bounded() printed — both walk registry_all() in order
- * with the same predicate, so "the first N" is the same N in both places.
+ * osint_services_list_bounded() printed — both walk pivot_order() with the
+ * same predicate, so "the first N" is the same N in both places.
  * That equality is the point: the enum is what the model is ALLOWED to say and
  * the catalogue is what it was TOLD about, and letting those two disagree
  * means either offering names it was never shown the meaning of, or rejecting
@@ -509,12 +533,15 @@ static cJSON *osint_service_id_array(int limit) {
   cJSON *a = cJSON_CreateArray();
   const source_def **all = registry_all();
   int n = registry_count(), taken = 0;
-  for (int i = 0; i < n; i++) {
-    if (!is_entity_pivot(all[i])) continue;
+  int *order = malloc((size_t)(n > 0 ? n : 1) * sizeof *order);
+  if (!order) return a;
+  int norder = pivot_order(order);
+  for (int oi = 0; oi < norder; oi++) {
     if (limit > 0 && taken >= limit) break;
-    cJSON_AddItemToArray(a, cJSON_CreateString(all[i]->id));
+    cJSON_AddItemToArray(a, cJSON_CreateString(all[order[oi]]->id));
     taken++;
   }
+  free(order);
   return a;
 }
 
