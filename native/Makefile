@@ -250,6 +250,7 @@ pagewalktest:
 	$(CC) $(CFLAGS) -o bin/pagewalk_test tests/pagewalk_test.c lib/pagewalk.c \
 	  third_party/cJSON.c
 	./bin/pagewalk_test
+	python3 tests/paging_core_single.py
 
 # Offline round-trip for the JWT public-key path (core/auth.c). Generates real
 # RSA-2048 and P-256 keys, publishes them as JWKs, signs real JWTs and runs the

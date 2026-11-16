@@ -5,7 +5,7 @@
  * is no default record, no cached sample, no "source found" placeholder. A row
  * that cannot fetch emits zero items and logs why. */
 #include "hpengine.h"
-#include "jsonlist.h"      /* jsonlist_next_page: page_walk rows page as VJSON did */
+#include "jsonlist.h"      /* jsonlist_emit: page_walk rows are walked by pw_next_page, as VJSON is */
 #include "pagewalk.h"      /* jo_page_max: the tree's one page ceiling */
 #include "../core/url_override.h"
 #include "csv.h"
@@ -224,120 +224,11 @@ static void hp_vars_free(hp_vars *v) {
   memset(v, 0, sizeof *v);
 }
 
-/* host part of "https://a.b/c", "user@a.b" or a bare host.
- *
- * The userinfo '@' counts only INSIDE the authority — before the first '/',
- * '?' or '#' that ends it. It used to be the first '@' anywhere after the
- * scheme, so "http://evil.test/x?e=a@good.com" read as host "good.com": the
- * resume-position host check (and any host comparison built on this) could be
- * walked past by a query string. */
-static char *hp_host_of(const char *s) {
-  if (!s) return NULL;
-  const char *p = strstr(s, "://");
-  p = p ? p + 3 : s;
-  size_t alen = 0;                              /* authority length */
-  while (p[alen] && p[alen] != '/' && p[alen] != '?' && p[alen] != '#') alen++;
-  const char *at = NULL;
-  for (size_t i = 0; i < alen; i++) if (p[i] == '@') at = p + i;   /* the LAST one: userinfo may not hold '@', a host never does */
-  if (at) { alen -= (size_t)(at + 1 - p); p = at + 1; }
-  size_t n = 0;
-  if (p[0] == '[') {                            /* IPv6 literal */
-    while (n < alen && p[n] != ']') n++;
-    if (n < alen) n++;
-  } else {
-    while (n < alen && p[n] != ':' && p[n] != ' ') n++;
-  }
-  if (!n) return NULL;
-  char *out = malloc(n + 1);
-  if (!out) return NULL;
-  memcpy(out, p, n);
-  out[n] = 0;
-  return out;
-}
+/* Host of a URL: lib/pagewalk.c owns it (the cross-host rule is the paging core's). */
+static char *hp_host_of(const char *s) { return pw_host_of(s); }
 
-/* Same host, case-insensitively. Two NULLs are NOT the same host: an
- * unparseable URL is never "safe to send credentials to". */
-static int hp_same_host(const char *a, const char *b) {
-  char *ha = hp_host_of(a), *hb = hp_host_of(b);
-  int same = ha && hb && strcasecmp(ha, hb) == 0;
-  free(ha); free(hb);
-  return same;
-}
 
-/* Resolve `ref` against the page it was published on (RFC 3986, enough of it).
- * An absolute http(s) URL passes through; "//host/p", "/p", "?q" and a
- * relative path are resolved. A next link of "/api?page=2" used to be handed
- * to the HTTP client as written, which fails, and the walk then ended as a
- * "failed page" with the data behind it unread. NULL when `ref` is not a URL
- * reference at all (the caller then keeps what it had). */
-static char *hp_resolve_url(const char *base, const char *ref) {
-  if (!ref || !*ref) return NULL;
-  if (!strncasecmp(ref, "http://", 7) || !strncasecmp(ref, "https://", 8))
-    return strdup(ref);
-  if (!base) return NULL;
-  const char *sch = strstr(base, "://");
-  if (!sch) return NULL;
-  size_t schlen = (size_t)(sch - base) + 3;               /* "https://" */
-  const char *auth_end = base + schlen;
-  while (*auth_end && *auth_end != '/' && *auth_end != '?' && *auth_end != '#') auth_end++;
-  size_t cap = strlen(base) + strlen(ref) + 8;
-  char *out = malloc(cap);
-  if (!out) return NULL;
-  if (ref[0] == '/' && ref[1] == '/') {                   /* protocol-relative */
-    snprintf(out, cap, "%.*s%s", (int)(sch - base) + 1, base, ref);
-    return out;
-  }
-  if (ref[0] == '/') {                                    /* same origin */
-    snprintf(out, cap, "%.*s%s", (int)(auth_end - base), base, ref);
-    return out;
-  }
-  if (ref[0] == '?') {                                    /* same path, new query */
-    const char *q = auth_end;
-    while (*q && *q != '?' && *q != '#') q++;
-    snprintf(out, cap, "%.*s%s", (int)(q - base), base, ref);
-    return out;
-  }
-  if (ref[0] == '#') { free(out); return NULL; }
-  {                                                       /* "scheme:" of something we do not speak */
-    size_t k = 0;
-    while (ref[k] && (isalnum((unsigned char)ref[k]) || ref[k] == '+' || ref[k] == '-' || ref[k] == '.')) k++;
-    if (ref[k] == ':' && k > 0) { free(out); return NULL; }
-  }
-  {                                                       /* relative path */
-    const char *pe = auth_end;
-    while (*pe && *pe != '?' && *pe != '#') pe++;
-    const char *ls = pe;                                  /* last '/' of the path */
-    while (ls > auth_end && ls[-1] != '/') ls--;
-    size_t dirlen = (size_t)(ls - base);                  /* through the '/' */
-    if (ls == auth_end) {                                 /* path-less base */
-      snprintf(out, cap, "%.*s/%s", (int)(auth_end - base), base, ref);
-    } else snprintf(out, cap, "%.*s%s", (int)dirlen, base, ref);
-    /* collapse "./" and "../" in the path part */
-    char *path = out + (auth_end - base);
-    char *w = path, *r = path;
-    while (*r && *r != '?' && *r != '#') {
-      if (!strncmp(r, "/./", 3)) { r += 2; continue; }
-      if (!strncmp(r, "/../", 4)) {
-        r += 3;
-        if (w > path) { w--; while (w > path && *w != '/') w--; }
-        continue;
-      }
-      *w++ = *r++;
-    }
-    memmove(w, r, strlen(r) + 1);
-  }
-  return out;
-}
 
-/* Remove a secret (raw or percent-encoded) from a URL, in place. Used when an
- * upstream-supplied URL points at another host: our key is the ROW's, not that
- * host's, and must not travel with the request. */
-static void hp_strip_secret(char *url, const char *secret) {
-  if (!url || !secret || !*secret) return;
-  size_t sl = strlen(secret);
-  char *at;
-  while ((at = strstr(url, secret))) memmove(at, at + sl, strlen(at + sl) + 1);
-}
 
 static char *hp_user_of(const char *s) {
   const char *at = s ? strchr(s, '@') : NULL;
@@ -468,7 +359,7 @@ static int hp_url_num_param(const char *url, const char *key, long *out) {
  * The cost of not seeing it is that `yard` below is 0 on the SECOND request of
  * such a row, so "was the previous page short?" is unanswerable exactly when
  * it is first asked. Two rules that depend on it then could not apply:
- * hp_later_page_cut()'s (a failure after a short page is the end of the data,
+ * pw_later_page_cut()'s (a failure after a short page is the end of the data,
  * not a truncation) and the byte-identical-repeat diagnosis (a repeat after a
  * short page is most likely the end of the feed, not an ignored parameter).
  * WordPress is the measured case: a site with 30 pages answers
@@ -480,15 +371,10 @@ static int hp_url_num_param(const char *url, const char *key, long *out) {
  * page size makes a cut walk look like a complete one, which is the direction
  * that loses data, so nothing is guessed from shape. */
 static int hp_url_declared_size(const char *url) {
-  static const char *SZ[] = { "per_page", "pageSize", "page_size", "limit",
-                              "Count", "count", "rows", "size", "take",
-                              "maxRecords", "resultRecordCount", "$top",
-                              "num", "perPage", "pagesize", NULL };
-  for (int i = 0; SZ[i]; i++) {
-    long v = 0;
-    if (hp_url_num_param(url, SZ[i], &v) && v > 0 && v < 1000000) return (int)v;
-  }
-  return 0;
+  /* The spellings are PW_PAGERS rows flagged PWP_HP: one table, not a list of
+   * this engine's own. */
+  long v = pw_declared_size_below(url, PWP_HP, 1000000);
+  return v > 0 ? (int)v : 0;
 }
 
 /* {token} expansion. An unknown token is left verbatim so a typo shows up in
@@ -1605,12 +1491,12 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
    * its headers: its host was written by the author. */
   const char *const *dhdrs = st->detail_hdrs;
   static const char *const no_cred_hdrs[] = { "Accept: application/json", NULL };
-  if (whole && st->home_url && !hp_same_host(st->home_url, url)) {
+  if (whole && st->home_url && !pw_same_host(st->home_url, url)) {
     dhdrs = no_cred_hdrs;
     if (st->vars && st->vars->key && *st->vars->key) {
       char *enc = hp_urlenc(st->vars->key);
-      hp_strip_secret(url, st->vars->key);
-      if (enc) { hp_strip_secret(url, enc); free(enc); }
+      pw_strip_secret(url, st->vars->key);
+      if (enc) { pw_strip_secret(url, enc); free(enc); }
     }
     fprintf(stderr, "[hp:%s] detail URL is on another host than the row's — "
                     "fetched without the row's headers or key: %s\n", s->id, url);
@@ -2517,7 +2403,7 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   unsigned char *probe_new = NULL;
   int probe_new_n = 0;
   if (st->rec_guard && arr_n > 0) {
-    unsigned long long fp = jsonlist_page_fp(arr);
+    unsigned long long fp = pw_page_fp(arr);
     /* page_walk's page-1 probe: the first URL had no page number (or 0), so
      * the walk asked for page 1 in case the API is 0-based. Whether this
      * response IS that probe is a question about the URL PAIR, and it is asked
@@ -2529,7 +2415,7 @@ static int hp_run_json(hp_run_state *st, const char *body) {
      * whatever is left ARRIVED in between and is on this response alone, and
      * dropping the page would discard it. */
     char *p2 = (st->pw && !st->pw_probed && st->prev_url && st->page > 1)
-                 ? jsonlist_page_one_retry(st->prev_url, st->url) : NULL;
+                 ? pw_page_one_retry(st->prev_url, st->url) : NULL;
     if (p2) {
       free(st->pw_next);
       st->pw_next = p2;
@@ -2541,7 +2427,7 @@ static int hp_run_json(hp_run_state *st, const char *body) {
         cJSON *pr;
         cJSON_ArrayForEach(pr, arr) {
           if (pi >= arr_n) break;
-          if (!jsonlist_fps_has(st->probe_fps, st->probe_nfps, pr)) {
+          if (!pw_fps_has(st->probe_fps, st->probe_nfps, pr)) {
             probe_new[pi] = 1;
             probe_new_n++;
           }
@@ -2561,7 +2447,7 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     /* A probe can only follow the first page; keep that page's identities. */
     if (st->pw && !st->pw_probed && st->page == 1) {
       free(st->probe_fps);
-      st->probe_fps = jsonlist_page_fps(arr, &st->probe_nfps);
+      st->probe_fps = pw_page_fps(arr, &st->probe_nfps);
     }
   }
   /* What the upstream HANDED OVER: a record the probe re-served is not a
@@ -2613,14 +2499,14 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   /* The upstream's own count of what exists, read the way jsonlist reads it
    * (first page), so a truncation notice can report the real remainder and a
    * page_walk row stops exactly where its VJSON form stopped. */
-  if (st->declared_total < 0) st->declared_total = jsonlist_declared_total(doc);
+  if (st->declared_total < 0) st->declared_total = pw_declared_total(doc, PW_TOT_COUNT);
   /* `total` is what the walk has FETCHED, not what it emitted: the decision
    * compares it with the upstream's declared total, and a row whose
    * filter_query drops records (or whose sink refuses one) emits fewer than
    * the upstream handed over — which read as "the upstream holds more" and
    * filed a truncation notice on a walk that had read everything. */
   if (st->pw && !st->pw_next) {
-    st->pw_next = jsonlist_next_page(doc, st->url, arr_n, st->declared_total,
+    st->pw_next = pw_next_page(doc, st->url, arr_n, st->declared_total,
                                      st->available, &st->pw_full);
   }
   /* Hand the caller the next page URL when the row declared one, so the walk
@@ -3258,52 +3144,6 @@ static int hp_xml_record_tag(const char *body, char *out, size_t cap) {
   return 1;
 }
 
-/* The upstream's own count of what exists, read out of an XML ENVELOPE.
- *
- * hp_run_json has read a declared total since the truncation notice needed one
- * (jsonlist_declared_total), and the XML path never did — so NO XML row in the
- * tree could ever state a real remainder. Japan's KKJ procurement API is the
- * case that found it: it answers `<SearchHits>50530</SearchHits>` beside 100
- * results, which is the upstream saying exactly how much it is holding back.
- *
- * Only the text BEFORE the first record is searched. That is the guard that
- * matters: a name like `TotalCount` could occur inside a record as a field of
- * its own, and reading one record's field as the collection's size would make
- * the disclosure itself a fabrication. */
-static long hp_xml_declared_total(const char *body, const char *rec_open) {
-  static const char *EL[] = {
-    "SearchHits", "TotalCount", "TotalResults", "TotalHits", "SearchCount",
-    "RecordCount", "ResultCount", "numberMatched", "totalResults",
-    "totalCount", "numFound", NULL };
-  /* The first RECORD element, found the way the record loop below finds it: a
-   * tag name is only that name when the next character ends it. KKJ wraps its
-   * <SearchResult> records in a <SearchResults> envelope and puts the count
-   * inside that envelope, so a plain strstr for "<SearchResult" stops at the
-   * wrapper and the whole searchable span is the four lines before it. */
-  const char *first = NULL;
-  if (rec_open && *rec_open) {
-    size_t rl = strlen(rec_open);
-    for (const char *p = strstr(body, rec_open); p; p = strstr(p + rl, rec_open)) {
-      char c = p[rl];
-      if (c == '>' || c == '/' || isspace((unsigned char)c)) { first = p; break; }
-    }
-  }
-  size_t limit = first ? (size_t)(first - body) : strlen(body);
-  for (int i = 0; EL[i]; i++) {
-    char open[64];
-    int n = snprintf(open, sizeof open, "<%s>", EL[i]);
-    if (n <= 0 || (size_t)n >= sizeof open) continue;
-    const char *p = jo_memmem(body, limit, open, (size_t)n);
-    if (!p) continue;
-    p += n;
-    char *end = NULL;
-    long v = strtol(p, &end, 10);
-    /* The value must be the WHOLE element text: `<TotalCount>12 of 40<` is not
-     * a count, and neither is an empty element. */
-    if (end && end != p && *end == '<' && v >= 0) return v;
-  }
-  return -1;
-}
 
 static int hp_run_xml(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
@@ -3352,7 +3192,7 @@ static int hp_run_xml(hp_run_state *st, const char *body) {
   int ol = snprintf(open, sizeof open, "<%s", tag);
   /* Read once, on the first page, exactly as hp_run_json does. */
   if (st->declared_total < 0)
-    st->declared_total = hp_xml_declared_total(body, open);
+    st->declared_total = pw_declared_total_xml(body, open);
   int cl = snprintf(close, sizeof close, "</%s>", tag);
   int max = hp_record_cap(s);
   const char *p = body;
@@ -4261,15 +4101,6 @@ const hp_source *hp_source_get(const char *id) { return hp_lookup(id); }
 
 const hp_source *hp_spec_get(const char *id) { return hp_lookup(id); }
 
-/* FNV-1a 64 over a whole response body. Only ever compared for equality
- * between consecutive pages of one walk (shape notice (d)); nothing is keyed
- * on it. */
-static unsigned long long hp_body_hash(const char *body) {
-  unsigned long long h = 1469598103934665603ULL;
-  for (const unsigned char *p = (const unsigned char *)body; body && *p; p++)
-    h = (h ^ *p) * 1099511628211ULL;
-  return h;
-}
 
 /* ── schema drift, disclosed as data ─────────────────────────────────────
  *
@@ -4623,77 +4454,7 @@ static int hp_status_is_declared_empty(long status, const char *body) {
          jo_strcasestr(body, "no data available") != NULL;
 }
 
-/* A page AFTER the first did not deliver records: it answered a status other
- * than 200, failed in transport (`status` -1), or came back 200 with a body
- * that could not be read (`status` 200). Does that mean the upstream ran out
- * of data, or that the walk was cut short? The ruling, in order:
- *
- *   1. The previous page was SHORT: the upstream already said it had
- *      finished, so whatever the next request met is past the end. EPA
- *      Envirofacts answers a range past its last row with HTTP 500; plenty of
- *      servers answer 404 or 400.
- *   2. Statuses that never mean "no more data" — the request was not
- *      answered, it was refused or deferred: transport failure, any 3xx
- *      (curl follows redirects, so one that reaches us is a loop or has no
- *      Location), 304 (we sent no condition, so a cache is answering for a
- *      page it never fetched), 401/403/407, 408, 429, 5xx, and a 200 whose
- *      body is unreadable. A collection does not end in Forbidden.
- *   3. The rest of 4xx (400, 404, 410, 416, 422 …) is how many servers say
- *      "past the last page". It is still a walk cut short when the upstream
- *      gave evidence that more exists — its own total is larger than what
- *      was read, it published the link to the page that failed, or the
- *      previous page came back FULL. A full page followed by a 400 is the
- *      signature of a deep-paging limit (Elasticsearch's 10,000-record
- *      window, GitHub's 1,000-result search), which is a silent discard if
- *      it is read as the end. Only a collection ending exactly on a page
- *      boundary looks the same, and the notice says so.
- *
- * `prev_full`/`prev_short` are both 0 when the page size is unknown (the
- * second request of a walk that declared none). Returns 1 for "cut short". */
-static int hp_later_page_cut(long status, int prev_short, int prev_full,
-                             int link_given, long declared_total, long fetched) {
-  if (prev_short) return 0;
-  if (status < 0 || status == 200 || (status >= 300 && status < 400) ||
-      status == 401 || status == 403 || status == 407 || status == 408 ||
-      status == 429 || status >= 500)
-    return 1;
-  if (declared_total >= 0) return declared_total > fetched;
-  return prev_full || link_given;
-}
 
-/* The reason a cut-short walk files, by what the failing page answered. */
-static void hp_cut_reason(long status, int unreadable, char *out, size_t cap) {
-  if (status < 0)
-    snprintf(out, cap, "a later page failed at the transport level, so the walk "
-             "stopped before the upstream ran out");
-  else if (unreadable)
-    snprintf(out, cap, "a later page answered HTTP 200 with a body that could "
-             "not be read in this row's declared mode (an error or challenge "
-             "page), so its records were never delivered");
-  else if (status == 304)
-    snprintf(out, cap, "a later page answered HTTP 304 Not Modified to a request "
-             "that carried no conditional header (a cache or proxy answering for "
-             "a page it never fetched); a 304 has no body, so the walk stopped "
-             "before the upstream ran out");
-  else if (status >= 300 && status < 400)
-    snprintf(out, cap, "a later page answered a redirect (HTTP %ld) that could "
-             "not be followed, so the walk stopped before the upstream ran out",
-             status);
-  else if (status == 429)
-    snprintf(out, cap, "a later page was refused with HTTP 429 (rate limited), "
-             "so the walk stopped before the upstream ran out");
-  else if (status == 401 || status == 403 || status == 407)
-    snprintf(out, cap, "a later page was refused with HTTP %ld, so the walk "
-             "stopped before the upstream ran out", status);
-  else if (status == 408 || status >= 500)
-    snprintf(out, cap, "a later page answered a server error (HTTP %ld), so the "
-             "walk stopped before the upstream ran out", status);
-  else
-    snprintf(out, cap, "a later page answered HTTP %ld although the upstream had "
-             "given evidence of more (a full previous page, its own total, or a "
-             "next link): either a deep-paging limit refused the rest, or the "
-             "collection ends exactly on a page boundary", status);
-}
 
 static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   const hp_source *s = hp_lookup(ctx->source_id);
@@ -4934,7 +4695,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * silent). Rows that declare no paging do exactly one request, as before. */
   int out = 0, hard_error = 0;
   /* A LATER page that did not deliver its records, judged by
-   * hp_later_page_cut(): either the upstream's end of data (silent, as it
+   * pw_later_page_cut(): either the upstream's end of data (silent, as it
    * should be) or a walk cut short, which is disclosed with the status, the
    * page and the URL that failed. It used to be cut short only on 429/5xx; a
    * 304, a 403, an unreadable body or a deep-paging 400 ended the walk with
@@ -4987,7 +4748,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * own ceiling too — see jo_page_max_for() in lib/pagewalk.c for why this
    * used to read `s->page_max > 0 ? s->page_max : jo_page_max(NULL)` and what
    * that cost. */
-  int page_max = jo_page_max_for(s->page_max);
+  int page_max = pw_page_ceiling(NULL, s->page_max);
   /* A `{page}` token left in the URL after entity expansion is path-segment
    * paging: the upstream numbers its pages in the path (kanpou.ai's
    * /tosan/p/N), which no query parameter can express. hp_expand leaves an
@@ -5007,7 +4768,7 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
    * on the upstream's evidence, exactly as its VJSON form was. A row that
    * declares its own paging keeps it — the declaration names this upstream. */
   int page_walk = !paged && s->page_walk && s->mode == HP_JSON;
-  if (page_walk && s->page_max <= 0) page_max = jsonlist_page_max();
+  if (page_walk && s->page_max <= 0) page_max = pw_page_ceiling("JO_JSONLIST_PAGE_MAX", s->page_max);
   if (!paged && !page_walk) page_max = 1;
   int pw_stuck = 0;       /* the walk could not continue past a full page */
   int pw_repeat = 0;      /* the server's next link pointed at this page  */
@@ -5183,7 +4944,7 @@ dated_restart:;
      * else page 1's own count — which can only judge pages after the second
      * request, and was the only fallback until hp_url_declared_size() was
      * added, so both stayed 0 ("unknown") on the one request where the answer
-     * matters most. See hp_later_page_cut(). */
+     * matters most. See pw_later_page_cut(). */
     int prev_short = 0, prev_full = 0;
     if (page > 0) {
       int yard = s->page_size > 0 ? s->page_size
@@ -5256,12 +5017,12 @@ dated_restart:;
       }
       if (page == 0 && (fst < 0 || fst >= 500 || (fst == 304 && !first_conditional)))
         hard_error = 1;
-      /* A later page: hp_later_page_cut() rules end-of-data vs cut short.
+      /* A later page: pw_later_page_cut() rules end-of-data vs cut short.
        * 403 counts as cut short — NFRA's penalty registers (32,938 and 41,797
        * notices) met a burst-403 WAF on page 41 and page 6 and used to report
        * "emitted 800 of 800 available", rc=0 (batch 40, 2026-10-03). */
       if (page > 0) {
-        if (hp_later_page_cut(fst, prev_short, prev_full, next_evidence,
+        if (pw_later_page_cut(fst, prev_short, prev_full, next_evidence,
                               st.declared_total, (long)st.available)) {
           failed_midwalk = 1;
           failed_status = fst;
@@ -5286,7 +5047,7 @@ dated_restart:;
      * which also sees a repeat under a changing envelope, and which must be
      * allowed to see the page-1 probe come back byte-identical to an implicit
      * first page — that is how a 1-based API is recognised, not a stop. */
-    unsigned long long bh = hp_body_hash(hr.body);
+    unsigned long long bh = pw_text_hash(hr.body);
     if (page > 0 && bh == prev_hash && !page_walk) {
       /* Identical bytes always stop the walk — they cannot hold a new record —
        * but the DIAGNOSIS depends on how this row pages, and getting it wrong
@@ -5600,7 +5361,7 @@ dated_restart:;
       if (page > 0) {
         int unread = !st.upstream_error || st.err_code <= 0;
         long fst = unread ? 200 : st.err_code;
-        if (hp_later_page_cut(fst, prev_short, prev_full, next_evidence,
+        if (pw_later_page_cut(fst, prev_short, prev_full, next_evidence,
                               st.declared_total, (long)st.available)) {
           failed_midwalk = 1;
           failed_status = fst;
@@ -5669,14 +5430,14 @@ dated_restart:;
      * the walk as a "failed page"); a link to another host is followed
      * without the row's credentials. */
     if (nextp) {
-      char *abs = hp_resolve_url(page_url, nextp);
+      char *abs = pw_resolve_url(page_url, nextp, PW_RESOLVE_PATHS);
       if (abs) { free(nextp); nextp = abs; }
-      xhost = !hp_same_host(st.home_url, nextp);
+      xhost = !pw_same_host(st.home_url, nextp);
       if (xhost) {
         if (vars.key && *vars.key) {
           char *kenc = hp_urlenc(vars.key);
-          hp_strip_secret(nextp, vars.key);
-          if (kenc) { hp_strip_secret(nextp, kenc); free(kenc); }
+          pw_strip_secret(nextp, vars.key);
+          if (kenc) { pw_strip_secret(nextp, kenc); free(kenc); }
         }
         fprintf(stderr, "[hp:%s] next page is on another host than the row's — "
                         "followed without the row's headers, body or key: %s\n",
@@ -5895,12 +5656,13 @@ date_step_back:
   int win_behind = window_on && win_at < win_tail;
   if (st.truncated || failed_midwalk || pw_stuck || pw_repeat || pw_more ||
       st.malformed || win_behind) {
+    /* The facts every paging engine states (source, query, used, available and
+     * its basis, pages, pending, the failed page, reason, remedy) go through
+     * pw_notice_emit(), the one builder; `p` carries only what is this
+     * engine's own — skipped slots, the row's declared cap, the window or the
+     * cycle. */
     cJSON *p = cJSON_CreateObject();
-    cJSON_AddStringToObject(p, "source_id", s->id);
-    cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
-    cJSON_AddNumberToObject(p, "records_used", out);
-    cJSON_AddNumberToObject(p, "records_available", (double)avail);
-    cJSON_AddStringToObject(p, "records_available_basis",
+    const char *basis_v =
       /* On a WINDOW row the upstream's count answers the windowed query, so it
        * is the size of this slice and NOT of the collection. Reporting it as
        * "this total" invited reading Toyama's 1,458 as its 30,512 — a number
@@ -5912,16 +5674,14 @@ date_step_back:
         ? "upstream declared this total"
       : win_behind
         ? "records in THIS WINDOW — the collection outside it is not counted"
-        : "records counted so far — pages not read are not included");
+        : "records counted so far — pages not read are not included";
     if (st.empty > 0)
       cJSON_AddNumberToObject(p, "empty_slots_skipped", st.empty);
     if (st.malformed > 0)
       cJSON_AddNumberToObject(p, "unreadable_lines_skipped", st.malformed);
     /* Pages that DELIVERED records: the failing request is not one of them. */
-    cJSON_AddNumberToObject(p, "pages_read",
-                            failed_midwalk && failed_page > 0 ? failed_page - 1 : st.page);
-    cJSON_AddBoolToObject(p, "more_pages_pending",
-                          failed_midwalk || pw_stuck || avail <= (long)out);
+    const int pages_read_v = failed_midwalk && failed_page > 0 ? failed_page - 1 : st.page;
+    const int more_v = failed_midwalk || pw_stuck || avail <= (long)out;
     cJSON_AddNumberToObject(p, "declared_max_items", s->max_items);
     /* A cycling row's notice says WHICH SLICE this run read, so "used 2,000 of
      * 5,597,082" is not read as a permanent ceiling. Without this the
@@ -5965,13 +5725,9 @@ date_step_back:
     }
     char cutwhy[400] = "";
     if (failed_midwalk) {
-      cJSON_AddNumberToObject(p, "failed_page", failed_page);
-      cJSON_AddNumberToObject(p, "failed_page_status", (double)failed_status);
-      if (failed_unreadable) cJSON_AddBoolToObject(p, "failed_page_unreadable", 1);
-      cJSON_AddStringToObject(p, "failed_page_url", failed_url ? failed_url : "");
-      hp_cut_reason(failed_status, failed_unreadable, cutwhy, sizeof cutwhy);
+      pw_cut_reason(failed_status, failed_unreadable, cutwhy, sizeof cutwhy);
     }
-    cJSON_AddStringToObject(p, "reason",
+    const char *reason_v =
       /* A WINDOW THAT WAS ITSELF TOO WIDE. The branch below says the window was
        * read IN FULL, and it must not say that when the upstream's count for
        * this very window exceeds what it handed over — the window is then
@@ -5999,8 +5755,7 @@ date_step_back:
       : st.truncated
         ? "the page ceiling or a cancel stopped the walk"
       : pw_repeat
-        ? "the upstream's next-page link pointed back at the page just "
-          "fetched, so the walk stopped rather than re-collecting it"
+        ? PW_REASON_NEXT_LINK_SELF
       : pw_stuck
         ? "the last page came back full and the upstream offered no next "
           "link, nor does this row's URL carry a parameter that could be "
@@ -6008,24 +5763,13 @@ date_step_back:
       : !can_page
         ? "this row makes ONE request and the upstream's own count says it "
           "holds more than that request returned"
-        : "the upstream reports more records than it handed over");
-    cJSON_AddStringToObject(p, "remedy",
+        : "the upstream reports more records than it handed over";
+    const char *remedy_v =
       st.malformed && !st.truncated && !failed_midwalk
         ? "re-run; if the same lines fail again the upstream feed itself is "
           "malformed and the row should be re-pointed or retired"
-      : failed_midwalk && failed_status == 304
-        ? "re-run; the engine sends no conditional header on a later page and "
-          "already retried with Cache-Control: no-cache, so a 304 that survives "
-          "that is a cache or proxy in front of the upstream answering for it"
-      : failed_midwalk && failed_status >= 400 && failed_status < 500 &&
-        failed_status != 401 && failed_status != 403 && failed_status != 407 &&
-        failed_status != 408 && failed_status != 429
-        ? "check whether the upstream caps how deep it pages; if it does, "
-          "narrow each request (a date window or a filter) so every slice fits "
-          "under the cap — see docs/SOURCE_EXHAUSTIVENESS.md"
       : failed_midwalk
-        ? "re-run; a rate-limited host needs a per-host minimum gap "
-          "(core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
+        ? pw_cut_remedy(failed_status)
       : window_on && pw_more
         ? "narrow window_days on this row: the upstream counted more inside "
           "this one window than a single read could take, and those records "
@@ -6063,12 +5807,8 @@ date_step_back:
           "one record just beyond it, and an empty success (zero records, a "
           "zeroed total) means the bound is the upstream's own window and no "
           "ceiling reaches it. Where it is, slice the QUERY instead — see "
-          "docs/SOURCE_EXHAUSTIVENESS.md");
-    char *pj = cJSON_PrintUnformatted(p);
-    cJSON_Delete(p);
-    char key[320], title[256];
-    snprintf(key, sizeof key, "%.150s|truncation:%.120s", s->id,
-             vars.raw ? vars.raw : "");
+          "docs/SOURCE_EXHAUSTIVENESS.md";
+    char title[256];
     if (failed_midwalk)
       snprintf(title, sizeof title, "%s used %d of %ld available records — "
                "page %d answered %ld", s->id, out, avail, failed_page, failed_status);
@@ -6088,15 +5828,25 @@ date_step_back:
     else
       snprintf(title, sizeof title, "%s used %d of %ld available records",
                s->id, out, avail);
-    intel_item note = {0};
-    note.remote_key      = key;
-    note.title           = title;
-    note.lang            = "en";
-    note.record_type     = "collector-truncation-notice";
-    note.properties_json = pj ? pj : "{}";
-    note.tags_json       = "[\"osint-search\",\"truncation-notice\"]";
-    sink->emit(sink, &note);
-    free(pj);
+    pw_notice pn = PW_NOTICE_INIT;
+    pn.source_id = s->id;
+    pn.query = vars.raw ? vars.raw : "";
+    pn.used = out;
+    pn.available = avail;
+    pn.basis = basis_v;
+    pn.pages_read = pages_read_v;
+    pn.more_pages_pending = more_v;
+    pn.failed_page = failed_midwalk ? failed_page : 0;
+    pn.failed_status = failed_status;
+    pn.failed_url = failed_url;
+    pn.failed_unreadable = failed_unreadable;
+    pn.extra = p;                       /* consumed */
+    pn.reason = reason_v;
+    pn.remedy = remedy_v;
+    pn.title = title;
+    pn.key_style = PW_KEY_SCOPED;
+    pn.tags_json = "[\"osint-search\",\"truncation-notice\"]";
+    pw_notice_emit(sink, &pn);
   }
   free(resume_next);
 
