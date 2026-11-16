@@ -7,6 +7,8 @@
  * We collapse the pair into a single row keyed by `${run_id}:${request_seq}`
  * and update its status/latency/bytes/data_type when the end phase lands.
  *
+ * There is no history route: only live traffic appears.
+ *
  * `collector_hit_annotate` events arrive after the run finishes (server
  * route handler attaches feature counts) and patch `record_count` onto the
  * matching row.
@@ -14,7 +16,6 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import useWebSocket from './useWebSocket.js';
-import apiUrl from '../utils/apiUrl.js';
 
 const HIT_CAP = 1000;
 const RUN_CAP = 200;
@@ -23,8 +24,6 @@ export default function useCollectorFollowStream() {
   const [hits, setHits] = useState([]);            // newest first
   const [runs, setRuns] = useState([]);            // newest first
   const [paused, setPaused] = useState(false);
-  const [seeded, setSeeded] = useState(false);
-  const [historyError, setHistoryError] = useState(null);
 
   // ── Coalescer ─────────────────────────────────────────────────────────
   // Burst WS traffic (every collector request emits start+end frames) used
@@ -97,48 +96,9 @@ export default function useCollectorFollowStream() {
     if (rafRef.current == null) rafRef.current = requestAnimationFrame(flush);
   }, [flush]);
 
-  // Seed from the server's ring buffer so we paint history before WS
-  // delivers anything.
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      // Keep WHY the seed failed. The server goes out of its way to make this
-      // distinguishable: /api/follow/recent answers 501 with
-      // {"error":"not_implemented","detail":"collector-tap history is not
-      // supported by the native server"} precisely so a client cannot mistake
-      // it for an empty result (native/core/miscapi.c:263). Swallowing it left
-      // the panel asserting "The first cron tick or any /api/data/* call will
-      // populate this stream" — which is false: history is not implemented, so
-      // nothing ever will. The server's own words are better than ours.
-      try {
-        const res = await fetch(apiUrl('/api/follow/recent?limit=500'));
-        if (!res.ok) {
-          let detail = '';
-          try {
-            const body = await res.json();
-            detail = body?.detail || body?.error || '';
-          } catch { /* non-JSON error body: the status alone is the message */ }
-          if (!cancelled) {
-            setHistoryError({ status: res.status, detail,
-                              notImplemented: res.status === 501 });
-          }
-          return;
-        }
-        const json = await res.json();
-        if (cancelled || !Array.isArray(json.events)) return;
-        const reduced = reduceEvents(json.events);
-        setHits(reduced.hits);
-        setRuns(reduced.runs);
-        if (!cancelled) setHistoryError(null);
-      } catch (e) {
-        if (!cancelled) setHistoryError({ status: 0, detail: e?.message || 'request failed',
-                                          notImplemented: false });
-      } finally {
-        if (!cancelled) setSeeded(true);
-      }
-    })();
-    return () => { cancelled = true; };
-  }, []);
+  // There is no history seed: GET /api/follow/recent is a permanent HTTP 501
+  // on this server (collector-tap history is not implemented), so it is not
+  // called at all. The panel shows live traffic from the moment it opens.
 
   const onMessage = useCallback((msg) => {
     if (paused) return;
@@ -177,8 +137,6 @@ export default function useCollectorFollowStream() {
     liveAvailable,
     paused,
     setPaused,
-    seeded,
-    historyError,
     clear,
   };
 }
@@ -240,40 +198,4 @@ function upsertRun(prev, run) {
   }
   const next = [run, ...prev];
   return next.length > RUN_CAP ? next.slice(0, RUN_CAP) : next;
-}
-
-/** Bulk-replay seed events into hit/run state without re-rendering each one. */
-function reduceEvents(events) {
-  let hits = [];
-  let runs = [];
-  for (const ev of events) {
-    if (ev.type === 'collector_request_hit') {
-      hits = upsertHit(hits, ev);
-    } else if (ev.type === 'collector_run_start') {
-      runs = upsertRun(runs, {
-        run_id: ev.run_id,
-        collector_key: ev.collector_key,
-        source_id: ev.source_id,
-        source_name: ev.source_name,
-        trigger: ev.trigger,
-        started_ms: Date.parse(ev.timestamp) || Date.now(),
-        ended_ms: null,
-        status: null,
-        hit_count: 0,
-      });
-    } else if (ev.type === 'collector_run_end') {
-      runs = runs.map((r) => (
-        r.run_id === ev.run_id
-          ? { ...r, ended_ms: Date.parse(ev.timestamp) || Date.now(), status: ev.status, hit_count: ev.hit_count, error: ev.error, duration_ms: ev.duration_ms }
-          : r
-      ));
-    } else if (ev.type === 'collector_hit_annotate') {
-      hits = hits.map((h) => (
-        h.run_id === ev.run_id && h.request_seq === ev.request_seq
-          ? { ...h, record_count: ev.record_count ?? h.record_count, data_type: ev.data_type ?? h.data_type }
-          : h
-      ));
-    }
-  }
-  return { hits, runs };
 }
