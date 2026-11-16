@@ -970,6 +970,11 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   int stored_exact = 1;
   long stored = intel_sink_stored(&inner, &stored_exact);
   long stored_notices = intel_sink_stored_notices(&inner);
+  /* The sink batches its writes, so a record the final flush could not store
+   * was refused AFTER the collector's last emit() returned: nothing told the
+   * counting sink. Reading the stored count above flushed; whatever that flush
+   * refused is added here so `failed=` on the run line stays the whole truth. */
+  { long pend = intel_sink_failed_pending(&inner); if (pend > 0) cs.failed += pend; }
   intel_sink_free(&inner);        /* make() heap-allocates; nothing freed it */
 
   /* ── the run line, and why `stored=` sits at the END of it ───────────────
