@@ -167,4 +167,10 @@ int                http_client_request_count(const http_client *c);
  * pinned rather than only measured in production. */
 void http_client_test_log_host(http_client *c, const char *url, long status);
 
+/* `url` with an OPTIONAL per-host query credential appended, or NULL when it
+ * goes out as written. Today: $OPENALEX_API_KEY on api.openalex.org only.
+ * Exposed for tests; the engine applies it inside the request, never in a
+ * string that is logged. malloc'd, caller frees. */
+char *http_optional_key_url(const char *url);
+
 #endif

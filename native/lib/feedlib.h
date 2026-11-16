@@ -30,7 +30,21 @@ void feed_last_json_status_reset(void);
  * "an unrecorded failure" — the words a truncation notice uses for `st`. */
 void feed_status_describe(long st, char *out, size_t cap);
 
-/* GET url, return raw body (malloc'd, caller frees) or NULL. */
+/* The body of this thread's most recent feed_get_text / feed_get_text_max
+ * call WHEN THAT CALL WAS REFUSED (non-2xx), else NULL. Bounded at 64 KB,
+ * owned by the library, valid until this thread's next text fetch. It exists
+ * for one question — did the refusal say the service is in maintenance
+ * (jo_body_says_maintenance, lib/jocore.h), whose remedy is to wait — and is
+ * deliberately NOT returned as data: a refused body is never a record. */
+const char *feed_last_failed_body(void);
+
+/* GET url, return raw body (malloc'd, caller frees) or NULL.
+ *
+ * Since 2026-11-16 the text path records its outcome in the SAME per-thread
+ * slot the JSON calls use, so after a NULL a caller can ask
+ * feed_last_json_status() for the HTTP status (or FEED_ST_TRANSPORT) and
+ * feed_last_failed_body() for what a non-2xx answer SAID. FEED_ST_UNPARSED is
+ * never set here: text has no parse. */
 char *feed_get_text(http_client *http, const char *url, int timeout_ms);
 
 /* feed_get_text with a response-body ceiling for this one fetch (0 = the

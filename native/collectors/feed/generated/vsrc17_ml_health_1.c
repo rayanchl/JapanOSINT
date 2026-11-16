@@ -19,8 +19,12 @@ VJSON_IDKEYS(dhs_data_ml, "dhs-data-ml", "DHS Program indicator data - Mali", "D
      `perpage` joined lib/jsonlist.c's PAGERS. The API honours 1,000 a page
      (RecordsReturned 1000, TotalPages 20 for Ghana's 19,342), so the default
      20-page ceiling reads up to 20,000; the remainder, if any, is disclosed
-     against the envelope's own RecordCount. */
-  "https://api.dhsprogram.com/rest/dhs/data?countryIds=ML&f=json&perpage=1000",
+     against the envelope's own RecordCount.
+     perpage=5000, MEASURED 2026-11-16: this country's 21,021 exceed 20,000,
+     so at 1,000 a page the rest was disclosed and never read. The API honours
+     5,000 (Senegal: RecordsReturned 5000, TotalPages 8, 5,000 distinct
+     DataId), so the collection is 5 pages and reads whole in one run. */
+  "https://api.dhsprogram.com/rest/dhs/data?countryIds=ML&f=json&perpage=5000",
   "data",
   "en", "[\"ml\",\"health\",\"batch17\",\"high-penetrancy\"]", 43200,
   "DHS observations for Mali with indicator label, value, survey id/year and characteristic breakdowns.",

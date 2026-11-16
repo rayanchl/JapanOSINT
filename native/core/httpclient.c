@@ -638,6 +638,46 @@ static int tls_cause_of(CURLcode rc, long verify, const char *msg) {
   return HTTP_TLS_OTHER;
 }
 
+/* OpenAlex, measured 2026-11-16: an unkeyed request "shares one free daily
+ * budget ($0.10) with everyone on your network's IP address" — the API's own
+ * `meta.notice`, with `x-ratelimit-remaining: 3` of 1,000 on the reading that
+ * carried it — and the same notice names the remedy: "add api_key=YOUR_KEY to
+ * your requests". So when the operator has set $OPENALEX_API_KEY, every
+ * request to api.openalex.org carries it; unset, nothing changes at all.
+ *
+ * It is a host rule rather than a `key_env` on each row because key_env GATES
+ * (a row without its key stores a needs-credential notice and fetches
+ * nothing), and these ~170 rows work without one — just on a budget shared
+ * with strangers. An optional key must not turn a working row into a gated
+ * one. Returns a malloc'd URL, or NULL for "send it as written" (other host,
+ * no key, a URL that already carries api_key, or a key with a character that
+ * could not be a key). The host test is exact, so the key never reaches
+ * another server, including a url-override's target. */
+char *http_optional_key_url(const char *url) {
+  static const char HOST[] = "://api.openalex.org";
+  if (!url) return NULL;
+  const char *h = strstr(url, HOST);
+  if (!h || (strncmp(url, "https", (size_t)(h - url)) != 0) || h - url != 5)
+    return NULL;
+  char after = h[sizeof HOST - 1];
+  if (after != '/' && after != '?' && after != 0) return NULL;
+  const char *key = getenv("OPENALEX_API_KEY");
+  if (!key || !*key) return NULL;
+  for (const char *p = key; *p; p++)
+    if (!((*p >= '0' && *p <= '9') || (*p >= 'a' && *p <= 'z') ||
+          (*p >= 'A' && *p <= 'Z') || *p == '-' || *p == '_' || *p == '.'))
+      return NULL;
+  if (strstr(url, "?api_key=") || strstr(url, "&api_key=")) return NULL;
+  const char *frag = strchr(url, '#');
+  size_t base = frag ? (size_t)(frag - url) : strlen(url);
+  size_t cap = strlen(url) + strlen(key) + 16;
+  char *out = malloc(cap);
+  if (!out) return NULL;
+  snprintf(out, cap, "%.*s%capi_key=%s%s", (int)base, url,
+           memchr(url, '?', base) ? '&' : '?', key, frag ? frag : "");
+  return out;
+}
+
 static int do_once(http_client *c, const char *method, const char *url,
                    const char *const *headers, const char *body,
                    size_t body_len, int timeout_ms, http_response *out,
@@ -675,7 +715,12 @@ static int do_once(http_client *c, const char *method, const char *url,
   if (ha >= 0 && HOST_AGENTS[ha].kind == HA_BROWSER)
     for (const char *const *h = BROWSER_EXTRA_HEADERS; *h; ++h) hl = curl_slist_append(hl, *h);
 
-  curl_easy_setopt(e, CURLOPT_URL, url);
+  /* An OPTIONAL per-host query credential, applied only on the wire: `url`
+   * stays keyless for every log line, the evidence hook and the host log, so
+   * the key cannot leak through any of them. See http_optional_key_url(). */
+  char *keyed = http_optional_key_url(url);
+  curl_easy_setopt(e, CURLOPT_URL, keyed ? keyed : url);   /* libcurl copies it */
+  free(keyed);
   curl_easy_setopt(e, CURLOPT_WRITEFUNCTION, on_data);
   curl_easy_setopt(e, CURLOPT_WRITEDATA, &b);
   hdr_state hs = { -1 };

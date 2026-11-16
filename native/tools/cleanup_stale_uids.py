@@ -396,6 +396,44 @@ def judge_rdw_old_repeat(con):
     return out
 
 
+DPORTAL_PREFIX = "af-dportal-trans-"
+
+
+def judge_dportal_misattributed(con):
+    """The eleven `af-dportal-trans-XX` rows asked d-portal for
+    `trans_country_code=XX` until 2026-11-14, a parameter the upstream IGNORES:
+    each stored the same GLOBAL transactions under its own country's name
+    (CLAUDE.md, rule 4b: "measured on the wrong collection"). The form that
+    filters is the join `from=act,trans,country&country_code=XX`, and a record
+    read through it carries `country_code: XX` — measured 2026-11-16, where
+    the old form's record carries no `country_code` at all (38 fields against
+    40). So the row's OWN properties say which read it came from.
+
+    This is a different kind of proof from every other judge here: there is no
+    replacement row, because the record was never this country's. It is
+    therefore its own verdict, `misattributed`, reported always and removed
+    only by --delete-misattributed — never by --delete."""
+    out = []
+    q = """SELECT uid, fetched_at, properties, source_id FROM intel_items
+            WHERE source_id LIKE ?1 ORDER BY uid"""
+    for uid, fetched, props, sid in con.execute(q, (DPORTAL_PREFIX + "%",)).fetchall():
+        cc = sid[len(DPORTAL_PREFIX):].upper()
+        if len(cc) != 2:
+            continue
+        row = Row(uid, fetched, props)
+        if not row.props:
+            continue                 # a notice or an unreadable row: not judged
+        if row.props.get("trans_code") is None and row.props.get("aid") is None:
+            continue                 # not a transaction record (an engine notice)
+        have = _sv(row.props.get("country_code"))
+        if have and have.upper() == cc:
+            continue
+        out.append(verdict_of(row, "dportal", "misattributed", None,
+                              "stored country_code is %s, source is %s"
+                              % (have or "absent", cc), source=sid))
+    return out
+
+
 def references(con, uid):
     refs = []
     for table, col, extra in REFERENCES:
@@ -418,6 +456,11 @@ def find(con, only=None):
         rows += judge_rdw_old_repeat(con)
     if not only or WAYBACK in only:
         rows += judge_wayback(con)
+    for r in judge_dportal_misattributed(con):
+        if not only or r["source"] in only:
+            if references(con, r["uid"]):
+                r["verdict"], r["refs"] = "kept-referenced", references(con, r["uid"])
+            rows.append(r)
     # A replacement that is itself about to be deleted proves nothing: the row
     # is kept, never deleted along a chain.
     doomed = {r["uid"] for r in rows if r["verdict"] == "stale"}
@@ -434,7 +477,7 @@ def find(con, only=None):
 
 # ── reporting ───────────────────────────────────────────────────────────────
 
-VERDICTS = ["stale", "kept-referenced", "kept-unproven", "kept-newer", "kept-no-replacement"]
+VERDICTS = ["stale", "misattributed", "kept-referenced", "kept-unproven", "kept-newer", "kept-no-replacement"]
 
 
 def report(rows, sample, out=sys.stdout):
@@ -467,6 +510,10 @@ def report(rows, sample, out=sys.stdout):
                 if r.get("refs"):
                     tail += "  referenced by %s" % ", ".join(r["refs"])
                 print("  %-19s %s%s" % (v, r["uid"], tail), file=out)
+    mis = sum(1 for r in rows if r["verdict"] == "misattributed")
+    if mis:
+        print("\nmisattributed rows (stored under a country the record does not name): %d — "
+              "removed only by --delete-misattributed" % mis, file=out)
     return total
 
 
@@ -500,6 +547,10 @@ def recheck(con, r):
                       (r["uid"],)).fetchone()
     if not cur or (cur[0] or "") != r["fetched_at"] or cur[1] != r["text"]:
         return "the row was rewritten since the scan"
+    if r["kind"] == "dportal":
+        # No replacement to re-prove: the proof is the row's own text, which
+        # the comparison above has just shown unchanged.
+        return "something references it now" if references(con, r["uid"]) else None
     rep = con.execute("SELECT fetched_at, properties FROM intel_items WHERE uid=?",
                       (r["replacement"],)).fetchone()
     if not rep:
@@ -513,8 +564,8 @@ def recheck(con, r):
     return None
 
 
-def delete(con, rows, out=sys.stdout):
-    stale = [r for r in rows if r["verdict"] == "stale"]
+def delete(con, rows, out=sys.stdout, verdict="stale"):
+    stale = [r for r in rows if r["verdict"] == verdict]
     if not stale:
         print("\nnothing to delete", file=out)
         return 0
@@ -567,9 +618,14 @@ def delete(con, rows, out=sys.stdout):
         print("\nnot deleted, because the database changed after the scan:", file=out)
     for r, why in left:
         print("  left    %s: %s" % (r["uid"], why), file=out)
-    print("\ndeleted %d stale row(s) in one transaction:" % n, file=out)
-    for r in stale:
-        print("  removed %s  -> kept %s (%s)" % (r["uid"], r["replacement"], r["proof"]), file=out)
+    print("\ndeleted %d %s row(s) in one transaction:" % (n, verdict), file=out)
+    for r in stale[:50] if verdict != "stale" else stale:
+        if r["replacement"]:
+            print("  removed %s  -> kept %s (%s)" % (r["uid"], r["replacement"], r["proof"]), file=out)
+        else:
+            print("  removed %s  (%s)" % (r["uid"], r["proof"]), file=out)
+    if verdict != "stale" and len(stale) > 50:
+        print("  ... and %d more" % (len(stale) - 50), file=out)
     print("  with: " + (", ".join("%s %d" % kv for kv in sorted(side.items())) or "no dependent rows"), file=out)
     if vec_left:
         print("  intel_vec: the vec0 module is not loadable here, so %d embedding(s) of removed rows "
@@ -613,6 +669,16 @@ def self_test():
         con.execute("INSERT INTO intel_items_fts_uid_map(uid,rowid) VALUES (?,?)", (uid, rid))
 
     want_stale, want_kept = set(), {}
+
+    # d-portal: stored under Botswana. M1 came from the old (ignored-filter)
+    # read and names no country; M2 names another one; OK names Botswana; the
+    # notice is not a transaction and is never judged.
+    dp = "af-dportal-trans-bw"
+    put(dp + "|M1", dp, {"aid": "A-1", "trans_code": "D", "trans_country": "MW"}, T0)
+    put(dp + "|M2", dp, {"aid": "A-2", "trans_code": "D", "country_code": "GH"}, T1)
+    put(dp + "|OK", dp, {"aid": "A-3", "trans_code": "D", "country_code": "BW"}, T1)
+    put(dp + "|collector-truncation-notice", dp, {"records_used": 5}, T1)
+    want_mis = {dp + "|M1", dp + "|M2"}
 
     # Chicago contracts: plain C1 held revision 1; C1|1 and C1|2 now exist.
     put("us-chicago-contracts|C1", "us-chicago-contracts", {"revision_number": "1", "award_amount": "5"}, T0)
@@ -798,6 +864,25 @@ def self_test():
     con.close()
     check(not again, "a second pass still finds %d stale rows" % len(again))
 
+    # The misattributed rows are a separate verdict: reported, untouched by the
+    # stale delete above, removed only when asked for by name.
+    mis = {u for u, v in got.items() if v == "misattributed"}
+    check(mis == want_mis, "misattributed set: got %s" % sorted(mis))
+    check(dp + "|OK" not in got, "a row naming its own country was judged")
+    check(dp + "|collector-truncation-notice" not in got, "a notice was judged as a transaction")
+    c = sqlite3.connect(path)
+    still = {r[0] for r in c.execute("SELECT uid FROM intel_items")}
+    c.close()
+    check(want_mis <= still, "--delete removed a misattributed row it must leave")
+    con = open_db(path, write=True)
+    nm = delete(con, find(con), out=io.StringIO(), verdict="misattributed")
+    con.close()
+    c = sqlite3.connect(path)
+    after_mis = {r[0] for r in c.execute("SELECT uid FROM intel_items")}
+    c.close()
+    check(nm == 2 and not (after_mis & want_mis), "misattributed delete removed %d" % nm)
+    check(still - after_mis == want_mis, "misattributed delete removed something else")
+
     if failures:
         for f in failures:
             print("FAIL: " + f)
@@ -816,6 +901,9 @@ def main():
     ap.add_argument("db", nargs="?", help="path to the SQLite database (e.g. $JO_DB)")
     ap.add_argument("--delete", action="store_true",
                     help="delete the stale rows (one transaction); default is to report only")
+    ap.add_argument("--delete-misattributed", action="store_true",
+                    help="delete rows stored under af-dportal-trans-XX whose own record does not "
+                         "name country XX (no replacement exists; see judge_dportal_misattributed)")
     ap.add_argument("--source", action="append", metavar="ID",
                     help="limit to this source id (repeatable)")
     ap.add_argument("--sample", type=int, default=5, help="rows shown per verdict per source (default 5)")
@@ -827,14 +915,16 @@ def main():
         ap.error("a database path is required (or --self-test)")
     known = {s["id"] for s in SOURCES} | {WAYBACK}
     for s in a.source or []:
-        if s not in known:
+        if s not in known and not s.startswith(DPORTAL_PREFIX):
             ap.error("%s is not a source this tool covers: %s" % (s, ", ".join(sorted(known))))
-    con = open_db(a.db, write=a.delete)
+    con = open_db(a.db, write=a.delete or a.delete_misattributed)
     rows = find(con, set(a.source) if a.source else None)
     report(rows, a.sample)
+    if a.delete_misattributed:
+        delete(con, rows, verdict="misattributed")
     if a.delete:
         delete(con, rows)
-    else:
+    elif not a.delete_misattributed:
         print("\nreport only; nothing was changed (pass --delete to remove the stale rows)")
     con.close()
     return 0

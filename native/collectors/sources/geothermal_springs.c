@@ -92,7 +92,25 @@ static cJSON *pick_number_json(const char *desc, const char *label) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char *kml = feed_get_text(ctx->http, KML_URL, 60000);
-  if (!kml) return -1;  /* JS: empty features on fetch fail */
+  if (!kml) {
+    /* The text path records what it met since 2026-11-16 (lib/feedlib.h), so
+     * a refusal is no longer just a NULL: a 5xx whose own body says the
+     * service is in maintenance wants WAIT, where every other failure wants a
+     * re-read of the endpoint. The return is -1 either way; what changes is
+     * the remedy on stderr, which is what the reader of this row acts on. */
+    long st = feed_last_json_status();
+    char how[64];
+    feed_status_describe(st, how, sizeof how);
+    if (jo_body_says_maintenance(feed_last_failed_body()))
+      fprintf(stderr, "[geothermal-springs] %s answered %s with a body that "
+                      "says the SERVICE IS IN MAINTENANCE — reporting a "
+                      "failed fetch. Wait and re-read this row; do NOT "
+                      "re-point the URL.\n", KML_URL, how);
+    else
+      fprintf(stderr, "[geothermal-springs] %s answered %s — reporting a "
+                      "failed fetch\n", KML_URL, how);
+    return -1;
+  }
   /* A 200 can be a refusal, and here it is: measured 2026-11-07, gbank.gsj.jp
    * answers this KML's URL with HTTP 200 and **160 bytes** whose whole content
    * is `<title>メンテナンス中</title>`. The Placemark loop below then found

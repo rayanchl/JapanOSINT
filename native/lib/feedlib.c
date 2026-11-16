@@ -66,27 +66,37 @@ int feed_url_host_is_jp(const char *url) {
          (end[-1] == 'p' || end[-1] == 'P');
 }
 
-char *feed_get_text_max(http_client *http, const char *url, int timeout_ms,
-                        size_t max_body) {
-  int own = 0;
-  if (!http) { http = http_client_new(); own = 1; }
-  http_response r = {0};
-  int rc = http_request_max(http, "GET", url, NULL, NULL, 0,
-                            timeout_ms > 0 ? timeout_ms : 15000, 2,
-                            max_body, &r);
-  char *body = NULL;
-  if (rc == 0 && r.status >= 200 && r.status < 300 && r.body) {
-    size_t n = strlen(r.body);
-    if (n && feed_url_host_is_jp(url) && !csv_is_utf8(r.body, n))
-      body = csv_decode_sjis(r.body, n);
-    if (!body) body = strdup(r.body);
+/* See feed_last_json_status() in feedlib.h. Declared here, above the text
+ * path, because since 2026-11-16 the text path records into it too. */
+static _Thread_local long g_feed_json_status = FEED_ST_UNKNOWN;
+
+/* The body of this thread's last REFUSED text fetch, bounded. A maintenance
+ * page is a few hundred bytes (FINMAC 7,249, gbank 160, JAIRO 690), so the
+ * bound keeps the notice and drops a half-megabyte React 404 page's tail,
+ * which no phrase test should be reading anyway. */
+#define FEED_FAILED_BODY_CAP 65536
+static _Thread_local char *g_feed_failed_body = NULL;
+
+const char *feed_last_failed_body(void) { return g_feed_failed_body; }
+
+static void feed_note_text(int rc, const http_response *r) {
+  free(g_feed_failed_body);
+  g_feed_failed_body = NULL;
+  if (rc != 0) { g_feed_json_status = FEED_ST_TRANSPORT; return; }
+  g_feed_json_status = r->status;
+  if ((r->status < 200 || r->status >= 300) && r->body && r->body[0]) {
+    size_t n = strlen(r->body);
+    if (n > FEED_FAILED_BODY_CAP) n = FEED_FAILED_BODY_CAP;
+    g_feed_failed_body = malloc(n + 1);
+    if (g_feed_failed_body) {
+      memcpy(g_feed_failed_body, r->body, n);
+      g_feed_failed_body[n] = 0;
+    }
   }
-  http_response_free(&r);
-  if (own) http_client_free(http);
-  return body;
 }
 
-char *feed_get_text(http_client *http, const char *url, int timeout_ms) {
+char *feed_get_text_max(http_client *http, const char *url, int timeout_ms,
+                        size_t max_body) {
   int own = 0;
   if (!http) { http = http_client_new(); own = 1; }
   http_response r = {0};
@@ -94,8 +104,9 @@ char *feed_get_text(http_client *http, const char *url, int timeout_ms) {
    * overriding here only made this path differ from feed_get_json's — and the
    * string it used, "(+https://github.com)", was a placeholder that points at
    * nothing, which is worse than the shared one for any host that checks. */
-  int rc = http_request(http, "GET", url, NULL, NULL, 0,
-                        timeout_ms > 0 ? timeout_ms : 15000, 2, &r);
+  int rc = http_request_max(http, "GET", url, NULL, NULL, 0,
+                            timeout_ms > 0 ? timeout_ms : 15000, 2,
+                            max_body, &r);
   char *body = NULL;
   if (rc == 0 && r.status >= 200 && r.status < 300 && r.body) {
     size_t n = strlen(r.body);
@@ -106,13 +117,23 @@ char *feed_get_text(http_client *http, const char *url, int timeout_ms) {
       body = csv_decode_sjis(r.body, n);
     if (!body) body = strdup(r.body);
   }
+  /* The text path recorded NOTHING until 2026-11-16: a NULL return was all a
+   * bespoke collector could ever know, so a maintenance 503 (JAIRO's 690
+   * bytes, whose remedy is WAIT) read exactly like a moved endpoint. */
+  feed_note_text(rc, &r);
   http_response_free(&r);
   if (own) http_client_free(http);
   return body;
 }
 
+/* One implementation: this was a second copy of the function above, differing
+ * only in the ceiling it passed (0 = the default, which is what
+ * http_request() itself passes). */
+char *feed_get_text(http_client *http, const char *url, int timeout_ms) {
+  return feed_get_text_max(http, url, timeout_ms, 0);
+}
+
 /* See feed_last_json_status() in feedlib.h. */
-static _Thread_local long g_feed_json_status = FEED_ST_UNKNOWN;
 long feed_last_json_status(void) { return g_feed_json_status; }
 void feed_last_json_status_reset(void) { g_feed_json_status = FEED_ST_UNKNOWN; }
 
