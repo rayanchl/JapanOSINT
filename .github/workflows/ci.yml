@@ -169,6 +169,8 @@ jobs:
         run: |
           python3 -W error -m py_compile tools/*.py
           python3 tools/audit_page_two.py --self-test
+          # OPS-13: the consolidated audit CLI; checks every subcommand's --help.
+          python3 tools/jo_audit.py --self-test
 
       # docs/ENVIRONMENT.md is generated from the getenv() calls (OPS-06): a new
       # variable without a regenerated table fails here.
@@ -394,8 +396,24 @@ jobs:
         # entropy current kernels default to, and `setarch -R` is how the
         # Makefile's own tsan targets turn it off.
 
+      # ccache (OPS-12): the TSan tree is a second full compile of ~1,900
+      # objects; the key carries "tsan" because its flags differ from the plain
+      # build, and the Makefile hash because flags live there.
+      - name: Install ccache
+        run: sudo apt-get install -y --no-install-recommends ccache
+      - name: Restore ccache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/ccache
+          key: ccache-tsan-${{ runner.os }}-gcc-${{ hashFiles('native/Makefile') }}-${{ github.sha }}
+          restore-keys: |
+            ccache-tsan-${{ runner.os }}-gcc-${{ hashFiles('native/Makefile') }}-
       - name: Unit tests under ThreadSanitizer
         working-directory: native
+        env:
+          CC: ccache cc
+          CCACHE_DIR: ${{ runner.temp }}/ccache
+          CCACHE_MAXSIZE: 1G
         run: make tsan-test
 
   # 57 JS files, a tracked lockfile and a vitest block that was configured in
@@ -418,6 +436,13 @@ jobs:
       - name: Install client dependencies
         working-directory: client
         run: npm ci
+
+      # OPS-08: flat config in client/eslint.config.js. Real-bug rules are
+      # errors; the existing style/compiler-rule findings are warnings (see the
+      # file) so this gates new errors without a churn-heavy rewrite.
+      - name: Client lint (ESLint)
+        working-directory: client
+        run: npm run lint
 
       - name: Client tests
         working-directory: client
@@ -530,6 +555,7 @@ jobs:
           name: fuzz-crashes
           path: |
             native/crash-*
+            native/tests/fuzz/crashes/*
             native/timeout-*
             native/oom-*
           if-no-files-found: ignore
@@ -568,9 +594,27 @@ jobs:
         # the Ubuntu job: without it core/fts.c degrades to Latin passthrough
         # and the Japanese tokenizer path is never exercised.
 
+      # ccache (OPS-12) on the macOS leg too: a cold clang build of ~1,900
+      # objects is most of this job's 90-minute budget.
+      - name: Install ccache
+        run: brew list --formula ccache >/dev/null 2>&1 || brew install ccache
+      - name: Restore ccache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/ccache
+          key: ccache-macos-${{ runner.os }}-${{ hashFiles('native/Makefile') }}-${{ github.sha }}
+          restore-keys: |
+            ccache-macos-${{ runner.os }}-${{ hashFiles('native/Makefile') }}-
+
       - name: Build
         working-directory: native
-        run: make -j"$(sysctl -n hw.ncpu)"
+        env:
+          CC: ccache cc
+          CCACHE_DIR: ${{ runner.temp }}/ccache
+          CCACHE_MAXSIZE: 1G
+        run: |
+          make -j"$(sysctl -n hw.ncpu)"
+          ccache -s | head -8
 
       - name: Selftest
         working-directory: native
