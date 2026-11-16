@@ -39,7 +39,7 @@ static long long wal_bytes(const char *dbp) {
   return stat(p, &st) == 0 ? (long long)st.st_size : 0;
 }
 
-static double pass(db_handle *db, int n) {
+static double pass(db_handle *db, int n, int changed) {
   intel_sink k = intel_sink_make(db, "bench-src", NULL);
   char key[32], title[160], body[512], props[256];
   double t0 = now_s();
@@ -54,6 +54,7 @@ static double pass(db_handle *db, int n) {
       snprintf(body, sizeof body, "Hourly observation record %d from the "
                "national network; values update on the hour.", i);
     }
+    if (changed) strncat(body, " [revised]", sizeof body - strlen(body) - 1);
     snprintf(props, sizeof props, "{\"station\":%d,\"network\":\"bench\","
              "\"elevation_m\":%d}", i, i % 900);
     intel_item it = {0};
@@ -64,10 +65,12 @@ static double pass(db_handle *db, int n) {
     it.record_type = "observation"; it.properties_json = props;
     k.emit(&k, &it);
   }
-  double dt = now_s() - t0;
+  /* The clock stops AFTER the counters are read and the sink freed: a batched
+   * sink writes its last records there, and leaving that out would flatter it. */
   int exact = 1;
   long stored = intel_sink_stored(&k, &exact);
   intel_sink_free(&k);
+  double dt = now_s() - t0;
   if (stored != n) fprintf(stderr, "stored=%ld != %d\n", stored, n);
   return dt;
 }
@@ -81,14 +84,16 @@ int main(int argc, char **argv) {
   if (db_open(&db, NULL, NULL) != 0) return 1;
   sqlite3_exec(db.h, "PRAGMA wal_autocheckpoint=0", NULL, NULL, NULL);
 
-  const char *label[2] = {"first (all new)", "second (unchanged)"};
-  for (int p = 0; p < 2; p++) {
+  /* JO_SINK_BATCH / JO_SINK_BATCH_MS select the sink's batching; the third
+   * pass rewrites every record with changed text. */
+  const char *label[3] = {"first (all new)", "second (unchanged)", "third (changed)"};
+  for (int p = 0; p < 3; p++) {
     sqlite3_exec(db.h, "PRAGMA wal_checkpoint(TRUNCATE)", NULL, NULL, NULL);
     long long w0 = wal_bytes(dbp);
-    double dt = pass(&db, n);
+    double dt = pass(&db, n, p == 2);
     long long w1 = wal_bytes(dbp);
-    printf("%-20s n=%d  %.2fs  %.1f us/emit  WAL +%lld bytes (%.0f B/emit)\n",
-           label[p], n, dt, dt * 1e6 / n, w1 - w0, (double)(w1 - w0) / n);
+    printf("%-20s n=%d  %.2fs  %.0f rec/s  %.1f us/emit  WAL +%lld bytes (%.0f B/emit)\n",
+           label[p], n, dt, n / dt, dt * 1e6 / n, w1 - w0, (double)(w1 - w0) / n);
   }
   db_close(&db);
   return 0;

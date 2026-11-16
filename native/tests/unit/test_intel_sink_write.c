@@ -79,6 +79,10 @@ int main(void) {
   const char *dbp = getenv("JO_DB");
   if (!dbp || !*dbp) { fprintf(stderr, "set JO_DB to a scratch path\n"); return 2; }
   assert(db_open(&db, NULL, NULL) == 0);
+  /* Sections 1-8 assert emit()'s per-record answers (1 new / 0 updated), which
+   * is the JO_SINK_BATCH=1 contract; section 9 repeats the content assertions
+   * under the default batching (see also test_intel_sink_batch.c). */
+  setenv("JO_SINK_BATCH", "1", 1);
   const char *U = "t-src|k1";
 
   /* ── 1/2: unchanged re-fetch ───────────────────────────────────────── */
@@ -208,6 +212,39 @@ int main(void) {
     assert(strchr(uidb, '#'));
   }
   printf("  long keys: hashed tail, no collapse, deterministic, valid UTF-8: ok\n");
+
+  /* ── 9: the same guarantees under batching (the default) ─────────────── */
+  setenv("JO_SINK_BATCH", "200", 1);
+  k = intel_sink_make(&db, "bat-src", NULL);
+  for (int i = 0; i < 50; i++) {
+    char kk[16]; snprintf(kk, sizeof kk, "k%d", i);
+    assert(put(&k, kk, "観測点", "本文テキスト") >= 0);
+  }
+  assert(intel_sink_stored(&k, &exact) == 50 && exact == 1);
+  intel_sink_free(&k);
+  char *bf0 = text1("SELECT fetched_at FROM intel_items WHERE uid='bat-src|k7'", NULL);
+  sql("UPDATE intel_items_fts SET keywords='kw' WHERE uid='bat-src|k7'");
+  long long brid = int1("SELECT rowid FROM intel_items_fts_uid_map WHERE uid='bat-src|k7'", NULL);
+  usleep(5000);
+  k = intel_sink_make(&db, "bat-src", NULL);
+  for (int i = 0; i < 50; i++) {
+    char kk[16]; snprintf(kk, sizeof kk, "k%d", i);
+    assert(put(&k, kk, i < 25 ? "観測点" : "観測所", "本文テキスト") >= 0);
+  }
+  assert(intel_sink_stored(&k, &exact) == 50);
+  intel_sink_free(&k);
+  char *bf1 = text1("SELECT fetched_at FROM intel_items WHERE uid='bat-src|k7'", NULL);
+  assert(strcmp(bf0, bf1) == 0 && "batched unchanged re-fetch: fetched_at stays");
+  char *bkw = text1("SELECT keywords FROM intel_items_fts WHERE uid='bat-src|k7'", NULL);
+  assert(bkw && strcmp(bkw, "kw") == 0 && "batched unchanged re-fetch: keywords stay");
+  assert(int1("SELECT rowid FROM intel_items_fts_uid_map WHERE uid='bat-src|k7'", NULL) == brid);
+  assert(int1("SELECT count(*) FROM intel_items_fts WHERE uid LIKE 'bat-src|%'", NULL) == 50);
+  assert(int1("SELECT count(*) FROM intel_items WHERE source_id='bat-src' AND "
+              "title='観測所'", NULL) == 25 && "batched changed re-fetch is a full write");
+  free(bf0); free(bf1); free(bkw);
+  unsetenv("JO_SINK_BATCH");
+  printf("  batched: unchanged re-fetch touches last_seen_at only, changed is "
+         "a full write, stored counted: ok\n");
 
   /* ── 8: statements are finalized with the sink ─────────────────────── */
   free(fetched0); free(fetched1); free(fetched2); free(seen1);
