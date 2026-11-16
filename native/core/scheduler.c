@@ -15,6 +15,7 @@
 #include "source_settings.h"
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
+#include "_credential_notice.inc"  /* jo_needs_credential: the gated notice */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdatomic.h>
@@ -852,6 +853,7 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   /* Same thread-local pattern for content-change detection (roadmap 26): the
    * httpclient hook needs a db_handle and source_id it cannot otherwise see. */
   content_change_scope_begin(db, d->id);
+  http_credential_refusal_reset();      /* sticky per thread: this run's only */
   hostgate_set_cancel(cancel);
   /* The operator's per-source ceiling applies to EVERY engine's requests, not
    * only to the collectors that read ctx.body_ceiling: hpengine and VJSON rows
@@ -893,6 +895,23 @@ int scheduler_run_source(db_handle *db, const source_def *d,
    * It was computed only below until 2026-10-22, which is why the disclosure
    * could not live anywhere but inside each engine — see
    * sched_disclose_fetch_failure for what that cost. */
+  /* A host that needs a configured credential (SEC_CONTACT) refused the run's
+   * requests before any network. A run that left NOTHING behind because of it
+   * is GATED, the way a key-gated collector is: one collector-status-notice
+   * naming the credential, rc 0 (a missing credential is a state, not a run
+   * failure — see _credential_notice.inc). hpengine and the bespoke SEC
+   * collectors file the same notice themselves and then never reach this. */
+  {
+    const char *need = http_credential_refusal();
+    if (need && cs.n == 0 && cs.notices == 0) {
+      jo_needs_credential(&sink, d->id, d->name ? d->name : d->id,
+                          (const char *[]){ need, NULL }, d->url,
+                          "an e-mail address SEC can reach, set from the Keys "
+                          "screen or the environment — SEC answers 403 to a "
+                          "User-Agent without one");
+      rc = 0;
+    }
+  }
   const char *run_why = NULL;
   const char *run_st = run_status(rc, cs.n, hosts, hosts_ok, &run_why);
   int real_collector = d->collector && d->collector[0] != '_';

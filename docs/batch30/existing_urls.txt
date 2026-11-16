@@ -443,21 +443,21 @@ api.core.ac.uk/v3/search/outputs?q={}&limit=100
 api.core.ac.uk/v3/search/works?q={}&limit=20
 api.criminalip.io/v1/asset/ip/report?ip={}
 api.crossref.org
-api.crossref.org/funders/{}/works?rows=100&sort=created&order=desc&mailto=rayanchouialkessal@gmail.com
+api.crossref.org/funders/{}/works?rows=100&sort=created&order=desc&mailto=<contact address>
 api.crossref.org/funders?query={}&rows=100
 api.crossref.org/funders?query={}&rows=25
 api.crossref.org/funders?rows=100
-api.crossref.org/journals/{}/works?rows=100&sort=created&order=desc&mailto=rayanchouialkessal@gmail.com
+api.crossref.org/journals/{}/works?rows=100&sort=created&order=desc&mailto=<contact address>
 api.crossref.org/journals?rows=100
 api.crossref.org/licenses?rows=100
-api.crossref.org/members/{}/works?rows=100&sort=created&order=desc&mailto=rayanchouialkessal@gmail.com
+api.crossref.org/members/{}/works?rows=100&sort=created&order=desc&mailto=<contact address>
 api.crossref.org/members?query={}&rows=25
 api.crossref.org/members?rows=100
-api.crossref.org/prefixes/{}/works?rows=100&sort=created&order=desc&mailto=rayanchouialkessal@gmail.com
+api.crossref.org/prefixes/{}/works?rows=100&sort=created&order=desc&mailto=<contact address>
 api.crossref.org/types?rows=100
 api.crossref.org/works/10.1038/nature12373
 api.crossref.org/works?filter=has-clinical-trial-number:true&sort=created&order=desc&rows=100
-api.crossref.org/works?filter=ror-id:{}&rows=100&mailto=rayanchouialkessal@gmail.com
+api.crossref.org/works?filter=ror-id:{}&rows=100&mailto=<contact address>
 api.crossref.org/works?filter=type:component&sort=created&order=desc&rows=100
 api.crossref.org/works?filter=type:dataset&sort=created&order=desc&rows=100
 api.crossref.org/works?filter=type:dissertation&sort=created&order=desc&rows=100
@@ -472,7 +472,7 @@ api.crossref.org/works?filter=update-type:correction&sort=updated&order=desc&row
 api.crossref.org/works?filter=update-type:expression_of_concern&sort=updated&order=desc&rows=100
 api.crossref.org/works?filter=update-type:retraction&sort=updated&order=desc&rows=100
 api.crossref.org/works?filter=update-type:withdrawal&sort=updated&order=desc&rows=100
-api.crossref.org/works?query.affiliation={}&rows=100&sort=created&order=desc&mailto=rayanchouialkessal@gmail.com
+api.crossref.org/works?query.affiliation={}&rows=100&sort=created&order=desc&mailto=<contact address>
 api.crossref.org/works?query={}&rows=100
 api.crossref.org/works?query={}&rows=15
 api.crossref.org/works?query={}&rows={}
@@ -1279,18 +1279,18 @@ api.openalex.org/topics?per_page=100
 api.openalex.org/works/doi:10.1038/nature12373
 api.openalex.org/works?filter=authorships.author.id:a5023888391&per_page=25
 api.openalex.org/works?filter=authorships.institutions.ror:https://ror.org/00cvxb145&per_page=10
-api.openalex.org/works?filter=cites:{}&per-page=100&mailto=rayanchouialkessal@gmail.com
-api.openalex.org/works?filter=fulltext.search:{}&per-page=100&sort=publication_date:desc&mailto=rayanchouialkessal@gmail.com
+api.openalex.org/works?filter=cites:{}&per-page=100&mailto=<contact address>
+api.openalex.org/works?filter=fulltext.search:{}&per-page=100&sort=publication_date:desc&mailto=<contact address>
 api.openalex.org/works?filter=institutions.country_code:cn&per_page=100&sort=publication_date:desc
 api.openalex.org/works?filter=institutions.country_code:in&per_page=100&sort=publication_date:desc
 api.openalex.org/works?filter=institutions.country_code:jp&per_page=100&sort=publication_date:desc
 api.openalex.org/works?filter=institutions.country_code:jp,type:preprint&per_page=100&sort=publication_date:desc
 api.openalex.org/works?filter=is_oa:true&per_page=100&sort=publication_date:desc
 api.openalex.org/works?filter=is_retracted:true&per_page=100&sort=publication_date:desc
-api.openalex.org/works?filter=locations.source.type:repository&per-page=100&sort=publication_date:desc&mailto=rayanchouialkessal@gmail.com
+api.openalex.org/works?filter=locations.source.type:repository&per-page=100&sort=publication_date:desc&mailto=<contact address>
 api.openalex.org/works?filter=raw_affiliation_strings.search:{}
-api.openalex.org/works?filter=sustainable_development_goals.id:https://metadata.un.org/sdg/16&per-page=100&sort=publication_date:desc&mailto=rayanchouialkessal@gmail.com
-api.openalex.org/works?filter=title_and_abstract.search:{}&per-page=100&sort=publication_date:desc&mailto=rayanchouialkessal@gmail.com
+api.openalex.org/works?filter=sustainable_development_goals.id:https://metadata.un.org/sdg/16&per-page=100&sort=publication_date:desc&mailto=<contact address>
+api.openalex.org/works?filter=title_and_abstract.search:{}&per-page=100&sort=publication_date:desc&mailto=<contact address>
 api.openalex.org/works?filter=type:dataset&per_page=100&sort=publication_date:desc
 api.openalex.org/works?filter=type:preprint&per_page=100&sort=publication_date:desc
 api.openalex.org/works?per_page=100&sort=publication_date:desc
@@ -1742,8 +1742,8 @@ api.unhcr.org/population/v1/solutions/?limit=100&yearfrom=2015
 api.unhcr.org/population/v1/solutions/?limit=1000&per_page=1000&page=1&yearfrom=2024&yearto=2024&coo_all=true&coa_all=true
 api.unhcr.org/population/v1/unrwa/?limit=100&per_page=100&page=1&yearfrom=2023
 api.unhcr.org/population/v1/unrwa/?limit=1000&per_page=1000&page=1&yearfrom=2024&yearto=2024&coa_all=true
-api.unpaywall.org/v2/10.7717/peerj.4375?email=rayanchouialkessal@gmail.com
-api.unpaywall.org/v2/{}?email=rayanchouialkessal@gmail.com
+api.unpaywall.org/v2/10.7717/peerj.4375?email=<contact address>
+api.unpaywall.org/v2/{}?email=<contact address>
 api.us.socrata.com/api/catalog/v1
 api.us.socrata.com/api/catalog/v1?domains=data.act.gov.au&limit=100&offset=0&order=dataset_id
 api.us.socrata.com/api/catalog/v1?domains=data.bayareametro.gov&limit=100&offset=0&order=dataset_id

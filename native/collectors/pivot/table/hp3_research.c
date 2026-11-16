@@ -145,7 +145,8 @@ static const hp_source HP3_RESEARCH[] = {
     .record_type = "open-access-record",
     .tags = "\"research\",\"openaccess\",\"doi\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.unpaywall.org/v2/{q}?email=rayanchouialkessal@gmail.com",
+    .url = "https://api.unpaywall.org/v2/{q}?email={key}",
+    .key_env = "UNPAYWALL_EMAIL",
     .description = "Whether a given DOI has a legally free full text and where it is "
       "hosted, with every open location, its version, licence and host "
       "type. The route from a paywalled citation to a readable copy, "

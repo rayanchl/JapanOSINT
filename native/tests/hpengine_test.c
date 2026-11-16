@@ -170,6 +170,10 @@ void http_response_free(http_response *r) { if (r) { free(r->body); r->body = NU
  * not what a sentence in another file says. test_http_tls_cause.c owns the
  * classifier and the wording. */
 int http_last_tls_cause(void) { return g_fx_tls; }
+/* A host-level credential refusal (SEC_CONTACT): whatever a test set. */
+static const char *g_fx_cred = NULL;
+const char *http_credential_refusal(void) { return g_fx_cred; }
+void http_credential_refusal_reset(void) {}
 const char *http_tls_cause_label(int cause) {
   return cause == HTTP_TLS_NONE ? "" : "STUB-LABEL";
 }
@@ -4933,6 +4937,23 @@ int main(void) {
        strstr(nt->title, "TLS chain is incomplete") != NULL,
        "53b: a missing intermediate is named in the cause, the detail, the "
        "remedy AND the title — not filed as a generic transport failure");
+    (void)rc; }
+
+  /* 53-cred. The HTTP client refused the request because a host-level
+   *      credential (SEC_CONTACT) is not configured: that is GATED, one
+   *      collector-status-notice naming it — not a fetch failure. */
+  fx_reset();
+  fx_add("/us?per_page=100", FX_TRANSPORT_FAIL, NULL);
+  g_fx_cred = "SEC_CONTACT";
+  rc = run_source("T_URLSIZE", NULL);
+  g_fx_cred = NULL;
+  { const cap *nt = NULL;
+    ok(cap_count("collector-status-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "needs_credential") != NULL &&
+       strstr(nt->props, "SEC_CONTACT") != NULL &&
+       cap_count("collector-fetch-failure", NULL) == 0,
+       "53-cred: a refused credential-gated host is a needs-credential "
+       "notice naming SEC_CONTACT, not a fetch failure");
     (void)rc; }
 
   /* 53c. Each cause gets its own title, because the title is what a human

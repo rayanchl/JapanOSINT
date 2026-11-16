@@ -98,6 +98,19 @@ DEFAULT_UA = _engine_user_agent() or \
     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; feed collector; contact via repo issues)"
 
 
+def _sec_contact_ua(template):
+    """-> the SEC User-Agent, or None when no valid contact is configured."""
+    full = os.environ.get("SEC_CONTACT_UA", "").strip()
+    val = full or os.environ.get("SEC_CONTACT", "").strip()
+    if not val or len(val) > 256 or any(ord(c) < 32 or ord(c) == 127 for c in val):
+        return None
+    if not re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z0-9-]+", val):
+        return None
+    if not full and not re.search(r"[ \t()/]", val):
+        return template.replace("%CONTACT%", val)
+    return val
+
+
 def _host_agents():
     """core/host_agents.def — the engine's per-host User-Agent table — as
     {host: (agent, extra_headers)}, parsed from the same file the C includes so
@@ -115,12 +128,13 @@ def _host_agents():
     for h in re.findall(r'"([^"]+)"', m.group(1) if m else ""):
         k, _, v = h.partition(":")
         extra[k.strip()] = v.strip()
-    # HA_SEC's agent carries a contact mailbox and an operator may replace it
-    # with their own; host_agent_ua() in httpclient.c reads the same variable,
-    # so the probe keeps sending what the engine sends.
-    sec_env = os.environ.get("SEC_CONTACT_UA")
-    if sec_env and "HA_SEC" in kinds:
-        kinds["HA_SEC"] = sec_env
+    # HA_SEC's agent is built from the deployment's contact, a credential
+    # (SEC_CONTACT; $SEC_CONTACT_UA replaces the whole string), exactly as
+    # host_agent_ua()/http_contact_ua() in httpclient.c resolve it. Unset or
+    # invalid -> None: the engine sends NO request to these hosts, and neither
+    # does the probe (fetch() raises "needs SEC_CONTACT").
+    if "HA_SEC" in kinds:
+        kinds["HA_SEC"] = _sec_contact_ua(kinds["HA_SEC"])
     out = {}
     for host, kind in re.findall(r'HOST_AGENT\(\s*"([^"]+)"\s*,\s*(\w+)\s*\)', src):
         out[host.lower()] = (kinds[kind], extra if kind == "HA_BROWSER" else {})
@@ -428,6 +442,9 @@ def fetch(url, extra, timeout=None, body=None):
     if ha:
         for k in [k for k in headers if k.lower() == "user-agent"]:
             del headers[k]
+        if ha[0] is None:
+            raise RuntimeError("needs SEC_CONTACT: no request is sent to SEC "
+                               "without a configured contact address")
         headers["User-Agent"] = ha[0]
         headers.update(ha[1])
     data = body.encode("utf-8") if body is not None else None

@@ -190,7 +190,7 @@ UK_DATA_GOV	https://ckan.publishing.service.gov.uk/api/3/action/package_search?q
 UK_LEGISLATION_SEARCH	https://www.legislation.gov.uk/all/data.feed?title=sanctions	PASS	atom	20	200	49092	
 UK_PARLIAMENT_BILLS	https://bills-api.parliament.uk/api/v1/Bills?SearchTerm=security&take=50	PASS	json:items	29	200	16082	
 UNHCR_POPULATION	https://api.unhcr.org/population/v1/population/?limit=100&yearFrom=2020	PASS	json:items	75	200	20352	
-UNPAYWALL_DOI	https://api.unpaywall.org/v2/10.1038/nature12373?email=rayanchouialkessal@gmail.com	PASS	json:z_authors	8	200	5049	
+UNPAYWALL_DOI	https://api.unpaywall.org/v2/10.1038/nature12373?email=<contact address>	PASS	json:z_authors	8	200	5049	
 UN_COMTRADE_SUMMARY	https://comtradeapi.un.org/public/v1/preview/C/A/HS?reporterCode=392&period=2022&cmdCode=TOTAL&flowCode=X	PASS	json:data	217	200	194416	
 UN_DATA_POPULATION	https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json&per_page=200	PASS	json-array	2	200	42288	
 URLHAUS_RECENT	https://urlhaus.abuse.ch/downloads/csv_recent/	PASS	text-lines	16701	200	3225946	
