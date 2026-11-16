@@ -1556,10 +1556,25 @@ SIGXFSZ, median 108.7 s against a ~200 s kill line). Rule 1's note on the
   contractor insurance and the FRA railroad reference were created TODAY and
   got a measured semantic composite instead. Of the tree's 155 existing `:id`
   rows read on 2026-11-14, **40 serve a sample created within two days**
-  (`docs/socrata-id-created-at-2026-11-14.tsv`). That those ids therefore
-  churn is an INFERENCE; `tools/socrata_id_churn.py` took a content-hash
-  snapshot (`docs/socrata-id-snapshot-2026-11-14.tsv`) and its `compare` a day
-  later is the measurement. Nothing was re-keyed on the inference.
+  (`docs/socrata-id-created-at-2026-11-14.tsv`).
+
+  **OBSERVED A DAY LATER, where the paragraph above could only infer it**
+  (2026-11-15, `tools/socrata_id_churn.py compare`,
+  `docs/socrata-id-churn-2026-11-15.tsv`). The tool hashes each row's CONTENT
+  with Socrata's system fields removed, so a row that is the same record can be
+  asked whether it kept its id. WA contractor insurance: **500 of 500 rows
+  unchanged in content, 0 kept their `:id`**, every row now created
+  2026-11-15. Honolulu, the control: 249 of 249 kept theirs. So a wholesale
+  replace mints a new id for every row, and a source keyed on `:id` there
+  stores its whole dataset again on each refresh.
+  **The third dataset says nothing, and its label was my over-claim**: NYC
+  restaurant inspections kept 500 of 500 ids because it was NOT refreshed
+  between the two readings (rows still created 2026-11-13). "Replaced daily"
+  had been read off one `:created_at` sample; a single creation day shows that
+  a dataset was replaced, not how often. Of the existing `:id` rows, 63 sit on
+  datasets replaced within thirty days and each needs a measured semantic key
+  (`audit_distinctness.py --try-key`, then the engine over the whole
+  collection) — the named follow-up. No key was changed on this reading.
 
 **Every registered source is now proof-of-life verified.** Batch 14's 1,001
 unverified `csrc14_*` candidates were probed and promoted (594 PASS →

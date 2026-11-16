@@ -14,8 +14,10 @@ the opposite direction: a key chosen BECAUSE it looked like the stable one.
 
 WHAT IS MEASURED AND WHAT IS INFERRED. `:created_at` is measured: 40 of the 155
 `:id` rows read on 2026-11-14 serve a sample in which every row was created
-within the previous two days. That those rows' ids are therefore new is an
-INFERENCE about Socrata, and this tool exists to replace it with a reading:
+within the previous two days. That those rows' ids are therefore new was an
+INFERENCE about Socrata until 2026-11-15, when this tool observed it: 500 of
+500 content-identical WA rows carried a new id a day later, the 2015 control
+kept all 249. The method:
 
     snapshot   record, for a deterministic slice of each dataset, a hash of each
                row's CONTENT (system fields removed) beside its `:id`
@@ -45,7 +47,7 @@ DATASETS = [
     ('WA_CONTRACTOR_INSURANCE  (replaced daily; NOT keyed on :id)',
      'https://data.wa.gov/resource/ciwg-agsx.json',
      'contractorlicensenumber,insurancepolicyno,effectivedate'),
-    ('nam-nyc-restaurant-inspections  (replaced daily; NOT keyed on :id)',
+    ('nam-nyc-restaurant-inspections  (single creation day; refresh cadence unmeasured)',
      'https://data.cityofnewyork.us/resource/43nn-pn8j.json',
      'camis,inspection_date,violation_code'),
     ('JO29A_CAM_US_HI_HONOLULU  (CONTROL: rows created 2015; keyed on :id)',

@@ -1,0 +1,4 @@
+dataset	resource	snapshot	reread	rows_content_unchanged	id_kept	id_changed	rows_created_at_reread	verdict
+WA_CONTRACTOR_INSURANCE	data.wa.gov ciwg-agsx	2026-11-14	2026-11-15	500	0	500	2026-11-15	CHURN_OBSERVED - replaced wholesale, every :id new
+nam-nyc-restaurant-inspections	data.cityofnewyork.us 43nn-pn8j	2026-11-14	2026-11-15	500	500	0	2026-11-13	NO_REFRESH_IN_INTERVAL - ids kept because nothing was replaced; says nothing about churn
+JO29A_CAM_US_HI_HONOLULU	data.honolulu.gov cat5-2v98	2026-11-14	2026-11-15	249	249	0	2015-07-10	STABLE (control)
