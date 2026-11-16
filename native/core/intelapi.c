@@ -13,6 +13,7 @@
 #include <sys/time.h>
 #include <math.h>
 #include "source_trust.h"
+#include "../lib/jocore.h"   /* jo_iso_now */
 
 /* explicit column order shared by item-by-uid and list-items so rows can be
  * read by fixed index (== rowToItem field access in intelStore.js). */
@@ -44,21 +45,6 @@ static void add_str_or_null(cJSON *o, const char *k, const char *v) {
   cJSON_AddItemToObject(o, k, v ? cJSON_CreateString(v) : cJSON_CreateNull());
 }
 
-/* Node's new Date().toISOString(): YYYY-MM-DDTHH:MM:SS.mmmZ */
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
 
 /* Buffer.from(str,'utf8').toString('base64url') — no padding, +/ → -_ */
 static char *b64url(const char *in) {
@@ -751,7 +737,7 @@ char *intelapi_list_items_st(db_handle *db, const intel_items_query *Q,
   add_str_or_null(filters, "sub_source_id", Q ? Q->sub_source_id : NULL);
   add_str_or_null(filters, "has_geom",      Q ? Q->has_geom : NULL);
 
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddItemToObject(meta, "filters", filters);
@@ -1314,7 +1300,7 @@ char *intelapi_intel_sources_view(db_handle *db, int limit, int offset,
     else cJSON_Delete(SR[i].obj);
   }
 
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddNumberToObject(meta, "total", nout);

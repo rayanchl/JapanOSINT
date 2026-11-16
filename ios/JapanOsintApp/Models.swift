@@ -717,12 +717,34 @@ struct IntelItem: Codable, Identifiable, Hashable {
     /// True for the engine's self-disclosure rows. Every list that shows intel
     /// must either style these as notices or filter them — never present them
     /// as findings.
+    ///
+    /// The server's rule (core/intel.c) is every `collector-*-notice` —
+    /// truncation, status, shape, … — PLUS `collector-fetch-failure` (written
+    /// when a fetch was refused) and `collector-fetch-error`. Matching the
+    /// kinds by name alone missed the shape and fetch-failure rows, which then
+    /// rendered as findings.
     var isCollectorNotice: Bool {
         guard let rt = record_type else { return false }
-        return rt == "collector-truncation-notice" || rt == "collector-status-notice"
+        if rt == "collector-fetch-failure" || rt == "collector-fetch-error" { return true }
+        return rt.hasPrefix("collector-") && rt.hasSuffix("-notice")
     }
     var isTruncationNotice: Bool { record_type == "collector-truncation-notice" }
     var isStatusNotice: Bool { record_type == "collector-status-notice" }
+    var isFetchFailure: Bool {
+        record_type == "collector-fetch-failure" || record_type == "collector-fetch-error"
+    }
+
+    /// Short human label for the notice kind, from the record type.
+    var noticeLabel: String { NoticeText.label(forKind: record_type) }
+
+    /// The notice's own explanation, read from `properties`: why it fired
+    /// (`reason`, `note`, `error`, `message`, `outcome`) and what to do about
+    /// it (`remedy`), with the HTTP status / TLS cause the engine measured when
+    /// it carries them. Nothing is composed here beyond joining what the
+    /// server wrote; an empty result means the row carried no such field.
+    var noticeDetail: [(label: String, text: String)] {
+        NoticeText.detail(from: properties)
+    }
 
     static func == (lhs: IntelItem, rhs: IntelItem) -> Bool { lhs.uid == rhs.uid }
     func hash(into hasher: inout Hasher) { hasher.combine(uid) }

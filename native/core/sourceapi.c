@@ -18,6 +18,7 @@
 #include "source_interval.h"
 #include "scheduler.h"
 #include "../lib/hpengine.h"
+#include "layertab.h"
 #include "../lib/jocore.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
@@ -30,17 +31,6 @@
 #include <sys/time.h>
 #include <time.h>
 
-/* ── small helpers ──────────────────────────────────────────────────────── */
-
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
 static void iso_epoch(long long t, char *buf, size_t n) {
   time_t tt = (time_t)t; struct tm tm; gmtime_r(&tt, &tm);
   strftime(buf, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
@@ -387,7 +377,7 @@ static void snap_load(db_handle *db, snapshot *s) {
   s->trust = source_trust_load(db, &s->ntrust);
   if (s->trust) qsort(s->trust, (size_t)s->ntrust, sizeof *s->trust, id_cmp_trust);
   s->built_ms = now_ms();
-  iso_now(s->built_at, sizeof s->built_at);
+  jo_iso_now(s->built_at, sizeof s->built_at);
 }
 
 /* Hands back a private COPY-BY-REFERENCE of the current snapshot under the
@@ -770,7 +760,7 @@ static cJSON *search_obj(db_handle *db, const sourceapi_query *q, const char *fo
   cJSON_AddItemToObject(fa, "healths", facet_json(&f_health, 8, 0));
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddItemToObject(meta, "facets", fa);   /* inside meta: the {data,page,meta} envelope every list shares */
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now(ts, sizeof ts);
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddStringToObject(meta, "snapshot_at", s->built_at);
   cJSON_AddNumberToObject(meta, "registry_total", g_nreg);
@@ -949,7 +939,10 @@ static cJSON *groups_json(const coll_t *c, int n) {
   return arr;
 }
 
-char *sourceapi_collectors(db_handle *db) {
+char *sourceapi_collectors(db_handle *db) { return sourceapi_collectors_q(db, NULL); }
+
+char *sourceapi_collectors_q(db_handle *db, const char *fq) {
+  if (fq && !*fq) fq = NULL;
   reg_build();
   snapshot *s = snap_lock(db);
   int n = 0;
@@ -959,14 +952,30 @@ char *sourceapi_collectors(db_handle *db) {
   cJSON *groups = groups_json(c, n);     /* before coll_json() eats the facets */
   cJSON *data = cJSON_CreateArray();
   long srcs = 0;
-  for (int i = 0; i < n; i++) { srcs += c[i].sources; cJSON_AddItemToArray(data, coll_json(&c[i])); }
+  int shown = 0;
+  for (int i = 0; i < n; i++) {
+    if (fq) {
+      /* a substring of the key or the label, either language, any case */
+      const collector_meta *cm = collector_meta_get(c[i].key);
+      int hit = jo_strcasestr(c[i].key, fq) ||
+                (cm && cm->label && jo_strcasestr(cm->label, fq)) ||
+                (cm && cm->label_ja && strstr(cm->label_ja, fq));
+      if (!hit) { free(c[i].cats.v); free(c[i].engines.v); continue; }
+    }
+    srcs += c[i].sources; shown++;
+    cJSON_AddItemToArray(data, coll_json(&c[i]));
+  }
   cJSON_AddItemToObject(o, "data", data);
   cJSON_AddItemToObject(o, "groups", groups);
   cJSON *meta = cJSON_CreateObject();
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now(ts, sizeof ts);
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddStringToObject(meta, "snapshot_at", s->built_at);
-  cJSON_AddNumberToObject(meta, "total", n);
+  cJSON_AddNumberToObject(meta, "total", shown);
+  if (fq) {
+    cJSON_AddStringToObject(meta, "q", fq);
+    cJSON_AddNumberToObject(meta, "collectors_total", n);
+  }
   cJSON_AddNumberToObject(meta, "sources", (double)srcs);
   cJSON_AddNumberToObject(meta, "registry_total", g_nreg);
   cJSON_AddNumberToObject(meta, "labelled", collector_meta_count());
@@ -1455,6 +1464,27 @@ char *sourceapi_detail(db_handle *db, const char *id) {
   cJSON_AddBoolToObject(reg, "free_tier", m ? m->free : d->free_tier);
   cJSON_AddBoolToObject(reg, "curated_overlay", m != NULL);
   cJSON_AddBoolToObject(reg, "is_entity_pivot", registry_is_entity_pivot(d));
+  /* Which map layer the source's geocoded rows are served through, resolved
+   * by core/layertab (layers.def terms, else the declared layer), NOT the
+   * source's own `.layer` above — which is NULL for ~13k generated sources
+   * that are on curated layers all the same. null = served by the catch-all.
+   * records_geocoded is what decides whether it can appear on a map at all.
+   * Both are also at the top level of the detail object. */
+  {
+    const char *lid = layertab_layer_for_source(d->id);
+    long long geo = 0;
+    sqlite3_stmt *gs = NULL;
+    if (sqlite3_prepare_v2(db->h, "SELECT COUNT(*) FROM intel_items "
+          "WHERE source_id=?1 AND lat IS NOT NULL", -1, &gs, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(gs, 1, d->id, -1, SQLITE_TRANSIENT);
+      if (sqlite3_step(gs) == SQLITE_ROW) geo = sqlite3_column_int64(gs, 0);
+    }
+    sqlite3_finalize(gs);
+    add_str_or_null(reg, "layer_id", lid);
+    cJSON_AddNumberToObject(reg, "records_geocoded", (double)geo);
+    add_str_or_null(o, "layer_id", lid);
+    cJSON_AddNumberToObject(o, "records_geocoded", (double)geo);
+  }
   cJSON_AddItemToObject(o, "registry", reg);
 
   /* engine — the row as declared (hpengine), or what the def alone can say */
@@ -1611,7 +1641,7 @@ char *sourceapi_detail(db_handle *db, const char *id) {
   cJSON_AddItemToObject(o, "provenance", prov_json(id));
 
   cJSON *meta = cJSON_CreateObject();
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now(ts, sizeof ts);
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddStringToObject(meta, "run", "/api/intel/sources/{id}/run");
   cJSON_AddStringToObject(meta, "items", "/api/intel/items?source={id}");

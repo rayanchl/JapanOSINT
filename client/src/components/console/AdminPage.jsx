@@ -579,7 +579,8 @@ function StepCard({ n, title, hint, children }) {
 }
 
 function BreachTab() {
-  const status = useApi('/api/status');
+  // Counters only; breach source ids come from the server's category search.
+  const status = useApi('/api/status?summary=1');
   const jobsQ = useApi('/api/admin/breach/jobs');
   const jobs = jobsQ.data?.jobs || [];
   const busyAny = jobs.some(isRunning);
@@ -611,12 +612,10 @@ function BreachTab() {
   const [confirmIngest, setConfirmIngest] = useState(false);
 
   const summary = status.data?.summary;
-  const breachSources = useMemo(() => (status.data?.apis || []).filter((s) => s.category === 'breach'), [status.data]);
-  const suggestions = useMemo(() => {
-    const q = sourceId.toLowerCase();
-    const pool = q ? breachSources.filter((s) => s.id.toLowerCase().includes(q) || (s.name || '').toLowerCase().includes(q)) : breachSources;
-    return pool.slice(0, 25);
-  }, [breachSources, sourceId]);
+  const [sugQ, setSugQ] = useState('');
+  useEffect(() => { const t = setTimeout(() => setSugQ(sourceId.trim()), 250); return () => clearTimeout(t); }, [sourceId]);
+  const sugResp = useApi(`/api/sources/search?category=breach&limit=25${sugQ ? `&q=${encodeURIComponent(sugQ)}` : ''}`, { deps: [sugQ] });
+  const suggestions = useMemo(() => (Array.isArray(sugResp.data?.data) ? sugResp.data.data : []), [sugResp.data]);
   const fetchBusy = jobs.some((j) => j.kind === 'fetch' && isRunning(j));
   const ingestBusy = jobs.some((j) => j.kind === 'ingest' && isRunning(j));
 

@@ -36,8 +36,11 @@ export default function useDataSources() {
 
   useEffect(() => {
     fetchStats();
-    const pollInterval = setInterval(fetchStats, 60000);
-    return () => clearInterval(pollInterval);
+    // Paused while the tab is hidden; one refresh when it becomes visible.
+    const pollInterval = setInterval(() => { if (!document.hidden) fetchStats(); }, 60000);
+    const onVis = () => { if (!document.hidden) fetchStats(); };
+    document.addEventListener('visibilitychange', onVis);
+    return () => { clearInterval(pollInterval); document.removeEventListener('visibilitychange', onVis); };
   }, [fetchStats]);
 
   return { stats, isConnected: connected, lastUpdate, error };

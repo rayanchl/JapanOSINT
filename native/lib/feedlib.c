@@ -1,3 +1,4 @@
+#include "jsonbig.h"   /* exact integers beyond 2^53 */
 #include "feedlib.h"
 #include "csv.h"           /* csv_is_utf8 / csv_decode_sjis */
 #include <openssl/evp.h>
@@ -155,7 +156,7 @@ cJSON *feed_get_json_h(http_client *http, const char *url,
     char *conv = NULL;
     if (r.body_len && feed_url_host_is_jp(url) && !csv_is_utf8(r.body, r.body_len))
       conv = csv_decode_sjis(r.body, r.body_len);
-    j = cJSON_Parse(conv ? conv : r.body);
+    j = jo_json_parse(conv ? conv : r.body);
     free(conv);
   }
   feed_note_status(rc, &r, j);
@@ -182,7 +183,7 @@ cJSON *feed_post_json(http_client *http, const char *url, const char *body,
     char *conv = NULL;
     if (r.body_len && feed_url_host_is_jp(url) && !csv_is_utf8(r.body, r.body_len))
       conv = csv_decode_sjis(r.body, r.body_len);
-    j = cJSON_Parse(conv ? conv : r.body);
+    j = jo_json_parse(conv ? conv : r.body);
     free(conv);
   }
   feed_note_status(rc, &r, j);

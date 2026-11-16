@@ -11,6 +11,7 @@
 #include "alertsapi.h"
 #include "alert_eval.h"
 #include "casesapi.h"
+#include "metricsapi.h"
 #include "annotationsapi.h"
 #include "timelineapi.h"
 #include "exportapi.h"
@@ -58,6 +59,7 @@
 #include "breach_jobs.h"
 #include "pagination_probe.h"
 #include "breach_meta.h"
+#include "../lib/jocore.h"   /* jo_iso_now */
 #include "breach_adapter.h"
 #include "../third_party/mongoose.h"
 #include "../third_party/sqlite3.h"
@@ -74,21 +76,6 @@
 
 static db_handle *g_db;
 
-/* Node's new Date().toISOString(): YYYY-MM-DDTHH:MM:SS.mmmZ */
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
 
 /* Escape `s` for embedding inside a JSON string literal, truncating only on a
  * COMPLETE escape sequence so the result is always valid JSON.
@@ -169,6 +156,17 @@ static void reply_json(struct mg_connection *c, int code, const char *body) {
   char hb[CORS_HDR_MAX + 96];
   snprintf(hb, sizeof hb, "Content-Type: application/json\r\n%s", cors_h(c));
   mg_http_reply(c, code, hb, "%s", body);
+}
+
+/* A failed tenant_resolve(): -403 is an X-Tenant-Id the caller is not a member
+ * of (their client is pointed at a workspace it cannot act in), anything else
+ * is a server fault. */
+static void reply_tenant_err(struct mg_connection *c, int tr) {
+  if (tr == -403)
+    reply_json(c, 403, "{\"error\":\"not_a_member\",\"detail\":"
+                       "\"X-Tenant-Id is not one of your workspaces\"}");
+  else
+    reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}");
 }
 
 /* Copy the request's query string into a fixed buffer, or answer 414.
@@ -300,7 +298,7 @@ static char *sa_build(db_handle *db, const sa_arg *a, int *st) {
   switch (a->kind) {
     case SA_DETAIL:     b = sourceapi_detail(db, a->id); break;
     case SA_SEARCH:     b = sourceapi_search(db, &q); break;
-    case SA_COLLECTORS: b = sourceapi_collectors(db); break;
+    case SA_COLLECTORS: b = sourceapi_collectors_q(db, a->q); break;
     case SA_COLLECTOR:  b = sourceapi_collector(db, a->id, &q); break;
     case SA_SUMMARY:    b = sourceapi_summary(db, a->id, a->refresh); break;
   }
@@ -324,12 +322,15 @@ static void *sa_thread(void *vp) {
   return NULL;
 }
 static void sa_serve(struct mg_connection *c, struct mg_http_message *hm, sa_kind kind,
-                     const char *id) {
+                     const char *id, int op) {
   sa_arg *a = calloc(1, sizeof *a);
   if (!a) { reply_json(c, 500, "{\"error\":\"out_of_memory\"}"); return; }
   a->mgr = c->mgr; a->cid = c->id; a->kind = kind;
   if (id) snprintf(a->id, sizeof a->id, "%s", id);
   sa_parse(hm, a);
+  /* ?refresh=1 forces an LLM regeneration on every call: operators only
+   * (API-08). A non-operator's flag is ignored and gets the cached summary. */
+  if (!op) a->refresh = 0;
   if (sa_cacheable(a)) {
     long age = 0;
     char *hit = respcache_get(a->key, fleet_ttl(), &age);
@@ -514,6 +515,50 @@ static void run_end(const char *id) {
     if (!strcmp(g_running[i], id)) { g_running[i][0] = 0; scheduler_release(id); break; }
   pthread_mutex_unlock(&g_runlock);
 }
+/* WHO may run a collector (M13 / API-02 / API-12). A run writes the SHARED
+ * corpus and spends the platform's upstream quota, so a plain signed-in user
+ * may not: a platform operator, or the owner/admin of the active workspace.
+ * A maintenance pod (collector `_*`) writes the shared database directly and
+ * is operator-only: every user owns an auto-provisioned personal workspace in
+ * which they are `owner`, and `tenants` carries no marker to tell that from a
+ * real one, so the workspace role cannot be trusted for a platform-level
+ * resource. A non-operator is also held to a per-user budget (rl_key; NULL =
+ * the caller charges its own). Returns 0 when allowed, else the HTTP status,
+ * with the JSON body in `body`. Safe on a worker thread given its own `db`. */
+static int collector_run_gate(db_handle *db, const auth_user *usr,
+                              const char *xtid, int is_pod, const char *rl_key,
+                              char *body, size_t cap) {
+  if (opgate_check(usr) == 0) return 0;
+  if (is_pod) {
+    snprintf(body, cap, "{\"error\":\"forbidden\",\"detail\":\"running a "
+             "maintenance pod requires platform operator\"}");
+    return 403;
+  }
+  tenant_ctx rtc;
+  int tr = tenant_resolve(db, usr, (xtid && *xtid) ? xtid : NULL, &rtc);
+  if (tr == -401) { snprintf(body, cap, "{\"error\":\"Auth required\"}"); return 401; }
+  if (tr == -403) {
+    snprintf(body, cap, "{\"error\":\"not_a_member\",\"detail\":"
+             "\"X-Tenant-Id is not one of your workspaces\"}");
+    return 403;
+  }
+  if (tr != 0) { snprintf(body, cap, "{\"error\":\"Tenant resolution failed\"}"); return 500; }
+  if (strcmp(rtc.role, "owner") != 0 && strcmp(rtc.role, "admin") != 0) {
+    snprintf(body, cap, "{\"error\":\"forbidden\",\"detail\":\"running a "
+             "collector requires platform operator or workspace owner/admin\"}");
+    return 403;
+  }
+  if (rl_key) {
+    int retry = 0;
+    if (!ratelimit_allow(RL_COLLECTOR_RUN, rl_key, 10, 60, &retry)) {
+      snprintf(body, cap, "{\"error\":\"collector_run_rate_limited\","
+               "\"retry_after_sec\":%d}", retry);
+      return 429;
+    }
+  }
+  return 0;
+}
+
 static long long si_count(db_handle *db, const char *id) {
   sqlite3_stmt *s; long long n = 0;
   if (sqlite3_prepare_v2(db->h,
@@ -1708,6 +1753,91 @@ static char *audit_verify_route(db_handle *db, const char *tenant,
   return body;
 }
 
+/* GET /api/layers/:id/geojson as a semsearch_route_fn (see sem_spawn). */
+static char *layer_geojson_route(db_handle *db, const char *tenant, const char *id,
+                                 const char *qs, int is_operator, int *status) {
+  (void)tenant; (void)is_operator;
+  struct mg_str q = mg_str_n(qs, strlen(qs));
+  int lim = 0, off = 0;
+  char v[32] = {0};
+  if (mg_http_get_var(&q, "limit", v, sizeof v) > 0) lim = atoi(v);
+  v[0] = 0;
+  if (mg_http_get_var(&q, "offset", v, sizeof v) > 0) off = atoi(v);
+  char *body = dataapi_layer_fc(db, id, lim, off);
+  if (!body) {
+    *status = 404;
+    return strdup("{\"error\":\"Layer not found\"}");
+  }
+  *status = 200;
+  return body;
+}
+
+/* GET /api/transit* as a semsearch_route_fn: `id` is the path after
+ * /api/transit, `qs` the query. Unported routes answer 501 as before. */
+static char *transit_route(db_handle *db, const char *tenant, const char *id,
+                           const char *qs, int is_operator, int *status) {
+  (void)tenant; (void)is_operator;
+  char tq[512];
+  snprintf(tq, sizeof tq, "%s", qs);
+  char *body = transitapi(db, id, tq);
+  if (!body) { *status = 404; return strdup("{\"error\":\"not_found\"}"); }
+  *status = strstr(body, "\"error\":\"not_implemented\"") ? 501 : 200;
+  return body;
+}
+
+/* POST /api/docmeta and POST /api/uploads/:id/commit, off-loop (API-07).
+ * docmeta sniffs and parses up to a 2.5 MiB document; commit assembles up to
+ * JO_UPLOAD_MAX_BYTES, hashes it, extracts and writes custody evidence. Both
+ * need the request body past this handler's return, so each carries its own
+ * copy, and commit runs on its OWN connection (a transaction belongs to a
+ * connection; see srcrun_thread). */
+typedef struct {
+  struct mg_mgr *mgr; unsigned long cid;
+  char *body; size_t len; char fn[256]; int has_fn; char ct[192];
+} dm_arg;
+static void *dm_thread(void *vp) {
+  dm_arg *a = vp;
+  char *m = docmeta_extract(a->body, a->len, a->has_fn ? a->fn : NULL,
+                            a->ct[0] ? a->ct : NULL);
+  if (!m) {
+    wakeup_reply(a->mgr, a->cid, 500, "{\"error\":\"server_error\"}");
+  } else {
+    size_t need = strlen(m) + 16;
+    char *out = malloc(need);
+    if (!out) {
+      free(m);
+      wakeup_reply(a->mgr, a->cid, 500, "{\"error\":\"server_error\"}");
+    } else {
+      snprintf(out, need, "{\"data\":%s}", m);
+      free(m);
+      wakeup_reply_big(a->mgr, a->cid, 200, out);          /* consumes out */
+    }
+  }
+  free(a->body); free(a);
+  worker_release();
+  return NULL;
+}
+typedef struct {
+  struct mg_mgr *mgr; unsigned long cid;
+  tenant_ctx tc; char meth[12], uid[128], act[32], qs[256];
+  char *body; size_t len;
+} upl_arg;
+static void *upl_thread(void *vp) {
+  upl_arg *a = vp;
+  db_handle own;
+  db_handle *db = db_worker_open(&own, g_db);
+  int st = 200;
+  char *body = uploadapi(db, &a->tc, a->meth, a->uid, a->act, a->qs,
+                         a->body, a->len, &st);
+  db_worker_close(&own);
+  if (!body && st == 204) wakeup_reply(a->mgr, a->cid, 204, "");
+  else if (!body) wakeup_reply(a->mgr, a->cid, st, "{\"error\":\"server_error\"}");
+  else wakeup_reply_big(a->mgr, a->cid, st, body);         /* consumes body */
+  free(a->body); free(a);
+  worker_release();
+  return NULL;
+}
+
 /* Run `fn` on a worker; always replies (now, or deferred to MG_EV_WAKEUP). */
 static void sem_spawn(struct mg_connection *c, struct mg_http_message *hm,
                       semsearch_route_fn fn, const char *tenant, const char *id,
@@ -1798,6 +1928,7 @@ static void *suggest_thread(void *vp) {
 typedef struct {
   struct mg_mgr *mgr; unsigned long cid;
   db_handle *db; const source_def *d; char id[128];
+  char entity[520];              /* "" = none (a scheduled source) */
 } srcrun_arg;
 
 static void *srcrun_thread(void *vp) {
@@ -1818,7 +1949,7 @@ static void *srcrun_thread(void *vp) {
   db_handle *db = db_worker_open(&own, a->db);
   uint64_t t0 = mg_millis();
   long long before = si_count(db, a->id);
-  int rc = scheduler_run_source(db, a->d, NULL);
+  int rc = scheduler_run_source(db, a->d, a->entity[0] ? a->entity : NULL);
   long long delta = si_count(db, a->id) - before;
   if (delta < 0) delta = 0;
   db_worker_close(&own);
@@ -1903,6 +2034,15 @@ typedef struct {
   db_handle *db; char id[256];
   char uid[128];                 /* the caller, for the run budget below */
   int retry;                     /* filled by data_allow_run on a refusal */
+  /* The run gate, evaluated only when the read becomes a live collector run
+   * (a cache miss). The handler captures the caller; the worker evaluates it
+   * on its OWN db handle, so the common cached read never costs a tenant
+   * lookup. */
+  auth_user usr; char xtid[128];
+  db_handle *wdb;                /* db to resolve the tenant on; NULL = a->db */
+  int denied;                    /* HTTP status of a gate refusal, 0 = none */
+  char deny_body[256];
+  int claimed;                   /* run_begin(a->id) is held: run_end after */
 } datarun_arg;
 
 /* Per-user budget for live collector runs reached through GET /api/data/<id>
@@ -1915,10 +2055,28 @@ typedef struct {
 #define DATA_RUN_WINDOW_SEC  300
 static int data_allow_run(void *vp) {
   datarun_arg *a = vp;
+  /* GET /api/data/<id> on a cold layer runs the collector; that is the same
+   * act as POST /api/intel/sources/:id/run and takes the same gate (API-02),
+   * and the same single-flight, so it cannot run beside the scheduler's or a
+   * manual copy of one source. */
+  a->denied = collector_run_gate(a->wdb ? a->wdb : a->db, &a->usr, a->xtid, 0,
+                                 NULL, a->deny_body, sizeof a->deny_body);
+  if (a->denied) return 0;
+  if (!run_begin(a->id)) {
+    a->denied = 409;
+    snprintf(a->deny_body, sizeof a->deny_body,
+             "{\"error\":\"run_in_flight\"}");
+    return 0;
+  }
+  a->claimed = 1;
   char key[160];
   snprintf(key, sizeof key, "data:%s", a->uid);
-  return ratelimit_allow(RL_COLLECTOR_RUN, key, DATA_RUN_LIMIT,
-                         DATA_RUN_WINDOW_SEC, &a->retry);
+  if (!ratelimit_allow(RL_COLLECTOR_RUN, key, DATA_RUN_LIMIT,
+                       DATA_RUN_WINDOW_SEC, &a->retry)) {
+    run_end(a->id); a->claimed = 0;
+    return 0;
+  }
+  return 1;
 }
 
 static void *datarun_thread(void *vp) {
@@ -1927,8 +2085,17 @@ static void *datarun_thread(void *vp) {
   db_handle *db = db_worker_open(&own, a->db);
   char *body = sweepapi_data(db, a->id);
   int refused = 0;
+  a->wdb = db;
   if (!body) body = dataapi_layer_admit(db, a->id, data_allow_run, a, &refused);
+  a->wdb = NULL;
+  if (a->claimed) { run_end(a->id); a->claimed = 0; }
   db_worker_close(&own);
+  if (refused && a->denied) {
+    wakeup_reply(a->mgr, a->cid, a->denied, a->deny_body);
+    free(a);
+    worker_release();
+    return NULL;
+  }
   if (refused) {
     char rb[192];
     snprintf(rb, sizeof rb, "{\"error\":\"collector_run_rate_limited\","
@@ -1980,12 +2147,12 @@ static int intel_tenant_or_reply(struct mg_connection *c, struct mg_http_message
   if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len] = 0; }
   int tr = tenant_resolve(g_db, usr, xt ? xtid : NULL, tc);
   if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return -1; }
-  if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return -1; }
+  if (tr != 0)    { reply_tenant_err(c, tr); return -1; }
   return 0;
 }
 
-static char *intel_items_run(struct mg_http_message *hm, const char *tenant,
-                             int *too_long, int *st) {
+static char *intel_items_run_db(db_handle *qdb, struct mg_http_message *hm,
+                                const char *tenant, int *too_long, int *st) {
   char src[160]={0}, q[256]={0}, qalt[256]={0}, lang[16]={0}, since[40]={0},
        until[40]={0}, rt[48]={0}, ssid[120]={0}, hg[8]={0}, tag[120]={0},
        cur[768]={0}, lim[16]={0}, sortv[16]={0}, tot[4]={0}, col[4]={0};
@@ -2013,7 +2180,11 @@ static char *intel_items_run(struct mg_http_message *hm, const char *tenant,
   if (too_long) *too_long = tl;
   if (tl) return NULL;
   Q.tenant = tenant;   /* rows of this tenant plus the shared 'legacy' corpus */
-  return intelapi_list_items_st(g_db, &Q, st);
+  return intelapi_list_items_st(qdb, &Q, st);
+}
+static char *intel_items_run(struct mg_http_message *hm, const char *tenant,
+                             int *too_long, int *st) {
+  return intel_items_run_db(g_db, hm, tenant, too_long, st);
 }
 
 /* ?lang_view=en|both — attach each row's machine translation (roadmap 29).
@@ -2023,14 +2194,50 @@ static char *intel_items_run(struct mg_http_message *hm, const char *tenant,
  * toggle on full-text search, and any translation in Nearby, changed nothing.
  * Returns the body to send: the shaped one, or `body` itself for the default
  * (no lang_view, or "ja") so existing clients get the original bytes. */
-static char *intel_lang_view(struct mg_http_message *hm, char *body) {
+static char *intel_lang_view_db(db_handle *qdb, struct mg_http_message *hm,
+                                char *body) {
   char lv[16] = {0};
   if (!body || mg_http_get_var(&hm->query, "lang_view", lv, sizeof lv) <= 0)
     return body;
-  char *sh = translate_shape_items(g_db, body, translate_view_parse(lv));
+  char *sh = translate_shape_items(qdb, body, translate_view_parse(lv));
   if (!sh) return body;
   free(body);
   return sh;
+}
+static char *intel_lang_view(struct mg_http_message *hm, char *body) {
+  return intel_lang_view_db(g_db, hm, body);
+}
+
+/* GET /api/intel/items|search with sort=relevance|trust, as a
+ * semsearch_route_fn so sem_spawn runs it off-loop (API-07): the BM25/trust
+ * ranking sorts every full-text hit, which JO_TOTAL_CAP does not bound. The
+ * worker rebuilds an http message around the raw query string so the one
+ * parser (intel_items_run_db) is the only copy of the filter set. */
+static int intel_sort_is_ranked(struct mg_http_message *hm) {
+  char sv[16] = {0}, qv[8] = {0};
+  if (mg_http_get_var(&hm->query, "sort", sv, sizeof sv) <= 0) return 0;
+  if (strcmp(sv, "relevance") != 0 && strcmp(sv, "trust") != 0) return 0;
+  int qn = mg_http_get_var(&hm->query, "q", qv, sizeof qv);
+  return qn > 0 || qn == -3;
+}
+static char *intel_items_route(db_handle *db, const char *tenant, const char *id,
+                               const char *qs, int is_operator, int *status) {
+  (void)id; (void)is_operator;
+  struct mg_http_message fake;
+  memset(&fake, 0, sizeof fake);
+  fake.query = mg_str_n(qs, strlen(qs));
+  int tl = 0, ist = 200;
+  char *body = intel_items_run_db(db, &fake, tenant, &tl, &ist);
+  if (tl) {
+    *status = 414;
+    return strdup("{\"error\":\"filter_too_long\",\"detail\":\"a query "
+      "parameter exceeded its maximum length; half a filter set cannot be "
+      "honoured\"}");
+  }
+  if (!body) { *status = 500; return strdup("{\"error\":\"failed_to_list_intel_items\"}"); }
+  if (ist != 200) { *status = ist; return body; }
+  *status = 200;
+  return intel_lang_view_db(db, &fake, body);
 }
 
 /* ── breach corpus gate ────────────────────────────────────────────────────
@@ -2233,7 +2440,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
 
   /* ---- pre-auth ---- */
   if (eq(u, "/api/health")) {
-    char ts[40]; iso_now(ts, sizeof ts);
+    char ts[40]; jo_iso_now(ts, sizeof ts);
     char body[96];
     snprintf(body, sizeof body, "{\"status\":\"ok\",\"timestamp\":\"%s\"}", ts);
     reply_json(c, 200, body);
@@ -2346,7 +2553,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         if (tr != 0) {
           if (jb) cJSON_Delete(jb);
           if (tr == -401) reply_json(c, 401, "{\"error\":\"Auth required\"}");
-          else reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}");
+          else reply_tenant_err(c, tr);
           return;
         } }
       int ast = 200;
@@ -2359,6 +2566,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           "{\"error\":\"too_many_searches\",\"detail\":\"concurrent search limit "
           "reached; retry shortly\"}"); return;
       }
+      if (!body && ast == 413) {
+        reply_json(c, 413, "{\"error\":\"query_too_long\",\"limit_bytes\":16384}");
+        return; }
       if (!body && ast == 500) {
         reply_json(c, 500, "{\"error\":\"search_not_started\"}"); return; }
       if (!body) { reply_json(c, 400, "{\"error\":\"query_required\"}"); return; }
@@ -2424,7 +2634,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         tenant_ctx rtc;
         int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &rtc);
         if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-        if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+        if (tr != 0)    { reply_tenant_err(c, tr); return; }
         char *body = searchapi_results(g_db, rtc.tenant_id, rid);
         if (!body) { reply_json(c, 404, "{\"error\":\"not_found\"}"); return; }
         reply_json(c, 200, body); free(body); return;
@@ -2476,13 +2686,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * server, one source in full, the registry grouped by collector. These
      * precede the bare /api/sources/:id matcher below, which would otherwise
      * take "search" for an id. */
-    if (eq(u, "/api/sources/search"))  { sa_serve(c, hm, SA_SEARCH, NULL); return; }
-    if (eq(u, "/api/collectors"))      { sa_serve(c, hm, SA_COLLECTORS, NULL); return; }
+    if (eq(u, "/api/sources/search"))  { sa_serve(c, hm, SA_SEARCH, NULL, 0); return; }
+    if (eq(u, "/api/collectors"))      { sa_serve(c, hm, SA_COLLECTORS, NULL, 0); return; }
     { char ck[128];
-      if (seg(u, "/api/collectors/", "", ck, sizeof ck)) { sa_serve(c, hm, SA_COLLECTOR, ck); return; }
+      if (seg(u, "/api/collectors/", "", ck, sizeof ck)) { sa_serve(c, hm, SA_COLLECTOR, ck, 0); return; }
       char sid[256];
-      if (seg(u, "/api/sources/", "/detail", sid, sizeof sid))  { sa_serve(c, hm, SA_DETAIL, sid); return; }
-      if (seg(u, "/api/sources/", "/summary", sid, sizeof sid)) { sa_serve(c, hm, SA_SUMMARY, sid); return; }
+      if (seg(u, "/api/sources/", "/detail", sid, sizeof sid))  { sa_serve(c, hm, SA_DETAIL, sid, 0); return; }
+      if (seg(u, "/api/sources/", "/summary", sid, sizeof sid)) { sa_serve(c, hm, SA_SUMMARY, sid, opgate_check(&usr) == 0); return; }
 
       /* ---- per-source operator settings (core/source_settings.c).
        * GET is plain-auth: the page shows what is configured, and the key set,
@@ -2594,6 +2804,24 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       return;
     }
 
+    /* GET /api/metrics — Prometheus text exposition (OPS-14), platform
+     * operator only: registry shape and run volume are operational detail,
+     * and the route is meant for a scraper holding an operator token. Two
+     * indexed one-hour COUNTs over fetch_log; no sem_spawn needed. */
+    if (eq(u, "/api/metrics")) {
+      if (hm->method.len != 3 || memcmp(hm->method.buf, "GET", 3) != 0) {
+        reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return; }
+      if (breach_gate(c, &usr)) return;     /* the operator gate's own replies */
+      char *mb = metricsapi_render(g_db);
+      if (!mb) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+      char hb[CORS_HDR_MAX + 96];
+      snprintf(hb, sizeof hb, "Content-Type: text/plain; version=0.0.4; "
+               "charset=utf-8\r\n%s", cors_h(c));
+      mg_http_reply(c, 200, hb, "%s", mb);
+      free(mb);
+      return;
+    }
+
     /* GET /api/intel/sources — registry × intel_items aggregates. Same shape
      * and the same reasons as /api/status above. */
     if (eq(u, "/api/intel/sources")) {
@@ -2622,7 +2850,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           tenant_ctx tc;
           int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
           if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-          if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+          if (tr != 0)    { reply_tenant_err(c, tr); return; }
           /* With q it ranks the radius by similarity to q, which embeds:
            * off-loop (nearapi_items_route; FTS fallback inside). */
           { char nq[8] = {0};
@@ -2645,6 +2873,10 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int qtl = 0, ist = 200;
       tenant_ctx itc;
       if (intel_tenant_or_reply(c, hm, &usr, &itc) != 0) return;
+      if (intel_sort_is_ranked(hm)) {
+        sem_spawn(c, hm, intel_items_route, itc.tenant_id, "", 0);
+        return;
+      }
       char *body = intel_items_run(hm, itc.tenant_id, &qtl, &ist);
       if (qtl) { reply_json(c, 414,
         "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
@@ -2945,16 +3177,10 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * records_available/truncated/next_offset meta; limit/offset page the
      * rest (dataapi.h). */
     if (seg(u, "/api/layers/", "/geojson", p, sizeof p)) {
-      int lim = 0, off = 0;
-      { char v[32] = {0};
-        if (mg_http_get_var(&hm->query, "limit", v, sizeof v) > 0)
-          lim = atoi(v);
-        v[0] = 0;
-        if (mg_http_get_var(&hm->query, "offset", v, sizeof v) > 0)
-          off = atoi(v); }
-      char *body = dataapi_layer_fc(g_db, p, lim, off);
-      if (!body) { reply_json(c, 404, "{\"error\":\"Layer not found\"}"); return; }
-      reply_json(c, 200, body); free(body); return;
+      /* Off-loop (API-07): a COUNT(*) over the layer predicate plus up to
+       * 50,000 features of per-row JSON parsing is not an event-loop job. */
+      sem_spawn(c, hm, layer_geojson_route, "", p, 0);
+      return;
     }
 
     /* GET /api/intel/semantic?q=&mode=hybrid|vector&limit=&k=[&source=a,b
@@ -2976,6 +3202,10 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       int qtl = 0, ist = 200;
       tenant_ctx itc;
       if (intel_tenant_or_reply(c, hm, &usr, &itc) != 0) return;
+      if (intel_sort_is_ranked(hm)) {
+        sem_spawn(c, hm, intel_items_route, itc.tenant_id, "", 0);
+        return;
+      }
       char *body = intel_items_run(hm, itc.tenant_id, &qtl, &ist);
       if (qtl) { reply_json(c, 414,
         "{\"error\":\"filter_too_long\",\"detail\":\"a query parameter exceeded "
@@ -3000,37 +3230,73 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (hm->method.len != 4 || memcmp(hm->method.buf, "POST", 4) != 0) {
         reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
       }
-      /* WHO may run a collector (M13). A run writes the SHARED corpus and
-       * spends the platform's upstream quota, so a plain signed-in user may
-       * not: platform operator, or owner/admin of the active workspace. A
-       * non-operator is also held to a per-user budget — every user owns a
-       * personal workspace, so the role check alone bounds who, not how
-       * often. */
-      if (opgate_check(&usr) != 0) {
+      const source_def *d = registry_get(p);
+      /* Optional body {"entity": "..."} — what an entity pivot is asked about.
+       * Bounded; a pivot with no entity is refused rather than run, because
+       * hpengine answers it with rc=0 and a stderr line, which the caller
+       * would read as "ran, found nothing" (house rule 1's invisible nothing). */
+      char ent[520] = {0};
+      if (d) {
+        if (hm->body.len > 4096) {
+          reply_json_err_id(c, 413, "body_too_large", p); return;
+        }
+        if (hm->body.len) {
+          char *bb = malloc(hm->body.len + 1);
+          if (!bb) { reply_json(c, 500, "{\"error\":\"oom\"}"); return; }
+          memcpy(bb, hm->body.buf, hm->body.len); bb[hm->body.len] = 0;
+          cJSON *jb = cJSON_Parse(bb);
+          free(bb);
+          if (!jb || !cJSON_IsObject(jb)) {
+            if (jb) cJSON_Delete(jb);
+            reply_json_err_id(c, 400, "invalid_json_body", p); return;
+          }
+          cJSON *je = cJSON_GetObjectItem(jb, "entity");
+          if (je && !cJSON_IsNull(je)) {
+            if (!cJSON_IsString(je) || !je->valuestring) {
+              cJSON_Delete(jb);
+              reply_json_err_id(c, 400, "entity_must_be_a_string", p); return;
+            }
+            size_t el = strlen(je->valuestring);
+            if (el >= 512) {
+              cJSON_Delete(jb);
+              reply_json_err_id(c, 400, "entity_too_long", p); return;
+            }
+            memcpy(ent, je->valuestring, el + 1);
+          }
+          cJSON_Delete(jb);
+        }
+        /* trim: an all-blank entity is no entity */
+        size_t el = strlen(ent), st0 = 0;
+        while (el > 0 && (ent[el-1]==' '||ent[el-1]=='\t'||ent[el-1]=='\r'||ent[el-1]=='\n')) ent[--el] = 0;
+        while (ent[st0]==' '||ent[st0]=='\t'||ent[st0]=='\r'||ent[st0]=='\n') st0++;
+        if (st0) memmove(ent, ent + st0, strlen(ent + st0) + 1);
+        const int pivot = registry_is_entity_pivot(d);
+        if (sched_is_pod(d) && ent[0]) {
+          reply_json_err_id(c, 400, "entity_not_accepted", p); return;
+        }
+        if (pivot && !ent[0]) {
+          cJSON *e = cJSON_CreateObject();
+          cJSON_AddStringToObject(e, "error", "needs_entity");
+          cJSON_AddStringToObject(e, "source_id", p);
+          cJSON_AddStringToObject(e, "detail", "this source is an entity pivot: "
+            "POST {\"entity\":\"...\"} to run it for one subject");
+          char *eb = cJSON_PrintUnformatted(e); cJSON_Delete(e);
+          reply_json(c, 422, eb ? eb : "{\"error\":\"needs_entity\"}");
+          free(eb); return;
+        }
+        if (!pivot && ent[0]) {
+          reply_json_err_id(c, 400, "entity_not_accepted", p); return;
+        }
+      }
+      {
         struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
         char xtid[128] = {0};
         if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len] = 0; }
-        tenant_ctx rtc;
-        int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &rtc);
-        if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-        if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
-        if (strcmp(rtc.role, "owner") != 0 && strcmp(rtc.role, "admin") != 0) {
-          reply_json(c, 403, "{\"error\":\"forbidden\",\"detail\":\"running a "
-                     "collector requires platform operator or workspace "
-                     "owner/admin\"}");
-          return;
-        }
-        char rk[160]; int retry = 0;
+        char rk[160], gb[256];
         snprintf(rk, sizeof rk, "run:%s", usr.id);
-        if (!ratelimit_allow(RL_COLLECTOR_RUN, rk, 10, 60, &retry)) {
-          char rb[128];
-          snprintf(rb, sizeof rb, "{\"error\":\"collector_run_rate_limited\","
-                   "\"retry_after_sec\":%d}", retry);
-          reply_json(c, 429, rb);
-          return;
-        }
+        int gs = collector_run_gate(g_db, &usr, xtid, sched_is_pod(d), rk, gb, sizeof gb);
+        if (gs) { reply_json(c, gs, gb); return; }
       }
-      const source_def *d = registry_get(p);
       /* `p` is a URL-DECODED path segment of up to 1023 bytes, so it can carry
        * a literal '"' (from %22) and it can outrun any fixed body buffer. The
        * snprintf pair that used to build these two replies did neither escape
@@ -3046,6 +3312,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       srcrun_arg *ra = calloc(1, sizeof *ra);
       if (ra) {
         ra->mgr = c->mgr; ra->cid = c->id; ra->db = g_db; ra->d = d;
+        snprintf(ra->entity, sizeof ra->entity, "%s", ent);
         /* `p` is up to 1023 bytes and ra->id is 128. registry_get() has
          * already matched it against a real registration (the longest id in
          * the tree is under 40 chars), so this cannot fire — but refusing
@@ -3071,7 +3338,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       {
         uint64_t t0 = mg_millis();
         long long before = si_count(g_db, p);
-        int rc = scheduler_run_source(g_db, d, NULL);
+        int rc = scheduler_run_source(g_db, d, ent[0] ? ent : NULL);
         long long delta = si_count(g_db, p) - before;
         if (delta < 0) delta = 0;
         run_end(p);
@@ -3685,7 +3952,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
       char rv[8] = {0};
       int refresh = mg_http_get_var(&hm->query, "refresh", rv, sizeof rv) > 0 &&
                     rv[0] == '1';
@@ -3735,7 +4002,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
       /* Reads tenant intel, so viewer is not enough. */
       if (strcmp(tc.role, "viewer") == 0) {
         reply_json(c, 403, "{\"error\":\"forbidden\"}"); return; }
@@ -3784,7 +4051,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         tenant_ctx tc;
         int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
         if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-        if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+        if (tr != 0)    { reply_tenant_err(c, tr); return; }
         int status = 200;
         char *body = alertdeliveriesapi(g_db, tc.tenant_id, tc.user_id,
                                         evid, &status);
@@ -3799,7 +4066,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
 
       /* One segment after "/api/alert-events/" (18 chars). A trailing
        * "/read" on an event id is stripped — POST :id/read and POST :id are
@@ -3833,7 +4100,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
 
       char aid[128] = {0}, act[32] = {0};
       if (u.len > 12) {                         /* after "/api/alerts/" */
@@ -3888,7 +4155,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
 
       char kind[32] = {0};
       { size_t kl = u.len - 12;
@@ -3954,7 +4221,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
       /* ?q= embeds the query (a semantic timeline): off-loop. */
       { char tq[8] = {0};
         int tqn = mg_http_get_var(&hm->query, "q", tq, sizeof tq);
@@ -3988,7 +4255,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
       char cid[128] = {0};
       { char raw[256] = {0};
         size_t rl = u.len - 11 - 7;      /* between "/api/cases/" and "/report" */
@@ -4037,7 +4304,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
 
       char cid[128] = {0}, act[32] = {0};
       if (u.len > 11) {                          /* after "/api/cases/" */
@@ -4082,7 +4349,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       cq.limit    = hl > 0 ? atoi(qli) : 0;
 
       int status = 200;
-      char *body = casesapi(g_db, &tc, meth, cid, act, bdy, &cq, &status);
+      char *body = casesapi_ex(g_db, &tc, meth, cid, act, bdy, &cq, &status,
+                               opgate_check(&usr) == 0);
       free(bdy);
       if (!body && status == 204) { mg_http_reply(c, 204, cors_h(c), ""); return; }
       if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
@@ -4098,7 +4366,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
 
       char aid[160] = {0};
       if (u.len > 17) {                          /* after "/api/annotations/" */
@@ -4282,7 +4550,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
       char aid[160] = {0};
       if (u.len > 9) {                            /* after "/api/aoi/" */
         char rest[256] = {0};
@@ -4322,7 +4590,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
       char wid[160] = {0};
       if (u.len > 16) {                           /* after "/api/watchlists/" */
         char rest[256] = {0};
@@ -4379,16 +4647,26 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       char ctv[192] = {0};
       if (cth && cth->len < sizeof ctv) { memcpy(ctv, cth->buf, cth->len); ctv[cth->len] = 0; }
       /* Both are HINTS, echoed and diffed against the magic bytes; they never
-       * steer the parser (docmeta.h:284). */
-      char *m = docmeta_extract(hm->body.buf, hm->body.len,
-                                hf > 0 ? fnv : NULL, ctv[0] ? ctv : NULL);
-      if (!m) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
-      size_t need = strlen(m) + 16;
-      char *out = malloc(need);
-      if (!out) { free(m); reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
-      snprintf(out, need, "{\"data\":%s}", m);
-      free(m);
-      reply_json(c, 200, out); free(out); return;
+       * steer the parser (docmeta.h:284). Parsed off-loop. */
+      if (!worker_admit()) { reply_busy(c); return; }
+      dm_arg *da = calloc(1, sizeof *da);
+      if (da) da->body = malloc(hm->body.len);
+      if (da && da->body) {
+        memcpy(da->body, hm->body.buf, hm->body.len);
+        da->len = hm->body.len; da->mgr = c->mgr; da->cid = c->id;
+        da->has_fn = hf > 0;
+        if (hf > 0) snprintf(da->fn, sizeof da->fn, "%s", fnv);
+        snprintf(da->ct, sizeof da->ct, "%s", ctv);
+        pthread_t th;
+        if (pthread_create(&th, NULL, dm_thread, da) == 0) {
+          pthread_detach(th);
+          return;      /* reply deferred to MG_EV_WAKEUP — loop stays free */
+        }
+      }
+      if (da) { free(da->body); free(da); }
+      worker_release();
+      reply_busy(c);
+      return;
     }
 
     /* ---- Chunked upload: begin / part / commit / status / abort.
@@ -4405,7 +4683,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
 
       char uid2[128] = {0}, act[32] = {0};
       if (u.len > 13) {                          /* after "/api/uploads/" */
@@ -4421,6 +4699,32 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       memcpy(meth, hm->method.buf, ml);
       char qsb[256] = {0};
       if (qs_copy_or_414(c, hm, qsb, sizeof qsb)) { return; }
+      /* The commit is the heavy step (assemble, sha256, extract, evidence
+       * write): off-loop on its own connection. begin/part/status/abort are
+       * short and stay on the shared handle. */
+      if (!strcmp(meth, "POST") && !strcmp(act, "commit")) {
+        if (!worker_admit()) { reply_busy(c); return; }
+        upl_arg *ua = calloc(1, sizeof *ua);
+        if (ua) ua->body = hm->body.len ? malloc(hm->body.len) : NULL;
+        if (ua && (ua->body || !hm->body.len)) {
+          if (hm->body.len) memcpy(ua->body, hm->body.buf, hm->body.len);
+          ua->len = hm->body.len; ua->mgr = c->mgr; ua->cid = c->id;
+          ua->tc = tc;
+          snprintf(ua->meth, sizeof ua->meth, "%s", meth);
+          snprintf(ua->uid, sizeof ua->uid, "%s", uid2);
+          snprintf(ua->act, sizeof ua->act, "%s", act);
+          snprintf(ua->qs, sizeof ua->qs, "%s", qsb);
+          pthread_t th;
+          if (pthread_create(&th, NULL, upl_thread, ua) == 0) {
+            pthread_detach(th);
+            return;    /* reply deferred to MG_EV_WAKEUP — loop stays free */
+          }
+        }
+        if (ua) { free(ua->body); free(ua); }
+        worker_release();
+        reply_busy(c);
+        return;
+      }
       int status = 200;
       char *body = uploadapi(g_db, &tc, meth, uid2, act, qsb,
                              hm->body.buf, hm->body.len, &status);
@@ -4439,7 +4743,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
 
       char mid[128] = {0}, act[32] = {0};
       if (u.len > 21) {                        /* after "/api/breach-monitors/" */
@@ -4490,7 +4794,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
       char sid[160] = {0}, act[64] = {0};
       if (u.len > 20) {                          /* after "/api/saved-searches/" */
         char rest[256] = {0};
@@ -4532,7 +4836,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
       char meth[12] = {0};
       size_t ml = hm->method.len < sizeof meth - 1 ? hm->method.len : sizeof meth - 1;
       memcpy(meth, hm->method.buf, ml);
@@ -4595,7 +4899,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
 
       char seg[128] = {0}, act[128] = {0};
       if (u.len > 13) {                          /* after "/api/members/" */
@@ -4643,7 +4947,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c,500,"{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
       char meth[12] = {0};
       size_t ml = hm->method.len < 11 ? hm->method.len : 11;
       memcpy(meth, hm->method.buf, ml);
@@ -4715,7 +5019,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx tc;
       int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &tc);
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (tr != 0)    { reply_tenant_err(c, tr); return; }
 
       /* The chain walk is the whole log, streamed: off the event loop. */
       if (eq(u, "/api/audit/verify")) {
@@ -4748,7 +5052,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       tenant_ctx etc;
       int etr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &etc);
       if (etr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
-      if (etr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+      if (etr != 0)    { reply_tenant_err(c, etr); return; }
       /* Breach-derived rows live under a reserved tenant sentinel and are
        * invisible to the ordinary shared-graph predicate; only a platform
        * operator sees them. Evaluated once for the whole subtree. */
@@ -4990,6 +5294,18 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (hm->method.len != 4 || memcmp(hm->method.buf, "POST", 4) != 0) {
         reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
       }
+      /* Same gate as POST /api/intel/sources/:id/run (API-12): this fans out
+       * over 16 scrapers on the platform's egress and a worker slot, so a
+       * plain signed-in user may not fire it. */
+      {
+        struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+        char xtid[128] = {0};
+        if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len] = 0; }
+        char rk[160], gb[256];
+        snprintf(rk, sizeof rk, "run:%s", usr.id);
+        int gs = collector_run_gate(g_db, &usr, xtid, 0, rk, gb, sizeof gb);
+        if (gs) { reply_json(c, gs, gb); return; }
+      }
       const source_def *ch[CAM_MAX_CHANNELS];
       int nch = cam_channels(ch, CAM_MAX_CHANNELS);
       /* No channels registered is a real fault, not a quiet no-op — the old
@@ -5041,7 +5357,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       g_cam.channels_skipped = 0;
       g_cam.ingested = 0;
       g_cam.current[0] = 0;
-      iso_now(g_cam.started_at, sizeof g_cam.started_at);
+      jo_iso_now(g_cam.started_at, sizeof g_cam.started_at);
       snprintf(g_cam.run_id, sizeof g_cam.run_id, "cam-%llu",
                (unsigned long long)mg_millis());
       char run_id[40];
@@ -5075,6 +5391,17 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     if (starts(u, "/api/data/")) {
       char did[256];
       if (seg(u, "/api/data/", "", did, sizeof did)) {
+        /* A maintenance pod (collector `_*`) is not a map layer: it writes the
+         * shared database directly and returns no features. This route never
+         * runs one (API-02); the operator-gated /run route does. */
+        {
+          const source_def *pd = registry_get(did);
+          if (pd && sched_is_pod(pd)) {
+            reply_json(c, 403, "{\"error\":\"forbidden\",\"detail\":"
+                       "\"maintenance pods are not served as layers\"}");
+            return;
+          }
+        }
         /* Deferred to a worker: this can run a collector (see datarun_thread
          * for the measurement that forced it). */
         if (!worker_admit()) { reply_busy(c); return; }
@@ -5082,6 +5409,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         if (da) {
           da->mgr = c->mgr; da->cid = c->id; da->db = g_db;
           snprintf(da->uid, sizeof da->uid, "%s", usr.id);
+          da->usr = usr;
+          { struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+            if (xt && xt->len < sizeof da->xtid) { memcpy(da->xtid, xt->buf, xt->len); da->xtid[xt->len] = 0; } }
           /* Refuse rather than truncate, like the /run route: a truncated id
            * would serve the layer that happens to share the prefix. `did` and
            * da->id are both 256, so this cannot fire today; it stays as the
@@ -5102,9 +5432,15 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         char *body = sweepapi_data(g_db, did);
         datarun_arg ia = {0};
         snprintf(ia.uid, sizeof ia.uid, "%s", usr.id);
+        snprintf(ia.id, sizeof ia.id, "%s", did);
+        ia.db = g_db; ia.usr = usr;
+        { struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+          if (xt && xt->len < sizeof ia.xtid) { memcpy(ia.xtid, xt->buf, xt->len); ia.xtid[xt->len] = 0; } }
         int refused = 0;
         if (!body) body = dataapi_layer_admit(g_db, did, data_allow_run, &ia,
                                               &refused);  /* generic layer */
+        if (ia.claimed) run_end(ia.id);
+        if (refused && ia.denied) { reply_json(c, ia.denied, ia.deny_body); return; }
         if (refused) { reply_json(c, 429,
           "{\"error\":\"collector_run_rate_limited\"}"); return; }
         if (body) { reply_json(c, 200, body); free(body); return; }
@@ -5136,13 +5472,11 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       }
       memcpy(tp, u.buf + pre, sl); tp[sl] = 0;
       if (qs_copy_or_414(c, hm, tq, sizeof tq)) return;
-      char *body = transitapi(g_db, tp, tq);
-      if (body) {
-        /* Unported transit routes (hydrate, station-boundaries) return a
-         * {"error":"not_implemented",...} body → send it as HTTP 501. */
-        int code = strstr(body, "\"error\":\"not_implemented\"") ? 501 : 200;
-        reply_json(c, code, body); free(body); return;
-      }
+      /* Off-loop (API-07): trip x stop_times x shapes interpolation is a
+       * multi-second query. Unported routes still answer 501, an unknown
+       * path 404 — both decided inside transit_route(). */
+      sem_spawn(c, hm, transit_route, "", tp, 0);
+      return;
     }
 
 

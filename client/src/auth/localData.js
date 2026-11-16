@@ -16,6 +16,7 @@
  */
 import { savedStore } from '../store/savedStore.js';
 import { resetSearchStore } from '../store/searchStore.js';
+import { clearLayerCatalogCache } from '../hooks/useLayerCatalog.js';
 
 export const MAP_RECENT_SEARCHES_KEY = 'osint:map:recent-searches';
 export const CAMERA_FAVORITES_KEY = 'japanosint.cameraFavorites';
@@ -30,6 +31,7 @@ export function clearLocalUserData() {
   lsDel(MAP_RECENT_SEARCHES_KEY);
   lsDel(CAMERA_FAVORITES_KEY);
   resetSearchStore();
+  clearLayerCatalogCache();
 }
 
 export function claimLocalData(userId) {

@@ -262,7 +262,7 @@ static int ma_emit(intel_sink *sink, keyqual *kq, const ma_entry *e,
   char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char summary[384];
+  char summary[512];   /* sev + area[256] + onset[64] + separators: must hold all three whole */
   snprintf(summary, sizeof summary, "%s%s%s%s%s", sev[0] ? sev : "",
            (sev[0] && area[0]) ? " · " : "", area[0] ? area : "",
            onset[0] ? " · from " : "", onset[0] ? onset : "");

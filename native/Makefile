@@ -1,5 +1,7 @@
 # JapanOSINT native backend — single build -> bin/japanosint
 CC      ?= cc
+# CC may be wrapped by the caller (CI passes CC="ccache cc"); every recipe uses
+# $(CC) so the wrapper reaches all of them, including the vendored objects.
 REPO_ROOT := $(abspath ..)
 
 PKG_CFLAGS := $(shell pkg-config --cflags libcurl openssl 2>/dev/null)
@@ -72,6 +74,26 @@ override CFLAGS += -DJO_REPO_ROOT='"$(REPO_ROOT)"' $(PKG_CFLAGS) $(MECAB_CFLAGS)
 # deleted header doesn't break the build.
 DEPFLAGS := -MMD -MP
 override CFLAGS += $(DEPFLAGS)
+
+# Hardening (audit OPS-02). Network-facing C that parses untrusted bodies.
+#   -fstack-protector-strong, -fPIE, -Wformat-security: every compiler we build with.
+#   -D_FORTIFY_SOURCE=2: needs optimisation (glibc #warns at -O0), so it is added
+#     only when the CFLAGS in force do not say -O0. -U first, because distro
+#     compilers predefine it (Ubuntu: =3) and a bare -D would warn "redefined".
+#   -pie at link, plus relro/now on Linux only (ld64 has no -z). -Wformat=2 is NOT
+#     used: -Wformat-nonliteral would fire across the tree, which holds 0 warnings.
+# HARDEN_CFLAGS is also handed to the vendored objects, whose rules do not use
+# CFLAGS: with -pie at link, every object must be -fPIE.
+HARDEN_CFLAGS := -fstack-protector-strong -fPIE
+ifeq ($(findstring -O0,$(CFLAGS)),)
+  HARDEN_CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
+endif
+override CFLAGS += $(HARDEN_CFLAGS) -Wformat-security
+ifeq ($(UNAME_S),Linux)
+  override LDFLAGS += -pie -Wl,-z,relro,-z,now
+else
+  override LDFLAGS += -pie
+endif
 LDLIBS  := $(PKG_LIBS) $(MECAB_LIBS) -lpthread -lm -ldl $(ICONV_LIB) -lz
 
 OBJ := obj
@@ -99,7 +121,7 @@ all: $(BIN)
 
 $(OBJ)/third_party/sqlite3.o: third_party/sqlite3.c
 	@mkdir -p $(dir $@)
-	$(CC) -O2 -g $(DEPFLAGS) $(SQLITE_DEFS) -c $< -o $@
+	$(CC) -O2 -g $(HARDEN_CFLAGS) $(DEPFLAGS) $(SQLITE_DEFS) -c $< -o $@
 
 # sqlite-vec amalgamation (v0.1.9, MIT/Apache-2.0 — third_party/sqlite-vec.LICENSE-*).
 # -DSQLITE_CORE: statically linked next to sqlite3.o, so it calls the real
@@ -108,7 +130,7 @@ $(OBJ)/third_party/sqlite3.o: third_party/sqlite3.c
 # it is vendored code, not ours, so it is not held to -Wall -Wextra.
 $(OBJ)/third_party/sqlite-vec.o: third_party/sqlite-vec.c
 	@mkdir -p $(dir $@)
-	$(CC) -O2 -g $(DEPFLAGS) -DSQLITE_CORE -Ithird_party -c $< -o $@
+	$(CC) -O2 -g $(HARDEN_CFLAGS) $(DEPFLAGS) -DSQLITE_CORE -Ithird_party -c $< -o $@
 
 $(OBJ)/third_party/cJSON.o: third_party/cJSON.c
 	@mkdir -p $(dir $@)
@@ -116,7 +138,7 @@ $(OBJ)/third_party/cJSON.o: third_party/cJSON.c
 
 $(OBJ)/third_party/mongoose.o: third_party/mongoose.c
 	@mkdir -p $(dir $@)
-	$(CC) -O2 -g $(DEPFLAGS) -Ithird_party -c $< -o $@
+	$(CC) -O2 -g $(HARDEN_CFLAGS) $(DEPFLAGS) -Ithird_party -c $< -o $@
 
 $(OBJ)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -142,7 +164,7 @@ $(OBJLIST): FORCE
 
 $(BIN): $(OBJS) $(OBJLIST)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDLIBS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@ $(LDLIBS)
 	@echo "built $@"
 
 selftest: $(BIN)
@@ -336,6 +358,49 @@ asan:
 
 asan-test: asan
 	OBJDIR=obj-asan CC="$(CC) $(ASAN_FLAGS)" tests/unit/run.sh
+
+# ── libFuzzer smoke (audit OPS-07b) ─────────────────────────────────────────
+# Harnesses in tests/fuzz/ for the parsers that read untrusted bodies: zipread,
+# xlsx, csv, htmlparse and rss_atom. Needs clang with the fuzzer runtime;
+# builds under bin/fuzz/ (never the main obj tree) and runs each target for
+# FUZZ_SECS seconds. Any crash, sanitizer report or timeout fails the target.
+#   make fuzz-smoke                    # 20 s each
+#   make fuzz-smoke FUZZ_SECS=5
+FUZZ_CC   ?= clang
+FUZZ_SECS ?= 20
+FUZZ_DIR  := bin/fuzz
+FUZZ_FLAGS := -O1 -g -fno-omit-frame-pointer -fsanitize=fuzzer,address,undefined \
+              -fno-sanitize-recover=undefined -DJO_REPO_ROOT='"$(REPO_ROOT)"' \
+              $(PKG_CFLAGS) $(MECAB_CFLAGS) -Ithird_party -iquote . -iquote collectors/sources
+FUZZ_RSS_SRCS := lib/rss_atom.c lib/feedlib.c lib/csv.c lib/hpengine.c lib/datetok.c \
+                 lib/htmlparse.c lib/seenset.c lib/xlsx.c lib/zipread.c lib/jsonlist.c \
+                 lib/pagewalk.c collectors/pivot/table/hp_uk_deep.c third_party/cJSON.c
+.PHONY: fuzz-build fuzz-smoke
+fuzz-build:
+	@command -v $(FUZZ_CC) >/dev/null || { echo "fuzz: $(FUZZ_CC) not found (clang with -fsanitize=fuzzer required)"; exit 1; }
+	@mkdir -p $(FUZZ_DIR)
+	$(FUZZ_CC) $(FUZZ_FLAGS) -o $(FUZZ_DIR)/fuzz_zipread tests/fuzz/fuzz_zipread.c lib/zipread.c -lz
+	$(FUZZ_CC) $(FUZZ_FLAGS) -o $(FUZZ_DIR)/fuzz_xlsx tests/fuzz/fuzz_xlsx.c lib/xlsx.c lib/zipread.c -lz
+	$(FUZZ_CC) $(FUZZ_FLAGS) -o $(FUZZ_DIR)/fuzz_csv tests/fuzz/fuzz_csv.c lib/csv.c third_party/cJSON.c $(ICONV_LIB) -lm
+	$(FUZZ_CC) $(FUZZ_FLAGS) -o $(FUZZ_DIR)/fuzz_htmlparse tests/fuzz/fuzz_htmlparse.c lib/htmlparse.c lib/seenset.c
+	$(FUZZ_CC) $(FUZZ_FLAGS) -o $(FUZZ_DIR)/fuzz_rss_atom tests/fuzz/fuzz_rss_atom.c $(FUZZ_RSS_SRCS) \
+	  $(LDLIBS) $(ICONV_LIB) -lz
+
+fuzz-smoke: fuzz-build
+	@set -e; for t in zipread xlsx csv htmlparse rss_atom; do \
+	  mkdir -p $(FUZZ_DIR)/corpus-$$t; \
+	  echo "--- fuzz_$$t ($(FUZZ_SECS)s) ---"; \
+	  ASAN_OPTIONS=detect_leaks=0 $(FUZZ_DIR)/fuzz_$$t -max_total_time=$(FUZZ_SECS) -timeout=10 \
+	    -rss_limit_mb=2048 -print_final_stats=1 $(FUZZ_DIR)/corpus-$$t; \
+	done
+
+# docs/ENVIRONMENT.md is generated from the source (audit OPS-06); this fails
+# when a getenv was added or removed without regenerating it.
+.PHONY: env-doc-check env-doc
+env-doc:
+	python3 tools/gen_env_doc.py
+env-doc-check:
+	python3 tools/gen_env_doc.py --check
 
 # Mechanical checks over the collector tree (duplicate ids, orphaned registry
 # rows, the quarantine-on-honest-empty return shape, unguarded snprintf

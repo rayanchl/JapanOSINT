@@ -36,6 +36,7 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
+#include "../lib/jocore.h"   /* jo_iso_now */
 
 /* strftime() format literals, kept as SQL string literals so they can be
  * spliced into generated SQL with %s — never as a printf format, or the %Y
@@ -58,20 +59,6 @@ static char *err(int *st, int code, const char *msg) {
 }
 static void add_str_or_null(cJSON *o, const char *k, const char *v) {
   cJSON_AddItemToObject(o, k, v ? cJSON_CreateString(v) : cJSON_CreateNull());
-}
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 
 /* ── cursor codec (byte-identical to intelapi.c) ───────────────────────────── */
@@ -640,7 +627,7 @@ char *timelineapi_query(db_handle *db, const tenant_ctx *t,
   add_str_or_null(filters, "bbox",    v_bbox[0] ? v_bbox : NULL);
   add_str_or_null(filters, "case_id", v_case[0] ? v_case : NULL);
 
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddStringToObject(meta, "bucket", by_hour ? "hour" : "day");

@@ -600,7 +600,10 @@ auth_result auth_check(const char *hdr, auth_user *out) {
    * NO audience check at all — exactly the shape a token minted for a
    * different service has. Present-but-neither-form is a reject, not a skip. */
   cJSON *aud = cJSON_GetObjectItem(j, "aud");
-  if (g_aud && aud && !cJSON_IsNull(aud)) {
+  /* When an audience is configured a token with NO `aud` is refused too
+   * (API-15): jose rejects it, and "absent means skipped" let any same-issuer
+   * token minted for another purpose (a service token) through. */
+  if (g_aud) {
     int match = 0;
     if (cJSON_IsString(aud)) {
       match = strcmp(aud->valuestring, g_aud) == 0;
