@@ -1093,7 +1093,8 @@ static int sched_row_benched(db_handle *db, const char *id) {
  * default; JO_SCHED_WORKERS moves it (1..128). The 6 h policy needs ~4.5
  * runs/s at this registry size, which no setting reached from the measuring
  * container: the heartbeat's deferred=N is how to see the backlog. */
-#define SCHED_WORKERS_DEFAULT 24
+/* (the default itself is the literal in env_long("JO_SCHED_WORKERS", …),
+ * written there so tools/gen_env_doc.py can read it) */
 #define SCHED_RT_RESERVE 64        /* queue slots only a real-time row may take */
 
 enum { LANE_COLLECT = 0, LANE_MAINT = 1, LANE_N = 2 };
@@ -1606,9 +1607,9 @@ void scheduler_loop(db_handle *db) {
    * consumed the whole window and the fleet never got past "a"); 8 → 63 runs;
    * 16 → 97 runs. The work is network-bound, not CPU-bound, so the ceiling is
    * upstream politeness (hostgate), not cores. The default and the 2026-11-16
-   * measurement behind it are at SCHED_WORKERS_DEFAULT. 1 = the old serial
+   * measurement behind it are in the comment dated 2026-11-16 above. 1 = the old serial
    * behaviour. */
-  int workers = (int)env_long("JO_SCHED_WORKERS", SCHED_WORKERS_DEFAULT, 1, 128);
+  int workers = (int)env_long("JO_SCHED_WORKERS", 24, 1, 128);
   /* The pods are few, mostly short, and must never wait on the fleet. Two, so
    * one long LLM-bound pod (repair, enrichment) cannot hold the WAL
    * checkpoint or retention behind it. */
