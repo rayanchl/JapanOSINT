@@ -188,3 +188,39 @@ Timing code outside the scheduler:
   stay parked up to 300 s in the host gate.
 * About 25 private copies of `iso_now` and 9 of "monotonic ms" exist across
   `core/`; consolidating them is mechanical and was left out of this change.
+
+## Follow-up, 2026-11-16
+
+Measured on 180 s boots of the full registry (96,472 scheduled rows), a fresh
+database each time, from one container. One reading per setting.
+
+| workers | runs | runs/s | refused writes |
+| --- | --- | --- | --- |
+| 8 | 248 | 1.38 | 0 |
+| 24 | 376 | 2.09 | 0 |
+| 48 | 450 | 2.50 | 0 |
+
+* **The default is 24 workers** (`SCHED_WORKERS_DEFAULT`; `JO_SCHED_WORKERS`
+  moves it, 1..128). No write was refused at any level, so SQLite contention is
+  not the bound. The 6 h policy needs about 4.5 runs/s at this registry size and
+  no setting reached it from the measuring container; the heartbeat's
+  `deferred=N` shows the backlog.
+* **The dispatcher walks the registry on a stride** (`sched_walk_stride`,
+  `sched_walk_index`) instead of in registration order. Rows of one table share
+  a host, so the in-order walk filled the queue with one host and the workers
+  waited on its gate: host-gate waits went from 168 to 16 in the same window.
+* **A wall-clock step no longer moves the plan** (`sched_clock_step`): a jump of
+  more than 5 s between the wall clock and the boot clock shifts every due time,
+  hold and last-run stamp by the same amount.
+* **The other audit session's branch is merged here**
+  (`claude/peaceful-ritchie-i7e0hj`): cancel-aware host-gate waits, one
+  `jo_iso_now`, and its `docs/audit-2026-11-14/` notes. Nine private
+  millisecond-clock helpers in `core/` are still separate copies.
+* **The six real-time sources that stored nothing**, one run each:
+  `odpt-bus` now files the credential notice (`rc=0 stored=1 notices=1`);
+  `flightradar-jp` is re-pointed at `data-cloud.flightradar24.com` (796 / 796);
+  `certstream-jp` returns -1 and discloses when the websocket fails (this
+  container's libcurl 8.5.0 has no `wss`, so the relay itself is unmeasured);
+  `odpt-train` needs its ODPT key; `airplanes-live-mil` answers 403 to every
+  agent tried; `nerv-feed`'s host `unii-api.nerv.app` does not resolve. The last
+  two are unchanged and are the owner's decision.

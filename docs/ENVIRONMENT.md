@@ -275,7 +275,7 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_SCHED_QUARANTINE_PROBE_SEC` |  | `core/scheduler.c` |
 | `JO_SCHED_RAMP_SEC` | `900` | `core/scheduler.c` |
 | `JO_SCHED_STAGGER_SEC` | `3` | `core/scheduler.c` |
-| `JO_SCHED_WORKERS` | `8` | `core/scheduler.c` |
+| `JO_SCHED_WORKERS` | `24` | `core/scheduler.c` |
 | `JO_SCHEMA` |  | `core/db.c` |
 | `JO_SENSORCOMMUNITY_MAX` |  | `collectors/sources/eni_sensor_community_air.c` |
 | `JO_SHAPE_NOTICES` |  | `lib/osintemit.h` |

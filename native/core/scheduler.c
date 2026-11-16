@@ -1085,7 +1085,15 @@ static int sched_row_benched(db_handle *db, const char *id) {
  * already true — it is the reason this port is a pool and not a rewrite.  */
 
 #define SCHED_QCAP 2048
-#define SCHED_WORKERS_DEFAULT 8
+/* Measured 2026-11-16 on 180 s boots of the full registry (96,472 scheduled
+ * rows), fresh database each: 8 workers 1.38 runs/s, 24 workers 2.09, 48
+ * workers 2.50 — and not one refused write (EMIT-FAILED 0, attach failures 0)
+ * at any of them, so SQLite contention is not what bounds the pool. The
+ * return past 24 is small and was not monotonic across readings, so 24 is the
+ * default; JO_SCHED_WORKERS moves it (1..128). The 6 h policy needs ~4.5
+ * runs/s at this registry size, which no setting reached from the measuring
+ * container: the heartbeat's deferred=N is how to see the backlog. */
+#define SCHED_WORKERS_DEFAULT 24
 #define SCHED_RT_RESERVE 64        /* queue slots only a real-time row may take */
 
 enum { LANE_COLLECT = 0, LANE_MAINT = 1, LANE_N = 2 };
@@ -1498,6 +1506,32 @@ long sched_clock_step(time_t wall_prev, time_t wall_now,
   return (d >= SCHED_CLOCK_STEP_MIN || d <= -SCHED_CLOCK_STEP_MIN) ? (long)d : 0;
 }
 
+/* ── walk order ───────────────────────────────────────────────────────────
+ *
+ * The registry is in LINK order, so neighbours are one table's rows — which
+ * are very often one upstream's: 122 consecutive rows on one open-data host,
+ * 68 Google News editions. Walking it 0,1,2… fills the queue with whole
+ * clusters, and since hostgate serves one request per host per gap, most of
+ * the pool then stands in line for the same few hosts. Measured on a 180 s
+ * boot, 48 workers: 2 requests in flight, median run 4.1 s against 1.2 s at 8.
+ *
+ * sched_walk_index(k) visits every source exactly once in a stride that is
+ * coprime with the registry size, so consecutive picks are thousands of rows
+ * apart and a queue's worth of rows is a queue's worth of hosts. */
+int sched_walk_stride(int n) {
+  if (n < 3) return 1;
+  int s = n / 3 > 7919 ? 7919 : n / 3 + 1;
+  for (;; s++) {
+    int a = n, b = s;
+    while (b) { int t = a % b; a = b; b = t; }
+    if (a == 1) return s;
+  }
+}
+
+int sched_walk_index(int k, int n, int stride) {
+  return n > 0 ? (int)(((long long)k * stride) % n) : 0;
+}
+
 static long long sched_steady_sec(void) {
   struct timespec ts;
 #ifdef CLOCK_BOOTTIME
@@ -1571,9 +1605,9 @@ void scheduler_loop(db_handle *db) {
    * was the only variable: 1 worker → 5 runs (a single 55.8 s `5g-coverage`
    * consumed the whole window and the fleet never got past "a"); 8 → 63 runs;
    * 16 → 97 runs. The work is network-bound, not CPU-bound, so the ceiling is
-   * upstream politeness (hostgate) and sqlite write contention, not cores. 8
-   * is the conservative default for a first deploy; raise it once the
-   * heartbeat below shows a standing backlog. 1 = the old serial behaviour. */
+   * upstream politeness (hostgate), not cores. The default and the 2026-11-16
+   * measurement behind it are at SCHED_WORKERS_DEFAULT. 1 = the old serial
+   * behaviour. */
   int workers = (int)env_long("JO_SCHED_WORKERS", SCHED_WORKERS_DEFAULT, 1, 128);
   /* The pods are few, mostly short, and must never wait on the fleet. Two, so
    * one long LLM-bound pod (repair, enrichment) cannot hold the WAL
@@ -1613,7 +1647,9 @@ void scheduler_loop(db_handle *db) {
   /* Pass 2: place them. */
   int k[LANE_N] = {0};
   long last[LANE_N] = {0};
-  for (int i = 0; i < n; i++) {
+  int stride = sched_walk_stride(n);
+  for (int w = 0; w < n; w++) {
+    int i = sched_walk_index(w, n, stride);       /* spread hosts along the ramp too */
     const source_def *d = g_all[i];
     if (d->update_interval_sec <= 0 || (skip && skip[i])) continue;
     if (hold && hold[i] > now0) continue;
@@ -1704,7 +1740,8 @@ void scheduler_loop(db_handle *db) {
     int room[LANE_N];
     for (int ln = 0; ln < LANE_N; ln++) room[ln] = SCHED_QCAP - g_q.lane[ln].count;
     for (int k = 0; k < n; k++) {
-      int i = cursor + k < n ? cursor + k : cursor + k - n;
+      int pos = cursor + k < n ? cursor + k : cursor + k - n;
+      int i = sched_walk_index(pos, n, stride);
       const source_def *d = g_all[i];
       if (d->update_interval_sec <= 0 || now < next[i]) continue;
       if (g_q.running[i]) {
@@ -1719,7 +1756,7 @@ void scheduler_loop(db_handle *db) {
        * a 10 s feed waiting its round-robin turn behind 90,000 rows would be
        * hours late whatever its interval says. */
       int need = cadence_is_realtime(d->update_interval_sec) ? 0 : SCHED_RT_RESERVE;
-      if (room[ln] <= need) { deferred++; if (first_deferred < 0) first_deferred = i; continue; }
+      if (room[ln] <= need) { deferred++; if (first_deferred < 0) first_deferred = pos; continue; }
       room[ln]--;
       cand[nc++] = i;
     }

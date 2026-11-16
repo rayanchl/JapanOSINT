@@ -2513,7 +2513,12 @@ pinned in `test_sched_backoff.c` / `test_sched_pool.c`:
 Two numbers it measured that are decisions rather than defects: at a mean run
 of 6.2 s (uniform sample of 400) the default 8 workers lap the fleet in about
 18 h, so **the 6 h policy needs `JO_SCHED_WORKERS=24`** (27 on the 90,907
-scheduled rows main held by the time this merged); and the policy held
+scheduled rows main held by the time this merged) — and **24 is the default since 2026-11-16**, measured on the full registry
+(8 / 24 / 48 workers: 1.38 / 2.09 / 2.50 runs/s over 180 s, no refused write at
+any of them; the 6 h policy needs ~4.5, which no setting reached from the
+measuring container). The dispatcher also walks the registry on a stride
+(`sched_walk_index`) so one host's rows do not fill the queue together, and a
+wall-clock step shifts the whole plan (`sched_clock_step`); and the policy held
 the 22 real-time feeds (`wolfx-eew` 10 s, `jma-tsunami` 60 s) at six hours.
 
 **A REAL-TIME FEED IS OUTSIDE THE POLICY** (the owner's decision of
