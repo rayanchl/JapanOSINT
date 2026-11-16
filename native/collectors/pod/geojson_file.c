@@ -1,5 +1,12 @@
 /* test harness source: reads $GEOJSON_FILE, emits via the geojson toolkit.
- * Lets us parity-test featureToMasterItem/featureUid vs Node deterministically. */
+ * Lets us parity-test featureToMasterItem/featureUid vs Node deterministically.
+ *
+ * A TEST FIXTURE, so it is not in the production registry (2026-11-16,
+ * audit ARC-03): it registered as an `_test` source in every shipped binary and
+ * counted in the source totals. Build with -DJO_TEST_PODS (CFLAGS) to get it
+ * back; nothing in tests/ or tools/ needs it today. tools/lint_sources.py
+ * honours the same #ifdef, so `make source-count` and the binary agree. */
+#ifdef JO_TEST_PODS
 #include "source.h"
 #include "lib/geojson.h"
 #include <stdio.h>
@@ -23,3 +30,4 @@ static const source_def geojson_file_def = {
   .name_ja="",  .update_interval_sec=0, .run=run,
   .category = "test" };
 REGISTER_SOURCE(geojson_file_def)
+#endif /* JO_TEST_PODS */

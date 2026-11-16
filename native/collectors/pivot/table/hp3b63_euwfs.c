@@ -24,7 +24,7 @@
 static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_80A9A6460D", .name = "service.pdok.nl — natura2000 [natura2000:natura2000]",
     .name_ja = "service.pdok.nl — natura2000 [natura2000:natura2000]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -47,7 +47,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E476B854B9", .name = "service.pdok.nl — arbeidsmarktregio_gegeneraliseerd "
       "[gebiedsindelingen:arbeidsmarktregio_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — arbeidsmarktregio_gegeneraliseerd [gebiedsindelingen:arbeidsmarktregio_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -72,7 +72,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E22048E0A8", .name = "service.pdok.nl — arbeidsmarktregio_labelpoint "
       "[gebiedsindelingen:arbeidsmarktregio_labelpoint]",
     .name_ja = "service.pdok.nl — arbeidsmarktregio_labelpoint [gebiedsindelingen:arbeidsmarktregio_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -96,7 +96,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_6715C5F57C", .name = "service.pdok.nl — Buurten [wijkenbuurten:buurten]",
     .name_ja = "service.pdok.nl — Buurten [wijkenbuurten:buurten]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -119,7 +119,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_6D8802D22F", .name = "data.geopf.fr — oscge_gers_32_2016 "
       "[OCS-GERS_BDD_LAMB93_2016:oscge_gers_32_2016]",
     .name_ja = "data.geopf.fr — oscge_gers_32_2016 [OCS-GERS_BDD_LAMB93_2016:oscge_gers_32_2016]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -143,7 +143,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E880C8CEAE", .name = "service.pdok.nl — arrondissementsgebied_gegeneraliseerd "
       "[gebiedsindelingen:arrondissementsgebied_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — arrondissementsgebied_gegeneraliseerd [gebiedsindelingen:arrondissementsgebied_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -167,7 +167,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_BF37E30FD1", .name = "sgx.geodatenzentrum.de — Bundesland [vg250:vg250_lan]",
     .name_ja = "sgx.geodatenzentrum.de — Bundesland [vg250:vg250_lan]",
-    .category = "geospatial", .portal = "https://sgx.geodatenzentrum.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://sgx.geodatenzentrum.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -190,7 +190,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_7DD66E5ECB", .name = "www.wfs.nrw.de — DVG1 Kreisangehörige Kommunen und kreisfreie "
       "Städte [dvg:nw_dvg1_gem]",
     .name_ja = "www.wfs.nrw.de — DVG1 Kreisangehörige Kommunen und kreisfreie Städte [dvg:nw_dvg1_gem]",
-    .category = "geospatial", .portal = "https://www.wfs.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.wfs.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -212,7 +212,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_CF99DC2650", .name = "service.pdok.nl — arrondissementsgebied_labelpoint "
       "[gebiedsindelingen:arrondissementsgebied_labelpoint]",
     .name_ja = "service.pdok.nl — arrondissementsgebied_labelpoint [gebiedsindelingen:arrondissementsgebied_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -236,7 +236,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_C8F18034F3", .name = "service.pdok.nl — Wijken [wijkenbuurten:wijken]",
     .name_ja = "service.pdok.nl — Wijken [wijkenbuurten:wijken]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -258,7 +258,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_E785D942B5", .name = "sgx.geodatenzentrum.de — Gemeinden [vg250:vg250_gem]",
     .name_ja = "sgx.geodatenzentrum.de — Gemeinden [vg250:vg250_gem]",
-    .category = "geospatial", .portal = "https://sgx.geodatenzentrum.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://sgx.geodatenzentrum.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -281,7 +281,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_3A25BABFC9", .name = "service.pdok.nl — buurt_gegeneraliseerd "
       "[gebiedsindelingen:buurt_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — buurt_gegeneraliseerd [gebiedsindelingen:buurt_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -305,7 +305,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_3C5BFE23A5", .name = "www.wfs.nrw.de — DVG1 Kreise und kreisfreie Städte "
       "[dvg:nw_dvg1_krs]",
     .name_ja = "www.wfs.nrw.de — DVG1 Kreise und kreisfreie Städte [dvg:nw_dvg1_krs]",
-    .category = "geospatial", .portal = "https://www.wfs.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.wfs.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -326,7 +326,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_5B33FF8EDC", .name = "service.pdok.nl — Gemeenten [wijkenbuurten:gemeenten]",
     .name_ja = "service.pdok.nl — Gemeenten [wijkenbuurten:gemeenten]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -349,7 +349,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_B96263F32B", .name = "sgx.geodatenzentrum.de — Gemeindepunkte [vg250:vg250_pk]",
     .name_ja = "sgx.geodatenzentrum.de — Gemeindepunkte [vg250:vg250_pk]",
-    .category = "geospatial", .portal = "https://sgx.geodatenzentrum.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://sgx.geodatenzentrum.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -372,7 +372,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_ED2A505C8C", .name = "service.pdok.nl — buurt_labelpoint "
       "[gebiedsindelingen:buurt_labelpoint]",
     .name_ja = "service.pdok.nl — buurt_labelpoint [gebiedsindelingen:buurt_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -395,7 +395,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_EFC8D39E5A", .name = "www.wfs.nrw.de — DVG1 Regierungsbezirke [dvg:nw_dvg1_rbz]",
     .name_ja = "www.wfs.nrw.de — DVG1 Regierungsbezirke [dvg:nw_dvg1_rbz]",
-    .category = "geospatial", .portal = "https://www.wfs.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.wfs.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -416,7 +416,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_17183E9CF8", .name = "data.geopf.fr — (obsolete) Site RBF [IGNF_GEODESIE:site-rbf]",
     .name_ja = "data.geopf.fr — (obsolete) Site RBF [IGNF_GEODESIE:site-rbf]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -437,7 +437,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_00436F546C", .name = "sgx.geodatenzentrum.de — Grenzlinien [vg250:vg250_li]",
     .name_ja = "sgx.geodatenzentrum.de — Grenzlinien [vg250:vg250_li]",
-    .category = "geospatial", .portal = "https://sgx.geodatenzentrum.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://sgx.geodatenzentrum.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -459,7 +459,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_9B4B346B9B", .name = "www.wfs.nrw.de — DVG1 Landesgrenze NRW [dvg:nw_dvg1_bld]",
     .name_ja = "www.wfs.nrw.de — DVG1 Landesgrenze NRW [dvg:nw_dvg1_bld]",
-    .category = "geospatial", .portal = "https://www.wfs.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.wfs.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -480,7 +480,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_5664559147", .name = "data.geopf.fr — (obsolete) Site RDF [IGNF_GEODESIE:site-rdf]",
     .name_ja = "data.geopf.fr — (obsolete) Site RDF [IGNF_GEODESIE:site-rdf]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -501,7 +501,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_91E702048A", .name = "sgx.geodatenzentrum.de — Kreis [vg250:vg250_krs]",
     .name_ja = "sgx.geodatenzentrum.de — Kreis [vg250:vg250_krs]",
-    .category = "geospatial", .portal = "https://sgx.geodatenzentrum.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://sgx.geodatenzentrum.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -525,7 +525,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "départemental "
       "[ADMINEXPRESS-COG.2017:arrondissement_departemental]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2017 Arrondissement départemental [ADMINEXPRESS-COG.2017:arrondissement_departemental]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -550,7 +550,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_67E8378D0C", .name = "www.wfs.nrw.de — DVG2 Kreisangehörige Kommunen und kreisfreie "
       "Städte [dvg:nw_dvg2_gem]",
     .name_ja = "www.wfs.nrw.de — DVG2 Kreisangehörige Kommunen und kreisfreie Städte [dvg:nw_dvg2_gem]",
-    .category = "geospatial", .portal = "https://www.wfs.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.wfs.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -571,7 +571,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_170BBF6F0C", .name = "sgx.geodatenzentrum.de — Regierungsbezirk [vg250:vg250_rbz]",
     .name_ja = "sgx.geodatenzentrum.de — Regierungsbezirk [vg250:vg250_rbz]",
-    .category = "geospatial", .portal = "https://sgx.geodatenzentrum.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://sgx.geodatenzentrum.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -594,7 +594,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_20B8511CAF", .name = "data.geopf.fr — ADMINEXPRESS COG 2017 Chef-lieu "
       "[ADMINEXPRESS-COG.2017:chef_lieu]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2017 Chef-lieu [ADMINEXPRESS-COG.2017:chef_lieu]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -618,7 +618,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9D00AB4457", .name = "service.pdok.nl — buurt_niet_gegeneraliseerd "
       "[gebiedsindelingen:buurt_niet_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — buurt_niet_gegeneraliseerd [gebiedsindelingen:buurt_niet_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -643,7 +643,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F1314ABEBA", .name = "www.wfs.nrw.de — DVG2 Kreise und kreisfreie Städte "
       "[dvg:nw_dvg2_krs]",
     .name_ja = "www.wfs.nrw.de — DVG2 Kreise und kreisfreie Städte [dvg:nw_dvg2_krs]",
-    .category = "geospatial", .portal = "https://www.wfs.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.wfs.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -665,7 +665,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_6D166D6D15", .name = "data.geopf.fr — ADMINEXPRESS COG 2017 Commune "
       "[ADMINEXPRESS-COG.2017:commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2017 Commune [ADMINEXPRESS-COG.2017:commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -689,7 +689,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_8CDEEE4221", .name = "service.pdok.nl — coropgebied_gegeneraliseerd "
       "[gebiedsindelingen:coropgebied_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — coropgebied_gegeneraliseerd [gebiedsindelingen:coropgebied_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -713,7 +713,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_6A4296C9F7", .name = "www.wfs.nrw.de — DVG2 Regierungsbezirke [dvg:nw_dvg2_rbz]",
     .name_ja = "www.wfs.nrw.de — DVG2 Regierungsbezirke [dvg:nw_dvg2_rbz]",
-    .category = "geospatial", .portal = "https://www.wfs.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.wfs.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -735,7 +735,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_8B5AB1CD3E", .name = "service.pdok.nl — coropgebied_labelpoint "
       "[gebiedsindelingen:coropgebied_labelpoint]",
     .name_ja = "service.pdok.nl — coropgebied_labelpoint [gebiedsindelingen:coropgebied_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -758,7 +758,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_05D73631E0", .name = "sgx.geodatenzentrum.de — Staat [vg250:vg250_sta]",
     .name_ja = "sgx.geodatenzentrum.de — Staat [vg250:vg250_sta]",
-    .category = "geospatial", .portal = "https://sgx.geodatenzentrum.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://sgx.geodatenzentrum.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -781,7 +781,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C47ACF24D7", .name = "data.geopf.fr — ADMINEXPRESS COG 2017 Département "
       "[ADMINEXPRESS-COG.2017:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2017 Département [ADMINEXPRESS-COG.2017:departement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -805,7 +805,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_91C071B012", .name = "service.pdok.nl — coropplusgebied_gegeneraliseerd "
       "[gebiedsindelingen:coropplusgebied_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — coropplusgebied_gegeneraliseerd [gebiedsindelingen:coropplusgebied_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -829,7 +829,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_AACB61BA16", .name = "sgx.geodatenzentrum.de — Verwaltungsgebiete [vg250:vg250_vwg]",
     .name_ja = "sgx.geodatenzentrum.de — Verwaltungsgebiete [vg250:vg250_vwg]",
-    .category = "geospatial", .portal = "https://sgx.geodatenzentrum.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://sgx.geodatenzentrum.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -853,7 +853,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_6D6A2078F7", .name = "data.geopf.fr — ADMINEXPRESS COG 2017 EPCI "
       "[ADMINEXPRESS-COG.2017:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2017 EPCI [ADMINEXPRESS-COG.2017:epci]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -876,7 +876,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_67C00F89DB", .name = "www.wfs.nrw.de — DVG2 Landesgrenze NRW [dvg:nw_dvg2_bld]",
     .name_ja = "www.wfs.nrw.de — DVG2 Landesgrenze NRW [dvg:nw_dvg2_bld]",
-    .category = "geospatial", .portal = "https://www.wfs.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.wfs.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"de\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -898,7 +898,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9B09BD23D0", .name = "service.pdok.nl — coropplusgebied_labelpoint "
       "[gebiedsindelingen:coropplusgebied_labelpoint]",
     .name_ja = "service.pdok.nl — coropplusgebied_labelpoint [gebiedsindelingen:coropplusgebied_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -923,7 +923,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_EDCA0BA497", .name = "data.geopf.fr — ADMINEXPRESS COG 2017 Région "
       "[ADMINEXPRESS-COG.2017:region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2017 Région [ADMINEXPRESS-COG.2017:region]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -947,7 +947,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5E9668B8E0", .name = "service.pdok.nl — coropsubgebied_gegeneraliseerd "
       "[gebiedsindelingen:coropsubgebied_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — coropsubgebied_gegeneraliseerd [gebiedsindelingen:coropsubgebied_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -973,7 +973,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "départemental "
       "[ADMINEXPRESS-COG.2018:arrondissement_departemental]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2018 Arrondissement départemental [ADMINEXPRESS-COG.2018:arrondissement_departemental]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -998,7 +998,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_1188608580", .name = "service.pdok.nl — coropsubgebied_labelpoint "
       "[gebiedsindelingen:coropsubgebied_labelpoint]",
     .name_ja = "service.pdok.nl — coropsubgebied_labelpoint [gebiedsindelingen:coropsubgebied_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1023,7 +1023,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_389E12CEDF", .name = "data.geopf.fr — ADMINEXPRESS COG 2018 Chef-lieu "
       "[ADMINEXPRESS-COG.2018:chef_lieu]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2018 Chef-lieu [ADMINEXPRESS-COG.2018:chef_lieu]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1047,7 +1047,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B107772D61", .name = "service.pdok.nl — gemeente_gegeneraliseerd "
       "[gebiedsindelingen:gemeente_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — gemeente_gegeneraliseerd [gebiedsindelingen:gemeente_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1072,7 +1072,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4C0BB1E39D", .name = "data.geopf.fr — ADMINEXPRESS COG 2018 Commune "
       "[ADMINEXPRESS-COG.2018:commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2018 Commune [ADMINEXPRESS-COG.2018:commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1096,7 +1096,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_CF1E3B0248", .name = "geoservizi.regione.liguria.it — (Acr) AREE SOGGETTE A CROLLI "
       "(pericolosità molto elevata) [M2423:L9140]",
     .name_ja = "geoservizi.regione.liguria.it — (Acr) AREE SOGGETTE A CROLLI (pericolosità molto elevata) [M2423:L9140]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1120,7 +1120,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9FC87B9B36", .name = "service.pdok.nl — gemeente_labelpoint "
       "[gebiedsindelingen:gemeente_labelpoint]",
     .name_ja = "service.pdok.nl — gemeente_labelpoint [gebiedsindelingen:gemeente_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1144,7 +1144,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_8311422409", .name = "data.geopf.fr — ADMINEXPRESS COG 2018 Département "
       "[ADMINEXPRESS-COG.2018:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2018 Département [ADMINEXPRESS-COG.2018:departement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1168,7 +1168,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_BFBE690BCC", .name = "service.pdok.nl — gemeente_niet_gegeneraliseerd "
       "[gebiedsindelingen:gemeente_niet_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — gemeente_niet_gegeneraliseerd [gebiedsindelingen:gemeente_niet_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1193,7 +1193,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_64AF2A6342", .name = "data.geopf.fr — ADMINEXPRESS COG 2018 EPCI "
       "[ADMINEXPRESS-COG.2018:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2018 EPCI [ADMINEXPRESS-COG.2018:epci]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1217,7 +1217,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_294B0EA5A1", .name = "geoservizi.regione.liguria.it — (DGPV) DEFORMAZIONI GRAVITATIVE "
       "PROFONDE (pericolosità moderata) [M2423:L9144]",
     .name_ja = "geoservizi.regione.liguria.it — (DGPV) DEFORMAZIONI GRAVITATIVE PROFONDE (pericolosità moderata) [M2423:L9144]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1241,7 +1241,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5363AC5542", .name = "geo.stat.fi — AVI-alueet (1:1 000 000) "
       "[tilastointialueet:avi1000k]",
     .name_ja = "geo.stat.fi — AVI-alueet (1:1 000 000) [tilastointialueet:avi1000k]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1265,7 +1265,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_DA85A3459A", .name = "service.pdok.nl — ggdregio_gegeneraliseerd "
       "[gebiedsindelingen:ggdregio_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — ggdregio_gegeneraliseerd [gebiedsindelingen:ggdregio_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1290,7 +1290,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_672A50F6B4", .name = "data.geopf.fr — ADMINEXPRESS COG 2018 Région "
       "[ADMINEXPRESS-COG.2018:region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2018 Région [ADMINEXPRESS-COG.2018:region]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1314,7 +1314,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_7F06632646", .name = "geoservizi.regione.liguria.it — (Fa) FRANE ATTIVE (pericolisità "
       "molto elevata) [M2423:L9139]",
     .name_ja = "geoservizi.regione.liguria.it — (Fa) FRANE ATTIVE (pericolisità molto elevata) [M2423:L9139]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1338,7 +1338,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F9F8C521CD", .name = "si.icnf.pt — Ecologically or Biologically Significant Marine "
       "Areas [POEM:ebsa]",
     .name_ja = "si.icnf.pt — Ecologically or Biologically Significant Marine Areas [POEM:ebsa]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1362,7 +1362,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_65A862569F", .name = "geo.stat.fi — AVI-alueet (1:4 500 000) "
       "[tilastointialueet:avi4500k]",
     .name_ja = "geo.stat.fi — AVI-alueet (1:4 500 000) [tilastointialueet:avi4500k]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1386,7 +1386,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_36DF83A21E", .name = "service.pdok.nl — ggdregio_labelpoint "
       "[gebiedsindelingen:ggdregio_labelpoint]",
     .name_ja = "service.pdok.nl — ggdregio_labelpoint [gebiedsindelingen:ggdregio_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1411,7 +1411,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "départemental "
       "[ADMINEXPRESS-COG.2019:arrondissement_departemental]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2019 Arrondissement départemental [ADMINEXPRESS-COG.2019:arrondissement_departemental]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1436,7 +1436,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_343FA08C37", .name = "mapy.geoportal.gov.pl — W12_Przystan_morska "
       "[ms:W12_Przystan_morska]",
     .name_ja = "mapy.geoportal.gov.pl — W12_Przystan_morska [ms:W12_Przystan_morska]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1458,7 +1458,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_229F1AA7D9", .name = "service.pdok.nl — jeugdregio_gegeneraliseerd "
       "[gebiedsindelingen:jeugdregio_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — jeugdregio_gegeneraliseerd [gebiedsindelingen:jeugdregio_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1483,7 +1483,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_62E82AE993", .name = "si.icnf.pt — POAP Regimes de Proteção do POEM "
       "[POEM:poap_rprotecao_poem]",
     .name_ja = "si.icnf.pt — POAP Regimes de Proteção do POEM [POEM:poap_rprotecao_poem]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1505,7 +1505,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0FA1ED6C48", .name = "data.geopf.fr — ADMINEXPRESS COG 2019 Chef-lieu "
       "[ADMINEXPRESS-COG.2019:chef_lieu]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2019 Chef-lieu [ADMINEXPRESS-COG.2019:chef_lieu]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1528,7 +1528,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_698D772761", .name = "mapy.geoportal.gov.pl — W11_Port_morski [ms:W11_Port_morski]",
     .name_ja = "mapy.geoportal.gov.pl — W11_Port_morski [ms:W11_Port_morski]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1550,7 +1550,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FDC5B2E08A", .name = "geo.stat.fi — AVI-alueet 2013 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2013]",
     .name_ja = "geo.stat.fi — AVI-alueet 2013 (1:1 000 000) [tilastointialueet:avi1000k_2013]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1574,7 +1574,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5B3CFC5357", .name = "service.pdok.nl — jeugdregio_labelpoint "
       "[gebiedsindelingen:jeugdregio_labelpoint]",
     .name_ja = "service.pdok.nl — jeugdregio_labelpoint [gebiedsindelingen:jeugdregio_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1598,7 +1598,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_918DBBD4D0", .name = "data.geopf.fr — ADMINEXPRESS COG 2019 Commune "
       "[ADMINEXPRESS-COG.2019:commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2019 Commune [ADMINEXPRESS-COG.2019:commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1622,7 +1622,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_ECA71E5148", .name = "si.icnf.pt — Rede Nacional de Áreas Protegidas POEM "
       "[POEM:ap_poem]",
     .name_ja = "si.icnf.pt — Rede Nacional de Áreas Protegidas POEM [POEM:ap_poem]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1644,7 +1644,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_BC6E3F2EF2", .name = "geoservizi.regione.liguria.it — (Fd) FRANOSITA' DIFFUSA "
       "(pericolosità moderata) [M2423:L9143]",
     .name_ja = "geoservizi.regione.liguria.it — (Fd) FRANOSITA' DIFFUSA (pericolosità moderata) [M2423:L9143]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1667,7 +1667,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_1F93962241", .name = "mapy.geoportal.gov.pl — W10_Reda [ms:W10_Reda]",
     .name_ja = "mapy.geoportal.gov.pl — W10_Reda [ms:W10_Reda]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1688,7 +1688,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_21E2DBCA0F", .name = "geo.stat.fi — AVI-alueet 2013 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2013]",
     .name_ja = "geo.stat.fi — AVI-alueet 2013 (1:4 500 000) [tilastointialueet:avi4500k_2013]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1712,7 +1712,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_6EE4A1D5D2", .name = "service.pdok.nl — kamervankoophandelregio_gegeneraliseerd "
       "[gebiedsindelingen:kamervankoophandelregio_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — kamervankoophandelregio_gegeneraliseerd [gebiedsindelingen:kamervankoophandelregio_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1737,7 +1737,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_1F4F6AC938", .name = "data.geopf.fr — ADMINEXPRESS COG 2019 Département "
       "[ADMINEXPRESS-COG.2019:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2019 Département [ADMINEXPRESS-COG.2019:departement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1761,7 +1761,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_6D2AF71893", .name = "geoservizi.regione.liguria.it — (Fq) FRANE QUIESCENTI "
       "(pericolosità elevata) [M2423:L9141]",
     .name_ja = "geoservizi.regione.liguria.it — (Fq) FRANE QUIESCENTI (pericolosità elevata) [M2423:L9141]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1785,7 +1785,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D45983AA9F", .name = "service.pdok.nl — kamervankoophandelregio_labelpoint "
       "[gebiedsindelingen:kamervankoophandelregio_labelpoint]",
     .name_ja = "service.pdok.nl — kamervankoophandelregio_labelpoint [gebiedsindelingen:kamervankoophandelregio_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1810,7 +1810,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A1FB16ED06", .name = "data.geopf.fr — ADMINEXPRESS COG 2019 EPCI "
       "[ADMINEXPRESS-COG.2019:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2019 EPCI [ADMINEXPRESS-COG.2019:epci]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1834,7 +1834,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5C2B40858A", .name = "mapy.geoportal.gov.pl — W09_Pas_techniczny "
       "[ms:W09_Pas_techniczny]",
     .name_ja = "mapy.geoportal.gov.pl — W09_Pas_techniczny [ms:W09_Pas_techniczny]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1855,7 +1855,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_D1358AD78D", .name = "si.icnf.pt — Reserva da Biosfera do POEM [POEM:biosfera_poem]",
     .name_ja = "si.icnf.pt — Reserva da Biosfera do POEM [POEM:biosfera_poem]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1877,7 +1877,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_00FAE29BBE", .name = "geo.stat.fi — AVI-alueet 2014 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2014]",
     .name_ja = "geo.stat.fi — AVI-alueet 2014 (1:1 000 000) [tilastointialueet:avi1000k_2014]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1901,7 +1901,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4505F9A812", .name = "geoservizi.regione.liguria.it — (Fs) FRANE STABILIZZATE "
       "(pericolosità media o moderata) [M2423:L9142]",
     .name_ja = "geoservizi.regione.liguria.it — (Fs) FRANE STABILIZZATE (pericolosità media o moderata) [M2423:L9142]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1925,7 +1925,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_8186A6981A", .name = "service.pdok.nl — landbouwgebied_gegeneraliseerd "
       "[gebiedsindelingen:landbouwgebied_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — landbouwgebied_gegeneraliseerd [gebiedsindelingen:landbouwgebied_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1950,7 +1950,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_26B35235CB", .name = "data.geopf.fr — ADMINEXPRESS COG 2019 Région "
       "[ADMINEXPRESS-COG.2019:region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2019 Région [ADMINEXPRESS-COG.2019:region]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1973,7 +1973,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_CF56D32F41", .name = "mapy.geoportal.gov.pl — W08_Pas_ochronny [ms:W08_Pas_ochronny]",
     .name_ja = "mapy.geoportal.gov.pl — W08_Pas_ochronny [ms:W08_Pas_ochronny]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1995,7 +1995,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4F7E046089", .name = "geo.stat.fi — AVI-alueet 2014 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2014]",
     .name_ja = "geo.stat.fi — AVI-alueet 2014 (1:4 500 000) [tilastointialueet:avi4500k_2014]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2019,7 +2019,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_559DF558AB", .name = "si.icnf.pt — Sitios de Importancia Comunitaria marinhos e "
       "costeiros propostos para classficacao [POEM:sic_propostos]",
     .name_ja = "si.icnf.pt — Sitios de Importancia Comunitaria marinhos e costeiros propostos para classficacao [POEM:sic_propostos]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2045,7 +2045,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "départemental "
       "[ADMINEXPRESS-COG.2020:arrondissement_departemental]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2020 Arrondissement départemental [ADMINEXPRESS-COG.2020:arrondissement_departemental]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2070,7 +2070,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_86769D1920", .name = "service.pdok.nl — landbouwgebied_labelpoint "
       "[gebiedsindelingen:landbouwgebied_labelpoint]",
     .name_ja = "service.pdok.nl — landbouwgebied_labelpoint [gebiedsindelingen:landbouwgebied_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2095,7 +2095,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F6EBE1FAE9", .name = "geoservizi.regione.liguria.it — (Pi 1) AREE A PERICOLOSITA' "
       "MEDIA [M2423:L9148]",
     .name_ja = "geoservizi.regione.liguria.it — (Pi 1) AREE A PERICOLOSITA' MEDIA [M2423:L9148]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2119,7 +2119,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B35306C774", .name = "data.geopf.fr — ADMINEXPRESS COG 2020 Arrondissement municipal "
       "[ADMINEXPRESS-COG.2020:arrondissement_municipal]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2020 Arrondissement municipal [ADMINEXPRESS-COG.2020:arrondissement_municipal]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2144,7 +2144,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_62EE37558C", .name = "mapy.geoportal.gov.pl — W07_Pas_nadbrzezny "
       "[ms:W07_Pas_nadbrzezny]",
     .name_ja = "mapy.geoportal.gov.pl — W07_Pas_nadbrzezny [ms:W07_Pas_nadbrzezny]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2166,7 +2166,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B04E2A03FC", .name = "service.pdok.nl — landbouwgroep_gegeneraliseerd "
       "[gebiedsindelingen:landbouwgroep_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — landbouwgroep_gegeneraliseerd [gebiedsindelingen:landbouwgroep_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2191,7 +2191,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D0AE237F62", .name = "si.icnf.pt — Sítios de Importância Comunitária POEM "
       "[POEM:sic_poem]",
     .name_ja = "si.icnf.pt — Sítios de Importância Comunitária POEM [POEM:sic_poem]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2213,7 +2213,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2F88A89F83", .name = "geo.stat.fi — AVI-alueet 2015 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2015]",
     .name_ja = "geo.stat.fi — AVI-alueet 2015 (1:1 000 000) [tilastointialueet:avi1000k_2015]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2237,7 +2237,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_1B13D32B55", .name = "data.geopf.fr — ADMINEXPRESS COG 2020 Canton "
       "[ADMINEXPRESS-COG.2020:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2020 Canton [ADMINEXPRESS-COG.2020:canton]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2261,7 +2261,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5517D707E3", .name = "service.pdok.nl — landbouwgroep_labelpoint "
       "[gebiedsindelingen:landbouwgroep_labelpoint]",
     .name_ja = "service.pdok.nl — landbouwgroep_labelpoint [gebiedsindelingen:landbouwgroep_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2286,7 +2286,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_70EB33A814", .name = "mapy.geoportal.gov.pl — W06_Morskie_linie_brzegowe "
       "[ms:W06_Morskie_linie_brzegowe]",
     .name_ja = "mapy.geoportal.gov.pl — W06_Morskie_linie_brzegowe [ms:W06_Morskie_linie_brzegowe]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2308,7 +2308,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_40FB90919E", .name = "geo.stat.fi — AVI-alueet 2015 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2015]",
     .name_ja = "geo.stat.fi — AVI-alueet 2015 (1:4 500 000) [tilastointialueet:avi4500k_2015]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2332,7 +2332,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_916B50696E", .name = "si.icnf.pt — Zonamento Reservas da Biosfera do POEM "
       "[POEM:biosfera_zonamento_poem]",
     .name_ja = "si.icnf.pt — Zonamento Reservas da Biosfera do POEM [POEM:biosfera_zonamento_poem]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2354,7 +2354,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_DF00D6DB95", .name = "data.geopf.fr — ADMINEXPRESS COG 2020 Chef-lieu "
       "[ADMINEXPRESS-COG.2020:chef_lieu]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2020 Chef-lieu [ADMINEXPRESS-COG.2020:chef_lieu]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2378,7 +2378,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_57450727B4", .name = "service.pdok.nl — landsdeel_gegeneraliseerd "
       "[gebiedsindelingen:landsdeel_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — landsdeel_gegeneraliseerd [gebiedsindelingen:landsdeel_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2403,7 +2403,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B1A014A31E", .name = "mapy.geoportal.gov.pl — W05_Strefa_przylegla "
       "[ms:W05_Strefa_przylegla]",
     .name_ja = "mapy.geoportal.gov.pl — W05_Strefa_przylegla [ms:W05_Strefa_przylegla]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2425,7 +2425,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_220CCB3ACD", .name = "data.geopf.fr — ADMINEXPRESS COG 2020 Chef-lieu entité rattachée "
       "[ADMINEXPRESS-COG.2020:chef_lieu_entite_rattachee]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2020 Chef-lieu entité rattachée [ADMINEXPRESS-COG.2020:chef_lieu_entite_rattachee]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2450,7 +2450,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4072C0926B", .name = "geoservizi.regione.liguria.it — (Pi 2) AREE A PERICOLOSITA' "
       "ELEVATA [M2423:L9147]",
     .name_ja = "geoservizi.regione.liguria.it — (Pi 2) AREE A PERICOLOSITA' ELEVATA [M2423:L9147]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2474,7 +2474,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_EF1C1C52DF", .name = "service.pdok.nl — landsdeel_labelpoint "
       "[gebiedsindelingen:landsdeel_labelpoint]",
     .name_ja = "service.pdok.nl — landsdeel_labelpoint [gebiedsindelingen:landsdeel_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2498,7 +2498,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_65BCD96A3D", .name = "geo.stat.fi — AVI-alueet 2016 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2016]",
     .name_ja = "geo.stat.fi — AVI-alueet 2016 (1:1 000 000) [tilastointialueet:avi1000k_2016]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2521,7 +2521,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_4008184A7E", .name = "si.icnf.pt — Zonas de Proteção Especial POEM [POEM:zpe_poem]",
     .name_ja = "si.icnf.pt — Zonas de Proteção Especial POEM [POEM:zpe_poem]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2543,7 +2543,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_250C9A5151", .name = "mapy.geoportal.gov.pl — W04_Wylaczna_strefa_ekonomiczna "
       "[ms:W04_Wylaczna_strefa_ekonomiczna]",
     .name_ja = "mapy.geoportal.gov.pl — W04_Wylaczna_strefa_ekonomiczna [ms:W04_Wylaczna_strefa_ekonomiczna]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2564,7 +2564,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_D594BA8909", .name = "service.pdok.nl — Wegvakken [nwbwegen:wegvakken]",
     .name_ja = "service.pdok.nl — Wegvakken [nwbwegen:wegvakken]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2587,7 +2587,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F0377C581C", .name = "data.geopf.fr — ADMINEXPRESS COG 2020 Commune "
       "[ADMINEXPRESS-COG.2020:commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2020 Commune [ADMINEXPRESS-COG.2020:commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2611,7 +2611,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_AB3327A8D0", .name = "service.pdok.nl — provincie_gegeneraliseerd "
       "[gebiedsindelingen:provincie_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — provincie_gegeneraliseerd [gebiedsindelingen:provincie_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2636,7 +2636,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_70A50DF41D", .name = "data.geopf.fr — ADMINEXPRESS COG 2020 Département "
       "[ADMINEXPRESS-COG.2020:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2020 Département [ADMINEXPRESS-COG.2020:departement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2660,7 +2660,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5B04DA748F", .name = "service.pdok.nl — provincie_labelpoint "
       "[gebiedsindelingen:provincie_labelpoint]",
     .name_ja = "service.pdok.nl — provincie_labelpoint [gebiedsindelingen:provincie_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2684,7 +2684,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_790F2F46AD", .name = "mapy.geoportal.gov.pl — W03_Morskie_wody_wewnetrzne "
       "[ms:W03_Morskie_wody_wewnetrzne]",
     .name_ja = "mapy.geoportal.gov.pl — W03_Morskie_wody_wewnetrzne [ms:W03_Morskie_wody_wewnetrzne]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2706,7 +2706,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E544A7D105", .name = "geoservizi.regione.liguria.it — (Pi 3) AREE A PERICOLOSITA' "
       "MOLTO ELEVATA [M2423:L9146]",
     .name_ja = "geoservizi.regione.liguria.it — (Pi 3) AREE A PERICOLOSITA' MOLTO ELEVATA [M2423:L9146]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2730,7 +2730,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_051B2697FB", .name = "geo.stat.fi — AVI-alueet 2016 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2016]",
     .name_ja = "geo.stat.fi — AVI-alueet 2016 (1:4 500 000) [tilastointialueet:avi4500k_2016]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2753,7 +2753,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_3FD79871E4", .name = "service.pdok.nl — Hectopunten [nwbwegen:hectopunten]",
     .name_ja = "service.pdok.nl — Hectopunten [nwbwegen:hectopunten]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2776,7 +2776,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A812D76DBC", .name = "data.geopf.fr — ADMINEXPRESS COG 2020 EPCI "
       "[ADMINEXPRESS-COG.2020:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2020 EPCI [ADMINEXPRESS-COG.2020:epci]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2800,7 +2800,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C88A0D2EC5", .name = "si.icnf.pt — aquiculturas_aguas_interiores "
       "[BDG:aquicultura_aguas_interiores]",
     .name_ja = "si.icnf.pt — aquiculturas_aguas_interiores [BDG:aquicultura_aguas_interiores]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2824,7 +2824,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_BC48801DA0", .name = "service.pdok.nl — regionaalmeld_coordinatiepunt_gegeneraliseerd "
       "[gebiedsindelingen:regionaalmeld_coordinatiepunt_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — regionaalmeld_coordinatiepunt_gegeneraliseerd [gebiedsindelingen:regionaalmeld_coordinatiepunt_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2849,7 +2849,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E982FEB3BA", .name = "geo.stat.fi — AVI-alueet 2017 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2017]",
     .name_ja = "geo.stat.fi — AVI-alueet 2017 (1:1 000 000) [tilastointialueet:avi1000k_2017]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2873,7 +2873,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9B96A10A99", .name = "mapy.geoportal.gov.pl — W02_Morze_terytorialne_RP "
       "[ms:W02_Morze_terytorialne_RP]",
     .name_ja = "mapy.geoportal.gov.pl — W02_Morze_terytorialne_RP [ms:W02_Morze_terytorialne_RP]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2895,7 +2895,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_ABB7D49D16", .name = "geoservizi.regione.liguria.it — (Pi 3*) AREE 'EE' PAI E "
       "'STORICAMENTE INONDATE' NON INDAGATE [M2423:L9150]",
     .name_ja = "geoservizi.regione.liguria.it — (Pi 3*) AREE 'EE' PAI E 'STORICAMENTE INONDATE' NON INDAGATE [M2423:L9150]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2919,7 +2919,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_35DF6153D0", .name = "data.geopf.fr — ADMINEXPRESS COG 2020 Région "
       "[ADMINEXPRESS-COG.2020:region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2020 Région [ADMINEXPRESS-COG.2020:region]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2943,7 +2943,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_70A2BDC5C2", .name = "service.pdok.nl — regionaalmeld_coordinatiepunt_labelpoint "
       "[gebiedsindelingen:regionaalmeld_coordinatiepunt_labelpoint]",
     .name_ja = "service.pdok.nl — regionaalmeld_coordinatiepunt_labelpoint [gebiedsindelingen:regionaalmeld_coordinatiepunt_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2967,7 +2967,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_C803395A2F", .name = "si.icnf.pt — ardida_1990_1999 [BDG:ardida_1990_1999]",
     .name_ja = "si.icnf.pt — ardida_1990_1999 [BDG:ardida_1990_1999]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2991,7 +2991,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "W01_Linia_podstawowa_morza_terytorialnego "
       "[ms:W01_Linia_podstawowa_morza_terytorialnego]",
     .name_ja = "mapy.geoportal.gov.pl — W01_Linia_podstawowa_morza_terytorialnego [ms:W01_Linia_podstawowa_morza_terytorialnego]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3014,7 +3014,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D9004C66B6", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Arrondissement "
       "[ADMINEXPRESS-COG.2021:arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Arrondissement [ADMINEXPRESS-COG.2021:arrondissement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3038,7 +3038,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B4869A6500", .name = "service.pdok.nl — regioplus_arbeidsmarktregio_gegeneraliseerd "
       "[gebiedsindelingen:regioplus_arbeidsmarktregio_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — regioplus_arbeidsmarktregio_gegeneraliseerd [gebiedsindelingen:regioplus_arbeidsmarktregio_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3063,7 +3063,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E4B11CAB76", .name = "geo.stat.fi — AVI-alueet 2017 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2017]",
     .name_ja = "geo.stat.fi — AVI-alueet 2017 (1:4 500 000) [tilastointialueet:avi4500k_2017]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3087,7 +3087,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2EEC45982E", .name = "geoservizi.regione.liguria.it — (Pi 3*) AREE INTERESSATE "
       "DALL'ALLUVIONE 2016 [M2423:L9149]",
     .name_ja = "geoservizi.regione.liguria.it — (Pi 3*) AREE INTERESSATE DALL'ALLUVIONE 2016 [M2423:L9149]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3111,7 +3111,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4491471193", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Arrondissement municipal "
       "[ADMINEXPRESS-COG.2021:arrondissement_municipal]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Arrondissement municipal [ADMINEXPRESS-COG.2021:arrondissement_municipal]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3136,7 +3136,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9D8627E3E3", .name = "service.pdok.nl — regioplus_arbeidsmarktregio_labelpoint "
       "[gebiedsindelingen:regioplus_arbeidsmarktregio_labelpoint]",
     .name_ja = "service.pdok.nl — regioplus_arbeidsmarktregio_labelpoint [gebiedsindelingen:regioplus_arbeidsmarktregio_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3161,7 +3161,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_CA68BDAE64", .name = "mapy.geoportal.gov.pl — U11_Urzad_zeglugi_srodladowej "
       "[ms:U11_Urzad_zeglugi_srodladowej]",
     .name_ja = "mapy.geoportal.gov.pl — U11_Urzad_zeglugi_srodladowej [ms:U11_Urzad_zeglugi_srodladowej]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3183,7 +3183,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_054A01334D", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Canton "
       "[ADMINEXPRESS-COG.2021:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Canton [ADMINEXPRESS-COG.2021:canton]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3206,7 +3206,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_6AABF49B9B", .name = "si.icnf.pt — ardida_2000_2008 [BDG:ardida_2000_2008]",
     .name_ja = "si.icnf.pt — ardida_2000_2008 [BDG:ardida_2000_2008]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3229,7 +3229,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_876F64C80D", .name = "service.pdok.nl — regionale_eenheid_gegeneraliseerd "
       "[gebiedsindelingen:regionale_eenheid_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — regionale_eenheid_gegeneraliseerd [gebiedsindelingen:regionale_eenheid_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3254,7 +3254,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FE054DBA73", .name = "geo.stat.fi — AVI-alueet 2018 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2018]",
     .name_ja = "geo.stat.fi — AVI-alueet 2018 (1:1 000 000) [tilastointialueet:avi1000k_2018]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3277,7 +3277,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_C7DE9F843D", .name = "mapy.geoportal.gov.pl — U10_Urzad_morski [ms:U10_Urzad_morski]",
     .name_ja = "mapy.geoportal.gov.pl — U10_Urzad_morski [ms:U10_Urzad_morski]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3300,7 +3300,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "municipal "
       "[ADMINEXPRESS-COG.2021:chef_lieu_arrondissement_municipal]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Chef-lieu Arrondissement municipal [ADMINEXPRESS-COG.2021:chef_lieu_arrondissement_municipal]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3325,7 +3325,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_785B52D05C", .name = "geoservizi.regione.liguria.it — (ZLS) Porto e Retroporto di La "
       "Spezia - Comune La Spezia e Autorità di Porto [M2744:L10844]",
     .name_ja = "geoservizi.regione.liguria.it — (ZLS) Porto e Retroporto di La Spezia - Comune La Spezia e Autorità di Porto [M2744:L10844]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3349,7 +3349,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_20C7C6ABB8", .name = "service.pdok.nl — regionale_eenheid_labelpoint "
       "[gebiedsindelingen:regionale_eenheid_labelpoint]",
     .name_ja = "service.pdok.nl — regionale_eenheid_labelpoint [gebiedsindelingen:regionale_eenheid_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3374,7 +3374,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D1B357B5A0", .name = "geo.stat.fi — AVI-alueet 2018 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2018]",
     .name_ja = "geo.stat.fi — AVI-alueet 2018 (1:4 500 000) [tilastointialueet:avi4500k_2018]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3399,7 +3399,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "ou déléguée "
       "[ADMINEXPRESS-COG.2021:chef_lieu_commune_associee_ou_deleguee]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Chef-lieu Commune associée ou déléguée [ADMINEXPRESS-COG.2021:chef_lieu_commune_associee_ou_deleguee]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3424,7 +3424,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_346ED02DF0", .name = "service.pdok.nl — regionale_energiestrategie_gegeneraliseerd "
       "[gebiedsindelingen:regionale_energiestrategie_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — regionale_energiestrategie_gegeneraliseerd [gebiedsindelingen:regionale_energiestrategie_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3449,7 +3449,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FE6D62F3DF", .name = "geo.stat.fi — AVI-alueet 2019 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2019]",
     .name_ja = "geo.stat.fi — AVI-alueet 2019 (1:1 000 000) [tilastointialueet:avi1000k_2019]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3472,7 +3472,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_6D24481FE8", .name = "si.icnf.pt — ardida_2009 [BDG:ardida_2009]",
     .name_ja = "si.icnf.pt — ardida_2009 [BDG:ardida_2009]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3496,7 +3496,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "U09_Regionalny_zarzad_gospodarki_wodnej_PGWWP "
       "[ms:U09_Regionalny_zarzad_gospodarki_wodnej_PGWWP]",
     .name_ja = "mapy.geoportal.gov.pl — U09_Regionalny_zarzad_gospodarki_wodnej_PGWWP [ms:U09_Regionalny_zarzad_gospodarki_wodnej_PGWWP]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3520,7 +3520,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_77E829564D", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Chef-lieu commune "
       "[ADMINEXPRESS-COG.2021:chef_lieu_commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Chef-lieu commune [ADMINEXPRESS-COG.2021:chef_lieu_commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3544,7 +3544,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4D72A6A519", .name = "geoservizi.regione.liguria.it — (ZLS) Retroporto di La Spezia - "
       "Comune Arcola [M2744:L10842]",
     .name_ja = "geoservizi.regione.liguria.it — (ZLS) Retroporto di La Spezia - Comune Arcola [M2744:L10842]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3568,7 +3568,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_98C5185FDC", .name = "service.pdok.nl — regionale_energiestrategie_labelpoint "
       "[gebiedsindelingen:regionale_energiestrategie_labelpoint]",
     .name_ja = "service.pdok.nl — regionale_energiestrategie_labelpoint [gebiedsindelingen:regionale_energiestrategie_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3593,7 +3593,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E1BFC4F3E4", .name = "geo.stat.fi — AVI-alueet 2019 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2019]",
     .name_ja = "geo.stat.fi — AVI-alueet 2019 (1:4 500 000) [tilastointialueet:avi4500k_2019]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3617,7 +3617,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_87CA8797E5", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Collectivité territoriale "
       "[ADMINEXPRESS-COG.2021:collectivite_territoriale]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Collectivité territoriale [ADMINEXPRESS-COG.2021:collectivite_territoriale]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3641,7 +3641,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_4D2E2AF2F1", .name = "si.icnf.pt — ardida_2010 [BDG:ardida_2010]",
     .name_ja = "si.icnf.pt — ardida_2010 [BDG:ardida_2010]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3664,7 +3664,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E4CA790A18", .name = "service.pdok.nl — ressort_gegeneraliseerd "
       "[gebiedsindelingen:ressort_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — ressort_gegeneraliseerd [gebiedsindelingen:ressort_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3688,7 +3688,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D09CA7895F", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Commune "
       "[ADMINEXPRESS-COG.2021:commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Commune [ADMINEXPRESS-COG.2021:commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3712,7 +3712,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D4D6DE67E6", .name = "geoservizi.regione.liguria.it — (ZLS) Retroporto di La Spezia - "
       "Comune Follo [M2744:L10843]",
     .name_ja = "geoservizi.regione.liguria.it — (ZLS) Retroporto di La Spezia - Comune Follo [M2744:L10843]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3735,7 +3735,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_152FA74B04", .name = "si.icnf.pt — ardida_2011 [BDG:ardida_2011]",
     .name_ja = "si.icnf.pt — ardida_2011 [BDG:ardida_2011]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3758,7 +3758,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_404B0AEB8B", .name = "geo.stat.fi — AVI-alueet 2020 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2020]",
     .name_ja = "geo.stat.fi — AVI-alueet 2020 (1:1 000 000) [tilastointialueet:avi1000k_2020]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3782,7 +3782,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D5DAC36F25", .name = "service.pdok.nl — ressort_labelpoint "
       "[gebiedsindelingen:ressort_labelpoint]",
     .name_ja = "service.pdok.nl — ressort_labelpoint [gebiedsindelingen:ressort_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3806,7 +3806,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C7F619D702", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Commune associée ou "
       "déléguée [ADMINEXPRESS-COG.2021:commune_associee_ou_deleguee]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Commune associée ou déléguée [ADMINEXPRESS-COG.2021:commune_associee_ou_deleguee]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3831,7 +3831,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C0FD068714", .name = "mapy.geoportal.gov.pl — U08_Zarzad_zlewni_PGWWP "
       "[ms:U08_Zarzad_zlewni_PGWWP]",
     .name_ja = "mapy.geoportal.gov.pl — U08_Zarzad_zlewni_PGWWP [ms:U08_Zarzad_zlewni_PGWWP]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3853,7 +3853,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_07FF5B4B29", .name = "geoservizi.regione.liguria.it — (ZLS) Retroporto di La Spezia - "
       "Comune Santo Stefano di Magra [M2744:L10845]",
     .name_ja = "geoservizi.regione.liguria.it — (ZLS) Retroporto di La Spezia - Comune Santo Stefano di Magra [M2744:L10845]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3877,7 +3877,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5AED664814", .name = "geo.stat.fi — AVI-alueet 2020 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2020]",
     .name_ja = "geo.stat.fi — AVI-alueet 2020 (1:4 500 000) [tilastointialueet:avi4500k_2020]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3900,7 +3900,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_2770F48658", .name = "si.icnf.pt — ardida_2012 [BDG:ardida_2012]",
     .name_ja = "si.icnf.pt — ardida_2012 [BDG:ardida_2012]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3923,7 +3923,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_CE2C4B67D2", .name = "service.pdok.nl — subres_regio_gegeneraliseerd "
       "[gebiedsindelingen:subres_regio_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — subres_regio_gegeneraliseerd [gebiedsindelingen:subres_regio_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3948,7 +3948,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_109F90EC58", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Département "
       "[ADMINEXPRESS-COG.2021:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Département [ADMINEXPRESS-COG.2021:departement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3972,7 +3972,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0E62049361", .name = "geo.stat.fi — AVI-alueet 2021 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2021]",
     .name_ja = "geo.stat.fi — AVI-alueet 2021 (1:1 000 000) [tilastointialueet:avi1000k_2021]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3995,7 +3995,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_5DF6C4E8DE", .name = "service.pdok.nl — Ligplaats [bag:ligplaats]",
     .name_ja = "service.pdok.nl — Ligplaats [bag:ligplaats]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4018,7 +4018,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_CF280F0253", .name = "service.pdok.nl — subres_regio_labelpoint "
       "[gebiedsindelingen:subres_regio_labelpoint]",
     .name_ja = "service.pdok.nl — subres_regio_labelpoint [gebiedsindelingen:subres_regio_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4042,7 +4042,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_98E2EF97A3", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 EPCI "
       "[ADMINEXPRESS-COG.2021:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 EPCI [ADMINEXPRESS-COG.2021:epci]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4065,7 +4065,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_A25A8F5EEE", .name = "si.icnf.pt — ardida_2013 [BDG:ardida_2013]",
     .name_ja = "si.icnf.pt — ardida_2013 [BDG:ardida_2013]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4088,7 +4088,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_1FDDD9A133", .name = "geo.stat.fi — AVI-alueet 2021 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2021]",
     .name_ja = "geo.stat.fi — AVI-alueet 2021 (1:4 500 000) [tilastointialueet:avi4500k_2021]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4113,7 +4113,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "U07_Regionalna_dyrekcja_lasow_panstwowych "
       "[ms:U07_Regionalna_dyrekcja_lasow_panstwowych]",
     .name_ja = "mapy.geoportal.gov.pl — U07_Regionalna_dyrekcja_lasow_panstwowych [ms:U07_Regionalna_dyrekcja_lasow_panstwowych]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4136,7 +4136,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_43569FC90A", .name = "service.pdok.nl — toeristengebied_gegeneraliseerd "
       "[gebiedsindelingen:toeristengebied_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — toeristengebied_gegeneraliseerd [gebiedsindelingen:toeristengebied_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4160,7 +4160,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_00F3B83FB5", .name = "service.pdok.nl — Standplaats [bag:standplaats]",
     .name_ja = "service.pdok.nl — Standplaats [bag:standplaats]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4183,7 +4183,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_79CB648320", .name = "data.geopf.fr — ADMINEXPRESS COG 2021 Région "
       "[ADMINEXPRESS-COG.2021:region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2021 Région [ADMINEXPRESS-COG.2021:region]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4206,7 +4206,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_AD68FFCE38", .name = "si.icnf.pt — ardida_2014 [BDG:ardida_2014]",
     .name_ja = "si.icnf.pt — ardida_2014 [BDG:ardida_2014]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4229,7 +4229,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F95477BC61", .name = "geo.stat.fi — AVI-alueet 2022 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2022]",
     .name_ja = "geo.stat.fi — AVI-alueet 2022 (1:1 000 000) [tilastointialueet:avi1000k_2022]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4253,7 +4253,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C58FD9787E", .name = "service.pdok.nl — toeristengebied_labelpoint "
       "[gebiedsindelingen:toeristengebied_labelpoint]",
     .name_ja = "service.pdok.nl — toeristengebied_labelpoint [gebiedsindelingen:toeristengebied_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4278,7 +4278,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2C2010CF59", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Arrondissement "
       "[ADMINEXPRESS-COG.2022:arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Arrondissement [ADMINEXPRESS-COG.2022:arrondissement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4302,7 +4302,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_1833A9AFFF", .name = "geoservizi.regione.liguria.it — (ZLS) Retroporto di La Spezia - "
       "Comune Sarzana [M2744:L10846]",
     .name_ja = "geoservizi.regione.liguria.it — (ZLS) Retroporto di La Spezia - Comune Sarzana [M2744:L10846]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4326,7 +4326,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_503662F0D5", .name = "geo.stat.fi — AVI-alueet 2022 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2022]",
     .name_ja = "geo.stat.fi — AVI-alueet 2022 (1:4 500 000) [tilastointialueet:avi4500k_2022]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4349,7 +4349,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_51B8CC9637", .name = "si.icnf.pt — ardida_2015 [BDG:ardida_2015]",
     .name_ja = "si.icnf.pt — ardida_2015 [BDG:ardida_2015]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4372,7 +4372,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5276B46A33", .name = "service.pdok.nl — toeristengroep_gegeneraliseerd "
       "[gebiedsindelingen:toeristengroep_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — toeristengroep_gegeneraliseerd [gebiedsindelingen:toeristengroep_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4397,7 +4397,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_195284F53F", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Arrondissement municipal "
       "[ADMINEXPRESS-COG.2022:arrondissement_municipal]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Arrondissement municipal [ADMINEXPRESS-COG.2022:arrondissement_municipal]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4422,7 +4422,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_520CC57586", .name = "geo.stat.fi — AVI-alueet 2023 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2023]",
     .name_ja = "geo.stat.fi — AVI-alueet 2023 (1:1 000 000) [tilastointialueet:avi1000k_2023]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4445,7 +4445,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_7D44B467A9", .name = "geoservizi.regione.liguria.it — L10847 [M2744:L10847]",
     .name_ja = "geoservizi.regione.liguria.it — L10847 [M2744:L10847]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4467,7 +4467,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_D6F42FDAAA", .name = "si.icnf.pt — ardida_2016 [BDG:ardida_2016]",
     .name_ja = "si.icnf.pt — ardida_2016 [BDG:ardida_2016]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4490,7 +4490,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_061A527312", .name = "service.pdok.nl — toeristengroep_labelpoint "
       "[gebiedsindelingen:toeristengroep_labelpoint]",
     .name_ja = "service.pdok.nl — toeristengroep_labelpoint [gebiedsindelingen:toeristengroep_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4515,7 +4515,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_260906F832", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Canton "
       "[ADMINEXPRESS-COG.2022:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Canton [ADMINEXPRESS-COG.2022:canton]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4539,7 +4539,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2A0F75B994", .name = "geo.stat.fi — AVI-alueet 2023 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2023]",
     .name_ja = "geo.stat.fi — AVI-alueet 2023 (1:4 500 000) [tilastointialueet:avi4500k_2023]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4563,7 +4563,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F0BA317A04", .name = "service.pdok.nl — veiligheidsregio_gegeneraliseerd "
       "[gebiedsindelingen:veiligheidsregio_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — veiligheidsregio_gegeneraliseerd [gebiedsindelingen:veiligheidsregio_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4589,7 +4589,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "municipal "
       "[ADMINEXPRESS-COG.2022:chef_lieu_arrondissement_municipal]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Chef-lieu Arrondissement municipal [ADMINEXPRESS-COG.2022:chef_lieu_arrondissement_municipal]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4614,7 +4614,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_AD239D4957", .name = "geo.stat.fi — AVI-alueet 2024 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2024]",
     .name_ja = "geo.stat.fi — AVI-alueet 2024 (1:1 000 000) [tilastointialueet:avi1000k_2024]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4637,7 +4637,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_22502A329D", .name = "mapy.geoportal.gov.pl — U06_Nadlesnictwo [ms:U06_Nadlesnictwo]",
     .name_ja = "mapy.geoportal.gov.pl — U06_Nadlesnictwo [ms:U06_Nadlesnictwo]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4658,7 +4658,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_CA985B9EB1", .name = "geoservizi.regione.liguria.it — 0 - 2 [ADSL] [M2704:L10610]",
     .name_ja = "geoservizi.regione.liguria.it — 0 - 2 [ADSL] [M2704:L10610]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4681,7 +4681,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FA37D5FB88", .name = "service.pdok.nl — veiligheidsregio_labelpoint "
       "[gebiedsindelingen:veiligheidsregio_labelpoint]",
     .name_ja = "service.pdok.nl — veiligheidsregio_labelpoint [gebiedsindelingen:veiligheidsregio_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4705,7 +4705,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_84E05E44B3", .name = "si.icnf.pt — ardida_2017 [BDG:ardida_2017]",
     .name_ja = "si.icnf.pt — ardida_2017 [BDG:ardida_2017]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4729,7 +4729,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "ou déléguée "
       "[ADMINEXPRESS-COG.2022:chef_lieu_commune_associee_ou_deleguee]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Chef-lieu Commune associée ou déléguée [ADMINEXPRESS-COG.2022:chef_lieu_commune_associee_ou_deleguee]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4754,7 +4754,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_17204EC591", .name = "geo.stat.fi — AVI-alueet 2024 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2024]",
     .name_ja = "geo.stat.fi — AVI-alueet 2024 (1:4 500 000) [tilastointialueet:avi4500k_2024]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4778,7 +4778,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FF00E809FD", .name = "service.pdok.nl — veiligthuisregio_gegeneraliseerd "
       "[gebiedsindelingen:veiligthuisregio_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — veiligthuisregio_gegeneraliseerd [gebiedsindelingen:veiligthuisregio_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4802,7 +4802,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_A4F031F041", .name = "geoservizi.regione.liguria.it — 10 - 30 [ADSL] [M2704:L10614]",
     .name_ja = "geoservizi.regione.liguria.it — 10 - 30 [ADSL] [M2704:L10614]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4825,7 +4825,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D8C2275B07", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Chef-lieu commune "
       "[ADMINEXPRESS-COG.2022:chef_lieu_commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Chef-lieu commune [ADMINEXPRESS-COG.2022:chef_lieu_commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4849,7 +4849,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_22DA9A8B16", .name = "mapy.geoportal.gov.pl — U05_Izba_administracji_skarbowej "
       "[ms:U05_Izba_administracji_skarbowej]",
     .name_ja = "mapy.geoportal.gov.pl — U05_Izba_administracji_skarbowej [ms:U05_Izba_administracji_skarbowej]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4871,7 +4871,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_49CE284340", .name = "geo.stat.fi — AVI-alueet 2025 (1:1 000 000) "
       "[tilastointialueet:avi1000k_2025]",
     .name_ja = "geo.stat.fi — AVI-alueet 2025 (1:1 000 000) [tilastointialueet:avi1000k_2025]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4895,7 +4895,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B59F35B313", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Collectivité territoriale "
       "[ADMINEXPRESS-COG.2022:collectivite_territoriale]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Collectivité territoriale [ADMINEXPRESS-COG.2022:collectivite_territoriale]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4920,7 +4920,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D4B2D60184", .name = "service.pdok.nl — veiligthuisregio_labelpoint "
       "[gebiedsindelingen:veiligthuisregio_labelpoint]",
     .name_ja = "service.pdok.nl — veiligthuisregio_labelpoint [gebiedsindelingen:veiligthuisregio_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4945,7 +4945,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_180B640E3D", .name = "geoservizi.regione.liguria.it — 10 - 30 [FTTC-100] "
       "[M2704:L10615]",
     .name_ja = "geoservizi.regione.liguria.it — 10 - 30 [FTTC-100] [M2704:L10615]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4968,7 +4968,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_3769066242", .name = "si.icnf.pt — ardida_2018 [BDG:ardida_2018]",
     .name_ja = "si.icnf.pt — ardida_2018 [BDG:ardida_2018]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4991,7 +4991,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C35380EA3F", .name = "geo.stat.fi — AVI-alueet 2025 (1:4 500 000) "
       "[tilastointialueet:avi4500k_2025]",
     .name_ja = "geo.stat.fi — AVI-alueet 2025 (1:4 500 000) [tilastointialueet:avi4500k_2025]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5015,7 +5015,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F70D628192", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Commune "
       "[ADMINEXPRESS-COG.2022:commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Commune [ADMINEXPRESS-COG.2022:commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5039,7 +5039,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_3F3B927082", .name = "service.pdok.nl — wijk_gegeneraliseerd "
       "[gebiedsindelingen:wijk_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — wijk_gegeneraliseerd [gebiedsindelingen:wijk_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5063,7 +5063,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E8B4E79F46", .name = "geoservizi.regione.liguria.it — 10 - 30 [FTTC-200] "
       "[M2704:L10616]",
     .name_ja = "geoservizi.regione.liguria.it — 10 - 30 [FTTC-200] [M2704:L10616]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5087,7 +5087,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_AF5420D3A9", .name = "geo.stat.fi — ELY-alueet (1:1 000 000) "
       "[tilastointialueet:ely1000k]",
     .name_ja = "geo.stat.fi — ELY-alueet (1:1 000 000) [tilastointialueet:ely1000k]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5111,7 +5111,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_8730B7F48C", .name = "si.icnf.pt — area_ocorrencia_roazes_sado "
       "[snimar:area_ocorrencia_roazes_sado]",
     .name_ja = "si.icnf.pt — area_ocorrencia_roazes_sado [snimar:area_ocorrencia_roazes_sado]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5133,7 +5133,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4566704F06", .name = "mapy.geoportal.gov.pl — U04_Urzad_celno-skarbowy "
       "[ms:U04_Urzad_celno-skarbowy]",
     .name_ja = "mapy.geoportal.gov.pl — U04_Urzad_celno-skarbowy [ms:U04_Urzad_celno-skarbowy]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5155,7 +5155,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B1C251CB8B", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Commune associée ou "
       "déléguée [ADMINEXPRESS-COG.2022:commune_associee_ou_deleguee]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Commune associée ou déléguée [ADMINEXPRESS-COG.2022:commune_associee_ou_deleguee]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5180,7 +5180,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5C36E3DDC3", .name = "service.pdok.nl — wijk_labelpoint "
       "[gebiedsindelingen:wijk_labelpoint]",
     .name_ja = "service.pdok.nl — wijk_labelpoint [gebiedsindelingen:wijk_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5204,7 +5204,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A4D6D173CB", .name = "geo.stat.fi — ELY-alueet (1:4 500 000) "
       "[tilastointialueet:ely4500k]",
     .name_ja = "geo.stat.fi — ELY-alueet (1:4 500 000) [tilastointialueet:ely4500k]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5227,7 +5227,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_B22E075574", .name = "si.icnf.pt — arv_class [BDG:arv_class]",
     .name_ja = "si.icnf.pt — arv_class [BDG:arv_class]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5250,7 +5250,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_187CB14C3C", .name = "geoservizi.regione.liguria.it — 100 - 150 [FTTC-100] "
       "[M2704:L10621]",
     .name_ja = "geoservizi.regione.liguria.it — 100 - 150 [FTTC-100] [M2704:L10621]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5274,7 +5274,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5B8458D57B", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Département "
       "[ADMINEXPRESS-COG.2022:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Département [ADMINEXPRESS-COG.2022:departement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5298,7 +5298,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_252A22B46E", .name = "service.pdok.nl — wijk_niet_gegeneraliseerd "
       "[gebiedsindelingen:wijk_niet_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — wijk_niet_gegeneraliseerd [gebiedsindelingen:wijk_niet_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5323,7 +5323,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_ADB4F7966B", .name = "geo.stat.fi — ELY-alueet 2013 (1:1 000 000) "
       "[tilastointialueet:ely1000k_2013]",
     .name_ja = "geo.stat.fi — ELY-alueet 2013 (1:1 000 000) [tilastointialueet:ely1000k_2013]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5347,7 +5347,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_6540AD6963", .name = "mapy.geoportal.gov.pl — U03_Wyspecjalizowany_urzad_skarbowy "
       "[ms:U03_Wyspecjalizowany_urzad_skarbowy]",
     .name_ja = "mapy.geoportal.gov.pl — U03_Wyspecjalizowany_urzad_skarbowy [ms:U03_Wyspecjalizowany_urzad_skarbowy]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5369,7 +5369,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_529A7D43E6", .name = "geoservizi.regione.liguria.it — 100 - 150 [FTTC-200] "
       "[M2704:L10622]",
     .name_ja = "geoservizi.regione.liguria.it — 100 - 150 [FTTC-200] [M2704:L10622]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5393,7 +5393,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_EE758AA101", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 EPCI "
       "[ADMINEXPRESS-COG.2022:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 EPCI [ADMINEXPRESS-COG.2022:epci]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5417,7 +5417,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2EB18476E9", .name = "geo.stat.fi — ELY-alueet 2013 (1:4 500 000) "
       "[tilastointialueet:ely4500k_2013]",
     .name_ja = "geo.stat.fi — ELY-alueet 2013 (1:4 500 000) [tilastointialueet:ely4500k_2013]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5441,7 +5441,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_7119E3FBCA", .name = "service.pdok.nl — zorgkantoorregio_gegeneraliseerd "
       "[gebiedsindelingen:zorgkantoorregio_gegeneraliseerd]",
     .name_ja = "service.pdok.nl — zorgkantoorregio_gegeneraliseerd [gebiedsindelingen:zorgkantoorregio_gegeneraliseerd]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5466,7 +5466,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0A33F45C72", .name = "si.icnf.pt — atlas_anfibios_repteis_obs "
       "[BDG:atlas_anfibios_repteis_obs]",
     .name_ja = "si.icnf.pt — atlas_anfibios_repteis_obs [BDG:atlas_anfibios_repteis_obs]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5491,7 +5491,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "DELL'ADEGUAMENTO E DELLO SVILUPPO DELLE ZONE RURALI "
       "[M2165:L7886]",
     .name_ja = "geoservizi.regione.liguria.it — 13 - SETT.PROD.: PROMOZIONE DELL'ADEGUAMENTO E DELLO SVILUPPO DELLE ZONE RURALI [M2165:L7886]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5515,7 +5515,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0BC172620E", .name = "data.geopf.fr — ADMINEXPRESS COG 2022 Région "
       "[ADMINEXPRESS-COG.2022:region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2022 Région [ADMINEXPRESS-COG.2022:region]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5539,7 +5539,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_ADAFBF8420", .name = "geo.stat.fi — ELY-alueet 2014 (1:1 000 000) "
       "[tilastointialueet:ely1000k_2014]",
     .name_ja = "geo.stat.fi — ELY-alueet 2014 (1:1 000 000) [tilastointialueet:ely1000k_2014]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5563,7 +5563,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_8B23D2140D", .name = "service.pdok.nl — zorgkantoorregio_labelpoint "
       "[gebiedsindelingen:zorgkantoorregio_labelpoint]",
     .name_ja = "service.pdok.nl — zorgkantoorregio_labelpoint [gebiedsindelingen:zorgkantoorregio_labelpoint]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5589,7 +5589,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "DELL'ADEGUAMENTO E DELLO SVILUPPO DELLE ZONE RURALI "
       "[M2195:L7960]",
     .name_ja = "geoservizi.regione.liguria.it — 13 - SETT.PROD.: PROMOZIONE DELL'ADEGUAMENTO E DELLO SVILUPPO DELLE ZONE RURALI [M2195:L7960]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5613,7 +5613,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_011A725CBF", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 Arrondissement "
       "[ADMINEXPRESS-COG.2023:arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Arrondissement [ADMINEXPRESS-COG.2023:arrondissement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5637,7 +5637,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_883A2B0C3C", .name = "geo.stat.fi — ELY-alueet 2014 (1:4 500 000) "
       "[tilastointialueet:ely4500k_2014]",
     .name_ja = "geo.stat.fi — ELY-alueet 2014 (1:4 500 000) [tilastointialueet:ely4500k_2014]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5661,7 +5661,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_56AC0DF11C", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 Arrondissement municipal "
       "[ADMINEXPRESS-COG.2023:arrondissement_municipal]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Arrondissement municipal [ADMINEXPRESS-COG.2023:arrondissement_municipal]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5686,7 +5686,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_1157C71704", .name = "geo.stat.fi — ELY-alueet 2015 (1:1 000 000) "
       "[tilastointialueet:ely1000k_2015]",
     .name_ja = "geo.stat.fi — ELY-alueet 2015 (1:1 000 000) [tilastointialueet:ely1000k_2015]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5710,7 +5710,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_99793CBDA3", .name = "geoservizi.regione.liguria.it — 131 - Aree Estrattive "
       "[M1921:L6333]",
     .name_ja = "geoservizi.regione.liguria.it — 131 - Aree Estrattive [M1921:L6333]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5733,7 +5733,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_2D1EAE3735", .name = "si.icnf.pt — atlas_aves_sp_dir [BDG:atlas_aves_sp_dir]",
     .name_ja = "si.icnf.pt — atlas_aves_sp_dir [BDG:atlas_aves_sp_dir]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5757,7 +5757,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_321441C9D1", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 Canton "
       "[ADMINEXPRESS-COG.2023:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Canton [ADMINEXPRESS-COG.2023:canton]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5781,7 +5781,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_1216ED6E1F", .name = "mapy.geoportal.gov.pl — U02_Urzad_skarbowy "
       "[ms:U02_Urzad_skarbowy]",
     .name_ja = "mapy.geoportal.gov.pl — U02_Urzad_skarbowy [ms:U02_Urzad_skarbowy]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5802,7 +5802,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_A54207D0CD", .name = "geoservizi.regione.liguria.it — 132 - Discariche [M1921:L6332]",
     .name_ja = "geoservizi.regione.liguria.it — 132 - Discariche [M1921:L6332]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5825,7 +5825,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_03971A6755", .name = "geo.stat.fi — ELY-alueet 2015 (1:4 500 000) "
       "[tilastointialueet:ely4500k_2015]",
     .name_ja = "geo.stat.fi — ELY-alueet 2015 (1:4 500 000) [tilastointialueet:ely4500k_2015]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5848,7 +5848,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_505155E31A", .name = "si.icnf.pt — atlas_aves_sp_geral [BDG:atlas_aves_sp_geral]",
     .name_ja = "si.icnf.pt — atlas_aves_sp_geral [BDG:atlas_aves_sp_geral]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5873,7 +5873,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "municipal "
       "[ADMINEXPRESS-COG.2023:chef_lieu_arrondissement_municipal]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Chef-lieu Arrondissement municipal [ADMINEXPRESS-COG.2023:chef_lieu_arrondissement_municipal]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5898,7 +5898,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E129B10A56", .name = "geo.stat.fi — ELY-alueet 2016 (1:1 000 000) "
       "[tilastointialueet:ely1000k_2016]",
     .name_ja = "geo.stat.fi — ELY-alueet 2016 (1:1 000 000) [tilastointialueet:ely1000k_2016]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5922,7 +5922,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_82C21FDB0C", .name = "geoservizi.regione.liguria.it — 1331 - Cantieri- Spazi in "
       "costruzione e scavi [M1921:L6331]",
     .name_ja = "geoservizi.regione.liguria.it — 1331 - Cantieri- Spazi in costruzione e scavi [M1921:L6331]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5947,7 +5947,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "ou déléguée "
       "[ADMINEXPRESS-COG.2023:chef_lieu_commune_associee_ou_deleguee]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Chef-lieu Commune associée ou déléguée [ADMINEXPRESS-COG.2023:chef_lieu_commune_associee_ou_deleguee]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5971,7 +5971,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_B6CBD9FA90", .name = "si.icnf.pt — atlas_bivalves_2007 [BDG:atlas_bivalves_2007]",
     .name_ja = "si.icnf.pt — atlas_bivalves_2007 [BDG:atlas_bivalves_2007]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5995,7 +5995,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2ADCA1DB74", .name = "geo.stat.fi — ELY-alueet 2016 (1:4 500 000) "
       "[tilastointialueet:ely4500k_2016]",
     .name_ja = "geo.stat.fi — ELY-alueet 2016 (1:4 500 000) [tilastointialueet:ely4500k_2016]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6019,7 +6019,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_EFBFE0377D", .name = "mapy.geoportal.gov.pl — U01_Archiwum_panstwowe "
       "[ms:U01_Archiwum_panstwowe]",
     .name_ja = "mapy.geoportal.gov.pl — U01_Archiwum_panstwowe [ms:U01_Archiwum_panstwowe]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6041,7 +6041,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4E3ADF690C", .name = "geoservizi.regione.liguria.it — 1332 - Suoli rimaneggiati e "
       "artefatti [M1921:L6330]",
     .name_ja = "geoservizi.regione.liguria.it — 1332 - Suoli rimaneggiati e artefatti [M1921:L6330]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6065,7 +6065,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_6E1BE6634B", .name = "geoservizi.regione.liguria.it — 141 - Aree Verdi Urbane "
       "[M1921:L6329]",
     .name_ja = "geoservizi.regione.liguria.it — 141 - Aree Verdi Urbane [M1921:L6329]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6089,7 +6089,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4665CFE0A6", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 Chef-lieu commune "
       "[ADMINEXPRESS-COG.2023:chef_lieu_commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Chef-lieu commune [ADMINEXPRESS-COG.2023:chef_lieu_commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6113,7 +6113,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0272A25156", .name = "geo.stat.fi — ELY-alueet 2017 (1:1 000 000) "
       "[tilastointialueet:ely1000k_2017]",
     .name_ja = "geo.stat.fi — ELY-alueet 2017 (1:1 000 000) [tilastointialueet:ely1000k_2017]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6137,7 +6137,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_6F4D384695", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 Collectivité territoriale "
       "[ADMINEXPRESS-COG.2023:collectivite_territoriale]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Collectivité territoriale [ADMINEXPRESS-COG.2023:collectivite_territoriale]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6161,7 +6161,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_0B19A7EF13", .name = "geoservizi.regione.liguria.it — L6328 [M1921:L6328]",
     .name_ja = "geoservizi.regione.liguria.it — L6328 [M1921:L6328]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6184,7 +6184,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_BB6AD9537C", .name = "geo.stat.fi — ELY-alueet 2017 (1:4 500 000) "
       "[tilastointialueet:ely4500k_2017]",
     .name_ja = "geo.stat.fi — ELY-alueet 2017 (1:4 500 000) [tilastointialueet:ely4500k_2017]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6207,7 +6207,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_8C5CD63DB7", .name = "si.icnf.pt — bd_anilhagem [snimar:bd_anilhagem]",
     .name_ja = "si.icnf.pt — bd_anilhagem [snimar:bd_anilhagem]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6228,7 +6228,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E287052DA1", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 Commune "
       "[ADMINEXPRESS-COG.2023:commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Commune [ADMINEXPRESS-COG.2023:commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6252,7 +6252,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9DA7C82255", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 Commune associée ou "
       "déléguée [ADMINEXPRESS-COG.2023:commune_associee_ou_deleguee]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Commune associée ou déléguée [ADMINEXPRESS-COG.2023:commune_associee_ou_deleguee]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6277,7 +6277,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B2B4AE8D20", .name = "geo.stat.fi — ELY-alueet 2018 (1:1 000 000) "
       "[tilastointialueet:ely1000k_2018]",
     .name_ja = "geo.stat.fi — ELY-alueet 2018 (1:1 000 000) [tilastointialueet:ely1000k_2018]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6301,7 +6301,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5912C35072", .name = "geoservizi.regione.liguria.it — 1423 - Parchi di Divertimento e "
       "Aree Attrezzate [M1921:L6327]",
     .name_ja = "geoservizi.regione.liguria.it — 1423 - Parchi di Divertimento e Aree Attrezzate [M1921:L6327]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6324,7 +6324,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_1850063E8B", .name = "si.icnf.pt — bd_dist_anilhagem [snimar:bd_dist_anilhagem]",
     .name_ja = "si.icnf.pt — bd_dist_anilhagem [snimar:bd_dist_anilhagem]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6346,7 +6346,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9FF6DD5AB0", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 Département "
       "[ADMINEXPRESS-COG.2023:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Département [ADMINEXPRESS-COG.2023:departement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6370,7 +6370,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A08420AF16", .name = "geoservizi.regione.liguria.it — 1427 - Aree Archeologiche - "
       "Grandi aree aperte al pubblico [M1921:L6326]",
     .name_ja = "geoservizi.regione.liguria.it — 1427 - Aree Archeologiche - Grandi aree aperte al pubblico [M1921:L6326]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6394,7 +6394,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_347A49C466", .name = "geo.stat.fi — ELY-alueet 2018 (1:4 500 000) "
       "[tilastointialueet:ely4500k_2018]",
     .name_ja = "geo.stat.fi — ELY-alueet 2018 (1:4 500 000) [tilastointialueet:ely4500k_2018]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6418,7 +6418,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_327D9C006C", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 EPCI "
       "[ADMINEXPRESS-COG.2023:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 EPCI [ADMINEXPRESS-COG.2023:epci]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6442,7 +6442,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_485D0BE71B", .name = "geoservizi.regione.liguria.it — 150 - 200 [FTTC-200] "
       "[M2704:L10623]",
     .name_ja = "geoservizi.regione.liguria.it — 150 - 200 [FTTC-200] [M2704:L10623]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6465,7 +6465,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_BC77F1DB75", .name = "si.icnf.pt — biogeneticas_snimar [snimar:biogeneticas_snimar]",
     .name_ja = "si.icnf.pt — biogeneticas_snimar [snimar:biogeneticas_snimar]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6487,7 +6487,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E0DDBB0B82", .name = "geo.stat.fi — ELY-alueet 2019 (1:1 000 000) "
       "[tilastointialueet:ely1000k_2019]",
     .name_ja = "geo.stat.fi — ELY-alueet 2019 (1:1 000 000) [tilastointialueet:ely1000k_2019]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6511,7 +6511,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C46860EDF2", .name = "data.geopf.fr — ADMINEXPRESS COG 2023 Région "
       "[ADMINEXPRESS-COG.2023:region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2023 Région [ADMINEXPRESS-COG.2023:region]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6535,7 +6535,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5CF0AA3BDD", .name = "geoservizi.regione.liguria.it — 17 - SETT. PRODUTTIVO: TURISMO "
       "[M2165:L7890]",
     .name_ja = "geoservizi.regione.liguria.it — 17 - SETT. PRODUTTIVO: TURISMO [M2165:L7890]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6559,7 +6559,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_539FE14C87", .name = "geo.stat.fi — ELY-alueet 2019 (1:4 500 000) "
       "[tilastointialueet:ely4500k_2019]",
     .name_ja = "geo.stat.fi — ELY-alueet 2019 (1:4 500 000) [tilastointialueet:ely4500k_2019]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6583,7 +6583,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B2A321E98F", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Arrondissement "
       "[ADMINEXPRESS-COG.2024:arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Arrondissement [ADMINEXPRESS-COG.2024:arrondissement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6606,7 +6606,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_239D47E0C9", .name = "si.icnf.pt — biosfera [BDG:biosfera]",
     .name_ja = "si.icnf.pt — biosfera [BDG:biosfera]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6629,7 +6629,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_1444BAA68C", .name = "geoservizi.regione.liguria.it — 17 - SETT. PRODUTTIVO: TURISMO "
       "[M2195:L7961]",
     .name_ja = "geoservizi.regione.liguria.it — 17 - SETT. PRODUTTIVO: TURISMO [M2195:L7961]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6653,7 +6653,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C1BC125497", .name = "geo.stat.fi — ELY-alueet 2020 (1:1 000 000) "
       "[tilastointialueet:ely1000k_2020]",
     .name_ja = "geo.stat.fi — ELY-alueet 2020 (1:1 000 000) [tilastointialueet:ely1000k_2020]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6677,7 +6677,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_66E404BDF4", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Arrondissement municipal "
       "[ADMINEXPRESS-COG.2024:arrondissement_municipal]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Arrondissement municipal [ADMINEXPRESS-COG.2024:arrondissement_municipal]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6702,7 +6702,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_790CE142C4", .name = "geoservizi.regione.liguria.it — 171/AMB - INVEST.MATERIALI "
       "TURISMO/AMB [M2165:L7925]",
     .name_ja = "geoservizi.regione.liguria.it — 171/AMB - INVEST.MATERIALI TURISMO/AMB [M2165:L7925]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6726,7 +6726,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FF80716CDC", .name = "geo.stat.fi — ELY-alueet 2020 (1:4 500 000) "
       "[tilastointialueet:ely4500k_2020]",
     .name_ja = "geo.stat.fi — ELY-alueet 2020 (1:4 500 000) [tilastointialueet:ely4500k_2020]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6750,7 +6750,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_34FC0BA6F8", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Canton "
       "[ADMINEXPRESS-COG.2024:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Canton [ADMINEXPRESS-COG.2024:canton]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6773,7 +6773,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_264C732EE8", .name = "si.icnf.pt — biosfera_snimar [snimar:biosfera_snimar]",
     .name_ja = "si.icnf.pt — biosfera_snimar [snimar:biosfera_snimar]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6796,7 +6796,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "municipal "
       "[ADMINEXPRESS-COG.2024:chef_lieu_arrondissement_municipal]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Chef-lieu Arrondissement municipal [ADMINEXPRESS-COG.2024:chef_lieu_arrondissement_municipal]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6821,7 +6821,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2553FACA94", .name = "geo.stat.fi — ELY-alueet 2021 (1:1 000 000) "
       "[tilastointialueet:ely1000k_2021]",
     .name_ja = "geo.stat.fi — ELY-alueet 2021 (1:1 000 000) [tilastointialueet:ely1000k_2021]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6846,7 +6846,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "K13_Obszar_dzialania_szefa_obrony_cywilnej_gminy "
       "[ms:K13_Obszar_dzialania_szefa_obrony_cywilnej_gminy]",
     .name_ja = "mapy.geoportal.gov.pl — K13_Obszar_dzialania_szefa_obrony_cywilnej_gminy [ms:K13_Obszar_dzialania_szefa_obrony_cywilnej_gminy]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6871,7 +6871,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "ou déléguée "
       "[ADMINEXPRESS-COG.2024:chef_lieu_commune_associee_ou_deleguee]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Chef-lieu Commune associée ou déléguée [ADMINEXPRESS-COG.2024:chef_lieu_commune_associee_ou_deleguee]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6896,7 +6896,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_46229E7A57", .name = "si.icnf.pt — biosfera_zonamento_snimar "
       "[snimar:biosfera_zonamento_snimar]",
     .name_ja = "si.icnf.pt — biosfera_zonamento_snimar [snimar:biosfera_zonamento_snimar]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6918,7 +6918,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F76D42DD1A", .name = "geo.stat.fi — ELY-alueet 2021 (1:4 500 000) "
       "[tilastointialueet:ely4500k_2021]",
     .name_ja = "geo.stat.fi — ELY-alueet 2021 (1:4 500 000) [tilastointialueet:ely4500k_2021]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6942,7 +6942,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FA706FD989", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Chef-lieu commune "
       "[ADMINEXPRESS-COG.2024:chef_lieu_commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Chef-lieu commune [ADMINEXPRESS-COG.2024:chef_lieu_commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6966,7 +6966,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C0E3F34F22", .name = "geoservizi.regione.liguria.it — 18 - RICERCA, SVILUPPO "
       "TECNOLOGICO E INNOVAZIONE (RSTI) [M2165:L7891]",
     .name_ja = "geoservizi.regione.liguria.it — 18 - RICERCA, SVILUPPO TECNOLOGICO E INNOVAZIONE (RSTI) [M2165:L7891]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6990,7 +6990,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2088B09047", .name = "geo.stat.fi — ELY-alueet 2022 (1:1 000 000) "
       "[tilastointialueet:ely1000k_2022]",
     .name_ja = "geo.stat.fi — ELY-alueet 2022 (1:1 000 000) [tilastointialueet:ely1000k_2022]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7014,7 +7014,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_51F197375B", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Collectivité territoriale "
       "[ADMINEXPRESS-COG.2024:collectivite_territoriale]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Collectivité territoriale [ADMINEXPRESS-COG.2024:collectivite_territoriale]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7038,7 +7038,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_7C907A1E2D", .name = "si.icnf.pt — concelhos [BDG:concelhos]",
     .name_ja = "si.icnf.pt — concelhos [BDG:concelhos]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7061,7 +7061,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B375CB0B32", .name = "geoservizi.regione.liguria.it — 18 - RICERCA, SVILUPPO "
       "TECNOLOGICO E INNOVAZIONE (RSTI) [M2195:L7962]",
     .name_ja = "geoservizi.regione.liguria.it — 18 - RICERCA, SVILUPPO TECNOLOGICO E INNOVAZIONE (RSTI) [M2195:L7962]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7085,7 +7085,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B78A50C1A1", .name = "geo.stat.fi — ELY-alueet 2022 (1:4 500 000) "
       "[tilastointialueet:ely4500k_2022]",
     .name_ja = "geo.stat.fi — ELY-alueet 2022 (1:4 500 000) [tilastointialueet:ely4500k_2022]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7109,7 +7109,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_90DFC3E985", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Commune "
       "[ADMINEXPRESS-COG.2024:commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Commune [ADMINEXPRESS-COG.2024:commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7132,7 +7132,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_35CFFD3091", .name = "geoservizi.regione.liguria.it — 2 - 10 [ADSL] [M2704:L10611]",
     .name_ja = "geoservizi.regione.liguria.it — 2 - 10 [ADSL] [M2704:L10611]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7155,7 +7155,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D8BBDB99CA", .name = "geo.stat.fi — ELY-alueet 2023 (1:1 000 000) "
       "[tilastointialueet:ely1000k_2023]",
     .name_ja = "geo.stat.fi — ELY-alueet 2023 (1:1 000 000) [tilastointialueet:ely1000k_2023]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7180,7 +7180,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "K12_Obszar_dzialania_szefa_obrony_cywilnej_powiatu "
       "[ms:K12_Obszar_dzialania_szefa_obrony_cywilnej_powiatu]",
     .name_ja = "mapy.geoportal.gov.pl — K12_Obszar_dzialania_szefa_obrony_cywilnej_powiatu [ms:K12_Obszar_dzialania_szefa_obrony_cywilnej_powiatu]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7203,7 +7203,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_41AD781BB7", .name = "geoservizi.regione.liguria.it — 2 - 10 [FTTC-100] [M2704:L10612]",
     .name_ja = "geoservizi.regione.liguria.it — 2 - 10 [FTTC-100] [M2704:L10612]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7227,7 +7227,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E0D5EB81AC", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Commune associée ou "
       "déléguée [ADMINEXPRESS-COG.2024:commune_associee_ou_deleguee]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Commune associée ou déléguée [ADMINEXPRESS-COG.2024:commune_associee_ou_deleguee]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7252,7 +7252,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_BC990258BF", .name = "geo.stat.fi — ELY-alueet 2023 (1:4 500 000) "
       "[tilastointialueet:ely4500k_2023]",
     .name_ja = "geo.stat.fi — ELY-alueet 2023 (1:4 500 000) [tilastointialueet:ely4500k_2023]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7275,7 +7275,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_7F12EBD754", .name = "si.icnf.pt — concelhos_label [SOS_VESPA:concelhos_label]",
     .name_ja = "si.icnf.pt — concelhos_label [SOS_VESPA:concelhos_label]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7297,7 +7297,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5BD2296B50", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Département "
       "[ADMINEXPRESS-COG.2024:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Département [ADMINEXPRESS-COG.2024:departement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7321,7 +7321,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_86A767A1CE", .name = "geo.stat.fi — ELY-alueet 2024 (1:1 000 000) "
       "[tilastointialueet:ely1000k_2024]",
     .name_ja = "geo.stat.fi — ELY-alueet 2024 (1:1 000 000) [tilastointialueet:ely1000k_2024]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7344,7 +7344,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_4E0CC5B66E", .name = "geoservizi.regione.liguria.it — 2 - 10 [FTTC-200] [M2704:L10613]",
     .name_ja = "geoservizi.regione.liguria.it — 2 - 10 [FTTC-200] [M2704:L10613]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7369,7 +7369,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "K11_Obszar_dzialania_szefa_obrony_cywilnej_wojewodztwa "
       "[ms:K11_Obszar_dzialania_szefa_obrony_cywilnej_wojewodztwa]",
     .name_ja = "mapy.geoportal.gov.pl — K11_Obszar_dzialania_szefa_obrony_cywilnej_wojewodztwa [ms:K11_Obszar_dzialania_szefa_obrony_cywilnej_wojewodztwa]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7393,7 +7393,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_327656C3B7", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 EPCI "
       "[ADMINEXPRESS-COG.2024:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 EPCI [ADMINEXPRESS-COG.2024:epci]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7417,7 +7417,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_82DB6C0552", .name = "geo.stat.fi — ELY-alueet 2024 (1:4 500 000) "
       "[tilastointialueet:ely4500k_2024]",
     .name_ja = "geo.stat.fi — ELY-alueet 2024 (1:4 500 000) [tilastointialueet:ely4500k_2024]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7440,7 +7440,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_C74DFBB489", .name = "si.icnf.pt — concelhos_velutina [SOS_VESPA:lyr_concelhos]",
     .name_ja = "si.icnf.pt — concelhos_velutina [SOS_VESPA:lyr_concelhos]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7462,7 +7462,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C6663530A1", .name = "geo.stat.fi — ELY-alueet 2025 (1:1 000 000) "
       "[tilastointialueet:ely1000k_2025]",
     .name_ja = "geo.stat.fi — ELY-alueet 2025 (1:1 000 000) [tilastointialueet:ely1000k_2025]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7486,7 +7486,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_7CACC4B536", .name = "data.geopf.fr — ADMINEXPRESS COG 2024 Région "
       "[ADMINEXPRESS-COG.2024:region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2024 Région [ADMINEXPRESS-COG.2024:region]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7510,7 +7510,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F90EC462FB", .name = "mapy.geoportal.gov.pl — K10_Dywizjon_strazy_granicznej "
       "[ms:K10_Dywizjon_strazy_granicznej]",
     .name_ja = "mapy.geoportal.gov.pl — K10_Dywizjon_strazy_granicznej [ms:K10_Dywizjon_strazy_granicznej]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7532,7 +7532,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D5D02AA5DD", .name = "geoservizi.regione.liguria.it — 200 - 300 [FTTC-200] "
       "[M2704:L10624]",
     .name_ja = "geoservizi.regione.liguria.it — 200 - 300 [FTTC-200] [M2704:L10624]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7556,7 +7556,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_214B08B6DA", .name = "geo.stat.fi — ELY-alueet 2025 (1:4 500 000) "
       "[tilastointialueet:ely4500k_2025]",
     .name_ja = "geo.stat.fi — ELY-alueet 2025 (1:4 500 000) [tilastointialueet:ely4500k_2025]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7580,7 +7580,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FBE1DB35A5", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Arrondissement "
       "[ADMINEXPRESS-COG.2025:arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Arrondissement [ADMINEXPRESS-COG.2025:arrondissement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7604,7 +7604,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_783EDAC6A9", .name = "si.icnf.pt — cont_anatideos_1992_1993_snimar "
       "[snimar:cont_anatideos_92_93]",
     .name_ja = "si.icnf.pt — cont_anatideos_1992_1993_snimar [snimar:cont_anatideos_92_93]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7626,7 +7626,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0BDD862EE2", .name = "geoservizi.regione.liguria.it — 2011 - Riprese aeree alluvione "
       "provincia di La Spezia [M1506:L3862]",
     .name_ja = "geoservizi.regione.liguria.it — 2011 - Riprese aeree alluvione provincia di La Spezia [M1506:L3862]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7650,7 +7650,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B52F7E88CA", .name = "geo.stat.fi — Elinvoimakeskukset (1:1 000 000) "
       "[tilastointialueet:elinvoimakeskus1000k]",
     .name_ja = "geo.stat.fi — Elinvoimakeskukset (1:1 000 000) [tilastointialueet:elinvoimakeskus1000k]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7674,7 +7674,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4378D36E8D", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Arrondissement municipal "
       "[ADMINEXPRESS-COG.2025:arrondissement_municipal]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Arrondissement municipal [ADMINEXPRESS-COG.2025:arrondissement_municipal]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7699,7 +7699,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_01F936CF61", .name = "geoservizi.regione.liguria.it — 2013 - Distribuzione degli "
       "incidenti [M2239:L8203]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Distribuzione degli incidenti [M2239:L8203]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7723,7 +7723,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A1D147A76B", .name = "geo.stat.fi — Elinvoimakeskukset (1:4 500 000) "
       "[tilastointialueet:elinvoimakeskus4500k]",
     .name_ja = "geo.stat.fi — Elinvoimakeskukset (1:4 500 000) [tilastointialueet:elinvoimakeskus4500k]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7747,7 +7747,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B5D00F7FE5", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Canton "
       "[ADMINEXPRESS-COG.2025:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Canton [ADMINEXPRESS-COG.2025:canton]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7771,7 +7771,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E1BAFE398C", .name = "mapy.geoportal.gov.pl — K09_Placowka_strazy_granicznej "
       "[ms:K09_Placowka_strazy_granicznej]",
     .name_ja = "mapy.geoportal.gov.pl — K09_Placowka_strazy_granicznej [ms:K09_Placowka_strazy_granicznej]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7792,7 +7792,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_3E5310E218", .name = "si.icnf.pt — cont_aquaticas [snimar:cont_aquaticas]",
     .name_ja = "si.icnf.pt — cont_aquaticas [snimar:cont_aquaticas]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7814,7 +7814,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9FF8A4BF36", .name = "geoservizi.regione.liguria.it — 2013 - Distribuzione degli "
       "incidenti [M2590:L10110]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Distribuzione degli incidenti [M2590:L10110]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7838,7 +7838,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E92CEAB60A", .name = "geo.stat.fi — Elinvoimakeskukset 2026 (1:1 000 000) "
       "[tilastointialueet:elinvoimakeskus1000k_2026]",
     .name_ja = "geo.stat.fi — Elinvoimakeskukset 2026 (1:1 000 000) [tilastointialueet:elinvoimakeskus1000k_2026]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7863,7 +7863,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_701E495D60", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Chef-lieu commune "
       "[ADMINEXPRESS-COG.2025:chef_lieu_de_commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Chef-lieu commune [ADMINEXPRESS-COG.2025:chef_lieu_de_commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7888,7 +7888,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_652DADE22A", .name = "geo.stat.fi — Elinvoimakeskukset 2026 (1:4 500 000) "
       "[tilastointialueet:elinvoimakeskus4500k_2026]",
     .name_ja = "geo.stat.fi — Elinvoimakeskukset 2026 (1:4 500 000) [tilastointialueet:elinvoimakeskus4500k_2026]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7913,7 +7913,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A22D1DB80E", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti avvenuti alla "
       "sera del fine settimana [M2239:L8201]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti avvenuti alla sera del fine settimana [M2239:L8201]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7937,7 +7937,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_22EED1FA12", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Chef-lieu d'Arrondissement "
       "[ADMINEXPRESS-COG.2025:chef_lieu_d_arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Chef-lieu d'Arrondissement [ADMINEXPRESS-COG.2025:chef_lieu_d_arrondissement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7961,7 +7961,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_DB5BF2A144", .name = "si.icnf.pt — cont_estuarios [snimar:cont_estuarios]",
     .name_ja = "si.icnf.pt — cont_estuarios [snimar:cont_estuarios]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7983,7 +7983,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_7B7AABDED0", .name = "mapy.geoportal.gov.pl — K08_Oddzial_strazy_granicznej "
       "[ms:K08_Oddzial_strazy_granicznej]",
     .name_ja = "mapy.geoportal.gov.pl — K08_Oddzial_strazy_granicznej [ms:K08_Oddzial_strazy_granicznej]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8005,7 +8005,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_78707F5A29", .name = "geo.stat.fi — Hyvinvointialueet (1:1 000 000) "
       "[tilastointialueet:hyvinvointialue1000k]",
     .name_ja = "geo.stat.fi — Hyvinvointialueet (1:1 000 000) [tilastointialueet:hyvinvointialue1000k]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8030,7 +8030,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "municipal "
       "[ADMINEXPRESS-COG.2025:chef_lieu_d_arrondissement_municipal]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Chef-lieu d'Arrondissement municipal [ADMINEXPRESS-COG.2025:chef_lieu_d_arrondissement_municipal]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8056,7 +8056,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "territoriale "
       "[ADMINEXPRESS-COG.2025:chef_lieu_de_collectivite_territoriale]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Chef-lieu de Collectivité territoriale [ADMINEXPRESS-COG.2025:chef_lieu_de_collectivite_territoriale]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8081,7 +8081,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_7A831EEDB1", .name = "geo.stat.fi — Hyvinvointialueet (1:4 500 000) "
       "[tilastointialueet:hyvinvointialue4500k]",
     .name_ja = "geo.stat.fi — Hyvinvointialueet (1:4 500 000) [tilastointialueet:hyvinvointialue4500k]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8104,7 +8104,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_96C724FC7F", .name = "si.icnf.pt — cont_limicolas [snimar:cont_limicolas]",
     .name_ja = "si.icnf.pt — cont_limicolas [snimar:cont_limicolas]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8126,7 +8126,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B20F070165", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti classificati in "
       "base alla tipologia [M2239:L8180]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti classificati in base alla tipologia [M2239:L8180]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8151,7 +8151,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "associée ou déléguée "
       "[ADMINEXPRESS-COG.2025:chef_lieu_de_commune_associee_ou_deleguee]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Chef-lieu de Commune associée ou déléguée [ADMINEXPRESS-COG.2025:chef_lieu_de_commune_associee_ou_deleguee]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8177,7 +8177,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_759328EFA1", .name = "geo.stat.fi — Hyvinvointialueet 2022 (1:1 000 000) "
       "[tilastointialueet:hyvinvointialue1000k_2022]",
     .name_ja = "geo.stat.fi — Hyvinvointialueet 2022 (1:1 000 000) [tilastointialueet:hyvinvointialue1000k_2022]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8202,7 +8202,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_76FC547D21", .name = "geo.stat.fi — Hyvinvointialueet 2022 (1:4 500 000) "
       "[tilastointialueet:hyvinvointialue4500k_2022]",
     .name_ja = "geo.stat.fi — Hyvinvointialueet 2022 (1:4 500 000) [tilastointialueet:hyvinvointialue4500k_2022]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8226,7 +8226,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_343CD44981", .name = "si.icnf.pt — continente [SOS_VESPA:lyr_continente]",
     .name_ja = "si.icnf.pt — continente [SOS_VESPA:lyr_continente]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8248,7 +8248,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_C99D06E754", .name = "service.pdok.nl — woonplaats [bag:woonplaats]",
     .name_ja = "service.pdok.nl — woonplaats [bag:woonplaats]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8271,7 +8271,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_90DB7EB18A", .name = "geo.stat.fi — Hyvinvointialueet 2023 (1:1 000 000) "
       "[tilastointialueet:hyvinvointialue1000k_2023]",
     .name_ja = "geo.stat.fi — Hyvinvointialueet 2023 (1:1 000 000) [tilastointialueet:hyvinvointialue1000k_2023]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8296,7 +8296,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_72CF828D03", .name = "mapy.geoportal.gov.pl — K07_Komenda_powiatowa_strazy_pozarnej "
       "[ms:K07_Komenda_powiatowa_strazy_pozarnej]",
     .name_ja = "mapy.geoportal.gov.pl — K07_Komenda_powiatowa_strazy_pozarnej [ms:K07_Komenda_powiatowa_strazy_pozarnej]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8317,7 +8317,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_AF08344F6F", .name = "si.icnf.pt — corredores_ecologicos [BDG:corredores_ecologicos]",
     .name_ja = "si.icnf.pt — corredores_ecologicos [BDG:corredores_ecologicos]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8341,7 +8341,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_160469C019", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti con biciclette "
       "coinvolte [M2239:L8205]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti con biciclette coinvolte [M2239:L8205]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8365,7 +8365,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D7C93FDE8C", .name = "geo.stat.fi — Hyvinvointialueet 2023 (1:4 500 000) "
       "[tilastointialueet:hyvinvointialue4500k_2023]",
     .name_ja = "geo.stat.fi — Hyvinvointialueet 2023 (1:4 500 000) [tilastointialueet:hyvinvointialue4500k_2023]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8390,7 +8390,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4D95D37D82", .name = "geo.stat.fi — Hyvinvointialueet 2024 (1:1 000 000) "
       "[tilastointialueet:hyvinvointialue1000k_2024]",
     .name_ja = "geo.stat.fi — Hyvinvointialueet 2024 (1:1 000 000) [tilastointialueet:hyvinvointialue1000k_2024]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8415,7 +8415,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_81F52C4849", .name = "mapy.geoportal.gov.pl — K06_Komenda_wojewodzka_strazy_pozarnej "
       "[ms:K06_Komenda_wojewodzka_strazy_pozarnej]",
     .name_ja = "mapy.geoportal.gov.pl — K06_Komenda_wojewodzka_strazy_pozarnej [ms:K06_Komenda_wojewodzka_strazy_pozarnej]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8436,7 +8436,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_153FB8AE1F", .name = "si.icnf.pt — dados_aquariport [BDG:dados_aquariport]",
     .name_ja = "si.icnf.pt — dados_aquariport [BDG:dados_aquariport]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8459,7 +8459,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A5C07B914B", .name = "geo.stat.fi — Hyvinvointialueet 2024 (1:4 500 000) "
       "[tilastointialueet:hyvinvointialue4500k_2024]",
     .name_ja = "geo.stat.fi — Hyvinvointialueet 2024 (1:4 500 000) [tilastointialueet:hyvinvointialue4500k_2024]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8484,7 +8484,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F6C2B26AEC", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti con biciclette "
       "coinvolte [M2741:L10822]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti con biciclette coinvolte [M2741:L10822]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8506,7 +8506,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_90B3A35002", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Chef-lieu de Département "
       "[ADMINEXPRESS-COG.2025:chef_lieu_de_departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Chef-lieu de Département [ADMINEXPRESS-COG.2025:chef_lieu_de_departement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8531,7 +8531,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9418D324DA", .name = "geo.stat.fi — Hyvinvointialueet 2025 (1:1 000 000) "
       "[tilastointialueet:hyvinvointialue1000k_2025]",
     .name_ja = "geo.stat.fi — Hyvinvointialueet 2025 (1:1 000 000) [tilastointialueet:hyvinvointialue1000k_2025]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8556,7 +8556,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_AE079EA753", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti con deceduti "
       "[M2239:L8202]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti con deceduti [M2239:L8202]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8580,7 +8580,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_790388B2A4", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Chef-lieu de Région "
       "[ADMINEXPRESS-COG.2025:chef_lieu_de_region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Chef-lieu de Région [ADMINEXPRESS-COG.2025:chef_lieu_de_region]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8604,7 +8604,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_601812E208", .name = "geo.stat.fi — Hyvinvointialueet 2025 (1:4 500 000) "
       "[tilastointialueet:hyvinvointialue4500k_2025]",
     .name_ja = "geo.stat.fi — Hyvinvointialueet 2025 (1:4 500 000) [tilastointialueet:hyvinvointialue4500k_2025]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8628,7 +8628,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_F0BEDB8F01", .name = "si.icnf.pt — desp_nauticos_rnap [snimar:desp_nauticos_rnap]",
     .name_ja = "si.icnf.pt — desp_nauticos_rnap [snimar:desp_nauticos_rnap]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8652,7 +8652,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_72BDA8E45E", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Collectivité territoriale "
       "[ADMINEXPRESS-COG.2025:collectivite_territoriale]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Collectivité territoriale [ADMINEXPRESS-COG.2025:collectivite_territoriale]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8677,7 +8677,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_EA4D2D9CC2", .name = "geo.stat.fi — Hyvinvointialueet 2026 (1:1 000 000) "
       "[tilastointialueet:hyvinvointialue1000k_2026]",
     .name_ja = "geo.stat.fi — Hyvinvointialueet 2026 (1:1 000 000) [tilastointialueet:hyvinvointialue1000k_2026]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8702,7 +8702,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_31FC0BAAB8", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Commune "
       "[ADMINEXPRESS-COG.2025:commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Commune [ADMINEXPRESS-COG.2025:commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8726,7 +8726,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_3887044C08", .name = "geo.stat.fi — Hyvinvointialueet 2026 (1:4 500 000) "
       "[tilastointialueet:hyvinvointialue4500k_2026]",
     .name_ja = "geo.stat.fi — Hyvinvointialueet 2026 (1:4 500 000) [tilastointialueet:hyvinvointialue4500k_2026]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8751,7 +8751,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_36325D9604", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Commune associée ou "
       "déléguée [ADMINEXPRESS-COG.2025:commune_associee_ou_deleguee]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Commune associée ou déléguée [ADMINEXPRESS-COG.2025:commune_associee_ou_deleguee]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8776,7 +8776,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A2A0E18FF2", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti con deceduti "
       "[M2741:L10820]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti con deceduti [M2741:L10820]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8797,7 +8797,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_4490724217", .name = "si.icnf.pt — distritos [SOS_VESPA:lyr_distritos]",
     .name_ja = "si.icnf.pt — distritos [SOS_VESPA:lyr_distritos]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8820,7 +8820,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_87EE2B9669", .name = "mapy.geoportal.gov.pl — K05_Komisariat_policji "
       "[ms:K05_Komisariat_policji]",
     .name_ja = "mapy.geoportal.gov.pl — K05_Komisariat_policji [ms:K05_Komisariat_policji]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8842,7 +8842,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C578C9BCF8", .name = "geo.stat.fi — Kunnat (1:1 000 000) "
       "[tilastointialueet:kunta1000k]",
     .name_ja = "geo.stat.fi — Kunnat (1:1 000 000) [tilastointialueet:kunta1000k]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8866,7 +8866,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0050168808", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti con feriti "
       "[M2239:L8207]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti con feriti [M2239:L8207]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8890,7 +8890,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E8E17958CB", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Département "
       "[ADMINEXPRESS-COG.2025:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Département [ADMINEXPRESS-COG.2025:departement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8914,7 +8914,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D808E9EFCD", .name = "geo.stat.fi — Kunnat (1:4 500 000) "
       "[tilastointialueet:kunta4500k]",
     .name_ja = "geo.stat.fi — Kunnat (1:4 500 000) [tilastointialueet:kunta4500k]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8937,7 +8937,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_3145B8773E", .name = "si.icnf.pt — distritos_label [SOS_VESPA:lyr_distritos_lbl]",
     .name_ja = "si.icnf.pt — distritos_label [SOS_VESPA:lyr_distritos_lbl]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8959,7 +8959,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A811508443", .name = "mapy.geoportal.gov.pl — K04_Komenda_rejonowa_policji "
       "[ms:K04_Komenda_rejonowa_policji]",
     .name_ja = "mapy.geoportal.gov.pl — K04_Komenda_rejonowa_policji [ms:K04_Komenda_rejonowa_policji]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8981,7 +8981,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_44CF56D105", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 EPCI "
       "[ADMINEXPRESS-COG.2025:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 EPCI [ADMINEXPRESS-COG.2025:epci]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9005,7 +9005,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4F9082002E", .name = "geo.stat.fi — Kunnat 2013 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2013]",
     .name_ja = "geo.stat.fi — Kunnat 2013 (1:1 000 000) [tilastointialueet:kunta1000k_2013]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9029,7 +9029,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0DAE57E887", .name = "data.geopf.fr — ADMINEXPRESS COG 2025 Région "
       "[ADMINEXPRESS-COG.2025:region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2025 Région [ADMINEXPRESS-COG.2025:region]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9053,7 +9053,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_6A7D6C6093", .name = "mapy.geoportal.gov.pl — K03_Komenda_stoleczna_policji "
       "[ms:K03_Komenda_stoleczna_policji]",
     .name_ja = "mapy.geoportal.gov.pl — K03_Komenda_stoleczna_policji [ms:K03_Komenda_stoleczna_policji]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9075,7 +9075,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_6CA89E57D7", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti con feriti "
       "[M2741:L10824]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti con feriti [M2741:L10824]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9097,7 +9097,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C7B928B56F", .name = "geo.stat.fi — Kunnat 2013 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2013]",
     .name_ja = "geo.stat.fi — Kunnat 2013 (1:4 500 000) [tilastointialueet:kunta4500k_2013]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9120,7 +9120,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_D8EA87C683", .name = "si.icnf.pt — ebsa [BDG:ebsa]",
     .name_ja = "si.icnf.pt — ebsa [BDG:ebsa]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9143,7 +9143,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9AC38A194D", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Arrondissement , édition "
       "2026-01-01 [ADMINEXPRESS-COG.2026:arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Arrondissement , édition 2026-01-01 [ADMINEXPRESS-COG.2026:arrondissement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9167,7 +9167,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0D75E57B29", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti con "
       "investimento pedoni [M2239:L8204]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti con investimento pedoni [M2239:L8204]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9191,7 +9191,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_43292ED0E6", .name = "geo.stat.fi — Kunnat 2014 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2014]",
     .name_ja = "geo.stat.fi — Kunnat 2014 (1:1 000 000) [tilastointialueet:kunta1000k_2014]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9216,7 +9216,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "édition 2026-01-01 "
       "[ADMINEXPRESS-COG.2026:arrondissement_municipal]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Arrondissement municipal , édition 2026-01-01 [ADMINEXPRESS-COG.2026:arrondissement_municipal]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9241,7 +9241,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_06A53F9E64", .name = "geo.stat.fi — Kunnat 2014 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2014]",
     .name_ja = "geo.stat.fi — Kunnat 2014 (1:4 500 000) [tilastointialueet:kunta4500k_2014]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9264,7 +9264,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_F93DF0303A", .name = "si.icnf.pt — ebsa_snimar [snimar:ebsa_snimar]",
     .name_ja = "si.icnf.pt — ebsa_snimar [snimar:ebsa_snimar]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9285,7 +9285,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_67A4BD0D1D", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Canton , édition "
       "2026-01-01 [ADMINEXPRESS-COG.2026:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Canton , édition 2026-01-01 [ADMINEXPRESS-COG.2026:canton]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9309,7 +9309,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C80261A5CE", .name = "geo.stat.fi — Kunnat 2015 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2015]",
     .name_ja = "geo.stat.fi — Kunnat 2015 (1:1 000 000) [tilastointialueet:kunta1000k_2015]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9333,7 +9333,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F330E23C49", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti con "
       "investimento pedoni [M2741:L10821]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti con investimento pedoni [M2741:L10821]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9355,7 +9355,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_ACB960D7A6", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Chef-lieu commune "
       "[ADMINEXPRESS-COG.2026:chef_lieu_de_commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Chef-lieu commune [ADMINEXPRESS-COG.2026:chef_lieu_de_commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9380,7 +9380,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_353B390471", .name = "geo.stat.fi — Kunnat 2015 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2015]",
     .name_ja = "geo.stat.fi — Kunnat 2015 (1:4 500 000) [tilastointialueet:kunta4500k_2015]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9404,7 +9404,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_3CDEDC704F", .name = "si.icnf.pt — especies_diretiva_habitats_07_12 "
       "[BDG:especies_diretiva_habitats_07_12]",
     .name_ja = "si.icnf.pt — especies_diretiva_habitats_07_12 [BDG:especies_diretiva_habitats_07_12]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9428,7 +9428,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E99F78F76C", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti con mezzi "
       "pesanti coinvolti [M2239:L8206]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti con mezzi pesanti coinvolti [M2239:L8206]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9453,7 +9453,7 @@ static const hp_source HP3B63_EUWFS[] = {
       ", édition 2026-01-01 "
       "[ADMINEXPRESS-COG.2026:chef_lieu_d_arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Chef-lieu d'Arrondissement , édition 2026-01-01 [ADMINEXPRESS-COG.2026:chef_lieu_d_arrondissement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9479,7 +9479,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_3419A396FA", .name = "mapy.geoportal.gov.pl — K02_Komenda_powiatowa_policji "
       "[ms:K02_Komenda_powiatowa_policji]",
     .name_ja = "mapy.geoportal.gov.pl — K02_Komenda_powiatowa_policji [ms:K02_Komenda_powiatowa_policji]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9501,7 +9501,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5299C49293", .name = "geo.stat.fi — Kunnat 2016 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2016]",
     .name_ja = "geo.stat.fi — Kunnat 2016 (1:1 000 000) [tilastointialueet:kunta1000k_2016]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9526,7 +9526,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "municipal , édition 2026-01-01 "
       "[ADMINEXPRESS-COG.2026:chef_lieu_d_arrondissement_muni",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Chef-lieu d'Arrondissement municipal , édition 2026-01-01 [ADMINEXPRESS-COG.2026:chef_lieu_d_arrondissement_muni",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9552,7 +9552,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_7C142FD1BB", .name = "geo.stat.fi — Kunnat 2016 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2016]",
     .name_ja = "geo.stat.fi — Kunnat 2016 (1:4 500 000) [tilastointialueet:kunta4500k_2016]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9575,7 +9575,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_E1298867FB", .name = "si.icnf.pt — export_ninhos [SOS_VESPA:export_ninhos]",
     .name_ja = "si.icnf.pt — export_ninhos [SOS_VESPA:export_ninhos]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9597,7 +9597,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5F74CD3716", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti con mezzi "
       "pesanti coinvolti [M2741:L10823]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti con mezzi pesanti coinvolti [M2741:L10823]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9620,7 +9620,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "territoriale , édition 2026-01-01 "
       "[ADMINEXPRESS-COG.2026:chef_lieu_de_collectivite_ter",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Chef-lieu de Collectivité territoriale , édition 2026-01-01 [ADMINEXPRESS-COG.2026:chef_lieu_de_collectivite_ter",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9646,7 +9646,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_98EB9FE14C", .name = "geo.stat.fi — Kunnat 2017 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2017]",
     .name_ja = "geo.stat.fi — Kunnat 2017 (1:1 000 000) [tilastointialueet:kunta1000k_2017]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9670,7 +9670,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A84F14253C", .name = "mapy.geoportal.gov.pl — K01_Komenda_wojewodzka_policji "
       "[ms:K01_Komenda_wojewodzka_policji]",
     .name_ja = "mapy.geoportal.gov.pl — K01_Komenda_wojewodzka_policji [ms:K01_Komenda_wojewodzka_policji]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9692,7 +9692,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_56B5DB985F", .name = "geo.stat.fi — Kunnat 2017 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2017]",
     .name_ja = "geo.stat.fi — Kunnat 2017 (1:4 500 000) [tilastointialueet:kunta4500k_2017]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9717,7 +9717,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "associée ou déléguée , édition 2026-01-01 "
       "[ADMINEXPRESS-COG.2026:chef_lieu_de_commune_assoc",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Chef-lieu de Commune associée ou déléguée , édition 2026-01-01 [ADMINEXPRESS-COG.2026:chef_lieu_de_commune_assoc",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9742,7 +9742,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_7C5A1F50FA", .name = "si.icnf.pt — export_vespa [SOS_VESPA:export_vespa]",
     .name_ja = "si.icnf.pt — export_vespa [SOS_VESPA:export_vespa]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9764,7 +9764,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C4E07D07DA", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti con motoveicoli "
       "coinvolti [M2741:L10826]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti con motoveicoli coinvolti [M2741:L10826]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9787,7 +9787,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "édition 2026-01-01 "
       "[ADMINEXPRESS-COG.2026:chef_lieu_de_departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Chef-lieu de Département , édition 2026-01-01 [ADMINEXPRESS-COG.2026:chef_lieu_de_departement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9812,7 +9812,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2F602743CF", .name = "geo.stat.fi — Kunnat 2018 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2018]",
     .name_ja = "geo.stat.fi — Kunnat 2018 (1:1 000 000) [tilastointialueet:kunta1000k_2018]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9836,7 +9836,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_372AF8F895", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti distribuiti nei "
       "giorni della settimana [M2239:L8200]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti distribuiti nei giorni della settimana [M2239:L8200]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9860,7 +9860,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0B8B156160", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Chef-lieu de Région , "
       "édition 2026-01-01 [ADMINEXPRESS-COG.2026:chef_lieu_de_region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Chef-lieu de Région , édition 2026-01-01 [ADMINEXPRESS-COG.2026:chef_lieu_de_region]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9885,7 +9885,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_1AA725A6FD", .name = "geo.stat.fi — Kunnat 2018 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2018]",
     .name_ja = "geo.stat.fi — Kunnat 2018 (1:4 500 000) [tilastointialueet:kunta4500k_2018]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9910,7 +9910,7 @@ static const hp_source HP3B63_EUWFS[] = {
       ", édition 2026-01-01 "
       "[ADMINEXPRESS-COG.2026:collectivite_territoriale]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Collectivité territoriale , édition 2026-01-01 [ADMINEXPRESS-COG.2026:collectivite_territoriale]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9934,7 +9934,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_0A6500420E", .name = "si.icnf.pt — fgc_pmdfci2g_aveiro [PMDFCI:fgc_pmdfci2g_aveiro]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_aveiro [PMDFCI:fgc_pmdfci2g_aveiro]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9958,7 +9958,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E779BD008D", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Commune , édition "
       "2026-01-01 [ADMINEXPRESS-COG.2026:commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Commune , édition 2026-01-01 [ADMINEXPRESS-COG.2026:commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9982,7 +9982,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C3844DD0BA", .name = "geoservizi.regione.liguria.it — 2013 - Incidenti in relazione "
       "alla classificazione delle strade [M2239:L8199]",
     .name_ja = "geoservizi.regione.liguria.it — 2013 - Incidenti in relazione alla classificazione delle strade [M2239:L8199]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10006,7 +10006,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_56406231CC", .name = "geo.stat.fi — Kunnat 2019 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2019]",
     .name_ja = "geo.stat.fi — Kunnat 2019 (1:1 000 000) [tilastointialueet:kunta1000k_2019]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10030,7 +10030,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_319995EEF2", .name = "mapy.geoportal.gov.pl — P03_Prokuratura_rejonowa "
       "[ms:P03_Prokuratura_rejonowa]",
     .name_ja = "mapy.geoportal.gov.pl — P03_Prokuratura_rejonowa [ms:P03_Prokuratura_rejonowa]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10053,7 +10053,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "déléguée , édition 2026-01-01 "
       "[ADMINEXPRESS-COG.2026:commune_associee_ou_deleguee]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Commune associée ou déléguée , édition 2026-01-01 [ADMINEXPRESS-COG.2026:commune_associee_ou_deleguee]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10079,7 +10079,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_73477125F5", .name = "geo.stat.fi — Kunnat 2019 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2019]",
     .name_ja = "geo.stat.fi — Kunnat 2019 (1:4 500 000) [tilastointialueet:kunta4500k_2019]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10103,7 +10103,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FF0E2181F3", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Département , édition "
       "2026-01-01 [ADMINEXPRESS-COG.2026:departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Département , édition 2026-01-01 [ADMINEXPRESS-COG.2026:departement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10126,7 +10126,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_7D884964EE", .name = "si.icnf.pt — fgc_pmdfci2g_braga [PMDFCI:fgc_pmdfci2g_braga]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_braga [PMDFCI:fgc_pmdfci2g_braga]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10150,7 +10150,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_129F9BA687", .name = "geoservizi.regione.liguria.it — 2014 - Distribuzione degli "
       "incidenti [M2240:L8213]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Distribuzione degli incidenti [M2240:L8213]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10174,7 +10174,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_1666F20899", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 EPCI , édition 2026-01-01 "
       "[ADMINEXPRESS-COG.2026:epci]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 EPCI , édition 2026-01-01 [ADMINEXPRESS-COG.2026:epci]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10198,7 +10198,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_79EE353DD3", .name = "geo.stat.fi — Kunnat 2020 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2020]",
     .name_ja = "geo.stat.fi — Kunnat 2020 (1:1 000 000) [tilastointialueet:kunta1000k_2020]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10222,7 +10222,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_7ED526CCE8", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti avvenuti alla "
       "sera del fine settimana [M2240:L8211]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti avvenuti alla sera del fine settimana [M2240:L8211]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10246,7 +10246,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_ABCECFC1DB", .name = "mapy.geoportal.gov.pl — P02_Prokuratura_okregowa "
       "[ms:P02_Prokuratura_okregowa]",
     .name_ja = "mapy.geoportal.gov.pl — P02_Prokuratura_okregowa [ms:P02_Prokuratura_okregowa]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10268,7 +10268,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_1AA9A8EA1D", .name = "data.geopf.fr — ADMINEXPRESS COG 2026 Région , édition "
       "2026-01-01 [ADMINEXPRESS-COG.2026:region]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG 2026 Région , édition 2026-01-01 [ADMINEXPRESS-COG.2026:region]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10292,7 +10292,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5EBEEA25B3", .name = "geo.stat.fi — Kunnat 2020 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2020]",
     .name_ja = "geo.stat.fi — Kunnat 2020 (1:4 500 000) [tilastointialueet:kunta4500k_2020]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10316,7 +10316,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_6D2E1CB777", .name = "si.icnf.pt — fgc_pmdfci2g_braganca "
       "[PMDFCI:fgc_pmdfci2g_braganca]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_braganca [PMDFCI:fgc_pmdfci2g_braganca]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10340,7 +10340,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_05BDFD6ACF", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti classificati in "
       "base alla tipologia [M2240:L8208]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti classificati in base alla tipologia [M2240:L8208]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10364,7 +10364,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_16C6116B92", .name = "data.geopf.fr — ADMINEXPRESS COG CARTO PE 2025 Arrondissement "
       "[ADMINEXPRESS-COG-CARTO-PE.2025:arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG CARTO PE 2025 Arrondissement [ADMINEXPRESS-COG-CARTO-PE.2025:arrondissement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10389,7 +10389,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_452A0E047A", .name = "geo.stat.fi — Kunnat 2021 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2021]",
     .name_ja = "geo.stat.fi — Kunnat 2021 (1:1 000 000) [tilastointialueet:kunta1000k_2021]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10413,7 +10413,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_952709FC36", .name = "mapy.geoportal.gov.pl — P01_Prokuratura_regionalna "
       "[ms:P01_Prokuratura_regionalna]",
     .name_ja = "mapy.geoportal.gov.pl — P01_Prokuratura_regionalna [ms:P01_Prokuratura_regionalna]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10435,7 +10435,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_19B19E5EB3", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti con biciclette "
       "coinvolte [M2240:L8215]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti con biciclette coinvolte [M2240:L8215]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10459,7 +10459,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_87414BDD0F", .name = "geo.stat.fi — Kunnat 2021 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2021]",
     .name_ja = "geo.stat.fi — Kunnat 2021 (1:4 500 000) [tilastointialueet:kunta4500k_2021]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10484,7 +10484,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "municipal "
       "[ADMINEXPRESS-COG-CARTO-PE.2025:arrondissement_municipal]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG CARTO PE 2025 Arrondissement municipal [ADMINEXPRESS-COG-CARTO-PE.2025:arrondissement_municipal]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10509,7 +10509,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D77AD45420", .name = "si.icnf.pt — fgc_pmdfci2g_castelobranco "
       "[PMDFCI:fgc_pmdfci2g_castelobranco]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_castelobranco [PMDFCI:fgc_pmdfci2g_castelobranco]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10533,7 +10533,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_471EE247D1", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti con biciclette "
       "coinvolte [M2740:L10815]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti con biciclette coinvolte [M2740:L10815]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10555,7 +10555,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_88CA2C7F23", .name = "data.geopf.fr — ADMINEXPRESS COG CARTO PE 2025 Canton "
       "[ADMINEXPRESS-COG-CARTO-PE.2025:canton]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG CARTO PE 2025 Canton [ADMINEXPRESS-COG-CARTO-PE.2025:canton]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10579,7 +10579,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FD9BF1C581", .name = "geo.stat.fi — Kunnat 2022 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2022]",
     .name_ja = "geo.stat.fi — Kunnat 2022 (1:1 000 000) [tilastointialueet:kunta1000k_2022]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10603,7 +10603,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_EC1F58CE0C", .name = "mapy.geoportal.gov.pl — S04_Wojewodzki_sad_administracyjny "
       "[ms:S04_Wojewodzki_sad_administracyjny]",
     .name_ja = "mapy.geoportal.gov.pl — S04_Wojewodzki_sad_administracyjny [ms:S04_Wojewodzki_sad_administracyjny]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10625,7 +10625,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D2A0E73B46", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti con deceduti "
       "[M2240:L8212]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti con deceduti [M2240:L8212]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10649,7 +10649,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_1CE5A0FCE3", .name = "service.pdok.nl — Nummeraanduidingreeks "
       "[kadastralekaart:Nummeraanduidingreeks]",
     .name_ja = "service.pdok.nl — Nummeraanduidingreeks [kadastralekaart:Nummeraanduidingreeks]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10673,7 +10673,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_03621E3BC5", .name = "geo.stat.fi — Kunnat 2022 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2022]",
     .name_ja = "geo.stat.fi — Kunnat 2022 (1:4 500 000) [tilastointialueet:kunta4500k_2022]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10697,7 +10697,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A56255D4B0", .name = "data.geopf.fr — ADMINEXPRESS COG CARTO PE 2025 Chef-lieu commune "
       "[ADMINEXPRESS-COG-CARTO-PE.2025:chef_lieu_de_commune]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG CARTO PE 2025 Chef-lieu commune [ADMINEXPRESS-COG-CARTO-PE.2025:chef_lieu_de_commune]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10722,7 +10722,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_207ACA200B", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti con deceduti "
       "[M2740:L10813]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti con deceduti [M2740:L10813]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10744,7 +10744,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_213942CF69", .name = "geo.stat.fi — Kunnat 2023 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2023]",
     .name_ja = "geo.stat.fi — Kunnat 2023 (1:1 000 000) [tilastointialueet:kunta1000k_2023]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10767,7 +10767,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_2EE99ADEE8", .name = "si.icnf.pt — fgc_pmdfci2g_coimbra [PMDFCI:fgc_pmdfci2g_coimbra]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_coimbra [PMDFCI:fgc_pmdfci2g_coimbra]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10792,7 +10792,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "d'Arrondissement "
       "[ADMINEXPRESS-COG-CARTO-PE.2025:chef_lieu_d_arrondissement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG CARTO PE 2025 Chef-lieu d'Arrondissement [ADMINEXPRESS-COG-CARTO-PE.2025:chef_lieu_d_arrondissement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10817,7 +10817,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_EB11587EAA", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti con feriti "
       "[M2240:L8217]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti con feriti [M2240:L8217]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10841,7 +10841,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0FD48A1386", .name = "geo.stat.fi — Kunnat 2023 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2023]",
     .name_ja = "geo.stat.fi — Kunnat 2023 (1:4 500 000) [tilastointialueet:kunta4500k_2023]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10866,7 +10866,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "d'Arrondissement municipal "
       "[ADMINEXPRESS-COG-CARTO-PE.2025:chef_lieu_d_arrondissement_municip",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG CARTO PE 2025 Chef-lieu d'Arrondissement municipal [ADMINEXPRESS-COG-CARTO-PE.2025:chef_lieu_d_arrondissement_municip",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10892,7 +10892,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_1B0C0EA43B", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti con feriti "
       "[M2740:L10817]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti con feriti [M2740:L10817]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10914,7 +10914,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0EA954284D", .name = "geo.stat.fi — Kunnat 2024 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2024]",
     .name_ja = "geo.stat.fi — Kunnat 2024 (1:1 000 000) [tilastointialueet:kunta1000k_2024]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10939,7 +10939,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "Collectivité territoriale "
       "[ADMINEXPRESS-COG-CARTO-PE.2025:chef_lieu_de_collectivite_territ",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG CARTO PE 2025 Chef-lieu de Collectivité territoriale [ADMINEXPRESS-COG-CARTO-PE.2025:chef_lieu_de_collectivite_territ",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10965,7 +10965,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_579DD4F38A", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti con "
       "investimento pedoni [M2240:L8214]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti con investimento pedoni [M2240:L8214]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10988,7 +10988,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_9324B16458", .name = "si.icnf.pt — fgc_pmdfci2g_evora [PMDFCI:fgc_pmdfci2g_evora]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_evora [PMDFCI:fgc_pmdfci2g_evora]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11012,7 +11012,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E00BB51B57", .name = "geo.stat.fi — Kunnat 2024 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2024]",
     .name_ja = "geo.stat.fi — Kunnat 2024 (1:4 500 000) [tilastointialueet:kunta4500k_2024]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11037,7 +11037,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "Commune associée ou déléguée "
       "[ADMINEXPRESS-COG-CARTO-PE.2025:chef_lieu_de_commune_associee",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG CARTO PE 2025 Chef-lieu de Commune associée ou déléguée [ADMINEXPRESS-COG-CARTO-PE.2025:chef_lieu_de_commune_associee",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11063,7 +11063,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_11F0EEDB5E", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti con "
       "investimento pedoni [M2740:L10814]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti con investimento pedoni [M2740:L10814]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11084,7 +11084,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_25825639CF", .name = "mapy.geoportal.gov.pl — S03_Sad_rejonowy [ms:S03_Sad_rejonowy]",
     .name_ja = "mapy.geoportal.gov.pl — S03_Sad_rejonowy [ms:S03_Sad_rejonowy]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11105,7 +11105,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_15DECC2D71", .name = "si.icnf.pt — fgc_pmdfci2g_faro [PMDFCI:fgc_pmdfci2g_faro]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_faro [PMDFCI:fgc_pmdfci2g_faro]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11129,7 +11129,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9C1EFD9A9F", .name = "geo.stat.fi — Kunnat 2025 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2025]",
     .name_ja = "geo.stat.fi — Kunnat 2025 (1:1 000 000) [tilastointialueet:kunta1000k_2025]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11154,7 +11154,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "Département "
       "[ADMINEXPRESS-COG-CARTO-PE.2025:chef_lieu_de_departement]",
     .name_ja = "data.geopf.fr — ADMINEXPRESS COG CARTO PE 2025 Chef-lieu de Département [ADMINEXPRESS-COG-CARTO-PE.2025:chef_lieu_de_departement]",
-    .category = "geospatial", .portal = "https://data.geopf.fr",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://data.geopf.fr",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fr\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11179,7 +11179,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_89512FB021", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti con mezzi "
       "pesanti coinvolti [M2240:L8216]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti con mezzi pesanti coinvolti [M2240:L8216]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11203,7 +11203,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_080DEC2895", .name = "geo.stat.fi — Kunnat 2025 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2025]",
     .name_ja = "geo.stat.fi — Kunnat 2025 (1:4 500 000) [tilastointialueet:kunta4500k_2025]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11226,7 +11226,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_62CD87D2F7", .name = "si.icnf.pt — fgc_pmdfci2g_guarda [PMDFCI:fgc_pmdfci2g_guarda]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_guarda [PMDFCI:fgc_pmdfci2g_guarda]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11250,7 +11250,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0DFEFF39E6", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti con mezzi "
       "pesanti coinvolti [M2740:L10816]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti con mezzi pesanti coinvolti [M2740:L10816]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11272,7 +11272,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_AAF42F3713", .name = "geo.stat.fi — Kunnat 2026 (1:1 000 000) "
       "[tilastointialueet:kunta1000k_2026]",
     .name_ja = "geo.stat.fi — Kunnat 2026 (1:1 000 000) [tilastointialueet:kunta1000k_2026]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11295,7 +11295,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_9EBAFC63A3", .name = "si.icnf.pt — fgc_pmdfci2g_leiria [PMDFCI:fgc_pmdfci2g_leiria]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_leiria [PMDFCI:fgc_pmdfci2g_leiria]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11318,7 +11318,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_D19F3382AA", .name = "mapy.geoportal.gov.pl — S02_Sad_okregowy [ms:S02_Sad_okregowy]",
     .name_ja = "mapy.geoportal.gov.pl — S02_Sad_okregowy [ms:S02_Sad_okregowy]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11340,7 +11340,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E7049E9366", .name = "geo.stat.fi — Kunnat 2026 (1:4 500 000) "
       "[tilastointialueet:kunta4500k_2026]",
     .name_ja = "geo.stat.fi — Kunnat 2026 (1:4 500 000) [tilastointialueet:kunta4500k_2026]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11364,7 +11364,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_24CB971966", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti con motoveicoli "
       "coinvolti [M2740:L10819]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti con motoveicoli coinvolti [M2740:L10819]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11386,7 +11386,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_99A9E2E2BF", .name = "geo.stat.fi — Maakunnat (1:1 000 000) "
       "[tilastointialueet:maakunta1000k]",
     .name_ja = "geo.stat.fi — Maakunnat (1:1 000 000) [tilastointialueet:maakunta1000k]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11410,7 +11410,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FF097DB897", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti distribuiti nei "
       "giorni della settimana [M2240:L8210]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti distribuiti nei giorni della settimana [M2240:L8210]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11434,7 +11434,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_03A8BA007F", .name = "mapy.geoportal.gov.pl — S01_Sad_apelacyjny "
       "[ms:S01_Sad_apelacyjny]",
     .name_ja = "mapy.geoportal.gov.pl — S01_Sad_apelacyjny [ms:S01_Sad_apelacyjny]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11456,7 +11456,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_DFC451FB77", .name = "geo.stat.fi — Maakunnat (1:4 500 000) "
       "[tilastointialueet:maakunta4500k]",
     .name_ja = "geo.stat.fi — Maakunnat (1:4 500 000) [tilastointialueet:maakunta4500k]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11480,7 +11480,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F13F3B1923", .name = "geoservizi.regione.liguria.it — 2014 - Incidenti in relazione "
       "alla classificazione delle strade [M2240:L8209]",
     .name_ja = "geoservizi.regione.liguria.it — 2014 - Incidenti in relazione alla classificazione delle strade [M2240:L8209]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11503,7 +11503,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_BC6F4FBFF3", .name = "si.icnf.pt — fgc_pmdfci2g_lisboa [PMDFCI:fgc_pmdfci2g_lisboa]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_lisboa [PMDFCI:fgc_pmdfci2g_lisboa]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11527,7 +11527,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FD39CACAC8", .name = "geo.stat.fi — Maakunnat 2013 (1:1 000 000) "
       "[tilastointialueet:maakunta1000k_2013]",
     .name_ja = "geo.stat.fi — Maakunnat 2013 (1:1 000 000) [tilastointialueet:maakunta1000k_2013]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11551,7 +11551,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_80F6B2B9D9", .name = "geoservizi.regione.liguria.it — 2015 - Distribuzione degli "
       "incidenti [M2242:L8221]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Distribuzione degli incidenti [M2242:L8221]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11575,7 +11575,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_73C846CEDD", .name = "si.icnf.pt — fgc_pmdfci2g_portalegre "
       "[PMDFCI:fgc_pmdfci2g_portalegre]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_portalegre [PMDFCI:fgc_pmdfci2g_portalegre]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11599,7 +11599,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_DB52F9C356", .name = "geo.stat.fi — Maakunnat 2013 (1:4 500 000) "
       "[tilastointialueet:maakunta4500k_2013]",
     .name_ja = "geo.stat.fi — Maakunnat 2013 (1:4 500 000) [tilastointialueet:maakunta4500k_2013]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11623,7 +11623,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_3474FC338A", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti avvenuti alla "
       "sera del fine settimana [M2242:L8225]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti avvenuti alla sera del fine settimana [M2242:L8225]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11647,7 +11647,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2EAC1207EF", .name = "geo.stat.fi — Maakunnat 2014 (1:1 000 000) "
       "[tilastointialueet:maakunta1000k_2014]",
     .name_ja = "geo.stat.fi — Maakunnat 2014 (1:1 000 000) [tilastointialueet:maakunta1000k_2014]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11671,7 +11671,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A28A691578", .name = "si.icnf.pt — fgc_pmdfci2g_santarem "
       "[PMDFCI:fgc_pmdfci2g_santarem]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_santarem [PMDFCI:fgc_pmdfci2g_santarem]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11695,7 +11695,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_154E0C8CEF", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti classificati in "
       "base alla tipologia [M2242:L8222]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti classificati in base alla tipologia [M2242:L8222]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11719,7 +11719,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_6913C4D3E6", .name = "geo.stat.fi — Maakunnat 2014 (1:4 500 000) "
       "[tilastointialueet:maakunta4500k_2014]",
     .name_ja = "geo.stat.fi — Maakunnat 2014 (1:4 500 000) [tilastointialueet:maakunta4500k_2014]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11743,7 +11743,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_03CC95F34F", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti con biciclette "
       "coinvolte [M2242:L8228]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti con biciclette coinvolte [M2242:L8228]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11767,7 +11767,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E3B36570F4", .name = "geo.stat.fi — Maakunnat 2015 (1:1 000 000) "
       "[tilastointialueet:maakunta1000k_2015]",
     .name_ja = "geo.stat.fi — Maakunnat 2015 (1:1 000 000) [tilastointialueet:maakunta1000k_2015]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11791,7 +11791,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E1FCCC27A4", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti con biciclette "
       "coinvolte [M2739:L10808]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti con biciclette coinvolte [M2739:L10808]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11813,7 +11813,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2BB9323045", .name = "si.icnf.pt — fgc_pmdfci2g_vianacastelo "
       "[PMDFCI:fgc_pmdfci2g_vianacastelo]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_vianacastelo [PMDFCI:fgc_pmdfci2g_vianacastelo]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11837,7 +11837,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9FBAA58299", .name = "geo.stat.fi — Maakunnat 2015 (1:4 500 000) "
       "[tilastointialueet:maakunta4500k_2015]",
     .name_ja = "geo.stat.fi — Maakunnat 2015 (1:4 500 000) [tilastointialueet:maakunta4500k_2015]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11861,7 +11861,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E29C1FB34B", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti con deceduti "
       "[M2739:L10806]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti con deceduti [M2739:L10806]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11882,7 +11882,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_929AE53CA3", .name = "si.icnf.pt — fgc_pmdfci2g_viseu [PMDFCI:fgc_pmdfci2g_viseu]",
     .name_ja = "si.icnf.pt — fgc_pmdfci2g_viseu [PMDFCI:fgc_pmdfci2g_viseu]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11906,7 +11906,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FF5E259194", .name = "geo.stat.fi — Maakunnat 2016 (1:1 000 000) "
       "[tilastointialueet:maakunta1000k_2016]",
     .name_ja = "geo.stat.fi — Maakunnat 2016 (1:1 000 000) [tilastointialueet:maakunta1000k_2016]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11930,7 +11930,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_CD32D74D09", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti con feriti "
       "[M2242:L8230]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti con feriti [M2242:L8230]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11954,7 +11954,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4D1C3DE53A", .name = "geo.stat.fi — Maakunnat 2016 (1:4 500 000) "
       "[tilastointialueet:maakunta4500k_2016]",
     .name_ja = "geo.stat.fi — Maakunnat 2016 (1:4 500 000) [tilastointialueet:maakunta4500k_2016]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11978,7 +11978,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B87A225078", .name = "si.icnf.pt — freg_locais_inter_nematodo "
       "[BDG:freg_locais_inter_nematodo]",
     .name_ja = "si.icnf.pt — freg_locais_inter_nematodo [BDG:freg_locais_inter_nematodo]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12002,7 +12002,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_DA6EFF63BF", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti con feriti "
       "[M2739:L10810]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti con feriti [M2739:L10810]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12024,7 +12024,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_951FE8D88C", .name = "geo.stat.fi — Maakunnat 2017 (1:1 000 000) "
       "[tilastointialueet:maakunta1000k_2017]",
     .name_ja = "geo.stat.fi — Maakunnat 2017 (1:1 000 000) [tilastointialueet:maakunta1000k_2017]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12048,7 +12048,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_476096FDBB", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti con "
       "investimento pedoni [M2242:L8227]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti con investimento pedoni [M2242:L8227]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12072,7 +12072,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_94E0BC34D7", .name = "geo.stat.fi — Maakunnat 2017 (1:4 500 000) "
       "[tilastointialueet:maakunta4500k_2017]",
     .name_ja = "geo.stat.fi — Maakunnat 2017 (1:4 500 000) [tilastointialueet:maakunta4500k_2017]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12096,7 +12096,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_7A8EBC8148", .name = "si.icnf.pt — freg_prioritarias_dfci_2019 "
       "[BDG:freg_prioritarias_dfci_2019]",
     .name_ja = "si.icnf.pt — freg_prioritarias_dfci_2019 [BDG:freg_prioritarias_dfci_2019]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12120,7 +12120,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_757747A8CE", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti con "
       "investimento pedoni [M2739:L10807]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti con investimento pedoni [M2739:L10807]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12142,7 +12142,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_69BFD8828E", .name = "geo.stat.fi — Maakunnat 2018 (1:1 000 000) "
       "[tilastointialueet:maakunta1000k_2018]",
     .name_ja = "geo.stat.fi — Maakunnat 2018 (1:1 000 000) [tilastointialueet:maakunta1000k_2018]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12166,7 +12166,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E52F0B7A20", .name = "si.icnf.pt — freg_zonas_tampao_nematodo "
       "[BDG:freg_zonas_tampao_nematodo]",
     .name_ja = "si.icnf.pt — freg_zonas_tampao_nematodo [BDG:freg_zonas_tampao_nematodo]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12190,7 +12190,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A35CE0758F", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti con mezzi "
       "pesanti coinvolti [M2242:L8229]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti con mezzi pesanti coinvolti [M2242:L8229]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12214,7 +12214,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FFBCD5596E", .name = "geo.stat.fi — Maakunnat 2018 (1:4 500 000) "
       "[tilastointialueet:maakunta4500k_2018]",
     .name_ja = "geo.stat.fi — Maakunnat 2018 (1:4 500 000) [tilastointialueet:maakunta4500k_2018]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12238,7 +12238,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A71396EA0E", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti con mezzi "
       "pesanti coinvolti [M2739:L10809]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti con mezzi pesanti coinvolti [M2739:L10809]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12260,7 +12260,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_25A8649B83", .name = "geo.stat.fi — Maakunnat 2019 (1:1 000 000) "
       "[tilastointialueet:maakunta1000k_2019]",
     .name_ja = "geo.stat.fi — Maakunnat 2019 (1:1 000 000) [tilastointialueet:maakunta1000k_2019]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12283,7 +12283,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_6D3CD27800", .name = "si.icnf.pt — freguesias_label [SOS_VESPA:lyr_freguesia_lbl]",
     .name_ja = "si.icnf.pt — freguesias_label [SOS_VESPA:lyr_freguesia_lbl]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12305,7 +12305,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_EC67F0AECD", .name = "geo.stat.fi — Maakunnat 2019 (1:4 500 000) "
       "[tilastointialueet:maakunta4500k_2019]",
     .name_ja = "geo.stat.fi — Maakunnat 2019 (1:4 500 000) [tilastointialueet:maakunta4500k_2019]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12328,7 +12328,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_7078671285", .name = "si.icnf.pt — freguesias_velutina [SOS_VESPA:lyr_freguesias]",
     .name_ja = "si.icnf.pt — freguesias_velutina [SOS_VESPA:lyr_freguesias]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12350,7 +12350,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_5629A07552", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti con motoveicoli "
       "coinvolti [M2739:L10812]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti con motoveicoli coinvolti [M2739:L10812]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12372,7 +12372,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_081B9A971D", .name = "geo.stat.fi — Maakunnat 2020 (1:1 000 000) "
       "[tilastointialueet:maakunta1000k_2020]",
     .name_ja = "geo.stat.fi — Maakunnat 2020 (1:1 000 000) [tilastointialueet:maakunta1000k_2020]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12396,7 +12396,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_83DD68562B", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti distribuiti nei "
       "giorni della settimana [M2242:L8224]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti distribuiti nei giorni della settimana [M2242:L8224]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12420,7 +12420,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_16A74C98A7", .name = "geo.stat.fi — Maakunnat 2020 (1:4 500 000) "
       "[tilastointialueet:maakunta4500k_2020]",
     .name_ja = "geo.stat.fi — Maakunnat 2020 (1:4 500 000) [tilastointialueet:maakunta4500k_2020]",
-    .category = "geospatial", .portal = "https://geo.stat.fi",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://geo.stat.fi",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"fi\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12444,7 +12444,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9206528CDD", .name = "geoservizi.regione.liguria.it — 2015 - Incidenti in relazione "
       "alla classificazione delle strade [M2242:L8223]",
     .name_ja = "geoservizi.regione.liguria.it — 2015 - Incidenti in relazione alla classificazione delle strade [M2242:L8223]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12468,7 +12468,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D9543A4AEE", .name = "geoservizi.regione.liguria.it — 2015- Incidenti con deceduti "
       "[M2242:L8226]",
     .name_ja = "geoservizi.regione.liguria.it — 2015- Incidenti con deceduti [M2242:L8226]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12492,7 +12492,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_EE1FD44226", .name = "geoservizi.regione.liguria.it — 2016 - Distribuzione degli "
       "incidenti [M2224:L8118]",
     .name_ja = "geoservizi.regione.liguria.it — 2016 - Distribuzione degli incidenti [M2224:L8118]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12516,7 +12516,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0AB9562A54", .name = "geoservizi.regione.liguria.it — 2016 - Distribuzione degli "
       "incidenti [M2214:L8059]",
     .name_ja = "geoservizi.regione.liguria.it — 2016 - Distribuzione degli incidenti [M2214:L8059]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12540,7 +12540,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_45622DA1E2", .name = "geoservizi.regione.liguria.it — 2016 - Distribuzione degli "
       "incidenti [M2180:L7876]",
     .name_ja = "geoservizi.regione.liguria.it — 2016 - Distribuzione degli incidenti [M2180:L7876]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12564,7 +12564,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D4A9D89319", .name = "geoservizi.regione.liguria.it — 2016 - Incidenti avvenuti alla "
       "sera del fine settimana [M2224:L8116]",
     .name_ja = "geoservizi.regione.liguria.it — 2016 - Incidenti avvenuti alla sera del fine settimana [M2224:L8116]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12588,7 +12588,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4D05FDA10F", .name = "geoservizi.regione.liguria.it — 2016 - Incidenti classificati in "
       "base alla tipologia [M2224:L8117]",
     .name_ja = "geoservizi.regione.liguria.it — 2016 - Incidenti classificati in base alla tipologia [M2224:L8117]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12612,7 +12612,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D12AAF5CAF", .name = "geoservizi.regione.liguria.it — 2016 - Incidenti con biciclette "
       "coinvolte [M2224:L8109]",
     .name_ja = "geoservizi.regione.liguria.it — 2016 - Incidenti con biciclette coinvolte [M2224:L8109]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12636,7 +12636,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_54F6E26882", .name = "geoservizi.regione.liguria.it — 2016 - Incidenti con biciclette "
       "coinvolte [M2738:L10801]",
     .name_ja = "geoservizi.regione.liguria.it — 2016 - Incidenti con biciclette coinvolte [M2738:L10801]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12658,7 +12658,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F0FC10CC21", .name = "geoservizi.regione.liguria.it — 2016 - Incidenti con deceduti "
       "[M2224:L8115]",
     .name_ja = "geoservizi.regione.liguria.it — 2016 - Incidenti con deceduti [M2224:L8115]",
-    .category = "geospatial", .portal = "https://geoservizi.regione.liguria.it",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://geoservizi.regione.liguria.it",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"it\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12682,7 +12682,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_52975BE6C0", .name = "si.icnf.pt — geocay_processos_arb "
       "[ICNF_TESTE:geocay_processos_arb]",
     .name_ja = "si.icnf.pt — geocay_processos_arb [ICNF_TESTE:geocay_processos_arb]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12704,7 +12704,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_B1984E7600", .name = "si.icnf.pt — geocay_requerimentos_abertos "
       "[ICNF_TESTE:geocay_requerimentos_abertos]",
     .name_ja = "si.icnf.pt — geocay_requerimentos_abertos [ICNF_TESTE:geocay_requerimentos_abertos]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12726,7 +12726,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2C352769DF", .name = "service.pdok.nl — OpenbareRuimteNaam "
       "[kadastralekaart:OpenbareRuimteNaam]",
     .name_ja = "service.pdok.nl — OpenbareRuimteNaam [kadastralekaart:OpenbareRuimteNaam]",
-    .category = "geospatial", .portal = "https://service.pdok.nl",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://service.pdok.nl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"nl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12749,7 +12749,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_E25DD09BD8", .name = "si.icnf.pt — geossitios_pt [BDG:geossitios_pt]",
     .name_ja = "si.icnf.pt — geossitios_pt [BDG:geossitios_pt]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12771,7 +12771,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_FC917000DC", .name = "si.icnf.pt — geossitios_snimar [snimar:geossitios_snimar]",
     .name_ja = "si.icnf.pt — geossitios_snimar [snimar:geossitios_snimar]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12793,7 +12793,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_CC46581F51", .name = "si.icnf.pt — habitats_diretiva_07_12 "
       "[BDG:habitats_diretiva_07_12]",
     .name_ja = "si.icnf.pt — habitats_diretiva_07_12 [BDG:habitats_diretiva_07_12]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12817,7 +12817,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_EE206C2B0C", .name = "si.icnf.pt — ibas_continente_snimar "
       "[snimar:ibas_continente_snimar]",
     .name_ja = "si.icnf.pt — ibas_continente_snimar [snimar:ibas_continente_snimar]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12838,7 +12838,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_4900965D2F", .name = "si.icnf.pt — ii_aan_snimar [snimar:ii_aan_snimar]",
     .name_ja = "si.icnf.pt — ii_aan_snimar [snimar:ii_aan_snimar]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12860,7 +12860,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F1F0DC8797", .name = "si.icnf.pt — indice_aridez_1970_2000 "
       "[BDG:indice_aridez_1970_2000]",
     .name_ja = "si.icnf.pt — indice_aridez_1970_2000 [BDG:indice_aridez_1970_2000]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12884,7 +12884,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_8ACD0FDE05", .name = "si.icnf.pt — indice_aridez_1980_2010 "
       "[BDG:indice_aridez_1980_2010]",
     .name_ja = "si.icnf.pt — indice_aridez_1980_2010 [BDG:indice_aridez_1980_2010]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12908,7 +12908,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2FA43374CC", .name = "si.icnf.pt — indice_aridez_2000_2010 "
       "[BDG:indice_aridez_2000_2010]",
     .name_ja = "si.icnf.pt — indice_aridez_2000_2010 [BDG:indice_aridez_2000_2010]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12931,7 +12931,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_837EF5C136", .name = "si.icnf.pt — ldi_estado [BDG:ldi_estado]",
     .name_ja = "si.icnf.pt — ldi_estado [BDG:ldi_estado]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12953,7 +12953,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_D9281AEB4C", .name = "si.icnf.pt — ldi_tendencias [BDG:ldi_tendencias]",
     .name_ja = "si.icnf.pt — ldi_tendencias [BDG:ldi_tendencias]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12975,7 +12975,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_ECFA886BA5", .name = "si.icnf.pt — lyr_ninhos [SOS_VESPA:lyr_ninhos]",
     .name_ja = "si.icnf.pt — lyr_ninhos [SOS_VESPA:lyr_ninhos]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12997,7 +12997,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_B3A562F913", .name = "si.icnf.pt — lyr_vespa [SOS_VESPA:lyr_vespa]",
     .name_ja = "si.icnf.pt — lyr_vespa [SOS_VESPA:lyr_vespa]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13019,7 +13019,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_CFCEF9DBCA", .name = "si.icnf.pt — maq_local [MAQUINAS:maq_local]",
     .name_ja = "si.icnf.pt — maq_local [MAQUINAS:maq_local]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13041,7 +13041,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_A2D2BD0B76", .name = "si.icnf.pt — obs_cetaceos_locais [snimar:obs_cetaceos_locais]",
     .name_ja = "si.icnf.pt — obs_cetaceos_locais [snimar:obs_cetaceos_locais]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13065,7 +13065,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0F660318BC", .name = "si.icnf.pt — observacao_roazes_sado "
       "[snimar:observacao_roazes_sado]",
     .name_ja = "si.icnf.pt — observacao_roazes_sado [snimar:observacao_roazes_sado]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13086,7 +13086,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_A08613D581", .name = "si.icnf.pt — oper_local [MAQUINAS:oper_local]",
     .name_ja = "si.icnf.pt — oper_local [MAQUINAS:oper_local]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13108,7 +13108,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_274F036242", .name = "si.icnf.pt — oper_local [MAQUINAS:oper_local_fc]",
     .name_ja = "si.icnf.pt — oper_local [MAQUINAS:oper_local_fc]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13130,7 +13130,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_32DF5F26D1", .name = "si.icnf.pt — opernum_local [MAQUINAS:opernum_local]",
     .name_ja = "si.icnf.pt — opernum_local [MAQUINAS:opernum_local]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13153,7 +13153,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E385458526", .name = "si.icnf.pt — pontos_obs_aves_marinhas "
       "[snimar:pontos_obs_aves_marinhas]",
     .name_ja = "si.icnf.pt — pontos_obs_aves_marinhas [snimar:pontos_obs_aves_marinhas]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13177,7 +13177,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FD6C94F68F", .name = "mapy.geoportal.gov.pl — R01_Granice_rejonow_statystycznych "
       "[ms:R01_Granice_rejonow_statystycznych]",
     .name_ja = "mapy.geoportal.gov.pl — R01_Granice_rejonow_statystycznych [ms:R01_Granice_rejonow_statystycznych]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13198,7 +13198,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_B22ED9B0B3", .name = "si.icnf.pt — prof [BDG:prof]",
     .name_ja = "si.icnf.pt — prof [BDG:prof]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13220,7 +13220,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_419679EDD2", .name = "si.icnf.pt — prof_srh [BDG:prof_srh]",
     .name_ja = "si.icnf.pt — prof_srh [BDG:prof_srh]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13243,7 +13243,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_FF93190477", .name = "si.icnf.pt — psrn2000_dir_aves_orientacoes_gestao "
       "[snimar:psrn2000_dir_aves_orientacoes_gestao]",
     .name_ja = "si.icnf.pt — psrn2000_dir_aves_orientacoes_gestao [snimar:psrn2000_dir_aves_orientacoes_gestao]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13266,7 +13266,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A8C45BB9F3", .name = "si.icnf.pt — psrn2000_dir_aves_valores_snimar "
       "[snimar:psrn2000_dir_aves_valores]",
     .name_ja = "si.icnf.pt — psrn2000_dir_aves_valores_snimar [snimar:psrn2000_dir_aves_valores]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13288,7 +13288,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C8D2B1BEC0", .name = "si.icnf.pt — psrn2000_especies_aves "
       "[BDG:psrn2000_dir_aves_valores]",
     .name_ja = "si.icnf.pt — psrn2000_especies_aves [BDG:psrn2000_dir_aves_valores]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13311,7 +13311,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_941A0F5A13", .name = "si.icnf.pt — psrn2000_fauna_linhas [BDG:psrn2000_fauna_linhas]",
     .name_ja = "si.icnf.pt — psrn2000_fauna_linhas [BDG:psrn2000_fauna_linhas]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13335,7 +13335,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_838BAA155D", .name = "si.icnf.pt — psrn2000_fauna_poligonos "
       "[BDG:psrn2000_fauna_poligonos]",
     .name_ja = "si.icnf.pt — psrn2000_fauna_poligonos [BDG:psrn2000_fauna_poligonos]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13358,7 +13358,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_A490B6F860", .name = "si.icnf.pt — psrn2000_fauna_pontos [BDG:psrn2000_fauna_pontos]",
     .name_ja = "si.icnf.pt — psrn2000_fauna_pontos [BDG:psrn2000_fauna_pontos]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13382,7 +13382,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9DF2A8D964", .name = "si.icnf.pt — psrn2000_flora_poligonos "
       "[BDG:psrn2000_flora_poligonos]",
     .name_ja = "si.icnf.pt — psrn2000_flora_poligonos [BDG:psrn2000_flora_poligonos]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13405,7 +13405,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_6914AE65F8", .name = "si.icnf.pt — psrn2000_flora_pontos [BDG:psrn2000_flora_pontos]",
     .name_ja = "si.icnf.pt — psrn2000_flora_pontos [BDG:psrn2000_flora_pontos]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13429,7 +13429,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_A4B7C62E84", .name = "si.icnf.pt — psrn2000_habitats_nacional "
       "[BDG:psrn2000_habitats_nacional]",
     .name_ja = "si.icnf.pt — psrn2000_habitats_nacional [BDG:psrn2000_habitats_nacional]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13453,7 +13453,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_C7AFB938E4", .name = "si.icnf.pt — psrn2000_habitats_nacional_l "
       "[BDG:psrn2000_habitats_nacional_l]",
     .name_ja = "si.icnf.pt — psrn2000_habitats_nacional_l [BDG:psrn2000_habitats_nacional_l]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13477,7 +13477,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2B4B3450F2", .name = "si.icnf.pt — psrn2000_habitats_snimar "
       "[snimar:psrn2000_habitats_snimar]",
     .name_ja = "si.icnf.pt — psrn2000_habitats_snimar [snimar:psrn2000_habitats_snimar]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13499,7 +13499,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4CF113A0BF", .name = "si.icnf.pt — pt_art12_aves_distribuicao "
       "[BDG:pt_art12_aves_distribuicao]",
     .name_ja = "si.icnf.pt — pt_art12_aves_distribuicao [BDG:pt_art12_aves_distribuicao]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13523,7 +13523,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_745D11429A", .name = "mapy.geoportal.gov.pl — A06_Granice_obrebow_ewidencyjnych "
       "[ms:A06_Granice_obrebow_ewidencyjnych]",
     .name_ja = "mapy.geoportal.gov.pl — A06_Granice_obrebow_ewidencyjnych [ms:A06_Granice_obrebow_ewidencyjnych]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13545,7 +13545,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_0211B04E82", .name = "si.icnf.pt — pt_art12_aves_distribuicao "
       "[snimar:pt_art12_aves_distribuicao]",
     .name_ja = "si.icnf.pt — pt_art12_aves_distribuicao [snimar:pt_art12_aves_distribuicao]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13566,7 +13566,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_EDA66F732B", .name = "si.icnf.pt — pt_art12_aves_range [snimar:pt_art12_aves_range]",
     .name_ja = "si.icnf.pt — pt_art12_aves_range [snimar:pt_art12_aves_range]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13588,7 +13588,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_E30E2EE555", .name = "si.icnf.pt — pt_art17_especies_avaliacao "
       "[snimar:pt_art17_especies_avaliacao]",
     .name_ja = "si.icnf.pt — pt_art17_especies_avaliacao [snimar:pt_art17_especies_avaliacao]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13610,7 +13610,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_99A9B47248", .name = "si.icnf.pt — pt_art17_especies_distribuicao "
       "[snimar:pt_art17_especies_distribuicao]",
     .name_ja = "si.icnf.pt — pt_art17_especies_distribuicao [snimar:pt_art17_especies_distribuicao]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13632,7 +13632,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D21A66CAAC", .name = "si.icnf.pt — pt_art17_especies_range "
       "[snimar:pt_art17_especies_range]",
     .name_ja = "si.icnf.pt — pt_art17_especies_range [snimar:pt_art17_especies_range]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13654,7 +13654,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_9822E45243", .name = "si.icnf.pt — pt_art17_habitats_avaliacao "
       "[snimar:pt_art17_habitats_avaliacao]",
     .name_ja = "si.icnf.pt — pt_art17_habitats_avaliacao [snimar:pt_art17_habitats_avaliacao]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13676,7 +13676,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_4F2D5AB02C", .name = "mapy.geoportal.gov.pl — A05_Granice_jednostek_ewidencyjnych "
       "[ms:A05_Granice_jednostek_ewidencyjnych]",
     .name_ja = "mapy.geoportal.gov.pl — A05_Granice_jednostek_ewidencyjnych [ms:A05_Granice_jednostek_ewidencyjnych]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13698,7 +13698,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_7B2C7E657E", .name = "si.icnf.pt — pt_art17_habitats_distribuicao "
       "[BDG:pt_art17_habitats_distribuicao]",
     .name_ja = "si.icnf.pt — pt_art17_habitats_distribuicao [BDG:pt_art17_habitats_distribuicao]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13722,7 +13722,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_D95FE2085C", .name = "si.icnf.pt — pt_art17_habitats_distribuicao "
       "[snimar:pt_art17_habitats_distribuicao]",
     .name_ja = "si.icnf.pt — pt_art17_habitats_distribuicao [snimar:pt_art17_habitats_distribuicao]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13743,7 +13743,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_315FECC89D", .name = "mapy.geoportal.gov.pl — A04_Granice_miast [ms:A04_Granice_miast]",
     .name_ja = "mapy.geoportal.gov.pl — A04_Granice_miast [ms:A04_Granice_miast]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13765,7 +13765,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_6E7C5BD80B", .name = "si.icnf.pt — pt_art17_habitats_range "
       "[snimar:pt_art17_habitats_range]",
     .name_ja = "si.icnf.pt — pt_art17_habitats_range [snimar:pt_art17_habitats_range]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13786,7 +13786,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_85C222CB96", .name = "si.icnf.pt — ramsar_continente [BDG:ramsar_continente]",
     .name_ja = "si.icnf.pt — ramsar_continente [BDG:ramsar_continente]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13809,7 +13809,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_947A77BF7E", .name = "si.icnf.pt — ramsar_snimar [snimar:ramsar_snimar]",
     .name_ja = "si.icnf.pt — ramsar_snimar [snimar:ramsar_snimar]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13831,7 +13831,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_2F3CE8AD4B", .name = "si.icnf.pt — reservas_biogeneticas_ptcont "
       "[BDG:reservas_biogeneticas_ptcont]",
     .name_ja = "si.icnf.pt — reservas_biogeneticas_ptcont [BDG:reservas_biogeneticas_ptcont]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13854,7 +13854,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_6368C6362E", .name = "si.icnf.pt — rnap_snimar [snimar:rnap_snimar]",
     .name_ja = "si.icnf.pt — rnap_snimar [snimar:rnap_snimar]",
-    .category = "geospatial", .portal = "https://si.icnf.pt",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://si.icnf.pt",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pt\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13874,7 +13874,7 @@ static const hp_source HP3B63_EUWFS[] = {
 
   { .id = "JO63_EUWFS_E71B5AB900", .name = "mapy.geoportal.gov.pl — A03_Granice_gmin [ms:A03_Granice_gmin]",
     .name_ja = "mapy.geoportal.gov.pl — A03_Granice_gmin [ms:A03_Granice_gmin]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13896,7 +13896,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_969FA4BA90", .name = "mapy.geoportal.gov.pl — A02_Granice_powiatow "
       "[ms:A02_Granice_powiatow]",
     .name_ja = "mapy.geoportal.gov.pl — A02_Granice_powiatow [ms:A02_Granice_powiatow]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13918,7 +13918,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_F221892145", .name = "mapy.geoportal.gov.pl — A01_Granice_wojewodztw "
       "[ms:A01_Granice_wojewodztw]",
     .name_ja = "mapy.geoportal.gov.pl — A01_Granice_wojewodztw [ms:A01_Granice_wojewodztw]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13940,7 +13940,7 @@ static const hp_source HP3B63_EUWFS[] = {
   { .id = "JO63_EUWFS_06B702C5B2", .name = "mapy.geoportal.gov.pl — A00_Granice_panstwa "
       "[ms:A00_Granice_panstwa]",
     .name_ja = "mapy.geoportal.gov.pl — A00_Granice_panstwa [ms:A00_Granice_panstwa]",
-    .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,

@@ -142,12 +142,9 @@ VRSS(gov_justice_news, "gov-justice-news", "US Department of Justice — All New
   "en", "[\"usa\",\"doj\",\"prosecution\",\"enforcement\"]", 3600,
   "All Department of Justice news items: indictments, settlements, policy and leadership announcements.");
 
-VJSON(gov_kr_law_search, "gov-kr-law-search", "Korea Law Information — Statute Search", "韓国法令情報 法令検索",
-  "legal", "parliament",
-  "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=law&type=JSON&display=20",
-  "lawsearch.law",
-  "ko", "[\"korea\",\"legislation\",\"statute\",\"asia\"]", 86400,
-  "Korean national statute search API returning law names, ministries and effective dates.");
+/* gov-kr-law-search moved to hp17_kr_legal_1.c (2026-11-16): a VJSON row has no
+ * credential gate, and law.go.kr answers OC=test with a 215-byte HTTP-200
+ * "user verification failed" body, so the row stored nothing at rc=0. Same id. */
 
 VJSON(gov_nl_tweedekamer_besluit, "gov-nl-tweedekamer-besluit", "Tweede Kamer — Decisions", "オランダ下院 決定",
   "legal", "parliament",

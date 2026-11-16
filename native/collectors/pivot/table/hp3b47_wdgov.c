@@ -24,7 +24,7 @@
 static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11926724", .name = "Andorran Financial Authority (central-bank, AD) - AFA",
     .name_ja = "Andorran Financial Authority (central-bank, AD) - AFA",
-    .category = "government", .portal = "https://www.afa.ad/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.afa.ad/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -43,7 +43,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q11926724_2", .name = "Andorran Financial Authority (central-bank, AD) - AFA",
     .name_ja = "Andorran Financial Authority (central-bank, AD) - AFA",
-    .category = "government", .portal = "https://www.afa.ad/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.afa.ad/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -62,7 +62,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q11926724_3", .name = "Andorran Financial Authority (central-bank, AD) - AFA",
     .name_ja = "Andorran Financial Authority (central-bank, AD) - AFA",
-    .category = "government", .portal = "https://www.afa.ad/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.afa.ad/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -81,7 +81,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q11926724_4", .name = "Andorran Financial Authority (central-bank, AD) - Advertències",
     .name_ja = "Andorran Financial Authority (central-bank, AD) - Advertències",
-    .category = "government", .portal = "https://www.afa.ad/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.afa.ad/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -101,7 +101,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11926724_5", .name = "Andorran Financial Authority (central-bank, AD) - Comunicats de "
       "premsa",
     .name_ja = "Andorran Financial Authority (central-bank, AD) - Comunicats de premsa",
-    .category = "government", .portal = "https://www.afa.ad/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.afa.ad/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -120,7 +120,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q11926724_6", .name = "Andorran Financial Authority (central-bank, AD) - Nova normativa",
     .name_ja = "Andorran Financial Authority (central-bank, AD) - Nova normativa",
-    .category = "government", .portal = "https://www.afa.ad/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.afa.ad/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -140,7 +140,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4689151", .name = "Afghanistan Meteorological Authority (government-agency, AF) - "
       "Afghanistan Meteorological Department",
     .name_ja = "Afghanistan Meteorological Authority (government-agency, AF) - Afghanistan Meteorological Department",
-    .category = "government", .portal = "https://amd.gov.af/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://amd.gov.af/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -160,7 +160,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q97041548", .name = "World Health Organization - Afghanistan (government-agency, AF) "
       "- WHO EMRO - Home",
     .name_ja = "World Health Organization - Afghanistan (government-agency, AF) - WHO EMRO - Home",
-    .category = "government", .portal = "https://www.emro.who.int/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.emro.who.int/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -180,7 +180,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q97041548_2", .name = "World Health Organization - Afghanistan (government-agency, AF) "
       "- WHO EMRO - Home",
     .name_ja = "World Health Organization - Afghanistan (government-agency, AF) - WHO EMRO - Home",
-    .category = "government", .portal = "https://www.emro.who.int/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.emro.who.int/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -200,7 +200,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5358329", .name = "Autoriteti i Komunikimeve Elektronike dhe Postare "
       "(government-agency, AL) - AKEP",
     .name_ja = "Autoriteti i Komunikimeve Elektronike dhe Postare (government-agency, AL) - AKEP",
-    .category = "government", .portal = "https://akep.al/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://akep.al/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -220,7 +220,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116455399", .name = "General Directorate of Metrology and Calibration "
       "(government-agency, AL) - DPM",
     .name_ja = "General Directorate of Metrology and Calibration (government-agency, AL) - DPM",
-    .category = "government", .portal = "https://dpm.gov.al/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://dpm.gov.al/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -240,7 +240,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1349315", .name = "Constitutional Court of Albania (court, AL) - GJYKATA "
       "KUSHTETUESE",
     .name_ja = "Constitutional Court of Albania (court, AL) - GJYKATA KUSHTETUESE",
-    .category = "government", .portal = "https://www.gjykatakushtetuese.gov.al/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.gjykatakushtetuese.gov.al/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -259,7 +259,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q4709158", .name = "Albanian Republican Guard (police, AL) - Garda e Republikës",
     .name_ja = "Albanian Republican Guard (police, AL) - Garda e Republikës",
-    .category = "government", .portal = "https://www.garda.gov.al/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.garda.gov.al/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -279,7 +279,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q806714", .name = "Bank of Albania (central-bank, AL) - Banka e Shqipërisë-Njoftime "
       "në RSS",
     .name_ja = "Bank of Albania (central-bank, AL) - Banka e Shqipërisë-Njoftime në RSS",
-    .category = "government", .portal = "https://www.bankofalbania.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.bankofalbania.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -299,7 +299,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16368812", .name = "Cadastre Committee (government-agency, AM) - Նորություններ – "
       "Cadastre am",
     .name_ja = "Cadastre Committee (government-agency, AM) - Նորություններ – Cadastre am",
-    .category = "government", .portal = "https://cadastre.am/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cadastre.am/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -318,7 +318,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q115885591", .name = "Language Committee (government-agency, AM) - ԼԵԶՎԻ ԿՈՄԻՏԵ",
     .name_ja = "Language Committee (government-agency, AM) - ԼԵԶՎԻ ԿՈՄԻՏԵ",
-    .category = "government", .portal = "https://langcom.am/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://langcom.am/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -338,7 +338,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116846360", .name = "Ministry of Internal Affairs (government-agency, AM) - Ministry "
       "of Internal Affairs of the Republic of Armenia",
     .name_ja = "Ministry of Internal Affairs (government-agency, AM) - Ministry of Internal Affairs of the Republic of Armenia",
-    .category = "government", .portal = "https://mia.gov.am/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mia.gov.am/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -357,7 +357,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q25486289", .name = "Q25486289 (court, AM) - Արբիտրաժային Հաստատություն",
     .name_ja = "Q25486289 (court, AM) - Արբիտրաժային Հաստատություն",
-    .category = "government", .portal = "https://arbitrage.am/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://arbitrage.am/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -376,7 +376,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q109535905", .name = "Armenian Automobile Federation (regulatory-agency, AM) - FAA",
     .name_ja = "Armenian Automobile Federation (regulatory-agency, AM) - FAA",
-    .category = "government", .portal = "https://faa.am/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://faa.am/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -395,7 +395,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q109535905_2", .name = "Armenian Automobile Federation (regulatory-agency, AM) - FAA",
     .name_ja = "Armenian Automobile Federation (regulatory-agency, AM) - FAA",
-    .category = "government", .portal = "https://faa.am/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://faa.am/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -416,7 +416,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, AR) - II Festival en Defensa de la Ciencia "
       "Soberana y la Educación Pública",
     .name_ja = "Laboratorio de Investigaciones del Territorio y el Ambiente (government-agency, AR) - II Festival en Defensa de la Ciencia Soberana y la Educación Pública",
-    .category = "government", .portal = "https://linta.cic.gba.gob.ar/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://linta.cic.gba.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -436,7 +436,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135398222", .name = "Instituto de Psicología Básica, Aplicada y Tecnología "
       "(government-agency, AR) - IPSIBAT",
     .name_ja = "Instituto de Psicología Básica, Aplicada y Tecnología (government-agency, AR) - IPSIBAT",
-    .category = "government", .portal = "https://ipsibat.conicet.gov.ar/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ipsibat.conicet.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -456,7 +456,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137409137", .name = "Instituto de Biotecnología Ambiental y Salud (government-agency, "
       "AR) - INBIAS",
     .name_ja = "Instituto de Biotecnología Ambiental y Salud (government-agency, AR) - INBIAS",
-    .category = "government", .portal = "https://inbias.conicet.gov.ar/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://inbias.conicet.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -476,7 +476,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137409152", .name = "Instituto de Investigación en Producción Animal "
       "(government-agency, AR) - INPA",
     .name_ja = "Instituto de Investigación en Producción Animal (government-agency, AR) - INPA",
-    .category = "government", .portal = "https://inpa-uba.conicet.gov.ar/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://inpa-uba.conicet.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -496,7 +496,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140870460", .name = "Investigaciones Socio-históricas Regionales (government-agency, "
       "AR) - ISHIR",
     .name_ja = "Investigaciones Socio-históricas Regionales (government-agency, AR) - ISHIR",
-    .category = "government", .portal = "https://ishir.conicet.gov.ar/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ishir.conicet.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -515,7 +515,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5573733", .name = "Acumar (government-agency, AR) - ACUMAR",
     .name_ja = "Acumar (government-agency, AR) - ACUMAR",
-    .category = "government", .portal = "https://www.acumar.gob.ar/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.acumar.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -535,7 +535,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q98398781", .name = "Q98398781 (government-agency, AR) - Comité Nacional para la "
       "prevención de la tortura",
     .name_ja = "Q98398781 (government-agency, AR) - Comité Nacional para la prevención de la tortura",
-    .category = "government", .portal = "https://cnpt.gob.ar/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cnpt.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -556,7 +556,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Centro Argentino de Información Científica y Tecnológica "
       "(government-agency, AR) - CAICYT-CONICET",
     .name_ja = "Consejo Nacional de Investigaciones Científicas y Técnicas, Centro Argentino de Información Científica y Tecnológica (government-agency, AR) - CAICYT-CONICET",
-    .category = "government", .portal = "http://www.caicyt-conicet.gov.ar/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://www.caicyt-conicet.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -577,7 +577,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Materiales (government-agency, AR) - INTEMA – Instituto de "
       "Investigaciones en Ciencia y Tecnología de Material",
     .name_ja = "Instituto de Investigaciones en Ciencia y Tecnología de Materiales (government-agency, AR) - INTEMA – Instituto de Investigaciones en Ciencia y Tecnología de Material",
-    .category = "government", .portal = "https://intema.gob.ar/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://intema.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -596,7 +596,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q33122165", .name = "Municipality De Malargue (government-agency, AR) - Sitio oficial",
     .name_ja = "Municipality De Malargue (government-agency, AR) - Sitio oficial",
-    .category = "government", .portal = "https://www.malargue.gov.ar/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.malargue.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -615,7 +615,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q119085978", .name = "Teatro Colón (government-agency, AR) - Teatro Colón",
     .name_ja = "Teatro Colón (government-agency, AR) - Teatro Colón",
-    .category = "government", .portal = "https://teatrocolon.org.ar/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://teatrocolon.org.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -635,7 +635,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6973624", .name = "National Institute of Cinema and Audiovisual Arts "
       "(government-organization, AR) - INCAA",
     .name_ja = "National Institute of Cinema and Audiovisual Arts (government-organization, AR) - INCAA",
-    .category = "government", .portal = "https://www.incaa.gob.ar/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.incaa.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -655,7 +655,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16566000", .name = "Faculty of Astronomical and Geophysical Sciences "
       "(government-organization, AR) - FCAGLP – UNLP",
     .name_ja = "Faculty of Astronomical and Geophysical Sciences (government-organization, AR) - FCAGLP – UNLP",
-    .category = "government", .portal = "https://www.fcaglp.unlp.edu.ar/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.fcaglp.unlp.edu.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -674,7 +674,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q21002870", .name = "Q21002870 (police, AR) - Formosa.gob.ar / Licitaciones",
     .name_ja = "Q21002870 (police, AR) - Formosa.gob.ar / Licitaciones",
-    .category = "government", .portal = "https://www.formosa.gob.ar/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.formosa.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -693,7 +693,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q41142147", .name = "Senate of Catamarca (legislature, AR) - Cámara de Senadores de "
       "la Provincia de Catamarca",
     .name_ja = "Senate of Catamarca (legislature, AR) - Cámara de Senadores de la Provincia de Catamarca",
-    .category = "government", .portal = "https://senadodecatamarca.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://senadodecatamarca.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -713,7 +713,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457126", .name = "Deliberative Council of Salta (legislature, AR) - En el marco de "
       "una nueva celebración de la Fiesta Nacional de dicho país Se l",
     .name_ja = "Deliberative Council of Salta (legislature, AR) - En el marco de una nueva celebración de la Fiesta Nacional de dicho país Se l",
-    .category = "government", .portal = "https://cdsalta.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://cdsalta.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -733,7 +733,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457125", .name = "Deliberative Council of San Miguel de Tucumán (legislature, AR) "
       "- Honorable Concejo Deliberante",
     .name_ja = "Deliberative Council of San Miguel de Tucumán (legislature, AR) - Honorable Concejo Deliberante",
-    .category = "government", .portal = "https://hcdtucuman.com.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://hcdtucuman.com.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -753,7 +753,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457128", .name = "Deliberative Council of Merlo Partido (legislature, AR) - Merlo "
       "Buenos Aires",
     .name_ja = "Deliberative Council of Merlo Partido (legislature, AR) - Merlo Buenos Aires",
-    .category = "government", .portal = "https://www.merlo.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.merlo.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -773,7 +773,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457129", .name = "Deliberative Council of Santa Fe (legislature, AR) - Concejo "
       "Municipal de Santa Fe — Noticias",
     .name_ja = "Deliberative Council of Santa Fe (legislature, AR) - Concejo Municipal de Santa Fe — Noticias",
-    .category = "government", .portal = "https://www.concejosantafe.gov.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.concejosantafe.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -793,7 +793,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457140", .name = "Deliberative Council of Neuquén (legislature, AR) - Concejo "
       "Deliberante de la ciudad de Neuquén",
     .name_ja = "Deliberative Council of Neuquén (legislature, AR) - Concejo Deliberante de la ciudad de Neuquén",
-    .category = "government", .portal = "http://www.cdnqn.gov.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "http://www.cdnqn.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -813,7 +813,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457144", .name = "Deliberative Council of Tres de Febrero Partido (legislature, "
       "AR) - Municipalidad Tres de Febrero",
     .name_ja = "Deliberative Council of Tres de Febrero Partido (legislature, AR) - Municipalidad Tres de Febrero",
-    .category = "government", .portal = "https://www.tresdefebrero.gov.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.tresdefebrero.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -833,7 +833,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457152", .name = "Deliberative Council of Berazategui Partido (legislature, AR) - "
       "Municipalidad de Berazategui",
     .name_ja = "Deliberative Council of Berazategui Partido (legislature, AR) - Municipalidad de Berazategui",
-    .category = "government", .portal = "https://berazategui.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://berazategui.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -853,7 +853,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457158", .name = "Deliberative Council of Pilar Partido (legislature, AR) - HCD "
       "Pilar",
     .name_ja = "Deliberative Council of Pilar Partido (legislature, AR) - HCD Pilar",
-    .category = "government", .portal = "https://hcdpilar.gov.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://hcdpilar.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -873,7 +873,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457156", .name = "Deliberative Council of Bahía Blanca (legislature, AR) - "
       "Honorable Concejo Deliberante de Bahía Blanca",
     .name_ja = "Deliberative Council of Bahía Blanca (legislature, AR) - Honorable Concejo Deliberante de Bahía Blanca",
-    .category = "government", .portal = "https://concejobahia.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://concejobahia.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -893,7 +893,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457165", .name = "Deliberative Council of San Miguel Partido (legislature, AR) - "
       "HCD Concejales",
     .name_ja = "Deliberative Council of San Miguel Partido (legislature, AR) - HCD Concejales",
-    .category = "government", .portal = "http://hcdconcejales.blogspot.com/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "http://hcdconcejales.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -913,7 +913,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457165_2", .name = "Deliberative Council of San Miguel Partido (legislature, AR) - "
       "HCD Concejales",
     .name_ja = "Deliberative Council of San Miguel Partido (legislature, AR) - HCD Concejales",
-    .category = "government", .portal = "http://hcdconcejales.blogspot.com/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "http://hcdconcejales.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -933,7 +933,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457165_3", .name = "Deliberative Council of San Miguel Partido (legislature, AR) - "
       "HCD Concejales",
     .name_ja = "Deliberative Council of San Miguel Partido (legislature, AR) - HCD Concejales",
-    .category = "government", .portal = "https://www.blogger.com/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.blogger.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -953,7 +953,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457171", .name = "Deliberative Council of San Salvador de Jujuy (legislature, AR) "
       "- Concejo Deliberante",
     .name_ja = "Deliberative Council of San Salvador de Jujuy (legislature, AR) - Concejo Deliberante",
-    .category = "government", .portal = "https://cdjujuy.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://cdjujuy.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -973,7 +973,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59457169", .name = "Deliberative Council of Santiago del Estero (legislature, AR) - "
       "CDSDE",
     .name_ja = "Deliberative Council of Santiago del Estero (legislature, AR) - CDSDE",
-    .category = "government", .portal = "https://cdsde.com.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://cdsde.com.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -993,7 +993,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q118390852", .name = "Deliberative Council of Cipolletti (legislature, AR) - Concejo "
       "Deliberante de Cipolletti",
     .name_ja = "Deliberative Council of Cipolletti (legislature, AR) - Concejo Deliberante de Cipolletti",
-    .category = "government", .portal = "https://www.cdcipolletti.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.cdcipolletti.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1013,7 +1013,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q125190890", .name = "Concejo Deliberante de Yerba Buena (legislature, AR) - "
       "Municipalidad de Yerba Buena",
     .name_ja = "Concejo Deliberante de Yerba Buena (legislature, AR) - Municipalidad de Yerba Buena",
-    .category = "government", .portal = "https://yerbabuena.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://yerbabuena.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1033,7 +1033,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q56316686", .name = "Q56316686 (legislature, AR) - Honorable Cámara de Diputados de "
       "la Provincia de Corrientes",
     .name_ja = "Q56316686 (legislature, AR) - Honorable Cámara de Diputados de la Provincia de Corrientes",
-    .category = "government", .portal = "https://hcdcorrientes.gov.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://hcdcorrientes.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1052,7 +1052,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q109424025", .name = "Q109424025 (legislature, AR) - Comentarios en: Portada",
     .name_ja = "Q109424025 (legislature, AR) - Comentarios en: Portada",
-    .category = "government", .portal = "https://chivilcoy.gov.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://chivilcoy.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1071,7 +1071,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q130285152", .name = "Q130285152 (legislature, AR) - 25 Aniversario de Bomberos N°16",
     .name_ja = "Q130285152 (legislature, AR) - 25 Aniversario de Bomberos N°16",
-    .category = "government", .portal = "https://hcdrincon.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://hcdrincon.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1090,7 +1090,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q130285313", .name = "Q130285313 (legislature, AR) - Concejo Deliberante Plottier 2026",
     .name_ja = "Q130285313 (legislature, AR) - Concejo Deliberante Plottier 2026",
-    .category = "government", .portal = "https://www.concejoplottier.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.concejoplottier.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1110,7 +1110,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q130285595", .name = "Q130285595 (legislature, AR) - Concejo Municipal de San Carlos "
       "de Bariloche - Sitio Oficial.",
     .name_ja = "Q130285595 (legislature, AR) - Concejo Municipal de San Carlos de Bariloche - Sitio Oficial.",
-    .category = "government", .portal = "https://concejobariloche.gov.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://concejobariloche.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1130,7 +1130,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q130285595_2", .name = "Q130285595 (legislature, AR) - Concejo Municipal de San Carlos "
       "de Bariloche - Sitio Oficial.",
     .name_ja = "Q130285595 (legislature, AR) - Concejo Municipal de San Carlos de Bariloche - Sitio Oficial.",
-    .category = "government", .portal = "https://concejobariloche.gov.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://concejobariloche.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1149,7 +1149,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q130285630", .name = "Q130285630 (legislature, AR) - RESOLUCIONES CDT 2021",
     .name_ja = "Q130285630 (legislature, AR) - RESOLUCIONES CDT 2021",
-    .category = "government", .portal = "https://concejodeliberantetolhuin.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://concejodeliberantetolhuin.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1168,7 +1168,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q130285650", .name = "Q130285650 (legislature, AR) - Concejo Deliberante de Río Grande",
     .name_ja = "Q130285650 (legislature, AR) - Concejo Deliberante de Río Grande",
-    .category = "government", .portal = "https://concejoriogrande.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://concejoriogrande.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1188,7 +1188,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q130287493", .name = "Q130287493 (legislature, AR) - Honorable Concejo Deliberante "
       "Andacollo",
     .name_ja = "Q130287493 (legislature, AR) - Honorable Concejo Deliberante Andacollo",
-    .category = "government", .portal = "https://www.hcdandacollo.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.hcdandacollo.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1208,7 +1208,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q130287516", .name = "Q130287516 (legislature, AR) - Honorable Concejo Deliberante de "
       "Las Lajas",
     .name_ja = "Q130287516 (legislature, AR) - Honorable Concejo Deliberante de Las Lajas",
-    .category = "government", .portal = "https://concejodeliberantelaslajas.wordpress.com/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://concejodeliberantelaslajas.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1228,7 +1228,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q130287537", .name = "Q130287537 (legislature, AR) - Concejo Deliberante Piedra del "
       "Águila",
     .name_ja = "Q130287537 (legislature, AR) - Concejo Deliberante Piedra del Águila",
-    .category = "government", .portal = "https://hcdpda.blogspot.com/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://hcdpda.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1248,7 +1248,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q130287537_2", .name = "Q130287537 (legislature, AR) - Concejo Deliberante Piedra del "
       "Águila",
     .name_ja = "Q130287537 (legislature, AR) - Concejo Deliberante Piedra del Águila",
-    .category = "government", .portal = "https://hcdpda.blogspot.com/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://hcdpda.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1268,7 +1268,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q130287537_3", .name = "Q130287537 (legislature, AR) - Concejo Deliberante Piedra del "
       "Águila",
     .name_ja = "Q130287537 (legislature, AR) - Concejo Deliberante Piedra del Águila",
-    .category = "government", .portal = "https://www.blogger.com/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.blogger.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1287,7 +1287,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q130287549", .name = "Q130287549 (legislature, AR) - Concejo Deliberante de Allen",
     .name_ja = "Q130287549 (legislature, AR) - Concejo Deliberante de Allen",
-    .category = "government", .portal = "https://allencd.gov.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://allencd.gov.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1307,7 +1307,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5780796", .name = "Deliberative Council of Córdoba (legislature, AR) - Concejo "
       "Deliberante de Córdoba",
     .name_ja = "Deliberative Council of Córdoba (legislature, AR) - Concejo Deliberante de Córdoba",
-    .category = "government", .portal = "https://cdcordoba.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://cdcordoba.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1327,7 +1327,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5972573", .name = "legislature of Córdoba (legislature, AR) - Legislatura de la "
       "Provincia de Córdoba",
     .name_ja = "legislature of Córdoba (legislature, AR) - Legislatura de la Provincia de Córdoba",
-    .category = "government", .portal = "https://legislaturacba.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://legislaturacba.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1347,7 +1347,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16589934", .name = "Legislature of Tierra del Fuego (legislature, AR) - Legislatura "
       "TDF A.I.A.S.",
     .name_ja = "Legislature of Tierra del Fuego (legislature, AR) - Legislatura TDF A.I.A.S.",
-    .category = "government", .portal = "https://www.legistdf.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.legistdf.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1366,7 +1366,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q18419590", .name = "Chubut legislature (legislature, AR) - Honorable Legislatura",
     .name_ja = "Chubut legislature (legislature, AR) - Honorable Legislatura",
-    .category = "government", .portal = "https://legislaturadelchubut.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://legislaturadelchubut.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1385,7 +1385,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q40323546", .name = "Senate of Salta (legislature, AR) - Cámara de Senadores",
     .name_ja = "Senate of Salta (legislature, AR) - Cámara de Senadores",
-    .category = "government", .portal = "https://senadosalta.gob.ar/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://senadosalta.gob.ar/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1405,7 +1405,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q24288270", .name = "Federal Institute of Agricultural Economics (government-agency, "
       "AT) - Home",
     .name_ja = "Federal Institute of Agricultural Economics (government-agency, AT) - Home",
-    .category = "government", .portal = "https://bab.gv.at/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://bab.gv.at/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1426,7 +1426,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141548960", .name = "Cradle Coast Authority (government-agency, AU) - Cradle Coast "
       "Authority",
     .name_ja = "Cradle Coast Authority (government-agency, AU) - Cradle Coast Authority",
-    .category = "government", .portal = "https://cradlecoast.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://cradlecoast.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1446,7 +1446,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q109667818", .name = "Australian Cyber Collaboration Centre (government-agency, AU) - "
       "Australian Cyber Collaboration Centre",
     .name_ja = "Australian Cyber Collaboration Centre (government-agency, AU) - Australian Cyber Collaboration Centre",
-    .category = "government", .portal = "https://www.cybercollaboration.org.au/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.cybercollaboration.org.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1466,7 +1466,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q111431889", .name = "Population Health Research Network (government-agency, AU) - "
       "Data Connect Australia",
     .name_ja = "Population Health Research Network (government-agency, AU) - Data Connect Australia",
-    .category = "government", .portal = "https://www.dataconnectaustralia.org.au/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.dataconnectaustralia.org.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1486,7 +1486,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q111431895", .name = "Phenomics Australia (government-agency, AU) - Phenomics "
       "Australia",
     .name_ja = "Phenomics Australia (government-agency, AU) - Phenomics Australia",
-    .category = "government", .portal = "https://phenomicsaustralia.org.au/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://phenomicsaustralia.org.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1506,7 +1506,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q112085340", .name = "NSW Health Pathology (government-agency, AU) - NSW Health "
       "Pathology",
     .name_ja = "NSW Health Pathology (government-agency, AU) - NSW Health Pathology",
-    .category = "government", .portal = "https://pathology.health.nsw.gov.au/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://pathology.health.nsw.gov.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1525,7 +1525,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q18165604", .name = "Goulburn–Murray Water (government-agency, AU) - News & Updates",
     .name_ja = "Goulburn–Murray Water (government-agency, AU) - News & Updates",
-    .category = "government", .portal = "https://www.g-mwater.com.au/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.g-mwater.com.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1545,7 +1545,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q27991344", .name = "Australian Access Federation (government-agency, AU) - "
       "Australian Access Federation",
     .name_ja = "Australian Access Federation (government-agency, AU) - Australian Access Federation",
-    .category = "government", .portal = "https://aaf.edu.au/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://aaf.edu.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1565,7 +1565,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6864416", .name = "Minerals Council of Australia (government-agency, AU) - Minerals "
       "Council of Australia",
     .name_ja = "Minerals Council of Australia (government-agency, AU) - Minerals Council of Australia",
-    .category = "government", .portal = "https://minerals.org.au/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://minerals.org.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1585,7 +1585,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4650880", .name = "ACT Fire and Rescue (government-agency, AU) - ACT Emergency "
       "Services Agency - Working together to care and protect",
     .name_ja = "ACT Fire and Rescue (government-agency, AU) - ACT Emergency Services Agency - Working together to care and protect",
-    .category = "government", .portal = "http://www.esa.act.gov.au/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "http://www.esa.act.gov.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1605,7 +1605,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4650880_2", .name = "ACT Fire and Rescue (government-agency, AU) - ACT Emergency "
       "Services Agency - Working together to care and protect",
     .name_ja = "ACT Fire and Rescue (government-agency, AU) - ACT Emergency Services Agency - Working together to care and protect",
-    .category = "government", .portal = "http://esa.act.gov.au/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "http://esa.act.gov.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1624,7 +1624,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q4698993", .name = "Airservices Australia (government-agency, AU) - Airservices",
     .name_ja = "Airservices Australia (government-agency, AU) - Airservices",
-    .category = "government", .portal = "https://www.airservicesaustralia.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.airservicesaustralia.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1644,7 +1644,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q50039032", .name = "Aboriginal Health and Medical Research Council of New South "
       "Wales (government-agency, AU) - AH&MRC",
     .name_ja = "Aboriginal Health and Medical Research Council of New South Wales (government-agency, AU) - AH&MRC",
-    .category = "government", .portal = "https://www.ahmrc.org.au/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.ahmrc.org.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1664,7 +1664,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q50039903", .name = "Inland Fisheries Service (government-agency, AU) - Inland "
       "Fisheries Service Tas",
     .name_ja = "Inland Fisheries Service (government-agency, AU) - Inland Fisheries Service Tas",
-    .category = "government", .portal = "https://www.ifs.tas.gov.au/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ifs.tas.gov.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1684,7 +1684,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7283888", .name = "Rail Corporation New South Wales (government-agency, AU) - "
       "Travel Docs",
     .name_ja = "Rail Corporation New South Wales (government-agency, AU) - Travel Docs",
-    .category = "government", .portal = "https://www.railcorp.info/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.railcorp.info/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1704,7 +1704,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30264765", .name = "National Centre for Groundwater Research and Training "
       "(government-agency, AU) - NCGRT",
     .name_ja = "National Centre for Groundwater Research and Training (government-agency, AU) - NCGRT",
-    .category = "government", .portal = "https://groundwater.com.au/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://groundwater.com.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1723,7 +1723,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30296850", .name = "Healthway (government-agency, AU) - Healthway",
     .name_ja = "Healthway (government-agency, AU) - Healthway",
-    .category = "government", .portal = "https://www.healthway.wa.gov.au/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.healthway.wa.gov.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1744,7 +1744,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-organization, AU) - NCCARF and CoastAdapt Archive "
       "Library",
     .name_ja = "National Climate Change Adaptation Research Facility (government-organization, AU) - NCCARF and CoastAdapt Archive Library",
-    .category = "government", .portal = "https://nccarf.edu.au/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://nccarf.edu.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1763,7 +1763,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5172270", .name = "Coroner's Court of South Australia (court, AU) - CAA",
     .name_ja = "Coroner's Court of South Australia (court, AU) - CAA",
-    .category = "government", .portal = "https://www.courts.sa.gov.au/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.courts.sa.gov.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1783,7 +1783,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1506724", .name = "Reserve Bank of Australia (central-bank, AU) - Reserve Bank of "
       "Australia   Bulletin",
     .name_ja = "Reserve Bank of Australia (central-bank, AU) - Reserve Bank of Australia   Bulletin",
-    .category = "government", .portal = "https://www.rba.gov.au/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.rba.gov.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1803,7 +1803,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1506724_2", .name = "Reserve Bank of Australia (central-bank, AU) - Reserve Bank of "
       "Australia   Exchange Rates",
     .name_ja = "Reserve Bank of Australia (central-bank, AU) - Reserve Bank of Australia   Exchange Rates",
-    .category = "government", .portal = "https://www.rba.gov.au/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.rba.gov.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1823,7 +1823,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1506724_3", .name = "Reserve Bank of Australia (central-bank, AU) - Reserve Bank of "
       "Australia   Freedom of Information",
     .name_ja = "Reserve Bank of Australia (central-bank, AU) - Reserve Bank of Australia   Freedom of Information",
-    .category = "government", .portal = "https://www.rba.gov.au/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.rba.gov.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1843,7 +1843,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1506724_5", .name = "Reserve Bank of Australia (central-bank, AU) - Reserve Bank of "
       "Australia   Research Discussion Papers",
     .name_ja = "Reserve Bank of Australia (central-bank, AU) - Reserve Bank of Australia   Research Discussion Papers",
-    .category = "government", .portal = "https://www.rba.gov.au/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.rba.gov.au/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1863,7 +1863,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7754727", .name = "The Office of Azerbaijan President (government-agency, AZ) - "
       "Azərbaycan Prezidentinin Rəsmi internet səhifəsi",
     .name_ja = "The Office of Azerbaijan President (government-agency, AZ) - Azərbaycan Prezidentinin Rəsmi internet səhifəsi",
-    .category = "government", .portal = "https://president.az/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://president.az/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1883,7 +1883,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q61931528", .name = "Institute for Scientific Research on Economic Reforms "
       "(government-agency, AZ) - QəbulOL",
     .name_ja = "Institute for Scientific Research on Economic Reforms (government-agency, AZ) - QəbulOL",
-    .category = "government", .portal = "https://qebulol.az/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://qebulol.az/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1902,7 +1902,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q111169496", .name = "Azerbaijan Government CERT (government-agency, AZ) - RSS feed",
     .name_ja = "Azerbaijan Government CERT (government-agency, AZ) - RSS feed",
-    .category = "government", .portal = "https://cert.gov.az/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cert.gov.az/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1923,7 +1923,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Ekspertiza Mərkəzi\\\" Publik Hüquqi Şəxsi (government-agency, "
       "AZ) - AEM",
     .name_ja = "Azərbaycan Respublikası Səhiyyə Nazirliyi \\\"Analitik Ekspertiza Mərkəzi\\\" Publik Hüquqi Şəxsi (government-agency, AZ) - AEM",
-    .category = "government", .portal = "https://pharma.az/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://pharma.az/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1943,7 +1943,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141665187", .name = "İctimai Səhiyyə və İslahatlar Mərkəzi (government-agency, AZ) - "
       "İCTİMAİ SƏHİYYƏ və İSLAHATLAR MƏRKƏZİ",
     .name_ja = "İctimai Səhiyyə və İslahatlar Mərkəzi (government-agency, AZ) - İCTİMAİ SƏHİYYƏ və İSLAHATLAR MƏRKƏZİ",
-    .category = "government", .portal = "https://isim.az/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://isim.az/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1963,7 +1963,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2860448", .name = "Archives of Republika Srpska (government-agency, BA) - Архив "
       "Републике Српске",
     .name_ja = "Archives of Republika Srpska (government-agency, BA) - Архив Републике Српске",
-    .category = "government", .portal = "https://arhivrs.org/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://arhivrs.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1983,7 +1983,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q50041066", .name = "Ministarstvo Gospodarstva (government-agency, BA) - Vlada "
       "Hercegbosanske županije",
     .name_ja = "Ministarstvo Gospodarstva (government-agency, BA) - Vlada Hercegbosanske županije",
-    .category = "government", .portal = "https://www.vladahbz.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.vladahbz.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2003,7 +2003,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q61361803", .name = "Bosnia and Herzegovina Directorate of Civil Aviation "
       "(government-agency, BA) - BHDCA - News",
     .name_ja = "Bosnia and Herzegovina Directorate of Civil Aviation (government-agency, BA) - BHDCA - News",
-    .category = "government", .portal = "http://www.bhdca.gov.ba/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "http://www.bhdca.gov.ba/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2023,7 +2023,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q110112642", .name = "Agency for Identification Documents, Records, and Data Exchange "
       "of Bosnia and Herzegovina (government-agency, BA) - IDDEEA",
     .name_ja = "Agency for Identification Documents, Records, and Data Exchange of Bosnia and Herzegovina (government-agency, BA) - IDDEEA",
-    .category = "government", .portal = "https://www.iddeea.gov.ba/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.iddeea.gov.ba/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2043,7 +2043,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q108052803", .name = "Q108052803 (government-agency, BA) - Federalno ministarstvo "
       "okoliša i turizma – Bosna i Hercegovina",
     .name_ja = "Q108052803 (government-agency, BA) - Federalno ministarstvo okoliša i turizma – Bosna i Hercegovina",
-    .category = "government", .portal = "https://fmoit.gov.ba/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://fmoit.gov.ba/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2063,7 +2063,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1184535", .name = "Central Bank of Bosnia and Herzegovina (central-bank, BA) - "
       "Гувернерка ЦББиХ на Економском форуму у Ист",
     .name_ja = "Central Bank of Bosnia and Herzegovina (central-bank, BA) - Гувернерка ЦББиХ на Економском форуму у Ист",
-    .category = "government", .portal = "https://www.cbbh.ba/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.cbbh.ba/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2083,7 +2083,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5039360", .name = "Caribbean Broadcasting Corporation (government-agency, BB) - "
       "Caribbean Broadcasting Corporation",
     .name_ja = "Caribbean Broadcasting Corporation (government-agency, BB) - Caribbean Broadcasting Corporation",
-    .category = "government", .portal = "https://www.cbc.bb/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.cbc.bb/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2103,7 +2103,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5974475", .name = "ISPR Bangladesh (government-agency, BD) - গণপ্রজাতন্ত্রী "
       "বাংলাদেশ সরকা",
     .name_ja = "ISPR Bangladesh (government-agency, BD) - গণপ্রজাতন্ত্রী বাংলাদেশ সরকা",
-    .category = "government", .portal = "https://ispr.gov.bd/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ispr.gov.bd/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2123,7 +2123,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5974475_2", .name = "ISPR Bangladesh (government-agency, BD) - গণপ্রজাতন্ত্রী "
       "বাংলাদেশ সরকা",
     .name_ja = "ISPR Bangladesh (government-agency, BD) - গণপ্রজাতন্ত্রী বাংলাদেশ সরকা",
-    .category = "government", .portal = "https://ispr.gov.bd/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ispr.gov.bd/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2143,7 +2143,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2927108", .name = "Bruxelles Formation (government-agency, BE) - Bruxelles "
       "Formation",
     .name_ja = "Bruxelles Formation (government-agency, BE) - Bruxelles Formation",
-    .category = "government", .portal = "https://www.bruxellesformation.brussels/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.bruxellesformation.brussels/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2162,7 +2162,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5324374", .name = "ESST (government-agency, BE) - ESST",
     .name_ja = "ESST (government-agency, BE) - ESST",
-    .category = "government", .portal = "https://esst.eu/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://esst.eu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2182,7 +2182,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q14853542", .name = "Public Psychiatric Care Centre - Rekem (government-agency, BE) - "
       "OPZC Rekem",
     .name_ja = "Public Psychiatric Care Centre - Rekem (government-agency, BE) - OPZC Rekem",
-    .category = "government", .portal = "https://www.opzcrekem.be/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.opzcrekem.be/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2202,7 +2202,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q130304206", .name = "European Leader Association for Rural Development "
       "(government-agency, BE) - Elard",
     .name_ja = "European Leader Association for Rural Development (government-agency, BE) - Elard",
-    .category = "government", .portal = "https://elard.eu/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://elard.eu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2221,7 +2221,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q136315401", .name = "Q136315401 (government-agency, BE) - ASEVA nv",
     .name_ja = "Q136315401 (government-agency, BE) - ASEVA nv",
-    .category = "government", .portal = "https://aseva.be/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://aseva.be/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2241,7 +2241,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q42162684", .name = "Q42162684 (government-organization, BE) - Steunpunt tot "
       "bestrijding van armoede",
     .name_ja = "Q42162684 (government-organization, BE) - Steunpunt tot bestrijding van armoede",
-    .category = "government", .portal = "https://armoedebestrijding.be/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://armoedebestrijding.be/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2260,7 +2260,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q85313574", .name = "Q85313574 (government-organization, BE) - FRDO",
     .name_ja = "Q85313574 (government-organization, BE) - FRDO",
-    .category = "government", .portal = "https://frdo-cfdd.be/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://frdo-cfdd.be/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2280,7 +2280,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1824157", .name = "Standing Intelligence Agencies Review Committee "
       "(government-organization, BE) - Comiteri",
     .name_ja = "Standing Intelligence Agencies Review Committee (government-organization, BE) - Comiteri",
-    .category = "government", .portal = "https://www.comiteri.be/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.comiteri.be/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2300,7 +2300,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2103415", .name = "Flemish advisory council for environment and nature "
       "(government-organization, BE) - Minaraad",
     .name_ja = "Flemish advisory council for environment and nature (government-organization, BE) - Minaraad",
-    .category = "government", .portal = "https://www.minaraad.be/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.minaraad.be/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2320,7 +2320,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2103415_2", .name = "Flemish advisory council for environment and nature "
       "(government-organization, BE) - Minaraad",
     .name_ja = "Flemish advisory council for environment and nature (government-organization, BE) - Minaraad",
-    .category = "government", .portal = "https://www.minaraad.be/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.minaraad.be/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2340,7 +2340,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2103415_3", .name = "Flemish advisory council for environment and nature "
       "(government-organization, BE) - Minaraad",
     .name_ja = "Flemish advisory council for environment and nature (government-organization, BE) - Minaraad",
-    .category = "government", .portal = "https://www.minaraad.be/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.minaraad.be/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2360,7 +2360,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2582528", .name = "Assembly of the Flemish Community Commission (legislature, BE) - "
       "raadvgc.be",
     .name_ja = "Assembly of the Flemish Community Commission (legislature, BE) - raadvgc.be",
-    .category = "government", .portal = "https://www.raadvgc.be/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.raadvgc.be/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2380,7 +2380,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30295043", .name = "Centre de Recherche en Santé de Nouna (government-agency, BF) - "
       "Centre de Recherche en Santé de Nouna",
     .name_ja = "Centre de Recherche en Santé de Nouna (government-agency, BF) - Centre de Recherche en Santé de Nouna",
-    .category = "government", .portal = "https://www.crsn-nouna.bf/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.crsn-nouna.bf/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2400,7 +2400,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137298552", .name = "Central Procurement Agency for Essential Generic Medicines "
       "(government-agency, BF) - CAMEG",
     .name_ja = "Central Procurement Agency for Essential Generic Medicines (government-agency, BF) - CAMEG",
-    .category = "government", .portal = "https://www.cameg.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.cameg.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2420,7 +2420,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140045263", .name = "Global Water Partnership West Africa (government-agency, BF) - "
       "GWPO-GWP",
     .name_ja = "Global Water Partnership West Africa (government-agency, BF) - GWPO-GWP",
-    .category = "government", .portal = "https://gwpo-gwp.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://gwpo-gwp.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2440,7 +2440,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141412212", .name = "Agency for the Promotion of Community Entrepreneurship "
       "(government-organization, BF) - APEC Burkina Faso",
     .name_ja = "Agency for the Promotion of Community Entrepreneurship (government-organization, BF) - APEC Burkina Faso",
-    .category = "government", .portal = "https://apec.bf/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://apec.bf/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2460,7 +2460,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135991673", .name = "agence nationale de promotion des technologies de l’information "
       "et de la communication (regulatory-agency, BF) - ANPTIC",
     .name_ja = "agence nationale de promotion des technologies de l’information et de la communication (regulatory-agency, BF) - ANPTIC",
-    .category = "government", .portal = "https://anptic.gov.bf/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://anptic.gov.bf/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2481,7 +2481,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "PASS-FBP3 : dix ans de réformes au service d’un système de santé "
       "plus perfo",
     .name_ja = "Ministry of Public Health of Burundi (government-agency, BI) - PASS-FBP3 : dix ans de réformes au service d’un système de santé plus perfo",
-    .category = "government", .portal = "https://minisante.gov.bi/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://minisante.gov.bi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2502,7 +2502,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "MINISTERE DES RESSOURCES MINIERES, ENERGETIQUE, DE L'INDUSTRIE, "
       "DU COMMERCE",
     .name_ja = "Ministry of Hydraulics, Energy and Mines (ministry, BI) - MINISTERE DES RESSOURCES MINIERES, ENERGETIQUE, DE L'INDUSTRIE, DU COMMERCE",
-    .category = "government", .portal = "https://mrmeict.gov.bi/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mrmeict.gov.bi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2523,7 +2523,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Development Cooperation of Burundi (ministry, BI) - Ministère "
       "des Affaires Etrangères du Burundi",
     .name_ja = "Ministry of Foreign Affairs, Regional Integration and Development Cooperation of Burundi (ministry, BI) - Ministère des Affaires Etrangères du Burundi",
-    .category = "government", .portal = "https://www.mae.gov.bi/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.mae.gov.bi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2543,7 +2543,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q55648321", .name = "Ministry of Justice, Human Rights and Gender of Burundi "
       "(ministry, BI) - Minijustice/Genre",
     .name_ja = "Ministry of Justice, Human Rights and Gender of Burundi (ministry, BI) - Minijustice/Genre",
-    .category = "government", .portal = "https://justice.gov.bi/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://justice.gov.bi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2564,7 +2564,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(ministry, BI) - Ministère des Finances , du Budget et de "
       "l'Economie Numérique",
     .name_ja = "Ministry of Finance, Budget and Digital Economy of Burundi (ministry, BI) - Ministère des Finances , du Budget et de l'Economie Numérique",
-    .category = "government", .portal = "https://finances.gov.bi/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://finances.gov.bi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2584,7 +2584,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141189478", .name = "Ministry of National Education and Scientific Research of "
       "Burundi (ministry, BI) - MENRS",
     .name_ja = "Ministry of National Education and Scientific Research of Burundi (ministry, BI) - MENRS",
-    .category = "government", .portal = "https://mesrs.gov.bi/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mesrs.gov.bi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2605,7 +2605,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Burundi (ministry, BI) - Ministère du Travail, de la Fonction "
       "Publique et de la Sécurité Sociale",
     .name_ja = "Ministry of Labour, Public Service and Social Security of Burundi (ministry, BI) - Ministère du Travail, de la Fonction Publique et de la Sécurité Sociale",
-    .category = "government", .portal = "https://minfp.gov.bi/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://minfp.gov.bi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2626,7 +2626,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "- Petit dossier d’appel d’offres N° Réf 1701.3/04/S/CM/2026-2027 "
       "pou",
     .name_ja = "Ministry of Youth, Sports and Culture of Burundi (ministry, BI) - Petit dossier d’appel d’offres N° Réf 1701.3/04/S/CM/2026-2027 pou",
-    .category = "government", .portal = "https://www.mjsc.gov.bi/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.mjsc.gov.bi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2646,7 +2646,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141189481", .name = "Ministry of Communication and Media (ministry, BI) - Ministère "
       "de la Communication et des Médias",
     .name_ja = "Ministry of Communication and Media (ministry, BI) - Ministère de la Communication et des Médias",
-    .category = "government", .portal = "https://mincom.gov.bi/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mincom.gov.bi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2665,7 +2665,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q118174383", .name = "Q118174383 (government-agency, BJ) - CNSS BÉNIN",
     .name_ja = "Q118174383 (government-agency, BJ) - CNSS BÉNIN",
-    .category = "government", .portal = "https://cnss.bj/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cnss.bj/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2684,7 +2684,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q109045089", .name = "Q109045089 (ministry, BJ) - Actualités - Flux RSS",
     .name_ja = "Q109045089 (ministry, BJ) - Actualités - Flux RSS",
-    .category = "government", .portal = "https://innovation.gouv.bj/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://innovation.gouv.bj/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2704,7 +2704,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5268045", .name = "Dewan Bahasa dan Pustaka Brunei (government-agency, BN) - Dewan "
       "Bahasa dan Pustaka Brunei",
     .name_ja = "Dewan Bahasa dan Pustaka Brunei (government-agency, BN) - Dewan Bahasa dan Pustaka Brunei",
-    .category = "government", .portal = "https://www.dbp.gov.bn/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.dbp.gov.bn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2723,7 +2723,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30296765", .name = "Ministry of Education (government-agency, BN) - MOE",
     .name_ja = "Ministry of Education (government-agency, BN) - MOE",
-    .category = "government", .portal = "https://www.moe.gov.bn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.moe.gov.bn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2743,7 +2743,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30297099", .name = "Prime Minister's Office (government-agency, BN) - Jabatan "
       "Perdana Menteri Brunei Darussalam",
     .name_ja = "Prime Minister's Office (government-agency, BN) - Jabatan Perdana Menteri Brunei Darussalam",
-    .category = "government", .portal = "https://www.jpm.gov.bn/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.jpm.gov.bn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2763,7 +2763,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q108381593", .name = "Department of Economic Planning and Statistics "
       "(government-agency, BN) - DEPS",
     .name_ja = "Department of Economic Planning and Statistics (government-agency, BN) - DEPS",
-    .category = "government", .portal = "https://www.deps.gov.bn/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.deps.gov.bn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2784,7 +2784,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Darussalam (government-agency, BN) - AGC   Attorney General "
       "Chamber Brunei Darussalam",
     .name_ja = "Attorney General's Chambers, Prime Minister's Office, Brunei Darussalam (government-agency, BN) - AGC   Attorney General Chamber Brunei Darussalam",
-    .category = "government", .portal = "https://www.agc.gov.bn/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.agc.gov.bn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2804,7 +2804,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q48165928", .name = "Ministry of Development (ministry, BN) - Kementerian Pembangunan "
       "Negara Brunei Darussalam",
     .name_ja = "Ministry of Development (ministry, BN) - Kementerian Pembangunan Negara Brunei Darussalam",
-    .category = "government", .portal = "https://www.mod.gov.bn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.mod.gov.bn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2824,7 +2824,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113226902", .name = "Prime Minister's Office (ministry, BN) - Prime Minister's Office "
       "Brunei Darussalam",
     .name_ja = "Prime Minister's Office (ministry, BN) - Prime Minister's Office Brunei Darussalam",
-    .category = "government", .portal = "https://www.pmo.gov.bn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.pmo.gov.bn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2844,7 +2844,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q114633216", .name = "Ministry of Transport and Infocommunications of Brunei "
       "(ministry, BN) - Ministry of Transport and Infocommunications",
     .name_ja = "Ministry of Transport and Infocommunications of Brunei (ministry, BN) - Ministry of Transport and Infocommunications",
-    .category = "government", .portal = "https://www.mtic.gov.bn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.mtic.gov.bn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2864,7 +2864,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7205559", .name = "Plurinational Constitutional Tribunal (court, BO) - .:: Tribunal "
       "Constitucional Plurinacional ::.",
     .name_ja = "Plurinational Constitutional Tribunal (court, BO) - .:: Tribunal Constitucional Plurinacional ::.",
-    .category = "government", .portal = "https://tcpbolivia.bo/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://tcpbolivia.bo/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2884,7 +2884,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q806180", .name = "Central Bank of Bolivia (central-bank, BO) - Banco Central de "
       "Bolivia",
     .name_ja = "Central Bank of Bolivia (central-bank, BO) - Banco Central de Bolivia",
-    .category = "government", .portal = "https://www.bcb.gob.bo/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.bcb.gob.bo/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2904,7 +2904,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6041653", .name = "Instituto de Computação da Universidade Estadual de Campinas "
       "(government-agency, BR) - Instituto de Computação",
     .name_ja = "Instituto de Computação da Universidade Estadual de Campinas (government-agency, BR) - Instituto de Computação",
-    .category = "government", .portal = "https://ic.unicamp.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ic.unicamp.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2923,7 +2923,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q7305683", .name = "Rede Nacional de Ensino e Pesquisa (government-agency, BR) - RNP",
     .name_ja = "Rede Nacional de Ensino e Pesquisa (government-agency, BR) - RNP",
-    .category = "government", .portal = "https://www.rnp.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.rnp.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2943,7 +2943,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q29184368", .name = "Fundação de Amparo à Pesquisa e Inovação do Estado de Santa "
       "Catarina (government-agency, BR) - Fapesc",
     .name_ja = "Fundação de Amparo à Pesquisa e Inovação do Estado de Santa Catarina (government-agency, BR) - Fapesc",
-    .category = "government", .portal = "https://fapesc.sc.gov.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://fapesc.sc.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2963,7 +2963,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q29184409", .name = "Fundação de Amparo à Pesquisa do Estado do Piauí "
       "(government-agency, BR) - Fapepi",
     .name_ja = "Fundação de Amparo à Pesquisa do Estado do Piauí (government-agency, BR) - Fapepi",
-    .category = "government", .portal = "https://www.fapepi.pi.gov.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.fapepi.pi.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2983,7 +2983,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q29184766", .name = "Fundação de Amparo à Ciência e Tecnologia de Pernambuco "
       "(government-agency, BR) - FACEPE",
     .name_ja = "Fundação de Amparo à Ciência e Tecnologia de Pernambuco (government-agency, BR) - FACEPE",
-    .category = "government", .portal = "https://www.facepe.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.facepe.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3004,7 +3004,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, BR) - FAPESQ - Fundação de Apoio à Pesquisa "
       "do Estado da Paraíba",
     .name_ja = "Fundação de Apoio à Pesquisa do Estado da Paraíba (government-agency, BR) - FAPESQ - Fundação de Apoio à Pesquisa do Estado da Paraíba",
-    .category = "government", .portal = "https://fapesq.rpp.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://fapesq.rpp.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3025,7 +3025,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, BR) - FAPESQ - Fundação de Apoio à Pesquisa "
       "do Estado da Paraíba",
     .name_ja = "Fundação de Apoio à Pesquisa do Estado da Paraíba (government-agency, BR) - FAPESQ - Fundação de Apoio à Pesquisa do Estado da Paraíba",
-    .category = "government", .portal = "https://fapesq.rpp.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://fapesq.rpp.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3045,7 +3045,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30299123", .name = "Secretaria de Desenvolvimento Econômico e Turístico "
       "(government-agency, BR) - Prefeitura de Lorena",
     .name_ja = "Secretaria de Desenvolvimento Econômico e Turístico (government-agency, BR) - Prefeitura de Lorena",
-    .category = "government", .portal = "http://www.lorena.sp.gov.br/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "http://www.lorena.sp.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3065,7 +3065,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30299178", .name = "Serviço Autônomo de Água e Esgoto de Jaboticabal "
       "(government-agency, BR) - Saaej",
     .name_ja = "Serviço Autônomo de Água e Esgoto de Jaboticabal (government-agency, BR) - Saaej",
-    .category = "government", .portal = "https://www.saaej.sp.gov.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.saaej.sp.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3085,7 +3085,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q45132861", .name = "Alagoas State Research Foundation (government-agency, BR) - "
       "FAPEAL – Fundação de Amparo à Pesquisa do Estado de Alagoas",
     .name_ja = "Alagoas State Research Foundation (government-agency, BR) - FAPEAL – Fundação de Amparo à Pesquisa do Estado de Alagoas",
-    .category = "government", .portal = "https://www.fapeal.br/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.fapeal.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3105,7 +3105,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9592631", .name = "National Supplementary Health Agency (government-agency, BR) - "
       "Participação da Sociedade",
     .name_ja = "National Supplementary Health Agency (government-agency, BR) - Participação da Sociedade",
-    .category = "government", .portal = "http://feeds.feedburner.com/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "http://feeds.feedburner.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3125,7 +3125,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9592631_2", .name = "National Supplementary Health Agency (government-agency, BR) - "
       "Operadoras",
     .name_ja = "National Supplementary Health Agency (government-agency, BR) - Operadoras",
-    .category = "government", .portal = "http://feeds.feedburner.com/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "http://feeds.feedburner.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3145,7 +3145,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q10272532", .name = "Empresa de Pesquisa Agropecuária de Minas Gerais "
       "(government-agency, BR) - EPAMIG",
     .name_ja = "Empresa de Pesquisa Agropecuária de Minas Gerais (government-agency, BR) - EPAMIG",
-    .category = "government", .portal = "https://www.epamig.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.epamig.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3165,7 +3165,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q63982829", .name = "Brazilian Platform for Biodiversity and Ecosystem Services "
       "(government-agency, BR) - BPBES",
     .name_ja = "Brazilian Platform for Biodiversity and Ecosystem Services (government-agency, BR) - BPBES",
-    .category = "government", .portal = "https://www.bpbes.net.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.bpbes.net.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3185,7 +3185,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q96473009", .name = "Department of Highways of Piauí (government-agency, BR) - DER – "
       "Departamento de Estradas de Rodagem do Piauí",
     .name_ja = "Department of Highways of Piauí (government-agency, BR) - DER – Departamento de Estradas de Rodagem do Piauí",
-    .category = "government", .portal = "https://www.der.pi.gov.br/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.der.pi.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3205,7 +3205,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116796982", .name = "Civil Defense of the State of Rio de Janeiro (government-agency, "
       "BR) - Defesa Civil RJ",
     .name_ja = "Civil Defense of the State of Rio de Janeiro (government-agency, BR) - Defesa Civil RJ",
-    .category = "government", .portal = "https://www.defesacivil.rj.gov.br/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.defesacivil.rj.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3225,7 +3225,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116796982_2", .name = "Civil Defense of the State of Rio de Janeiro (government-agency, "
       "BR) - Defesa Civil RJ",
     .name_ja = "Civil Defense of the State of Rio de Janeiro (government-agency, BR) - Defesa Civil RJ",
-    .category = "government", .portal = "https://www.defesacivil.rj.gov.br/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.defesacivil.rj.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3245,7 +3245,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116796991", .name = "Civil Defense of the State of Goiás (government-agency, BR) - "
       "Corpo de Bombeiros Militar do Estado de Goiás",
     .name_ja = "Civil Defense of the State of Goiás (government-agency, BR) - Corpo de Bombeiros Militar do Estado de Goiás",
-    .category = "government", .portal = "https://www.bombeiros.go.gov.br/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.bombeiros.go.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3265,7 +3265,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116813442", .name = "Civil Defense of the State of Piauí (government-agency, BR) - "
       "Defesa Civil",
     .name_ja = "Civil Defense of the State of Piauí (government-agency, BR) - Defesa Civil",
-    .category = "government", .portal = "https://portal.pi.gov.br/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://portal.pi.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3285,7 +3285,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116813596", .name = "Civil Defense of the State of Alagoas (government-agency, BR) - "
       "Defesa Civil do Estado de Alagoas",
     .name_ja = "Civil Defense of the State of Alagoas (government-agency, BR) - Defesa Civil do Estado de Alagoas",
-    .category = "government", .portal = "https://defesacivil.al.gov.br/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://defesacivil.al.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3305,7 +3305,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116813668", .name = "Civil Defense of the State of Ceará (government-agency, BR) - "
       "Coordenadoria Estadual de Defesa Civil do Ceará",
     .name_ja = "Civil Defense of the State of Ceará (government-agency, BR) - Coordenadoria Estadual de Defesa Civil do Ceará",
-    .category = "government", .portal = "https://www.defesacivil.ce.gov.br/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.defesacivil.ce.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3325,7 +3325,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q125200007", .name = "Fundação Catarinense de Educação Especial (government-agency, "
       "BR) - FCEE - Início",
     .name_ja = "Fundação Catarinense de Educação Especial (government-agency, BR) - FCEE - Início",
-    .category = "government", .portal = "https://www.fcee.sc.gov.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.fcee.sc.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3345,7 +3345,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q125200007_2", .name = "Fundação Catarinense de Educação Especial (government-agency, "
       "BR) - FCEE - Início",
     .name_ja = "Fundação Catarinense de Educação Especial (government-agency, BR) - FCEE - Início",
-    .category = "government", .portal = "https://www.fcee.sc.gov.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.fcee.sc.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3366,7 +3366,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "REGION-SERGIPE (government-agency, BR) - Conselho Regional de "
       "Economia da 16ª Região – SE",
     .name_ja = "CORECON/SE   REGIONAL OF ECONOMICS COUNCIL OF THE 16TH REGION-SERGIPE (government-agency, BR) - Conselho Regional de Economia da 16ª Região – SE",
-    .category = "government", .portal = "https://corecon-se.org.br/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://corecon-se.org.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3386,7 +3386,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q10279555", .name = "Bauru School of Dentistry of the University of São Paulo "
       "(government-agency, BR) - Faculdade de Odontologia de Bauru",
     .name_ja = "Bauru School of Dentistry of the University of São Paulo (government-agency, BR) - Faculdade de Odontologia de Bauru",
-    .category = "government", .portal = "https://fob.usp.br/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://fob.usp.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3405,7 +3405,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q10303307", .name = "Investe São Paulo (government-agency, BR) - InvestSP",
     .name_ja = "Investe São Paulo (government-agency, BR) - InvestSP",
-    .category = "government", .portal = "https://investsp.org.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://investsp.org.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3424,7 +3424,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q9830599", .name = "Q9830599 (government-agency, BR) - CORSAN",
     .name_ja = "Q9830599 (government-agency, BR) - CORSAN",
-    .category = "government", .portal = "https://www.corsan.com.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.corsan.com.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3443,7 +3443,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q10280703", .name = "Q10280703 (government-agency, BR) - RSS Famurs",
     .name_ja = "Q10280703 (government-agency, BR) - RSS Famurs",
-    .category = "government", .portal = "https://famurs.com.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://famurs.com.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3462,7 +3462,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q10354188", .name = "Q10354188 (government-agency, BR) - PRODEMGE - Home",
     .name_ja = "Q10354188 (government-agency, BR) - PRODEMGE - Home",
-    .category = "government", .portal = "https://www.prodemge.gov.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.prodemge.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3481,7 +3481,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q10354188_2", .name = "Q10354188 (government-agency, BR) - PRODEMGE - Home",
     .name_ja = "Q10354188 (government-agency, BR) - PRODEMGE - Home",
-    .category = "government", .portal = "https://www.prodemge.gov.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.prodemge.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3501,7 +3501,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q10286388", .name = "Procon (government-organization, BR) - PROCON.SP",
     .name_ja = "Procon (government-organization, BR) - PROCON.SP",
-    .category = "government", .portal = "https://www.procon.sp.gov.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.procon.sp.gov.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3522,7 +3522,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-organization, BR) - MPDFT - Ministério Público do "
       "Distrito Federal e Territórios",
     .name_ja = "Federal District and the Territories Public Ministry (government-organization, BR) - MPDFT - Ministério Público do Distrito Federal e Territórios",
-    .category = "government", .portal = "https://www.mpdft.mp.br/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.mpdft.mp.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3541,7 +3541,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q10384624", .name = "Q10384624 (government-organization, BR) - TRT18",
     .name_ja = "Q10384624 (government-organization, BR) - TRT18",
-    .category = "government", .portal = "https://www.trt18.jus.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.trt18.jus.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3560,7 +3560,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q20060331", .name = "Q20060331 (government-organization, BR) - MPRN",
     .name_ja = "Q20060331 (government-organization, BR) - MPRN",
-    .category = "government", .portal = "https://www.mprn.mp.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.mprn.mp.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3579,7 +3579,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q123786872", .name = "Q123786872 (government-organization, BR) - Consecti",
     .name_ja = "Q123786872 (government-organization, BR) - Consecti",
-    .category = "government", .portal = "https://consecti.org.br/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://consecti.org.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3599,7 +3599,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30264452", .name = "National Institute of Science and Technology of Drugs and "
       "Medicines (government-organization, BR) - INOFAR 2014 - Home",
     .name_ja = "National Institute of Science and Technology of Drugs and Medicines (government-organization, BR) - INOFAR 2014 - Home",
-    .category = "government", .portal = "http://www.inct-inofar.ccs.ufrj.br/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://www.inct-inofar.ccs.ufrj.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3619,7 +3619,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30264452_2", .name = "National Institute of Science and Technology of Drugs and "
       "Medicines (government-organization, BR) - INOFAR 2014 - Home",
     .name_ja = "National Institute of Science and Technology of Drugs and Medicines (government-organization, BR) - INOFAR 2014 - Home",
-    .category = "government", .portal = "http://www.inct-inofar.ccs.ufrj.br/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://www.inct-inofar.ccs.ufrj.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3639,7 +3639,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q138736739", .name = "Q138736739 (legislature, BR) - Câmara Municipal de São Fidélis",
     .name_ja = "Q138736739 (legislature, BR) - Câmara Municipal de São Fidélis",
-    .category = "government", .portal = "https://www.saofidelis.rj.leg.br/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.saofidelis.rj.leg.br/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3659,7 +3659,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q136776270", .name = "Water and Sewage Corporation (government-agency, BS) - Water & "
       "Sewerage Corporation",
     .name_ja = "Water and Sewage Corporation (government-agency, BS) - Water & Sewerage Corporation",
-    .category = "government", .portal = "https://wsc.com.bs/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://wsc.com.bs/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3679,7 +3679,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q61931829", .name = "Royal Education Council (government-agency, BT) - Department of "
       "School Education",
     .name_ja = "Royal Education Council (government-agency, BT) - Department of School Education",
-    .category = "government", .portal = "https://rec.gov.bt/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://rec.gov.bt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3699,7 +3699,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q107519649", .name = "Royal Centre for Disease Control (government-agency, BT) - Royal "
       "Centers For Disease Control",
     .name_ja = "Royal Centre for Disease Control (government-agency, BT) - Royal Centers For Disease Control",
-    .category = "government", .portal = "https://www.rcdc.gov.bt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.rcdc.gov.bt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3718,7 +3718,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q85845561", .name = "Botswana Unified Revenue Service (government-agency, BW) - Home",
     .name_ja = "Botswana Unified Revenue Service (government-agency, BW) - Home",
-    .category = "government", .portal = "https://www.burs.org.bw/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.burs.org.bw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3737,7 +3737,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q85845561_2", .name = "Botswana Unified Revenue Service (government-agency, BW) - Home",
     .name_ja = "Botswana Unified Revenue Service (government-agency, BW) - Home",
-    .category = "government", .portal = "https://www.burs.org.bw/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.burs.org.bw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3757,7 +3757,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q116959470", .name = "Botswana Bureau of Standards (government-agency, BW) - BOBS",
     .name_ja = "Botswana Bureau of Standards (government-agency, BW) - BOBS",
-    .category = "government", .portal = "https://bobstandards.bw/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://bobstandards.bw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3777,7 +3777,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q132042479", .name = "Kgalagadi Land Board (government-agency, BW) - Botswana Business "
       "Directory Feed",
     .name_ja = "Kgalagadi Land Board (government-agency, BW) - Botswana Business Directory Feed",
-    .category = "government", .portal = "https://www.localbotswana.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.localbotswana.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3797,7 +3797,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139574622", .name = "Botswana Gambling Authority (government-agency, BW) - Gambling "
       "Authority    Motshameko O Phepha",
     .name_ja = "Botswana Gambling Authority (government-agency, BW) - Gambling Authority    Motshameko O Phepha",
-    .category = "government", .portal = "https://gamblingauthority.co.bw/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://gamblingauthority.co.bw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3816,7 +3816,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q89521785", .name = "Q89521785 (government-agency, BY) - Архивы Беларуси",
     .name_ja = "Q89521785 (government-agency, BY) - Архивы Беларуси",
-    .category = "government", .portal = "https://archives.gov.by/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://archives.gov.by/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3837,7 +3837,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, BY) - Официальный интернет-портал Президента "
       "Рес",
     .name_ja = "Administration of the President of the Republic of Belarus (government-agency, BY) - Официальный интернет-портал Президента Рес",
-    .category = "government", .portal = "https://president.gov.by/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://president.gov.by/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3857,7 +3857,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4146916", .name = "State Border Committee of the Republic of Belarus "
       "(government-agency, BY) - Новости русская версия",
     .name_ja = "State Border Committee of the Republic of Belarus (government-agency, BY) - Новости русская версия",
-    .category = "government", .portal = "https://gpk.gov.by/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://gpk.gov.by/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3877,7 +3877,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q22905851", .name = "International Financial Services Commission (government-agency, "
       "BZ) - Financial Services Commission",
     .name_ja = "International Financial Services Commission (government-agency, BZ) - Financial Services Commission",
-    .category = "government", .portal = "https://www.belizefsc.org.bz/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.belizefsc.org.bz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3896,7 +3896,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30266838", .name = "Department of Agriculture (government-agency, BZ) - Agriculture",
     .name_ja = "Department of Agriculture (government-agency, BZ) - Agriculture",
-    .category = "government", .portal = "https://www.agriculture.gov.bz/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.agriculture.gov.bz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3916,7 +3916,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q97257226", .name = "Belize National Emergency Management Organisation "
       "(government-agency, BZ) - NEMO",
     .name_ja = "Belize National Emergency Management Organisation (government-agency, BZ) - NEMO",
-    .category = "government", .portal = "https://site.nemo.org.bz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://site.nemo.org.bz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3936,7 +3936,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137588622", .name = "Q137588622 (ministry, BZ) - Ministry of Infrastructure "
       "Development & Housing",
     .name_ja = "Q137588622 (ministry, BZ) - Ministry of Infrastructure Development & Housing",
-    .category = "government", .portal = "https://www.midh.gov.bz/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.midh.gov.bz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3956,7 +3956,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3091483", .name = "Federation of Canadian Municipalities (government-agency, CA) - "
       "FCM news feed",
     .name_ja = "Federation of Canadian Municipalities (government-agency, CA) - FCM news feed",
-    .category = "government", .portal = "https://feeds.feedburner.com/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://feeds.feedburner.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3976,7 +3976,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140351580", .name = "Fisheries Joint Management Committee (government-agency, CA) - "
       "Fisheries Joint Management Committee",
     .name_ja = "Fisheries Joint Management Committee (government-agency, CA) - Fisheries Joint Management Committee",
-    .category = "government", .portal = "https://fjmc.ca/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://fjmc.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3996,7 +3996,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2860571", .name = "Archives of Ontario (government-agency, CA) - Archives of "
       "Ontario",
     .name_ja = "Archives of Ontario (government-agency, CA) - Archives of Ontario",
-    .category = "government", .portal = "https://www.archives.gov.on.ca/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.archives.gov.on.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4015,7 +4015,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q3487586", .name = "Makivik Corporation (government-agency, CA) - ᒪᑭᕝᕕᒃ – Makivvik",
     .name_ja = "Makivik Corporation (government-agency, CA) - ᒪᑭᕝᕕᒃ – Makivvik",
-    .category = "government", .portal = "https://www.makivvik.ca/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.makivvik.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4035,7 +4035,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5029353", .name = "Canada Development Investment Corporation (government-agency, "
       "CA) - CDEV",
     .name_ja = "Canada Development Investment Corporation (government-agency, CA) - CDEV",
-    .category = "government", .portal = "https://cdev.gc.ca/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://cdev.gc.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4054,7 +4054,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5209570", .name = "Dairy Farmers of Ontario (government-agency, CA) - Milk",
     .name_ja = "Dairy Farmers of Ontario (government-agency, CA) - Milk",
-    .category = "government", .portal = "https://new.milk.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://new.milk.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4074,7 +4074,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5260519", .name = "Nova Scotia Department of Public Works (government-agency, CA) - "
       "NovaScotia.ca homepage news",
     .name_ja = "Nova Scotia Department of Public Works (government-agency, CA) - NovaScotia.ca homepage news",
-    .category = "government", .portal = "https://news-feeds.novascotia.ca/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://news-feeds.novascotia.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4093,7 +4093,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5354576", .name = "Elections BC (government-agency, CA) - Elections BC",
     .name_ja = "Elections BC (government-agency, CA) - Elections BC",
-    .category = "government", .portal = "https://elections.bc.ca/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://elections.bc.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4112,7 +4112,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5354576_2", .name = "Elections BC (government-agency, CA) - Elections BC",
     .name_ja = "Elections BC (government-agency, CA) - Elections BC",
-    .category = "government", .portal = "https://elections.bc.ca/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://elections.bc.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4131,7 +4131,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q6517362", .name = "Legal Aid Ontario (government-agency, CA) - Legal Aid Ontario",
     .name_ja = "Legal Aid Ontario (government-agency, CA) - Legal Aid Ontario",
-    .category = "government", .portal = "https://www.legalaid.on.ca/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.legalaid.on.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4150,7 +4150,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30264655", .name = "New Brunswick Arts Board (government-agency, CA) - ArtsNB",
     .name_ja = "New Brunswick Arts Board (government-agency, CA) - ArtsNB",
-    .category = "government", .portal = "https://artsnb.ca/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://artsnb.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4170,7 +4170,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30294982", .name = "Canadian Honey Council (government-agency, CA) - Canadian Honey "
       "Council",
     .name_ja = "Canadian Honey Council (government-agency, CA) - Canadian Honey Council",
-    .category = "government", .portal = "https://honeycouncil.ca/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://honeycouncil.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4190,7 +4190,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30295017", .name = "British Columbia Blueberry Council (government-agency, CA) - "
       "British Columbia Blueberry Council",
     .name_ja = "British Columbia Blueberry Council (government-agency, CA) - British Columbia Blueberry Council",
-    .category = "government", .portal = "https://www.bcblueberry.com/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.bcblueberry.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4210,7 +4210,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30295536", .name = "Walkerton Clean Water Centre (government-agency, CA) - Walkerton "
       "Clean Water Centre",
     .name_ja = "Walkerton Clean Water Centre (government-agency, CA) - Walkerton Clean Water Centre",
-    .category = "government", .portal = "https://wcwc.ca/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://wcwc.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4230,7 +4230,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q36874937", .name = "Nunavut Wildlife Management Board (government-agency, CA) - NWMB "
       "- NWMB",
     .name_ja = "Nunavut Wildlife Management Board (government-agency, CA) - NWMB - NWMB",
-    .category = "government", .portal = "https://www.nwmb.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.nwmb.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4250,7 +4250,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q36874937_2", .name = "Nunavut Wildlife Management Board (government-agency, CA) - NWMB "
       "- NWMB",
     .name_ja = "Nunavut Wildlife Management Board (government-agency, CA) - NWMB - NWMB",
-    .category = "government", .portal = "https://www.nwmb.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.nwmb.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4270,7 +4270,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q48754899", .name = "Fonds de recherche du Québec (government-agency, CA) - Appel "
       "Archives - Fonds de recherche du Québec",
     .name_ja = "Fonds de recherche du Québec (government-agency, CA) - Appel Archives - Fonds de recherche du Québec",
-    .category = "government", .portal = "https://frq.gouv.qc.ca/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://frq.gouv.qc.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4290,7 +4290,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59535440", .name = "First Nations Health and Social Secretariat of Manitoba "
       "(government-agency, CA) - FNHSSM",
     .name_ja = "First Nations Health and Social Secretariat of Manitoba (government-agency, CA) - FNHSSM",
-    .category = "government", .portal = "https://www.fnhssm.com/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.fnhssm.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4310,7 +4310,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59535979", .name = "Industry, Tourism and Investment (government-agency, CA) - "
       "Industry, Tourism and Investment",
     .name_ja = "Industry, Tourism and Investment (government-agency, CA) - Industry, Tourism and Investment",
-    .category = "government", .portal = "https://www.iti.gov.nt.ca/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.iti.gov.nt.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4331,7 +4331,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Resources (government-agency, CA) - Environment and Climate "
       "Change",
     .name_ja = "Northwest Territories Department of Environment and Natural Resources (government-agency, CA) - Environment and Climate Change",
-    .category = "government", .portal = "https://www.gov.nt.ca/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.gov.nt.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4351,7 +4351,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q112266142", .name = "Atlantic Canada Fish Farmers Association (government-agency, CA) "
       "- Atlantic Canada Fish Farmers Association (ACFFA)",
     .name_ja = "Atlantic Canada Fish Farmers Association (government-agency, CA) - Atlantic Canada Fish Farmers Association (ACFFA)",
-    .category = "government", .portal = "https://atlanticfishfarmers.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://atlanticfishfarmers.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4372,7 +4372,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Change (government-agency, CA) - Government of Northwest "
       "Territories",
     .name_ja = "Northwest Territories Department of Environment and Climate Change (government-agency, CA) - Government of Northwest Territories",
-    .category = "government", .portal = "https://www.gov.nt.ca/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.gov.nt.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4391,7 +4391,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q133812024", .name = "InnoTech Alberta (government-agency, CA) - InnoTech Alberta",
     .name_ja = "InnoTech Alberta (government-agency, CA) - InnoTech Alberta",
-    .category = "government", .portal = "https://innotechalberta.ca/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://innotechalberta.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4411,7 +4411,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7574476", .name = "Special Areas Board (government-agency, CA) - Special Areas "
       "Board   Alberta Transportation Road Maintenance – October 16 to",
     .name_ja = "Special Areas Board (government-agency, CA) - Special Areas Board   Alberta Transportation Road Maintenance – October 16 to",
-    .category = "government", .portal = "https://specialareas.ab.ca/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://specialareas.ab.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4431,7 +4431,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7587579", .name = "St. Clair Region Conservation Authority (government-agency, CA) "
       "- St. Clair Region Conservation Authority",
     .name_ja = "St. Clair Region Conservation Authority (government-agency, CA) - St. Clair Region Conservation Authority",
-    .category = "government", .portal = "https://www.scrca.on.ca/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.scrca.on.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4450,7 +4450,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q22080013", .name = "Research Manitoba (government-agency, CA) - Research Manitoba",
     .name_ja = "Research Manitoba (government-agency, CA) - Research Manitoba",
-    .category = "government", .portal = "https://researchmanitoba.ca/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://researchmanitoba.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4470,7 +4470,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q24190325", .name = "Manitoba Arts Council (government-agency, CA) - Manitoba Arts "
       "Council",
     .name_ja = "Manitoba Arts Council (government-agency, CA) - Manitoba Arts Council",
-    .category = "government", .portal = "https://artscouncil.mb.ca/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://artscouncil.mb.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4490,7 +4490,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q45132698", .name = "Dunlap Institute for Astronomy and Astrophysics "
       "(government-organization, CA) - Dunlap Website",
     .name_ja = "Dunlap Institute for Astronomy and Astrophysics (government-organization, CA) - Dunlap Website",
-    .category = "government", .portal = "https://www.dunlap.utoronto.ca/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.dunlap.utoronto.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4510,7 +4510,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q45136701", .name = "Ontario Division, Canadian Mental Health Association "
       "(government-organization, CA) - CMHA Ontario",
     .name_ja = "Ontario Division, Canadian Mental Health Association (government-organization, CA) - CMHA Ontario",
-    .category = "government", .portal = "https://ontario.cmha.ca/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://ontario.cmha.ca/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4529,7 +4529,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q140045477", .name = "Conseil Scientifique National (government-agency, CD) - CSN",
     .name_ja = "Conseil Scientifique National (government-agency, CD) - CSN",
-    .category = "government", .portal = "https://csnrdc.net/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://csnrdc.net/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4548,7 +4548,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q140045477_2", .name = "Conseil Scientifique National (government-agency, CD) - CSN",
     .name_ja = "Conseil Scientifique National (government-agency, CD) - CSN",
-    .category = "government", .portal = "https://csnrdc.net/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://csnrdc.net/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4569,7 +4569,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Communication Technologies (DRC (ministry, CD) - Secrétariat "
       "Général des PTNTIC",
     .name_ja = "Ministry of Telecommunications and New Information and Communication Technologies (DRC (ministry, CD) - Secrétariat Général des PTNTIC",
-    .category = "government", .portal = "https://sgptntic.gouv.cd/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://sgptntic.gouv.cd/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4589,7 +4589,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2882989", .name = "Central Bank of Congo (central-bank, CD) - Banque Centrale du "
       "Congo : actualités",
     .name_ja = "Central Bank of Congo (central-bank, CD) - Banque Centrale du Congo : actualités",
-    .category = "government", .portal = "https://www.bcc.cd/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.bcc.cd/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4609,7 +4609,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q112584726", .name = "Q112584726 (court, CF) - Cour Pénale Spéciale de la République "
       "Centrafricaine",
     .name_ja = "Q112584726 (court, CF) - Cour Pénale Spéciale de la République Centrafricaine",
-    .category = "government", .portal = "https://www.cpsrca.cf/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.cpsrca.cf/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4629,7 +4629,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q19822942", .name = "Agence nationale de l'aviation civile (Republic of the Congo) "
       "(government-agency, CG) - Anac- Congo",
     .name_ja = "Agence nationale de l'aviation civile (Republic of the Congo) (government-agency, CG) - Anac- Congo",
-    .category = "government", .portal = "https://anaccongo.cg/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://anaccongo.cg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4648,7 +4648,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q139836464", .name = "Q139836464 (ministry, CG) - Ministère des hydrocarbures",
     .name_ja = "Q139836464 (ministry, CG) - Ministère des hydrocarbures",
-    .category = "government", .portal = "https://www.hydrocarbures.gouv.cg/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.hydrocarbures.gouv.cg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4667,7 +4667,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q33121335", .name = "Gesundheitsdienst (government-agency, CH) - Nachrichten",
     .name_ja = "Gesundheitsdienst (government-agency, CH) - Nachrichten",
-    .category = "government", .portal = "https://www.bern.ch/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.bern.ch/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4687,7 +4687,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q33121525", .name = "Schweizerische Koordinationsstelle für Bildungsforschung "
       "(government-agency, CH) - SKBF-CSRE: News",
     .name_ja = "Schweizerische Koordinationsstelle für Bildungsforschung (government-agency, CH) - SKBF-CSRE: News",
-    .category = "government", .portal = "https://www.skbf-csre.ch/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.skbf-csre.ch/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4706,7 +4706,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q131440933", .name = "Q131440933 (government-agency, CI) - FIRCA",
     .name_ja = "Q131440933 (government-agency, CI) - FIRCA",
-    .category = "government", .portal = "https://firca.ci/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://firca.ci/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4726,7 +4726,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131620972", .name = "Q131620972 (government-agency, CI) - Office du Service Civique "
       "National",
     .name_ja = "Q131620972 (government-agency, CI) - Office du Service Civique National",
-    .category = "government", .portal = "https://www.oscn.ci/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.oscn.ci/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4746,7 +4746,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30290072", .name = "Centre National de Recherche Agronomique (government-agency, CI) "
       "- CNRA",
     .name_ja = "Centre National de Recherche Agronomique (government-agency, CI) - CNRA",
-    .category = "government", .portal = "https://cnra.ci/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cnra.ci/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4765,7 +4765,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q2497840", .name = "Fundación Chile (government-agency, CL) - Fundación Chile",
     .name_ja = "Fundación Chile (government-agency, CL) - Fundación Chile",
-    .category = "government", .portal = "https://fch.cl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://fch.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4784,7 +4784,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q2985226", .name = "CONICYT (government-agency, CL) - CONICYT",
     .name_ja = "CONICYT (government-agency, CL) - CONICYT",
-    .category = "government", .portal = "https://www.conicyt.cl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.conicyt.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4803,7 +4803,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5779092", .name = "Chilean Copper Commission (government-agency, CL) - COCHILCO",
     .name_ja = "Chilean Copper Commission (government-agency, CL) - COCHILCO",
-    .category = "government", .portal = "https://www.cochilco.cl/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.cochilco.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4822,7 +4822,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5801311", .name = "Civil defence of Chile (government-agency, CL) - Defensa Civil",
     .name_ja = "Civil defence of Chile (government-agency, CL) - Defensa Civil",
-    .category = "government", .portal = "https://defensacivil.cl/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://defensacivil.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4842,7 +4842,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5808001", .name = "Dirección General del Crédito Prendario (government-agency, CL) "
       "- Dicrep",
     .name_ja = "Dirección General del Crédito Prendario (government-agency, CL) - Dicrep",
-    .category = "government", .portal = "http://www.dicrep.gob.cl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://www.dicrep.gob.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4862,7 +4862,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6126062", .name = "Servicio Nacional de Turismo (government-agency, CL) - Servicio "
       "Nacional de Turismo   SERNATUR",
     .name_ja = "Servicio Nacional de Turismo (government-agency, CL) - Servicio Nacional de Turismo   SERNATUR",
-    .category = "government", .portal = "https://www.sernatur.cl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.sernatur.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4882,7 +4882,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q115799488", .name = "Directorate of Public Education (government-agency, CL) - "
       "Dirección de Educación Pública",
     .name_ja = "Directorate of Public Education (government-agency, CL) - Dirección de Educación Pública",
-    .category = "government", .portal = "https://dep.gob.cl/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dep.gob.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4901,7 +4901,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q1072817", .name = "Q1072817 (government-agency, CL) - IND",
     .name_ja = "Q1072817 (government-agency, CL) - IND",
-    .category = "government", .portal = "https://ind.cl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ind.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4921,7 +4921,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5659763", .name = "Q5659763 (government-agency, CL) - Agencia de Calidad de la "
       "Educación",
     .name_ja = "Q5659763 (government-agency, CL) - Agencia de Calidad de la Educación",
-    .category = "government", .portal = "https://www.agenciaeducacion.cl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.agenciaeducacion.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4940,7 +4940,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5784135", .name = "Q5784135 (government-agency, CL) - Consejo para la Transparencia",
     .name_ja = "Q5784135 (government-agency, CL) - Consejo para la Transparencia",
-    .category = "government", .portal = "https://www.consejotransparencia.cl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.consejotransparencia.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4959,7 +4959,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5956512", .name = "Q5956512 (government-agency, CL) - Junji.gob.cl",
     .name_ja = "Q5956512 (government-agency, CL) - Junji.gob.cl",
-    .category = "government", .portal = "https://junji.cl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://junji.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4979,7 +4979,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q122789951", .name = "Q122789951 (government-agency, CL) - División de Transporte "
       "Público Regional",
     .name_ja = "Q122789951 (government-agency, CL) - División de Transporte Público Regional",
-    .category = "government", .portal = "https://dtpr.gob.cl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://dtpr.gob.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4998,7 +4998,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141563588", .name = "Q141563588 (government-agency, CL) - Dirección de Arquitectura",
     .name_ja = "Q141563588 (government-agency, CL) - Dirección de Arquitectura",
-    .category = "government", .portal = "https://arquitectura.mop.gob.cl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://arquitectura.mop.gob.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5018,7 +5018,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q33986", .name = "Valparaíso (legislature, CL) - Ilustre Municipalidad de "
       "Valparaíso",
     .name_ja = "Valparaíso (legislature, CL) - Ilustre Municipalidad de Valparaíso",
-    .category = "government", .portal = "https://municipalidaddevalparaiso.cl/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://municipalidaddevalparaiso.cl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5038,7 +5038,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137164175", .name = "Q137164175 (government-organization, CM) - Autorité Portuaire "
       "Nationale",
     .name_ja = "Q137164175 (government-organization, CM) - Autorité Portuaire Nationale",
-    .category = "government", .portal = "https://www.apn.cm/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.apn.cm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5058,7 +5058,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q124845727", .name = "Beijing Institute for General Artificial Intelligence "
       "(government-agency, CN) - 北京通用人工智能研究院BIGAI",
     .name_ja = "Beijing Institute for General Artificial Intelligence (government-agency, CN) - 北京通用人工智能研究院BIGAI",
-    .category = "government", .portal = "https://www.bigai.ai/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.bigai.ai/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5078,7 +5078,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137819688", .name = "China Anti-Money Laundering Monitoring and Analysis Center "
       "(government-agency, CN) - 新闻RSS格式页",
     .name_ja = "China Anti-Money Laundering Monitoring and Analysis Center (government-agency, CN) - 新闻RSS格式页",
-    .category = "government", .portal = "https://www.pbc.gov.cn/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.pbc.gov.cn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5098,7 +5098,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3151868", .name = "Colombian Institute of Anthropology and History "
       "(government-agency, CO) - ICANH Sede electrónica1",
     .name_ja = "Colombian Institute of Anthropology and History (government-agency, CO) - ICANH Sede electrónica1",
-    .category = "government", .portal = "https://www.icanh.gov.co/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.icanh.gov.co/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5118,7 +5118,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3485341", .name = "National System of Protected Areas (government-agency, CO) - "
       "Parques Nacionales Naturales de Colombia",
     .name_ja = "National System of Protected Areas (government-agency, CO) - Parques Nacionales Naturales de Colombia",
-    .category = "government", .portal = "https://www.parquesnacionales.gov.co/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.parquesnacionales.gov.co/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5138,7 +5138,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q21572744", .name = "National Center for Historical Memory (government-agency, CO) - "
       "Centro Nacional de Memoria Histórica",
     .name_ja = "National Center for Historical Memory (government-agency, CO) - Centro Nacional de Memoria Histórica",
-    .category = "government", .portal = "https://www.centrodememoriahistorica.gov.co/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.centrodememoriahistorica.gov.co/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5158,7 +5158,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30266828", .name = "Corporación Autónoma Regional de Los Valles del Sinu y del San "
       "Jorge (government-agency, CO) - CVS",
     .name_ja = "Corporación Autónoma Regional de Los Valles del Sinu y del San Jorge (government-agency, CO) - CVS",
-    .category = "government", .portal = "https://cvs.gov.co/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://cvs.gov.co/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5178,7 +5178,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113551492", .name = "Instituto Nacional de Metrología de Colombia (government-agency, "
       "CO) - Instituto Nacional de Metrología – INM",
     .name_ja = "Instituto Nacional de Metrología de Colombia (government-agency, CO) - Instituto Nacional de Metrología – INM",
-    .category = "government", .portal = "https://inm.gov.co/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://inm.gov.co/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5199,7 +5199,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Resolución 2164 Por la cual se retira un(a) Docente en Propiedad "
       "y se declara u",
     .name_ja = "Secretaría de Educación de Soacha (government-agency, CO) - Resolución 2164 Por la cual se retira un(a) Docente en Propiedad y se declara u",
-    .category = "government", .portal = "https://www.soachaeducativa.edu.co/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.soachaeducativa.edu.co/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5218,7 +5218,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q43894880", .name = "Innpulsa (government-organization, CO) - Innpulsa",
     .name_ja = "Innpulsa (government-organization, CO) - Innpulsa",
-    .category = "government", .portal = "https://www.innpulsacolombia.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.innpulsacolombia.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5238,7 +5238,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113551502", .name = "Laboratorio Costarricense de Metrología (government-agency, CR) "
       "- LACOMET",
     .name_ja = "Laboratorio Costarricense de Metrología (government-agency, CR) - LACOMET",
-    .category = "government", .portal = "https://www.lacomet.go.cr/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.lacomet.go.cr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5258,7 +5258,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137943538", .name = "Instituto Nacional de Saúde Pública (government-agency, CV) - "
       "INSP",
     .name_ja = "Instituto Nacional de Saúde Pública (government-agency, CV) - INSP",
-    .category = "government", .portal = "http://insp.gov.cv/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://insp.gov.cv/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5278,7 +5278,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q118314807", .name = "Agentura Pro Zdravotnický Výzkum České Republiky "
       "(government-agency, CZ) - AZV ČR",
     .name_ja = "Agentura Pro Zdravotnický Výzkum České Republiky (government-agency, CZ) - AZV ČR",
-    .category = "government", .portal = "https://www.azvcr.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.azvcr.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5298,7 +5298,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11087630", .name = "Forest Management Institute (FMI) (government-agency, CZ) - "
       "nli.gov.cz",
     .name_ja = "Forest Management Institute (FMI) (government-agency, CZ) - nli.gov.cz",
-    .category = "government", .portal = "https://nli.gov.cz/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://nli.gov.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5318,7 +5318,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12056852", .name = "State water transportation authority (government-agency, CZ) - "
       "Státní plavební správa - úřední deska",
     .name_ja = "State water transportation authority (government-agency, CZ) - Státní plavební správa - úřední deska",
-    .category = "government", .portal = "https://sps.gov.cz/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://sps.gov.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5338,7 +5338,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12056852_2", .name = "State water transportation authority (government-agency, CZ) - "
       "Státní plavební správa",
     .name_ja = "State water transportation authority (government-agency, CZ) - Státní plavební správa",
-    .category = "government", .portal = "https://sps.gov.cz/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://sps.gov.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5358,7 +5358,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16928139", .name = "Státní pozemkový úřad (government-agency, CZ) - Státní pozemkový "
       "úřad České republiky",
     .name_ja = "Státní pozemkový úřad (government-agency, CZ) - Státní pozemkový úřad České republiky",
-    .category = "government", .portal = "https://spu.gov.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://spu.gov.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5378,7 +5378,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16928139_2", .name = "Státní pozemkový úřad (government-agency, CZ) - Státní pozemkový "
       "úřad České republiky",
     .name_ja = "Státní pozemkový úřad (government-agency, CZ) - Státní pozemkový úřad České republiky",
-    .category = "government", .portal = "https://spu.gov.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://spu.gov.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5398,7 +5398,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q41567483", .name = "Městské lesy Doksy (government-agency, CZ) - Městské lesy Doksy, "
       "s. r. o.",
     .name_ja = "Městské lesy Doksy (government-agency, CZ) - Městské lesy Doksy, s. r. o.",
-    .category = "government", .portal = "https://lesydoksy.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://lesydoksy.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5417,7 +5417,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q60540745", .name = "Czech Assay Office (government-agency, CZ) - Puncovní úřad",
     .name_ja = "Czech Assay Office (government-agency, CZ) - Puncovní úřad",
-    .category = "government", .portal = "https://www.puncovniurad.eu/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.puncovniurad.eu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5436,7 +5436,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q8184549", .name = "Q8184549 (government-agency, CZ) - Akreditační komise",
     .name_ja = "Q8184549 (government-agency, CZ) - Akreditační komise",
-    .category = "government", .portal = "https://www.akreditacnikomise.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.akreditacnikomise.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5456,7 +5456,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12055720", .name = "Q12055720 (government-agency, CZ) - Digitální a informační "
       "agentura - Úvodní strana",
     .name_ja = "Q12055720 (government-agency, CZ) - Digitální a informační agentura - Úvodní strana",
-    .category = "government", .portal = "https://www.szrcr.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.szrcr.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5476,7 +5476,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12055720_2", .name = "Q12055720 (government-agency, CZ) - Digitální a informační "
       "agentura - Úvodní strana",
     .name_ja = "Q12055720 (government-agency, CZ) - Digitální a informační agentura - Úvodní strana",
-    .category = "government", .portal = "https://www.szrcr.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.szrcr.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5495,7 +5495,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q24639794", .name = "Q24639794 (government-agency, CZ) - NAÚ",
     .name_ja = "Q24639794 (government-agency, CZ) - NAÚ",
-    .category = "government", .portal = "https://nauvs.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nauvs.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5514,7 +5514,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q24639794_2", .name = "Q24639794 (government-agency, CZ) - NAÚ",
     .name_ja = "Q24639794 (government-agency, CZ) - NAÚ",
-    .category = "government", .portal = "https://nauvs.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nauvs.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5533,7 +5533,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q45898143", .name = "Q45898143 (government-agency, CZ) - Ministerstvo zdravotnictví",
     .name_ja = "Q45898143 (government-agency, CZ) - Ministerstvo zdravotnictví",
-    .category = "government", .portal = "https://mzd.gov.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://mzd.gov.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5553,7 +5553,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q109978690", .name = "Q109978690 (government-agency, CZ) - Celní správa ČR - Tiskové "
       "zprávy",
     .name_ja = "Q109978690 (government-agency, CZ) - Celní správa ČR - Tiskové zprávy",
-    .category = "government", .portal = "https://celnisprava.gov.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://celnisprava.gov.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5572,7 +5572,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q109978690_2", .name = "Q109978690 (government-agency, CZ) - Celní správa ČR - Aktuality",
     .name_ja = "Q109978690 (government-agency, CZ) - Celní správa ČR - Aktuality",
-    .category = "government", .portal = "https://celnisprava.gov.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://celnisprava.gov.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5592,7 +5592,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11089537", .name = "Office for Personal Data Protection (government-agency, CZ) - "
       "Úřad pro ochranu osobních údajů",
     .name_ja = "Office for Personal Data Protection (government-agency, CZ) - Úřad pro ochranu osobních údajů",
-    .category = "government", .portal = "https://uoou.gov.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://uoou.gov.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5612,7 +5612,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11280554", .name = "Czech Geological Survey (government-agency, CZ) - Česká "
       "geologická služba",
     .name_ja = "Czech Geological Survey (government-agency, CZ) - Česká geologická služba",
-    .category = "government", .portal = "https://cgs.gov.cz/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://cgs.gov.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5631,7 +5631,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q11284991", .name = "Česká školní inspekce (government-agency, CZ) - Aktuality",
     .name_ja = "Česká školní inspekce (government-agency, CZ) - Aktuality",
-    .category = "government", .portal = "https://www.csicr.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.csicr.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5651,7 +5651,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11379528", .name = "Czech Office of Surveying and Cadastre (government-agency, CZ) - "
       "ČÚZK - důležité informace",
     .name_ja = "Czech Office of Surveying and Cadastre (government-agency, CZ) - ČÚZK - důležité informace",
-    .category = "government", .portal = "https://www.cuzk.gov.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.cuzk.gov.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5671,7 +5671,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11878921", .name = "Energy Regulatory Office (government-agency, CZ) - Aktuální "
       "sdělení",
     .name_ja = "Energy Regulatory Office (government-agency, CZ) - Aktuální sdělení",
-    .category = "government", .portal = "https://eru.gov.cz/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://eru.gov.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5691,7 +5691,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12018444", .name = "Czech Science Foundation (government-agency, CZ) - Grantová "
       "agentura České republiky",
     .name_ja = "Czech Science Foundation (government-agency, CZ) - Grantová agentura České republiky",
-    .category = "government", .portal = "https://gacr.cz/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://gacr.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5711,7 +5711,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12037741", .name = "Ministry of the Environment of the Czech Republic "
       "(government-agency, CZ) - Ministerstvo životního prostředí",
     .name_ja = "Ministry of the Environment of the Czech Republic (government-agency, CZ) - Ministerstvo životního prostředí",
-    .category = "government", .portal = "https://mzp.gov.cz/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://mzp.gov.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5733,7 +5733,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "From women’s health to bees to burnout. The SciComHub online "
       "conference showed",
     .name_ja = "Centre for Nanomaterials, Advanced Technologies and Innovation, Technical University of Liberec (government-organization, CZ) - From women’s health to bees to burnout. The SciComHub online conference showed",
-    .category = "government", .portal = "https://www.cxi.tul.cz/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.cxi.tul.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5753,7 +5753,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q101093420", .name = "Český ekologický ústav (government-organization, CZ) - Online "
       "magazín CEU",
     .name_ja = "Český ekologický ústav (government-organization, CZ) - Online magazín CEU",
-    .category = "government", .portal = "https://www.ceu.cz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.ceu.cz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5773,7 +5773,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q256651", .name = "Ärzteversorgung Westfalen-Lippe (government-agency, DE) - "
       "Ärzteversorgung Westfalen-Lippe",
     .name_ja = "Ärzteversorgung Westfalen-Lippe (government-agency, DE) - Ärzteversorgung Westfalen-Lippe",
-    .category = "government", .portal = "https://aevwl.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://aevwl.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5793,7 +5793,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q684357", .name = "Federal Ministry for Economic Cooperation and Development "
       "(government-agency, DE) - BMZ Aktuelle Meldungen",
     .name_ja = "Federal Ministry for Economic Cooperation and Development (government-agency, DE) - BMZ Aktuelle Meldungen",
-    .category = "government", .portal = "https://www.bmz.de/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.bmz.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5813,7 +5813,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q812238", .name = "Bayerische Landesanstalt für Wald und Forstwirtschaft "
       "(government-agency, DE) - LWF-Nachrichten",
     .name_ja = "Bayerische Landesanstalt für Wald und Forstwirtschaft (government-agency, DE) - LWF-Nachrichten",
-    .category = "government", .portal = "https://www.lwf.bayern.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.lwf.bayern.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5832,7 +5832,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q1240928", .name = "Erste Abwicklungsanstalt (government-agency, DE) - AA1",
     .name_ja = "Erste Abwicklungsanstalt (government-agency, DE) - AA1",
-    .category = "government", .portal = "https://aa1.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://aa1.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5852,7 +5852,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1501890", .name = "Generallandesarchiv Karlsruhe (government-agency, DE) - "
       "Landesarchiv Baden-Württemberg",
     .name_ja = "Generallandesarchiv Karlsruhe (government-agency, DE) - Landesarchiv Baden-Württemberg",
-    .category = "government", .portal = "https://www.landesarchiv-bw.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.landesarchiv-bw.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5872,7 +5872,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q33534136", .name = "European Molecular Biology Laboratory Hamburg "
       "(government-agency, DE) - EMBL",
     .name_ja = "European Molecular Biology Laboratory Hamburg (government-agency, DE) - EMBL",
-    .category = "government", .portal = "https://www.embl.org/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.embl.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5891,7 +5891,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q50038478", .name = "Feuerwehr Brühl (government-agency, DE) - Startseite",
     .name_ja = "Feuerwehr Brühl (government-agency, DE) - Startseite",
-    .category = "government", .portal = "https://feuerwehr-bruehl.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://feuerwehr-bruehl.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5910,7 +5910,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q50038478_2", .name = "Feuerwehr Brühl (government-agency, DE) - Startseite",
     .name_ja = "Feuerwehr Brühl (government-agency, DE) - Startseite",
-    .category = "government", .portal = "https://feuerwehr-bruehl.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://feuerwehr-bruehl.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5930,7 +5930,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q136663821", .name = "Kompetenzzentrum Wasser Hessen (government-agency, DE) - "
       "Kompetenzzentrum Wasser Hessen",
     .name_ja = "Kompetenzzentrum Wasser Hessen (government-agency, DE) - Kompetenzzentrum Wasser Hessen",
-    .category = "government", .portal = "https://www.kompetenzzentrum-wasser-hessen.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.kompetenzzentrum-wasser-hessen.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5950,7 +5950,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15794007", .name = "Chemical and veterinary research office "
       "Münsterland-Emscher-Lippe (government-agency, DE) - Startseite",
     .name_ja = "Chemical and veterinary research office Münsterland-Emscher-Lippe (government-agency, DE) - Startseite",
-    .category = "government", .portal = "https://www.cvua-mel.de/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.cvua-mel.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5970,7 +5970,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15794007_2", .name = "Chemical and veterinary research office "
       "Münsterland-Emscher-Lippe (government-agency, DE) - Startseite",
     .name_ja = "Chemical and veterinary research office Münsterland-Emscher-Lippe (government-agency, DE) - Startseite",
-    .category = "government", .portal = "https://www.cvua-mel.de/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.cvua-mel.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5990,7 +5990,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15809603", .name = "Firefighting in Kiel (government-agency, DE) - "
       "Stadtfeuerwehrverband Kiel",
     .name_ja = "Firefighting in Kiel (government-agency, DE) - Stadtfeuerwehrverband Kiel",
-    .category = "government", .portal = "https://www.feuerwehr-kiel.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.feuerwehr-kiel.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6010,7 +6010,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q19964305", .name = "Institut für Bienenkunde Celle (government-agency, DE) - Nds. "
       "Landesamt für Verbraucherschutz und Lebensmittelsicherheit",
     .name_ja = "Institut für Bienenkunde Celle (government-agency, DE) - Nds. Landesamt für Verbraucherschutz und Lebensmittelsicherheit",
-    .category = "government", .portal = "https://www.laves.niedersachsen.de/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.laves.niedersachsen.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6030,7 +6030,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30256768", .name = "Research Institute for Telecommunication Cooperation "
       "(government-agency, DE) - FTK",
     .name_ja = "Research Institute for Telecommunication Cooperation (government-agency, DE) - FTK",
-    .category = "government", .portal = "https://www.ftk.de/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.ftk.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6050,7 +6050,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q896642", .name = "German Council of Science and Humanities (government-agency, DE) "
       "- RSS-Newsfeed",
     .name_ja = "German Council of Science and Humanities (government-agency, DE) - RSS-Newsfeed",
-    .category = "government", .portal = "https://www.wissenschaftsrat.de/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.wissenschaftsrat.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6070,7 +6070,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1603234", .name = "Helmholtz Institute Freiberg for Resource Technology "
       "(government-agency, DE) - HZDR - Presse",
     .name_ja = "Helmholtz Institute Freiberg for Resource Technology (government-agency, DE) - HZDR - Presse",
-    .category = "government", .portal = "https://www.hzdr.de/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.hzdr.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6090,7 +6090,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1913589", .name = "Max Weber Foundation (government-agency, DE) - "
       "Max-Weber-Stiftung RSS-Feed",
     .name_ja = "Max Weber Foundation (government-agency, DE) - Max-Weber-Stiftung RSS-Feed",
-    .category = "government", .portal = "https://www.maxweberstiftung.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.maxweberstiftung.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6110,7 +6110,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1913589_2", .name = "Max Weber Foundation (government-agency, DE) - "
       "Max-Weber-Stiftung Pressemitteilungen",
     .name_ja = "Max Weber Foundation (government-agency, DE) - Max-Weber-Stiftung Pressemitteilungen",
-    .category = "government", .portal = "https://www.maxweberstiftung.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.maxweberstiftung.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6130,7 +6130,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1913589_3", .name = "Max Weber Foundation (government-agency, DE) - "
       "Max-Weber-Stiftung Nachrichten",
     .name_ja = "Max Weber Foundation (government-agency, DE) - Max-Weber-Stiftung Nachrichten",
-    .category = "government", .portal = "https://www.maxweberstiftung.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.maxweberstiftung.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6150,7 +6150,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1913589_4", .name = "Max Weber Foundation (government-agency, DE) - Termine der Max "
       "Weber Stiftung",
     .name_ja = "Max Weber Foundation (government-agency, DE) - Termine der Max Weber Stiftung",
-    .category = "government", .portal = "https://www.maxweberstiftung.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.maxweberstiftung.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6170,7 +6170,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1913589_5", .name = "Max Weber Foundation (government-agency, DE) - "
       "Max-Weber-Stiftung Publikationen",
     .name_ja = "Max Weber Foundation (government-agency, DE) - Max-Weber-Stiftung Publikationen",
-    .category = "government", .portal = "https://www.maxweberstiftung.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.maxweberstiftung.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6190,7 +6190,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1913589_6", .name = "Max Weber Foundation (government-agency, DE) - "
       "Max-Weber-Stiftung Stellenangebote/Stipendien",
     .name_ja = "Max Weber Foundation (government-agency, DE) - Max-Weber-Stiftung Stellenangebote/Stipendien",
-    .category = "government", .portal = "https://www.maxweberstiftung.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.maxweberstiftung.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6210,7 +6210,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1913589_7", .name = "Max Weber Foundation (government-agency, DE) - "
       "Max-Weber-Stiftung Ausschreibungen",
     .name_ja = "Max Weber Foundation (government-agency, DE) - Max-Weber-Stiftung Ausschreibungen",
-    .category = "government", .portal = "https://www.maxweberstiftung.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.maxweberstiftung.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6230,7 +6230,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1913589_8", .name = "Max Weber Foundation (government-agency, DE) - "
       "Max-Weber-Stiftung RSS-Feed",
     .name_ja = "Max Weber Foundation (government-agency, DE) - Max-Weber-Stiftung RSS-Feed",
-    .category = "government", .portal = "https://www.maxweberstiftung.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.maxweberstiftung.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6250,7 +6250,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2328360", .name = "Government of Cologne (government-agency, DE) - Pressemeldungen "
       "Stadt Köln",
     .name_ja = "Government of Cologne (government-agency, DE) - Pressemeldungen Stadt Köln",
-    .category = "government", .portal = "https://www.stadt-koeln.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.stadt-koeln.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6270,7 +6270,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2328360_2", .name = "Government of Cologne (government-agency, DE) - Veranstaltungen "
       "Stadt Köln",
     .name_ja = "Government of Cologne (government-agency, DE) - Veranstaltungen Stadt Köln",
-    .category = "government", .portal = "https://www.stadt-koeln.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.stadt-koeln.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6290,7 +6290,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2328360_3", .name = "Government of Cologne (government-agency, DE) - Verkehrskalender "
       "Stadt Köln",
     .name_ja = "Government of Cologne (government-agency, DE) - Verkehrskalender Stadt Köln",
-    .category = "government", .portal = "https://www.stadt-koeln.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.stadt-koeln.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6310,7 +6310,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2328360_4", .name = "Government of Cologne (government-agency, DE) - Aktuelle "
       "Stellenausschreibungen",
     .name_ja = "Government of Cologne (government-agency, DE) - Aktuelle Stellenausschreibungen",
-    .category = "government", .portal = "https://www.stadt-koeln.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.stadt-koeln.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6330,7 +6330,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2328360_5", .name = "Government of Cologne (government-agency, DE) - Verkauf "
       "unbebauter Grundstücke",
     .name_ja = "Government of Cologne (government-agency, DE) - Verkauf unbebauter Grundstücke",
-    .category = "government", .portal = "https://www.stadt-koeln.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.stadt-koeln.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6350,7 +6350,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2328360_6", .name = "Government of Cologne (government-agency, DE) - "
       "Stellenausschreibungen Ingenieure",
     .name_ja = "Government of Cologne (government-agency, DE) - Stellenausschreibungen Ingenieure",
-    .category = "government", .portal = "https://www.stadt-koeln.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.stadt-koeln.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6370,7 +6370,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2328360_7", .name = "Government of Cologne (government-agency, DE) - Veranstaltungen "
       "Stadtbibliothek Köln",
     .name_ja = "Government of Cologne (government-agency, DE) - Veranstaltungen Stadtbibliothek Köln",
-    .category = "government", .portal = "https://www.stadt-koeln.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.stadt-koeln.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6390,7 +6390,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q191207", .name = "Q191207 (government-agency, DE) - BayZiel - Aktuelles Programm - "
       "BayZiel",
     .name_ja = "Q191207 (government-agency, DE) - BayZiel - Aktuelles Programm - BayZiel",
-    .category = "government", .portal = "https://fortbildung.bayziel.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://fortbildung.bayziel.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6410,7 +6410,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q191207_2", .name = "Q191207 (government-agency, DE) - BayZiel - Aktuelles Programm - "
       "BayZiel",
     .name_ja = "Q191207 (government-agency, DE) - BayZiel - Aktuelles Programm - BayZiel",
-    .category = "government", .portal = "https://fortbildung.bayziel.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://fortbildung.bayziel.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6429,7 +6429,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q27967430", .name = "Q27967430 (government-agency, DE) - Stadt Gräfenberg",
     .name_ja = "Q27967430 (government-agency, DE) - Stadt Gräfenberg",
-    .category = "government", .portal = "https://www.graefenberg.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.graefenberg.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6449,7 +6449,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q29075937", .name = "Q29075937 (government-agency, DE) - Meldungen - "
       "Bodenwerder-Polle",
     .name_ja = "Q29075937 (government-agency, DE) - Meldungen - Bodenwerder-Polle",
-    .category = "government", .portal = "https://www.muenchhausenland.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.muenchhausenland.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6468,7 +6468,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q31837374", .name = "Q31837374 (government-agency, DE) - Newsfeed des LZG.NRW",
     .name_ja = "Q31837374 (government-agency, DE) - Newsfeed des LZG.NRW",
-    .category = "government", .portal = "https://www.lzg.nrw.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.lzg.nrw.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6487,7 +6487,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q130245325", .name = "Q130245325 (government-agency, DE) - Startseite",
     .name_ja = "Q130245325 (government-agency, DE) - Startseite",
-    .category = "government", .portal = "https://laendernotarkasse.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://laendernotarkasse.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6506,7 +6506,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q130245325_2", .name = "Q130245325 (government-agency, DE) - Startseite",
     .name_ja = "Q130245325 (government-agency, DE) - Startseite",
-    .category = "government", .portal = "https://laendernotarkasse.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://laendernotarkasse.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6526,7 +6526,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131195546", .name = "Q131195546 (government-agency, DE) - Aktuelle Themen des "
       "Deutschen Bundestages",
     .name_ja = "Q131195546 (government-agency, DE) - Aktuelle Themen des Deutschen Bundestages",
-    .category = "government", .portal = "https://www.bundestag.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.bundestag.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6546,7 +6546,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131195546_2", .name = "Q131195546 (government-agency, DE) - Pressemitteilungen des "
       "Deutschen Bundestages",
     .name_ja = "Q131195546 (government-agency, DE) - Pressemitteilungen des Deutschen Bundestages",
-    .category = "government", .portal = "https://www.bundestag.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.bundestag.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6565,7 +6565,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q131195546_3", .name = "Q131195546 (government-agency, DE) - hib - heute im Bundestag",
     .name_ja = "Q131195546 (government-agency, DE) - hib - heute im Bundestag",
-    .category = "government", .portal = "https://www.bundestag.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.bundestag.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6585,7 +6585,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131195546_4", .name = "Q131195546 (government-agency, DE) - Publikationen der "
       "Wissenschaftlichen Dienste",
     .name_ja = "Q131195546 (government-agency, DE) - Publikationen der Wissenschaftlichen Dienste",
-    .category = "government", .portal = "https://www.bundestag.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.bundestag.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6605,7 +6605,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131195546_5", .name = "Q131195546 (government-agency, DE) - Tagesordnungen der "
       "Ausschüsse",
     .name_ja = "Q131195546 (government-agency, DE) - Tagesordnungen der Ausschüsse",
-    .category = "government", .portal = "https://www.bundestag.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.bundestag.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6624,7 +6624,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q133696112", .name = "Q133696112 (government-agency, DE) - Stadt Deggendorf",
     .name_ja = "Q133696112 (government-agency, DE) - Stadt Deggendorf",
-    .category = "government", .portal = "https://www.deggendorf.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.deggendorf.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6645,7 +6645,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Protection of the Federal State of Brandenburg "
       "(government-organization, DE) - Pressemitteilungen des MLEUV",
     .name_ja = "Ministry of Agriculture, Food Industry, Environment and Consumer Protection of the Federal State of Brandenburg (government-organization, DE) - Pressemitteilungen des MLEUV",
-    .category = "government", .portal = "https://mleuv.brandenburg.de/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://mleuv.brandenburg.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6664,7 +6664,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q106410376", .name = "Q106410376 (government-organization, DE) - InphA",
     .name_ja = "Q106410376 (government-organization, DE) - InphA",
-    .category = "government", .portal = "https://inpha.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://inpha.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6684,7 +6684,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q317284", .name = "German Institute of Development and Sustainability "
       "(government-organization, DE) - Neueste Publikationen – IDOS",
     .name_ja = "German Institute of Development and Sustainability (government-organization, DE) - Neueste Publikationen – IDOS",
-    .category = "government", .portal = "https://www.idos-research.de/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.idos-research.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6704,7 +6704,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1406725", .name = "Lausitzer und Mitteldeutsche Bergbau-Verwaltungsgesellschaft "
       "(government-organization, DE) - LMBV",
     .name_ja = "Lausitzer und Mitteldeutsche Bergbau-Verwaltungsgesellschaft (government-organization, DE) - LMBV",
-    .category = "government", .portal = "https://www.lmbv.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.lmbv.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6724,7 +6724,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2519128", .name = "Landesvertretung Brandenburg (government-organization, DE) - "
       "Landesvertretung Brandenburg beim Bund",
     .name_ja = "Landesvertretung Brandenburg (government-organization, DE) - Landesvertretung Brandenburg beim Bund",
-    .category = "government", .portal = "https://landesvertretung-brandenburg.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://landesvertretung-brandenburg.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6744,7 +6744,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2519136", .name = "Landesvertretung Niedersachsen Berlin (government-organization, "
       "DE) - Staatskanzlei",
     .name_ja = "Landesvertretung Niedersachsen Berlin (government-organization, DE) - Staatskanzlei",
-    .category = "government", .portal = "https://www.stk.niedersachsen.de/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.stk.niedersachsen.de/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6764,7 +6764,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4504271", .name = "Central Bank of Djibouti (central-bank, DJ) - BANQUE CENTRALE DE "
       "DJIBOUTI",
     .name_ja = "Central Bank of Djibouti (central-bank, DJ) - BANQUE CENTRALE DE DJIBOUTI",
-    .category = "government", .portal = "https://banque-centrale.dj/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://banque-centrale.dj/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6785,7 +6785,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, DO) - Ministerio de Educación Superior, "
       "Ciencia y Tecnología",
     .name_ja = "Ministerio de Educación Superior, Ciencia y Tecnología (government-agency, DO) - Ministerio de Educación Superior, Ciencia y Tecnología",
-    .category = "government", .portal = "https://mescyt.gob.do/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mescyt.gob.do/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6805,7 +6805,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6866816", .name = "Ministry of Economy, Planning and Development (ministry, DO) - "
       "Ministerio de Economía, Planificación y Desarrollo (MEPyD)",
     .name_ja = "Ministry of Economy, Planning and Development (ministry, DO) - Ministerio de Economía, Planificación y Desarrollo (MEPyD)",
-    .category = "government", .portal = "https://mepyd.gob.do/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mepyd.gob.do/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6825,7 +6825,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q110340900", .name = "Ministry of Public Administration (ministry, DO) - Ministerio de "
       "Administración Pública",
     .name_ja = "Ministry of Public Administration (ministry, DO) - Ministerio de Administración Pública",
-    .category = "government", .portal = "https://map.gob.do/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://map.gob.do/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6846,7 +6846,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(ministry, DO) - Ministerio de Vivienda, Hábitat y Edificaciones "
       "(MIVHED)",
     .name_ja = "Ministry of Housing and Constructions (Dominican Republic) (ministry, DO) - Ministerio de Vivienda, Hábitat y Edificaciones (MIVHED)",
-    .category = "government", .portal = "https://mivhed.gob.do/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mivhed.gob.do/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6866,7 +6866,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116052810", .name = "Ministry of the Presidency (Dominican Republic) (ministry, DO) - "
       "Ministerio de la Presidencia",
     .name_ja = "Ministry of the Presidency (Dominican Republic) (ministry, DO) - Ministerio de la Presidencia",
-    .category = "government", .portal = "https://minpre.gob.do/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://minpre.gob.do/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6885,7 +6885,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q116729689", .name = "Ministry of Labour (ministry, DO) - Ministerio de Trabajo",
     .name_ja = "Ministry of Labour (ministry, DO) - Ministerio de Trabajo",
-    .category = "government", .portal = "https://mt.gob.do/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mt.gob.do/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6904,7 +6904,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q116730098", .name = "Ministry of Youth (ministry, DO) - Ministerio de la Juventud",
     .name_ja = "Ministry of Youth (ministry, DO) - Ministerio de la Juventud",
-    .category = "government", .portal = "https://juventud.gob.do/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://juventud.gob.do/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6924,7 +6924,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116730318", .name = "Ministry of Treasury (Dominican Republic) (ministry, DO) - "
       "Ministerio de Hacienda y Economía",
     .name_ja = "Ministry of Treasury (Dominican Republic) (ministry, DO) - Ministerio de Hacienda y Economía",
-    .category = "government", .portal = "https://www.hacienda.gob.do/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.hacienda.gob.do/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6944,7 +6944,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116730788", .name = "Ministry of Sports and Recreation (ministry, DO) - Ministerio de "
       "Deportes & Recreación (MIDEREC)",
     .name_ja = "Ministry of Sports and Recreation (ministry, DO) - Ministerio de Deportes & Recreación (MIDEREC)",
-    .category = "government", .portal = "https://miderec.gob.do/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://miderec.gob.do/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6964,7 +6964,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116731341", .name = "Fuerzas Armadas de República Dominicana (ministry, DO) - "
       "Ministerio de Defensa (MIDE)",
     .name_ja = "Fuerzas Armadas de República Dominicana (ministry, DO) - Ministerio de Defensa (MIDE)",
-    .category = "government", .portal = "https://mide.gob.do/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mide.gob.do/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6983,7 +6983,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q16127016", .name = "Ministry of Culture (government-agency, DZ) - الصفحة الرئيسية",
     .name_ja = "Ministry of Culture (government-agency, DZ) - الصفحة الرئيسية",
-    .category = "government", .portal = "https://www.m-culture.gov.dz/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.m-culture.gov.dz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7002,7 +7002,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q16127016_2", .name = "Ministry of Culture (government-agency, DZ) - الصفحة الرئيسية",
     .name_ja = "Ministry of Culture (government-agency, DZ) - الصفحة الرئيسية",
-    .category = "government", .portal = "https://www.m-culture.gov.dz/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.m-culture.gov.dz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7022,7 +7022,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30261680", .name = "Anvredet (government-agency, DZ) - anvredet",
     .name_ja = "Anvredet (government-agency, DZ) - anvredet",
-    .category = "government", .portal = "https://anvredet.org.dz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://anvredet.org.dz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7042,7 +7042,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q67903596", .name = "Independent National Authority Of Elections (government-agency, "
       "DZ) - السلطة الوطنية المستقلة للإنتخابات",
     .name_ja = "Independent National Authority Of Elections (government-agency, DZ) - السلطة الوطنية المستقلة للإنتخابات",
-    .category = "government", .portal = "https://ina-elections.dz/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://ina-elections.dz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7062,7 +7062,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q106914635", .name = "National Maritime Signaling Office (government-agency, DZ) - "
       "ONSM",
     .name_ja = "National Maritime Signaling Office (government-agency, DZ) - ONSM",
-    .category = "government", .portal = "https://onsm-dz.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://onsm-dz.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7081,7 +7081,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q91092821", .name = "Q91092821 (government-agency, DZ) - ONEDD",
     .name_ja = "Q91092821 (government-agency, DZ) - ONEDD",
-    .category = "government", .portal = "https://onedd.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://onedd.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7100,7 +7100,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q92324509", .name = "Q92324509 (government-agency, DZ) - OGEBC",
     .name_ja = "Q92324509 (government-agency, DZ) - OGEBC",
-    .category = "government", .portal = "https://ogebc.dz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ogebc.dz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7119,7 +7119,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q138331984", .name = "Q138331984 (government-agency, DZ) - الديوان الوطني للتطهير",
     .name_ja = "Q138331984 (government-agency, DZ) - الديوان الوطني للتطهير",
-    .category = "government", .portal = "https://ona.dz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ona.dz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7139,7 +7139,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16632260", .name = "Ministry of Tourism and Handicrafts (Algeria) (ministry, DZ) - "
       "وزارة السياحة والصناعة التقليديـة",
     .name_ja = "Ministry of Tourism and Handicrafts (Algeria) (ministry, DZ) - وزارة السياحة والصناعة التقليديـة",
-    .category = "government", .portal = "https://www.mta.gov.dz/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.mta.gov.dz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7159,7 +7159,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116787863", .name = "Q116787863 (government-agency, EC) - Secretaría Nacional de "
       "Gestión de Riesgos",
     .name_ja = "Q116787863 (government-agency, EC) - Secretaría Nacional de Gestión de Riesgos",
-    .category = "government", .portal = "https://www.gestionderiesgos.gob.ec/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.gestionderiesgos.gob.ec/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7179,7 +7179,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q115121175", .name = "Agency for Quality Assurance of Health Services and Prepaid "
       "Medicine (government-agency, EC) - ACESS",
     .name_ja = "Agency for Quality Assurance of Health Services and Prepaid Medicine (government-agency, EC) - ACESS",
-    .category = "government", .portal = "http://www.acess.gob.ec/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "http://www.acess.gob.ec/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7200,7 +7200,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Surveillance (government-agency, EC) - Agencia Nacional de "
       "Regulación, Control y Vigilancia Sanitaria",
     .name_ja = "National Agency for Health Regulation, Control and Sanitary Surveillance (government-agency, EC) - Agencia Nacional de Regulación, Control y Vigilancia Sanitaria",
-    .category = "government", .portal = "https://www.controlsanitario.gob.ec/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.controlsanitario.gob.ec/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7220,7 +7220,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137204440", .name = "Agencia de Regulación y Control Fito y Zoosanitario "
       "(government-agency, EC) - Agrocalidad",
     .name_ja = "Agencia de Regulación y Control Fito y Zoosanitario (government-agency, EC) - Agrocalidad",
-    .category = "government", .portal = "https://www.agrocalidad.gob.ec/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.agrocalidad.gob.ec/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7240,7 +7240,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140871501", .name = "Consejo de Comunicación (government-agency, EC) - Consejo de "
       "Comunicación",
     .name_ja = "Consejo de Comunicación (government-agency, EC) - Consejo de Comunicación",
-    .category = "government", .portal = "https://www.consejodecomunicacion.gob.ec/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.consejodecomunicacion.gob.ec/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7260,7 +7260,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q56377204", .name = "Ministry of Government of Ecuador (ministry, EC) - Ministerio de "
       "Gobierno",
     .name_ja = "Ministry of Government of Ecuador (ministry, EC) - Ministerio de Gobierno",
-    .category = "government", .portal = "https://www.ministeriodegobierno.gob.ec/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.ministeriodegobierno.gob.ec/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7280,7 +7280,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5164313", .name = "Constitutional Court of Ecuador (court, EC) - Corte "
       "Constitucional del Ecuador",
     .name_ja = "Constitutional Court of Ecuador (court, EC) - Corte Constitucional del Ecuador",
-    .category = "government", .portal = "https://www.corteconstitucional.gob.ec/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.corteconstitucional.gob.ec/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7300,7 +7300,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141455021", .name = "Q141455021 (regulatory-agency, EC) - Superintendencia de "
       "Protección de Datos Personales (SPDP)",
     .name_ja = "Q141455021 (regulatory-agency, EC) - Superintendencia de Protección de Datos Personales (SPDP)",
-    .category = "government", .portal = "https://www.spdp.gob.ec/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.spdp.gob.ec/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7320,7 +7320,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3440361", .name = "Estonian Education and Research Network (government-agency, EE) "
       "- Uudised - EENet.ee",
     .name_ja = "Estonian Education and Research Network (government-agency, EE) - Uudised - EENet.ee",
-    .category = "government", .portal = "https://www.eenet.ee/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.eenet.ee/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7340,7 +7340,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12362644", .name = "Financial Supervision Authority (government-agency, EE) - "
       "Uudised",
     .name_ja = "Financial Supervision Authority (government-agency, EE) - Uudised",
-    .category = "government", .portal = "https://www.fi.ee/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.fi.ee/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7360,7 +7360,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5348408", .name = "Egyptian Financial Supervisory Authority (government-agency, EG) "
       "- نبنى الجسور لا الحواجز",
     .name_ja = "Egyptian Financial Supervisory Authority (government-agency, EG) - نبنى الجسور لا الحواجز",
-    .category = "government", .portal = "https://fra.gov.eg/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://fra.gov.eg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7380,7 +7380,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30265188", .name = "General Organization For Teaching Hospitals and Institutes "
       "(government-agency, EG) - GOTHI",
     .name_ja = "General Organization For Teaching Hospitals and Institutes (government-agency, EG) - GOTHI",
-    .category = "government", .portal = "https://gothi.gov.eg/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://gothi.gov.eg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7400,7 +7400,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q124970017", .name = "Supreme Council for Media Regulation (government-agency, EG) - "
       "المجلس الاعلى لتنظيم الاعلام – الموقع ال",
     .name_ja = "Supreme Council for Media Regulation (government-agency, EG) - المجلس الاعلى لتنظيم الاعلام – الموقع ال",
-    .category = "government", .portal = "https://scm.gov.eg/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://scm.gov.eg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7420,7 +7420,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q122213098", .name = "Q122213098 (government-agency, EG) - وزارة الموارد المائية و "
       "الرى",
     .name_ja = "Q122213098 (government-agency, EG) - وزارة الموارد المائية و الرى",
-    .category = "government", .portal = "https://www.mwri.gov.eg/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.mwri.gov.eg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7441,7 +7441,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, ES) - Seminario: Any Light Particle Search "
       "II",
     .name_ja = "Centro de Astropartículas y Física de Altas Energías (government-agency, ES) - Seminario: Any Light Particle Search II",
-    .category = "government", .portal = "https://capa.unizar.es/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://capa.unizar.es/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7461,7 +7461,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q22704014", .name = "Cartographic and Geological Institute of Catalonia "
       "(government-agency, ES) - Actualitat",
     .name_ja = "Cartographic and Geological Institute of Catalonia (government-agency, ES) - Actualitat",
-    .category = "government", .portal = "https://www.icgc.cat/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.icgc.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7481,7 +7481,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q22704014_2", .name = "Cartographic and Geological Institute of Catalonia "
       "(government-agency, ES) - Butlletí de Perill d'Allaus",
     .name_ja = "Cartographic and Geological Institute of Catalonia (government-agency, ES) - Butlletí de Perill d'Allaus",
-    .category = "government", .portal = "https://www.icgc.cat/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.icgc.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7501,7 +7501,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q22704014_3", .name = "Cartographic and Geological Institute of Catalonia "
       "(government-agency, ES) - Posicionament a l'ICGC",
     .name_ja = "Cartographic and Geological Institute of Catalonia (government-agency, ES) - Posicionament a l'ICGC",
-    .category = "government", .portal = "https://geofons.blogspot.com/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://geofons.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7521,7 +7521,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q22704014_4", .name = "Cartographic and Geological Institute of Catalonia "
       "(government-agency, ES) - Terratrèmols enregistrats",
     .name_ja = "Cartographic and Geological Institute of Catalonia (government-agency, ES) - Terratrèmols enregistrats",
-    .category = "government", .portal = "https://sismocat.icgc.cat/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://sismocat.icgc.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7541,7 +7541,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q25424116", .name = "Agency for Administration of University and Research "
       "(government-agency, ES) - Actualitat",
     .name_ja = "Agency for Administration of University and Research (government-agency, ES) - Actualitat",
-    .category = "government", .portal = "https://agaur.gencat.cat/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://agaur.gencat.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7561,7 +7561,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q25424116_2", .name = "Agency for Administration of University and Research "
       "(government-agency, ES) - Convocatòries amb termini obert",
     .name_ja = "Agency for Administration of University and Research (government-agency, ES) - Convocatòries amb termini obert",
-    .category = "government", .portal = "https://agaur.gencat.cat/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://agaur.gencat.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7581,7 +7581,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q25424127", .name = "Consorci Administració Oberta de Catalunya (government-agency, "
       "ES) - Consorci AOC",
     .name_ja = "Consorci Administració Oberta de Catalunya (government-agency, ES) - Consorci AOC",
-    .category = "government", .portal = "https://www.aoc.cat/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.aoc.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7600,7 +7600,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30100395", .name = "CERCA Institute (government-agency, ES) - CERCA",
     .name_ja = "CERCA Institute (government-agency, ES) - CERCA",
-    .category = "government", .portal = "https://cerca.cat/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://cerca.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7620,7 +7620,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30256861", .name = "Fundación Española para la Cooperación Internacional Salud y "
       "Política Social (government-agency, ES) - FCSAI",
     .name_ja = "Fundación Española para la Cooperación Internacional Salud y Política Social (government-agency, ES) - FCSAI",
-    .category = "government", .portal = "https://fcsai.es/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://fcsai.es/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7639,7 +7639,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30267406", .name = "Sodercan (government-agency, ES) - SODERCAN",
     .name_ja = "Sodercan (government-agency, ES) - SODERCAN",
-    .category = "government", .portal = "https://www.sodercan.es/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.sodercan.es/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7659,7 +7659,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30285209", .name = "Institut d'Assistència Sanitària (government-agency, ES) - RSS "
       "Novetats ICSGirona",
     .name_ja = "Institut d'Assistència Sanitària (government-agency, ES) - RSS Novetats ICSGirona",
-    .category = "government", .portal = "http://www.ias.cat/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://www.ias.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7679,7 +7679,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30285209_2", .name = "Institut d'Assistència Sanitària (government-agency, ES) - "
       "Institut d'Assistència Sanitària",
     .name_ja = "Institut d'Assistència Sanitària (government-agency, ES) - Institut d'Assistència Sanitària",
-    .category = "government", .portal = "http://www.ias.cat/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://www.ias.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7698,7 +7698,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q47516295", .name = "Almeria Port Authority (government-agency, ES) - Apalmeria",
     .name_ja = "Almeria Port Authority (government-agency, ES) - Apalmeria",
-    .category = "government", .portal = "https://apalmeria.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://apalmeria.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7718,7 +7718,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q56467103", .name = "Regional Energy Agency of Castilla y León (government-agency, "
       "ES) - Energía y minería en Castilla y León",
     .name_ja = "Regional Energy Agency of Castilla y León (government-agency, ES) - Energía y minería en Castilla y León",
-    .category = "government", .portal = "https://energia.jcyl.es/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://energia.jcyl.es/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7739,7 +7739,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Zientziaren, teknologiaren eta berrikuntzaren topagune "
       "bilakatuko da Bergara ZTB",
     .name_ja = "Laboratorium Bergara museum (government-agency, ES) - Zientziaren, teknologiaren eta berrikuntzaren topagune bilakatuko da Bergara ZTB",
-    .category = "government", .portal = "https://laboratorium.eus/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://laboratorium.eus/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7760,7 +7760,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, ES) - Oferta per a la cobertura de "
       "situacions de substitució i/o acumulacions de tasq",
     .name_ja = "Institut Català de l'Acolliment i de l'Adopció (government-agency, ES) - Oferta per a la cobertura de situacions de substitució i/o acumulacions de tasq",
-    .category = "government", .portal = "https://dretssocials.gencat.cat/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://dretssocials.gencat.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7779,7 +7779,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q6052393", .name = "Museos de Tenerife (government-agency, ES) - Museos de Tenerife",
     .name_ja = "Museos de Tenerife (government-agency, ES) - Museos de Tenerife",
-    .category = "government", .portal = "https://www.museosdetenerife.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.museosdetenerife.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7800,7 +7800,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "El POICAT reivindica la perspectiva intercultural com a element "
       "clau a l’hora",
     .name_ja = "Agència de Salut Pública de Catalunya (government-agency, ES) - El POICAT reivindica la perspectiva intercultural com a element clau a l’hora",
-    .category = "government", .portal = "https://salutpublica.gencat.cat/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://salutpublica.gencat.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7820,7 +7820,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11926704", .name = "International Catalan Institute for Peace (government-agency, "
       "ES) - ICIP",
     .name_ja = "International Catalan Institute for Peace (government-agency, ES) - ICIP",
-    .category = "government", .portal = "https://www.icip.cat/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.icip.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7840,7 +7840,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q138528338", .name = "Egaz Txorierri (government-agency, ES) - Agencia de desarrollo "
       "económico de Txorierri",
     .name_ja = "Egaz Txorierri (government-agency, ES) - Agencia de desarrollo económico de Txorierri",
-    .category = "government", .portal = "https://egaz.eus/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://egaz.eus/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7860,7 +7860,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140045510", .name = "Consorci Corporació de Salut del Maresme i la Selva "
       "(government-agency, ES) - Corporació Salut",
     .name_ja = "Consorci Corporació de Salut del Maresme i la Selva (government-agency, ES) - Corporació Salut",
-    .category = "government", .portal = "https://salutms.cat/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://salutms.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7879,7 +7879,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q140045782", .name = "FundeSalud (government-agency, ES) - FUNDESALUD",
     .name_ja = "FundeSalud (government-agency, ES) - FUNDESALUD",
-    .category = "government", .portal = "https://fundesalud.es/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://fundesalud.es/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7899,7 +7899,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q83819", .name = "Ferrocarrils de la Generalitat de Catalunya (government-agency, "
       "ES) - FGC",
     .name_ja = "Ferrocarrils de la Generalitat de Catalunya (government-agency, ES) - FGC",
-    .category = "government", .portal = "https://www.fgc.cat/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.fgc.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7919,7 +7919,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q928087", .name = "CESGA (government-agency, ES) - Cesga – Centro de "
       "Supercomputación de Galicia",
     .name_ja = "CESGA (government-agency, ES) - Cesga – Centro de Supercomputación de Galicia",
-    .category = "government", .portal = "https://www.cesga.es/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.cesga.es/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7939,7 +7939,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5712781", .name = "Autoridad Portuaria de Gijon (government-agency, ES) - Puerto de "
       "Gijón – Autoridad Portuaria de Gijón",
     .name_ja = "Autoridad Portuaria de Gijon (government-agency, ES) - Puerto de Gijón – Autoridad Portuaria de Gijón",
-    .category = "government", .portal = "https://www.puertogijon.es/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.puertogijon.es/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7959,7 +7959,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5779899", .name = "Torrecárdenas University Hospital (government-agency, ES) - "
       "Hospital Universitario Torrecárdenas",
     .name_ja = "Torrecárdenas University Hospital (government-agency, ES) - Hospital Universitario Torrecárdenas",
-    .category = "government", .portal = "https://www.hospitaltorrecardenas.es/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.hospitaltorrecardenas.es/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7978,7 +7978,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q47516749", .name = "Q47516749 (government-agency, ES) - Puerto de Ceuta",
     .name_ja = "Q47516749 (government-agency, ES) - Puerto de Ceuta",
-    .category = "government", .portal = "http://www.puertodeceuta.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://www.puertodeceuta.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7997,7 +7997,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q120542741", .name = "Q120542741 (government-agency, ES) - Cultura Digital",
     .name_ja = "Q120542741 (government-agency, ES) - Cultura Digital",
-    .category = "government", .portal = "https://culturadigital.blog.gencat.cat/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://culturadigital.blog.gencat.cat/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8017,7 +8017,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131934927", .name = "Q131934927 (government-agency, ES) - Tenerife Isla Solidaria   "
       "Taller ¿Sabes hidratarte bien?",
     .name_ja = "Q131934927 (government-agency, ES) - Tenerife Isla Solidaria   Taller ¿Sabes hidratarte bien?",
-    .category = "government", .portal = "https://www.tenerifeislasolidaria.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.tenerifeislasolidaria.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8036,7 +8036,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q138509145", .name = "Q138509145 (government-agency, ES) - Bioética Andalucía",
     .name_ja = "Q138509145 (government-agency, ES) - Bioética Andalucía",
-    .category = "government", .portal = "https://www.bioetica-andalucia.es/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.bioetica-andalucia.es/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8056,7 +8056,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4890912", .name = "General Assemblies of Gipuzkoa (legislature, ES) - Gipuzkoako "
       "Batzar Nagusiak - Agenda",
     .name_ja = "General Assemblies of Gipuzkoa (legislature, ES) - Gipuzkoako Batzar Nagusiak - Agenda",
-    .category = "government", .portal = "http://www.gipuzkoa.net/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "http://www.gipuzkoa.net/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8076,7 +8076,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16550595", .name = "National Commission of Markets and Competition "
       "(regulatory-agency, ES) - RSS CNMC",
     .name_ja = "National Commission of Markets and Competition (regulatory-agency, ES) - RSS CNMC",
-    .category = "government", .portal = "https://www.cnmc.es/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.cnmc.es/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8096,7 +8096,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30261782", .name = "Ethiopian Society of Obstetricians and Gynecologists "
       "(government-agency, ET) - የኢትዮጵያ የፅንስና የማህፀን ሐኪሞች ማህበር",
     .name_ja = "Ethiopian Society of Obstetricians and Gynecologists (government-agency, ET) - የኢትዮጵያ የፅንስና የማህፀን ሐኪሞች ማህበር",
-    .category = "government", .portal = "https://esog-eth.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://esog-eth.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8116,7 +8116,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30261963", .name = "National Veterinary Institute (government-agency, ET) - National "
       "Veterinary Institute",
     .name_ja = "National Veterinary Institute (government-agency, ET) - National Veterinary Institute",
-    .category = "government", .portal = "https://www.nvi.com.et/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.nvi.com.et/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8136,7 +8136,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q108737221", .name = "Ethiopian Biodiversity Institute (government-agency, ET) - "
       "Ethiopian Biodiversity Institute – EBI",
     .name_ja = "Ethiopian Biodiversity Institute (government-agency, ET) - Ethiopian Biodiversity Institute – EBI",
-    .category = "government", .portal = "https://ebi.gov.et/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://ebi.gov.et/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8156,7 +8156,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q133811981", .name = "Tigray Health Research Institute THRI (government-agency, ET) - "
       "Tigray Health Research Institute THRI",
     .name_ja = "Tigray Health Research Institute THRI (government-agency, ET) - Tigray Health Research Institute THRI",
-    .category = "government", .portal = "https://thri.gov.et/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://thri.gov.et/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8176,7 +8176,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135115283", .name = "Ethiopian Food and Nutrition Association (EFNA) "
       "(government-agency, ET) - EFDA",
     .name_ja = "Ethiopian Food and Nutrition Association (EFNA) (government-agency, ET) - EFDA",
-    .category = "government", .portal = "https://www.efda.gov.et/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.efda.gov.et/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8196,7 +8196,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135117147", .name = "Ethiopian National Dialogue Commission (government-agency, ET) - "
       "የኢትዮጵያ ሀገራዊ ምክክር ኮሚሽን",
     .name_ja = "Ethiopian National Dialogue Commission (government-agency, ET) - የኢትዮጵያ ሀገራዊ ምክክር ኮሚሽን",
-    .category = "government", .portal = "https://ethiondc.org.et/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://ethiondc.org.et/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8216,7 +8216,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q136723669", .name = "Refugees and Returnees Service (government-agency, ET) - "
       "Refugees and Returnees Service (RRS)",
     .name_ja = "Refugees and Returnees Service (government-agency, ET) - Refugees and Returnees Service (RRS)",
-    .category = "government", .portal = "https://rrs.et/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://rrs.et/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8236,7 +8236,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1967889", .name = "National Bank of Ethiopia (central-bank, ET) - National Bank of "
       "Ethiopia",
     .name_ja = "National Bank of Ethiopia (central-bank, ET) - National Bank of Ethiopia",
-    .category = "government", .portal = "https://nbe.gov.et/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://nbe.gov.et/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8256,7 +8256,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3266959", .name = "Finnish Meteorological Institute (government-agency, FI) - "
       "Ilmatieteen laitoksen tiedotteet",
     .name_ja = "Finnish Meteorological Institute (government-agency, FI) - Ilmatieteen laitoksen tiedotteet",
-    .category = "government", .portal = "https://www.ilmatieteenlaitos.fi/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.ilmatieteenlaitos.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8276,7 +8276,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3266959_2", .name = "Finnish Meteorological Institute (government-agency, FI) - "
       "Meteorologiska institutets pressmeddelanden",
     .name_ja = "Finnish Meteorological Institute (government-agency, FI) - Meteorologiska institutets pressmeddelanden",
-    .category = "government", .portal = "https://sv.ilmatieteenlaitos.fi/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://sv.ilmatieteenlaitos.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8295,7 +8295,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q414422", .name = "Research Council of Finland (government-agency, FI) - Tiedotteet",
     .name_ja = "Research Council of Finland (government-agency, FI) - Tiedotteet",
-    .category = "government", .portal = "https://www.aka.fi/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.aka.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8315,7 +8315,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11873352", .name = "Consumer Disputes Board (government-agency, FI) - "
       "Kuluttajariitalautakunta - Sivut",
     .name_ja = "Consumer Disputes Board (government-agency, FI) - Kuluttajariitalautakunta - Sivut",
-    .category = "government", .portal = "https://www.kuluttajariita.fi/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.kuluttajariita.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8335,7 +8335,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11873352_2", .name = "Consumer Disputes Board (government-agency, FI) - "
       "Kuluttajariitalautakunta - Ajankohtaiset",
     .name_ja = "Consumer Disputes Board (government-agency, FI) - Kuluttajariitalautakunta - Ajankohtaiset",
-    .category = "government", .portal = "https://www.kuluttajariita.fi/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.kuluttajariita.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8355,7 +8355,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11873352_3", .name = "Consumer Disputes Board (government-agency, FI) - "
       "Kuluttajariitalautakunta - Päätökset",
     .name_ja = "Consumer Disputes Board (government-agency, FI) - Kuluttajariitalautakunta - Päätökset",
-    .category = "government", .portal = "https://www.kuluttajariita.fi/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.kuluttajariita.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8375,7 +8375,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18691139", .name = "Prison and Probation Service of Finland (government-agency, FI) "
       "- Rikosseuraamuslaitos - Sivut",
     .name_ja = "Prison and Probation Service of Finland (government-agency, FI) - Rikosseuraamuslaitos - Sivut",
-    .category = "government", .portal = "https://www.rikosseuraamus.fi/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.rikosseuraamus.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8395,7 +8395,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18691139_2", .name = "Prison and Probation Service of Finland (government-agency, FI) "
       "- Rikosseuraamuslaitos - Ajankohtaiset",
     .name_ja = "Prison and Probation Service of Finland (government-agency, FI) - Rikosseuraamuslaitos - Ajankohtaiset",
-    .category = "government", .portal = "https://www.rikosseuraamus.fi/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.rikosseuraamus.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8415,7 +8415,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18691139_3", .name = "Prison and Probation Service of Finland (government-agency, FI) "
       "- Rikosseuraamuslaitos - Blogiartikkelit",
     .name_ja = "Prison and Probation Service of Finland (government-agency, FI) - Rikosseuraamuslaitos - Blogiartikkelit",
-    .category = "government", .portal = "https://www.rikosseuraamus.fi/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.rikosseuraamus.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8435,7 +8435,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18691139_4", .name = "Prison and Probation Service of Finland (government-agency, FI) "
       "- Rikosseuraamuslaitos - Portti",
     .name_ja = "Prison and Probation Service of Finland (government-agency, FI) - Rikosseuraamuslaitos - Portti",
-    .category = "government", .portal = "https://www.rikosseuraamus.fi/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.rikosseuraamus.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8455,7 +8455,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131626050", .name = "National Legal Services Authority (government-agency, FI) - "
       "Oikeuspalveluvirasto - Sivut",
     .name_ja = "National Legal Services Authority (government-agency, FI) - Oikeuspalveluvirasto - Sivut",
-    .category = "government", .portal = "https://www.oikeuspalveluvirasto.fi/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.oikeuspalveluvirasto.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8475,7 +8475,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131626050_2", .name = "National Legal Services Authority (government-agency, FI) - "
       "Oikeuspalveluvirasto - Toimipaikat",
     .name_ja = "National Legal Services Authority (government-agency, FI) - Oikeuspalveluvirasto - Toimipaikat",
-    .category = "government", .portal = "https://www.oikeuspalveluvirasto.fi/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.oikeuspalveluvirasto.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8495,7 +8495,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131626050_3", .name = "National Legal Services Authority (government-agency, FI) - "
       "Oikeuspalveluvirasto - Ajankohtaiset",
     .name_ja = "National Legal Services Authority (government-agency, FI) - Oikeuspalveluvirasto - Ajankohtaiset",
-    .category = "government", .portal = "https://www.oikeuspalveluvirasto.fi/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.oikeuspalveluvirasto.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8515,7 +8515,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q23045378", .name = "The Finnish Economic Policy Council (government-organization, "
       "FI) - Talouspolitiikan arviointineuvosto",
     .name_ja = "The Finnish Economic Policy Council (government-organization, FI) - Talouspolitiikan arviointineuvosto",
-    .category = "government", .portal = "https://talouspolitiikanarviointineuvosto.fi/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://talouspolitiikanarviointineuvosto.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8535,7 +8535,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q23045378_2", .name = "The Finnish Economic Policy Council (government-organization, "
       "FI) - Talouspolitiikan arviointineuvosto",
     .name_ja = "The Finnish Economic Policy Council (government-organization, FI) - Talouspolitiikan arviointineuvosto",
-    .category = "government", .portal = "https://www.retriever-info.com/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.retriever-info.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8555,7 +8555,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2011233", .name = "Supreme Administrative Court of Finland (court, FI) - Korkein "
       "hallinto-oikeus - Sivut",
     .name_ja = "Supreme Administrative Court of Finland (court, FI) - Korkein hallinto-oikeus - Sivut",
-    .category = "government", .portal = "https://www.kho.fi/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.kho.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8575,7 +8575,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2011233_2", .name = "Supreme Administrative Court of Finland (court, FI) - Korkein "
       "hallinto-oikeus - Ajankohtaiset",
     .name_ja = "Supreme Administrative Court of Finland (court, FI) - Korkein hallinto-oikeus - Ajankohtaiset",
-    .category = "government", .portal = "https://www.kho.fi/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.kho.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8595,7 +8595,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2011233_3", .name = "Supreme Administrative Court of Finland (court, FI) - Korkein "
       "hallinto-oikeus - Blogiartikkelit",
     .name_ja = "Supreme Administrative Court of Finland (court, FI) - Korkein hallinto-oikeus - Blogiartikkelit",
-    .category = "government", .portal = "https://www.kho.fi/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.kho.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8615,7 +8615,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2011233_4", .name = "Supreme Administrative Court of Finland (court, FI) - Korkein "
       "hallinto-oikeus - Lausunnot",
     .name_ja = "Supreme Administrative Court of Finland (court, FI) - Korkein hallinto-oikeus - Lausunnot",
-    .category = "government", .portal = "https://www.kho.fi/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.kho.fi/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8635,7 +8635,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59536824", .name = "iTaukei Trust Fund Board (government-agency, FJ) - iTaukei Trust "
       "Fund Board",
     .name_ja = "iTaukei Trust Fund Board (government-agency, FJ) - iTaukei Trust Fund Board",
-    .category = "government", .portal = "https://itaukeitrustfund.com.fj/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://itaukeitrustfund.com.fj/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8654,7 +8654,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q1776552", .name = "Reserve Bank of Fiji (central-bank, FJ) - Reserve Bank of Fiji",
     .name_ja = "Reserve Bank of Fiji (central-bank, FJ) - Reserve Bank of Fiji",
-    .category = "government", .portal = "https://www.rbf.gov.fj/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.rbf.gov.fj/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8674,7 +8674,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2972371", .name = "International Centre for Advanced Mediterranean Agronomic "
       "Studies (government-agency, FR) - CIHEAM",
     .name_ja = "International Centre for Advanced Mediterranean Agronomic Studies (government-agency, FR) - CIHEAM",
-    .category = "government", .portal = "https://www.ciheam.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.ciheam.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8695,7 +8695,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "nouvelles et les nanomatériaux (government-agency, FR) - "
       "CEA-Liten - Mosaïque",
     .name_ja = "Laboratoire d'innovation pour les technologies des énergies nouvelles et les nanomatériaux (government-agency, FR) - CEA-Liten - Mosaïque",
-    .category = "government", .portal = "https://liten.cea.fr/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://liten.cea.fr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8715,7 +8715,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30255382", .name = "Agence Régionale d'évaluation Environnement et Climat "
       "(government-agency, FR) - Arecpc",
     .name_ja = "Agence Régionale d'évaluation Environnement et Climat (government-agency, FR) - Arecpc",
-    .category = "government", .portal = "https://www.arecpc.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.arecpc.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8735,7 +8735,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30256243", .name = "Fédération Nationale des Centres d'Initiatives pour Valoriser "
       "l’Agriculture et le Milieu Rural (government-agency, FR) - CIVAM",
     .name_ja = "Fédération Nationale des Centres d'Initiatives pour Valoriser l’Agriculture et le Milieu Rural (government-agency, FR) - CIVAM",
-    .category = "government", .portal = "https://www.civam.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.civam.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8755,7 +8755,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140351929", .name = "Infrastructures en Biologie Santé et Agronomie "
       "(government-agency, FR) - Actualits du GIS IBiSA",
     .name_ja = "Infrastructures en Biologie Santé et Agronomie (government-agency, FR) - Actualits du GIS IBiSA",
-    .category = "government", .portal = "https://www.ibisa.net/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.ibisa.net/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8775,7 +8775,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q96335508", .name = "Q96335508 (government-agency, FR) - Office public de la langue "
       "catalane",
     .name_ja = "Q96335508 (government-agency, FR) - Office public de la langue catalane",
-    .category = "government", .portal = "https://oplcat.eu/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://oplcat.eu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8795,7 +8795,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q2867049", .name = "Assembly of French Citizens Abroad (legislature, FR) - AFE",
     .name_ja = "Assembly of French Citizens Abroad (legislature, FR) - AFE",
-    .category = "government", .portal = "https://www.assemblee-afe.fr/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.assemblee-afe.fr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8814,7 +8814,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q139407774", .name = "BioFAIR (government-agency, GB) - BioFAIR",
     .name_ja = "BioFAIR (government-agency, GB) - BioFAIR",
-    .category = "government", .portal = "https://biofair.uk/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://biofair.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8834,7 +8834,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141553076", .name = "Iraqi Cultural Attaché in London (government-agency, GB) - Iraqi "
       "Cultural Attache",
     .name_ja = "Iraqi Cultural Attaché in London (government-agency, GB) - Iraqi Cultural Attache",
-    .category = "government", .portal = "https://www.iraqiculturalattache.org.uk/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.iraqiculturalattache.org.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8854,7 +8854,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5038424", .name = "Cardiff Harbour Authority (government-agency, GB) - notices "
       "Archive - Cardiff Harbour Authority",
     .name_ja = "Cardiff Harbour Authority (government-agency, GB) - notices Archive - Cardiff Harbour Authority",
-    .category = "government", .portal = "https://www.cardiffharbour.com/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.cardiffharbour.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8874,7 +8874,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5152798", .name = "Commissioner for Children and Young People, Northern Ireland "
       "(government-agency, GB) - Niccy",
     .name_ja = "Commissioner for Children and Young People, Northern Ireland (government-agency, GB) - Niccy",
-    .category = "government", .portal = "https://www.niccy.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.niccy.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8893,7 +8893,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5189355", .name = "Crown Estate Paving Commission (government-agency, GB) - CEPC",
     .name_ja = "Crown Estate Paving Commission (government-agency, GB) - CEPC",
-    .category = "government", .portal = "https://www.cepc.org.uk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.cepc.org.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8913,7 +8913,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5251136", .name = "Defence and Security Media Advisory Committee "
       "(government-agency, GB) - The DSMA Notice System",
     .name_ja = "Defence and Security Media Advisory Committee (government-agency, GB) - The DSMA Notice System",
-    .category = "government", .portal = "https://www.dsma.uk/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.dsma.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8933,7 +8933,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5635114", .name = "HM Inspectorate of Probation (government-agency, GB) - HM "
       "Inspectorate of Probation",
     .name_ja = "HM Inspectorate of Probation (government-agency, GB) - HM Inspectorate of Probation",
-    .category = "government", .portal = "https://hmiprobation.justiceinspectorates.gov.uk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://hmiprobation.justiceinspectorates.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8953,7 +8953,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5690635", .name = "Health Protection Agency (government-agency, GB) - Public Health "
       "England - Activity on GOV.UK",
     .name_ja = "Health Protection Agency (government-agency, GB) - Public Health England - Activity on GOV.UK",
-    .category = "government", .portal = "https://www.gov.uk/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8972,7 +8972,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q7579368", .name = "Sport Northern Ireland (government-agency, GB) - Sport NI",
     .name_ja = "Sport Northern Ireland (government-agency, GB) - Sport NI",
-    .category = "government", .portal = "https://www.sportni.net/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.sportni.net/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8993,7 +8993,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, GB) - Gastrointestinal & Liver - Nottingham "
       "Biomedical Research Centre",
     .name_ja = "NIHR Nottingham Digestive Diseases Biomedical Research Unit (government-agency, GB) - Gastrointestinal & Liver - Nottingham Biomedical Research Centre",
-    .category = "government", .portal = "https://nottinghambrc.nihr.ac.uk/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://nottinghambrc.nihr.ac.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9014,7 +9014,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, GB) - Gastrointestinal & Liver - Nottingham "
       "Biomedical Research Centre",
     .name_ja = "NIHR Nottingham Digestive Diseases Biomedical Research Unit (government-agency, GB) - Gastrointestinal & Liver - Nottingham Biomedical Research Centre",
-    .category = "government", .portal = "https://nottinghambrc.nihr.ac.uk/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://nottinghambrc.nihr.ac.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9035,7 +9035,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, GB) - NIHR Biomedical Research Centre: "
       "Oxford",
     .name_ja = "NIHR Oxford Musculoskeletal Biomedical Research Unit (government-agency, GB) - NIHR Biomedical Research Centre: Oxford",
-    .category = "government", .portal = "https://oxfordbrc.nihr.ac.uk/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://oxfordbrc.nihr.ac.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9055,7 +9055,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q33122141", .name = "Marine Alliance for Science and Technology for Scotland "
       "(government-agency, GB) - MASTS",
     .name_ja = "Marine Alliance for Science and Technology for Scotland (government-agency, GB) - MASTS",
-    .category = "government", .portal = "https://masts.ac.uk/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://masts.ac.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9075,7 +9075,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q61932644", .name = "Electric Infrastructure Security Council (government-agency, GB) "
       "- EIS",
     .name_ja = "Electric Infrastructure Security Council (government-agency, GB) - EIS",
-    .category = "government", .portal = "https://eiscouncil.org/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://eiscouncil.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9095,7 +9095,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6974279", .name = "National Measurement Office (government-agency, GB) - Department "
       "for Business, Energy & Industrial Strategy - Activity on GOV.UK",
     .name_ja = "National Measurement Office (government-agency, GB) - Department for Business, Energy & Industrial Strategy - Activity on GOV.UK",
-    .category = "government", .portal = "https://www.gov.uk/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9115,7 +9115,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7079167", .name = "Office for Nuclear Regulation (government-agency, GB) - Rss "
       "Global",
     .name_ja = "Office for Nuclear Regulation (government-agency, GB) - Rss Global",
-    .category = "government", .portal = "https://www.onr.org.uk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.onr.org.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9135,7 +9135,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7079167_2", .name = "Office for Nuclear Regulation (government-agency, GB) - Rss "
       "Latest Content",
     .name_ja = "Office for Nuclear Regulation (government-agency, GB) - Rss Latest Content",
-    .category = "government", .portal = "https://www.onr.org.uk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.onr.org.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9155,7 +9155,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7079167_3", .name = "Office for Nuclear Regulation (government-agency, GB) - Rss "
       "Publications",
     .name_ja = "Office for Nuclear Regulation (government-agency, GB) - Rss Publications",
-    .category = "government", .portal = "https://www.onr.org.uk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.onr.org.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9174,7 +9174,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q7079167_4", .name = "Office for Nuclear Regulation (government-agency, GB) - Rss News",
     .name_ja = "Office for Nuclear Regulation (government-agency, GB) - Rss News",
-    .category = "government", .portal = "https://www.onr.org.uk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.onr.org.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9193,7 +9193,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q136345828", .name = "Q136345828 (government-agency, GB) - HM Inspectorate of Prisons",
     .name_ja = "Q136345828 (government-agency, GB) - HM Inspectorate of Prisons",
-    .category = "government", .portal = "https://hmiprisons.justiceinspectorates.gov.uk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://hmiprisons.justiceinspectorates.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9213,7 +9213,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4944633", .name = "Border and Immigration Agency (government-organization, GB) - UK "
       "Visas and Immigration - Activity on GOV.UK",
     .name_ja = "Border and Immigration Agency (government-organization, GB) - UK Visas and Immigration - Activity on GOV.UK",
-    .category = "government", .portal = "https://www.gov.uk/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.gov.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9232,7 +9232,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q105430648", .name = "Land Data (regulatory-agency, GB) - Land Data",
     .name_ja = "Land Data (regulatory-agency, GB) - Land Data",
-    .category = "government", .portal = "https://www.land-data.org.uk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.land-data.org.uk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9252,7 +9252,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7574737", .name = "Special State Protection Service of Georgia (government-agency, "
       "GE) - ssps.gov.ge",
     .name_ja = "Special State Protection Service of Georgia (government-agency, GE) - ssps.gov.ge",
-    .category = "government", .portal = "https://ssps.gov.ge/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ssps.gov.ge/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9272,7 +9272,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q85793009", .name = "Petroleum Commission (government-agency, GH) - PETROLEUM "
       "COMMISSION GHANA",
     .name_ja = "Petroleum Commission (government-agency, GH) - PETROLEUM COMMISSION GHANA",
-    .category = "government", .portal = "https://petrocom.gov.gh/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://petrocom.gov.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9292,7 +9292,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4946698", .name = "Borstal Institute for Juveniles (government-agency, GH) - Ghana "
       "Prisons Service",
     .name_ja = "Borstal Institute for Juveniles (government-agency, GH) - Ghana Prisons Service",
-    .category = "government", .portal = "https://ghanaprisons.gov.gh/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://ghanaprisons.gov.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9312,7 +9312,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5555331", .name = "Ghana Atomic Energy Commission (government-agency, GH) - Ghana "
       "Atomic Energy Commission",
     .name_ja = "Ghana Atomic Energy Commission (government-agency, GH) - Ghana Atomic Energy Commission",
-    .category = "government", .portal = "https://gaec.gov.gh/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://gaec.gov.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9332,7 +9332,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5555341", .name = "Ghana Civil Aviation Authority (government-agency, GH) - GHANA "
       "CIVIL AVIATION AUTHORITY",
     .name_ja = "Ghana Civil Aviation Authority (government-agency, GH) - GHANA CIVIL AVIATION AUTHORITY",
-    .category = "government", .portal = "https://www.gcaa.com.gh/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.gcaa.com.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9351,7 +9351,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5555396", .name = "Ghana Revenue Authority (government-agency, GH) - GRA",
     .name_ja = "Ghana Revenue Authority (government-agency, GH) - GRA",
-    .category = "government", .portal = "https://gra.gov.gh/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://gra.gov.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9371,7 +9371,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6971716", .name = "National Communications Authority (government-agency, GH) - "
       "National Communications Authority",
     .name_ja = "National Communications Authority (government-agency, GH) - National Communications Authority",
-    .category = "government", .portal = "https://nca.org.gh/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://nca.org.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9391,7 +9391,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16733554", .name = "Environmental Protection Agency (Ghana) (government-agency, GH) "
       "- Environmental Protection Authority, Ghana",
     .name_ja = "Environmental Protection Agency (Ghana) (government-agency, GH) - Environmental Protection Authority, Ghana",
-    .category = "government", .portal = "https://www.epa.gov.gh/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.epa.gov.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9411,7 +9411,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16733579", .name = "Ghana Museums and Monuments Board (government-agency, GH) - "
       "Tourism in Ghana,Touring Ghana, Visiting Ghana",
     .name_ja = "Ghana Museums and Monuments Board (government-agency, GH) - Tourism in Ghana,Touring Ghana, Visiting Ghana",
-    .category = "government", .portal = "https://touringghana.com/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://touringghana.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9431,7 +9431,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q19604749", .name = "Ghana Medical and Dental Council (government-agency, GH) - "
       "MEDICAL AND DENTAL COUNCIL",
     .name_ja = "Ghana Medical and Dental Council (government-agency, GH) - MEDICAL AND DENTAL COUNCIL",
-    .category = "government", .portal = "https://www.mdcghana.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.mdcghana.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9451,7 +9451,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30261818", .name = "Ghana AIDS Commission (government-agency, GH) - Ghana AIDS "
       "Commission",
     .name_ja = "Ghana AIDS Commission (government-agency, GH) - Ghana AIDS Commission",
-    .category = "government", .portal = "https://ghanaids.gov.gh/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://ghanaids.gov.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9471,7 +9471,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q48797970", .name = "National Identification Authority (government-agency, GH) - "
       "National Identification Authority",
     .name_ja = "National Identification Authority (government-agency, GH) - National Identification Authority",
-    .category = "government", .portal = "https://nia.gov.gh/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://nia.gov.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9492,7 +9492,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(ministry, GH) - Decentralization, Decentralisation, Local "
       "Governamnce in Ghana, Policy coordinat",
     .name_ja = "Inter-Ministerial Cordinating Committee on Decentralization (ministry, GH) - Decentralization, Decentralisation, Local Governamnce in Ghana, Policy coordinat",
-    .category = "government", .portal = "https://imccod.gov.gh/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://imccod.gov.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9513,7 +9513,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-organization, GH) - Commission on Human Rights and "
       "Administrative Justice",
     .name_ja = "Commission on Human Rights and Administrative Justice (government-organization, GH) - Commission on Human Rights and Administrative Justice",
-    .category = "government", .portal = "https://chraj.gov.gh/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://chraj.gov.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9533,7 +9533,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6974843", .name = "National Peace Council of Ghana (government-organization, GH) - "
       "National Peace Council   Ghana",
     .name_ja = "National Peace Council of Ghana (government-organization, GH) - National Peace Council   Ghana",
-    .category = "government", .portal = "https://www.peacecouncil.gov.gh/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.peacecouncil.gov.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9554,7 +9554,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "and Midwifery Council of Ghana - Nursing and Midwifery Council "
       "of Ghana",
     .name_ja = "Nurses and Midwifery Council (regulatory-agency, GH) - Nursing and Midwifery Council of Ghana - Nursing and Midwifery Council of Ghana",
-    .category = "government", .portal = "https://www.nmc.gov.gh/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.nmc.gov.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9575,7 +9575,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "and Midwifery Council of Ghana - Nursing and Midwifery Council "
       "of Ghana",
     .name_ja = "Nurses and Midwifery Council (regulatory-agency, GH) - Nursing and Midwifery Council of Ghana - Nursing and Midwifery Council of Ghana",
-    .category = "government", .portal = "https://www.nmc.gov.gh/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.nmc.gov.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9596,7 +9596,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "and Midwifery Council of Ghana - Nursing and Midwifery Council "
       "of Ghana",
     .name_ja = "Nurses and Midwifery Council (regulatory-agency, GH) - Nursing and Midwifery Council of Ghana - Nursing and Midwifery Council of Ghana",
-    .category = "government", .portal = "https://www.nmc.gov.gh/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.nmc.gov.gh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9616,7 +9616,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140387270", .name = "Gambia Telecommunications Cellular Company (government-agency, "
       "GM) - SIMCARDS",
     .name_ja = "Gambia Telecommunications Cellular Company (government-agency, GM) - SIMCARDS",
-    .category = "government", .portal = "https://gamcel.gm/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://gamcel.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9636,7 +9636,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140387427", .name = "National Roads Authority (government-agency, GM) - National "
       "Roads Authority",
     .name_ja = "National Roads Authority (government-agency, GM) - National Roads Authority",
-    .category = "government", .portal = "https://nra.gm/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://nra.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9656,7 +9656,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140387424", .name = "National Sports Council (government-agency, GM) - National "
       "Sports Council",
     .name_ja = "National Sports Council (government-agency, GM) - National Sports Council",
-    .category = "government", .portal = "https://nsc.gm/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://nsc.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9676,7 +9676,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140387430", .name = "Public Service Commission (government-agency, GM) - PUBLIC "
       "SERVICE COMMISSION",
     .name_ja = "Public Service Commission (government-agency, GM) - PUBLIC SERVICE COMMISSION",
-    .category = "government", .portal = "https://pscgov.gm/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://pscgov.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9696,7 +9696,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140387431", .name = "National Audit Office (government-agency, GM) - National Audit "
       "Office, The Gambia.",
     .name_ja = "National Audit Office (government-agency, GM) - National Audit Office, The Gambia.",
-    .category = "government", .portal = "https://nao.gm/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://nao.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9716,7 +9716,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140387442", .name = "National Youth Council (government-agency, GM) - The Gambia "
       "National Youth Council",
     .name_ja = "National Youth Council (government-agency, GM) - The Gambia National Youth Council",
-    .category = "government", .portal = "https://nyc.gm/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://nyc.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9735,7 +9735,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q1492955", .name = "Gamtel (government-agency, GM) - GAMTEL",
     .name_ja = "Gamtel (government-agency, GM) - GAMTEL",
-    .category = "government", .portal = "http://gamtel.gm/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://gamtel.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9755,7 +9755,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1661087", .name = "Independent Electoral Commission (government-agency, GM) - IEC – "
       "Independent Electoral Commission",
     .name_ja = "Independent Electoral Commission (government-agency, GM) - IEC – Independent Electoral Commission",
-    .category = "government", .portal = "https://iec.gm/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://iec.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9774,7 +9774,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q50037285", .name = "National Nutrition Agency (government-agency, GM) - NaNA",
     .name_ja = "National Nutrition Agency (government-agency, GM) - NaNA",
-    .category = "government", .portal = "http://nana.gm/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://nana.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9794,7 +9794,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q105963205", .name = "Gambia Public Utilities Regulatory Authority (government-agency, "
       "GM) - Public Utilities Regulatory Authority",
     .name_ja = "Gambia Public Utilities Regulatory Authority (government-agency, GM) - Public Utilities Regulatory Authority",
-    .category = "government", .portal = "https://pura.gm/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://pura.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9814,7 +9814,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q110920340", .name = "National Council for Arts and Culture (government-agency, GM) - "
       "NATIONAL CENTRE FOR ARTS & CALTURE",
     .name_ja = "National Council for Arts and Culture (government-agency, GM) - NATIONAL CENTRE FOR ARTS & CALTURE",
-    .category = "government", .portal = "https://ncac.gm/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://ncac.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9833,7 +9833,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q117864632", .name = "NAWEC (government-agency, GM) - NAWEC",
     .name_ja = "NAWEC (government-agency, GM) - NAWEC",
-    .category = "government", .portal = "https://nawec.gm/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nawec.gm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9853,7 +9853,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135950459", .name = "Post and Telecommunications Regulatory Authority "
       "(government-agency, GN) - ARPT",
     .name_ja = "Post and Telecommunications Regulatory Authority (government-agency, GN) - ARPT",
-    .category = "government", .portal = "https://www.arpt.gov.gn/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.arpt.gov.gn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9873,7 +9873,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116882255", .name = "Ministry of Planning and International Cooperation (ministry, "
       "GN) - MPCI",
     .name_ja = "Ministry of Planning and International Cooperation (ministry, GN) - MPCI",
-    .category = "government", .portal = "https://mpcid.gov.gn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mpcid.gov.gn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9892,7 +9892,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q2882980", .name = "Central Bank of the Republic of Guinea (central-bank, GN) - BCRG",
     .name_ja = "Central Bank of the Republic of Guinea (central-bank, GN) - BCRG",
-    .category = "government", .portal = "https://www.bcrg-guinee.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.bcrg-guinee.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9913,7 +9913,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, GR) - Γενική Γραμματεία Επικοινωνίας και "
       "Ενημέρω",
     .name_ja = "General Secretariat for Communication and Information (Greece) (government-agency, GR) - Γενική Γραμματεία Επικοινωνίας και Ενημέρω",
-    .category = "government", .portal = "https://media.gov.gr/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://media.gov.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9933,7 +9933,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30256259", .name = "Union of Agricultural Cooperatives of Peza (government-agency, "
       "GR) - Ένωση Πεζών",
     .name_ja = "Union of Agricultural Cooperatives of Peza (government-agency, GR) - Ένωση Πεζών",
-    .category = "government", .portal = "https://pezaunion.gr/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://pezaunion.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9953,7 +9953,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30289753", .name = "Athens Chamber of Commerce and Industry (government-agency, GR) "
       "- Εμπορικό και Βιομηχανικό Επιμελητήριο Αθην",
     .name_ja = "Athens Chamber of Commerce and Industry (government-agency, GR) - Εμπορικό και Βιομηχανικό Επιμελητήριο Αθην",
-    .category = "government", .portal = "https://acci.gr/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://acci.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9974,7 +9974,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, GR) - ΟΠΑΝΔΑ - ΟΡΓΑΝΙΣΜΟΣ ΠΟΛΙΤΙΣΜΟΥ "
       "ΑΘΛΗΤΙΣΜΟΥ Κ",
     .name_ja = "Athens Municipality Agency for Culture, Athletics and Youth (government-agency, GR) - ΟΠΑΝΔΑ - ΟΡΓΑΝΙΣΜΟΣ ΠΟΛΙΤΙΣΜΟΥ ΑΘΛΗΤΙΣΜΟΥ Κ",
-    .category = "government", .portal = "https://www.opanda.gr/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.opanda.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9995,7 +9995,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, GR) - ΟΠΑΝΔΑ - ΟΡΓΑΝΙΣΜΟΣ ΠΟΛΙΤΙΣΜΟΥ "
       "ΑΘΛΗΤΙΣΜΟΥ Κ",
     .name_ja = "Athens Municipality Agency for Culture, Athletics and Youth (government-agency, GR) - ΟΠΑΝΔΑ - ΟΡΓΑΝΙΣΜΟΣ ΠΟΛΙΤΙΣΜΟΥ ΑΘΛΗΤΙΣΜΟΥ Κ",
-    .category = "government", .portal = "https://www.opanda.gr/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.opanda.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10014,7 +10014,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141553165", .name = "National Exams Organization (government-agency, GR) - Αρχική",
     .name_ja = "National Exams Organization (government-agency, GR) - Αρχική",
-    .category = "government", .portal = "https://eoe.minedu.gov.gr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://eoe.minedu.gov.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10033,7 +10033,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141553165_2", .name = "National Exams Organization (government-agency, GR) - Αρχική",
     .name_ja = "National Exams Organization (government-agency, GR) - Αρχική",
-    .category = "government", .portal = "https://eoe.minedu.gov.gr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://eoe.minedu.gov.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10053,7 +10053,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1546397", .name = "Greek National Council for Radio and Television "
       "(government-agency, GR) - Εθνικό Συμβούλιο Ραδιοτηλεόρασης",
     .name_ja = "Greek National Council for Radio and Television (government-agency, GR) - Εθνικό Συμβούλιο Ραδιοτηλεόρασης",
-    .category = "government", .portal = "https://www.esr.gr/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.esr.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10073,7 +10073,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4148745", .name = "Greek National Tourism Organisation (government-agency, GR) - "
       "ΕΛΛΗΝΙΚΟΣ ΟΡΓΑΝΙΣΜΟΣ ΤΟΥΡΙΣΜΟΥ",
     .name_ja = "Greek National Tourism Organisation (government-agency, GR) - ΕΛΛΗΝΙΚΟΣ ΟΡΓΑΝΙΣΜΟΣ ΤΟΥΡΙΣΜΟΥ",
-    .category = "government", .portal = "https://gnto.gov.gr/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://gnto.gov.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10094,7 +10094,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, GR) - EETT   Εθνική Επιτροπή Τηλεπικοινωνιών "
       "& Ταχ",
     .name_ja = "Hellenic Telecommunications and Post Commission (government-agency, GR) - EETT   Εθνική Επιτροπή Τηλεπικοινωνιών & Ταχ",
-    .category = "government", .portal = "https://www.eett.gr/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.eett.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10114,7 +10114,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16331024", .name = "National Printing Office (government-agency, GR) - Εθνικό "
       "Τυπογραφείο",
     .name_ja = "National Printing Office (government-agency, GR) - Εθνικό Τυπογραφείο",
-    .category = "government", .portal = "https://et.gr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://et.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10134,7 +10134,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16737276", .name = "General Secretariat for Sports (government-agency, GR) - "
       "Υπουργείο Αθλητισμού",
     .name_ja = "General Secretariat for Sports (government-agency, GR) - Υπουργείο Αθλητισμού",
-    .category = "government", .portal = "https://minsports.gov.gr/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://minsports.gov.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10153,7 +10153,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q18359142", .name = "PAE / RAE (regulatory-agency, GR) - ΡΑΑΕΥ",
     .name_ja = "PAE / RAE (regulatory-agency, GR) - ΡΑΑΕΥ",
-    .category = "government", .portal = "https://www.raaey.gr/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.raaey.gr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10172,7 +10172,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q6135900", .name = "Q6135900 (government-agency, GT) - Portal SAT",
     .name_ja = "Q6135900 (government-agency, GT) - Portal SAT",
-    .category = "government", .portal = "https://portal.sat.gob.gt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://portal.sat.gob.gt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10192,7 +10192,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5167999", .name = "Coordinadora Nacional para la Reducción de Desastres "
       "(government-agency, GT) - CONRED",
     .name_ja = "Coordinadora Nacional para la Reducción de Desastres (government-agency, GT) - CONRED",
-    .category = "government", .portal = "https://conred.gob.gt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://conred.gob.gt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10212,7 +10212,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6041624", .name = "Instituto de Antropología e Historia (government-agency, GT) - "
       "Ministerio de Cultura y Deportes",
     .name_ja = "Instituto de Antropología e Historia (government-agency, GT) - Ministerio de Cultura y Deportes",
-    .category = "government", .portal = "https://mcd.gob.gt/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mcd.gob.gt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10232,7 +10232,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q337268", .name = "Academia de Lenguas Mayas de Guatemala (government-organization, "
       "GT) - Academia de las Lenguas Mayas de Guatemala",
     .name_ja = "Academia de Lenguas Mayas de Guatemala (government-organization, GT) - Academia de las Lenguas Mayas de Guatemala",
-    .category = "government", .portal = "https://almg.org.gt/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://almg.org.gt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10251,7 +10251,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q115057280", .name = "Q115057280 (government-agency, GY) - Guyana Prison Service",
     .name_ja = "Q115057280 (government-agency, GY) - Guyana Prison Service",
-    .category = "government", .portal = "https://gps.moha.gov.gy/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://gps.moha.gov.gy/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10271,7 +10271,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q50041011", .name = "Guyana Forestry Commission (government-agency, GY) - Guyana "
       "Forestry Commission",
     .name_ja = "Guyana Forestry Commission (government-agency, GY) - Guyana Forestry Commission",
-    .category = "government", .portal = "https://forestry.gov.gy/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://forestry.gov.gy/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10291,7 +10291,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9008678", .name = "Instituto Hondureño de Antropología e Historia "
       "(government-agency, HN) - IHAH",
     .name_ja = "Instituto Hondureño de Antropología e Historia (government-agency, HN) - IHAH",
-    .category = "government", .portal = "https://ihah.hn/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ihah.hn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10311,7 +10311,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5187136", .name = "Croatian Meteorological and Hydrological Service "
       "(government-agency, HR) - DHMZ",
     .name_ja = "Croatian Meteorological and Hydrological Service (government-agency, HR) - DHMZ",
-    .category = "government", .portal = "https://meteo.hr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://meteo.hr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10330,7 +10330,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30296546", .name = "Croatian Science Foundation (government-agency, HR) - HRZZ",
     .name_ja = "Croatian Science Foundation (government-agency, HR) - HRZZ",
-    .category = "government", .portal = "https://hrzz.hr/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://hrzz.hr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10350,7 +10350,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q105266880", .name = "Directorate for Civil Protection of Haiti (government-agency, "
       "HT) - Protection Civile Haiti",
     .name_ja = "Directorate for Civil Protection of Haiti (government-agency, HT) - Protection Civile Haiti",
-    .category = "government", .portal = "https://www.protectioncivile.gouv.ht/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.protectioncivile.gouv.ht/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10370,7 +10370,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3152121", .name = "Institut de Sauvegarde du Patrimoine National "
       "(government-organization, HT) - ISPAN",
     .name_ja = "Institut de Sauvegarde du Patrimoine National (government-organization, HT) - ISPAN",
-    .category = "government", .portal = "https://ispan.gouv.ht/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://ispan.gouv.ht/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10390,7 +10390,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q855613", .name = "Hungarian Prison Service (government-agency, HU) - "
       "Büntetés-végrehajtás - Az igazság védelmében",
     .name_ja = "Hungarian Prison Service (government-agency, HU) - Büntetés-végrehajtás - Az igazság védelmében",
-    .category = "government", .portal = "https://www.bv.gov.hu/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.bv.gov.hu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10410,7 +10410,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30256961", .name = "HÉTFA Research Institute (government-agency, HU) - HÉTFA "
       "Research Institute",
     .name_ja = "HÉTFA Research Institute (government-agency, HU) - HÉTFA Research Institute",
-    .category = "government", .portal = "https://hetfa.eu/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://hetfa.eu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10430,7 +10430,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30296017", .name = "Teleki László Foundation (government-agency, HU) - TELEKI LÁSZLÓ "
       "ALAPÍTVÁNY",
     .name_ja = "Teleki László Foundation (government-agency, HU) - TELEKI LÁSZLÓ ALAPÍTVÁNY",
-    .category = "government", .portal = "https://www.telekialapitvany.hu/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.telekialapitvany.hu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10450,7 +10450,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134524004", .name = "National Centre for Biodiversity and Gene Conservation "
       "(government-agency, HU) - NBGK",
     .name_ja = "National Centre for Biodiversity and Gene Conservation (government-agency, HU) - NBGK",
-    .category = "government", .portal = "https://www.nbgk.hu/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.nbgk.hu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10471,7 +10471,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Methodology (government-agency, HU) - Magyar Művészeti Akadémia "
       "Művészetelméleti és Módszertani Kutatóintéze",
     .name_ja = "Hungarian Academy of Arts Research Institute of Art Theory and Methodology (government-agency, HU) - Magyar Művészeti Akadémia Művészetelméleti és Módszertani Kutatóintéze",
-    .category = "government", .portal = "https://mma-mmki.hu/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://mma-mmki.hu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10491,7 +10491,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q25458942", .name = "Central Java Language Center (government-agency, ID) - BALAI "
       "BAHASA PROVINSI JAWA TENGAH",
     .name_ja = "Central Java Language Center (government-agency, ID) - BALAI BAHASA PROVINSI JAWA TENGAH",
-    .category = "government", .portal = "https://balaibahasajateng.kemendikdasmen.go.id/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://balaibahasajateng.kemendikdasmen.go.id/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10511,7 +10511,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139987601", .name = "Public Accounting Profession Committee (government-agency, ID) - "
       "Komite Profesi Akuntan Publik",
     .name_ja = "Public Accounting Profession Committee (government-agency, ID) - Komite Profesi Akuntan Publik",
-    .category = "government", .portal = "https://kpap.go.id/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://kpap.go.id/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10531,7 +10531,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140868496", .name = "Beasiswa Pendidikan Indonesia (government-agency, ID) - Beasiswa "
       "Kemdiktisaintek RI",
     .name_ja = "Beasiswa Pendidikan Indonesia (government-agency, ID) - Beasiswa Kemdiktisaintek RI",
-    .category = "government", .portal = "https://beasiswa.kemdiktisaintek.go.id/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://beasiswa.kemdiktisaintek.go.id/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10551,7 +10551,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140907511", .name = "Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah Kota "
       "Magelang (government-agency, ID) - Bapperida Kota Magelang",
     .name_ja = "Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah Kota Magelang (government-agency, ID) - Bapperida Kota Magelang",
-    .category = "government", .portal = "https://bappeda.magelangkota.go.id/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://bappeda.magelangkota.go.id/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10571,7 +10571,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140907511_2", .name = "Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah Kota "
       "Magelang (government-agency, ID) - Bapperida Kota Magelang",
     .name_ja = "Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah Kota Magelang (government-agency, ID) - Bapperida Kota Magelang",
-    .category = "government", .portal = "https://bappeda.magelangkota.go.id/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://bappeda.magelangkota.go.id/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10592,7 +10592,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, ID) - ASN Brida Sulteng Ikuti Sosialisasi "
       "Antikorupsi dan Penguatan Nilai BerAKHLAK",
     .name_ja = "Badan Riset dan Inovasi Daerah Provinsi Sulawesi Tengah (government-agency, ID) - ASN Brida Sulteng Ikuti Sosialisasi Antikorupsi dan Penguatan Nilai BerAKHLAK",
-    .category = "government", .portal = "https://brida.sultengprov.go.id/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://brida.sultengprov.go.id/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10612,7 +10612,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140908037", .name = "Badan Strategi Kebijakan Hukum (government-agency, ID) - BSK "
       "Kemenkum",
     .name_ja = "Badan Strategi Kebijakan Hukum (government-agency, ID) - BSK Kemenkum",
-    .category = "government", .portal = "https://bsk.kemenkum.go.id/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://bsk.kemenkum.go.id/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10632,7 +10632,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140908155", .name = "Badan Riset dan Inovasi Daerah Kabupaten Pelalawan "
       "(government-agency, ID) - RSS BRIDA PELALAWAN",
     .name_ja = "Badan Riset dan Inovasi Daerah Kabupaten Pelalawan (government-agency, ID) - RSS BRIDA PELALAWAN",
-    .category = "government", .portal = "https://brida.pelalawankab.go.id/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://brida.pelalawankab.go.id/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10653,7 +10653,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, ID) - AWDI on Situs Resmi BPSDM Provinsi "
       "Kalimantan Barat",
     .name_ja = "Badan Pengembangan Sumber Daya Manusia Provinsi Kalimantan Barat (government-agency, ID) - AWDI on Situs Resmi BPSDM Provinsi Kalimantan Barat",
-    .category = "government", .portal = "https://bpsdm.kalbarprov.go.id/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://bpsdm.kalbarprov.go.id/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10673,7 +10673,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135285213", .name = "Q135285213 (government-organization, ID) - Dinas Pendidikan Kota "
       "Bekasi RSS",
     .name_ja = "Q135285213 (government-organization, ID) - Dinas Pendidikan Kota Bekasi RSS",
-    .category = "government", .portal = "https://disdik.bekasikota.go.id/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://disdik.bekasikota.go.id/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10693,7 +10693,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12473192", .name = "Association of Indonesia Regencies (government-organization, ID) "
       "- Apkasi (Asosiasi Pemerintah Kabupaten Seluruh Indonesia)",
     .name_ja = "Association of Indonesia Regencies (government-organization, ID) - Apkasi (Asosiasi Pemerintah Kabupaten Seluruh Indonesia)",
-    .category = "government", .portal = "https://apkasi.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://apkasi.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10712,7 +10712,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q130305265", .name = "Q130305265 (court, ID) - Pengadilan Negeri Serui",
     .name_ja = "Q130305265 (court, ID) - Pengadilan Negeri Serui",
-    .category = "government", .portal = "https://pn-serui.go.id/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://pn-serui.go.id/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10731,7 +10731,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q25459960", .name = "Medan High Court (court, ID) - Pengadilan Tinggi Medan",
     .name_ja = "Medan High Court (court, ID) - Pengadilan Tinggi Medan",
-    .category = "government", .portal = "https://pt-medan.go.id/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://pt-medan.go.id/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10750,7 +10750,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q25463554", .name = "Manado High Court (court, ID) - Pengadilan Tinggi Manado",
     .name_ja = "Manado High Court (court, ID) - Pengadilan Tinggi Manado",
-    .category = "government", .portal = "https://pt-manado.go.id/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://pt-manado.go.id/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10770,7 +10770,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140045816", .name = "Educational Research Organisation (government-agency, IE) - "
       "Educational Research Centre (ERC)",
     .name_ja = "Educational Research Organisation (government-agency, IE) - Educational Research Centre (ERC)",
-    .category = "government", .portal = "https://www.erc.ie/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.erc.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10790,7 +10790,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5185528", .name = "Criminal Assets Bureau (government-agency, IE) - Criminal Assets "
       "Bureau",
     .name_ja = "Criminal Assets Bureau (government-agency, IE) - Criminal Assets Bureau",
-    .category = "government", .portal = "https://www.cab.ie/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.cab.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10810,7 +10810,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6071037", .name = "Irish Naturalisation and Immigration Service (government-agency, "
       "IE) - Immigration Service Delivery",
     .name_ja = "Irish Naturalisation and Immigration Service (government-agency, IE) - Immigration Service Delivery",
-    .category = "government", .portal = "https://www.irishimmigration.ie/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.irishimmigration.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10830,7 +10830,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q22084207", .name = "Private Security Authority (government-agency, IE) - The Private "
       "Security Authority",
     .name_ja = "Private Security Authority (government-agency, IE) - The Private Security Authority",
-    .category = "government", .portal = "https://www.psa-gov.ie/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.psa-gov.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10849,7 +10849,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30291907", .name = "South West Regional Authority (government-agency, IE) - Swra",
     .name_ja = "South West Regional Authority (government-agency, IE) - Swra",
-    .category = "government", .portal = "https://www.swra.ie/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.swra.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10869,7 +10869,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30295322", .name = "Southern Regional Assembly (government-agency, IE) - Southern "
       "Regional Assembly",
     .name_ja = "Southern Regional Assembly (government-agency, IE) - Southern Regional Assembly",
-    .category = "government", .portal = "https://southernassembly.ie/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://southernassembly.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10889,7 +10889,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q61931463", .name = "Garda Síochána Inspectorate (government-agency, IE) - Garda "
       "Síochána Inspectorate",
     .name_ja = "Garda Síochána Inspectorate (government-agency, IE) - Garda Síochána Inspectorate",
-    .category = "government", .portal = "https://www.gsinsp.ie/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.gsinsp.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10908,7 +10908,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q112130898", .name = "Rannóg an Aistriúcháin (government-agency, IE) - Dail Schedule",
     .name_ja = "Rannóg an Aistriúcháin (government-agency, IE) - Dail Schedule",
-    .category = "government", .portal = "https://www.oireachtas.ie/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.oireachtas.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10927,7 +10927,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q112130898_2", .name = "Rannóg an Aistriúcháin (government-agency, IE) - Seanad Schedule",
     .name_ja = "Rannóg an Aistriúcháin (government-agency, IE) - Seanad Schedule",
-    .category = "government", .portal = "https://www.oireachtas.ie/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.oireachtas.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10947,7 +10947,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q112130898_3", .name = "Rannóg an Aistriúcháin (government-agency, IE) - Committee "
       "Schedule",
     .name_ja = "Rannóg an Aistriúcháin (government-agency, IE) - Committee Schedule",
-    .category = "government", .portal = "https://www.oireachtas.ie/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.oireachtas.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10966,7 +10966,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q112130898_4", .name = "Rannóg an Aistriúcháin (government-agency, IE) - Press Releases",
     .name_ja = "Rannóg an Aistriúcháin (government-agency, IE) - Press Releases",
-    .category = "government", .portal = "https://www.oireachtas.ie/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.oireachtas.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -10986,7 +10986,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q748903", .name = "Saint Canice's Cathedral (court, IE) - St. Canice Cathedral And "
       "Round Tower",
     .name_ja = "Saint Canice's Cathedral (court, IE) - St. Canice Cathedral And Round Tower",
-    .category = "government", .portal = "https://www.stcanicescathedral.ie/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.stcanicescathedral.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11006,7 +11006,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q25191157", .name = "Irish Takeover Panel (regulatory-agency, IE) - Irish Takeover "
       "Panel",
     .name_ja = "Irish Takeover Panel (regulatory-agency, IE) - Irish Takeover Panel",
-    .category = "government", .portal = "https://irishtakeoverpanel.ie/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://irishtakeoverpanel.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11025,7 +11025,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q117154461", .name = "Coimisiún na Meán (regulatory-agency, IE) - Coimisiún na Meán",
     .name_ja = "Coimisiún na Meán (regulatory-agency, IE) - Coimisiún na Meán",
-    .category = "government", .portal = "https://www.cnam.ie/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.cnam.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11045,7 +11045,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139976199", .name = "Property Services Regulatory Authority (regulatory-agency, IE) - "
       "Property Services Regulatory Authority",
     .name_ja = "Property Services Regulatory Authority (regulatory-agency, IE) - Property Services Regulatory Authority",
-    .category = "government", .portal = "https://www.psr.ie/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.psr.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11065,7 +11065,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139976641", .name = "Dental Council (regulatory-agency, IE) - Dental Council of "
       "Ireland",
     .name_ja = "Dental Council (regulatory-agency, IE) - Dental Council of Ireland",
-    .category = "government", .portal = "https://www.dentalcouncil.ie/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.dentalcouncil.ie/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11085,7 +11085,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4382269", .name = "Council for Higher Education in Israel (government-agency, IL) - "
       "המועצה להשכלה גבוהה",
     .name_ja = "Council for Higher Education in Israel (government-agency, IL) - המועצה להשכלה גבוהה",
-    .category = "government", .portal = "https://che.org.il/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://che.org.il/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11105,7 +11105,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30296766", .name = "Israeli Centers for Research Excellence (government-agency, IL) "
       "- i-core.org.il",
     .name_ja = "Israeli Centers for Research Excellence (government-agency, IL) - i-core.org.il",
-    .category = "government", .portal = "https://i-core.org.il/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://i-core.org.il/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11125,7 +11125,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q105674543", .name = "South Jordan Drainage and Streams Authority "
       "(government-organization, IL) - רשות ניקוז ונחלים",
     .name_ja = "South Jordan Drainage and Streams Authority (government-organization, IL) - רשות ניקוז ונחלים",
-    .category = "government", .portal = "https://yardend.org.il/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://yardend.org.il/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11145,7 +11145,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q854682", .name = "Bhabha Atomic Research Centre (government-agency, IN) - Bhabha "
       "Atomic Research Centre RSS Web Feed",
     .name_ja = "Bhabha Atomic Research Centre (government-agency, IN) - Bhabha Atomic Research Centre RSS Web Feed",
-    .category = "government", .portal = "https://www.barc.gov.in/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.barc.gov.in/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11165,7 +11165,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137795957", .name = "Kashmir Advanced Scientific Research Centre (government-agency, "
       "IN) - KASRC",
     .name_ja = "Kashmir Advanced Scientific Research Centre (government-agency, IN) - KASRC",
-    .category = "government", .portal = "https://kasrc.res.in/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://kasrc.res.in/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11186,7 +11186,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, IN) - ICAR-Directorate of Knowledge "
       "Management in Agriculture",
     .name_ja = "Directorate of Knowledge Management in Agriculture (government-agency, IN) - ICAR-Directorate of Knowledge Management in Agriculture",
-    .category = "government", .portal = "https://dkma.icar.org.in/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://dkma.icar.org.in/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11207,7 +11207,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, IN) - Assam Science Technology and "
       "environment Council",
     .name_ja = "Assam Science Technology and Environment Council (government-agency, IN) - Assam Science Technology and environment Council",
-    .category = "government", .portal = "https://astec.assam.gov.in/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://astec.assam.gov.in/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11227,7 +11227,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30296357", .name = "New Delhi Tuberculosis Center (government-agency, IN) - New "
       "Delhi Tuberculosis Centre",
     .name_ja = "New Delhi Tuberculosis Center (government-agency, IN) - New Delhi Tuberculosis Centre",
-    .category = "government", .portal = "https://ndtbc.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ndtbc.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11248,7 +11248,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "- National Health Systems Resource Centre - Technical Support "
       "Institute with Natio",
     .name_ja = "National Health Systems Resource Centre (government-agency, IN) - National Health Systems Resource Centre - Technical Support Institute with Natio",
-    .category = "government", .portal = "https://nhsrcindia.org/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://nhsrcindia.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11268,7 +11268,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q64143616", .name = "Animal Husbandry & Veterinary (government-agency, IN) - Animal "
       "Husbandry & Veterinary",
     .name_ja = "Animal Husbandry & Veterinary (government-agency, IN) - Animal Husbandry & Veterinary",
-    .category = "government", .portal = "https://animalhusbandry.assam.gov.in/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://animalhusbandry.assam.gov.in/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11288,7 +11288,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18762396", .name = "Maharashtra State Warehousing Corporation (government-agency, "
       "IN) - Maharashtra warehousing corporation",
     .name_ja = "Maharashtra State Warehousing Corporation (government-agency, IN) - Maharashtra warehousing corporation",
-    .category = "government", .portal = "https://mswarehousing.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://mswarehousing.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11308,7 +11308,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q24228270", .name = "Mahatma Gandhi Institute for Rural Industrialization "
       "(government-agency, IN) - MGIRI",
     .name_ja = "Mahatma Gandhi Institute for Rural Industrialization (government-agency, IN) - MGIRI",
-    .category = "government", .portal = "https://mgiri.org/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://mgiri.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11328,7 +11328,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7309177", .name = "Regional Transport Office (government-agency, IN) - RTO Office "
       "in India",
     .name_ja = "Regional Transport Office (government-agency, IN) - RTO Office in India",
-    .category = "government", .portal = "http://www.rtooffice.in/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "http://www.rtooffice.in/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11348,7 +11348,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7309177_2", .name = "Regional Transport Office (government-agency, IN) - Stories "
       "Archive - RTO Office in India",
     .name_ja = "Regional Transport Office (government-agency, IN) - Stories Archive - RTO Office in India",
-    .category = "government", .portal = "http://www.rtooffice.in/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://www.rtooffice.in/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11367,7 +11367,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q111949289", .name = "National Green Tribunal (government-agency, IN) - ngt",
     .name_ja = "National Green Tribunal (government-agency, IN) - ngt",
-    .category = "government", .portal = "https://www.greentribunal.gov.in/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.greentribunal.gov.in/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11387,7 +11387,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140907366", .name = "Directorate of Agricultural Research (government-agency, IQ) - "
       "Iraqi Journal of Agricultural Research",
     .name_ja = "Directorate of Agricultural Research (government-agency, IQ) - Iraqi Journal of Agricultural Research",
-    .category = "government", .portal = "http://ijarmoa.gov.iq/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://ijarmoa.gov.iq/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11407,7 +11407,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140907366_2", .name = "Directorate of Agricultural Research (government-agency, IQ) - "
       "Iraqi Journal of Agricultural Research",
     .name_ja = "Directorate of Agricultural Research (government-agency, IQ) - Iraqi Journal of Agricultural Research",
-    .category = "government", .portal = "http://ijarmoa.gov.iq/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://ijarmoa.gov.iq/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11427,7 +11427,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12250925", .name = "Ministry of Communications (ministry, IQ) - Ministry of "
       "Communications — News",
     .name_ja = "Ministry of Communications (ministry, IQ) - Ministry of Communications — News",
-    .category = "government", .portal = "https://moc.gov.iq/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://moc.gov.iq/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11447,7 +11447,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12250925_2", .name = "Ministry of Communications (ministry, IQ) - Ministry of "
       "Communications — News",
     .name_ja = "Ministry of Communications (ministry, IQ) - Ministry of Communications — News",
-    .category = "government", .portal = "https://moc.gov.iq/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://moc.gov.iq/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11466,7 +11466,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q16126966", .name = "Ministry of Planning (ministry, IQ) - وزارة التخطيط",
     .name_ja = "Ministry of Planning (ministry, IQ) - وزارة التخطيط",
-    .category = "government", .portal = "https://mop.gov.iq/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mop.gov.iq/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11486,7 +11486,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2478365", .name = "Environment Agency of Iceland (government-agency, IS) - "
       "Umhverfisstofnun - Fréttir",
     .name_ja = "Environment Agency of Iceland (government-agency, IS) - Umhverfisstofnun - Fréttir",
-    .category = "government", .portal = "https://www.ust.is/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ust.is/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11506,7 +11506,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q65336196", .name = "Cultural Heritage Agency of Iceland (government-agency, IS) - "
       "Minjastofnun",
     .name_ja = "Cultural Heritage Agency of Iceland (government-agency, IS) - Minjastofnun",
-    .category = "government", .portal = "https://www.minjastofnun.is/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.minjastofnun.is/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11526,7 +11526,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q132803432", .name = "Nátturustofa Suðurlands (government-agency, IS) - Náttúrustofa "
       "Suðurlands",
     .name_ja = "Nátturustofa Suðurlands (government-agency, IS) - Náttúrustofa Suðurlands",
-    .category = "government", .portal = "https://nattsud.is/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nattsud.is/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11545,7 +11545,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q140352277", .name = "Icelandic Tourist Board (government-agency, IS) - Ferðamálastofa",
     .name_ja = "Icelandic Tourist Board (government-agency, IS) - Ferðamálastofa",
-    .category = "government", .portal = "https://www.ferdamalastofa.is/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.ferdamalastofa.is/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11564,7 +11564,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q140352277_2", .name = "Icelandic Tourist Board (government-agency, IS) - Ferðamálastofa",
     .name_ja = "Icelandic Tourist Board (government-agency, IS) - Ferðamálastofa",
-    .category = "government", .portal = "https://www.ferdamalastofa.is/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.ferdamalastofa.is/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11584,7 +11584,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q43895470", .name = "Agenzia Sanitaria e Sociale Regionale (government-agency, IT) - "
       "Assr",
     .name_ja = "Agenzia Sanitaria e Sociale Regionale (government-agency, IT) - Assr",
-    .category = "government", .portal = "https://assr.regione.emilia-romagna.it/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://assr.regione.emilia-romagna.it/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11604,7 +11604,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q43895470_2", .name = "Agenzia Sanitaria e Sociale Regionale (government-agency, IT) - "
       "Assr",
     .name_ja = "Agenzia Sanitaria e Sociale Regionale (government-agency, IT) - Assr",
-    .category = "government", .portal = "https://assr.regione.emilia-romagna.it/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://assr.regione.emilia-romagna.it/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11624,7 +11624,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q43895470_3", .name = "Agenzia Sanitaria e Sociale Regionale (government-agency, IT) - "
       "Assr",
     .name_ja = "Agenzia Sanitaria e Sociale Regionale (government-agency, IT) - Assr",
-    .category = "government", .portal = "https://assr.regione.emilia-romagna.it/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://assr.regione.emilia-romagna.it/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11644,7 +11644,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q108436146", .name = "archaeological park of Colosseum (government-agency, IT) - Parco "
       "archeologico del Colosseo",
     .name_ja = "archaeological park of Colosseum (government-agency, IT) - Parco archeologico del Colosseo",
-    .category = "government", .portal = "https://colosseo.it/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://colosseo.it/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11664,7 +11664,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113551480", .name = "Institute for Agricultural and Forest Systems in the "
       "Mediterranean (government-agency, IT) - CNR – ISAFOM",
     .name_ja = "Institute for Agricultural and Forest Systems in the Mediterranean (government-agency, IT) - CNR – ISAFOM",
-    .category = "government", .portal = "https://isafom.cnr.it/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://isafom.cnr.it/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11683,7 +11683,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q3958117", .name = "Emilia-Romagna Health Service (government-agency, IT) - Salute",
     .name_ja = "Emilia-Romagna Health Service (government-agency, IT) - Salute",
-    .category = "government", .portal = "https://salute.regione.emilia-romagna.it/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://salute.regione.emilia-romagna.it/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11702,7 +11702,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q3958117_2", .name = "Emilia-Romagna Health Service (government-agency, IT) - Salute",
     .name_ja = "Emilia-Romagna Health Service (government-agency, IT) - Salute",
-    .category = "government", .portal = "https://salute.regione.emilia-romagna.it/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://salute.regione.emilia-romagna.it/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11721,7 +11721,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q3958117_3", .name = "Emilia-Romagna Health Service (government-agency, IT) - Salute",
     .name_ja = "Emilia-Romagna Health Service (government-agency, IT) - Salute",
-    .category = "government", .portal = "https://salute.regione.emilia-romagna.it/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://salute.regione.emilia-romagna.it/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11741,7 +11741,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18751939", .name = "Civic Museums of Brescia (government-agency, IT) - Fondazione "
       "Brescia Musei",
     .name_ja = "Civic Museums of Brescia (government-agency, IT) - Fondazione Brescia Musei",
-    .category = "government", .portal = "https://www.bresciamusei.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.bresciamusei.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11761,7 +11761,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30255657", .name = "International Centre for Advanced Mediterranean Agronomic "
       "Studies (government-agency, IT) - CIHEAM Bari",
     .name_ja = "International Centre for Advanced Mediterranean Agronomic Studies (government-agency, IT) - CIHEAM Bari",
-    .category = "government", .portal = "https://www.iamb.ciheam.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.iamb.ciheam.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11781,7 +11781,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113555413", .name = "Q113555413 (government-organization, IT) - Musei nazionali di "
       "Perugia – Direzione regionale Musei nazionali Umbria",
     .name_ja = "Q113555413 (government-organization, IT) - Musei nazionali di Perugia – Direzione regionale Musei nazionali Umbria",
-    .category = "government", .portal = "https://www.musei.umbria.beniculturali.it/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.musei.umbria.beniculturali.it/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11801,7 +11801,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q720038", .name = "Jamaica Defence Force (government-agency, JM) - Office of the "
       "Prime Minister",
     .name_ja = "Jamaica Defence Force (government-agency, JM) - Office of the Prime Minister",
-    .category = "government", .portal = "https://opm.gov.jm/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://opm.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11821,7 +11821,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5260214", .name = "Department of Correctional Services, Jamaica (government-agency, "
       "JM) - Department of Correctional Services (DCS)",
     .name_ja = "Department of Correctional Services, Jamaica (government-agency, JM) - Department of Correctional Services (DCS)",
-    .category = "government", .portal = "https://dcs.gov.jm/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://dcs.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11841,7 +11841,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6040469", .name = "Institute of Jamaica (government-agency, JM) - Institute of "
       "Jamaica",
     .name_ja = "Institute of Jamaica (government-agency, JM) - Institute of Jamaica",
-    .category = "government", .portal = "https://instituteofjamaica.org.jm/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://instituteofjamaica.org.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11862,7 +11862,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, JM) - Office of Disaster Preparedness and "
       "Emergency Management",
     .name_ja = "Office of Disaster Preparedness and Emergency Management (government-agency, JM) - Office of Disaster Preparedness and Emergency Management",
-    .category = "government", .portal = "https://www.odpem.gov.jm/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.odpem.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11882,7 +11882,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30254142", .name = "University Hospital of the West Indies (government-agency, JM) - "
       "University Hospital of the West Indies",
     .name_ja = "University Hospital of the West Indies (government-agency, JM) - University Hospital of the West Indies",
-    .category = "government", .portal = "https://uhwi.gov.jm/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://uhwi.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11902,7 +11902,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113111491", .name = "Jamaica National Commission for UNESCO (government-agency, JM) - "
       "Jamaica National Commission for UNESCO",
     .name_ja = "Jamaica National Commission for UNESCO (government-agency, JM) - Jamaica National Commission for UNESCO",
-    .category = "government", .portal = "https://jncunesco.gov.jm/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://jncunesco.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11922,7 +11922,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q126951828", .name = "Human Employment and Resource Training Trust/National Training "
       "Agency (government-agency, JM) - HEART/NSTA Trust",
     .name_ja = "Human Employment and Resource Training Trust/National Training Agency (government-agency, JM) - HEART/NSTA Trust",
-    .category = "government", .portal = "https://www.heart-nsta.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.heart-nsta.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11941,7 +11941,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q126951880", .name = "National Identification System (government-agency, JM) - NIRA",
     .name_ja = "National Identification System (government-agency, JM) - NIRA",
-    .category = "government", .portal = "https://nira.gov.jm/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nira.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11961,7 +11961,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127429881", .name = "Airports Authority of Jamaica (government-agency, JM) - Airports "
       "Authority of Jamaica",
     .name_ja = "Airports Authority of Jamaica (government-agency, JM) - Airports Authority of Jamaica",
-    .category = "government", .portal = "https://airportsauthorityjamaica.aero/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://airportsauthorityjamaica.aero/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -11981,7 +11981,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127605410", .name = "National Land Agency (government-agency, JM) - National Land "
       "Agency   One Agency, One Goal",
     .name_ja = "National Land Agency (government-agency, JM) - National Land Agency   One Agency, One Goal",
-    .category = "government", .portal = "https://nla.gov.jm/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nla.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12002,7 +12002,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, JM) - Passport, Immigration and Citizenship "
       "Agency",
     .name_ja = "The Passport, Immigration and Citizenship Agency (government-agency, JM) - Passport, Immigration and Citizenship Agency",
-    .category = "government", .portal = "https://www.pica.gov.jm/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.pica.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12023,7 +12023,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, JM) - Major Organised Crime & "
       "Anti-Corruption Agency",
     .name_ja = "Major Organized Crime and Anticorruption Agency (government-agency, JM) - Major Organised Crime & Anti-Corruption Agency",
-    .category = "government", .portal = "https://www.moca.gov.jm/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.moca.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12043,7 +12043,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127606102", .name = "Jamaica Bauxite Institute (government-agency, JM) - Jamaica "
       "Bauxite Institute",
     .name_ja = "Jamaica Bauxite Institute (government-agency, JM) - Jamaica Bauxite Institute",
-    .category = "government", .portal = "https://jbi.org.jm/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://jbi.org.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12063,7 +12063,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127606906", .name = "Abilities Foundation (government-agency, JM) - Abilities "
       "Foundation",
     .name_ja = "Abilities Foundation (government-agency, JM) - Abilities Foundation",
-    .category = "government", .portal = "https://abilitiesfoundationja.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://abilitiesfoundationja.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12083,7 +12083,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127606946", .name = "Jamaica Council for Persons with Disabilities "
       "(government-agency, JM) - JCPD",
     .name_ja = "Jamaica Council for Persons with Disabilities (government-agency, JM) - JCPD",
-    .category = "government", .portal = "https://jcpd.gov.jm/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://jcpd.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12103,7 +12103,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127607107", .name = "Anti-Dumping and Subsidies Commission (government-agency, JM) - "
       "Anti-dumping and Subsidies Commission",
     .name_ja = "Anti-Dumping and Subsidies Commission (government-agency, JM) - Anti-dumping and Subsidies Commission",
-    .category = "government", .portal = "https://jadsc.gov.jm/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://jadsc.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12124,7 +12124,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Profession (Continuing Legal Professional Development) "
       "(Amendment) Regulat",
     .name_ja = "General Legal Council of Jamaica (government-agency, JM) - Legal Profession (Continuing Legal Professional Development) (Amendment) Regulat",
-    .category = "government", .portal = "https://www.generallegalcouncil.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.generallegalcouncil.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12144,7 +12144,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127607183", .name = "Justice Training Institute of Jamaica (government-agency, JM) - "
       "JTI",
     .name_ja = "Justice Training Institute of Jamaica (government-agency, JM) - JTI",
-    .category = "government", .portal = "https://jti.edu.jm/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://jti.edu.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12164,7 +12164,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127607197", .name = "Attorney-General’s Chambers of Jamaica (government-agency, JM) - "
       "Attorney-General's Chambers",
     .name_ja = "Attorney-General’s Chambers of Jamaica (government-agency, JM) - Attorney-General's Chambers",
-    .category = "government", .portal = "https://agc.gov.jm/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://agc.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12184,7 +12184,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127607284", .name = "Betting, Gaming and Lotteries Commission (government-agency, JM) "
       "- Betting, Gaming & Lotteries Commission",
     .name_ja = "Betting, Gaming and Lotteries Commission (government-agency, JM) - Betting, Gaming & Lotteries Commission",
-    .category = "government", .portal = "https://www.bglc.gov.jm/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.bglc.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12204,7 +12204,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127607290", .name = "Accountant General’s Department of Jamaica (government-agency, "
       "JM) - Accountant General's Department",
     .name_ja = "Accountant General’s Department of Jamaica (government-agency, JM) - Accountant General's Department",
-    .category = "government", .portal = "https://www.treasury.gov.jm/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.treasury.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12225,7 +12225,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, JM) - Office of the Director of Public "
       "Prosecutions",
     .name_ja = "Office of the Director of Public Prosecutions of Jamaica (government-agency, JM) - Office of the Director of Public Prosecutions",
-    .category = "government", .portal = "https://dpp.gov.jm/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://dpp.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12245,7 +12245,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127688663", .name = "Clarendon Alumina Production Limited (government-agency, JM) - "
       "Jamalco",
     .name_ja = "Clarendon Alumina Production Limited (government-agency, JM) - Jamalco",
-    .category = "government", .portal = "https://www.jamalco.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.jamalco.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12265,7 +12265,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127688694", .name = "Caribbean Maritime University (government-agency, JM) - "
       "Caribbean Maritime University",
     .name_ja = "Caribbean Maritime University (government-agency, JM) - Caribbean Maritime University",
-    .category = "government", .portal = "https://cmu.edu.jm/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://cmu.edu.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12285,7 +12285,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127688708", .name = "Council of Community Colleges of Jamaica (government-agency, JM) "
       "- CCCJ",
     .name_ja = "Council of Community Colleges of Jamaica (government-agency, JM) - CCCJ",
-    .category = "government", .portal = "https://cccj.edu.jm/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://cccj.edu.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12305,7 +12305,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127688715", .name = "Early Childhood Commission (government-agency, JM) - The Early "
       "Childhood Commission",
     .name_ja = "Early Childhood Commission (government-agency, JM) - The Early Childhood Commission",
-    .category = "government", .portal = "https://ecc.gov.jm/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://ecc.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12325,7 +12325,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127688731", .name = "Jamaica Teaching Council (government-agency, JM) - Jamaica "
       "Teaching Council",
     .name_ja = "Jamaica Teaching Council (government-agency, JM) - Jamaica Teaching Council",
-    .category = "government", .portal = "https://jtc.gov.jm/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://jtc.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12345,7 +12345,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127688742", .name = "Jamaica Tertiary Education Commission (government-agency, JM) - "
       "Jamaica Tertiary Education Commission",
     .name_ja = "Jamaica Tertiary Education Commission (government-agency, JM) - Jamaica Tertiary Education Commission",
-    .category = "government", .portal = "https://www.jtec.gov.jm/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.jtec.gov.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12365,7 +12365,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127689067", .name = "Office of Utilities Regulation (government-agency, JM) - Office "
       "Of Utilities Regulation",
     .name_ja = "Office of Utilities Regulation (government-agency, JM) - Office Of Utilities Regulation",
-    .category = "government", .portal = "https://our.org.jm/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://our.org.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12384,7 +12384,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q3374585", .name = "Bank of Jamaica (central-bank, JM) - Bank of Jamaica",
     .name_ja = "Bank of Jamaica (central-bank, JM) - Bank of Jamaica",
-    .category = "government", .portal = "https://boj.org.jm/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://boj.org.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12403,7 +12403,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q3374585_2", .name = "Bank of Jamaica (central-bank, JM) - Bank of Jamaica",
     .name_ja = "Bank of Jamaica (central-bank, JM) - Bank of Jamaica",
-    .category = "government", .portal = "https://boj.org.jm/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://boj.org.jm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12423,7 +12423,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5758228", .name = "Higher Population Council (government-agency, JO) - المجلس "
       "الأعلى للسكان",
     .name_ja = "Higher Population Council (government-agency, JO) - المجلس الأعلى للسكان",
-    .category = "government", .portal = "http://www.hpc.org.jo/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "http://www.hpc.org.jo/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12443,7 +12443,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6276785", .name = "Jordan Maritime Authority (government-agency, JO) - Jordan "
       "Maritime Commission",
     .name_ja = "Jordan Maritime Authority (government-agency, JO) - Jordan Maritime Commission",
-    .category = "government", .portal = "https://jma.gov.jo/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://jma.gov.jo/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12463,7 +12463,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12201558", .name = "Social Security Corporation - Jordan (government-agency, JO) - "
       "المؤسسة العامة للضمان الاجتماعي",
     .name_ja = "Social Security Corporation - Jordan (government-agency, JO) - المؤسسة العامة للضمان الاجتماعي",
-    .category = "government", .portal = "https://www.ssc.gov.jo/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.ssc.gov.jo/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12483,7 +12483,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137943560", .name = "Fuchu City Hospital Organization (government-agency, JP) - "
       "地方独立行政法人 府中市病院機構",
     .name_ja = "Fuchu City Hospital Organization (government-agency, JP) - 地方独立行政法人 府中市病院機構",
-    .category = "government", .portal = "https://fuchuhp.jp/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://fuchuhp.jp/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12503,7 +12503,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137943560_2", .name = "Fuchu City Hospital Organization (government-agency, JP) - "
       "地方独立行政法人 府中市病院機構",
     .name_ja = "Fuchu City Hospital Organization (government-agency, JP) - 地方独立行政法人 府中市病院機構",
-    .category = "government", .portal = "https://fuchuhp.jp/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://fuchuhp.jp/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12522,7 +12522,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q11507232", .name = "Japan Sport Association (government-agency, JP) - 日本スポーツ協会",
     .name_ja = "Japan Sport Association (government-agency, JP) - 日本スポーツ協会",
-    .category = "government", .portal = "https://www.japan-sports.or.jp/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.japan-sports.or.jp/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12542,7 +12542,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q107387858", .name = "Okayama Prefectural Lifelong Learning Center (government-agency, "
       "JP) - 岡山県生涯学習センターホームページ お知らせ",
     .name_ja = "Okayama Prefectural Lifelong Learning Center (government-agency, JP) - 岡山県生涯学習センターホームページ お知らせ",
-    .category = "government", .portal = "https://www.pal.pref.okayama.jp/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.pal.pref.okayama.jp/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12562,7 +12562,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q107387858_2", .name = "Okayama Prefectural Lifelong Learning Center (government-agency, "
       "JP) - ぱるネット新着学習情報",
     .name_ja = "Okayama Prefectural Lifelong Learning Center (government-agency, JP) - ぱるネット新着学習情報",
-    .category = "government", .portal = "https://www.pal.pref.okayama.jp/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.pal.pref.okayama.jp/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12582,7 +12582,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q17213120", .name = "Japan Community Healthcare Organization (government-agency, JP) "
       "- 独立行政法人 地域医療機能推進機構独立行政法人 地域医療",
     .name_ja = "Japan Community Healthcare Organization (government-agency, JP) - 独立行政法人 地域医療機能推進機構独立行政法人 地域医療",
-    .category = "government", .portal = "http://www.jcho.go.jp/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://www.jcho.go.jp/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12602,7 +12602,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q17223096", .name = "Toyama Prefectural Education Center (government-agency, JP) - "
       "富山県総合教育センター",
     .name_ja = "Toyama Prefectural Education Center (government-agency, JP) - 富山県総合教育センター",
-    .category = "government", .portal = "https://www.center.tym.ed.jp/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.center.tym.ed.jp/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12622,7 +12622,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30280460", .name = "Shimane Prefectural Institute of Public Health and Environmental "
       "Sciences (government-agency, JP) - 島根県 RSS (新着情報（すべて表示）)",
     .name_ja = "Shimane Prefectural Institute of Public Health and Environmental Sciences (government-agency, JP) - 島根県 RSS (新着情報（すべて表示）)",
-    .category = "government", .portal = "https://www1.pref.shimane.lg.jp/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www1.pref.shimane.lg.jp/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12642,7 +12642,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2931685", .name = "Council of Local Authorities for International Relations "
       "(government-agency, JP) - CLAIR 一般財団法人自治体国際化協会",
     .name_ja = "Council of Local Authorities for International Relations (government-agency, JP) - CLAIR 一般財団法人自治体国際化協会",
-    .category = "government", .portal = "https://www.clair.or.jp/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.clair.or.jp/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12662,7 +12662,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11509480", .name = "Japan Expressway Holding and Debt Repayment Agency "
       "(government-organization, JP) - 新着情報RSS",
     .name_ja = "Japan Expressway Holding and Debt Repayment Agency (government-organization, JP) - 新着情報RSS",
-    .category = "government", .portal = "https://www.jehdra.go.jp/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.jehdra.go.jp/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12682,7 +12682,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6972473", .name = "National Environment Management Authority (government-agency, "
       "KE) - National Environment Management Authority (NEMA)",
     .name_ja = "National Environment Management Authority (government-agency, KE) - National Environment Management Authority (NEMA)",
-    .category = "government", .portal = "https://nema.go.ke/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://nema.go.ke/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12702,7 +12702,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q19462733", .name = "Kenya National Highway Authority (government-agency, KE) - Kenya "
       "National Highways Authority",
     .name_ja = "Kenya National Highway Authority (government-agency, KE) - Kenya National Highways Authority",
-    .category = "government", .portal = "https://kenha.co.ke/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://kenha.co.ke/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12722,7 +12722,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30261978", .name = "National Drought Management Authority (government-agency, KE) - "
       "NDMA",
     .name_ja = "National Drought Management Authority (government-agency, KE) - NDMA",
-    .category = "government", .portal = "https://ndma.go.ke/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://ndma.go.ke/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12743,7 +12743,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, KE) - NACOSTI Strengthens Research Ethics "
       "and Integrity Capacity through Five-day Trai",
     .name_ja = "National Commission for Science, Technology and Innovation (government-agency, KE) - NACOSTI Strengthens Research Ethics and Integrity Capacity through Five-day Trai",
-    .category = "government", .portal = "https://www.nacosti.go.ke/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.nacosti.go.ke/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12763,7 +12763,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q61931585", .name = "Kenya School of Government (government-agency, KE) - Kenya "
       "School of Government",
     .name_ja = "Kenya School of Government (government-agency, KE) - Kenya School of Government",
-    .category = "government", .portal = "https://ksg.ac.ke/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://ksg.ac.ke/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12783,7 +12783,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q122763741", .name = "National Research Fund Kenya (government-agency, KE) - National "
       "Research Fund",
     .name_ja = "National Research Fund Kenya (government-agency, KE) - National Research Fund",
-    .category = "government", .portal = "https://www.nrf.go.ke/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.nrf.go.ke/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12803,7 +12803,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q133811616", .name = "Wildlife Research and Training Institute (government-agency, KE) "
       "- WRTI",
     .name_ja = "Wildlife Research and Training Institute (government-agency, KE) - WRTI",
-    .category = "government", .portal = "https://wrti.go.ke/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://wrti.go.ke/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12823,7 +12823,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139890032", .name = "National Irrigation Authority (government-agency, KE) - National "
       "Irrigation Authority",
     .name_ja = "National Irrigation Authority (government-agency, KE) - National Irrigation Authority",
-    .category = "government", .portal = "https://www.irrigationauthority.go.ke/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.irrigationauthority.go.ke/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12843,7 +12843,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q33121513", .name = "Geological Survey of Kyrgyzstan (government-agency, KG) - "
       "Kyrgyzstan Geoportal",
     .name_ja = "Geological Survey of Kyrgyzstan (government-agency, KG) - Kyrgyzstan Geoportal",
-    .category = "government", .portal = "https://geoportal-kg.org/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://geoportal-kg.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12863,7 +12863,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6971407", .name = "National Centre for HIV/AIDS Dermatology and STDs, Cambodia "
       "(government-agency, KH) - មជ្ឈមណ្ឌលជាតិប្រយុទ្ធនឹងជំ",
     .name_ja = "National Centre for HIV/AIDS Dermatology and STDs, Cambodia (government-agency, KH) - មជ្ឈមណ្ឌលជាតិប្រយុទ្ធនឹងជំ",
-    .category = "government", .portal = "https://www.nchads.gov.kh/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.nchads.gov.kh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12882,7 +12882,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q16895178", .name = "Ministry of Environment (government-agency, KH) - ក្រសួងបរិស្ថាន",
     .name_ja = "Ministry of Environment (government-agency, KH) - ក្រសួងបរិស្ថាន",
-    .category = "government", .portal = "https://moe.gov.kh/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://moe.gov.kh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12902,7 +12902,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6867354", .name = "Ministry of Land Management, Urban Planning and Construction "
       "(ministry, KH) - ក្រសួងរៀបចំដែនដី នគរូបនីយកម",
     .name_ja = "Ministry of Land Management, Urban Planning and Construction (ministry, KH) - ក្រសួងរៀបចំដែនដី នគរូបនីយកម",
-    .category = "government", .portal = "https://mlmupc.gov.kh/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mlmupc.gov.kh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12922,7 +12922,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6867455", .name = "Ministry of Posts and Telecommunications, Cambodia (ministry, "
       "KH) - ក្រសួងប្រៃសណីយ៍និងទូរគមនាគ",
     .name_ja = "Ministry of Posts and Telecommunications, Cambodia (ministry, KH) - ក្រសួងប្រៃសណីយ៍និងទូរគមនាគ",
-    .category = "government", .portal = "https://mptc.gov.kh/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mptc.gov.kh/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12942,7 +12942,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q108381056", .name = "Kiribati National Statistics Office (government-agency, KI) - "
       "Kiribati National Statistics Office",
     .name_ja = "Kiribati National Statistics Office (government-agency, KI) - Kiribati National Statistics Office",
-    .category = "government", .portal = "https://nso.gov.ki/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://nso.gov.ki/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12962,7 +12962,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q120983427", .name = "Saint Kitts and Nevis Bureau of Standards (government-agency, "
       "KN) - St. Kitts and Nevis Bureau of Standards",
     .name_ja = "Saint Kitts and Nevis Bureau of Standards (government-agency, KN) - St. Kitts and Nevis Bureau of Standards",
-    .category = "government", .portal = "https://www.sknbs.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.sknbs.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -12982,7 +12982,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16093595", .name = "Gyeonggi Dongducheon Yangju Office of Education "
       "(government-agency, KR) - 라피아노 용인 공세",
     .name_ja = "Gyeonggi Dongducheon Yangju Office of Education (government-agency, KR) - 라피아노 용인 공세",
-    .category = "government", .portal = "https://dyoe.kr/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dyoe.kr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13002,7 +13002,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16093595_2", .name = "Gyeonggi Dongducheon Yangju Office of Education "
       "(government-agency, KR) - 라피아노 용인 공세",
     .name_ja = "Gyeonggi Dongducheon Yangju Office of Education (government-agency, KR) - 라피아노 용인 공세",
-    .category = "government", .portal = "https://dyoe.kr/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dyoe.kr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13022,7 +13022,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1794766", .name = "Kuwait Investment Authority (government-agency, KW) - Kuwait "
       "Investment Authority",
     .name_ja = "Kuwait Investment Authority (government-agency, KW) - Kuwait Investment Authority",
-    .category = "government", .portal = "https://www.kia.gov.kw/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.kia.gov.kw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13042,7 +13042,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135095131", .name = "Institute of Economics (government-agency, KZ) - Институт "
       "экономики",
     .name_ja = "Institute of Economics (government-agency, KZ) - Институт экономики",
-    .category = "government", .portal = "https://ieconom.kz/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://ieconom.kz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13063,7 +13063,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, KZ) - «Академик Ө.А. Жолдасбеков атындағы "
       "Механик",
     .name_ja = "Joldasbekov Institute of Mechanics and Engineering (government-agency, KZ) - «Академик Ө.А. Жолдасбеков атындағы Механик",
-    .category = "government", .portal = "https://www.immash.kz/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.immash.kz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13084,7 +13084,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, KZ) - Республиканский "
       "научно-исследовательский",
     .name_ja = "Republican Research Institute for Occupational Safety and Health (government-agency, KZ) - Республиканский научно-исследовательский",
-    .category = "government", .portal = "https://rniiot.kz/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://rniiot.kz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13105,7 +13105,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-organization, KZ) - ҚАЗАҚСТАН РЕСПУБЛИКАСЫНЫҢ "
       "ПРЕЗИДЕНТІ ЖАНЫ",
     .name_ja = "Kazakhstan Institute for Strategic Studies (government-organization, KZ) - ҚАЗАҚСТАН РЕСПУБЛИКАСЫНЫҢ ПРЕЗИДЕНТІ ЖАНЫ",
-    .category = "government", .portal = "https://kisi.kz/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://kisi.kz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13125,7 +13125,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141194344", .name = "Lao Academy of Social and Economic Sciences (government-agency, "
       "LA) - ສະຖາບັນວິທະຍາສາດເສດຖະກິດ ແລ",
     .name_ja = "Lao Academy of Social and Economic Sciences (government-agency, LA) - ສະຖາບັນວິທະຍາສາດເສດຖະກິດ ແລ",
-    .category = "government", .portal = "https://lases.gov.la/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://lases.gov.la/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13145,7 +13145,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30284428", .name = "National Council for Scientific Research (government-agency, LB) "
       "- National Council for Scientific Research – Lebanon (CNRS-L) -",
     .name_ja = "National Council for Scientific Research (government-agency, LB) - National Council for Scientific Research – Lebanon (CNRS-L) -",
-    .category = "government", .portal = "https://cnrs.edu.lb/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://cnrs.edu.lb/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13165,7 +13165,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4818598", .name = "Attorney-General's Department (government-agency, LK) - Contact "
       "Details Regarding E-Filing Cases",
     .name_ja = "Attorney-General's Department (government-agency, LK) - Contact Details Regarding E-Filing Cases",
-    .category = "government", .portal = "https://agd.gov.lk/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://agd.gov.lk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13185,7 +13185,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q106807427", .name = "Department of National Botanic Gardens (government-agency, LK) - "
       "Department of National Botanic Gardens",
     .name_ja = "Department of National Botanic Gardens (government-agency, LK) - Department of National Botanic Gardens",
-    .category = "government", .portal = "https://botanicgardens.gov.lk/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://botanicgardens.gov.lk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13205,7 +13205,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135738524", .name = "Sri Lanka Institute of Biotechnology (SLIBTEC) "
       "(government-agency, LK) - SLIBTEC",
     .name_ja = "Sri Lanka Institute of Biotechnology (SLIBTEC) (government-agency, LK) - SLIBTEC",
-    .category = "government", .portal = "https://slibtec.gov.lk/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://slibtec.gov.lk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13225,7 +13225,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137204392", .name = "Department of Cinnamon Development (government-agency, LK) - "
       "Department of Cinnamon Development",
     .name_ja = "Department of Cinnamon Development (government-agency, LK) - Department of Cinnamon Development",
-    .category = "government", .portal = "https://cinnamon.gov.lk/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://cinnamon.gov.lk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13245,7 +13245,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q17013973", .name = "Ministry of Public Security (ministry, LK) - Ministry of Public "
       "Security and Parliamentary Affairs",
     .name_ja = "Ministry of Public Security (ministry, LK) - Ministry of Public Security and Parliamentary Affairs",
-    .category = "government", .portal = "https://pubsec.gov.lk/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://pubsec.gov.lk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13265,7 +13265,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2640939", .name = "Central Bank of Sri Lanka (central-bank, LK) - Central Bank of "
       "Sri Lanka",
     .name_ja = "Central Bank of Sri Lanka (central-bank, LK) - Central Bank of Sri Lanka",
-    .category = "government", .portal = "https://www.cbsl.gov.lk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.cbsl.gov.lk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13285,7 +13285,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q108737223", .name = "National Public Health Institute of Liberia (government-agency, "
       "LR) - Epi-week 40 (September 28 – October 4, 2026)",
     .name_ja = "National Public Health Institute of Liberia (government-agency, LR) - Epi-week 40 (September 28 – October 4, 2026)",
-    .category = "government", .portal = "https://www.nphil.gov.lr/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.nphil.gov.lr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13305,7 +13305,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q110954676", .name = "Lesotho Ministry of Local Government and Chieftainship Affairs "
       "(ministry, LS) - Government of Lesotho",
     .name_ja = "Lesotho Ministry of Local Government and Chieftainship Affairs (ministry, LS) - Government of Lesotho",
-    .category = "government", .portal = "https://www.gov.ls/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.gov.ls/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13325,7 +13325,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135031777", .name = "Lesotho Electricity Generation Company (government-organization, "
       "LS) - Lesotho Electricity Generation Company",
     .name_ja = "Lesotho Electricity Generation Company (government-organization, LS) - Lesotho Electricity Generation Company",
-    .category = "government", .portal = "https://www.legco.co.ls/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.legco.co.ls/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13345,7 +13345,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2608033", .name = "Central Bank of Lesotho (central-bank, LS) - Central Bank of "
       "Lesotho",
     .name_ja = "Central Bank of Lesotho (central-bank, LS) - Central Bank of Lesotho",
-    .category = "government", .portal = "https://centralbank.org.ls/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://centralbank.org.ls/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13365,7 +13365,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q112751977", .name = "Lithuanian Centre for Social Sciences (government-agency, LT) - "
       "Lietuvos socialinių mokslų centras",
     .name_ja = "Lithuanian Centre for Social Sciences (government-agency, LT) - Lietuvos socialinių mokslų centras",
-    .category = "government", .portal = "https://lcss.lt/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://lcss.lt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13385,7 +13385,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q124628759", .name = "Office of the Ombudsperson for Academic Ethics and Procedures, "
       "Lithuania (government-agency, LT) - Etikostarnyba.lt",
     .name_ja = "Office of the Ombudsperson for Academic Ethics and Procedures, Lithuania (government-agency, LT) - Etikostarnyba.lt",
-    .category = "government", .portal = "https://etikostarnyba.lt/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://etikostarnyba.lt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13405,7 +13405,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q138683345", .name = "Media Support Fund (government-agency, LT) - Medijų rėmimo "
       "fondas",
     .name_ja = "Media Support Fund (government-agency, LT) - Medijų rėmimo fondas",
-    .category = "government", .portal = "https://www.medijufondas.lt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.medijufondas.lt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13425,7 +13425,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139859896", .name = "National Family Council of Lithuania (government-agency, LT) - "
       "Nacionalinė šeimos taryba",
     .name_ja = "National Family Council of Lithuania (government-agency, LT) - Nacionalinė šeimos taryba",
-    .category = "government", .portal = "https://seimostaryba.lt/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://seimostaryba.lt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13445,7 +13445,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139891661", .name = "The Intelligence Ombudspersons' Office (government-agency, LT) - "
       "LR Žvalgybos kontrolierių įstaiga",
     .name_ja = "The Intelligence Ombudspersons' Office (government-agency, LT) - LR Žvalgybos kontrolierių įstaiga",
-    .category = "government", .portal = "https://www.zki.lt/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.zki.lt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13465,7 +13465,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30284842", .name = "Lithuanian Innovation Centre (government-agency, LT) - Lietuvos "
       "inovacijų centras",
     .name_ja = "Lithuanian Innovation Centre (government-agency, LT) - Lietuvos inovacijų centras",
-    .category = "government", .portal = "https://www.lic.lt/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.lic.lt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13485,7 +13485,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30289898", .name = "Nature Research Centre (government-agency, LT) - Gamtos tyrimų "
       "centras",
     .name_ja = "Nature Research Centre (government-agency, LT) - Gamtos tyrimų centras",
-    .category = "government", .portal = "https://gamtostyrimai.lt/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://gamtostyrimai.lt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13505,7 +13505,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q56294369", .name = "State Forest Enterprise (government-agency, LT) - Valstybinių "
       "miškų urėdija",
     .name_ja = "State Forest Enterprise (government-agency, LT) - Valstybinių miškų urėdija",
-    .category = "government", .portal = "https://vmu.lt/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://vmu.lt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13525,7 +13525,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q25494276", .name = "Lithuanian Hydrometereological Service (government-agency, LT) - "
       "Meteo LT",
     .name_ja = "Lithuanian Hydrometereological Service (government-agency, LT) - Meteo LT",
-    .category = "government", .portal = "https://www.meteo.lt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.meteo.lt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13544,7 +13544,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q78188560", .name = "Q78188560 (government-agency, LU) - Accueil",
     .name_ja = "Q78188560 (government-agency, LU) - Accueil",
-    .category = "government", .portal = "https://geologie.lu/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://geologie.lu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13563,7 +13563,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q78188560_2", .name = "Q78188560 (government-agency, LU) - Accueil",
     .name_ja = "Q78188560 (government-agency, LU) - Accueil",
-    .category = "government", .portal = "https://geologie.lu/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://geologie.lu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13583,7 +13583,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q136341210", .name = "Q136341210 (government-organization, LU) - CDM Luxembourg – "
       "Centre pour le développement moteur",
     .name_ja = "Q136341210 (government-organization, LU) - CDM Luxembourg – Centre pour le développement moteur",
-    .category = "government", .portal = "https://cc-cdm.lu/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cc-cdm.lu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13603,7 +13603,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q84364211", .name = "High National Election Commission (government-agency, LY) - "
       "المفوضية الوطنية العليا للإنتخابات",
     .name_ja = "High National Election Commission (government-agency, LY) - المفوضية الوطنية العليا للإنتخابات",
-    .category = "government", .portal = "https://hnec.ly/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://hnec.ly/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13623,7 +13623,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q88639597", .name = "National Centre for Disease Control (government-agency, LY) - "
       "المركز الوطني لمكافحة الأمراض",
     .name_ja = "National Centre for Disease Control (government-agency, LY) - المركز الوطني لمكافحة الأمراض",
-    .category = "government", .portal = "https://ncdc.org.ly/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ncdc.org.ly/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13642,7 +13642,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q106407649", .name = "Ministry of Defence (government-agency, LY) - مركز خدمة المواطن",
     .name_ja = "Ministry of Defence (government-agency, LY) - مركز خدمة المواطن",
-    .category = "government", .portal = "https://csc.gov.ly/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://csc.gov.ly/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13662,7 +13662,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q125912040", .name = "Libyan Authority For Scientific Research (government-agency, LY) "
       "- الهيئة الليبية للبحث العلمي",
     .name_ja = "Libyan Authority For Scientific Research (government-agency, LY) - الهيئة الليبية للبحث العلمي",
-    .category = "government", .portal = "https://www.aonsrt.ly/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.aonsrt.ly/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13682,7 +13682,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q136501185", .name = "Libya Vision 2030 (government-agency, LY) - الجهاز الوطني "
       "للتنمية - ليبيا",
     .name_ja = "Libya Vision 2030 (government-agency, LY) - الجهاز الوطني للتنمية - ليبيا",
-    .category = "government", .portal = "https://nda.gov.ly/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nda.gov.ly/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13702,7 +13702,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q136663748", .name = "Libyan Climate Change Research Center (government-agency, LY) - "
       "المركز الليبي لأبحاث تغير المناخ",
     .name_ja = "Libyan Climate Change Research Center (government-agency, LY) - المركز الليبي لأبحاث تغير المناخ",
-    .category = "government", .portal = "https://lccrc.ly/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://lccrc.ly/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13722,7 +13722,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q138685202", .name = "Libyan Atomic Energy Corporation (government-agency, LY) - مؤسسة "
       "الطاقة الذرية الليبية",
     .name_ja = "Libyan Atomic Energy Corporation (government-agency, LY) - مؤسسة الطاقة الذرية الليبية",
-    .category = "government", .portal = "https://aee.gov.ly/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://aee.gov.ly/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13742,7 +13742,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q138717353", .name = "Ministry of Agriculture and Livestock (Libya) (ministry, LY) - "
       "وزارة الزراعة والثروة الحيوانية   لـيبيـا",
     .name_ja = "Ministry of Agriculture and Livestock (Libya) (ministry, LY) - وزارة الزراعة والثروة الحيوانية   لـيبيـا",
-    .category = "government", .portal = "https://www.agriculture.gov.ly/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.agriculture.gov.ly/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13761,7 +13761,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q58234", .name = "Central Bank of Libya (central-bank, LY) - مصرف ليبيا المركزي",
     .name_ja = "Central Bank of Libya (central-bank, LY) - مصرف ليبيا المركزي",
-    .category = "government", .portal = "https://cbl.gov.ly/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://cbl.gov.ly/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13781,7 +13781,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2993767", .name = "Competition Council (government-agency, MA) - Conseil de la "
       "concurrence du Maroc",
     .name_ja = "Competition Council (government-agency, MA) - Conseil de la concurrence du Maroc",
-    .category = "government", .portal = "https://conseil-concurrence.ma/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://conseil-concurrence.ma/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13801,7 +13801,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30261633", .name = "African Training and Research Centre in Administration for "
       "Development (government-agency, MA) - CAFRAD",
     .name_ja = "African Training and Research Centre in Administration for Development (government-agency, MA) - CAFRAD",
-    .category = "government", .portal = "https://cafrad.io/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://cafrad.io/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13821,7 +13821,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30261778", .name = "Direction générale de la Météorologie Nationale "
       "(government-agency, MA) - MINISTERE DE L’EQUIPEMENT ET DE L’EAU",
     .name_ja = "Direction générale de la Météorologie Nationale (government-agency, MA) - MINISTERE DE L’EQUIPEMENT ET DE L’EAU",
-    .category = "government", .portal = "https://www.marocmeteo.ma/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.marocmeteo.ma/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13841,7 +13841,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q60852065", .name = "Q60852065 (government-agency, MA) - Portail du Centre National "
       "de Documentation du Maroc",
     .name_ja = "Q60852065 (government-agency, MA) - Portail du Centre National de Documentation du Maroc",
-    .category = "government", .portal = "https://cnd.hcp.ma/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cnd.hcp.ma/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13861,7 +13861,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q60852065_2", .name = "Q60852065 (government-agency, MA) - Portail du Centre National "
       "de Documentation du Maroc",
     .name_ja = "Q60852065 (government-agency, MA) - Portail du Centre National de Documentation du Maroc",
-    .category = "government", .portal = "https://cnd.hcp.ma/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cnd.hcp.ma/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13881,7 +13881,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12192356", .name = "The Supreme Council of Scholars (Morocco) "
       "(government-organization, MA) - المجلس العلمي الأعلى",
     .name_ja = "The Supreme Council of Scholars (Morocco) (government-organization, MA) - المجلس العلمي الأعلى",
-    .category = "government", .portal = "https://cso.ma/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://cso.ma/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13901,7 +13901,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141548103", .name = "Q141548103 (government-agency, MC) - Gouvernement Actualités "
       "(FR)",
     .name_ja = "Q141548103 (government-agency, MC) - Gouvernement Actualités (FR)",
-    .category = "government", .portal = "https://www.gouv.mc/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.gouv.mc/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13921,7 +13921,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139117896", .name = "Heritage Institute (government-agency, MC) - Culture Actualités "
       "(FR)",
     .name_ja = "Heritage Institute (government-agency, MC) - Culture Actualités (FR)",
-    .category = "government", .portal = "https://culture.mc/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://culture.mc/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13940,7 +13940,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q139117896_2", .name = "Heritage Institute (government-agency, MC) - Culture Agenda (FR)",
     .name_ja = "Heritage Institute (government-agency, MC) - Culture Agenda (FR)",
-    .category = "government", .portal = "https://culture.mc/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://culture.mc/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13960,7 +13960,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q61355779", .name = "Q61355779 (government-agency, MD) - ANP - Administraţia "
       "Naţională a Penitenciarelor - ANP - Administraţia Naţio",
     .name_ja = "Q61355779 (government-agency, MD) - ANP - Administraţia Naţională a Penitenciarelor - ANP - Administraţia Naţio",
-    .category = "government", .portal = "https://anp.gov.md/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://anp.gov.md/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -13979,7 +13979,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141636905", .name = "Q141636905 (government-agency, MD) - Istoria Militara",
     .name_ja = "Q141636905 (government-agency, MD) - Istoria Militara",
-    .category = "government", .portal = "https://istoriamilitara.md/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://istoriamilitara.md/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14000,7 +14000,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, MD) - Camera Naţională a Cărţii din "
       "Republica Moldova",
     .name_ja = "National Book Chamber of the Republic of Moldova (government-agency, MD) - Camera Naţională a Cărţii din Republica Moldova",
-    .category = "government", .portal = "https://www.bookchamber.md/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.bookchamber.md/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14020,7 +14020,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q19702927", .name = "State Agency on Intellectual Property of the Republic of Moldova "
       "(government-agency, MD) - Noutăți",
     .name_ja = "State Agency on Intellectual Property of the Republic of Moldova (government-agency, MD) - Noutăți",
-    .category = "government", .portal = "https://www.agepi.gov.md/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.agepi.gov.md/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14040,7 +14040,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q114273640", .name = "National Heraldry Commission (government-agency, MD) - Comisia "
       "Naţională de Heraldică",
     .name_ja = "National Heraldry Commission (government-agency, MD) - Comisia Naţională de Heraldică",
-    .category = "government", .portal = "https://cnh.prm.md/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://cnh.prm.md/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14060,7 +14060,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q116455387", .name = "National Agency for Archaeology (government-agency, MD) - "
       "Agenția Națională Arheologică",
     .name_ja = "National Agency for Archaeology (government-agency, MD) - Agenția Națională Arheologică",
-    .category = "government", .portal = "https://ana.md/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ana.md/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14080,7 +14080,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137795872", .name = "Centrul Național de Expertize Judiciare (government-agency, MD) "
       "- Agenda",
     .name_ja = "Centrul Național de Expertize Judiciare (government-agency, MD) - Agenda",
-    .category = "government", .portal = "https://cnej.gov.md/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cnej.gov.md/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14100,7 +14100,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4294866", .name = "Ministry of Justice of Transnistria (ministry, MD) - Веб сайт "
       "Министерства юстиции",
     .name_ja = "Ministry of Justice of Transnistria (ministry, MD) - Веб сайт Министерства юстиции",
-    .category = "government", .portal = "http://minjust.org/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "http://minjust.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14120,7 +14120,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4294866_2", .name = "Ministry of Justice of Transnistria (ministry, MD) - Официальное "
       "опубликование",
     .name_ja = "Ministry of Justice of Transnistria (ministry, MD) - Официальное опубликование",
-    .category = "government", .portal = "http://minjust.org/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "http://minjust.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14140,7 +14140,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2636071", .name = "National Bank of Moldova (central-bank, MD) - Banca Națională a "
       "Moldovei",
     .name_ja = "National Bank of Moldova (central-bank, MD) - Banca Națională a Moldovei",
-    .category = "government", .portal = "https://www.bnm.md/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.bnm.md/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14160,7 +14160,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141141917", .name = "Ministry of Agriculture and Food Sovereignty (ministry, MG) - "
       "Ministère de l'Agriculture et de la Souveraineté Alimentaire",
     .name_ja = "Ministry of Agriculture and Food Sovereignty (ministry, MG) - Ministère de l'Agriculture et de la Souveraineté Alimentaire",
-    .category = "government", .portal = "https://www.miasa.gov.mg/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.miasa.gov.mg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14181,7 +14181,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, MH) - Economic Policy, Planning and "
       "Statistics Office",
     .name_ja = "Economic Policy, Planning and Statistics Office (government-agency, MH) - Economic Policy, Planning and Statistics Office",
-    .category = "government", .portal = "https://rmieppso.org/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://rmieppso.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14201,7 +14201,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12906246", .name = "State Statistical Office of North Macedonia (government-agency, "
       "MK) - Државен заво&#",
     .name_ja = "State Statistical Office of North Macedonia (government-agency, MK) - Државен заво&#",
-    .category = "government", .portal = "https://www.stat.gov.mk/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.stat.gov.mk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14222,7 +14222,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, MK) - Дирекција за безбедност на "
       "класифицирани и",
     .name_ja = "Military Service for Security and Intelligence (government-agency, MK) - Дирекција за безбедност на класифицирани и",
-    .category = "government", .portal = "https://dbki.gov.mk/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://dbki.gov.mk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14242,7 +14242,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q112752108", .name = "Bureau of Metrology of Macedonia (government-agency, MK) - Biro "
       "za metrologija",
     .name_ja = "Bureau of Metrology of Macedonia (government-agency, MK) - Biro za metrologija",
-    .category = "government", .portal = "https://www.bom.gov.mk/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.bom.gov.mk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14263,7 +14263,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, ML) - Agence des Technologies de "
       "l'Information et de la Communication-AGETIC",
     .name_ja = "Information and Communication Technologies Agency (government-agency, ML) - Agence des Technologies de l'Information et de la Communication-AGETIC",
-    .category = "government", .portal = "https://agetic.gouv.ml/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://agetic.gouv.ml/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14284,7 +14284,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "- Ministère de l'Enseignement Supérieur et de la Recherche "
       "Scientifique",
     .name_ja = "Ministry of Higher Education and Research of Mali (ministry, ML) - Ministère de l'Enseignement Supérieur et de la Recherche Scientifique",
-    .category = "government", .portal = "https://www.enseignementsuperieur.gouv.ml/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.enseignementsuperieur.gouv.ml/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14304,7 +14304,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141214737", .name = "Ministry of Energy and Water (Mali) (ministry, ML) - Ministere "
       "de l'Energie et de l'Eau",
     .name_ja = "Ministry of Energy and Water (Mali) (ministry, ML) - Ministere de l'Energie et de l'Eau",
-    .category = "government", .portal = "https://energie.gouv.ml/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://energie.gouv.ml/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14324,7 +14324,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141214774", .name = "Q141214774 (ministry, ML) - Ministère de la Jeunesse et des "
       "Sports-MJS",
     .name_ja = "Q141214774 (ministry, ML) - Ministère de la Jeunesse et des Sports-MJS",
-    .category = "government", .portal = "https://sports.gouv.ml/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://sports.gouv.ml/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14344,7 +14344,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30632323", .name = "Yangon Region Government (government-agency, MM) - "
       "ရန်ကုန်တိုင်းဒေသကြီး အစိုးရ",
     .name_ja = "Yangon Region Government (government-agency, MM) - ရန်ကုန်တိုင်းဒေသကြီး အစိုးရ",
-    .category = "government", .portal = "https://www.yangon.gov.mm/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.yangon.gov.mm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14363,7 +14363,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q4294720", .name = "Ministry of Commerce (ministry, MM) - Commerce",
     .name_ja = "Ministry of Commerce (ministry, MM) - Commerce",
-    .category = "government", .portal = "https://commerce.gov.mm/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://commerce.gov.mm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14383,7 +14383,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q17052214", .name = "Mineral Resources and Petroleum Authority (Mongolia) "
       "(government-agency, MN) - Ашигт Mалтмал, Газрын Тосны Газар",
     .name_ja = "Mineral Resources and Petroleum Authority (Mongolia) (government-agency, MN) - Ашигт Mалтмал, Газрын Тосны Газар",
-    .category = "government", .portal = "https://mrpam.gov.mn/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://mrpam.gov.mn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14403,7 +14403,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141548121", .name = "Q141548121 (government-agency, MR) - Parc National du Diawling "
       "(PND)",
     .name_ja = "Q141548121 (government-agency, MR) - Parc National du Diawling (PND)",
-    .category = "government", .portal = "https://www.pnd.mr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.pnd.mr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14423,7 +14423,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12194937", .name = "Mauritanian Information Agency (government-agency, MR) - الوكالة "
       "الموريتانية للأنباء",
     .name_ja = "Mauritanian Information Agency (government-agency, MR) - الوكالة الموريتانية للأنباء",
-    .category = "government", .portal = "https://www.ami.mr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.ami.mr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14444,7 +14444,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Modernisation of Administration (ministry, MR) - وزارة التحول "
       "الرقمي وعصرنة الادارة",
     .name_ja = "Ministry of Digital Transformation, Innovation, and Modernisation of Administration (ministry, MR) - وزارة التحول الرقمي وعصرنة الادارة",
-    .category = "government", .portal = "https://mtnima.gov.mr/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mtnima.gov.mr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14464,7 +14464,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q117405670", .name = "Malta Competition and Consumer Affairs Authority "
       "(government-agency, MT) - MCCAA",
     .name_ja = "Malta Competition and Consumer Affairs Authority (government-agency, MT) - MCCAA",
-    .category = "government", .portal = "https://mccaa.org.mt/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://mccaa.org.mt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14483,7 +14483,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q120921440", .name = "Festivals Malta Agency (government-agency, MT) - Festivals Malta",
     .name_ja = "Festivals Malta Agency (government-agency, MT) - Festivals Malta",
-    .category = "government", .portal = "https://www.festivals.mt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.festivals.mt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14503,7 +14503,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q120926468", .name = "Infrastructure Malta (government-agency, MT) - Infastructure "
       "Malta",
     .name_ja = "Infrastructure Malta (government-agency, MT) - Infastructure Malta",
-    .category = "government", .portal = "https://www.infrastructuremalta.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.infrastructuremalta.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14523,7 +14523,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q123760409", .name = "Malta Council for the Voluntary Sector (government-organization, "
       "MT) - MaltaCVS",
     .name_ja = "Malta Council for the Voluntary Sector (government-organization, MT) - MaltaCVS",
-    .category = "government", .portal = "https://maltacvs.org/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://maltacvs.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14543,7 +14543,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6793789", .name = "Mauritius Police Force (government-agency, MU) - Mauritius "
       "Police Force",
     .name_ja = "Mauritius Police Force (government-agency, MU) - Mauritius Police Force",
-    .category = "government", .portal = "https://police.govmu.org/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://police.govmu.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14563,7 +14563,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q50037258", .name = "Ministry of Health and Quality of Life (government-agency, MU) - "
       "Ministry of Health Wellness",
     .name_ja = "Ministry of Health and Quality of Life (government-agency, MU) - Ministry of Health Wellness",
-    .category = "government", .portal = "https://health.govmu.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://health.govmu.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14583,7 +14583,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q107178973", .name = "Ministry of Economic Development (ministry, MV) - Ministry of "
       "Economic Development Transport & Trade",
     .name_ja = "Ministry of Economic Development (ministry, MV) - Ministry of Economic Development Transport & Trade",
-    .category = "government", .portal = "https://trade.gov.mv/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://trade.gov.mv/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14603,7 +14603,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30290628", .name = "National AIDS Commission (government-agency, MW) - National AIDS "
       "Commission",
     .name_ja = "National AIDS Commission (government-agency, MW) - National AIDS Commission",
-    .category = "government", .portal = "https://www.aidsmalawi.org.mw/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.aidsmalawi.org.mw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14624,7 +14624,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, MW) - NATIONAL COMMISSION FOR SCIENCE AND "
       "TECHNOLOGY",
     .name_ja = "National Commission for Science and Technology Malawi (government-agency, MW) - NATIONAL COMMISSION FOR SCIENCE AND TECHNOLOGY",
-    .category = "government", .portal = "https://ncst.mw/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://ncst.mw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14645,7 +14645,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Tecnológico (government-agency, MX) - Consejo Veracruzano de "
       "Investigación Científica y Desarrollo Tecnológico",
     .name_ja = "Consejo Veracruzano de Investigación Científica y Desarrollo Tecnológico (government-agency, MX) - Consejo Veracruzano de Investigación Científica y Desarrollo Tecnológico",
-    .category = "government", .portal = "https://ciencia.covecyt.gob.mx/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ciencia.covecyt.gob.mx/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14666,7 +14666,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, MX) - Consejo Zacatecano de Ciencia, "
       "Tecnología e Innovación",
     .name_ja = "Consejo Zacatecano de Ciencia, Tecnología e Innovación (government-agency, MX) - Consejo Zacatecano de Ciencia, Tecnología e Innovación",
-    .category = "government", .portal = "https://cozcyt.gob.mx/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cozcyt.gob.mx/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14686,7 +14686,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q901361", .name = "Instituto Nacional de Antropología e Historia "
       "(government-agency, MX) - Bienvenidos al INAH",
     .name_ja = "Instituto Nacional de Antropología e Historia (government-agency, MX) - Bienvenidos al INAH",
-    .category = "government", .portal = "https://www.inah.gob.mx/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.inah.gob.mx/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14706,7 +14706,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q901361_2", .name = "Instituto Nacional de Antropología e Historia "
       "(government-agency, MX) - Bienvenidos al INAH",
     .name_ja = "Instituto Nacional de Antropología e Historia (government-agency, MX) - Bienvenidos al INAH",
-    .category = "government", .portal = "https://www.inah.gob.mx/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.inah.gob.mx/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14727,7 +14727,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, MX) - Comisión de Derechos Humanos de la "
       "Ciudad de México",
     .name_ja = "Comisión de Derechos Humanos de la Ciudad de México (government-agency, MX) - Comisión de Derechos Humanos de la Ciudad de México",
-    .category = "government", .portal = "https://cdhcm.org.mx/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cdhcm.org.mx/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14747,7 +14747,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30264360", .name = "Secretaría de Investigación, Innovación y Educación Superior "
       "(government-agency, MX) - SECIHTI",
     .name_ja = "Secretaría de Investigación, Innovación y Educación Superior (government-agency, MX) - SECIHTI",
-    .category = "government", .portal = "https://ciencia.yucatan.gob.mx/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://ciencia.yucatan.gob.mx/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14767,7 +14767,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q100980372", .name = "Q100980372 (government-agency, MX) - Programa de Desarrollo "
       "Cultural del Sotavento",
     .name_ja = "Q100980372 (government-agency, MX) - Programa de Desarrollo Cultural del Sotavento",
-    .category = "government", .portal = "http://programasotavento.blogspot.com/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "http://programasotavento.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14787,7 +14787,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q100980372_2", .name = "Q100980372 (government-agency, MX) - Programa de Desarrollo "
       "Cultural del Sotavento",
     .name_ja = "Q100980372 (government-agency, MX) - Programa de Desarrollo Cultural del Sotavento",
-    .category = "government", .portal = "http://programasotavento.blogspot.com/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "http://programasotavento.blogspot.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14807,7 +14807,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q100980372_3", .name = "Q100980372 (government-agency, MX) - Programa de Desarrollo "
       "Cultural del Sotavento",
     .name_ja = "Q100980372 (government-agency, MX) - Programa de Desarrollo Cultural del Sotavento",
-    .category = "government", .portal = "https://www.blogger.com/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.blogger.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14827,7 +14827,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q124220202", .name = "Fiscalía General del Estado de Guerrero (government-agency, MX) "
       "- FISCALÍA GENERAL DEL ESTADO DE GUERRERO",
     .name_ja = "Fiscalía General del Estado de Guerrero (government-agency, MX) - FISCALÍA GENERAL DEL ESTADO DE GUERRERO",
-    .category = "government", .portal = "https://fiscaliaguerrero.gob.mx/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://fiscaliaguerrero.gob.mx/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14847,7 +14847,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q37258451", .name = "Q37258451 (government-organization, MX) - Instituto Municipal "
       "Aguascalentense para la Cultura",
     .name_ja = "Q37258451 (government-organization, MX) - Instituto Municipal Aguascalentense para la Cultura",
-    .category = "government", .portal = "https://imac.gob.mx/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://imac.gob.mx/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14867,7 +14867,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6152372", .name = "Tribunal Superior de Justicia de la Ciudad de México (court, MX) "
       "- Portal del Poder Judicial de la CDMX",
     .name_ja = "Tribunal Superior de Justicia de la Ciudad de México (court, MX) - Portal del Poder Judicial de la CDMX",
-    .category = "government", .portal = "https://poderjudicialcdmx.gob.mx/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://poderjudicialcdmx.gob.mx/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14887,7 +14887,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5354512", .name = "Election Commission of Malaysia (government-agency, MY) - Portal "
       "SPR",
     .name_ja = "Election Commission of Malaysia (government-agency, MY) - Portal SPR",
-    .category = "government", .portal = "https://spr.gov.my/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://spr.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14907,7 +14907,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5469091", .name = "Forest Research Institute Malaysia (government-agency, MY) - "
       "Forest Research Institute Malaysia",
     .name_ja = "Forest Research Institute Malaysia (government-agency, MY) - Forest Research Institute Malaysia",
-    .category = "government", .portal = "https://www.frim.gov.my/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.frim.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14927,7 +14927,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6742002", .name = "Malaysian Palm Oil Board (government-agency, MY) - Malaysian "
       "Palm Oil Board",
     .name_ja = "Malaysian Palm Oil Board (government-agency, MY) - Malaysian Palm Oil Board",
-    .category = "government", .portal = "https://mpob.gov.my/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://mpob.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14947,7 +14947,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6742016", .name = "Malaysian Road Transport Department (government-agency, MY) - "
       "Portal Rasmi JPJ",
     .name_ja = "Malaysian Road Transport Department (government-agency, MY) - Portal Rasmi JPJ",
-    .category = "government", .portal = "https://www.jpj.gov.my/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.jpj.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14967,7 +14967,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7099462", .name = "Orang Asli Affairs Department (government-agency, MY) - Laman "
       "Web Rasmi Jabatan Kemajuan Orang Asli",
     .name_ja = "Orang Asli Affairs Department (government-agency, MY) - Laman Web Rasmi Jabatan Kemajuan Orang Asli",
-    .category = "government", .portal = "https://www.jakoa.gov.my/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.jakoa.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -14987,7 +14987,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7382233", .name = "Kuala Terengganu City Council (government-agency, MY) - "
       "Kandungan Terkini",
     .name_ja = "Kuala Terengganu City Council (government-agency, MY) - Kandungan Terkini",
-    .category = "government", .portal = "https://mbkt.gov.my/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://mbkt.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15007,7 +15007,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q576601", .name = "Istana Budaya (government-agency, MY) - Portal Rasmi Istana "
       "Budaya",
     .name_ja = "Istana Budaya (government-agency, MY) - Portal Rasmi Istana Budaya",
-    .category = "government", .portal = "https://istanabudaya.gov.my/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://istanabudaya.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15026,7 +15026,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q822202", .name = "Bernama (government-agency, MY) - BERNAMA - English Version",
     .name_ja = "Bernama (government-agency, MY) - BERNAMA - English Version",
-    .category = "government", .portal = "https://www.bernama.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.bernama.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15046,7 +15046,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1433720", .name = "Malaysian Industrial Development Authority (government-agency, "
       "MY) - MIDA   Malaysian Investment Development Authority",
     .name_ja = "Malaysian Industrial Development Authority (government-agency, MY) - MIDA   Malaysian Investment Development Authority",
-    .category = "government", .portal = "https://www.mida.gov.my/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.mida.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15066,7 +15066,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q130314550", .name = "National Metrology Institute of Malaysia (government-agency, MY) "
       "- Home – NMIM",
     .name_ja = "National Metrology Institute of Malaysia (government-agency, MY) - Home – NMIM",
-    .category = "government", .portal = "https://nmim.gov.my/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://nmim.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15086,7 +15086,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131765063", .name = "Sabah State Road Transport Department (government-agency, MY) - "
       "JPJ MALAYSIA",
     .name_ja = "Sabah State Road Transport Department (government-agency, MY) - JPJ MALAYSIA",
-    .category = "government", .portal = "https://jpjsabahmy.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://jpjsabahmy.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15106,7 +15106,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131781621", .name = "Sabah Native Affairs Department (government-agency, MY) - "
       "JABATAN HAL EHWAL ANAK NEGERI SABAH",
     .name_ja = "Sabah Native Affairs Department (government-agency, MY) - JABATAN HAL EHWAL ANAK NEGERI SABAH",
-    .category = "government", .portal = "https://jheans.sabah.gov.my/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://jheans.sabah.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15126,7 +15126,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135220132", .name = "Pahang Public Library Corporation (government-agency, MY) - "
       "PERBADANAN PERPUSTAKAAN AWAM PAHANG",
     .name_ja = "Pahang Public Library Corporation (government-agency, MY) - PERBADANAN PERPUSTAKAAN AWAM PAHANG",
-    .category = "government", .portal = "https://pahanglibrary.gov.my/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://pahanglibrary.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15146,7 +15146,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137608282", .name = "Selangor Syariah Prosecution Department (government-agency, MY) "
       "- JPSS Selangor",
     .name_ja = "Selangor Syariah Prosecution Department (government-agency, MY) - JPSS Selangor",
-    .category = "government", .portal = "https://jpss.gov.my/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://jpss.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15166,7 +15166,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141195193", .name = "Jabatan Pertanian Negeri Kedah Darul Aman (government-agency, "
       "MY) - Laman Rasmi Jabatan Pertanian Negeri Kedah Darul Aman",
     .name_ja = "Jabatan Pertanian Negeri Kedah Darul Aman (government-agency, MY) - Laman Rasmi Jabatan Pertanian Negeri Kedah Darul Aman",
-    .category = "government", .portal = "https://pertanian.kedah.gov.my/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://pertanian.kedah.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15187,7 +15187,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, MY) - Institut Penyelidikan Pembangunan "
       "Belia Malaysia - Institut Penyelidikan Pembang",
     .name_ja = "Institut Penyelidikan Pembangunan Belia Malaysia (government-agency, MY) - Institut Penyelidikan Pembangunan Belia Malaysia - Institut Penyelidikan Pembang",
-    .category = "government", .portal = "https://www.iyres.gov.my/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.iyres.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15208,7 +15208,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, MY) - Institut Penyelidikan Pembangunan "
       "Belia Malaysia - Institut Penyelidikan Pembang",
     .name_ja = "Institut Penyelidikan Pembangunan Belia Malaysia (government-agency, MY) - Institut Penyelidikan Pembangunan Belia Malaysia - Institut Penyelidikan Pembang",
-    .category = "government", .portal = "https://www.iyres.gov.my/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.iyres.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15228,7 +15228,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q63923285", .name = "Malaysia Department of Insolvency (government-agency, MY) - "
       "Portal Rasmi Jabatan Insolvensi Malaysia",
     .name_ja = "Malaysia Department of Insolvency (government-agency, MY) - Portal Rasmi Jabatan Insolvensi Malaysia",
-    .category = "government", .portal = "https://www.mdi.gov.my/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.mdi.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15248,7 +15248,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q65223079", .name = "Department of Chemistry Malaysia (government-agency, MY) - "
       "Jabatan Kimia Malaysia",
     .name_ja = "Department of Chemistry Malaysia (government-agency, MY) - Jabatan Kimia Malaysia",
-    .category = "government", .portal = "https://www.kimia.gov.my/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.kimia.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15268,7 +15268,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q65223079_2", .name = "Department of Chemistry Malaysia (government-agency, MY) - "
       "Jabatan Kimia Malaysia",
     .name_ja = "Department of Chemistry Malaysia (government-agency, MY) - Jabatan Kimia Malaysia",
-    .category = "government", .portal = "https://feeds.feedburner.com/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://feeds.feedburner.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15288,7 +15288,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q110132142", .name = "Negeri Sembilan State Mufti Department (government-agency, MY) - "
       "Jabatan Mufti Kerajaan Negeri Sembilan",
     .name_ja = "Negeri Sembilan State Mufti Department (government-agency, MY) - Jabatan Mufti Kerajaan Negeri Sembilan",
-    .category = "government", .portal = "https://muftins.gov.my/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://muftins.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15308,7 +15308,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113224518", .name = "Selangor State Mufti Department (government-agency, MY) - "
       "Jabatan Mufti Negeri Selangor",
     .name_ja = "Selangor State Mufti Department (government-agency, MY) - Jabatan Mufti Negeri Selangor",
-    .category = "government", .portal = "https://www.muftiselangor.gov.my/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.muftiselangor.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15328,7 +15328,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113309811", .name = "Johor State Islamic Religious Department (government-agency, MY) "
       "- Portal Rasmi Jabatan Agama Islam Negeri Johor",
     .name_ja = "Johor State Islamic Religious Department (government-agency, MY) - Portal Rasmi Jabatan Agama Islam Negeri Johor",
-    .category = "government", .portal = "https://jainj.johor.gov.my/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://jainj.johor.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15349,7 +15349,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Portal Rasmi Jabatan Hal Ehwal Agama Islam Negeri Kedah Darul "
       "Aman",
     .name_ja = "Kedah State Islamic Affairs Department (government-agency, MY) - Portal Rasmi Jabatan Hal Ehwal Agama Islam Negeri Kedah Darul Aman",
-    .category = "government", .portal = "https://jheaik.kedah.gov.my/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://jheaik.kedah.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15369,7 +15369,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113542253", .name = "Kemubu Agricultural Development Authority (government-agency, "
       "MY) - Lembaga Kemajuan Pertanian Kemubu (KADA)",
     .name_ja = "Kemubu Agricultural Development Authority (government-agency, MY) - Lembaga Kemajuan Pertanian Kemubu (KADA)",
-    .category = "government", .portal = "https://www.kada.gov.my/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.kada.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15389,7 +15389,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113542338", .name = "Department of Fisheries Malaysia (government-agency, MY) - "
       "Portal Rasmi Jabatan Perikanan Malaysia",
     .name_ja = "Department of Fisheries Malaysia (government-agency, MY) - Portal Rasmi Jabatan Perikanan Malaysia",
-    .category = "government", .portal = "https://www.dof.gov.my/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.dof.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15409,7 +15409,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7406432", .name = "Q7406432 (government-agency, MY) - Portal Rasmi Perbadanan "
       "Muzium Melaka",
     .name_ja = "Q7406432 (government-agency, MY) - Portal Rasmi Perbadanan Muzium Melaka",
-    .category = "government", .portal = "https://perzim.gov.my/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://perzim.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15429,7 +15429,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7447488", .name = "Selangor State Development Corporation (government-agency, MY) - "
       "Property in Selangor",
     .name_ja = "Selangor State Development Corporation (government-agency, MY) - Property in Selangor",
-    .category = "government", .portal = "https://www.pkns.gov.my/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.pkns.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15449,7 +15449,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12700322", .name = "Kelantan Public Library Corporation (government-agency, MY) - "
       "Pengumuman",
     .name_ja = "Kelantan Public Library Corporation (government-agency, MY) - Pengumuman",
-    .category = "government", .portal = "http://www.kelantanlibrary.gov.my/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://www.kelantanlibrary.gov.my/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15470,7 +15470,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, MZ) - Instituto Nacional de Tecnologias de "
       "Informação e Comunicação",
     .name_ja = "Instituto Nacional de Tecnologias de Informação e Comunicação (government-agency, MZ) - Instituto Nacional de Tecnologias de Informação e Comunicação",
-    .category = "government", .portal = "https://intic.gov.mz/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://intic.gov.mz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15490,7 +15490,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q136001701", .name = "National Agency for the Information Society (government-agency, "
       "NE) - ansi",
     .name_ja = "National Agency for the Information Society (government-agency, NE) - ansi",
-    .category = "government", .portal = "https://ansi.ne/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ansi.ne/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15509,7 +15509,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q138714927", .name = "Q138714927 (ministry, NE) - MCNTI",
     .name_ja = "Q138714927 (ministry, NE) - MCNTI",
-    .category = "government", .portal = "https://mcnti.gouv.ne/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mcnti.gouv.ne/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15529,7 +15529,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1967794", .name = "National Space Research and Development Agency "
       "(government-agency, NG) - NASRDA",
     .name_ja = "National Space Research and Development Agency (government-agency, NG) - NASRDA",
-    .category = "government", .portal = "https://central.nasrda.gov.ng/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://central.nasrda.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15550,7 +15550,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, NG) - Special Control Unit Against Money "
       "Laundering",
     .name_ja = "Special control unit against money laundering (government-agency, NG) - Special Control Unit Against Money Laundering",
-    .category = "government", .portal = "https://scuml.efcc.gov.ng/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://scuml.efcc.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15570,7 +15570,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q128154227", .name = "Nigeria Federal Department of Agriculture (government-agency, "
       "NG) - FMAFS",
     .name_ja = "Nigeria Federal Department of Agriculture (government-agency, NG) - FMAFS",
-    .category = "government", .portal = "https://agriculture.gov.ng/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://agriculture.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15591,7 +15591,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, NG) - Enugu Chamber of Commerce, Industry, "
       "Mines and Agriculture (ECCIMA)",
     .name_ja = "Enugu Chamber of Commerce Industry Mines and Agriculture (government-agency, NG) - Enugu Chamber of Commerce, Industry, Mines and Agriculture (ECCIMA)",
-    .category = "government", .portal = "https://enuguchamber.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://enuguchamber.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15612,7 +15612,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, NG) - Ministry of Information, Culture & "
       "Tourism",
     .name_ja = "Nasarawa State Ministry of Information, Culture and Tourism (government-agency, NG) - Ministry of Information, Culture & Tourism",
-    .category = "government", .portal = "https://moi.na.gov.ng/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://moi.na.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15632,7 +15632,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q130459092", .name = "Katsina State Ministry of Commerce, Industry, Tourism & "
       "Investment (government-agency, NG) - MOCIT",
     .name_ja = "Katsina State Ministry of Commerce, Industry, Tourism & Investment (government-agency, NG) - MOCIT",
-    .category = "government", .portal = "https://mocit.kt.gov.ng/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://mocit.kt.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15652,7 +15652,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131330247", .name = "National Power Training Institute of Nigeria, Kaduna "
       "(government-agency, NG) - National Power Training Institute",
     .name_ja = "National Power Training Institute of Nigeria, Kaduna (government-agency, NG) - National Power Training Institute",
-    .category = "government", .portal = "https://naptin.gov.ng/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://naptin.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15672,7 +15672,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135108703", .name = "National Hajj Commission of Nigeria (government-agency, NG) - "
       "National Hajj Commission of Nigeria",
     .name_ja = "National Hajj Commission of Nigeria (government-agency, NG) - National Hajj Commission of Nigeria",
-    .category = "government", .portal = "https://nahcon.gov.ng/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://nahcon.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15692,7 +15692,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135488542", .name = "Edo State Geographic Information Service (government-agency, NG) "
       "- EDOGIS",
     .name_ja = "Edo State Geographic Information Service (government-agency, NG) - EDOGIS",
-    .category = "government", .portal = "http://www.edogis.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://www.edogis.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15712,7 +15712,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135615464", .name = "Kwara  State Ministry of Health (government-agency, NG) - Kwara "
       "State Government",
     .name_ja = "Kwara  State Ministry of Health (government-agency, NG) - Kwara State Government",
-    .category = "government", .portal = "https://kwarastate.gov.ng/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://kwarastate.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15732,7 +15732,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141553947", .name = "African Regional Centre for Space Science and Technology "
       "Education in English (government-agency, NG) - arcsstee",
     .name_ja = "African Regional Centre for Space Science and Technology Education in English (government-agency, NG) - arcsstee",
-    .category = "government", .portal = "https://arcsstee.org.ng/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://arcsstee.org.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15752,7 +15752,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q19604791", .name = "Lagos State Ministry of Environment (government-agency, NG) - "
       "Lagos State Ministry of the Environment and Water Resources",
     .name_ja = "Lagos State Ministry of Environment (government-agency, NG) - Lagos State Ministry of the Environment and Water Resources",
-    .category = "government", .portal = "https://moelagos.gov.ng/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://moelagos.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15772,7 +15772,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q23220464", .name = "National Board for Technical Education (government-agency, NG) - "
       "National Board for Technical Education",
     .name_ja = "National Board for Technical Education (government-agency, NG) - National Board for Technical Education",
-    .category = "government", .portal = "https://web.nbte.gov.ng/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://web.nbte.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15792,7 +15792,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q25056674", .name = "National Information Technology Development Agency "
       "(government-agency, NG) - NITDA",
     .name_ja = "National Information Technology Development Agency (government-agency, NG) - NITDA",
-    .category = "government", .portal = "https://nitda.gov.ng/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://nitda.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15812,7 +15812,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q25203949", .name = "Federal Ministry of Science and Technology (government-agency, "
       "NG) - FMIST",
     .name_ja = "Federal Ministry of Science and Technology (government-agency, NG) - FMIST",
-    .category = "government", .portal = "https://scienceandtech.gov.ng/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://scienceandtech.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15832,7 +15832,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q28407262", .name = "Lagos Metropolitan Area Transport Authority (government-agency, "
       "NG) - Lagos Metropolitan Area Transport Authority",
     .name_ja = "Lagos Metropolitan Area Transport Authority (government-agency, NG) - Lagos Metropolitan Area Transport Authority",
-    .category = "government", .portal = "https://www.lamata-ng.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.lamata-ng.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15852,7 +15852,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30261965", .name = "National Office for Technology Acquisition and Promotion "
       "(government-agency, NG) - NOTAP",
     .name_ja = "National Office for Technology Acquisition and Promotion (government-agency, NG) - NOTAP",
-    .category = "government", .portal = "http://notap.gov.ng/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://notap.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15872,7 +15872,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30261975", .name = "National Primary Health Care Development Agency "
       "(government-agency, NG) - NPHCDA",
     .name_ja = "National Primary Health Care Development Agency (government-agency, NG) - NPHCDA",
-    .category = "government", .portal = "https://nphcda.gov.ng/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://nphcda.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15892,7 +15892,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30268190", .name = "National Agency for the Control of AIDS (government-agency, NG) "
       "- NACA Nigeria",
     .name_ja = "National Agency for the Control of AIDS (government-agency, NG) - NACA Nigeria",
-    .category = "government", .portal = "https://naca.gov.ng/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://naca.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15913,7 +15913,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "- Independent Corrupt Practices and Other Related Offences "
       "Commission",
     .name_ja = "Independent Corrupt Practices Commission (government-agency, NG) - Independent Corrupt Practices and Other Related Offences Commission",
-    .category = "government", .portal = "https://icpc.gov.ng/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://icpc.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15933,7 +15933,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6970209", .name = "National Agency for Food and Drug Administration and Control "
       "(government-agency, NG) - NAFDAC",
     .name_ja = "National Agency for Food and Drug Administration and Control (government-agency, NG) - NAFDAC",
-    .category = "government", .portal = "https://nafdac.gov.ng/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nafdac.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15953,7 +15953,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6973583", .name = "National Institute for Legislative Studies (government-agency, "
       "NG) - NILDS",
     .name_ja = "National Institute for Legislative Studies (government-agency, NG) - NILDS",
-    .category = "government", .portal = "https://nilds.gov.ng/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://nilds.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15973,7 +15973,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6979211", .name = "National Universities Commission (government-agency, NG) - "
       "National Universities Commision",
     .name_ja = "National Universities Commission (government-agency, NG) - National Universities Commision",
-    .category = "government", .portal = "https://www.nuc.edu.ng/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.nuc.edu.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -15993,7 +15993,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7032923", .name = "Nigerian Maritime Administration and Safety Agency "
       "(government-agency, NG) - NIMASA",
     .name_ja = "Nigerian Maritime Administration and Safety Agency (government-agency, NG) - NIMASA",
-    .category = "government", .portal = "https://nimasa.gov.ng/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://nimasa.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16013,7 +16013,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7033005", .name = "Nigerian Ports Authority (government-agency, NG) - Nigerian "
       "Ports Authority",
     .name_ja = "Nigerian Ports Authority (government-agency, NG) - Nigerian Ports Authority",
-    .category = "government", .portal = "https://nigerianports.gov.ng/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://nigerianports.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16033,7 +16033,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q111218066", .name = "Lagos State Public Procurement Agency (government-agency, NG) - "
       "Welcome to Lagos State Public Procurement Agency",
     .name_ja = "Lagos State Public Procurement Agency (government-agency, NG) - Welcome to Lagos State Public Procurement Agency",
-    .category = "government", .portal = "https://lagosppa.gov.ng/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://lagosppa.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16053,7 +16053,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q111344570", .name = "Lagos state bulding control agency (government-agency, NG) - "
       "LASBCA",
     .name_ja = "Lagos state bulding control agency (government-agency, NG) - LASBCA",
-    .category = "government", .portal = "https://lasbca.lagosstate.gov.ng/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://lasbca.lagosstate.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16073,7 +16073,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q111347308", .name = "Lagos State Ministry of Foreign affairs (government-agency, NG) "
       "- Foreign Affairs and Foreign Trade",
     .name_ja = "Lagos State Ministry of Foreign affairs (government-agency, NG) - Foreign Affairs and Foreign Trade",
-    .category = "government", .portal = "https://www.foreign.gov.bb/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.foreign.gov.bb/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16093,7 +16093,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30282968", .name = "Institute of Human Virology (government-agency, NG) - IHV "
       "NIGERIA.org",
     .name_ja = "Institute of Human Virology (government-agency, NG) - IHV NIGERIA.org",
-    .category = "government", .portal = "https://ihvnigeria.org/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://ihvnigeria.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16113,7 +16113,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q39087202", .name = "Lagos State Waste Management Authority (government-agency, NG) - "
       "LAWMA",
     .name_ja = "Lagos State Waste Management Authority (government-agency, NG) - LAWMA",
-    .category = "government", .portal = "https://lawma.gov.ng/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://lawma.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16133,7 +16133,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q104844764", .name = "Librarians' Registration Council of Nigeria (government-agency, "
       "NG) - LRCN",
     .name_ja = "Librarians' Registration Council of Nigeria (government-agency, NG) - LRCN",
-    .category = "government", .portal = "https://lrcn.gov.ng/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://lrcn.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16153,7 +16153,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q107803849", .name = "Universal Basic Education Commission (government-agency, NG) - "
       "Universal Basic Education Commission (UBEC)",
     .name_ja = "Universal Basic Education Commission (government-agency, NG) - Universal Basic Education Commission (UBEC)",
-    .category = "government", .portal = "https://ubec.gov.ng/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://ubec.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16173,7 +16173,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q108913294", .name = "National Emergency Management Agency (government-agency, NG) - "
       "NEMA Nigeria",
     .name_ja = "National Emergency Management Agency (government-agency, NG) - NEMA Nigeria",
-    .category = "government", .portal = "https://nema.gov.ng/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nema.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16194,7 +16194,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, NG) - The Lagos State Number Plate "
       "Production Authority",
     .name_ja = "Lagos State  Number Plate Production Authority (government-agency, NG) - The Lagos State Number Plate Production Authority",
-    .category = "government", .portal = "https://lsnppa.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://lsnppa.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16214,7 +16214,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q111086010", .name = "Lagos State Pension Commission (government-agency, NG) - Lagos "
       "State Pension Commission",
     .name_ja = "Lagos State Pension Commission (government-agency, NG) - Lagos State Pension Commission",
-    .category = "government", .portal = "https://laspec.gov.ng/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://laspec.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16234,7 +16234,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q118583100", .name = "Ondo State Ministry of information and Orientation (ministry, "
       "NG) - ONDO STATE MINISTRY OF INFORMATION",
     .name_ja = "Ondo State Ministry of information and Orientation (ministry, NG) - ONDO STATE MINISTRY OF INFORMATION",
-    .category = "government", .portal = "https://ondostateministryofinformation.wordpress.com/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://ondostateministryofinformation.wordpress.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16254,7 +16254,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q122643726", .name = "Adamawa State MINISTRY OF ENVIRONMENT AND NATURAL RESOURCES "
       "DEVELOPMENT (ministry, NG) - Adamawa State Planning Commisssion",
     .name_ja = "Adamawa State MINISTRY OF ENVIRONMENT AND NATURAL RESOURCES DEVELOPMENT (ministry, NG) - Adamawa State Planning Commisssion",
-    .category = "government", .portal = "https://adspc.ad.gov.ng/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://adspc.ad.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16275,7 +16275,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(ministry, NG) - KDSG   Official Website – Kaduna State "
       "Government, Nigeria",
     .name_ja = "KADUNA STATE Ministry Of Environment & Natural Resources (ministry, NG) - KDSG   Official Website – Kaduna State Government, Nigeria",
-    .category = "government", .portal = "https://kdsg.gov.ng/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://kdsg.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16296,7 +16296,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(ministry, NG) - Ministry of Science, Technology and Innovation, "
       "Gombe State",
     .name_ja = "Gombe State Ministry of Science, Technology and Innovation (ministry, NG) - Ministry of Science, Technology and Innovation, Gombe State",
-    .category = "government", .portal = "https://msti.gm.gov.ng/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://msti.gm.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16316,7 +16316,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q122947593", .name = "Katsina State Ministry of Education (ministry, NG) - Katsina "
       "State Government",
     .name_ja = "Katsina State Ministry of Education (ministry, NG) - Katsina State Government",
-    .category = "government", .portal = "https://katsinastate.gov.ng/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://katsinastate.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16336,7 +16336,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135156419", .name = "Ministry of Justice, Anambra State (ministry, NG) - Anambra "
       "State Government",
     .name_ja = "Ministry of Justice, Anambra State (ministry, NG) - Anambra State Government",
-    .category = "government", .portal = "https://anambrastate.gov.ng/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://anambrastate.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16356,7 +16356,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q111943786", .name = "Federal High Court of Nigeria (court, NG) - Federal High Court "
       "of Nigeria",
     .name_ja = "Federal High Court of Nigeria (court, NG) - Federal High Court of Nigeria",
-    .category = "government", .portal = "https://fhc.gov.ng/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://fhc.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16376,7 +16376,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q120204663", .name = "High Court of the Federal Capital Territory (court, NG) - FCT "
       "High Court",
     .name_ja = "High Court of the Federal Capital Territory (court, NG) - FCT High Court",
-    .category = "government", .portal = "https://www.fcthighcourt.gov.ng/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.fcthighcourt.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16396,7 +16396,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q120204663_2", .name = "High Court of the Federal Capital Territory (court, NG) - FCT "
       "High Court",
     .name_ja = "High Court of the Federal Capital Territory (court, NG) - FCT High Court",
-    .category = "government", .portal = "https://www.fcthighcourt.gov.ng/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.fcthighcourt.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16416,7 +16416,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q25044025", .name = "Pharmacy Council of Nigeria (regulatory-agency, NG) - Pharmacy "
       "Council of Nigeria",
     .name_ja = "Pharmacy Council of Nigeria (regulatory-agency, NG) - Pharmacy Council of Nigeria",
-    .category = "government", .portal = "https://pcn.gov.ng/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://pcn.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16436,7 +16436,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30688023", .name = "Council for the Regulation of Engineering in Nigeria "
       "(regulatory-agency, NG) - COREN",
     .name_ja = "Council for the Regulation of Engineering in Nigeria (regulatory-agency, NG) - COREN",
-    .category = "government", .portal = "https://coren.gov.ng/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://coren.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16457,7 +16457,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, NI) - Empresa Administradora de Aeropuertos "
       "Nacionales e Internacionales",
     .name_ja = "Administrative Company of National and International Airports (government-agency, NI) - Empresa Administradora de Aeropuertos Nacionales e Internacionales",
-    .category = "government", .portal = "https://www.eaai.com.ni/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.eaai.com.ni/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16477,7 +16477,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q121862762", .name = "Council for Animal Ethics (government-agency, NO) - Rådet for "
       "dyreetikk",
     .name_ja = "Council for Animal Ethics (government-agency, NO) - Rådet for dyreetikk",
-    .category = "government", .portal = "https://www.radetfordyreetikk.no/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.radetfordyreetikk.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16498,7 +16498,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "and Environmental Crime in Norway (government-agency, NO) - "
       "Økokrim Hjem",
     .name_ja = "National Authority for Investigation and Prosecution of Economic and Environmental Crime in Norway (government-agency, NO) - Økokrim Hjem",
-    .category = "government", .portal = "https://www.okokrim.no/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.okokrim.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16518,7 +16518,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1769848", .name = "Norwegian Parliamentary Intelligence Oversight Committee "
       "(government-agency, NO) - EOS-utvalget",
     .name_ja = "Norwegian Parliamentary Intelligence Oversight Committee (government-agency, NO) - EOS-utvalget",
-    .category = "government", .portal = "https://eos-utvalget.no/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://eos-utvalget.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16538,7 +16538,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6516304", .name = "Parliamentary Ombud’s Committee for the Norwegian Armed Forces "
       "(government-agency, NO) - Forsvarsombudet",
     .name_ja = "Parliamentary Ombud’s Committee for the Norwegian Armed Forces (government-agency, NO) - Forsvarsombudet",
-    .category = "government", .portal = "https://forsvarsombudet.no/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://forsvarsombudet.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16558,7 +16558,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6516503", .name = "Norwegian Archive, Library and Museum Authority "
       "(government-agency, NO) - ABM-utvikling",
     .name_ja = "Norwegian Archive, Library and Museum Authority (government-agency, NO) - ABM-utvikling",
-    .category = "government", .portal = "https://abm-utvikling.no/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://abm-utvikling.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16578,7 +16578,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6517285", .name = "Norwegian Consumer Council (government-agency, NO) - "
       "Forbrukerrådet",
     .name_ja = "Norwegian Consumer Council (government-agency, NO) - Forbrukerrådet",
-    .category = "government", .portal = "https://www.forbrukerradet.no/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.forbrukerradet.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16598,7 +16598,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7061064", .name = "Norwegian Council for Mental Health (government-agency, NO) - "
       "Rådet for psykisk helse",
     .name_ja = "Norwegian Council for Mental Health (government-agency, NO) - Rådet for psykisk helse",
-    .category = "government", .portal = "https://psykiskhelse.no/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://psykiskhelse.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16618,7 +16618,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11997318", .name = "Joint Rescue Coordination Centres (government-agency, NO) - "
       "Hovedredningssentralen",
     .name_ja = "Joint Rescue Coordination Centres (government-agency, NO) - Hovedredningssentralen",
-    .category = "government", .portal = "https://www.hovedredningssentralen.no/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.hovedredningssentralen.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16637,7 +16637,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q12001225", .name = "Skrivesenteret (government-agency, NO) - Skrivesenteret",
     .name_ja = "Skrivesenteret (government-agency, NO) - Skrivesenteret",
-    .category = "government", .portal = "https://skrivesenteret.no/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://skrivesenteret.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16656,7 +16656,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q12009574", .name = "Norwegian Veterinary Institute (government-agency, NO) - Nyheter",
     .name_ja = "Norwegian Veterinary Institute (government-agency, NO) - Nyheter",
-    .category = "government", .portal = "https://www.vetinst.no/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.vetinst.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16676,7 +16676,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q17750399", .name = "Norwegian Biotechnology Advisory Board (government-agency, NO) - "
       "Bioteknologirådet",
     .name_ja = "Norwegian Biotechnology Advisory Board (government-agency, NO) - Bioteknologirådet",
-    .category = "government", .portal = "https://bioteknologiradet.no/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://bioteknologiradet.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16695,7 +16695,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q19392525", .name = "Tilsynsrådet for advokatvirksomhet (government-agency, NO) - RSS",
     .name_ja = "Tilsynsrådet for advokatvirksomhet (government-agency, NO) - RSS",
-    .category = "government", .portal = "https://tilsynet.no/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://tilsynet.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16715,7 +16715,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q19393415", .name = "Trøndelags Europakontor (government-agency, NO) - Trøndelag "
       "European Office",
     .name_ja = "Trøndelags Europakontor (government-agency, NO) - Trøndelag European Office",
-    .category = "government", .portal = "https://trondelageuropeanoffice.no/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://trondelageuropeanoffice.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16734,7 +16734,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q104223649", .name = "Q104223649 (government-agency, NO) - RSS",
     .name_ja = "Q104223649 (government-agency, NO) - RSS",
-    .category = "government", .portal = "https://www.landbruksdirektoratet.no/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.landbruksdirektoratet.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16753,7 +16753,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q136326313", .name = "Q136326313 (government-agency, NO) - Riksadvokaten",
     .name_ja = "Q136326313 (government-agency, NO) - Riksadvokaten",
-    .category = "government", .portal = "https://www.riksadvokaten.no/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.riksadvokaten.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16773,7 +16773,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30259758", .name = "Norwegian Corporate Governance Board (government-agency, NO) - "
       "NUES",
     .name_ja = "Norwegian Corporate Governance Board (government-agency, NO) - NUES",
-    .category = "government", .portal = "https://nues.no/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nues.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16793,7 +16793,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31079622", .name = "Joint Tribunal Secretariat of Norway (government-agency, NO) - "
       "Klagenemndssekretariatet",
     .name_ja = "Joint Tribunal Secretariat of Norway (government-agency, NO) - Klagenemndssekretariatet",
-    .category = "government", .portal = "https://www.klagenemndssekretariatet.no/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.klagenemndssekretariatet.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16813,7 +16813,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q56409313_3", .name = "Norwegian National Cyber Security Centre (government-agency, NO) "
       "- Kronikker og innlegg fra NSM",
     .name_ja = "Norwegian National Cyber Security Centre (government-agency, NO) - Kronikker og innlegg fra NSM",
-    .category = "government", .portal = "https://nsm.no/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://nsm.no/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16833,7 +16833,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30296352", .name = "Nepal Health Research Council (government-agency, NP) - Nepal "
       "Health Research Council",
     .name_ja = "Nepal Health Research Council (government-agency, NP) - Nepal Health Research Council",
-    .category = "government", .portal = "https://nhrc.gov.np/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://nhrc.gov.np/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16853,7 +16853,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4693946", .name = "Agricultural and Marketing Research and Development Trust "
       "(government-agency, NZ) - AGMARDT",
     .name_ja = "Agricultural and Marketing Research and Development Trust (government-agency, NZ) - AGMARDT",
-    .category = "government", .portal = "https://agmardt.org.nz/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://agmardt.org.nz/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16873,7 +16873,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5906602", .name = "HortResearch (government-agency, NZ) - scigest - Bioeconomy "
       "Science Institute podcasts",
     .name_ja = "HortResearch (government-agency, NZ) - scigest - Bioeconomy Science Institute podcasts",
-    .category = "government", .portal = "https://www.plantandfood.com/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.plantandfood.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16892,7 +16892,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5906602_2", .name = "HortResearch (government-agency, NZ) - Collab",
     .name_ja = "HortResearch (government-agency, NZ) - Collab",
-    .category = "government", .portal = "https://www.plantandfood.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.plantandfood.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16912,7 +16912,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q21006789", .name = "Procuraduría General de la Nación de Panamá (government-agency, "
       "PA) - Procuraduria General de la Nación",
     .name_ja = "Procuraduría General de la Nación de Panamá (government-agency, PA) - Procuraduria General de la Nación",
-    .category = "government", .portal = "https://ministeriopublico.gob.pa/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ministeriopublico.gob.pa/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16932,7 +16932,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30264227", .name = "Secretaría Nacional de Ciencia, Tecnología e Innovación "
       "(government-agency, PA) - senacyt",
     .name_ja = "Secretaría Nacional de Ciencia, Tecnología e Innovación (government-agency, PA) - senacyt",
-    .category = "government", .portal = "https://www.senacyt.gob.pa/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.senacyt.gob.pa/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16952,7 +16952,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q118958482", .name = "Panama Maritime Authority (government-agency, PA) - Autoridad "
       "Marítima De Panamá",
     .name_ja = "Panama Maritime Authority (government-agency, PA) - Autoridad Marítima De Panamá",
-    .category = "government", .portal = "https://www.amp.gob.pa/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.amp.gob.pa/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16972,7 +16972,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q122763856", .name = "Instituto de Innovación Agropecuaria de Panamá "
       "(government-agency, PA) - IDIAP",
     .name_ja = "Instituto de Innovación Agropecuaria de Panamá (government-agency, PA) - IDIAP",
-    .category = "government", .portal = "https://www.idiap.gob.pa/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.idiap.gob.pa/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -16992,7 +16992,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q130241353", .name = "Superintendencia del Mercado de Valores (government-agency, PA) "
       "- Superintendencia del Mercado de Valores",
     .name_ja = "Superintendencia del Mercado de Valores (government-agency, PA) - Superintendencia del Mercado de Valores",
-    .category = "government", .portal = "https://supervalores.gob.pa/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://supervalores.gob.pa/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17013,7 +17013,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "de Veraguas intensifica operativo interinstitucional: más de 90 "
       "co",
     .name_ja = "Ministry of Government and Justice (ministry, PA) - Gobernación de Veraguas intensifica operativo interinstitucional: más de 90 co",
-    .category = "government", .portal = "https://www.mingob.gob.pa/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.mingob.gob.pa/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17033,7 +17033,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q87281802", .name = "Ministry of Economy and Finance (Panama) (ministry, PA) - "
       "Ministerio de Economía y Finanzas de Panamá",
     .name_ja = "Ministry of Economy and Finance (Panama) (ministry, PA) - Ministerio de Economía y Finanzas de Panamá",
-    .category = "government", .portal = "https://www.mef.gob.pa/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.mef.gob.pa/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17052,7 +17052,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q135964673", .name = "Q135964673 (ministry, PA) - Ministerio de la Mujer",
     .name_ja = "Q135964673 (ministry, PA) - Ministerio de la Mujer",
-    .category = "government", .portal = "https://mujer.gob.pa/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mujer.gob.pa/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17071,7 +17071,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q134475876", .name = "Q134475876 (government-agency, PE) - Qhapaq Nan Sede Nacional",
     .name_ja = "Q134475876 (government-agency, PE) - Qhapaq Nan Sede Nacional",
-    .category = "government", .portal = "https://qhapaqnan.cultura.pe/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://qhapaqnan.cultura.pe/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17091,7 +17091,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30083612", .name = "Servicio de Parques de Lima (government-agency, PE) - SERPAR – "
       "Servicio de Parques de Lima",
     .name_ja = "Servicio de Parques de Lima (government-agency, PE) - SERPAR – Servicio de Parques de Lima",
-    .category = "government", .portal = "https://www.serpar.gob.pe/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.serpar.gob.pe/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17112,7 +17112,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, PE) - Centro Nacional de Epidemiología "
       "Prevención y Control de Enfermedades",
     .name_ja = "National Center for Epidemiology and Disease Control (government-agency, PE) - Centro Nacional de Epidemiología Prevención y Control de Enfermedades",
-    .category = "government", .portal = "https://www.dge.gob.pe/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.dge.gob.pe/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17132,7 +17132,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3407467", .name = "Ombudsman of the Philippines (government-agency, PH) - Office of "
       "the Ombudsman",
     .name_ja = "Ombudsman of the Philippines (government-agency, PH) - Office of the Ombudsman",
-    .category = "government", .portal = "https://www.ombudsman.gov.ph/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.ombudsman.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17160,7 +17160,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31810190", .name = "Mactan Cebu International Airport Authority (government-agency, "
       "PH) - Mactan – Cebu International Airport Authority",
     .name_ja = "Mactan Cebu International Airport Authority (government-agency, PH) - Mactan – Cebu International Airport Authority",
-    .category = "government", .portal = "https://mciaa.gov.ph/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://mciaa.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17180,7 +17180,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31810189", .name = "Southern Philippines Development Authority (government-agency, "
       "PH) - Southern Philippines Development Authority – SPDA",
     .name_ja = "Southern Philippines Development Authority (government-agency, PH) - Southern Philippines Development Authority – SPDA",
-    .category = "government", .portal = "https://spda.gov.ph/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://spda.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17200,7 +17200,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31811385", .name = "Tourism Promotions Board (government-agency, PH) - Tourism "
       "Promotions Board",
     .name_ja = "Tourism Promotions Board (government-agency, PH) - Tourism Promotions Board",
-    .category = "government", .portal = "https://tpb.gov.ph/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://tpb.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17220,7 +17220,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31811405", .name = "Government Procurement Policy Board (government-agency, PH) - "
       "GPPB-TSO",
     .name_ja = "Government Procurement Policy Board (government-agency, PH) - GPPB-TSO",
-    .category = "government", .portal = "https://www.gppb.gov.ph/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.gppb.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17240,7 +17240,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31811476", .name = "Office of the Government Corporate Counsel (government-agency, "
       "PH) - OGCC   Office of the Government Corporate Counsel",
     .name_ja = "Office of the Government Corporate Counsel (government-agency, PH) - OGCC   Office of the Government Corporate Counsel",
-    .category = "government", .portal = "https://ogcc.gov.ph/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ogcc.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17260,7 +17260,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31811523", .name = "Health Technology Assessment Council (government-agency, PH) - "
       "Health Technology Assessment Division",
     .name_ja = "Health Technology Assessment Council (government-agency, PH) - Health Technology Assessment Division",
-    .category = "government", .portal = "https://hta.dost.gov.ph/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://hta.dost.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17280,7 +17280,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31811538", .name = "Philippine Commission on Sports Scuba Diving (government-agency, "
       "PH) - Philippine Commission on Sports SCUBA Diving",
     .name_ja = "Philippine Commission on Sports Scuba Diving (government-agency, PH) - Philippine Commission on Sports SCUBA Diving",
-    .category = "government", .portal = "https://divephilippines.com.ph/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://divephilippines.com.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17301,7 +17301,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, PH) - Construction Industry Authority of the "
       "Philippines",
     .name_ja = "Construction Industry Authority of the Philippines (government-agency, PH) - Construction Industry Authority of the Philippines",
-    .category = "government", .portal = "https://construction.gov.ph/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://construction.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17321,7 +17321,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31811596", .name = "National Amnesty Commission (government-agency, PH) - National "
       "Amnesty Commission",
     .name_ja = "National Amnesty Commission (government-agency, PH) - National Amnesty Commission",
-    .category = "government", .portal = "https://nac.gov.ph/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://nac.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17341,7 +17341,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31811619", .name = "Employees' Compensation Commission (government-agency, PH) - "
       "Employees' Compensation Commission",
     .name_ja = "Employees' Compensation Commission (government-agency, PH) - Employees' Compensation Commission",
-    .category = "government", .portal = "https://ecc.gov.ph/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://ecc.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17361,7 +17361,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q48669967", .name = "Intramuros Administration (government-agency, PH) - Intramuros "
       "Administration",
     .name_ja = "Intramuros Administration (government-agency, PH) - Intramuros Administration",
-    .category = "government", .portal = "https://intramuros.gov.ph/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://intramuros.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17381,7 +17381,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q48813698", .name = "Office of the Presidential Adviser on Peace, Reconciliation and "
       "Unity (government-agency, PH) - PeaceGovPH",
     .name_ja = "Office of the Presidential Adviser on Peace, Reconciliation and Unity (government-agency, PH) - PeaceGovPH",
-    .category = "government", .portal = "https://peace.gov.ph/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://peace.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17401,7 +17401,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q123198251", .name = "National Commission of Senior Citizens (government-agency, PH) - "
       "National Commission of Senior Citizens",
     .name_ja = "National Commission of Senior Citizens (government-agency, PH) - National Commission of Senior Citizens",
-    .category = "government", .portal = "https://www.ncsc.gov.ph/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.ncsc.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17422,7 +17422,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Administration (government-agency, PH) - Latest Alerts from "
       "Philippine Atmospheric Geophysical and Astronomical Services",
     .name_ja = "Philippine Atmospheric, Geophysical, and Astronomical Services Administration (government-agency, PH) - Latest Alerts from Philippine Atmospheric Geophysical and Astronomical Services",
-    .category = "government", .portal = "https://publicalert.pagasa.dost.gov.ph/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://publicalert.pagasa.dost.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17442,7 +17442,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7185199", .name = "Philippine Rice Research Institute (government-agency, PH) - "
       "DA-PhilRice",
     .name_ja = "Philippine Rice Research Institute (government-agency, PH) - DA-PhilRice",
-    .category = "government", .portal = "https://www.philrice.gov.ph/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.philrice.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17462,7 +17462,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7185199_2", .name = "Philippine Rice Research Institute (government-agency, PH) - "
       "DA-PhilRice",
     .name_ja = "Philippine Rice Research Institute (government-agency, PH) - DA-PhilRice",
-    .category = "government", .portal = "https://www.philrice.gov.ph/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.philrice.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17483,7 +17483,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Commission - The Official Website of the Philippines Civil "
       "Service",
     .name_ja = "Civil Service Commission (government-agency, PH) - Civil Service Commission - The Official Website of the Philippines Civil Service",
-    .category = "government", .portal = "https://www.csc.gov.ph/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.csc.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17504,7 +17504,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Commission - The Official Website of the Philippines Civil "
       "Service",
     .name_ja = "Civil Service Commission (government-agency, PH) - Civil Service Commission - The Official Website of the Philippines Civil Service",
-    .category = "government", .portal = "https://www.csc.gov.ph/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.csc.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17524,7 +17524,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q17081517", .name = "National Council on Disability Affairs (government-agency, PH) - "
       "National Council on Disability Affairs",
     .name_ja = "National Council on Disability Affairs (government-agency, PH) - National Council on Disability Affairs",
-    .category = "government", .portal = "https://ncda.gov.ph/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://ncda.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17544,7 +17544,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30263936", .name = "Southeast Asian Fisheries Development Center Aquaculture "
       "Department (government-agency, PH) - SEAFDEC/AQD",
     .name_ja = "Southeast Asian Fisheries Development Center Aquaculture Department (government-agency, PH) - SEAFDEC/AQD",
-    .category = "government", .portal = "https://www.seafdec.org.ph/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.seafdec.org.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17564,7 +17564,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31810149", .name = "National Tobacco Administration (government-agency, PH) - NTA at "
       "the 126th PCSA Lingkod Bayani Run",
     .name_ja = "National Tobacco Administration (government-agency, PH) - NTA at the 126th PCSA Lingkod Bayani Run",
-    .category = "government", .portal = "https://www.nta.da.gov.ph/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.nta.da.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17584,7 +17584,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31810157", .name = "Food and Nutrition Research Institute (government-agency, PH) - "
       "News and Announcement",
     .name_ja = "Food and Nutrition Research Institute (government-agency, PH) - News and Announcement",
-    .category = "government", .portal = "https://fnri.dost.gov.ph/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://fnri.dost.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17604,7 +17604,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31810157_2", .name = "Food and Nutrition Research Institute (government-agency, PH) - "
       "News and Announcement",
     .name_ja = "Food and Nutrition Research Institute (government-agency, PH) - News and Announcement",
-    .category = "government", .portal = "https://fnri.dost.gov.ph/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://fnri.dost.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17624,7 +17624,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31810163", .name = "Agricultural Credit Policy Council (government-agency, PH) - "
       "ACPC",
     .name_ja = "Agricultural Credit Policy Council (government-agency, PH) - ACPC",
-    .category = "government", .portal = "https://acpc.gov.ph/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://acpc.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17644,7 +17644,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31810160", .name = "Palawan Council for Sustainable Development (government-agency, "
       "PH) - PCSD",
     .name_ja = "Palawan Council for Sustainable Development (government-agency, PH) - PCSD",
-    .category = "government", .portal = "https://pcsd.gov.ph/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://pcsd.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17665,7 +17665,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, PH) - Philippine Council for Agriculture and "
       "Fisheries",
     .name_ja = "Philippine Council for Agriculture and Fisheries (government-agency, PH) - Philippine Council for Agriculture and Fisheries",
-    .category = "government", .portal = "https://pcaf.da.gov.ph/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://pcaf.da.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17685,7 +17685,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q31810173", .name = "Philippine Tax Academy (government-agency, PH) - Philippine Tax "
       "Academy",
     .name_ja = "Philippine Tax Academy (government-agency, PH) - Philippine Tax Academy",
-    .category = "government", .portal = "https://doftaxacademy.gov.ph/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://doftaxacademy.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17705,7 +17705,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1667156", .name = "National Museum of the Philippines (government-agency, PH) - "
       "National Museum",
     .name_ja = "National Museum of the Philippines (government-agency, PH) - National Museum",
-    .category = "government", .portal = "https://www.nationalmuseum.gov.ph/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.nationalmuseum.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17725,7 +17725,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1911986", .name = "National Library of the Philippines (government-agency, PH) - "
       "National Library of the Philippines",
     .name_ja = "National Library of the Philippines (government-agency, PH) - National Library of the Philippines",
-    .category = "government", .portal = "https://web.nlp.gov.ph/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://web.nlp.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17745,7 +17745,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5152717", .name = "Commission on Human Rights (government-agency, PH) - CHR "
       "Philippines –",
     .name_ja = "Commission on Human Rights (government-agency, PH) - CHR Philippines –",
-    .category = "government", .portal = "https://chr.gov.ph/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://chr.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17765,7 +17765,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5445588", .name = "Fertilizer and Pesticide Authority (government-agency, PH) - "
       "Fertilizer and Pesticide Authority",
     .name_ja = "Fertilizer and Pesticide Authority (government-agency, PH) - Fertilizer and Pesticide Authority",
-    .category = "government", .portal = "https://fpa.da.gov.ph/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://fpa.da.gov.ph/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17785,7 +17785,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7125537", .name = "Pakistan Bureau of Statistics (government-agency, PK) - Pakistan "
       "Bureau of Statistics",
     .name_ja = "Pakistan Bureau of Statistics (government-agency, PK) - Pakistan Bureau of Statistics",
-    .category = "government", .portal = "https://www.pbs.gov.pk/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.pbs.gov.pk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17805,7 +17805,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7973437", .name = "Water & Power Development Authority (government-agency, PK) - "
       "Water and Power Development Authority",
     .name_ja = "Water & Power Development Authority (government-agency, PK) - Water and Power Development Authority",
-    .category = "government", .portal = "https://wapda.gov.pk/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://wapda.gov.pk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17825,7 +17825,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q109236559", .name = "Khyber Pakhtunkhwa Elementary and Secondary Education Department "
       "(government-agency, PK) - KPESE",
     .name_ja = "Khyber Pakhtunkhwa Elementary and Secondary Education Department (government-agency, PK) - KPESE",
-    .category = "government", .portal = "https://kpese.gov.pk/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://kpese.gov.pk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17845,7 +17845,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140351639", .name = "Directorate of Science and Technology (government-agency, PK) - "
       "DoST",
     .name_ja = "Directorate of Science and Technology (government-agency, PK) - DoST",
-    .category = "government", .portal = "https://dost.kp.gov.pk/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://dost.kp.gov.pk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17865,7 +17865,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139579955", .name = "Centrum Informatyczne Edukacji (government-agency, PL) - Centrum "
       "Informatyczne Edukacji",
     .name_ja = "Centrum Informatyczne Edukacji (government-agency, PL) - Centrum Informatyczne Edukacji",
-    .category = "government", .portal = "https://cie.gov.pl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cie.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17885,7 +17885,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - Multimedia",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Multimedia",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17905,7 +17905,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279_2", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - Aktualności",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Aktualności",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17925,7 +17925,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279_3", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - Energia elektryczna",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Energia elektryczna",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17945,7 +17945,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279_4", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - Paliwa Gazowe",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Paliwa Gazowe",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17965,7 +17965,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279_5", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - Ciepło",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Ciepło",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -17986,7 +17986,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "PL) - Urząd Regulacji Energetyki - Informacje i komunikaty "
       "Prezesa URE",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Informacje i komunikaty Prezesa URE",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18007,7 +18007,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "PL) - Urząd Regulacji Energetyki - Biuletyn Urzędu Regulacji "
       "Energetyki",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Biuletyn Urzędu Regulacji Energetyki",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18027,7 +18027,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279_8", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - Energia elektryczna",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Energia elektryczna",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18047,7 +18047,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279_9", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - Ciepło",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Ciepło",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18067,7 +18067,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279_10", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - Gaz ziemny",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Gaz ziemny",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18087,7 +18087,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279_11", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - Zapasy paliw",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Zapasy paliw",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18107,7 +18107,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279_12", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - Współpraca międzynarodowa",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Współpraca międzynarodowa",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18127,7 +18127,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279_13", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - Liberalizacja rynku gazu",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Liberalizacja rynku gazu",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18147,7 +18147,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279_14", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - URE w mediach",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - URE w mediach",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18168,7 +18168,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "PL) - Urząd Regulacji Energetyki - Konsultacje społeczne Prezesa "
       "URE",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Konsultacje społeczne Prezesa URE",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18189,7 +18189,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "PL) - Urząd Regulacji Energetyki - Potencjał krajowy OZE w "
       "liczbach",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Potencjał krajowy OZE w liczbach",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18209,7 +18209,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279_17", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - Aktualności REMIT",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Aktualności REMIT",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18229,7 +18229,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9367279_18", .name = "The Energy Regulatory Authority of Poland (government-agency, "
       "PL) - Urząd Regulacji Energetyki - Ostatnio dodane",
     .name_ja = "The Energy Regulatory Authority of Poland (government-agency, PL) - Urząd Regulacji Energetyki - Ostatnio dodane",
-    .category = "government", .portal = "https://www.ure.gov.pl/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ure.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18249,7 +18249,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9356196", .name = "Cyprian Kamil Norwid Theatre (government-agency, PL) - Teatr im. "
       "Cypriana Kamila Norwida w Jeleniej Górze",
     .name_ja = "Cyprian Kamil Norwid Theatre (government-agency, PL) - Teatr im. Cypriana Kamila Norwida w Jeleniej Górze",
-    .category = "government", .portal = "https://teatrnorwida.pl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://teatrnorwida.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18269,7 +18269,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9356200", .name = "Teatr im. Ludwika Solskiego w Tarnowie (government-agency, PL) - "
       "Teatr im. Ludwika Solskiego Tarnów",
     .name_ja = "Teatr im. Ludwika Solskiego w Tarnowie (government-agency, PL) - Teatr im. Ludwika Solskiego Tarnów",
-    .category = "government", .portal = "https://teatr.tarnow.pl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://teatr.tarnow.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18289,7 +18289,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9159236", .name = "Archiwum Państwowe w Łodzi (government-agency, PL) - Archiwum "
       "Państwowe w Łodzi -",
     .name_ja = "Archiwum Państwowe w Łodzi (government-agency, PL) - Archiwum Państwowe w Łodzi -",
-    .category = "government", .portal = "https://www.lodz.ap.gov.pl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.lodz.ap.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18309,7 +18309,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q430553", .name = "National Disabled Persons Rehabilitation Fund "
       "(government-agency, PL) - Kanał RSS",
     .name_ja = "National Disabled Persons Rehabilitation Fund (government-agency, PL) - Kanał RSS",
-    .category = "government", .portal = "https://www.pfron.org.pl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.pfron.org.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18329,7 +18329,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q773485", .name = "Financial Supervision Authority (government-agency, PL) - "
       "Aktualności UKNF",
     .name_ja = "Financial Supervision Authority (government-agency, PL) - Aktualności UKNF",
-    .category = "government", .portal = "https://www.knf.gov.pl/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.knf.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18348,7 +18348,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q1963390", .name = "Narodowy Instytut Dziedzictwa (government-agency, PL) - NID",
     .name_ja = "Narodowy Instytut Dziedzictwa (government-agency, PL) - NID",
-    .category = "government", .portal = "https://nid.pl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nid.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18368,7 +18368,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11712694", .name = "Veterinary Inspection (government-agency, PL) - Główny "
       "Inspektorat Weterynarii - Wiadomości",
     .name_ja = "Veterinary Inspection (government-agency, PL) - Główny Inspektorat Weterynarii - Wiadomości",
-    .category = "government", .portal = "https://www.wetgiw.gov.pl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.wetgiw.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18388,7 +18388,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30069408", .name = "Museum of the Masovian Nobility in Ciechanów (government-agency, "
       "PL) - Muzeum Szlachty Mazowieckiej w Ciechanowie",
     .name_ja = "Museum of the Masovian Nobility in Ciechanów (government-agency, PL) - Muzeum Szlachty Mazowieckiej w Ciechanowie",
-    .category = "government", .portal = "https://muzeumciechanow.pl/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://muzeumciechanow.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18409,7 +18409,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, PL) - Wojewódzki Szpital Zespolony im. "
       "Jędrzeja Śniadeckiego w Białymstoku",
     .name_ja = "Wojewódzki Szpital Zespolony im. Jędrzeja Śniadeckiego (government-agency, PL) - Wojewódzki Szpital Zespolony im. Jędrzeja Śniadeckiego w Białymstoku",
-    .category = "government", .portal = "http://www.sniadecja.pl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://www.sniadecja.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18429,7 +18429,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q50362447", .name = "National Freedom Institute – Centre for Civil Society "
       "Development (government-agency, PL) - Narodowy Instytut Wolności",
     .name_ja = "National Freedom Institute – Centre for Civil Society Development (government-agency, PL) - Narodowy Instytut Wolności",
-    .category = "government", .portal = "https://niw.gov.pl/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://niw.gov.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18449,7 +18449,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113654054", .name = "Q113654054 (government-agency, PL) - Strona Główna - Zakład "
       "Zieleni Miejskiej - Katowice",
     .name_ja = "Q113654054 (government-agency, PL) - Strona Główna - Zakład Zieleni Miejskiej - Katowice",
-    .category = "government", .portal = "https://www.zzm.katowice.pl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.zzm.katowice.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18469,7 +18469,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113654054_2", .name = "Q113654054 (government-agency, PL) - Strona Główna - Zakład "
       "Zieleni Miejskiej - Katowice",
     .name_ja = "Q113654054 (government-agency, PL) - Strona Główna - Zakład Zieleni Miejskiej - Katowice",
-    .category = "government", .portal = "https://www.zzm.katowice.pl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.zzm.katowice.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18489,7 +18489,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7986274", .name = "West Pomeranian Regional Assembly (legislature, PL) - Strona "
       "główna",
     .name_ja = "West Pomeranian Regional Assembly (legislature, PL) - Strona główna",
-    .category = "government", .portal = "https://sejmik.wzp.pl/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://sejmik.wzp.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18509,7 +18509,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7986274_2", .name = "West Pomeranian Regional Assembly (legislature, PL) - Strona "
       "główna",
     .name_ja = "West Pomeranian Regional Assembly (legislature, PL) - Strona główna",
-    .category = "government", .portal = "https://sejmik.wzp.pl/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://sejmik.wzp.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18529,7 +18529,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11835771", .name = "Opole Regional Assembly (legislature, PL) - Samorząd Województwa "
       "Opolskiego",
     .name_ja = "Opole Regional Assembly (legislature, PL) - Samorząd Województwa Opolskiego",
-    .category = "government", .portal = "https://www.opolskie.pl/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.opolskie.pl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18549,7 +18549,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18210694", .name = "Palestinian Environmental Quality Authority (government-agency, "
       "PS) - سلطة جودة البيئة – فلسطين",
     .name_ja = "Palestinian Environmental Quality Authority (government-agency, PS) - سلطة جودة البيئة – فلسطين",
-    .category = "government", .portal = "https://environment.ps/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://environment.ps/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18569,7 +18569,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q24911155", .name = "Palestinian Civil Defence (government-agency, PS) - الدفاع "
       "المدني الفلسطيني – Palestinian Civil Defense",
     .name_ja = "Palestinian Civil Defence (government-agency, PS) - الدفاع المدني الفلسطيني – Palestinian Civil Defense",
-    .category = "government", .portal = "https://pcd.ps/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://pcd.ps/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18589,7 +18589,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q40376325", .name = "Palestinian International Cooperation Agency (government-agency, "
       "PS) - Palestinian International Cooperation Agency",
     .name_ja = "Palestinian International Cooperation Agency (government-agency, PS) - Palestinian International Cooperation Agency",
-    .category = "government", .portal = "https://pica.gov.ps/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://pica.gov.ps/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18609,7 +18609,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q107284067", .name = "Palestine Public Finance Institute (government-agency, PS) - "
       "Palestine Public Finance Institute",
     .name_ja = "Palestine Public Finance Institute (government-agency, PS) - Palestine Public Finance Institute",
-    .category = "government", .portal = "https://www.ppfi.ps/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.ppfi.ps/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18629,7 +18629,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q67063466", .name = "Ministry of Tourism and Antiquities (ministry, PS) - وزارة "
       "السياحة و الآثار",
     .name_ja = "Ministry of Tourism and Antiquities (ministry, PS) - وزارة السياحة و الآثار",
-    .category = "government", .portal = "https://tourism.ps/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://tourism.ps/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18650,7 +18650,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-organization, PS) - المجلس الأعلى للإبداع والتميّز "
       "يشارك في الم",
     .name_ja = "Higher Council for Innovation and Excellence (government-organization, PS) - المجلس الأعلى للإبداع والتميّز يشارك في الم",
-    .category = "government", .portal = "https://hcie.ps/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://hcie.ps/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18670,7 +18670,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134251133", .name = "Autoridade Antidopagem de Portugal (government-agency, PT) - "
       "ADoP",
     .name_ja = "Autoridade Antidopagem de Portugal (government-agency, PT) - ADoP",
-    .category = "government", .portal = "https://adop.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://adop.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18690,7 +18690,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134251161", .name = "Autoridade para a Prevenção e o Combate à Violência no Desporto "
       "(government-agency, PT) - APCVD",
     .name_ja = "Autoridade para a Prevenção e o Combate à Violência no Desporto (government-agency, PT) - APCVD",
-    .category = "government", .portal = "https://www.apcvd.gov.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.apcvd.gov.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18710,7 +18710,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134251200", .name = "Agência Espacial Portuguesa (government-agency, PT) - Portuguese "
       "Space Agency",
     .name_ja = "Agência Espacial Portuguesa (government-agency, PT) - Portuguese Space Agency",
-    .category = "government", .portal = "https://ptspace.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ptspace.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18730,7 +18730,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134251246", .name = "Republica Portuguesa Secretaria-Geral da Educação e Ciência "
       "(government-agency, PT) - AGSE",
     .name_ja = "Republica Portuguesa Secretaria-Geral da Educação e Ciência (government-agency, PT) - AGSE",
-    .category = "government", .portal = "https://agse.pt/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://agse.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18750,7 +18750,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134251260", .name = "Agência DNA Cascais Cascais um concelho empreendedor "
       "(government-agency, PT) - DNA Cascais",
     .name_ja = "Agência DNA Cascais Cascais um concelho empreendedor (government-agency, PT) - DNA Cascais",
-    .category = "government", .portal = "https://dnacascais.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://dnacascais.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18770,7 +18770,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134251414", .name = "Comunidade Intermunicipal do Alto Tâmega e Barroso "
       "(government-agency, PT) - CIM Alto Tâmega e Barroso",
     .name_ja = "Comunidade Intermunicipal do Alto Tâmega e Barroso (government-agency, PT) - CIM Alto Tâmega e Barroso",
-    .category = "government", .portal = "https://cimat.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cimat.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18791,7 +18791,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, PT) - Junta de Freguesia de São Domingos de "
       "Benfica",
     .name_ja = "Junta de Freguesia de São Domingos de Benfica (government-agency, PT) - Junta de Freguesia de São Domingos de Benfica",
-    .category = "government", .portal = "https://jf-sdomingosbenfica.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://jf-sdomingosbenfica.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18811,7 +18811,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113963952", .name = "Direção-Geral do Livro, dos Arquivos e das Bibliotecas "
       "(government-agency, PT) - DGLAB",
     .name_ja = "Direção-Geral do Livro, dos Arquivos e das Bibliotecas (government-agency, PT) - DGLAB",
-    .category = "government", .portal = "https://dglab.gov.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://dglab.gov.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18831,7 +18831,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q130537794", .name = "Departamento de Ciência e de Recursos Naturais "
       "(government-agency, PT) - Funchal",
     .name_ja = "Departamento de Ciência e de Recursos Naturais (government-agency, PT) - Funchal",
-    .category = "government", .portal = "https://www.funchal.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.funchal.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18851,7 +18851,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131428078", .name = "Fundacao de Computacao Cientifica Nacional (government-agency, "
       "PT) - FCCN",
     .name_ja = "Fundacao de Computacao Cientifica Nacional (government-agency, PT) - FCCN",
-    .category = "government", .portal = "https://www.fccn.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.fccn.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18871,7 +18871,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131428208", .name = "Instituto Nacional de Administração (government-agency, PT) - "
       "INA, I. P.",
     .name_ja = "Instituto Nacional de Administração (government-agency, PT) - INA, I. P.",
-    .category = "government", .portal = "https://www.ina.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.ina.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18891,7 +18891,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134250716", .name = "Agência Municipal de Energia do Seixal (government-agency, PT) - "
       "Notícias — AMESEIXAL",
     .name_ja = "Agência Municipal de Energia do Seixal (government-agency, PT) - Notícias — AMESEIXAL",
-    .category = "government", .portal = "https://www.ameseixal.pt/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.ameseixal.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18911,7 +18911,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134250739", .name = "Portugal Inovação Social (government-agency, PT) - Portugal "
       "Inovação Social",
     .name_ja = "Portugal Inovação Social (government-agency, PT) - Portugal Inovação Social",
-    .category = "government", .portal = "https://inovacaosocial.portugal2020.pt/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://inovacaosocial.portugal2020.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18931,7 +18931,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134250793", .name = "Centro de Informação Europeia Jacques Delors (government-agency, "
       "PT) - Feed RSS de Apoios Financeiros Eurocid",
     .name_ja = "Centro de Informação Europeia Jacques Delors (government-agency, PT) - Feed RSS de Apoios Financeiros Eurocid",
-    .category = "government", .portal = "https://eurocid.mne.gov.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://eurocid.mne.gov.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18951,7 +18951,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134250793_2", .name = "Centro de Informação Europeia Jacques Delors (government-agency, "
       "PT) - Feed RSS de Artigos Eurocid",
     .name_ja = "Centro de Informação Europeia Jacques Delors (government-agency, PT) - Feed RSS de Artigos Eurocid",
-    .category = "government", .portal = "https://eurocid.mne.gov.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://eurocid.mne.gov.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18971,7 +18971,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134250793_3", .name = "Centro de Informação Europeia Jacques Delors (government-agency, "
       "PT) - Feed RSS de Eventos Eurocid",
     .name_ja = "Centro de Informação Europeia Jacques Delors (government-agency, PT) - Feed RSS de Eventos Eurocid",
-    .category = "government", .portal = "https://eurocid.mne.gov.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://eurocid.mne.gov.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -18991,7 +18991,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134250793_4", .name = "Centro de Informação Europeia Jacques Delors (government-agency, "
       "PT) - Feed RSS de Prémios Eurocid",
     .name_ja = "Centro de Informação Europeia Jacques Delors (government-agency, PT) - Feed RSS de Prémios Eurocid",
-    .category = "government", .portal = "https://eurocid.mne.gov.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://eurocid.mne.gov.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19011,7 +19011,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134250840", .name = "Agência de Desenvolvimento Regional do Alentejo "
       "(government-agency, PT) - ADRAL",
     .name_ja = "Agência de Desenvolvimento Regional do Alentejo (government-agency, PT) - ADRAL",
-    .category = "government", .portal = "https://www.adral.pt/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.adral.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19031,7 +19031,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134251031", .name = "Serviço Regional de Proteção Civil e Bombeiros dos Açores "
       "(government-agency, PT) - SRPCBA",
     .name_ja = "Serviço Regional de Proteção Civil e Bombeiros dos Açores (government-agency, PT) - SRPCBA",
-    .category = "government", .portal = "https://www.prociv.azores.gov.pt/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.prociv.azores.gov.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19051,7 +19051,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134251031_2", .name = "Serviço Regional de Proteção Civil e Bombeiros dos Açores "
       "(government-agency, PT) - SRPCBA",
     .name_ja = "Serviço Regional de Proteção Civil e Bombeiros dos Açores (government-agency, PT) - SRPCBA",
-    .category = "government", .portal = "https://www.prociv.azores.gov.pt/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.prociv.azores.gov.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19070,7 +19070,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q108045686", .name = "Q108045686 (government-agency, PT) - inag.pt",
     .name_ja = "Q108045686 (government-agency, PT) - inag.pt",
-    .category = "government", .portal = "https://inag.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://inag.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19089,7 +19089,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q124167992", .name = "Q124167992 (government-agency, PT) - DGES",
     .name_ja = "Q124167992 (government-agency, PT) - DGES",
-    .category = "government", .portal = "https://www.dges.gov.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.dges.gov.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19108,7 +19108,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q10302645", .name = "Portuguese Institute for Quality (government-agency, PT) - IPQ",
     .name_ja = "Portuguese Institute for Quality (government-agency, PT) - IPQ",
-    .category = "government", .portal = "https://www.ipq.pt/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.ipq.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19128,7 +19128,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q29525204", .name = "National Laboratory for Energy and Geology (government-agency, "
       "PT) -   LNEG Laboratório Nacional de Energia e Geologia",
     .name_ja = "National Laboratory for Energy and Geology (government-agency, PT) -   LNEG Laboratório Nacional de Energia e Geologia",
-    .category = "government", .portal = "https://www.lneg.pt/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.lneg.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19149,7 +19149,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, PT) - Guia Online de Tratamentos Naturais e "
       "Bem-Estar",
     .name_ja = "Instituto Financeiro para o Desenvolvimento Regional (government-agency, PT) - Guia Online de Tratamentos Naturais e Bem-Estar",
-    .category = "government", .portal = "https://ifdr.pt/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://ifdr.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19169,7 +19169,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q51882888", .name = "Commission for Citizenship and Gender Equality "
       "(government-agency, PT) - CIG",
     .name_ja = "Commission for Citizenship and Gender Equality (government-agency, PT) - CIG",
-    .category = "government", .portal = "http://feeds.feedburner.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "http://feeds.feedburner.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19188,7 +19188,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q86360599", .name = "DGERT (government-agency, PT) - DGERT",
     .name_ja = "DGERT (government-agency, PT) - DGERT",
-    .category = "government", .portal = "https://www.dgert.gov.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.dgert.gov.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19207,7 +19207,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q86360599_2", .name = "DGERT (government-agency, PT) - DGERT",
     .name_ja = "DGERT (government-agency, PT) - DGERT",
-    .category = "government", .portal = "http://www.dgert.gov.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://www.dgert.gov.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19227,7 +19227,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q9630323", .name = "Arquivo Distrital de Aveiro (government-organization, PT) - "
       "Arquivo Distrital de Aveiro",
     .name_ja = "Arquivo Distrital de Aveiro (government-organization, PT) - Arquivo Distrital de Aveiro",
-    .category = "government", .portal = "https://adavr.dglab.gov.pt/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://adavr.dglab.gov.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19247,7 +19247,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7232691", .name = "Portuguese Supreme Administrative Court (court, PT) - Supremo "
       "Tribunal Administrativo",
     .name_ja = "Portuguese Supreme Administrative Court (court, PT) - Supremo Tribunal Administrativo",
-    .category = "government", .portal = "https://stadministrativo.pt/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://stadministrativo.pt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19267,7 +19267,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137796045", .name = "Servicio Nacional de Calidad y Sanidad Vegetal y de Semillas "
       "(government-agency, PY) - Senave",
     .name_ja = "Servicio Nacional de Calidad y Sanidad Vegetal y de Semillas (government-agency, PY) - Senave",
-    .category = "government", .portal = "https://www.senave.gov.py/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.senave.gov.py/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19288,7 +19288,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "I.C. Brătianu” al Academiei Române (government-agency, RO) - "
       "ISPRI Ion I. C. Bratianu",
     .name_ja = "Institutul de Științe Politice și Relații Internaționale „Ion I.C. Brătianu” al Academiei Române (government-agency, RO) - ISPRI Ion I. C. Bratianu",
-    .category = "government", .portal = "https://ispri.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ispri.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19308,7 +19308,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12721299", .name = "Romanian Naval Authority (government-agency, RO) - Autoritatea "
       "Navală Română",
     .name_ja = "Romanian Naval Authority (government-agency, RO) - Autoritatea Navală Română",
-    .category = "government", .portal = "https://portal.rna.ro/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://portal.rna.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19328,7 +19328,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18537264", .name = "National Administration of Land Improvements (government-agency, "
       "RO) - ANIF – Agenţia Naţională de Îmbunătăţiri Funciare",
     .name_ja = "National Administration of Land Improvements (government-agency, RO) - ANIF – Agenţia Naţională de Îmbunătăţiri Funciare",
-    .category = "government", .portal = "https://www.anif.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.anif.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19348,7 +19348,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18537295", .name = "National Agency for Employment of Romania (government-agency, "
       "RO) - ANOFM",
     .name_ja = "National Agency for Employment of Romania (government-agency, RO) - ANOFM",
-    .category = "government", .portal = "https://www.anofm.ro/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.anofm.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19368,7 +19368,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18537300", .name = "Romanian Agency for Saving Human Life at Sea (government-agency, "
       "RO) - ARSVOM",
     .name_ja = "Romanian Agency for Saving Human Life at Sea (government-agency, RO) - ARSVOM",
-    .category = "government", .portal = "https://arsvom.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://arsvom.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19388,7 +19388,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18537588", .name = "Romanian Financial Supervisory Authority (government-agency, RO) "
       "- Autoritatea de Supraveghere Financiară",
     .name_ja = "Romanian Financial Supervisory Authority (government-agency, RO) - Autoritatea de Supraveghere Financiară",
-    .category = "government", .portal = "https://www.asfromania.ro/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.asfromania.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19408,7 +19408,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18537588_2", .name = "Romanian Financial Supervisory Authority (government-agency, RO) "
       "- Autoritatea de Supraveghere Financiară",
     .name_ja = "Romanian Financial Supervisory Authority (government-agency, RO) - Autoritatea de Supraveghere Financiară",
-    .category = "government", .portal = "https://asfromania.ro/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://asfromania.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19428,7 +19428,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18537592", .name = "National Authority for Regulating Community Services Public "
       "Utilities (government-agency, RO) - A.N.R.S.C",
     .name_ja = "National Authority for Regulating Community Services Public Utilities (government-agency, RO) - A.N.R.S.C",
-    .category = "government", .portal = "https://www.anrsc.ro/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.anrsc.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19448,7 +19448,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1595448", .name = "National Integrity Agency (government-agency, RO) - Agenția "
       "Națională de Integritate",
     .name_ja = "National Integrity Agency (government-agency, RO) - Agenția Națională de Integritate",
-    .category = "government", .portal = "https://integritate.eu/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://integritate.eu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19468,7 +19468,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4201655", .name = "Institute for the Investigation of Communist Crimes in Romania "
       "(government-agency, RO) - IICCMER",
     .name_ja = "Institute for the Investigation of Communist Crimes in Romania (government-agency, RO) - IICCMER",
-    .category = "government", .portal = "https://www.iiccmer.ro/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.iiccmer.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19487,7 +19487,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q4653538", .name = "ARACIS (government-agency, RO) - ARACIS",
     .name_ja = "ARACIS (government-agency, RO) - ARACIS",
-    .category = "government", .portal = "https://www.aracis.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.aracis.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19507,7 +19507,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4683613", .name = "Administrația Națională de Meteorologie (government-agency, RO) "
       "- Meteo Romania",
     .name_ja = "Administrația Națională de Meteorologie (government-agency, RO) - Meteo Romania",
-    .category = "government", .portal = "https://www.meteoromania.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.meteoromania.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19527,7 +19527,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4683613_2", .name = "Administrația Națională de Meteorologie (government-agency, RO) "
       "- Administratia Nationala de Meteorologie",
     .name_ja = "Administrația Națională de Meteorologie (government-agency, RO) - Administratia Nationala de Meteorologie",
-    .category = "government", .portal = "https://www.meteoromania.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.meteoromania.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19547,7 +19547,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5360730", .name = "Elie Wiesel National Institute for Studying the Holocaust in "
       "Romania (government-agency, RO) - INSHR",
     .name_ja = "Elie Wiesel National Institute for Studying the Holocaust in Romania (government-agency, RO) - INSHR",
-    .category = "government", .portal = "https://www.inshr-ew.ro/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.inshr-ew.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19567,7 +19567,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6971889", .name = "National Council for Combating Discrimination "
       "(government-agency, RO) - CNCD",
     .name_ja = "National Council for Combating Discrimination (government-agency, RO) - CNCD",
-    .category = "government", .portal = "https://www.cncd.ro/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.cncd.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19587,7 +19587,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7362566", .name = "Romanian Ombudsman (government-agency, RO) - Instituția Avocatul "
       "Poporului",
     .name_ja = "Romanian Ombudsman (government-agency, RO) - Instituția Avocatul Poporului",
-    .category = "government", .portal = "https://avp.ro/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://avp.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19607,7 +19607,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12738898", .name = "State Protocol Heritage Administration (government-agency, RO) - "
       "RA APPS",
     .name_ja = "State Protocol Heritage Administration (government-agency, RO) - RA APPS",
-    .category = "government", .portal = "https://www.apps.ro/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.apps.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19626,7 +19626,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q12738900", .name = "RADEF (government-agency, RO) - Romania Film",
     .name_ja = "RADEF (government-agency, RO) - Romania Film",
-    .category = "government", .portal = "https://www.romaniafilm.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.romaniafilm.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19645,7 +19645,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q12738900_2", .name = "RADEF (government-agency, RO) - Romania Film",
     .name_ja = "RADEF (government-agency, RO) - Romania Film",
-    .category = "government", .portal = "https://www.romaniafilm.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.romaniafilm.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19666,7 +19666,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Urbanism şi Dezvoltare Teritorială Durabilă (government-agency, "
       "RO) - URBAN INCD INCERC",
     .name_ja = "Institutul Naţional de Cercetare-Dezvoltare in Construcţii Urbanism şi Dezvoltare Teritorială Durabilă (government-agency, RO) - URBAN INCD INCERC",
-    .category = "government", .portal = "https://incd.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://incd.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19686,7 +19686,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q43116131", .name = "Centrul National al Dansului - CNDB (government-agency, RO) - "
       "Centrul Național al Dansului București",
     .name_ja = "Centrul National al Dansului - CNDB (government-agency, RO) - Centrul Național al Dansului București",
-    .category = "government", .portal = "https://cndb.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cndb.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19707,7 +19707,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, RO) - Agenția Națională pentru Egalitatea de "
       "Șanse Între Femei și Bărbați",
     .name_ja = "National Agency of Equal Opportunities for Women and Men (government-agency, RO) - Agenția Națională pentru Egalitatea de Șanse Între Femei și Bărbați",
-    .category = "government", .portal = "https://anes.gov.ro/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://anes.gov.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19728,7 +19728,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, RO) - Agenția Națională pentru Egalitatea de "
       "Șanse Între Femei și Bărbați",
     .name_ja = "National Agency of Equal Opportunities for Women and Men (government-agency, RO) - Agenția Națională pentru Egalitatea de Șanse Între Femei și Bărbați",
-    .category = "government", .portal = "https://anes.gov.ro/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://anes.gov.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19749,7 +19749,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Minieră şi Protecţie Antiexplozivă - INSEMEX (government-agency, "
       "RO) - INSEMEX",
     .name_ja = "Institutul Naţional de Cercetare-Dezvoltare pentru Securitate Minieră şi Protecţie Antiexplozivă - INSEMEX (government-agency, RO) - INSEMEX",
-    .category = "government", .portal = "https://www.insemex.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.insemex.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19769,7 +19769,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q136352010", .name = "Stațiunea de Cercetare - Dezvoltare pentru Pomicultură Băneasa - "
       "București (government-agency, RO) - SCDP BANEASA",
     .name_ja = "Stațiunea de Cercetare - Dezvoltare pentru Pomicultură Băneasa - București (government-agency, RO) - SCDP BANEASA",
-    .category = "government", .portal = "https://scdpbaneasa.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://scdpbaneasa.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19789,7 +19789,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18538694", .name = "National House of Pensions and Other Social Insurance Rights "
       "(government-agency, RO) - cnpp.ro",
     .name_ja = "National House of Pensions and Other Social Insurance Rights (government-agency, RO) - cnpp.ro",
-    .category = "government", .portal = "https://www.cnpp.ro/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.cnpp.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19809,7 +19809,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141342241", .name = "Sectoral Pension House of the Ministry of Internal Affairs "
       "(government-agency, RO) - Casa de Pensii Sectorială a M.A.I.",
     .name_ja = "Sectoral Pension House of the Ministry of Internal Affairs (government-agency, RO) - Casa de Pensii Sectorială a M.A.I.",
-    .category = "government", .portal = "https://casapensii.mai.gov.ro/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://casapensii.mai.gov.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19830,7 +19830,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, RO) - Comisia Nationala de Strategie si "
       "Prognoza",
     .name_ja = "National Commission for Strategy and Prognosis (government-agency, RO) - Comisia Nationala de Strategie si Prognoza",
-    .category = "government", .portal = "https://cnp.ro/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://cnp.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19851,7 +19851,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, RO) - Arhive Prognoze - Comisia Nationala de "
       "Strategie si Prognoza",
     .name_ja = "National Commission for Strategy and Prognosis (government-agency, RO) - Arhive Prognoze - Comisia Nationala de Strategie si Prognoza",
-    .category = "government", .portal = "https://cnp.ro/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://cnp.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19870,7 +19870,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141545100", .name = "Q141545100 (government-agency, RO) - Home",
     .name_ja = "Q141545100 (government-agency, RO) - Home",
-    .category = "government", .portal = "http://www.icbmv.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://www.icbmv.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19889,7 +19889,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141545100_2", .name = "Q141545100 (government-agency, RO) - Home",
     .name_ja = "Q141545100 (government-agency, RO) - Home",
-    .category = "government", .portal = "http://www.icbmv.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://www.icbmv.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19909,7 +19909,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141560767", .name = "Q141560767 (government-agency, RO) - FGA",
     .name_ja = "Q141560767 (government-agency, RO) - FGA",
-    .category = "government", .portal = "https://www.fgaromania.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.fgaromania.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19928,7 +19928,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141560863", .name = "Q141560863 (government-agency, RO) - BAAR",
     .name_ja = "Q141560863 (government-agency, RO) - BAAR",
-    .category = "government", .portal = "https://www.baar.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.baar.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19947,7 +19947,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141560872", .name = "Q141560872 (government-agency, RO) - Salfin",
     .name_ja = "Q141560872 (government-agency, RO) - Salfin",
-    .category = "government", .portal = "https://www.salfin.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.salfin.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19967,7 +19967,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141629845", .name = "Q141629845 (government-agency, RO) - Cele mai noi pagini din "
       "ANPCDEFP",
     .name_ja = "Q141629845 (government-agency, RO) - Cele mai noi pagini din ANPCDEFP",
-    .category = "government", .portal = "https://www.erasmusplus.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.erasmusplus.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -19986,7 +19986,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141629928", .name = "Q141629928 (government-agency, RO) - CNDIPT",
     .name_ja = "Q141629928 (government-agency, RO) - CNDIPT",
-    .category = "government", .portal = "https://www.cndipt.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.cndipt.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20005,7 +20005,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141629937", .name = "Q141629937 (government-agency, RO) - Institutul Limbii Române",
     .name_ja = "Q141629937 (government-agency, RO) - Institutul Limbii Române",
-    .category = "government", .portal = "https://www.ilr.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.ilr.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20024,7 +20024,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141642387", .name = "Q141642387 (government-agency, RO) - ISCIR",
     .name_ja = "Q141642387 (government-agency, RO) - ISCIR",
-    .category = "government", .portal = "https://iscir.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://iscir.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20044,7 +20044,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12720106", .name = "Q12720106 (government-agency, RO) - Agenția pentru Dezvoltare "
       "Regională Nord-Est",
     .name_ja = "Q12720106 (government-agency, RO) - Agenția pentru Dezvoltare Regională Nord-Est",
-    .category = "government", .portal = "https://www.adrnordest.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.adrnordest.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20063,7 +20063,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141412242", .name = "Q141412242 (government-agency, RO) - Inec",
     .name_ja = "Q141412242 (government-agency, RO) - Inec",
-    .category = "government", .portal = "https://inec.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://inec.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20082,7 +20082,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141436877", .name = "Q141436877 (government-agency, RO) - Consiliul de Monitorizare",
     .name_ja = "Q141436877 (government-agency, RO) - Consiliul de Monitorizare",
-    .category = "government", .portal = "https://www.consiliuldemonitorizare.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.consiliuldemonitorizare.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20101,7 +20101,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141481217", .name = "Q141481217 (government-agency, RO) - ANFDF",
     .name_ja = "Q141481217 (government-agency, RO) - ANFDF",
-    .category = "government", .portal = "https://anfdf.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://anfdf.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20121,7 +20121,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141484910", .name = "Q141484910 (government-agency, RO) - ANMAP – Agenția Națională "
       "pentru Mediu și Arii Protejate",
     .name_ja = "Q141484910 (government-agency, RO) - ANMAP – Agenția Națională pentru Mediu și Arii Protejate",
-    .category = "government", .portal = "https://anmap.gov.ro/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://anmap.gov.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20140,7 +20140,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q7362532", .name = "Romanian Border Police (police, RO) - IGPF",
     .name_ja = "Romanian Border Police (police, RO) - IGPF",
-    .category = "government", .portal = "https://www.politiadefrontiera.ro/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.politiadefrontiera.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20160,7 +20160,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18537593", .name = "National Supervisory Authority for Personal Data Processing "
       "(regulatory-agency, RO) - News RSS",
     .name_ja = "National Supervisory Authority for Personal Data Processing (regulatory-agency, RO) - News RSS",
-    .category = "government", .portal = "https://www.dataprotection.ro/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.dataprotection.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20179,7 +20179,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18543714", .name = "Romanian Energy Regulatory Authority (regulatory-agency, RO) - "
       "anre.ro",
     .name_ja = "Romanian Energy Regulatory Authority (regulatory-agency, RO) - anre.ro",
-    .category = "government", .portal = "https://anre.ro/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://anre.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20199,7 +20199,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4315046", .name = "National Authority for Management and Regulation in "
       "Communications (regulatory-agency, RO) - ANCOM",
     .name_ja = "National Authority for Management and Regulation in Communications (regulatory-agency, RO) - ANCOM",
-    .category = "government", .portal = "https://www.ancom.ro/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.ancom.ro/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20218,7 +20218,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30255813", .name = "Centar za Promociju Nauke (government-agency, RS) - ЦПН",
     .name_ja = "Centar za Promociju Nauke (government-agency, RS) - ЦПН",
-    .category = "government", .portal = "https://www.cpn.edu.rs/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.cpn.edu.rs/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20238,7 +20238,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q33121206", .name = "Belgrade Centre for Security Policy (government-agency, RS) - "
       "Beogradski centar za bezbednosnu politiku",
     .name_ja = "Belgrade Centre for Security Policy (government-agency, RS) - Beogradski centar za bezbednosnu politiku",
-    .category = "government", .portal = "https://bezbednost.org/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://bezbednost.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20259,7 +20259,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, RS) - Министарство спољних послова - "
       "Република Ср",
     .name_ja = "Diplomatic Archives of the Ministry of Foreign Affairs of Serbia (government-agency, RS) - Министарство спољних послова - Република Ср",
-    .category = "government", .portal = "https://www.mfa.gov.rs/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.mfa.gov.rs/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20279,7 +20279,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q134251295", .name = "Institute of Public Health of Sabac (government-agency, RS) - "
       "Завод за јавно здравље",
     .name_ja = "Institute of Public Health of Sabac (government-agency, RS) - Завод за јавно здравље",
-    .category = "government", .portal = "https://www.zjz.org.rs/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.zjz.org.rs/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20299,7 +20299,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q110661272", .name = "Ministry of Family Welfare and Demography (ministry, RS) - "
       "Ministarstvo za brigu o porodici i demografiju",
     .name_ja = "Ministry of Family Welfare and Demography (ministry, RS) - Ministarstvo za brigu o porodici i demografiju",
-    .category = "government", .portal = "https://www.minbpd.gov.rs/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.minbpd.gov.rs/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20320,7 +20320,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-organization, RS) - Министарство заштите животне "
       "средине",
     .name_ja = "Ministry of Energy, Development and Environmental Protection (government-organization, RS) - Министарство заштите животне средине",
-    .category = "government", .portal = "https://www.ekologija.gov.rs/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ekologija.gov.rs/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20339,7 +20339,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q16088177", .name = "Q16088177 (court, RS) - Управни суд",
     .name_ja = "Q16088177 (court, RS) - Управни суд",
-    .category = "government", .portal = "https://www.up.sud.rs/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.up.sud.rs/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20360,7 +20360,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, RU) - ФЕДЕРАЛЬНАЯ СЛУЖБА ПО НАДЗОРУ В СФЕРЕ "
       "ОБРАЗ",
     .name_ja = "Federal Service for Supervision in Education and Science (government-agency, RU) - ФЕДЕРАЛЬНАЯ СЛУЖБА ПО НАДЗОРУ В СФЕРЕ ОБРАЗ",
-    .category = "government", .portal = "https://obrnadzor.gov.ru/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://obrnadzor.gov.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20380,7 +20380,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4481706", .name = "Federal Agency for Rail Transport (government-agency, RU) - "
       "Официальный сайт Федерального агентства же",
     .name_ja = "Federal Agency for Rail Transport (government-agency, RU) - Официальный сайт Федерального агентства же",
-    .category = "government", .portal = "https://www.rlw.gov.ru/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.rlw.gov.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20400,7 +20400,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4481716", .name = "Federal Agency for Health and Social Development "
       "(government-agency, RU) - Около 40 вылето",
     .name_ja = "Federal Agency for Health and Social Development (government-agency, RU) - Около 40 вылето",
-    .category = "government", .portal = "https://roszdravnadzor.gov.ru/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://roszdravnadzor.gov.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20420,7 +20420,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16436471", .name = "Federal Agency for Mineral Resources (government-agency, RU) - "
       "rosnedra.gov.ru",
     .name_ja = "Federal Agency for Mineral Resources (government-agency, RU) - rosnedra.gov.ru",
-    .category = "government", .portal = "https://rosnedra.gov.ru/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://rosnedra.gov.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20439,7 +20439,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q1154782", .name = "DOSAAF (government-agency, RU) - ДОСААФ России",
     .name_ja = "DOSAAF (government-agency, RU) - ДОСААФ России",
-    .category = "government", .portal = "https://www.dosaaf.ru/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.dosaaf.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20461,7 +20461,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Federal Medical and Biological Agency (government-agency, RU) - "
       "Официальный сайт ФГБУ ЦСП ФМБА России",
     .name_ja = "Federal State Budgetary Institution \\\"Centre for Strategic Planning and Management of Biomedical Health Risks\\\" of the Federal Medical and Biological Agency (government-agency, RU) - Официальный сайт ФГБУ ЦСП ФМБА России",
-    .category = "government", .portal = "https://www.cspfmba.ru/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.cspfmba.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20482,7 +20482,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Research (government-agency, RU) - ГБНИиОУ «Тувинский институт "
       "гуманитарных и",
     .name_ja = "Tuvan Institute of Humanities and Applied Social and Economic Research (government-agency, RU) - ГБНИиОУ «Тувинский институт гуманитарных и",
-    .category = "government", .portal = "https://tigpi.ru/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://tigpi.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20502,7 +20502,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30274134", .name = "Federal Agency for Legal Protection of Military Results, Special "
       "and Dual Purpose (government-agency, RU) - ФАПРИД",
     .name_ja = "Federal Agency for Legal Protection of Military Results, Special and Dual Purpose (government-agency, RU) - ФАПРИД",
-    .category = "government", .portal = "https://www.faprid.ru/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.faprid.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20522,7 +20522,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q52842900", .name = "All-Russian Research Institute for Fire Protection "
       "(government-agency, RU) - Новости",
     .name_ja = "All-Russian Research Institute for Fire Protection (government-agency, RU) - Новости",
-    .category = "government", .portal = "https://www.vniipo.ru/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.vniipo.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20542,7 +20542,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4235558", .name = "Kostroma Oblast Duma (legislature, RU) - Новое на сайте "
       "Костромская областная Дума",
     .name_ja = "Kostroma Oblast Duma (legislature, RU) - Новое на сайте Костромская областная Дума",
-    .category = "government", .portal = "https://kosoblduma.ru/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://kosoblduma.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20561,7 +20561,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q4424945", .name = "Smolensk Oblast Duma (legislature, RU) -",
     .name_ja = "Smolensk Oblast Duma (legislature, RU) -",
-    .category = "government", .portal = "http://www.smoloblduma.ru/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "http://www.smoloblduma.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20581,7 +20581,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q19911290", .name = "Nizhny Novgorod City Duma (legislature, RU) - Новости Городской "
       "Думы Нижнего Новгорода",
     .name_ja = "Nizhny Novgorod City Duma (legislature, RU) - Новости Городской Думы Нижнего Новгорода",
-    .category = "government", .portal = "https://www.gordumannov.ru/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.gordumannov.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20601,7 +20601,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4421035", .name = "Russian Power System Operator (regulatory-agency, RU) - АО "
       "«Системный оператор Единой энергетическ",
     .name_ja = "Russian Power System Operator (regulatory-agency, RU) - АО «Системный оператор Единой энергетическ",
-    .category = "government", .portal = "https://www.so-ups.ru/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.so-ups.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20621,7 +20621,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4421035_2", .name = "Russian Power System Operator (regulatory-agency, RU) - АО "
       "«Системный оператор Единой энергетическ",
     .name_ja = "Russian Power System Operator (regulatory-agency, RU) - АО «Системный оператор Единой энергетическ",
-    .category = "government", .portal = "https://www.so-ups.ru/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.so-ups.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20641,7 +20641,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4421035_3", .name = "Russian Power System Operator (regulatory-agency, RU) - АО "
       "«Системный оператор Единой энергетическ",
     .name_ja = "Russian Power System Operator (regulatory-agency, RU) - АО «Системный оператор Единой энергетическ",
-    .category = "government", .portal = "https://www.so-ups.ru/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.so-ups.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20661,7 +20661,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4421035_4", .name = "Russian Power System Operator (regulatory-agency, RU) - АО "
       "«Системный оператор Единой энергетическ",
     .name_ja = "Russian Power System Operator (regulatory-agency, RU) - АО «Системный оператор Единой энергетическ",
-    .category = "government", .portal = "https://www.so-ups.ru/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.so-ups.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20681,7 +20681,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4421035_5", .name = "Russian Power System Operator (regulatory-agency, RU) - АО "
       "«Системный оператор Единой энергетическ",
     .name_ja = "Russian Power System Operator (regulatory-agency, RU) - АО «Системный оператор Единой энергетическ",
-    .category = "government", .portal = "https://www.so-ups.ru/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.so-ups.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20701,7 +20701,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4421035_6", .name = "Russian Power System Operator (regulatory-agency, RU) - АО "
       "«Системный оператор Единой энергетическ",
     .name_ja = "Russian Power System Operator (regulatory-agency, RU) - АО «Системный оператор Единой энергетическ",
-    .category = "government", .portal = "https://www.so-ups.ru/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.so-ups.ru/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20721,7 +20721,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q132472718", .name = "Q132472718 (government-agency, RW) - Great Virunga Transboundary "
       "Collaboration",
     .name_ja = "Q132472718 (government-agency, RW) - Great Virunga Transboundary Collaboration",
-    .category = "government", .portal = "https://greatervirunga.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://greatervirunga.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20741,7 +20741,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q136772574", .name = "Saudi Shooting Federation (government-agency, SA) - الاتحاد "
       "السعودي للرماية",
     .name_ja = "Saudi Shooting Federation (government-agency, SA) - الاتحاد السعودي للرماية",
-    .category = "government", .portal = "https://ssf.sa/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ssf.sa/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20761,7 +20761,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12194736", .name = "Royal Commission for Riyadh (government-agency, SA) - الهيئة "
       "الملكية لمدينة الرياض",
     .name_ja = "Royal Commission for Riyadh (government-agency, SA) - الهيئة الملكية لمدينة الرياض",
-    .category = "government", .portal = "https://www.rcrc.gov.sa/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.rcrc.gov.sa/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20781,7 +20781,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q123929849", .name = "Ministry of Environment, Climate Change, Disaster Management and "
       "Meteorology (ministry, SB) - My SIG Services Portal",
     .name_ja = "Ministry of Environment, Climate Change, Disaster Management and Meteorology (ministry, SB) - My SIG Services Portal",
-    .category = "government", .portal = "https://solomons.gov.sb/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://solomons.gov.sb/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20801,7 +20801,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6503338", .name = "Royal Solomon Islands Police Force (police, SB) - Royal Solomon "
       "Islands Police Force",
     .name_ja = "Royal Solomon Islands Police Force (police, SB) - Royal Solomon Islands Police Force",
-    .category = "government", .portal = "https://www.rsipf.gov.sb/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.rsipf.gov.sb/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20820,7 +20820,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30259223", .name = "Ministry of Health (government-agency, SC) - Ministry of Health",
     .name_ja = "Ministry of Health (government-agency, SC) - Ministry of Health",
-    .category = "government", .portal = "https://www.health.gov.sc/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.health.gov.sc/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20840,7 +20840,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30261999", .name = "Seychelles Fisheries Authority (government-agency, SC) - "
       "Seychelles Fisheries Authority",
     .name_ja = "Seychelles Fisheries Authority (government-agency, SC) - Seychelles Fisheries Authority",
-    .category = "government", .portal = "https://www.sfa.sc/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.sfa.sc/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20860,7 +20860,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135797659", .name = "Seychelles Revenue Commission (government-agency, SC) - "
       "Seychelles Revenue Commission",
     .name_ja = "Seychelles Revenue Commission (government-agency, SC) - Seychelles Revenue Commission",
-    .category = "government", .portal = "https://src.gov.sc/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://src.gov.sc/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20879,7 +20879,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q190236", .name = "Bank of Sudan (central-bank, SD) - CBOS",
     .name_ja = "Bank of Sudan (central-bank, SD) - CBOS",
-    .category = "government", .portal = "https://cbos.gov.sd/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://cbos.gov.sd/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20899,7 +20899,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3500437", .name = "Swedish Language Council (government-agency, SE) - Nyheter från "
       "ISOF",
     .name_ja = "Swedish Language Council (government-agency, SE) - Nyheter från ISOF",
-    .category = "government", .portal = "https://www.isof.se/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.isof.se/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20919,7 +20919,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q10524874", .name = "Swedish Institute of Assistive Technology (government-agency, "
       "SE) - Hi.se",
     .name_ja = "Swedish Institute of Assistive Technology (government-agency, SE) - Hi.se",
-    .category = "government", .portal = "https://www.hi.se/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.hi.se/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20938,7 +20938,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q10650391", .name = "Regelrådet (government-agency, SE) - Nyheter från Regelrådet",
     .name_ja = "Regelrådet (government-agency, SE) - Nyheter från Regelrådet",
-    .category = "government", .portal = "https://www.regelradet.se/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.regelradet.se/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20958,7 +20958,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141194387", .name = "Singapore Institute of Legal Education (government-agency, SG) - "
       "Singapore Institute of Legal Education   Bar Admission & CPD",
     .name_ja = "Singapore Institute of Legal Education (government-agency, SG) - Singapore Institute of Legal Education   Bar Admission & CPD",
-    .category = "government", .portal = "https://www.sile.edu.sg/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.sile.edu.sg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20978,7 +20978,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6765860", .name = "Maritime and Port Authority of Singapore (government-agency, SG) "
       "- Media Releases",
     .name_ja = "Maritime and Port Authority of Singapore (government-agency, SG) - Media Releases",
-    .category = "government", .portal = "https://www.mpa.gov.sg/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.mpa.gov.sg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -20997,7 +20997,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q133811830", .name = "AI Singapore (government-agency, SG) - AI Singapore",
     .name_ja = "AI Singapore (government-agency, SG) - AI Singapore",
-    .category = "government", .portal = "https://aisingapore.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://aisingapore.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21017,7 +21017,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6867033", .name = "Ministry of Foreign Affairs of Slovenia (government-agency, SI) "
       "- Novice   Ministrstvo za zunanje in evropske zadeve",
     .name_ja = "Ministry of Foreign Affairs of Slovenia (government-agency, SI) - Novice   Ministrstvo za zunanje in evropske zadeve",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21037,7 +21037,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12784020", .name = "Radioactive Waste Management Agency (government-agency, SI) - "
       "ARAO Agencija za ravnanje z radioaktivnimi odpadki",
     .name_ja = "Radioactive Waste Management Agency (government-agency, SI) - ARAO Agencija za ravnanje z radioaktivnimi odpadki",
-    .category = "government", .portal = "https://arao.si/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://arao.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21057,7 +21057,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q19935304", .name = "Ministry of Public Administration (government-agency, SI) - "
       "Novice   Ministrstvo za notranje zadeve in javno upravo",
     .name_ja = "Ministry of Public Administration (government-agency, SI) - Novice   Ministrstvo za notranje zadeve in javno upravo",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21078,7 +21078,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, SI) - Novice   Geodetska uprava Republike "
       "Slovenije",
     .name_ja = "The Surveying and Mapping Authority of the Republic of Slovenia (government-agency, SI) - Novice   Geodetska uprava Republike Slovenije",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21097,7 +21097,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q25495967", .name = "Institute of Occupational Health (government-agency, SI) - ZVD",
     .name_ja = "Institute of Occupational Health (government-agency, SI) - ZVD",
-    .category = "government", .portal = "https://www.zvd.si/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.zvd.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21118,7 +21118,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Opportunities (government-agency, SI) - Novice   Ministrstvo za "
       "demografijo, družino in socialne zadeve",
     .name_ja = "Ministry of Labour, Family, Social Affairs and Equal Opportunities (government-agency, SI) - Novice   Ministrstvo za demografijo, družino in socialne zadeve",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21138,7 +21138,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30290519", .name = "Ministry of Culture of Slovenia (government-agency, SI) - Novice "
       "Ministrstvo za kulturo",
     .name_ja = "Ministry of Culture of Slovenia (government-agency, SI) - Novice   Ministrstvo za kulturo",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21159,7 +21159,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, SI) - Novice   Urad Republike Slovenije za "
       "meroslovje",
     .name_ja = "Metrology Institute of the Republic of Slovenia (government-agency, SI) - Novice   Urad Republike Slovenije za meroslovje",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21179,7 +21179,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30299315", .name = "Kmetijsko Gozdarski Zavod Nova Gorica (government-agency, SI) - "
       "Varstvo pora",
     .name_ja = "Kmetijsko Gozdarski Zavod Nova Gorica (government-agency, SI) - Varstvo pora",
-    .category = "government", .portal = "https://www.kmetijskizavod-ng.si/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.kmetijskizavod-ng.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21200,7 +21200,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Spatial Planning (government-agency, SI) - Novice   Inšpektorat "
       "Republike Slovenije za okolje in prostor",
     .name_ja = "Inspectorate of the Republic of Slovenia for the Environment and Spatial Planning (government-agency, SI) - Novice   Inšpektorat Republike Slovenije za okolje in prostor",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21221,7 +21221,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, SI) - Novice   Ministrstvo za okolje in "
       "prostor",
     .name_ja = "Ministry of the Environment and Spatial Planning (government-agency, SI) - Novice   Ministrstvo za okolje in prostor",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21241,7 +21241,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q50041087", .name = "Ministry of Health (government-agency, SI) - Novice   "
       "Ministrstvo za zdravje",
     .name_ja = "Ministry of Health (government-agency, SI) - Novice   Ministrstvo za zdravje",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21261,7 +21261,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12796751", .name = "Ministry of Agriculture, Forestry and Food (ministry, SI) - "
       "Novice   Ministrstvo za kmetijstvo",
     .name_ja = "Ministry of Agriculture, Forestry and Food (ministry, SI) - Novice   Ministrstvo za kmetijstvo",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21281,7 +21281,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q20521088", .name = "Ministry of Higher Education Science, and Technology (ministry, "
       "SI) - MVZT - aktualne novice",
     .name_ja = "Ministry of Higher Education Science, and Technology (ministry, SI) - MVZT - aktualne novice",
-    .category = "government", .portal = "http://www.arhiv.mvzt.gov.si/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "http://www.arhiv.mvzt.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21301,7 +21301,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q20521088_2", .name = "Ministry of Higher Education Science, and Technology (ministry, "
       "SI) - MVZT - aktualne novice",
     .name_ja = "Ministry of Higher Education Science, and Technology (ministry, SI) - MVZT - aktualne novice",
-    .category = "government", .portal = "http://www.arhiv.mvzt.gov.si/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "http://www.arhiv.mvzt.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21321,7 +21321,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12784016", .name = "AJPES (government-organization, SI) - AJPES - Agencija Republike "
       "Slovenije za javnopravne evidence in storitve",
     .name_ja = "AJPES (government-organization, SI) - AJPES - Agencija Republike Slovenije za javnopravne evidence in storitve",
-    .category = "government", .portal = "https://www.ajpes.si/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.ajpes.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21341,7 +21341,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q49216959", .name = "Office of the Prime Minister Slovenia (government-organization, "
       "SI) - Novice   Vlada Republike Slovenije",
     .name_ja = "Office of the Prime Minister Slovenia (government-organization, SI) - Novice   Vlada Republike Slovenije",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21362,7 +21362,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-organization, SI) - Novice   Uprava Republike "
       "Slovenije za jedrsko varnost",
     .name_ja = "Slovenian Nuclear Safety Administration (government-organization, SI) - Novice   Uprava Republike Slovenije za jedrsko varnost",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21383,7 +21383,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-organization, SI) - Novice   Zdravstveni inšpektorat "
       "Republike Slovenije",
     .name_ja = "Health Inspectorate of the Republic of Slovenia; (government-organization, SI) - Novice   Zdravstveni inšpektorat Republike Slovenije",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21404,7 +21404,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-organization, SI) - Novice   Služba Vlade Republike "
       "Slovenije za zakonodajo",
     .name_ja = "Government of Slovenia Office for Legislation (government-organization, SI) - Novice   Služba Vlade Republike Slovenije za zakonodajo",
-    .category = "government", .portal = "https://www.gov.si/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.gov.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21424,7 +21424,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q49451125", .name = "Republic of Slovenia Broadcasting Council "
       "(government-organization, SI) - RSS - Svet za radiodifuzijo",
     .name_ja = "Republic of Slovenia Broadcasting Council (government-organization, SI) - RSS - Svet za radiodifuzijo",
-    .category = "government", .portal = "https://www.srdf.si/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.srdf.si/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21444,7 +21444,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q56823105", .name = "Antimonopoly Office of the Slovak Republic (government-agency, "
       "SK) - RSS - Protimonopolný úrad SR",
     .name_ja = "Antimonopoly Office of the Slovak Republic (government-agency, SK) - RSS - Protimonopolný úrad SR",
-    .category = "government", .portal = "https://www.antimon.gov.sk/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.antimon.gov.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21464,7 +21464,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q63677246", .name = "National Health Information Center (government-agency, SK) - "
       "Aktuality: Pages",
     .name_ja = "National Health Information Center (government-agency, SK) - Aktuality: Pages",
-    .category = "government", .portal = "https://www.nczisk.sk/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.nczisk.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21484,7 +21484,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q108065148", .name = "State Nature Conservancy of the Slovak Republic "
       "(government-agency, SK) - ŠOP SR",
     .name_ja = "State Nature Conservancy of the Slovak Republic (government-agency, SK) - ŠOP SR",
-    .category = "government", .portal = "https://www.sopsr.sk/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.sopsr.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21504,7 +21504,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3490080", .name = "Nation's Memory Institute (government-agency, SK) - Archív "
       "aktualít - Ústav pamäti národa",
     .name_ja = "Nation's Memory Institute (government-agency, SK) - Archív aktualít - Ústav pamäti národa",
-    .category = "government", .portal = "https://www.upn.gov.sk/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.upn.gov.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21524,7 +21524,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3490080_2", .name = "Nation's Memory Institute (government-agency, SK) - Archív "
       "aktualít - Ústav pamäti národa",
     .name_ja = "Nation's Memory Institute (government-agency, SK) - Archív aktualít - Ústav pamäti národa",
-    .category = "government", .portal = "https://www.upn.gov.sk/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.upn.gov.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21544,7 +21544,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12772297", .name = "Supreme Audit Office of the Slovak Republic (government-agency, "
       "SK) - Aktuality RSS",
     .name_ja = "Supreme Audit Office of the Slovak Republic (government-agency, SK) - Aktuality RSS",
-    .category = "government", .portal = "https://www.nku.gov.sk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.nku.gov.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21564,7 +21564,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12772297_2", .name = "Supreme Audit Office of the Slovak Republic (government-agency, "
       "SK) - Kontroly RSS",
     .name_ja = "Supreme Audit Office of the Slovak Republic (government-agency, SK) - Kontroly RSS",
-    .category = "government", .portal = "https://www.nku.gov.sk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.nku.gov.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21583,7 +21583,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q12779324", .name = "Prison and Court Guard Service (government-agency, SK) - ZVJS",
     .name_ja = "Prison and Court Guard Service (government-agency, SK) - ZVJS",
-    .category = "government", .portal = "https://www.zvjs.sk/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.zvjs.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21603,7 +21603,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12781104", .name = "Nuclear Regulatory Authority of the Slovak Republic "
       "(government-agency, SK) - Úrad jadrového dozoru SR - Feed",
     .name_ja = "Nuclear Regulatory Authority of the Slovak Republic (government-agency, SK) - Úrad jadrového dozoru SR - Feed",
-    .category = "government", .portal = "https://www.ujd.gov.sk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.ujd.gov.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21623,7 +21623,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12781109", .name = "Geodesy, Cartography and Cadastre Authority of the Slovak "
       "Republic (government-agency, SK) - RSS Kanal UGKK SR",
     .name_ja = "Geodesy, Cartography and Cadastre Authority of the Slovak Republic (government-agency, SK) - RSS Kanal UGKK SR",
-    .category = "government", .portal = "https://www.skgeodesy.sk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.skgeodesy.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21643,7 +21643,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30297620", .name = "Slovak Youth Institute (government-agency, SK) - Národný "
       "inštitút vzdelávania a mládeže",
     .name_ja = "Slovak Youth Institute (government-agency, SK) - Národný inštitút vzdelávania a mládeže",
-    .category = "government", .portal = "https://nivam.sk/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://nivam.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21664,7 +21664,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-organization, SK) - Tlačové správy a oznamy Úradu "
       "vlády Slovenskej republiky",
     .name_ja = "Government Office of the Slovak Republic (government-organization, SK) - Tlačové správy a oznamy Úradu vlády Slovenskej republiky",
-    .category = "government", .portal = "https://www.vlada.gov.sk/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.vlada.gov.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21684,7 +21684,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18534597", .name = "Q18534597 (regulatory-agency, SK) - Úrad pre dohľad nad "
       "zdravotnou starostlivosťou",
     .name_ja = "Q18534597 (regulatory-agency, SK) - Úrad pre dohľad nad zdravotnou starostlivosťou",
-    .category = "government", .portal = "https://www.udzs-sk.sk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.udzs-sk.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21704,7 +21704,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18534597_2", .name = "Q18534597 (regulatory-agency, SK) - Úrad pre dohľad nad "
       "zdravotnou starostlivosťou",
     .name_ja = "Q18534597 (regulatory-agency, SK) - Úrad pre dohľad nad zdravotnou starostlivosťou",
-    .category = "government", .portal = "https://www.udzs-sk.sk/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.udzs-sk.sk/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21724,7 +21724,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30285491", .name = "Ministry of Health of Senegal (government-agency, SN) - "
       "MINISTÈRE DE LA SANTÉ ET DE L'ACTION SOCIALE",
     .name_ja = "Ministry of Health of Senegal (government-agency, SN) - MINISTÈRE DE LA SANTÉ ET DE L'ACTION SOCIALE",
-    .category = "government", .portal = "https://www.sante.gouv.sn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.sante.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21744,7 +21744,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30291100", .name = "Ministry of Higher Education and Research of Senegal "
       "(government-agency, SN) - MESRI SÉNÉGAL",
     .name_ja = "Ministry of Higher Education and Research of Senegal (government-agency, SN) - MESRI SÉNÉGAL",
-    .category = "government", .portal = "https://mesrisenegal.sn/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://mesrisenegal.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21765,7 +21765,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "verte (government-agency, SN) - Agence Panafricaine de la Grande "
       "Muraille Verte",
     .name_ja = "Agence sénégalaise de la reforestation et de la Grande muraille verte (government-agency, SN) - Agence Panafricaine de la Grande Muraille Verte",
-    .category = "government", .portal = "https://www.grandemurailleverte.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.grandemurailleverte.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21786,7 +21786,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "verte (government-agency, SN) - Agence Panafricaine de la Grande "
       "Muraille Verte",
     .name_ja = "Agence sénégalaise de la reforestation et de la Grande muraille verte (government-agency, SN) - Agence Panafricaine de la Grande Muraille Verte",
-    .category = "government", .portal = "https://www.grandemurailleverte.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.grandemurailleverte.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21806,7 +21806,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140843647", .name = "Ministry of Family, Social Action and Solidarity (ministry, SN) "
       "- MIFASS – Sénégal",
     .name_ja = "Ministry of Family, Social Action and Solidarity (ministry, SN) - MIFASS – Sénégal",
-    .category = "government", .portal = "https://femme.gouv.sn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://femme.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21825,7 +21825,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q140160027", .name = "Q140160027 (ministry, SN) - Accueil - MiNCOM",
     .name_ja = "Q140160027 (ministry, SN) - Accueil - MiNCOM",
-    .category = "government", .portal = "https://industriecommerce.gouv.sn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://industriecommerce.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21844,7 +21844,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q140176106", .name = "Q140176106 (ministry, SN) - MFPT",
     .name_ja = "Q140176106 (ministry, SN) - MFPT",
-    .category = "government", .portal = "https://formation.gouv.sn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://formation.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21864,7 +21864,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q120176333", .name = "Ministry of Armed Forces (ministry, SN) - Ministère des forces "
       "armées",
     .name_ja = "Ministry of Armed Forces (ministry, SN) - Ministère des forces armées",
-    .category = "government", .portal = "https://forcesarmees.gouv.sn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://forcesarmees.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21884,7 +21884,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139381107", .name = "Ministry of Energy, Petroleum and Mines of Senegal (ministry, "
       "SN) - Ministère de l'Energie, du Pétrole et des Mines",
     .name_ja = "Ministry of Energy, Petroleum and Mines of Senegal (ministry, SN) - Ministère de l'Energie, du Pétrole et des Mines",
-    .category = "government", .portal = "https://energie-mines.gouv.sn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://energie-mines.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21904,7 +21904,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139497581", .name = "Ministry of Armed Forces of Senegal (ministry, SN) - Ministère "
       "des forces armées",
     .name_ja = "Ministry of Armed Forces of Senegal (ministry, SN) - Ministère des forces armées",
-    .category = "government", .portal = "https://www.forcesarmees.gouv.sn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.forcesarmees.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21924,7 +21924,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140067386", .name = "Ministry of Water and Sanitation of Senegal (ministry, SN) - "
       "Ministère de l'Hydraulique et de l'Assainissement du Sénégal",
     .name_ja = "Ministry of Water and Sanitation of Senegal (ministry, SN) - Ministère de l'Hydraulique et de l'Assainissement du Sénégal",
-    .category = "government", .portal = "https://mha.gouv.sn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mha.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21945,7 +21945,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Industries of Senegal (ministry, SN) - MINISTÈRE DE L’INDUSTRIE "
       "ET DE LA PETITE ET MOYENE INDUSTRIE",
     .name_ja = "Ministry of Industrial Development and Small and Medium Industries of Senegal (ministry, SN) - MINISTÈRE DE L’INDUSTRIE ET DE LA PETITE ET MOYENE INDUSTRIE",
-    .category = "government", .portal = "https://www.industrie.gouv.sn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.industrie.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21965,7 +21965,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140074948", .name = "Ministry of Fisheries and Maritime Economy of Senegal (ministry, "
       "SN) - MPEM",
     .name_ja = "Ministry of Fisheries and Maritime Economy of Senegal (ministry, SN) - MPEM",
-    .category = "government", .portal = "https://mpem.gouv.sn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mpem.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -21986,7 +21986,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Senegal (ministry, SN) - MINISTERE DU RENOUVEAU URBAIN DE "
       "L’HABITAT ET DU CADRE DE VIE",
     .name_ja = "Ministry of Urban Planning, Housing and Public Hygiene of Senegal (ministry, SN) - MINISTERE DU RENOUVEAU URBAIN DE L’HABITAT ET DU CADRE DE VIE",
-    .category = "government", .portal = "https://urbanisme.gouv.sn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://urbanisme.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22006,7 +22006,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140134827", .name = "Ministry of Youth, Entrepreneurship and Employment of Senegal "
       "(ministry, SN) - MJ",
     .name_ja = "Ministry of Youth, Entrepreneurship and Employment of Senegal (ministry, SN) - MJ",
-    .category = "government", .portal = "https://jeunesse.gouv.sn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://jeunesse.gouv.sn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22025,7 +22025,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q7559149", .name = "Somali Postal Service (government-agency, SO) - WIT",
     .name_ja = "Somali Postal Service (government-agency, SO) - WIT",
-    .category = "government", .portal = "https://moct.gov.so/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://moct.gov.so/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22044,7 +22044,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q17069535", .name = "Puntland Highway Authority (government-agency, SO) - PHA",
     .name_ja = "Puntland Highway Authority (government-agency, SO) - PHA",
-    .category = "government", .portal = "https://pha.pl.so/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://pha.pl.so/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22064,7 +22064,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q17070528", .name = "Somali Disaster Management Agency (government-agency, SO) - "
       "SODMA",
     .name_ja = "Somali Disaster Management Agency (government-agency, SO) - SODMA",
-    .category = "government", .portal = "https://sodma.gov.so/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://sodma.gov.so/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22084,7 +22084,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q65074365", .name = "Ministry of Internal Security (government-agency, SO) - "
       "Wasaaradda Amniga Gudaha",
     .name_ja = "Ministry of Internal Security (government-agency, SO) - Wasaaradda Amniga Gudaha",
-    .category = "government", .portal = "https://mois.gov.so/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://mois.gov.so/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22104,7 +22104,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q131877012", .name = "Somalia National Bureau of Statistics (government-agency, SO) - "
       "Consumer Price Index (CPI) Aug 2026",
     .name_ja = "Somalia National Bureau of Statistics (government-agency, SO) - Consumer Price Index (CPI) Aug 2026",
-    .category = "government", .portal = "https://nbs.gov.so/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://nbs.gov.so/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22123,7 +22123,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q126371676", .name = "Q126371676 (government-agency, SR) - SBB",
     .name_ja = "Q126371676 (government-agency, SR) - SBB",
-    .category = "government", .portal = "https://sbb.sr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://sbb.sr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22143,7 +22143,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q64500817", .name = "Central Polling Authority (government-organization, SR) - "
       "Centraal Hoofdstembureau",
     .name_ja = "Central Polling Authority (government-organization, SR) - Centraal Hoofdstembureau",
-    .category = "government", .portal = "https://chs.gov.sr/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://chs.gov.sr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22163,7 +22163,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q98128961", .name = "Nationaal Orgaan voor Accreditatie (government-organization, SR) "
       "- Nova",
     .name_ja = "Nationaal Orgaan voor Accreditatie (government-organization, SR) - Nova",
-    .category = "government", .portal = "https://novasur.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://novasur.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22183,7 +22183,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q115670528", .name = "Kabinet van de President (government-organization, SR) - "
       "Overheid van de Republiek Suriname",
     .name_ja = "Kabinet van de President (government-organization, SR) - Overheid van de Republiek Suriname",
-    .category = "government", .portal = "https://gov.sr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://gov.sr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22203,7 +22203,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127163570", .name = "Energie Autoriteit Suriname (government-organization, SR) - "
       "Energie Autoriteit Suriname",
     .name_ja = "Energie Autoriteit Suriname (government-organization, SR) - Energie Autoriteit Suriname",
-    .category = "government", .portal = "https://eas.sr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://eas.sr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22223,7 +22223,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q130525724", .name = "Foundation Plan bureau Suriname (government-organization, SR) - "
       "Planning Office Suriname – SPS",
     .name_ja = "Foundation Plan bureau Suriname (government-organization, SR) - Planning Office Suriname – SPS",
-    .category = "government", .portal = "https://www.planningofficesuriname.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.planningofficesuriname.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22242,7 +22242,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q47473249", .name = "Korps Politie Suriname (police, SR) - Korps Politie Suriname",
     .name_ja = "Korps Politie Suriname (police, SR) - Korps Politie Suriname",
-    .category = "government", .portal = "https://politie.sr/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://politie.sr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22262,7 +22262,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135218673", .name = "National Communication Authority (government-agency, SS) - NCA "
       "SSD",
     .name_ja = "National Communication Authority (government-agency, SS) - NCA SSD",
-    .category = "government", .portal = "https://www.nca.gov.ss/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.nca.gov.ss/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22282,7 +22282,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139771266", .name = "South Sudan National Bureau of Standards (government-agency, SS) "
       "- South Sudan National Bureau of Standards",
     .name_ja = "South Sudan National Bureau of Standards (government-agency, SS) - South Sudan National Bureau of Standards",
-    .category = "government", .portal = "https://ssnbs.gov.ss/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ssnbs.gov.ss/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22302,7 +22302,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3359554", .name = "Bank of South Sudan (central-bank, SS) - BoSS Bank of South "
       "Sudan",
     .name_ja = "Bank of South Sudan (central-bank, SS) - BoSS Bank of South Sudan",
-    .category = "government", .portal = "https://boss.gov.ss/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://boss.gov.ss/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22322,7 +22322,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5280608", .name = "Directorate-General of Antiquities and Museums "
       "(government-agency, SY) - مديرية الآثار والمتاحف",
     .name_ja = "Directorate-General of Antiquities and Museums (government-agency, SY) - مديرية الآثار والمتاحف",
-    .category = "government", .portal = "https://dgam.gov.sy/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://dgam.gov.sy/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22342,7 +22342,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q60573084", .name = "Syrian General Organization of Books (government-agency, SY) - "
       "الهيئةالعامة السورية للكتاب",
     .name_ja = "Syrian General Organization of Books (government-agency, SY) - الهيئةالعامة السورية للكتاب",
-    .category = "government", .portal = "http://syrbook.gov.sy/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://syrbook.gov.sy/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22363,7 +22363,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Technologies (government-agency, TD) - Le Tchad renforce ses "
       "partenariats stratégiques pour accélérer sa transformat",
     .name_ja = "Agency for the Development of Information and Communication Technologies (government-agency, TD) - Le Tchad renforce ses partenariats stratégiques pour accélérer sa transformat",
-    .category = "government", .portal = "https://adetic.td/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://adetic.td/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22382,7 +22382,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q134351681", .name = "Q134351681 (government-organization, TD) - ARSAT",
     .name_ja = "Q134351681 (government-organization, TD) - ARSAT",
-    .category = "government", .portal = "https://arsat.td/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://arsat.td/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22401,7 +22401,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q119296585", .name = "Q119296585 (ministry, TG) - Ministère des Finances et du Budget",
     .name_ja = "Q119296585 (ministry, TG) - Ministère des Finances et du Budget",
-    .category = "government", .portal = "https://finances.gouv.tg/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://finances.gouv.tg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22421,7 +22421,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135337838", .name = "Ministry of Security of Togo (ministry, TG) - Ministère de la "
       "Sécurité",
     .name_ja = "Ministry of Security of Togo (ministry, TG) - Ministère de la Sécurité",
-    .category = "government", .portal = "https://securite.gouv.tg/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://securite.gouv.tg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22442,7 +22442,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(ministry, TG) - Ministère de l'Aménagement du Territoire et de "
       "l'Urbanisme",
     .name_ja = "Ministry of Territorial Planning, Urbanism and Housing (ministry, TG) - Ministère de l'Aménagement du Territoire et de l'Urbanisme",
-    .category = "government", .portal = "https://urbanisme.gouv.tg/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://urbanisme.gouv.tg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22463,7 +22463,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "and Climate Change of Togo (ministry, TG) - Ministère de "
       "l’Agriculture de la Pêche, des Ressources Animales et de la Sou",
     .name_ja = "Ministry of Environment, Forest Resources, Coastal Protection and Climate Change of Togo (ministry, TG) - Ministère de l’Agriculture de la Pêche, des Ressources Animales et de la Sou",
-    .category = "government", .portal = "https://agriculture.gouv.tg/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://agriculture.gouv.tg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22483,7 +22483,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139833516", .name = "Ministry of National Education of Togo (ministry, TG) - "
       "Ministère de l'Education Nationale",
     .name_ja = "Ministry of National Education of Togo (ministry, TG) - Ministère de l'Education Nationale",
-    .category = "government", .portal = "https://education.gouv.tg/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://education.gouv.tg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22504,7 +22504,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, TH) - NECTEC : National Electronics and "
       "Computer Technology Center",
     .name_ja = "National Electronics and Computer Technology Center (government-agency, TH) - NECTEC : National Electronics and Computer Technology Center",
-    .category = "government", .portal = "https://www.nectec.or.th/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.nectec.or.th/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22524,7 +22524,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q13022698", .name = "Office of the Attorney-General (Thailand) (government-agency, "
       "TH) - สำนักงานอัยการสูงสุด",
     .name_ja = "Office of the Attorney-General (Thailand) (government-agency, TH) - สำนักงานอัยการสูงสุด",
-    .category = "government", .portal = "https://www.ago.go.th/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.ago.go.th/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22544,7 +22544,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q20570807", .name = "Institute of Community Colleges (government-agency, TH) - "
       "สถาบันวิทยาลัยชุมชน Institute of Community",
     .name_ja = "Institute of Community Colleges (government-agency, TH) - สถาบันวิทยาลัยชุมชน Institute of Community",
-    .category = "government", .portal = "https://www.iccs.ac.th/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.iccs.ac.th/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22565,7 +22565,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, TH) - Network of Aquaculture Centres in "
       "Asia-Pacific",
     .name_ja = "Network of Aquaculture Centres in Asia-Pacific (government-agency, TH) - Network of Aquaculture Centres in Asia-Pacific",
-    .category = "government", .portal = "https://enaca.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://enaca.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22584,7 +22584,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q33121883", .name = "Energy Policy and Planning Office (government-agency, TH) - EPPO",
     .name_ja = "Energy Policy and Planning Office (government-agency, TH) - EPPO",
-    .category = "government", .portal = "https://www.eppo.go.th/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.eppo.go.th/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22604,7 +22604,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q65281010", .name = "Office of National Higher Education Science Research and "
       "Innovation Policy Council (government-agency, TH) - สอวช.",
     .name_ja = "Office of National Higher Education Science Research and Innovation Policy Council (government-agency, TH) - สอวช.",
-    .category = "government", .portal = "https://www.nxpo.or.th/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.nxpo.or.th/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22624,7 +22624,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q115536567", .name = "Postharvest Technology Innovation Center (government-agency, TH) "
       "- ศูนย์นวัตกรรมเทคโนโลยีหลัง",
     .name_ja = "Postharvest Technology Innovation Center (government-agency, TH) - ศูนย์นวัตกรรมเทคโนโลยีหลัง",
-    .category = "government", .portal = "https://phtnet.agri.cmu.ac.th/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://phtnet.agri.cmu.ac.th/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22644,7 +22644,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137103754", .name = "Q137103754 (government-agency, TJ) - Агентии назорат дар соҳаи "
       "маориф ва илми на",
     .name_ja = "Q137103754 (government-agency, TJ) - Агентии назорат дар соҳаи маориф ва илми на",
-    .category = "government", .portal = "https://ansmi.tj/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ansmi.tj/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22664,7 +22664,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137103754_2", .name = "Q137103754 (government-agency, TJ) - Агентии назорат дар соҳаи "
       "маориф ва илми на",
     .name_ja = "Q137103754 (government-agency, TJ) - Агентии назорат дар соҳаи маориф ва илми на",
-    .category = "government", .portal = "https://ansmi.tj/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ansmi.tj/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22683,7 +22683,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q4314981", .name = "National Bank of Tajikistan (central-bank, TJ) - Қурби асъор",
     .name_ja = "National Bank of Tajikistan (central-bank, TJ) - Қурби асъор",
-    .category = "government", .portal = "https://nbt.tj/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://nbt.tj/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22702,7 +22702,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141194649", .name = "Instituto Nacional de Ciências e Tecnologia (government-agency, "
       "TL) - Instituto Nacional de Ciências e Tecnologia",
     .name_ja = "Instituto Nacional de Ciências e Tecnologia (government-agency, TL) - Instituto Nacional de Ciências e Tecnologia",
-    .category = "government", .portal = "https://inct.gov.tl/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://inct.gov.tl/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22721,7 +22721,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q16123967", .name = "Q16123967 (government-agency, TN) - OTE",
     .name_ja = "Q16123967 (government-agency, TN) - OTE",
-    .category = "government", .portal = "https://ote.nat.tn/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ote.nat.tn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22740,7 +22740,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q136699374", .name = "Q136699374 (government-agency, TN) - AFI",
     .name_ja = "Q136699374 (government-agency, TN) - AFI",
-    .category = "government", .portal = "https://www.afi.nat.tn/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.afi.nat.tn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22760,7 +22760,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18122697", .name = "Haute Autorité Indépendante de la Communication Audiovisuelle "
       "(government-agency, TN) - HAICA",
     .name_ja = "Haute Autorité Indépendante de la Communication Audiovisuelle (government-agency, TN) - HAICA",
-    .category = "government", .portal = "https://haica.tn/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://haica.tn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22781,7 +22781,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, TN) - Agence Nationale de la Promotion de la "
       "Recherche scientifique",
     .name_ja = "National Agency for Promotion of Research and Innovation (government-agency, TN) - Agence Nationale de la Promotion de la Recherche scientifique",
-    .category = "government", .portal = "http://www.anpr.tn/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://www.anpr.tn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22802,7 +22802,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Le Centre National de l’Informatique recrute 02 Techniciens en "
       "informatique",
     .name_ja = "Observatoire National de la Jeunesse (government-agency, TN) - Le Centre National de l’Informatique recrute 02 Techniciens en informatique",
-    .category = "government", .portal = "http://www.onj.nat.tn/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://www.onj.nat.tn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22821,7 +22821,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q3315278", .name = "Ministry of Employment (ministry, TN) - المستجدات",
     .name_ja = "Ministry of Employment (ministry, TN) - المستجدات",
-    .category = "government", .portal = "https://www.emploi.gov.tn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.emploi.gov.tn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22841,7 +22841,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q19407202", .name = "Cabinet of the Head of Government (ministry, TN) - Portail de la "
       "Présidence du Gouvernement – Tunisie - Gouvernement, Administra",
     .name_ja = "Cabinet of the Head of Government (ministry, TN) - Portail de la Présidence du Gouvernement – Tunisie - Gouvernement, Administra",
-    .category = "government", .portal = "http://www.pm.gov.tn/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "http://www.pm.gov.tn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22861,7 +22861,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q29514145", .name = "National Handicrafts Office (government-organization, TN) - "
       "الديوان الوطني للصناعات التقليدية",
     .name_ja = "National Handicrafts Office (government-organization, TN) - الديوان الوطني للصناعات التقليدية",
-    .category = "government", .portal = "https://www.artisanat.nat.tn/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.artisanat.nat.tn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22881,7 +22881,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q29514145_2", .name = "National Handicrafts Office (government-organization, TN) - "
       "الديوان الوطني للصناعات التقليدية",
     .name_ja = "National Handicrafts Office (government-organization, TN) - الديوان الوطني للصناعات التقليدية",
-    .category = "government", .portal = "https://www.artisanat.nat.tn/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.artisanat.nat.tn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22901,7 +22901,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q374071", .name = "Turkish Historical Society (government-agency, TR) - Türk Tarih "
       "Kurumu",
     .name_ja = "Turkish Historical Society (government-agency, TR) - Türk Tarih Kurumu",
-    .category = "government", .portal = "https://ttk.gov.tr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://ttk.gov.tr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22921,7 +22921,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141669286", .name = "Millî Eğitim Akademisi Başkanlığı (government-agency, TR) - "
       "MİLLÎ EĞİTİM AKADEMİSİ BAŞKANLIĞI",
     .name_ja = "Millî Eğitim Akademisi Başkanlığı (government-agency, TR) - MİLLÎ EĞİTİM AKADEMİSİ BAŞKANLIĞI",
-    .category = "government", .portal = "https://akademi.meb.gov.tr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://akademi.meb.gov.tr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22941,7 +22941,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137409005", .name = "Kastamonu Ölçme Değerlendirme Merkezi (government-agency, TR) - "
       "KASTAMONU ÖLÇME DEĞERLENDİRME MERKEZİ MÜDÜRLÜĞÜ",
     .name_ja = "Kastamonu Ölçme Değerlendirme Merkezi (government-agency, TR) - KASTAMONU ÖLÇME DEĞERLENDİRME MERKEZİ MÜDÜRLÜĞÜ",
-    .category = "government", .portal = "https://kastamonuodm.meb.gov.tr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://kastamonuodm.meb.gov.tr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22961,7 +22961,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2464852", .name = "Turkish International Cooperation and Development Agency "
       "(government-agency, TR) - TİKA",
     .name_ja = "Turkish International Cooperation and Development Agency (government-agency, TR) - TİKA",
-    .category = "government", .portal = "https://tika.gov.tr/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://tika.gov.tr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -22981,7 +22981,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6095701", .name = "Turkish Standards Institution (government-agency, TR) - Türk "
       "Standardları Enstitüsü",
     .name_ja = "Turkish Standards Institution (government-agency, TR) - Türk Standardları Enstitüsü",
-    .category = "government", .portal = "https://www.tse.org.tr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.tse.org.tr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23001,7 +23001,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q28132060", .name = "Association of Access Providers (Turkey) (government-agency, TR) "
       "- esb",
     .name_ja = "Association of Access Providers (Turkey) (government-agency, TR) - esb",
-    .category = "government", .portal = "https://www.esb.org.tr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.esb.org.tr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23021,7 +23021,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q28137073", .name = "Turkish Education Board (government-agency, TR) - TALİM VE "
       "TERBİYE KURULU BAŞKANLIĞI",
     .name_ja = "Turkish Education Board (government-agency, TR) - TALİM VE TERBİYE KURULU BAŞKANLIĞI",
-    .category = "government", .portal = "https://ttkb.meb.gov.tr/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://ttkb.meb.gov.tr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23040,7 +23040,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q116282221", .name = "Environmental Management Authority (government-agency, TT) - EMA",
     .name_ja = "Environmental Management Authority (government-agency, TT) - EMA",
-    .category = "government", .portal = "https://www.ema.co.tt/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ema.co.tt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23060,7 +23060,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140351959", .name = "Ministry of Energy and Energy Industries (government-agency, TT) "
       "- Ministry of Energy and Energy Industries",
     .name_ja = "Ministry of Energy and Energy Industries (government-agency, TT) - Ministry of Energy and Energy Industries",
-    .category = "government", .portal = "https://www.energy.gov.tt/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.energy.gov.tt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23080,7 +23080,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4504281", .name = "Central Bank of Trinidad and Tobago (central-bank, TT) - Central "
       "Bank of Trinidad and Tobago",
     .name_ja = "Central Bank of Trinidad and Tobago (central-bank, TT) - Central Bank of Trinidad and Tobago",
-    .category = "government", .portal = "https://www.central-bank.org.tt/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.central-bank.org.tt/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23100,7 +23100,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920360", .name = "Department of Information Technology, Taipei City Government "
       "(government-agency, TW) - 資訊局新聞稿",
     .name_ja = "Department of Information Technology, Taipei City Government (government-agency, TW) - 資訊局新聞稿",
-    .category = "government", .portal = "https://doit.gov.taipei/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://doit.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23120,7 +23120,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920360_2", .name = "Department of Information Technology, Taipei City Government "
       "(government-agency, TW) - 資訊局本府消息",
     .name_ja = "Department of Information Technology, Taipei City Government (government-agency, TW) - 資訊局本府消息",
-    .category = "government", .portal = "https://doit.gov.taipei/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://doit.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23140,7 +23140,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920360_3", .name = "Department of Information Technology, Taipei City Government "
       "(government-agency, TW) - 資訊局本府活動",
     .name_ja = "Department of Information Technology, Taipei City Government (government-agency, TW) - 資訊局本府活動",
-    .category = "government", .portal = "https://doit.gov.taipei/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://doit.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23160,7 +23160,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920523", .name = "Department of Education, Taipei City Government "
       "(government-agency, TW) - 教育局一般公告",
     .name_ja = "Department of Education, Taipei City Government (government-agency, TW) - 教育局一般公告",
-    .category = "government", .portal = "https://www.doe.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.doe.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23180,7 +23180,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920523_2", .name = "Department of Education, Taipei City Government "
       "(government-agency, TW) - 教育局幼兒園",
     .name_ja = "Department of Education, Taipei City Government (government-agency, TW) - 教育局幼兒園",
-    .category = "government", .portal = "https://www.doe.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.doe.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23200,7 +23200,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920523_3", .name = "Department of Education, Taipei City Government "
       "(government-agency, TW) - 教育局國小",
     .name_ja = "Department of Education, Taipei City Government (government-agency, TW) - 教育局國小",
-    .category = "government", .portal = "https://www.doe.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.doe.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23220,7 +23220,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920523_4", .name = "Department of Education, Taipei City Government "
       "(government-agency, TW) - 教育局國中",
     .name_ja = "Department of Education, Taipei City Government (government-agency, TW) - 教育局國中",
-    .category = "government", .portal = "https://www.doe.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.doe.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23240,7 +23240,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920523_5", .name = "Department of Education, Taipei City Government "
       "(government-agency, TW) - 教育局高中職",
     .name_ja = "Department of Education, Taipei City Government (government-agency, TW) - 教育局高中職",
-    .category = "government", .portal = "https://www.doe.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.doe.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23260,7 +23260,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920523_6", .name = "Department of Education, Taipei City Government "
       "(government-agency, TW) - 教育局終身教育",
     .name_ja = "Department of Education, Taipei City Government (government-agency, TW) - 教育局終身教育",
-    .category = "government", .portal = "https://www.doe.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.doe.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23280,7 +23280,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920523_7", .name = "Department of Education, Taipei City Government "
       "(government-agency, TW) - 教育局幼兒園",
     .name_ja = "Department of Education, Taipei City Government (government-agency, TW) - 教育局幼兒園",
-    .category = "government", .portal = "https://www.doe.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.doe.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23300,7 +23300,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920523_8", .name = "Department of Education, Taipei City Government "
       "(government-agency, TW) - 教育局國小",
     .name_ja = "Department of Education, Taipei City Government (government-agency, TW) - 教育局國小",
-    .category = "government", .portal = "https://www.doe.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.doe.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23320,7 +23320,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920523_9", .name = "Department of Education, Taipei City Government "
       "(government-agency, TW) - 教育局國中",
     .name_ja = "Department of Education, Taipei City Government (government-agency, TW) - 教育局國中",
-    .category = "government", .portal = "https://www.doe.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.doe.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23340,7 +23340,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920523_10", .name = "Department of Education, Taipei City Government "
       "(government-agency, TW) - 教育局高中職",
     .name_ja = "Department of Education, Taipei City Government (government-agency, TW) - 教育局高中職",
-    .category = "government", .portal = "https://www.doe.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.doe.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23360,7 +23360,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920523_11", .name = "Department of Education, Taipei City Government "
       "(government-agency, TW) - 教育局終身教育",
     .name_ja = "Department of Education, Taipei City Government (government-agency, TW) - 教育局終身教育",
-    .category = "government", .portal = "https://www.doe.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.doe.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23380,7 +23380,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15920523_12", .name = "Department of Education, Taipei City Government "
       "(government-agency, TW) - 教育局新聞稿",
     .name_ja = "Department of Education, Taipei City Government (government-agency, TW) - 教育局新聞稿",
-    .category = "government", .portal = "https://www.doe.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.doe.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23400,7 +23400,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15933330", .name = "Department of Civil Affairs, Taipei City Government "
       "(government-agency, TW) - 民政局最新消息",
     .name_ja = "Department of Civil Affairs, Taipei City Government (government-agency, TW) - 民政局最新消息",
-    .category = "government", .portal = "https://ca.gov.taipei/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://ca.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23420,7 +23420,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15933330_2", .name = "Department of Civil Affairs, Taipei City Government "
       "(government-agency, TW) - 民政局活動訊息",
     .name_ja = "Department of Civil Affairs, Taipei City Government (government-agency, TW) - 民政局活動訊息",
-    .category = "government", .portal = "https://ca.gov.taipei/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://ca.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23440,7 +23440,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15933330_3", .name = "Department of Civil Affairs, Taipei City Government "
       "(government-agency, TW) - 民政局新聞稿",
     .name_ja = "Department of Civil Affairs, Taipei City Government (government-agency, TW) - 民政局新聞稿",
-    .category = "government", .portal = "https://ca.gov.taipei/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://ca.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23460,7 +23460,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q126181830", .name = "Nantou Environmental Protection Bureau (government-agency, TW) - "
       "南投縣政府環境保護局全球資訊網-最新消息",
     .name_ja = "Nantou Environmental Protection Bureau (government-agency, TW) - 南投縣政府環境保護局全球資訊網-最新消息",
-    .category = "government", .portal = "https://www.ntepb.gov.tw/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ntepb.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23480,7 +23480,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q136521979", .name = "Cultural Affairs Bureau, Hualien (government-agency, TW) - "
       "花蓮縣文化局",
     .name_ja = "Cultural Affairs Bureau, Hualien (government-agency, TW) - 花蓮縣文化局",
-    .category = "government", .portal = "https://www.hccc.gov.tw/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.hccc.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23500,7 +23500,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q698822", .name = "Coast Guard Administration, Ocean Affairs Council "
       "(government-agency, TW) - 海巡新聞",
     .name_ja = "Coast Guard Administration, Ocean Affairs Council (government-agency, TW) - 海巡新聞",
-    .category = "government", .portal = "https://www.cga.gov.tw/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.cga.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23520,7 +23520,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q698822_2", .name = "Coast Guard Administration, Ocean Affairs Council "
       "(government-agency, TW) - 救生救難",
     .name_ja = "Coast Guard Administration, Ocean Affairs Council (government-agency, TW) - 救生救難",
-    .category = "government", .portal = "https://www.cga.gov.tw/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.cga.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23540,7 +23540,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q698822_3", .name = "Coast Guard Administration, Ocean Affairs Council "
       "(government-agency, TW) - 環保生態",
     .name_ja = "Coast Guard Administration, Ocean Affairs Council (government-agency, TW) - 環保生態",
-    .category = "government", .portal = "https://www.cga.gov.tw/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.cga.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23560,7 +23560,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q701679", .name = "Civil Aeronautics Administration (government-agency, TW) - "
       "交通部民用航空局 - 即時新聞",
     .name_ja = "Civil Aeronautics Administration (government-agency, TW) - 交通部民用航空局 - 即時新聞",
-    .category = "government", .portal = "https://www.caa.gov.tw/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.caa.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23580,7 +23580,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q701679_2", .name = "Civil Aeronautics Administration (government-agency, TW) - "
       "交通部民用航空局 - 考試公告",
     .name_ja = "Civil Aeronautics Administration (government-agency, TW) - 交通部民用航空局 - 考試公告",
-    .category = "government", .portal = "https://www.caa.gov.tw/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.caa.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23600,7 +23600,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q701679_3", .name = "Civil Aeronautics Administration (government-agency, TW) - "
       "交通部民用航空局 - 業務公告",
     .name_ja = "Civil Aeronautics Administration (government-agency, TW) - 交通部民用航空局 - 業務公告",
-    .category = "government", .portal = "https://www.caa.gov.tw/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.caa.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23620,7 +23620,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q701679_4", .name = "Civil Aeronautics Administration (government-agency, TW) - "
       "交通部民用航空局 - 徵才公告",
     .name_ja = "Civil Aeronautics Administration (government-agency, TW) - 交通部民用航空局 - 徵才公告",
-    .category = "government", .portal = "https://www.caa.gov.tw/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.caa.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23640,7 +23640,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q701679_5", .name = "Civil Aeronautics Administration (government-agency, TW) - "
       "交通部民用航空局 - 法規公告",
     .name_ja = "Civil Aeronautics Administration (government-agency, TW) - 交通部民用航空局 - 法規公告",
-    .category = "government", .portal = "https://www.caa.gov.tw/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.caa.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23660,7 +23660,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q701679_6", .name = "Civil Aeronautics Administration (government-agency, TW) - "
       "交通部民用航空局 - 最新消息",
     .name_ja = "Civil Aeronautics Administration (government-agency, TW) - 交通部民用航空局 - 最新消息",
-    .category = "government", .portal = "https://www.caa.gov.tw/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.caa.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23680,7 +23680,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q110571516", .name = "All-Out Defense Mobilization Agency, MND (government-agency, TW) "
       "- 國防部全民防衛動員署-各類消息",
     .name_ja = "All-Out Defense Mobilization Agency, MND (government-agency, TW) - 國防部全民防衛動員署-各類消息",
-    .category = "government", .portal = "https://adma.mnd.gov.tw/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://adma.mnd.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23700,7 +23700,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11079253", .name = "K-12 Education Administration (government-agency, TW) - "
       "教育部國民及學前教育署RSS訂閱文章",
     .name_ja = "K-12 Education Administration (government-agency, TW) - 教育部國民及學前教育署RSS訂閱文章",
-    .category = "government", .portal = "https://www.k12ea.gov.tw/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.k12ea.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23720,7 +23720,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q10891294", .name = "National Land Surveying and Mapping Center (government-agency, "
       "TW) - 國土測繪中心全球資訊網-中文網最新消息",
     .name_ja = "National Land Surveying and Mapping Center (government-agency, TW) - 國土測繪中心全球資訊網-中文網最新消息",
-    .category = "government", .portal = "https://www.nlsc.gov.tw/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.nlsc.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23740,7 +23740,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15909687", .name = "Department of Military Compulsory service, Taipei City "
       "Government (government-agency, TW) - 臺北市政府兵役局最新消息",
     .name_ja = "Department of Military Compulsory service, Taipei City Government (government-agency, TW) - 臺北市政府兵役局最新消息",
-    .category = "government", .portal = "https://docms.gov.taipei/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://docms.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23760,7 +23760,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15911941", .name = "Bureau of Labor Insurance, Ministry of Labor (government-agency, "
       "TW) - 勞動部勞工保險局",
     .name_ja = "Bureau of Labor Insurance, Ministry of Labor (government-agency, TW) - 勞動部勞工保險局",
-    .category = "government", .portal = "https://www.bli.gov.tw/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.bli.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23779,7 +23779,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15912111", .name = "Department of Labor, Taipei City Government (government-agency, "
       "TW) - 勞動局中文網新聞稿",
     .name_ja = "Department of Labor, Taipei City Government (government-agency, TW) - 勞動局中文網新聞稿",
-    .category = "government", .portal = "https://bola.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://bola.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23799,7 +23799,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q15912111_2", .name = "Department of Labor, Taipei City Government (government-agency, "
       "TW) - 勞動局中文網最新消息",
     .name_ja = "Department of Labor, Taipei City Government (government-agency, TW) - 勞動局中文網最新消息",
-    .category = "government", .portal = "https://bola.gov.taipei/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://bola.gov.taipei/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23818,7 +23818,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q133691512", .name = "Q133691512 (government-agency, TW) - 南投縣政府衛生局-最新消息",
     .name_ja = "Q133691512 (government-agency, TW) - 南投縣政府衛生局-最新消息",
-    .category = "government", .portal = "https://www.ntshb.gov.tw/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.ntshb.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23837,7 +23837,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q6366073", .name = "Kaohsiung City Council (legislature, TW) - 高雄市議會全球網-中文網新聞快訊",
     .name_ja = "Kaohsiung City Council (legislature, TW) - 高雄市議會全球網-中文網新聞快訊",
-    .category = "government", .portal = "https://www.kcc.gov.tw/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://www.kcc.gov.tw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23857,7 +23857,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q61932754", .name = "Pastoral Women's Council (government-agency, TZ) - Pastoral "
       "Womens Council",
     .name_ja = "Pastoral Women's Council (government-agency, TZ) - Pastoral Womens Council",
-    .category = "government", .portal = "https://pastoralwomenscouncil.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://pastoralwomenscouncil.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23877,7 +23877,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135983340", .name = "State Enterprise \\\"Ukrainian Scientific Railway Car Building "
       "Research Institute\\\" (government-agency, UA) - УкрНДІВ",
     .name_ja = "State Enterprise \\\"Ukrainian Scientific Railway Car Building Research Institute\\\" (government-agency, UA) - УкрНДІВ",
-    .category = "government", .portal = "https://ukrndiv.com.ua/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://ukrndiv.com.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23898,7 +23898,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "of Agrarian Sciences of Ukraine (government-agency, UA) - "
       "Видавництво «Аграрна наука»",
     .name_ja = "Agrarian Science State Publishing House of the National Academy of Agrarian Sciences of Ukraine (government-agency, UA) - Видавництво «Аграрна наука»",
-    .category = "government", .portal = "https://www.agroscience-publishing.org.ua/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.agroscience-publishing.org.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23918,7 +23918,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q138860607", .name = "Technical Centre of the National Academy of Sciences of Ukraine "
       "(Ukraine) (government-agency, UA) - Технічний центр",
     .name_ja = "Technical Centre of the National Academy of Sciences of Ukraine (Ukraine) (government-agency, UA) - Технічний центр",
-    .category = "government", .portal = "https://techcenter.kyiv.ua/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://techcenter.kyiv.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23939,7 +23939,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Protection (government-agency, UA) - Національний "
       "науково-дослідний інститут пр",
     .name_ja = "National Research Institute of Industrial Safety and Labor Protection (government-agency, UA) - Національний науково-дослідний інститут пр",
-    .category = "government", .portal = "https://ndiop.kiev.ua/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://ndiop.kiev.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23962,7 +23962,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Ukraine (government-agency, UA) - Відділення фізико-хімії "
       "горючих копалин",
     .name_ja = "Department of Physical Chemistry of Fossil Fuels of the Institute of Physical-Organic Chemistry and Coal Chemistry named after L. M. Lytvynenko of the National Academy of Sciences of Ukraine (government-agency, UA) - Відділення фізико-хімії горючих копалин",
-    .category = "government", .portal = "https://physchem.lviv.ua/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://physchem.lviv.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -23983,7 +23983,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Sciences of Ukraine (government-agency, UA) - Інститут "
       "біоресурсів НААН",
     .name_ja = "Institute of Bioresources of the National Academy of Agrarian Sciences of Ukraine (government-agency, UA) - Інститут біоресурсів НААН",
-    .category = "government", .portal = "https://bioresurs.ck.ua/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://bioresurs.ck.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24004,7 +24004,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, UA) - Рада національної безпеки і оборони "
       "Україн",
     .name_ja = "National Security and Defence Council of Ukraine (government-agency, UA) - Рада національної безпеки і оборони Україн",
-    .category = "government", .portal = "https://rnbo.gov.ua/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://rnbo.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24024,7 +24024,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7878444", .name = "Ukrainian Center for EU Civil Service Standards "
       "(government-agency, UA) - З Днем юриста!",
     .name_ja = "Ukrainian Center for EU Civil Service Standards (government-agency, UA) - З Днем юриста!",
-    .category = "government", .portal = "https://center.gov.ua/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://center.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24044,7 +24044,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11212881", .name = "Secretariat of Cabinet of Ministers (Ukraine) "
       "(government-agency, UA) - RSS новин",
     .name_ja = "Secretariat of Cabinet of Ministers (Ukraine) (government-agency, UA) - RSS новин",
-    .category = "government", .portal = "https://www.kmu.gov.ua/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.kmu.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24065,7 +24065,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, UA) - Державна служба геології та надр "
       "України",
     .name_ja = "State Geological and Subsurface Survey of Ukraine (government-agency, UA) - Державна служба геології та надр України",
-    .category = "government", .portal = "https://www.geo.gov.ua/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.geo.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24085,7 +24085,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12100438", .name = "State Service of Ukraine for Ethnopolitics and Freedom of "
       "Conscience (government-agency, UA) - ДЕСС",
     .name_ja = "State Service of Ukraine for Ethnopolitics and Freedom of Conscience (government-agency, UA) - ДЕСС",
-    .category = "government", .portal = "https://dess.gov.ua/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://dess.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24106,7 +24106,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Danube (government-agency, UA) - Басейнове управління водних "
       "ресурсів річок",
     .name_ja = "Basin Agency of Water Resources of Prychornomoria Rivers and Low Danube (government-agency, UA) - Басейнове управління водних ресурсів річок",
-    .category = "government", .portal = "https://oouvr.gov.ua/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://oouvr.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24127,7 +24127,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Academy of Agrarian Sciences (government-agency, UA) - Інститут "
       "кормів та сільського господарства",
     .name_ja = "Institute of Feed and Agriculture of Podillya of the National Academy of Agrarian Sciences (government-agency, UA) - Інститут кормів та сільського господарства",
-    .category = "government", .portal = "http://fri.vin.ua/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://fri.vin.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24147,7 +24147,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q109264536", .name = "Center for Countering Disinformation (government-agency, UA) - "
       "Центр протидії дезінформації",
     .name_ja = "Center for Countering Disinformation (government-agency, UA) - Центр протидії дезінформації",
-    .category = "government", .portal = "https://cpd.gov.ua/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cpd.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24168,7 +24168,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "of Agrarian Sciences of Ukraine (government-agency, UA) - "
       "Інститут кліматично орієнтованого сільськ",
     .name_ja = "Institute of Climate-Smart Agriculture of the National Academy of Agrarian Sciences of Ukraine (government-agency, UA) - Інститут кліматично орієнтованого сільськ",
-    .category = "government", .portal = "https://icsanaas.com.ua/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://icsanaas.com.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24188,7 +24188,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135260925", .name = "Inforesurs (government-agency, UA) - Державне підприємство "
       "«Інфоресурс»",
     .name_ja = "Inforesurs (government-agency, UA) - Державне підприємство «Інфоресурс»",
-    .category = "government", .portal = "https://www.inforesurs.gov.ua/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.inforesurs.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24208,7 +24208,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q56367148", .name = "Ukrainian Institute (government-agency, UA) - Український "
       "інститут",
     .name_ja = "Ukrainian Institute (government-agency, UA) - Український інститут",
-    .category = "government", .portal = "https://ui.org.ua/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://ui.org.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24229,7 +24229,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, UA) - Національна рада України з питань "
       "телебаче",
     .name_ja = "National Council of Ukraine on Television and Radio Broadcasting (government-agency, UA) - Національна рада України з питань телебаче",
-    .category = "government", .portal = "https://webportal.nrada.gov.ua/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://webportal.nrada.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24250,7 +24250,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, UA) - Український центр оцінювання якості "
       "освіти",
     .name_ja = "Ukrainian Center for Educational Quality Assessment (government-agency, UA) - Український центр оцінювання якості освіти",
-    .category = "government", .portal = "http://feeds.feedburner.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://feeds.feedburner.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24271,7 +24271,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Ukraine (government-agency, UA) - National Agency for Higher "
       "Education Quality Assurance",
     .name_ja = "National Agency for Quality Assurance in Higher Education of Ukraine (government-agency, UA) - National Agency for Higher Education Quality Assurance",
-    .category = "government", .portal = "https://en.naqa.gov.ua/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://en.naqa.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24292,7 +24292,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Ukraine (government-agency, UA) - Національне агентство із "
       "забезпечення якос",
     .name_ja = "National Agency for Quality Assurance in Higher Education of Ukraine (government-agency, UA) - Національне агентство із забезпечення якос",
-    .category = "government", .portal = "https://naqa.gov.ua/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://naqa.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24312,7 +24312,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4331444", .name = "State Literature Museum (government-organization, UA) - Одеський "
       "літературний музей",
     .name_ja = "State Literature Museum (government-organization, UA) - Одеський літературний музей",
-    .category = "government", .portal = "https://museum-literature.odessa.ua/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://museum-literature.odessa.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24333,7 +24333,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-organization, UA) - Офіційний сайт Басейнового "
       "управління водн",
     .name_ja = "Basin Agency of Water Resources of Southern Buh River (government-organization, UA) - Офіційний сайт Басейнового управління водн",
-    .category = "government", .portal = "https://www.buvrpb.davr.gov.ua/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.buvrpb.davr.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24354,7 +24354,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-organization, UA) - Офіційний сайт Басейнового "
       "управління водн",
     .name_ja = "Basin Agency of Water Resources of Southern Buh River (government-organization, UA) - Офіційний сайт Басейнового управління водн",
-    .category = "government", .portal = "https://www.buvrpb.davr.gov.ua/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.buvrpb.davr.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24374,7 +24374,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12100330", .name = "State Migration Service of Ukraine (government-organization, UA) "
       "- Новини ДМС України (RSS-feed)",
     .name_ja = "State Migration Service of Ukraine (government-organization, UA) - Новини ДМС України (RSS-feed)",
-    .category = "government", .portal = "https://dmsu.gov.ua/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://dmsu.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24393,7 +24393,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q55575726", .name = "Q55575726 (court, UA) - Коментарі до: Головна",
     .name_ja = "Q55575726 (court, UA) - Коментарі до: Головна",
-    .category = "government", .portal = "https://7aac.gov.ua/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://7aac.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24413,7 +24413,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4413761", .name = "Selydove City Council (legislature, UA) - Селидівська міська "
       "рада",
     .name_ja = "Selydove City Council (legislature, UA) - Селидівська міська рада",
-    .category = "government", .portal = "https://selidovo-rada.gov.ua/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://selidovo-rada.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24433,7 +24433,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4413761_2", .name = "Selydove City Council (legislature, UA) - Селидівська міська "
       "рада",
     .name_ja = "Selydove City Council (legislature, UA) - Селидівська міська рада",
-    .category = "government", .portal = "https://selidovo-rada.gov.ua/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://selidovo-rada.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24453,7 +24453,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12123294", .name = "Mykolayivska Miskya rrada (legislature, UA) - Миколаївська "
       "міська радa",
     .name_ja = "Mykolayivska Miskya rrada (legislature, UA) - Миколаївська міська радa",
-    .category = "government", .portal = "https://mkrada.gov.ua/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://mkrada.gov.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24473,7 +24473,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q19936632", .name = "Q19936632 (legislature, UA) - Стрічка новин Нововоронцовської "
       "громади",
     .name_ja = "Q19936632 (legislature, UA) - Стрічка новин Нововоронцовської громади",
-    .category = "government", .portal = "https://gromada.org.ua/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://gromada.org.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24493,7 +24493,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2473869", .name = "Uganda Communications Commission (government-agency, UG) - "
       "Uganda Communications Commission",
     .name_ja = "Uganda Communications Commission (government-agency, UG) - Uganda Communications Commission",
-    .category = "government", .portal = "https://www.ucc.co.ug/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.ucc.co.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24513,7 +24513,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5035614", .name = "Capital Markets Authority (government-agency, UG) - Capital "
       "Markets Authority",
     .name_ja = "Capital Markets Authority (government-agency, UG) - Capital Markets Authority",
-    .category = "government", .portal = "https://cmauganda.co.ug/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://cmauganda.co.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24533,7 +24533,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5124427", .name = "Civil Aviation Authority of Uganda (government-agency, UG) - "
       "Civil Aviation Authority",
     .name_ja = "Civil Aviation Authority of Uganda (government-agency, UG) - Civil Aviation Authority",
-    .category = "government", .portal = "https://caa.go.ug/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://caa.go.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24553,7 +24553,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7877635", .name = "Uganda Wildlife Authority (government-agency, UG) - Uganda "
       "Wildlife Authority",
     .name_ja = "Uganda Wildlife Authority (government-agency, UG) - Uganda Wildlife Authority",
-    .category = "government", .portal = "https://ugandawildlife.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://ugandawildlife.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24572,7 +24572,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q17108374", .name = "National Forestry Authority (government-agency, UG) - NFA Uganda",
     .name_ja = "National Forestry Authority (government-agency, UG) - NFA Uganda",
-    .category = "government", .portal = "https://www.nfa.org.ug/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.nfa.org.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24592,7 +24592,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18351712", .name = "Insurance Regulatory Authority of Uganda (government-agency, UG) "
       "- The Insurance Regulatory Authority of Uganda",
     .name_ja = "Insurance Regulatory Authority of Uganda (government-agency, UG) - The Insurance Regulatory Authority of Uganda",
-    .category = "government", .portal = "https://www.ira.go.ug/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.ira.go.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24612,7 +24612,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18356047", .name = "Uganda National Council for Higher Education (government-agency, "
       "UG) - National Council for Higher Education",
     .name_ja = "Uganda National Council for Higher Education (government-agency, UG) - National Council for Higher Education",
-    .category = "government", .portal = "https://unche.or.ug/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://unche.or.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24632,7 +24632,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18356056", .name = "Uganda Retirement Benefits Regulatory Authority "
       "(government-agency, UG) - URBRA",
     .name_ja = "Uganda Retirement Benefits Regulatory Authority (government-agency, UG) - URBRA",
-    .category = "government", .portal = "https://urbra.go.ug/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://urbra.go.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24652,7 +24652,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q28446440", .name = "Deposit Protection Fund of Uganda (government-agency, UG) - "
       "Deposit Protection Fund of Uganda",
     .name_ja = "Deposit Protection Fund of Uganda (government-agency, UG) - Deposit Protection Fund of Uganda",
-    .category = "government", .portal = "https://dpf.or.ug/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://dpf.or.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24672,7 +24672,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30261875", .name = "National Agricultural Research Organisation (government-agency, "
       "UG) - National Agricultural Research Organisation (NARO)",
     .name_ja = "National Agricultural Research Organisation (government-agency, UG) - National Agricultural Research Organisation (NARO)",
-    .category = "government", .portal = "https://naro.go.ug/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://naro.go.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24692,7 +24692,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30262100", .name = "Uganda National Academy of Sciences (government-agency, UG) - "
       "UNAS",
     .name_ja = "Uganda National Academy of Sciences (government-agency, UG) - UNAS",
-    .category = "government", .portal = "https://unas.org.ug/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://unas.org.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24712,7 +24712,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q60746495", .name = "Uganda National Examinations Board (government-agency, UG) - "
       "UNEB",
     .name_ja = "Uganda National Examinations Board (government-agency, UG) - UNEB",
-    .category = "government", .portal = "https://uneb.ac.ug/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://uneb.ac.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24731,7 +24731,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q60746767", .name = "Uganda National Teachers Union (government-agency, UG) - UNATU",
     .name_ja = "Uganda National Teachers Union (government-agency, UG) - UNATU",
-    .category = "government", .portal = "https://unatu.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://unatu.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24752,7 +24752,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "the Prime Minister – A Coordinated, Responsive and Accountable "
       "Gover",
     .name_ja = "Office of the Prime Minister (government-agency, UG) - Office of the Prime Minister – A Coordinated, Responsive and Accountable Gover",
-    .category = "government", .portal = "https://opm.go.ug/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://opm.go.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24772,7 +24772,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q136088193", .name = "Uganda Tourism Board (government-agency, UG) - Uganda Tourism "
       "Board",
     .name_ja = "Uganda Tourism Board (government-agency, UG) - Uganda Tourism Board",
-    .category = "government", .portal = "https://utb.go.ug/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://utb.go.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24791,7 +24791,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q136088193_2", .name = "Uganda Tourism Board (government-agency, UG) - Comments on: Home",
     .name_ja = "Uganda Tourism Board (government-agency, UG) - Comments on: Home",
-    .category = "government", .portal = "https://utb.go.ug/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://utb.go.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24810,7 +24810,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q7877625", .name = "Uganda Police Force (police, UG) - Uganda Police Force",
     .name_ja = "Uganda Police Force (police, UG) - Uganda Police Force",
-    .category = "government", .portal = "https://upf.go.ug/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://upf.go.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24830,7 +24830,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140374388", .name = "Uganda Nurses and Midwives Council (regulatory-agency, UG) - "
       "UNMC",
     .name_ja = "Uganda Nurses and Midwives Council (regulatory-agency, UG) - UNMC",
-    .category = "government", .portal = "https://unmc.ug/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://unmc.ug/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24850,7 +24850,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5178266", .name = "Court Services and Offender Supervision Agency "
       "(government-agency, US) - CSOSA",
     .name_ja = "Court Services and Offender Supervision Agency (government-agency, US) - CSOSA",
-    .category = "government", .portal = "https://www.csosa.gov/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.csosa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24870,7 +24870,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q861855", .name = "National Agricultural Statistics Service (government-agency, US) "
       "- USDA - National Agricultural Statistics Service Reports",
     .name_ja = "National Agricultural Statistics Service (government-agency, US) - USDA - National Agricultural Statistics Service Reports",
-    .category = "government", .portal = "https://www.nass.usda.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.nass.usda.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24890,7 +24890,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q861855_2", .name = "National Agricultural Statistics Service (government-agency, US) "
       "- USDA - National Agricultural Statistics Service",
     .name_ja = "National Agricultural Statistics Service (government-agency, US) - USDA - National Agricultural Statistics Service",
-    .category = "government", .portal = "https://www.nass.usda.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.nass.usda.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24910,7 +24910,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1053937_70", .name = "Central Pacific Hurricane Center (government-agency, US) - "
       "Central North Pacific Hurricane Nolo Forecast/Advisory Number 57",
     .name_ja = "Central Pacific Hurricane Center (government-agency, US) - Central North Pacific Hurricane Nolo Forecast/Advisory Number 57",
-    .category = "government", .portal = "https://www.nhc.noaa.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.nhc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24931,7 +24931,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Central North Pacific Remnants of Moke Forecast/Advisory Number "
       "20",
     .name_ja = "Central Pacific Hurricane Center (government-agency, US) - Central North Pacific Remnants of Moke Forecast/Advisory Number 20",
-    .category = "government", .portal = "https://www.nhc.noaa.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.nhc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24952,7 +24952,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Central North Pacific Post-Tropical Cyclone Lowell "
       "Forecast/Advisory Number 60",
     .name_ja = "Central Pacific Hurricane Center (government-agency, US) - Central North Pacific Post-Tropical Cyclone Lowell Forecast/Advisory Number 60",
-    .category = "government", .portal = "https://www.nhc.noaa.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.nhc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24973,7 +24973,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Central North Pacific Post-Tropical Cyclone Karina "
       "Forecast/Advisory Number 43",
     .name_ja = "Central Pacific Hurricane Center (government-agency, US) - Central North Pacific Post-Tropical Cyclone Karina Forecast/Advisory Number 43",
-    .category = "government", .portal = "https://www.nhc.noaa.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.nhc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -24993,7 +24993,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1053937_74", .name = "Central Pacific Hurricane Center (government-agency, US) - "
       "Atlantic Post-Tropical Cyclone Fay Discussion Number 39",
     .name_ja = "Central Pacific Hurricane Center (government-agency, US) - Atlantic Post-Tropical Cyclone Fay Discussion Number 39",
-    .category = "government", .portal = "https://www.nhc.noaa.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.nhc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25013,7 +25013,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1053937_75", .name = "Central Pacific Hurricane Center (government-agency, US) - "
       "Atlantic Post-Tropical Cyclone Gonzalo Discussion Number 8",
     .name_ja = "Central Pacific Hurricane Center (government-agency, US) - Atlantic Post-Tropical Cyclone Gonzalo Discussion Number 8",
-    .category = "government", .portal = "https://www.nhc.noaa.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.nhc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25033,7 +25033,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1053937_76", .name = "Central Pacific Hurricane Center (government-agency, US) - "
       "Atlantic Post-Tropical Cyclone Hanna Discussion Number 9",
     .name_ja = "Central Pacific Hurricane Center (government-agency, US) - Atlantic Post-Tropical Cyclone Hanna Discussion Number 9",
-    .category = "government", .portal = "https://www.nhc.noaa.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.nhc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25054,7 +25054,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - Children, Youth, and Family Department "
       "of New Mexico",
     .name_ja = "New Mexico Children, Youth, and Families Department (government-agency, US) - Children, Youth, and Family Department of New Mexico",
-    .category = "government", .portal = "https://www.cyfd.nm.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.cyfd.nm.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25074,7 +25074,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7010174", .name = "New Mexico Department of Game and Fish (government-agency, US) - "
       "NMDOW",
     .name_ja = "New Mexico Department of Game and Fish (government-agency, US) - NMDOW",
-    .category = "government", .portal = "https://wildlife.dgf.nm.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://wildlife.dgf.nm.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25094,7 +25094,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5020292", .name = "California State Auditor (government-agency, US) - California "
       "State Auditor",
     .name_ja = "California State Auditor (government-agency, US) - California State Auditor",
-    .category = "government", .portal = "https://www.auditor.ca.gov/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.auditor.ca.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25114,7 +25114,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5020345", .name = "California Commission on Asian and Pacific Islander Affairs "
       "(government-agency, US) - California Commission on APIA Affairs",
     .name_ja = "California Commission on Asian and Pacific Islander Affairs (government-agency, US) - California Commission on APIA Affairs",
-    .category = "government", .portal = "https://capiaa.ca.gov/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://capiaa.ca.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25134,7 +25134,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5253341", .name = "Delaware River Joint Toll Bridge Commission (government-agency, "
       "US) - DRJTBC",
     .name_ja = "Delaware River Joint Toll Bridge Commission (government-agency, US) - DRJTBC",
-    .category = "government", .portal = "https://www.drjtbc.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.drjtbc.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25154,7 +25154,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5260534", .name = "Department of Youth Rehabilitation Services (government-agency, "
       "US) - config - Config",
     .name_ja = "Department of Youth Rehabilitation Services (government-agency, US) - config - Config",
-    .category = "government", .portal = "https://dyrs.dc.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dyrs.dc.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25173,7 +25173,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q7231911", .name = "Prosper Portland (government-agency, US) - Prosper Portland",
     .name_ja = "Prosper Portland (government-agency, US) - Prosper Portland",
-    .category = "government", .portal = "https://prosperportland.us/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://prosperportland.us/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25193,7 +25193,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7258742", .name = "Puerto Rico Natural Resources Ranger Corps (government-agency, "
       "US) - DRNA   Notificación monitoria de playas",
     .name_ja = "Puerto Rico Natural Resources Ranger Corps (government-agency, US) - DRNA   Notificación monitoria de playas",
-    .category = "government", .portal = "https://www.drna.pr.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.drna.pr.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25213,7 +25213,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7339865", .name = "Roaring Fork Transportation Authority (government-agency, US) - "
       "RFTA",
     .name_ja = "Roaring Fork Transportation Authority (government-agency, US) - RFTA",
-    .category = "government", .portal = "https://www.rfta.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.rfta.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25233,7 +25233,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7397015", .name = "Sacramento Regional Transit District (government-agency, US) - "
       "SacRT",
     .name_ja = "Sacramento Regional Transit District (government-agency, US) - SacRT",
-    .category = "government", .portal = "https://www.sacrt.com/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.sacrt.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25253,7 +25253,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7413997", .name = "San Francisco District Attorney's Office (government-agency, US) "
       "- San Francisco District Attorney",
     .name_ja = "San Francisco District Attorney's Office (government-agency, US) - San Francisco District Attorney",
-    .category = "government", .portal = "https://sfdistrictattorney.org/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://sfdistrictattorney.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25273,7 +25273,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6462132", .name = "South Jersey Transportation Authority (government-agency, US) - "
       "sjtabeta",
     .name_ja = "South Jersey Transportation Authority (government-agency, US) - sjtabeta",
-    .category = "government", .portal = "https://www.sjta.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.sjta.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25293,7 +25293,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6462132_2", .name = "South Jersey Transportation Authority (government-agency, US) - "
       "sjtabeta",
     .name_ja = "South Jersey Transportation Authority (government-agency, US) - sjtabeta",
-    .category = "government", .portal = "https://www.sjta.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.sjta.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25313,7 +25313,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6682074", .name = "Los Angeles County Department of Medical Examiner "
       "(government-agency, US) - County of Los Angeles Medical Examiner",
     .name_ja = "Los Angeles County Department of Medical Examiner (government-agency, US) - County of Los Angeles Medical Examiner",
-    .category = "government", .portal = "https://me.lacounty.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://me.lacounty.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25333,7 +25333,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6682075", .name = "Los Angeles County Department of Mental Health "
       "(government-agency, US) - Department of Mental Health",
     .name_ja = "Los Angeles County Department of Mental Health (government-agency, US) - Department of Mental Health",
-    .category = "government", .portal = "https://dmh.lacounty.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dmh.lacounty.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25353,7 +25353,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6724509", .name = "Mackinac Island State Park Commission (government-agency, US) - "
       "Mackinac State Historic Parks",
     .name_ja = "Mackinac Island State Park Commission (government-agency, US) - Mackinac State Historic Parks",
-    .category = "government", .portal = "https://www.mackinacparks.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.mackinacparks.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25373,7 +25373,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6784198", .name = "Massachusetts Bay Transportation Authority Police "
       "(government-agency, US) - MBTA News Feed",
     .name_ja = "Massachusetts Bay Transportation Authority Police (government-agency, US) - MBTA News Feed",
-    .category = "government", .portal = "https://www.mbta.com/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.mbta.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25393,7 +25393,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4708532", .name = "Alaska Department of Public Safety (government-agency, US) - "
       "Alaska Department of Public Safety",
     .name_ja = "Alaska Department of Public Safety (government-agency, US) - Alaska Department of Public Safety",
-    .category = "government", .portal = "https://dps.alaska.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://dps.alaska.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25413,7 +25413,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4791764", .name = "Arkansas Department of Community Correction (government-agency, "
       "US) - Arkansas Department of Corrections",
     .name_ja = "Arkansas Department of Community Correction (government-agency, US) - Arkansas Department of Corrections",
-    .category = "government", .portal = "https://doc.arkansas.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://doc.arkansas.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25433,7 +25433,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4816087", .name = "Atlanta Housing Authority (government-agency, US) - Atlanta "
       "Housing",
     .name_ja = "Atlanta Housing Authority (government-agency, US) - Atlanta Housing",
-    .category = "government", .portal = "https://www.atlantahousing.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.atlantahousing.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25454,7 +25454,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - NOAA's Atlantic Oceanographic and "
       "Meteorological Laboratory",
     .name_ja = "Atlantic Oceanographic and Meteorological Laboratory (government-agency, US) - NOAA's Atlantic Oceanographic and Meteorological Laboratory",
-    .category = "government", .portal = "https://www.aoml.noaa.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.aoml.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25475,7 +25475,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - PA Department of Community & Economic "
       "Development",
     .name_ja = "Pennsylvania Department of Community and Economic Development (government-agency, US) - PA Department of Community & Economic Development",
-    .category = "government", .portal = "https://dced.pa.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://dced.pa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25495,7 +25495,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7164019", .name = "Pennsylvania Northeast Regional Railroad Authority "
       "(government-agency, US) - PA Railroad",
     .name_ja = "Pennsylvania Northeast Regional Railroad Authority (government-agency, US) - PA Railroad",
-    .category = "government", .portal = "http://pnrra.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "http://pnrra.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25515,7 +25515,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2061000", .name = "Alaska Permanent Fund (government-agency, US) - Alaska Permanent "
       "Fund Corporation",
     .name_ja = "Alaska Permanent Fund (government-agency, US) - Alaska Permanent Fund Corporation",
-    .category = "government", .portal = "https://apfc.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://apfc.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25535,7 +25535,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q12060621", .name = "Huron–Clinton Metroparks (government-agency, US) - Huron-Clinton "
       "Metroparks",
     .name_ja = "Huron–Clinton Metroparks (government-agency, US) - Huron-Clinton Metroparks",
-    .category = "government", .portal = "https://www.metroparks.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.metroparks.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25555,7 +25555,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q13435342", .name = "Nebraska Library Commission (government-agency, US) - Nebraska "
       "Library News",
     .name_ja = "Nebraska Library Commission (government-agency, US) - Nebraska Library News",
-    .category = "government", .portal = "http://nlc.nebraska.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://nlc.nebraska.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25575,7 +25575,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q13435342_2", .name = "Nebraska Library Commission (government-agency, US) - Nebraska "
       "Library Social Networking Items",
     .name_ja = "Nebraska Library Commission (government-agency, US) - Nebraska Library Social Networking Items",
-    .category = "government", .portal = "http://nlc.nebraska.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://nlc.nebraska.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25595,7 +25595,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q13435342_3", .name = "Nebraska Library Commission (government-agency, US) - Nebraska "
       "Library Commission Blog",
     .name_ja = "Nebraska Library Commission (government-agency, US) - Nebraska Library Commission Blog",
-    .category = "government", .portal = "http://nlc.nebraska.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://nlc.nebraska.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25615,7 +25615,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16829896", .name = "Connect for Health Colorado (government-agency, US) - Connect "
       "for Health Colorado",
     .name_ja = "Connect for Health Colorado (government-agency, US) - Connect for Health Colorado",
-    .category = "government", .portal = "https://connectforhealthco.com/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://connectforhealthco.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25635,7 +25635,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q8040308", .name = "Wyoming Business Council (government-agency, US) - Wyoming "
       "Business Council",
     .name_ja = "Wyoming Business Council (government-agency, US) - Wyoming Business Council",
-    .category = "government", .portal = "https://wyomingbusiness.org/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://wyomingbusiness.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25655,7 +25655,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q8040327", .name = "Wyoming Department of Family Services (government-agency, US) - "
       "Wyoming Department of Family Services",
     .name_ja = "Wyoming Department of Family Services (government-agency, US) - Wyoming Department of Family Services",
-    .category = "government", .portal = "https://dfs.wyo.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dfs.wyo.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25675,7 +25675,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q751874", .name = "Storm Prediction Center (government-agency, US) - SPC Forecast "
       "Products",
     .name_ja = "Storm Prediction Center (government-agency, US) - SPC Forecast Products",
-    .category = "government", .portal = "https://www.spc.noaa.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.spc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25695,7 +25695,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q751874_2", .name = "Storm Prediction Center (government-agency, US) - SPC "
       "Tornado/Severe Thunderstorm Watches",
     .name_ja = "Storm Prediction Center (government-agency, US) - SPC Tornado/Severe Thunderstorm Watches",
-    .category = "government", .portal = "https://www.spc.noaa.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.spc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25715,7 +25715,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q751874_3", .name = "Storm Prediction Center (government-agency, US) - SPC Mesoscale "
       "Discussions",
     .name_ja = "Storm Prediction Center (government-agency, US) - SPC Mesoscale Discussions",
-    .category = "government", .portal = "https://www.spc.noaa.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.spc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25735,7 +25735,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q751874_5", .name = "Storm Prediction Center (government-agency, US) - SPC Oct 18, "
       "2026 0600Z Thunderstorm Outlook",
     .name_ja = "Storm Prediction Center (government-agency, US) - SPC Oct 18, 2026 0600Z Thunderstorm Outlook",
-    .category = "government", .portal = "https://www.spc.noaa.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.spc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25755,7 +25755,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q751874_6", .name = "Storm Prediction Center (government-agency, US) - SPC Fire "
       "Weather Outlooks",
     .name_ja = "Storm Prediction Center (government-agency, US) - SPC Fire Weather Outlooks",
-    .category = "government", .portal = "https://www.spc.noaa.gov/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.spc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25776,7 +25776,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Particularly Dangerous Situation (PDS) Tornado/Severe "
       "Thunderstorm Watch",
     .name_ja = "Storm Prediction Center (government-agency, US) - SPC Particularly Dangerous Situation (PDS) Tornado/Severe Thunderstorm Watch",
-    .category = "government", .portal = "https://www.spc.noaa.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.spc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25796,7 +25796,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q751874_8", .name = "Storm Prediction Center (government-agency, US) - SPC "
       "Experimental Public Severe Weather Outlook Multimedia Briefing",
     .name_ja = "Storm Prediction Center (government-agency, US) - SPC Experimental Public Severe Weather Outlook Multimedia Briefing",
-    .category = "government", .portal = "https://www.spc.noaa.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.spc.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25815,7 +25815,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q6820290", .name = "Merrimack Valley Transit (government-agency, US) - MeVa",
     .name_ja = "Merrimack Valley Transit (government-agency, US) - MeVa",
-    .category = "government", .portal = "https://mevatransit.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://mevatransit.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25835,7 +25835,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6879136", .name = "Mississippi Department of Mental Health (government-agency, US) "
       "- Mississippi Department of Mental Health",
     .name_ja = "Mississippi Department of Mental Health (government-agency, US) - Mississippi Department of Mental Health",
-    .category = "government", .portal = "https://www.dmh.ms.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.dmh.ms.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25855,7 +25855,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6879539", .name = "Missouri Department of Public Safety (government-agency, US) - "
       "Missouri Department of Public Safety",
     .name_ja = "Missouri Department of Public Safety (government-agency, US) - Missouri Department of Public Safety",
-    .category = "government", .portal = "https://dps.mo.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://dps.mo.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25875,7 +25875,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6942800", .name = "Muskingum Watershed Conservancy District (government-agency, US) "
       "- Muskingum Watershed Conservancy District",
     .name_ja = "Muskingum Watershed Conservancy District (government-agency, US) - Muskingum Watershed Conservancy District",
-    .category = "government", .portal = "https://www.mwcd.org/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.mwcd.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25896,7 +25896,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - Department of Agriculture & "
       "Biosecurity",
     .name_ja = "Hawaii Department of Agriculture and Biosecurity (government-agency, US) - Department of Agriculture & Biosecurity",
-    .category = "government", .portal = "https://dab.hawaii.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://dab.hawaii.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25915,7 +25915,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q140351166", .name = "Mobile Housing Board (government-agency, US) - Home",
     .name_ja = "Mobile Housing Board (government-agency, US) - Home",
-    .category = "government", .portal = "https://mobilehousing.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://mobilehousing.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25934,7 +25934,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q140351166_2", .name = "Mobile Housing Board (government-agency, US) - Home",
     .name_ja = "Mobile Housing Board (government-agency, US) - Home",
-    .category = "government", .portal = "https://mobilehousing.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://mobilehousing.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25954,7 +25954,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140351944", .name = "Defense and Veterans Brain Injury Center (government-agency, US) "
       "- Health.mil Articles RSS Feed",
     .name_ja = "Defense and Veterans Brain Injury Center (government-agency, US) - Health.mil Articles RSS Feed",
-    .category = "government", .portal = "https://www.health.mil/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.health.mil/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25974,7 +25974,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140351996", .name = "Hawai'i Division of Aquatic Resources (government-agency, US) - "
       "Department of Land and Natural Resources",
     .name_ja = "Hawai'i Division of Aquatic Resources (government-agency, US) - Department of Land and Natural Resources",
-    .category = "government", .portal = "https://dlnr.hawaii.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://dlnr.hawaii.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -25993,7 +25993,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q16846908", .name = "Your Health Idaho (government-agency, US) - Your Health Idaho",
     .name_ja = "Your Health Idaho (government-agency, US) - Your Health Idaho",
-    .category = "government", .portal = "https://yourhealthidaho.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://yourhealthidaho.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26013,7 +26013,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16939120", .name = "Idaho Department of Fish and Game (government-agency, US) - News "
       "Of The Day",
     .name_ja = "Idaho Department of Fish and Game (government-agency, US) - News Of The Day",
-    .category = "government", .portal = "https://idfg.idaho.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://idfg.idaho.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26032,7 +26032,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q16962486", .name = "HealthSource RI (government-agency, US) - HealthSource RI",
     .name_ja = "HealthSource RI (government-agency, US) - HealthSource RI",
-    .category = "government", .portal = "https://healthsourceri.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://healthsourceri.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26053,7 +26053,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - Wisconsin Department of Children and "
       "Families - Protecting Children, Strengtheni",
     .name_ja = "Wisconsin Department of Children and Families (government-agency, US) - Wisconsin Department of Children and Families - Protecting Children, Strengtheni",
-    .category = "government", .portal = "https://dcf.wisconsin.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dcf.wisconsin.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26073,7 +26073,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q17021350", .name = "New Jersey Sports and Exposition Authority (government-agency, "
       "US) - New Jersey Sports and Exposition Authority",
     .name_ja = "New Jersey Sports and Exposition Authority (government-agency, US) - New Jersey Sports and Exposition Authority",
-    .category = "government", .portal = "https://www.njsea.com/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.njsea.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26093,7 +26093,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5461311", .name = "Florida Department of Business and Professional Regulation "
       "(government-agency, US) - MyFloridaLicense.com",
     .name_ja = "Florida Department of Business and Professional Regulation (government-agency, US) - MyFloridaLicense.com",
-    .category = "government", .portal = "https://www2.myfloridalicense.com/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www2.myfloridalicense.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26113,7 +26113,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5470803", .name = "Fort Bend County Toll Road Authority (government-agency, US) - "
       "Fort Bend County Toll Road Authority",
     .name_ja = "Fort Bend County Toll Road Authority (government-agency, US) - Fort Bend County Toll Road Authority",
-    .category = "government", .portal = "https://www.fbctra.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.fbctra.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26133,7 +26133,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5599435", .name = "Great Lakes Commission (government-agency, US) - Great Lakes "
       "Commission",
     .name_ja = "Great Lakes Commission (government-agency, US) - Great Lakes Commission",
-    .category = "government", .portal = "https://www.glc.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.glc.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26153,7 +26153,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q107449411", .name = "Public Building Commission of Chicago (government-agency, US) - "
       "PBC Chicago",
     .name_ja = "Public Building Commission of Chicago (government-agency, US) - PBC Chicago",
-    .category = "government", .portal = "https://pbcchicago.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://pbcchicago.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26173,7 +26173,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q108156268", .name = "Alaska Division of Geological and Geophysical Surveys "
       "(government-agency, US) - DGGS News",
     .name_ja = "Alaska Division of Geological and Geophysical Surveys (government-agency, US) - DGGS News",
-    .category = "government", .portal = "http://feeds.feedburner.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://feeds.feedburner.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26194,7 +26194,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Department of Commerce – Commonwealth of the Northern Mariana "
       "Islands (CNMI)",
     .name_ja = "CNMI Central Statistics Division (government-agency, US) - Department of Commerce – Commonwealth of the Northern Mariana Islands (CNMI)",
-    .category = "government", .portal = "https://ver1.cnmicommerce.com/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://ver1.cnmicommerce.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26214,7 +26214,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q108737728", .name = "Arkansas Department of Agriculture (government-agency, US) - "
       "Arkansas Department of Agriculture",
     .name_ja = "Arkansas Department of Agriculture (government-agency, US) - Arkansas Department of Agriculture",
-    .category = "government", .portal = "https://agriculture.arkansas.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://agriculture.arkansas.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26234,7 +26234,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q109292618", .name = "Utah Division of State Parks (government-agency, US) - Utah "
       "State Parks",
     .name_ja = "Utah Division of State Parks (government-agency, US) - Utah State Parks",
-    .category = "government", .portal = "https://stateparks.utah.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://stateparks.utah.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26254,7 +26254,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q109292619", .name = "Utah Department of Natural Resources (government-agency, US) - "
       "Utah Department of Natural Resources",
     .name_ja = "Utah Department of Natural Resources (government-agency, US) - Utah Department of Natural Resources",
-    .category = "government", .portal = "https://naturalresources.utah.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://naturalresources.utah.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26274,7 +26274,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5987333", .name = "Idaho Commission for Libraries (government-agency, US) - Idaho "
       "Commission for Libraries",
     .name_ja = "Idaho Commission for Libraries (government-agency, US) - Idaho Commission for Libraries",
-    .category = "government", .portal = "https://libraries.idaho.gov/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://libraries.idaho.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26293,7 +26293,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q6034762", .name = "Inland Empire Utilities Agency (government-agency, US) - IEUA",
     .name_ja = "Inland Empire Utilities Agency (government-agency, US) - IEUA",
-    .category = "government", .portal = "https://www.ieua.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.ieua.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26312,7 +26312,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q6040803", .name = "Institute of Puerto Rican Culture (government-agency, US) - ICP",
     .name_ja = "Institute of Puerto Rican Culture (government-agency, US) - ICP",
-    .category = "government", .portal = "https://www.icp.pr.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.icp.pr.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26332,7 +26332,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q6230737", .name = "John E. Fogarty International Center (government-agency, US) - "
       "Fogarty International Center News",
     .name_ja = "John E. Fogarty International Center (government-agency, US) - Fogarty International Center News",
-    .category = "government", .portal = "https://www.fic.nih.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.fic.nih.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26352,7 +26352,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2994219", .name = "Council for the Development of French in Louisiana "
       "(government-agency, US) - CODOFIL",
     .name_ja = "Council for the Development of French in Louisiana (government-agency, US) - CODOFIL",
-    .category = "government", .portal = "https://codofil.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://codofil.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26372,7 +26372,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3120094", .name = "District of Columbia Public Schools (government-agency, US) - "
       "dcps - DC Public Schools",
     .name_ja = "District of Columbia Public Schools (government-agency, US) - dcps - DC Public Schools",
-    .category = "government", .portal = "https://dcps.dc.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dcps.dc.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26391,7 +26391,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5020416", .name = "California Civil Rights Department (government-agency, US) - CRD",
     .name_ja = "California Civil Rights Department (government-agency, US) - CRD",
-    .category = "government", .portal = "https://calcivilrights.ca.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://calcivilrights.ca.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26411,7 +26411,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5020434", .name = "California Department of Pesticide Regulation "
       "(government-agency, US) - Department of Pesticide Regulation",
     .name_ja = "California Department of Pesticide Regulation (government-agency, US) - Department of Pesticide Regulation",
-    .category = "government", .portal = "https://www.cdpr.ca.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.cdpr.ca.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26431,7 +26431,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5020489", .name = "California Film Commission (government-agency, US) - California "
       "Film Commission",
     .name_ja = "California Film Commission (government-agency, US) - California Film Commission",
-    .category = "government", .portal = "https://film.ca.gov/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://film.ca.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26452,7 +26452,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Development (government-agency, US) - California Governor’s "
       "Office of Business and Economic Development",
     .name_ja = "California Governor's Office of Business and Economic Development (government-agency, US) - California Governor’s Office of Business and Economic Development",
-    .category = "government", .portal = "https://business.ca.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://business.ca.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26472,7 +26472,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5020641", .name = "California Department of Resources Recycling and Recovery "
       "(government-agency, US) - CalRecycle Home Page",
     .name_ja = "California Department of Resources Recycling and Recovery (government-agency, US) - CalRecycle Home Page",
-    .category = "government", .portal = "https://calrecycle.ca.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://calrecycle.ca.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26492,7 +26492,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5021134", .name = "California Department of Technology (government-agency, US) - "
       "CDT",
     .name_ja = "California Department of Technology (government-agency, US) - CDT",
-    .category = "government", .portal = "https://www.cdt.ca.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.cdt.ca.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26513,7 +26513,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - Cambria County Conservation & "
       "Recreation Authority",
     .name_ja = "Cambria County Conservation And Recreation Authority (government-agency, US) - Cambria County Conservation & Recreation Authority",
-    .category = "government", .portal = "https://www.cambriaconservationrecreation.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.cambriaconservationrecreation.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26533,7 +26533,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5034793", .name = "Cape Fear Public Transportation Authority (government-agency, "
       "US) - Wave Transit",
     .name_ja = "Cape Fear Public Transportation Authority (government-agency, US) - Wave Transit",
-    .category = "government", .portal = "https://www.wavetransit.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.wavetransit.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26553,7 +26553,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5086749", .name = "Charter School Institute (government-agency, US) - Colorado "
       "Charter School Institute: State Charter Authorizer",
     .name_ja = "Charter School Institute (government-agency, US) - Colorado Charter School Institute: State Charter Authorizer",
-    .category = "government", .portal = "https://www.csi.state.co.us/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.csi.state.co.us/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26573,7 +26573,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q5087866", .name = "Chattanooga Area Regional Transportation Authority "
       "(government-agency, US) - CARTA",
     .name_ja = "Chattanooga Area Regional Transportation Authority (government-agency, US) - CARTA",
-    .category = "government", .portal = "https://www.gocarta.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.gocarta.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26594,7 +26594,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Engineering (government-agency, US) - DoW Research & "
       "Engineering, OUSW(R&E)",
     .name_ja = "Office of the Under Secretary of War for Research and Engineering (government-agency, US) - DoW Research & Engineering, OUSW(R&E)",
-    .category = "government", .portal = "https://www.cto.mil/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.cto.mil/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26614,7 +26614,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140868562", .name = "Virginia Foundation for Healthy Youth (government-agency, US) - "
       "Virginia Foundation for Healthy Youth (VFHY)",
     .name_ja = "Virginia Foundation for Healthy Youth (government-agency, US) - Virginia Foundation for Healthy Youth (VFHY)",
-    .category = "government", .portal = "https://vfhy.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://vfhy.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26635,7 +26635,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - Virginia Tobacco Region Revitalization "
       "Commission",
     .name_ja = "Virginia Tobacco Region Revitalization Commission (government-agency, US) - Virginia Tobacco Region Revitalization Commission",
-    .category = "government", .portal = "https://revitalizeva.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://revitalizeva.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26655,7 +26655,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140868864", .name = "Guam Coastal Management Program (government-agency, US) - The "
       "Bureau of Statistics and Plans Guam",
     .name_ja = "Guam Coastal Management Program (government-agency, US) - The Bureau of Statistics and Plans Guam",
-    .category = "government", .portal = "https://bsp.guam.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://bsp.guam.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26675,7 +26675,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140869877", .name = "Georgia Peanut Commission (government-agency, US) - Georgia "
       "Peanut Commission",
     .name_ja = "Georgia Peanut Commission (government-agency, US) - Georgia Peanut Commission",
-    .category = "government", .portal = "https://gapeanuts.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://gapeanuts.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26694,7 +26694,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q140870047", .name = "City of Prichard (government-agency, US) - The City of Prichard",
     .name_ja = "City of Prichard (government-agency, US) - The City of Prichard",
-    .category = "government", .portal = "https://thecityofprichard.org/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://thecityofprichard.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26714,7 +26714,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140872017", .name = "Utah Commission on Criminal and Juvenile Justice "
       "(government-agency, US) - Department of Criminal Justice",
     .name_ja = "Utah Commission on Criminal and Juvenile Justice (government-agency, US) - Department of Criminal Justice",
-    .category = "government", .portal = "https://justice.utah.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://justice.utah.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26734,7 +26734,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q128034414", .name = "Salem County Improvement Authority (government-agency, US) - "
       "Salem County Improvement Authority",
     .name_ja = "Salem County Improvement Authority (government-agency, US) - Salem County Improvement Authority",
-    .category = "government", .portal = "https://scianj.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://scianj.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26754,7 +26754,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q128118431", .name = "Essex County Utilities Authority (government-agency, US) - Essex "
       "County Utilities Authority",
     .name_ja = "Essex County Utilities Authority (government-agency, US) - Essex County Utilities Authority",
-    .category = "government", .portal = "https://www.ecuanj.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.ecuanj.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26774,7 +26774,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q128118429", .name = "Essex County Improvement Authority (government-agency, US) - "
       "ECIA",
     .name_ja = "Essex County Improvement Authority (government-agency, US) - ECIA",
-    .category = "government", .portal = "https://www.ecianj.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.ecianj.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26794,7 +26794,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q128797718", .name = "Beaumont Municipal Transit (government-agency, US) - Beaumont "
       "ZIP",
     .name_ja = "Beaumont Municipal Transit (government-agency, US) - Beaumont ZIP",
-    .category = "government", .portal = "https://beaumontzip.com/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://beaumontzip.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26814,7 +26814,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q132803372", .name = "Edwards Aquifer Authority (government-agency, US) - Edwards "
       "Aquifer Authority",
     .name_ja = "Edwards Aquifer Authority (government-agency, US) - Edwards Aquifer Authority",
-    .category = "government", .portal = "https://www.edwardsaquifer.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.edwardsaquifer.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26835,7 +26835,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - PA State Constable's Office Nazareth – "
       "Lehigh Valley",
     .name_ja = "Pennsylvania State Constable's Office Nazareth – Lehigh Valley (government-agency, US) - PA State Constable's Office Nazareth – Lehigh Valley",
-    .category = "government", .portal = "https://nazarethconstable.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nazarethconstable.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26855,7 +26855,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137943784", .name = "South Carolina Geological Survey (government-agency, US) - South "
       "Carolina Department of Natural Resources",
     .name_ja = "South Carolina Geological Survey (government-agency, US) - South Carolina Department of Natural Resources",
-    .category = "government", .portal = "https://www.dnr.sc.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.dnr.sc.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26875,7 +26875,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q138637560", .name = "District of Columbia Department of Licensing and Consumer "
       "Protection (government-agency, US) - dlcp - dlcp",
     .name_ja = "District of Columbia Department of Licensing and Consumer Protection (government-agency, US) - dlcp - dlcp",
-    .category = "government", .portal = "https://dlcp.dc.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://dlcp.dc.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26895,7 +26895,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q138637575", .name = "District of Columbia Department of Buildings (government-agency, "
       "US) - DOB - Department of Buildings",
     .name_ja = "District of Columbia Department of Buildings (government-agency, US) - DOB - Department of Buildings",
-    .category = "government", .portal = "https://dob.dc.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://dob.dc.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26915,7 +26915,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q138956658", .name = "Los Angeles County Internal Services Department "
       "(government-agency, US) - ISD website",
     .name_ja = "Los Angeles County Internal Services Department (government-agency, US) - ISD website",
-    .category = "government", .portal = "https://isd.lacounty.gov/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://isd.lacounty.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26935,7 +26935,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q20022524", .name = "Utah Department of Public Safety (government-agency, US) - "
       "Department of Public Safety",
     .name_ja = "Utah Department of Public Safety (government-agency, US) - Department of Public Safety",
-    .category = "government", .portal = "https://dps.utah.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://dps.utah.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26955,7 +26955,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q21020901", .name = "Florida Department of Citrus (government-agency, US) - Florida "
       "Citrus",
     .name_ja = "Florida Department of Citrus (government-agency, US) - Florida Citrus",
-    .category = "government", .portal = "https://www.floridacitrus.org/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.floridacitrus.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26975,7 +26975,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q22022404", .name = "District of Columbia Department of Public Works "
       "(government-agency, US) - config - Config",
     .name_ja = "District of Columbia Department of Public Works (government-agency, US) - config - Config",
-    .category = "government", .portal = "https://dpw.dc.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://dpw.dc.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -26995,7 +26995,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q22022636", .name = "Great Lakes Water Authority (government-agency, US) - Great "
       "Lakes Water Authority",
     .name_ja = "Great Lakes Water Authority (government-agency, US) - Great Lakes Water Authority",
-    .category = "government", .portal = "https://www.glwater.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.glwater.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27015,7 +27015,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q22058706", .name = "Colorado River Water Conservation District (government-agency, "
       "US) - Colorado River District 2026",
     .name_ja = "Colorado River Water Conservation District (government-agency, US) - Colorado River District 2026",
-    .category = "government", .portal = "https://www.coloradoriverdistrict.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.coloradoriverdistrict.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27035,7 +27035,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q22058800", .name = "Florida Department of Military Affairs (government-agency, US) - "
       "Department of Military Affairs",
     .name_ja = "Florida Department of Military Affairs (government-agency, US) - Department of Military Affairs",
-    .category = "government", .portal = "https://dma.myflorida.com/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://dma.myflorida.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27055,7 +27055,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q22073370", .name = "Utah Department of Human Services (government-agency, US) - Utah "
       "Department of Health and Human Services",
     .name_ja = "Utah Department of Human Services (government-agency, US) - Utah Department of Health and Human Services",
-    .category = "government", .portal = "https://dhhs.utah.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dhhs.utah.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27075,7 +27075,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q22073514", .name = "Wisconsin Economic Development Corporation (government-agency, "
       "US) - WEDC",
     .name_ja = "Wisconsin Economic Development Corporation (government-agency, US) - WEDC",
-    .category = "government", .portal = "https://wedc.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://wedc.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27095,7 +27095,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q23583696", .name = "Western Pacific Regional Fishery Management Council "
       "(government-agency, US) - Western Pacific Fishery Council",
     .name_ja = "Western Pacific Regional Fishery Management Council (government-agency, US) - Western Pacific Fishery Council",
-    .category = "government", .portal = "https://www.wpcouncil.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.wpcouncil.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27115,7 +27115,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q23651594", .name = "Cheboygan County Road Commission (government-agency, US) - "
       "Cheboygan County Michigan",
     .name_ja = "Cheboygan County Road Commission (government-agency, US) - Cheboygan County Michigan",
-    .category = "government", .portal = "https://www.cheboygancounty.net/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.cheboygancounty.net/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27135,7 +27135,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q24061865", .name = "Missouri State Board of Education (government-agency, US) - News "
       "Release",
     .name_ja = "Missouri State Board of Education (government-agency, US) - News Release",
-    .category = "government", .portal = "https://dese.mo.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dese.mo.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27155,7 +27155,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4680703", .name = "Adaptive Execution Office (government-agency, US) - DARPA - "
       "Defense Advanced Research Projects Agency",
     .name_ja = "Adaptive Execution Office (government-agency, US) - DARPA - Defense Advanced Research Projects Agency",
-    .category = "government", .portal = "https://www.darpa.mil/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.darpa.mil/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27175,7 +27175,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4705210", .name = "Alabama Cooperative Extension System (government-agency, US) - "
       "Alabama Cooperative Extension System",
     .name_ja = "Alabama Cooperative Extension System (government-agency, US) - Alabama Cooperative Extension System",
-    .category = "government", .portal = "https://www.aces.edu/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.aces.edu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27195,7 +27195,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4705210_2", .name = "Alabama Cooperative Extension System (government-agency, US) - "
       "Season 1 Episode 23—Going Nuts Over Pecans",
     .name_ja = "Alabama Cooperative Extension System (government-agency, US) - Season 1 Episode 23—Going Nuts Over Pecans",
-    .category = "government", .portal = "https://www.aces.edu/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.aces.edu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27215,7 +27215,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4705239", .name = "Alabama Department of Agriculture and Industries "
       "(government-agency, US) - Alabama Agriculture & Industries",
     .name_ja = "Alabama Department of Agriculture and Industries (government-agency, US) - Alabama Agriculture & Industries",
-    .category = "government", .portal = "https://agi.alabama.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://agi.alabama.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27235,7 +27235,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30258976", .name = "Coastal States Stewardship Foundation (government-agency, US) - "
       "CSSF",
     .name_ja = "Coastal States Stewardship Foundation (government-agency, US) - CSSF",
-    .category = "government", .portal = "https://coastalstatesfoundation.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://coastalstatesfoundation.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27255,7 +27255,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30259004", .name = "Alabama Department of Revenue (government-agency, US) - Alabama "
       "Department of Revenue",
     .name_ja = "Alabama Department of Revenue (government-agency, US) - Alabama Department of Revenue",
-    .category = "government", .portal = "https://www.revenue.alabama.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.revenue.alabama.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27275,7 +27275,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30259050", .name = "Idaho Governors Office of Species Conservation "
       "(government-agency, US) - Species Conservation",
     .name_ja = "Idaho Governors Office of Species Conservation (government-agency, US) - Species Conservation",
-    .category = "government", .portal = "https://species.idaho.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://species.idaho.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27295,7 +27295,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30259578", .name = "Florida Department of Elder Affairs (government-agency, US) - "
       "Elder Affairs Florida",
     .name_ja = "Florida Department of Elder Affairs (government-agency, US) - Elder Affairs Florida",
-    .category = "government", .portal = "https://elderaffairs.org/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://elderaffairs.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27315,7 +27315,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30264249", .name = "Texas Council for Developmental Disabilities (government-agency, "
       "US) - TCDD",
     .name_ja = "Texas Council for Developmental Disabilities (government-agency, US) - TCDD",
-    .category = "government", .portal = "https://tcdd.texas.gov/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://tcdd.texas.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27335,7 +27335,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30264258", .name = "Texas Groundwater Protection Committee (government-agency, US) - "
       "Texas Groundwater Protection Committee",
     .name_ja = "Texas Groundwater Protection Committee (government-agency, US) - Texas Groundwater Protection Committee",
-    .category = "government", .portal = "https://tgpc.texas.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://tgpc.texas.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27355,7 +27355,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q113141528", .name = "Tennessee Arts Commission (government-agency, US) - Tennessee "
       "Arts Commission",
     .name_ja = "Tennessee Arts Commission (government-agency, US) - Tennessee Arts Commission",
-    .category = "government", .portal = "https://tnartscommission.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://tnartscommission.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27375,7 +27375,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q114362334", .name = "California Office of Traffic Safety (government-agency, US) - "
       "Office of Traffic Safety",
     .name_ja = "California Office of Traffic Safety (government-agency, US) - Office of Traffic Safety",
-    .category = "government", .portal = "https://www.ots.ca.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.ots.ca.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27395,7 +27395,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q115816365", .name = "Metropolitan Development and Housing Agency (government-agency, "
       "US) - Metropolitan Development and Housing Agency",
     .name_ja = "Metropolitan Development and Housing Agency (government-agency, US) - Metropolitan Development and Housing Agency",
-    .category = "government", .portal = "https://www.nashville-mdha.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.nashville-mdha.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27415,7 +27415,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q118175450", .name = "National Microbiome Data Collaborative (government-agency, US) - "
       "National Microbiome Data Collaborative",
     .name_ja = "National Microbiome Data Collaborative (government-agency, US) - National Microbiome Data Collaborative",
-    .category = "government", .portal = "https://microbiomedata.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://microbiomedata.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27435,7 +27435,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q120835556", .name = "Delaware Department of Agriculture (government-agency, US) - "
       "Department of Agriculture Archives - State of Delaware News",
     .name_ja = "Delaware Department of Agriculture (government-agency, US) - Department of Agriculture Archives - State of Delaware News",
-    .category = "government", .portal = "http://news.delaware.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "http://news.delaware.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27455,7 +27455,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q123377990", .name = "Newport News Economic Development Authority (government-agency, "
       "US) - Newport News Economic Development Authority (EDA)",
     .name_ja = "Newport News Economic Development Authority (government-agency, US) - Newport News Economic Development Authority (EDA)",
-    .category = "government", .portal = "https://newportnewsva.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://newportnewsva.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27475,7 +27475,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q123512476", .name = "California Strategic Growth Council (government-agency, US) - "
       "Strategic Growth Council",
     .name_ja = "California Strategic Growth Council (government-agency, US) - Strategic Growth Council",
-    .category = "government", .portal = "https://sgc.ca.gov/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://sgc.ca.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27496,7 +27496,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - Los Angeles County Department of "
       "Children and Family Services",
     .name_ja = "Los Angeles County Department of Children and Family Services (government-agency, US) - Los Angeles County Department of Children and Family Services",
-    .category = "government", .portal = "https://dcfs.lacounty.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dcfs.lacounty.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27516,7 +27516,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q28134593", .name = "San Francisco Public Defender's Office (government-agency, US) - "
       "San Francisco Public Defender",
     .name_ja = "San Francisco Public Defender's Office (government-agency, US) - San Francisco Public Defender",
-    .category = "government", .portal = "https://sfpublicdefender.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://sfpublicdefender.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27536,7 +27536,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q28222753", .name = "Los Angeles County Health Agency (government-agency, US) - Los "
       "Angeles County",
     .name_ja = "Los Angeles County Health Agency (government-agency, US) - Los Angeles County",
-    .category = "government", .portal = "https://ceo.lacounty.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://ceo.lacounty.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27556,7 +27556,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30255353", .name = "Ben Franklin Technology Partners (government-agency, US) - Ben "
       "Franklin Technology Partners",
     .name_ja = "Ben Franklin Technology Partners (government-agency, US) - Ben Franklin Technology Partners",
-    .category = "government", .portal = "https://benfranklin.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://benfranklin.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27577,7 +27577,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - Charlotte-Mecklenburg Historic "
       "Landmarks Commission",
     .name_ja = "Charlotte-Mecklenburg Historic Landmarks Commission (government-agency, US) - Charlotte-Mecklenburg Historic Landmarks Commission",
-    .category = "government", .portal = "http://landmarkscommission.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "http://landmarkscommission.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27597,7 +27597,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30257987", .name = "Federation of State Humanities Councils (government-agency, US) "
       "- Federation of State Humanities Councils",
     .name_ja = "Federation of State Humanities Councils (government-agency, US) - Federation of State Humanities Councils",
-    .category = "government", .portal = "https://www.statehumanities.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.statehumanities.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27618,7 +27618,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - West Virginia Higher Education Policy "
       "Commission",
     .name_ja = "West Virginia Higher Education Policy Commission (government-agency, US) - West Virginia Higher Education Policy Commission",
-    .category = "government", .portal = "https://www.wvhepc.edu/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.wvhepc.edu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27638,7 +27638,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30283062", .name = "Metropolitan Drug Commission (government-agency, US) - Metro "
       "Drug Coalition",
     .name_ja = "Metropolitan Drug Commission (government-agency, US) - Metro Drug Coalition",
-    .category = "government", .portal = "https://metrodrug.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://metrodrug.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27657,7 +27657,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30283275", .name = "Cuyahoga County Board of Health (government-agency, US) - CCBH",
     .name_ja = "Cuyahoga County Board of Health (government-agency, US) - CCBH",
-    .category = "government", .portal = "https://ccbh.net/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://ccbh.net/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27677,7 +27677,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7902344", .name = "Utah Department of Alcoholic Beverage Services "
       "(government-agency, US) - Utah DABS",
     .name_ja = "Utah Department of Alcoholic Beverage Services (government-agency, US) - Utah DABS",
-    .category = "government", .portal = "https://abs.utah.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://abs.utah.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27697,7 +27697,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7902367", .name = "Utah Geological Survey (government-agency, US) - Utah Geological "
       "Survey",
     .name_ja = "Utah Geological Survey (government-agency, US) - Utah Geological Survey",
-    .category = "government", .portal = "https://geology.utah.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://geology.utah.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27717,7 +27717,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7902372", .name = "Utah Highway Patrol (government-agency, US) - Utah Highway "
       "Patrol",
     .name_ja = "Utah Highway Patrol (government-agency, US) - Utah Highway Patrol",
-    .category = "government", .portal = "https://uhp.utah.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://uhp.utah.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27737,7 +27737,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7920381", .name = "Ventura County Transportation Commission (government-agency, US) "
       "- VCTC",
     .name_ja = "Ventura County Transportation Commission (government-agency, US) - VCTC",
-    .category = "government", .portal = "https://www.goventura.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.goventura.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27756,7 +27756,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q7926418", .name = "Victor Valley Transit Authority (government-agency, US) - VVTA",
     .name_ja = "Victor Valley Transit Authority (government-agency, US) - VVTA",
-    .category = "government", .portal = "https://vvta.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://vvta.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27776,7 +27776,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7934459", .name = "Virginia Port Authority (government-agency, US) - Port of "
       "Virginia",
     .name_ja = "Virginia Port Authority (government-agency, US) - Port of Virginia",
-    .category = "government", .portal = "https://www.portofvirginia.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.portofvirginia.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27797,7 +27797,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Preservation (government-agency, US) - Washington State "
       "Department of Archaeology & Historic Preservation (DAHP)",
     .name_ja = "Washington State Department of Archaeology and Historic Preservation (government-agency, US) - Washington State Department of Archaeology & Historic Preservation (DAHP)",
-    .category = "government", .portal = "https://dahp.wa.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://dahp.wa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27817,7 +27817,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7972252", .name = "Washington State Institute for Public Policy (government-agency, "
       "US) - WSIPP Publications Feed",
     .name_ja = "Washington State Institute for Public Policy (government-agency, US) - WSIPP Publications Feed",
-    .category = "government", .portal = "https://www.wsipp.wa.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.wsipp.wa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27837,7 +27837,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q33121406", .name = "National Association of Development Organizations "
       "(government-agency, US) - NADO",
     .name_ja = "National Association of Development Organizations (government-agency, US) - NADO",
-    .category = "government", .portal = "https://www.nado.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.nado.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27858,7 +27858,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - Governor's Office of Land Use and "
       "Climate Innovation",
     .name_ja = "California Governor's Office of Planning and Research (government-agency, US) - Governor's Office of Land Use and Climate Innovation",
-    .category = "government", .portal = "https://lci.ca.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://lci.ca.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27878,7 +27878,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q43895260", .name = "Council of State Governments Midwest (government-agency, US) - "
       "CSG Midwest",
     .name_ja = "Council of State Governments Midwest (government-agency, US) - CSG Midwest",
-    .category = "government", .portal = "https://csgmidwest.org/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://csgmidwest.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27898,7 +27898,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7566628", .name = "South Carolina Research Authority (government-agency, US) - "
       "SCRA: South Carolina Research Authority",
     .name_ja = "South Carolina Research Authority (government-agency, US) - SCRA: South Carolina Research Authority",
-    .category = "government", .portal = "https://scra.org/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://scra.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27918,7 +27918,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7603599", .name = "State Universities Retirement System (government-agency, US) - "
       "SURS",
     .name_ja = "State Universities Retirement System (government-agency, US) - SURS",
-    .category = "government", .portal = "https://surs.org/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://surs.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27938,7 +27938,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7707797", .name = "Texas Juvenile Justice Department (government-agency, US) - "
       "Texas Juvenile Justice Department",
     .name_ja = "Texas Juvenile Justice Department (government-agency, US) - Texas Juvenile Justice Department",
-    .category = "government", .portal = "https://www.tjjd.texas.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.tjjd.texas.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27958,7 +27958,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7708019", .name = "Texas State Board of Dental Examiners (government-agency, US) - "
       "Texas State Board of Dental Examiners",
     .name_ja = "Texas State Board of Dental Examiners (government-agency, US) - Texas State Board of Dental Examiners",
-    .category = "government", .portal = "https://tsbde.texas.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://tsbde.texas.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27978,7 +27978,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q17086717", .name = "New Jersey Commission on Higher Education (government-agency, "
       "US) - AACC",
     .name_ja = "New Jersey Commission on Higher Education (government-agency, US) - AACC",
-    .category = "government", .portal = "https://www.aacc.nche.edu/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.aacc.nche.edu/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -27998,7 +27998,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q17108062", .name = "New Mexico Taxation and Revenue Department (government-agency, "
       "US) - Taxation and Revenue New Mexico",
     .name_ja = "New Mexico Taxation and Revenue Department (government-agency, US) - Taxation and Revenue New Mexico",
-    .category = "government", .portal = "https://www.tax.newmexico.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.tax.newmexico.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28018,7 +28018,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q17110123", .name = "Pennsylvania Office of Open Records (government-agency, US) - "
       "Recent Dockets",
     .name_ja = "Pennsylvania Office of Open Records (government-agency, US) - Recent Dockets",
-    .category = "government", .portal = "https://www.openrecords.pa.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.openrecords.pa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28038,7 +28038,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4705248", .name = "Alabama Department of Mental Health (government-agency, US) - "
       "Alabama Department of Mental Health",
     .name_ja = "Alabama Department of Mental Health (government-agency, US) - Alabama Department of Mental Health",
-    .category = "government", .portal = "https://mh.alabama.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://mh.alabama.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28059,7 +28059,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - RI Science & Technology Advisory "
       "Council",
     .name_ja = "Rhode Island Science and Technology Advisory Council (government-agency, US) - RI Science & Technology Advisory Council",
-    .category = "government", .portal = "https://stac.ri.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://stac.ri.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28080,7 +28080,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "- Egyptian Cultural and Educational Bureau - Washington DC - "
       "Egyptian Cultural and",
     .name_ja = "Egyptian Cultural and Educational Bureau (government-agency, US) - Egyptian Cultural and Educational Bureau - Washington DC - Egyptian Cultural and",
-    .category = "government", .portal = "https://www.eecous.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.eecous.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28101,7 +28101,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "- Egyptian Cultural and Educational Bureau - Washington DC - "
       "Egyptian Cultural and",
     .name_ja = "Egyptian Cultural and Educational Bureau (government-agency, US) - Egyptian Cultural and Educational Bureau - Washington DC - Egyptian Cultural and",
-    .category = "government", .portal = "https://www.eecous.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.eecous.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28121,7 +28121,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140876139", .name = "Oregon Potato Commission (government-agency, US) - Oregon Potato "
       "Commission v1",
     .name_ja = "Oregon Potato Commission (government-agency, US) - Oregon Potato Commission v1",
-    .category = "government", .portal = "https://www.oregonspuds.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.oregonspuds.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28141,7 +28141,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140876160", .name = "Michigan Bean Commission (government-agency, US) - Michigan "
       "Beans",
     .name_ja = "Michigan Bean Commission (government-agency, US) - Michigan Beans",
-    .category = "government", .portal = "https://michiganbean.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://michiganbean.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28161,7 +28161,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140876161", .name = "North Dakota Wheat Commission (government-agency, US) - ND Wheat "
       "Commission",
     .name_ja = "North Dakota Wheat Commission (government-agency, US) - ND Wheat Commission",
-    .category = "government", .portal = "https://www.ndwheat.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.ndwheat.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28181,7 +28181,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140876173", .name = "Juvenile Welfare Board of Pinellas County (government-agency, "
       "US) - JWB",
     .name_ja = "Juvenile Welfare Board of Pinellas County (government-agency, US) - JWB",
-    .category = "government", .portal = "https://www.jwbpinellas.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.jwbpinellas.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28201,7 +28201,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140876621", .name = "Utah Office of Energy Development (government-agency, US) - "
       "Office of Energy Development",
     .name_ja = "Utah Office of Energy Development (government-agency, US) - Office of Energy Development",
-    .category = "government", .portal = "https://energy.utah.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://energy.utah.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28221,7 +28221,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140876657", .name = "Utah Division of Forestry, Fire and State Lands "
       "(government-agency, US) - Forestry, Fire & State Lands Website",
     .name_ja = "Utah Division of Forestry, Fire and State Lands (government-agency, US) - Forestry, Fire & State Lands Website",
-    .category = "government", .portal = "https://ffsl.utah.gov/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://ffsl.utah.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28241,7 +28241,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q140877054", .name = "Georgia Cotton Commission (government-agency, US) - The Georgia "
       "Cotton Commission",
     .name_ja = "Georgia Cotton Commission (government-agency, US) - The Georgia Cotton Commission",
-    .category = "government", .portal = "https://georgiacottoncommission.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://georgiacottoncommission.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28261,7 +28261,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141545887", .name = "Idaho Barley Commission (government-agency, US) - Idaho Barley "
       "Commission",
     .name_ja = "Idaho Barley Commission (government-agency, US) - Idaho Barley Commission",
-    .category = "government", .portal = "https://www.idahobarleycommission.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.idahobarleycommission.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28282,7 +28282,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - Juvenile Court of Metropolitan "
       "Nashville & Davidson County",
     .name_ja = "Juvenile Court of Metropolitan Nashville and Davidson County (government-agency, US) - Juvenile Court of Metropolitan Nashville & Davidson County",
-    .category = "government", .portal = "https://juvenilecourt.nashville.gov/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://juvenilecourt.nashville.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28302,7 +28302,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30265349", .name = "Inter Tribal Council of Arizona (government-agency, US) - Inter "
       "Tribal Council of Arizona",
     .name_ja = "Inter Tribal Council of Arizona (government-agency, US) - Inter Tribal Council of Arizona",
-    .category = "government", .portal = "https://itcaonline.com/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://itcaonline.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28322,7 +28322,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30266561", .name = "Central Florida Regional Planning Council (government-agency, "
       "US) - Central Florida Regional Planning Council",
     .name_ja = "Central Florida Regional Planning Council (government-agency, US) - Central Florida Regional Planning Council",
-    .category = "government", .portal = "https://www.cfrpc.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.cfrpc.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28342,7 +28342,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30266583", .name = "Flint Hills Regional Council (government-agency, US) - Flint "
       "Hills Regional Council",
     .name_ja = "Flint Hills Regional Council (government-agency, US) - Flint Hills Regional Council",
-    .category = "government", .portal = "https://flinthillsregion.org/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://flinthillsregion.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28362,7 +28362,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30266585", .name = "Kaysinger Basin Regional Planning Commission (government-agency, "
       "US) - Kaysinger Basin Regional Planning Commission",
     .name_ja = "Kaysinger Basin Regional Planning Commission (government-agency, US) - Kaysinger Basin Regional Planning Commission",
-    .category = "government", .portal = "https://kaysinger.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://kaysinger.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28381,7 +28381,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30266594", .name = "Fort Monroe Authority (government-agency, US) - Fort Monroe",
     .name_ja = "Fort Monroe Authority (government-agency, US) - Fort Monroe",
-    .category = "government", .portal = "https://fortmonroe.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://fortmonroe.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28400,7 +28400,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30266592", .name = "Fort Mac LRA (government-agency, US) - Fort Mac",
     .name_ja = "Fort Mac LRA (government-agency, US) - Fort Mac",
-    .category = "government", .portal = "https://fortmaclra.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://fortmaclra.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28420,7 +28420,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30266624", .name = "Gulf Regional Planning Commission (government-agency, US) - Gulf "
       "Regional Planning Commission",
     .name_ja = "Gulf Regional Planning Commission (government-agency, US) - Gulf Regional Planning Commission",
-    .category = "government", .portal = "https://grpc.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://grpc.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28440,7 +28440,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30266684", .name = "Tri-County Council for Southern Maryland (government-agency, US) "
       "- Tri County Council for Southern Maryland",
     .name_ja = "Tri-County Council for Southern Maryland (government-agency, US) - Tri County Council for Southern Maryland",
-    .category = "government", .portal = "https://tccsmd.org/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://tccsmd.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28460,7 +28460,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30268400", .name = "Utah Department of Heritage and Arts (government-agency, US) - "
       "CCE",
     .name_ja = "Utah Department of Heritage and Arts (government-agency, US) - CCE",
-    .category = "government", .portal = "https://community.utah.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://community.utah.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28480,7 +28480,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30268406", .name = "Seattle Indian Health Board (government-agency, US) - Seattle "
       "Indian Health Board",
     .name_ja = "Seattle Indian Health Board (government-agency, US) - Seattle Indian Health Board",
-    .category = "government", .portal = "https://www.sihb.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.sihb.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28500,7 +28500,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30268404", .name = "Ute Mountain Ute Tribe's Environmental Programs Department "
       "(government-agency, US) - Ute Mountain Ute Environmental Program",
     .name_ja = "Ute Mountain Ute Tribe's Environmental Programs Department (government-agency, US) - Ute Mountain Ute Environmental Program",
-    .category = "government", .portal = "https://www.utemountainuteenvironmental.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.utemountainuteenvironmental.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28520,7 +28520,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30269525", .name = "Hamilton Dermatology (government-agency, US) - Hamilton "
       "Dermatology",
     .name_ja = "Hamilton Dermatology (government-agency, US) - Hamilton Dermatology",
-    .category = "government", .portal = "https://www.hamiltonderm.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.hamiltonderm.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28540,7 +28540,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30279661", .name = "Delaware Division of Public Health (government-agency, US) - "
       "DHSS",
     .name_ja = "Delaware Division of Public Health (government-agency, US) - DHSS",
-    .category = "government", .portal = "https://dhss.delaware.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dhss.delaware.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28560,7 +28560,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7082292", .name = "Oklahoma Public Employees Retirement System (government-agency, "
       "US) - OPERS",
     .name_ja = "Oklahoma Public Employees Retirement System (government-agency, US) - OPERS",
-    .category = "government", .portal = "https://www.opers.ok.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.opers.ok.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28580,7 +28580,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7082373", .name = "Oklahoma State Regents for Higher Education (government-agency, "
       "US) - Oklahoma State Regents for Higher Education",
     .name_ja = "Oklahoma State Regents for Higher Education (government-agency, US) - Oklahoma State Regents for Higher Education",
-    .category = "government", .portal = "https://okhighered.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://okhighered.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28600,7 +28600,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30283801", .name = "New Mexico Department of Human Services (government-agency, US) "
       "- New Mexico Health Care Authority",
     .name_ja = "New Mexico Department of Human Services (government-agency, US) - New Mexico Health Care Authority",
-    .category = "government", .portal = "https://www.hca.nm.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.hca.nm.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28620,7 +28620,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30284208", .name = "American Samoa Government Department of Health "
       "(government-agency, US) - AMERICAN SAMOA",
     .name_ja = "American Samoa Government Department of Health (government-agency, US) - AMERICAN SAMOA",
-    .category = "government", .portal = "https://www.americansamoa.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.americansamoa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28640,7 +28640,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30287959", .name = "Kent County Health Department (government-agency, US) - Kent "
       "County MD Health Department",
     .name_ja = "Kent County Health Department (government-agency, US) - Kent County MD Health Department",
-    .category = "government", .portal = "https://kenthd.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://kenthd.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28660,7 +28660,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30288503", .name = "San Bernardino County Department of Public Health "
       "(government-agency, US) - Department of Public Health",
     .name_ja = "San Bernardino County Department of Public Health (government-agency, US) - Department of Public Health",
-    .category = "government", .portal = "https://dph.sbcounty.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dph.sbcounty.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28679,7 +28679,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30291015", .name = "Social Development Commission (government-agency, US) - CR-SDC",
     .name_ja = "Social Development Commission (government-agency, US) - CR-SDC",
-    .category = "government", .portal = "https://cr-sdc.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://cr-sdc.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28699,7 +28699,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30297314", .name = "Washington State Department of Commerce (government-agency, US) "
       "- Washington State Department of Commerce",
     .name_ja = "Washington State Department of Commerce (government-agency, US) - Washington State Department of Commerce",
-    .category = "government", .portal = "https://www.commerce.wa.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.commerce.wa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28719,7 +28719,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q50039297", .name = "North Little Rock Health Department (government-agency, US) - "
       "City of North Little Rock",
     .name_ja = "North Little Rock Health Department (government-agency, US) - City of North Little Rock",
-    .category = "government", .portal = "https://nlr.ar.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://nlr.ar.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28739,7 +28739,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q50040795", .name = "Berkeley-Charleston-Dorchester Council of Governments "
       "(government-agency, US) - BCDCOG",
     .name_ja = "Berkeley-Charleston-Dorchester Council of Governments (government-agency, US) - BCDCOG",
-    .category = "government", .portal = "https://bcdcog.com/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://bcdcog.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28759,7 +28759,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q50040804", .name = "Alabama Department of Economic and Community Affairs "
       "(government-agency, US) - ADECA",
     .name_ja = "Alabama Department of Economic and Community Affairs (government-agency, US) - ADECA",
-    .category = "government", .portal = "https://adeca.alabama.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://adeca.alabama.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28779,7 +28779,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q50040823", .name = "Department of Lands and Natural Resources (government-agency, "
       "US) - Запоріжжя 24",
     .name_ja = "Department of Lands and Natural Resources (government-agency, US) - Запоріжжя 24",
-    .category = "government", .portal = "https://24.zp.ua/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://24.zp.ua/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28799,7 +28799,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q50041015", .name = "Idaho State Department of Agriculture (government-agency, US) - "
       "Idaho State Department of Agriculture",
     .name_ja = "Idaho State Department of Agriculture (government-agency, US) - Idaho State Department of Agriculture",
-    .category = "government", .portal = "https://agri.idaho.gov/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://agri.idaho.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28819,7 +28819,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q124525999", .name = "Arkansas Rice Research and Promotion Board (government-agency, "
       "US) - Arkansas Rice Research & Promotion Board",
     .name_ja = "Arkansas Rice Research and Promotion Board (government-agency, US) - Arkansas Rice Research & Promotion Board",
-    .category = "government", .portal = "https://arkrice.org/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://arkrice.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28838,7 +28838,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q125553059", .name = "Port of Oakland (government-agency, US) - Port of Oakland",
     .name_ja = "Port of Oakland (government-agency, US) - Port of Oakland",
-    .category = "government", .portal = "https://www.portofoakland.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.portofoakland.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28858,7 +28858,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q126898700", .name = "Roanoke Parks and Recreation (government-agency, US) - Roanoke "
       "Parks And Recreation",
     .name_ja = "Roanoke Parks and Recreation (government-agency, US) - Roanoke Parks And Recreation",
-    .category = "government", .portal = "https://www.playroanoke.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.playroanoke.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28878,7 +28878,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127415576", .name = "NOAA RESTORE Science Program (government-agency, US) - NOAA "
       "RESTORE Science Program",
     .name_ja = "NOAA RESTORE Science Program (government-agency, US) - NOAA RESTORE Science Program",
-    .category = "government", .portal = "https://restoreactscienceprogram.noaa.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://restoreactscienceprogram.noaa.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28898,7 +28898,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127925744", .name = "Cumberland County Improvement Authority (government-agency, US) "
       "- The Authority   Cumberland County",
     .name_ja = "Cumberland County Improvement Authority (government-agency, US) - The Authority   Cumberland County",
-    .category = "government", .portal = "https://www.theauthoritynj.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.theauthoritynj.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28917,7 +28917,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q61359691", .name = "Montgomery Parks (government-agency, US) - Montgomery Parks",
     .name_ja = "Montgomery Parks (government-agency, US) - Montgomery Parks",
-    .category = "government", .portal = "https://montgomeryparks.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://montgomeryparks.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28937,7 +28937,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q61459306", .name = "Montgomery County Planning Department (government-agency, US) - "
       "Montgomery Planning",
     .name_ja = "Montgomery County Planning Department (government-agency, US) - Montgomery Planning",
-    .category = "government", .portal = "https://montgomeryplanning.org/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://montgomeryplanning.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28957,7 +28957,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q61931179", .name = "Alabama State Office of Governor (government-agency, US) - Earth "
       "Science Week",
     .name_ja = "Alabama State Office of Governor (government-agency, US) - Earth Science Week",
-    .category = "government", .portal = "https://governor.alabama.gov/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://governor.alabama.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28977,7 +28977,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q64313614", .name = "Lake County Department of Job and Family Services "
       "(government-agency, US) - Lake County, Ohio",
     .name_ja = "Lake County Department of Job and Family Services (government-agency, US) - Lake County, Ohio",
-    .category = "government", .portal = "https://www.lakecountyohio.gov/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.lakecountyohio.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -28997,7 +28997,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q77082724", .name = "Michigan Works! Macomb/St. Clair (government-agency, US) - "
       "Michigan Works! Macomb/St. Clair",
     .name_ja = "Michigan Works! Macomb/St. Clair (government-agency, US) - Michigan Works! Macomb/St. Clair",
-    .category = "government", .portal = "https://msc-mw.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://msc-mw.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29017,7 +29017,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q85790630", .name = "Omaha Airport Authority (government-agency, US) - OMA Omaha "
       "Eppley Airfield",
     .name_ja = "Omaha Airport Authority (government-agency, US) - OMA Omaha Eppley Airfield",
-    .category = "government", .portal = "https://www.flyoma.com/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.flyoma.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29037,7 +29037,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q87653654", .name = "Georgia National Guard History (government-agency, US) - History "
       "of the Georgia National Guard",
     .name_ja = "Georgia National Guard History (government-agency, US) - History of the Georgia National Guard",
-    .category = "government", .portal = "http://www.georgiaguardhistory.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://www.georgiaguardhistory.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29057,7 +29057,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q87653654_2", .name = "Georgia National Guard History (government-agency, US) - History "
       "of the Georgia National Guard",
     .name_ja = "Georgia National Guard History (government-agency, US) - History of the Georgia National Guard",
-    .category = "government", .portal = "http://www.georgiaguardhistory.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "http://www.georgiaguardhistory.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29077,7 +29077,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q87653654_3", .name = "Georgia National Guard History (government-agency, US) - History "
       "of the Georgia National Guard",
     .name_ja = "Georgia National Guard History (government-agency, US) - History of the Georgia National Guard",
-    .category = "government", .portal = "https://www.blogger.com/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.blogger.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29097,7 +29097,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q97040848", .name = "Cook County Department of Public Health (government-agency, US) "
       "- Cook County Department of Public Health",
     .name_ja = "Cook County Department of Public Health (government-agency, US) - Cook County Department of Public Health",
-    .category = "government", .portal = "https://cookcountypublichealth.org/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://cookcountypublichealth.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29117,7 +29117,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q105952371", .name = "Arkansas Game and Fish Commission (government-agency, US) - "
       "Arkansas Game & Fish Commission",
     .name_ja = "Arkansas Game and Fish Commission (government-agency, US) - Arkansas Game & Fish Commission",
-    .category = "government", .portal = "https://www.agfc.com/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.agfc.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29138,7 +29138,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Office of the Legislative Counsel of the U.S. House of "
       "Representatives",
     .name_ja = "Office of the Legislative Counsel (government-agency, US) - The Office of the Legislative Counsel of the U.S. House of Representatives",
-    .category = "government", .portal = "https://legcounsel.house.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://legcounsel.house.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29159,7 +29159,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, US) - Virginia Department of Small Business "
       "and Supplier Diversity",
     .name_ja = "Virginia Department of Small Business and Supplier Diversity (government-agency, US) - Virginia Department of Small Business and Supplier Diversity",
-    .category = "government", .portal = "https://sbsd.virginia.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://sbsd.virginia.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29178,7 +29178,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q5613419", .name = "Guam Department of Land Management (ministry, US) - DLM",
     .name_ja = "Guam Department of Land Management (ministry, US) - DLM",
-    .category = "government", .portal = "https://dlm.guam.gov/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://dlm.guam.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29198,7 +29198,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7079196", .name = "Office of Congressional Ethics (government-organization, US) - "
       "Office of Congressional Conduct",
     .name_ja = "Office of Congressional Ethics (government-organization, US) - Office of Congressional Conduct",
-    .category = "government", .portal = "https://conduct.house.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://conduct.house.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29218,7 +29218,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30258216", .name = "Ohio Humanities Council (government-organization, US) - Ohio "
       "Humanities",
     .name_ja = "Ohio Humanities Council (government-organization, US) - Ohio Humanities",
-    .category = "government", .portal = "https://www.ohiohumanities.org/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://www.ohiohumanities.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29238,7 +29238,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q120060312", .name = "Office of Information and Technology (government-organization, "
       "US) - DigitalVA",
     .name_ja = "Office of Information and Technology (government-organization, US) - DigitalVA",
-    .category = "government", .portal = "https://digital.va.gov/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://digital.va.gov/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29259,7 +29259,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-organization, US) - Ohio Statewide Independent "
       "Living Council",
     .name_ja = "Ohio Statewide Independent Living Council (government-organization, US) - Ohio Statewide Independent Living Council",
-    .category = "government", .portal = "https://ohiosilc.org/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://ohiosilc.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29279,7 +29279,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q19878048", .name = "St. Louis Airport Police Department (police, US) - St. Louis "
       "Lambert International Airport",
     .name_ja = "St. Louis Airport Police Department (police, US) - St. Louis Lambert International Airport",
-    .category = "government", .portal = "https://www.flystl.com/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.flystl.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29299,7 +29299,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7182649", .name = "Philadelphia City Council (legislature, US) - Philadelphia City "
       "Council",
     .name_ja = "Philadelphia City Council (legislature, US) - Philadelphia City Council",
-    .category = "government", .portal = "https://phlcouncil.com/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://phlcouncil.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29319,7 +29319,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q127789718", .name = "El Paso County Board of County Commissioners (legislature, US) - "
       "El Paso County Board of County Commissioners",
     .name_ja = "El Paso County Board of County Commissioners (legislature, US) - El Paso County Board of County Commissioners",
-    .category = "government", .portal = "https://bocc.elpasoco.com/",
+    .category = "government", .collector = "wdgov_legislatures_courts", .portal = "https://bocc.elpasoco.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29339,7 +29339,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q95703669", .name = "National Directorate of Official Printings and Publications "
       "(government-agency, UY) - IMPO",
     .name_ja = "National Directorate of Official Printings and Publications (government-agency, UY) - IMPO",
-    .category = "government", .portal = "https://www.impo.com.uy/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.impo.com.uy/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29359,7 +29359,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q105267358", .name = "National Emergency Management Organisation of St. Vincent and "
       "the Grenadines (government-agency, VC) - Home",
     .name_ja = "National Emergency Management Organisation of St. Vincent and the Grenadines (government-agency, VC) - Home",
-    .category = "government", .portal = "https://nemo.gov.vc/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nemo.gov.vc/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29379,7 +29379,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q105267358_2", .name = "National Emergency Management Organisation of St. Vincent and "
       "the Grenadines (government-agency, VC) - Home",
     .name_ja = "National Emergency Management Organisation of St. Vincent and the Grenadines (government-agency, VC) - Home",
-    .category = "government", .portal = "https://nemo.gov.vc/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://nemo.gov.vc/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29399,7 +29399,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q120983426", .name = "Saint Vincent and the Grenadines Bureau of Standards "
       "(government-agency, VC) - Bureau of Standards",
     .name_ja = "Saint Vincent and the Grenadines Bureau of Standards (government-agency, VC) - Bureau of Standards",
-    .category = "government", .portal = "https://bos.gov.vc/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://bos.gov.vc/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29419,7 +29419,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q120983426_2", .name = "Saint Vincent and the Grenadines Bureau of Standards "
       "(government-agency, VC) - Bureau of Standards",
     .name_ja = "Saint Vincent and the Grenadines Bureau of Standards (government-agency, VC) - Bureau of Standards",
-    .category = "government", .portal = "https://bos.gov.vc/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://bos.gov.vc/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29439,7 +29439,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q940077", .name = "National Commission of Telecommunications (government-agency, "
       "VE) - CONATEL",
     .name_ja = "National Commission of Telecommunications (government-agency, VE) - CONATEL",
-    .category = "government", .portal = "https://conatel.gob.ve/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://conatel.gob.ve/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29459,7 +29459,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q132803452", .name = "Observatorio Nacional de Ciencia, Tecnología e Innovación "
       "(government-agency, VE) - ONCTI",
     .name_ja = "Observatorio Nacional de Ciencia, Tecnología e Innovación (government-agency, VE) - ONCTI",
-    .category = "government", .portal = "https://www.oncti.gob.ve/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.oncti.gob.ve/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29480,7 +29480,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "Ministro Yván Gil impulsa semilleros científicos en el estado "
       "Aragua",
     .name_ja = "Centro Nacional de Tecnología Química (government-agency, VE) - Ministro Yván Gil impulsa semilleros científicos en el estado Aragua",
-    .category = "government", .portal = "https://cntq.gob.ve/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://cntq.gob.ve/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29500,7 +29500,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16607803", .name = "Ministry of Economy and Finance (Venezuela) (ministry, VE) - "
       "MPPEF",
     .name_ja = "Ministry of Economy and Finance (Venezuela) (ministry, VE) - MPPEF",
-    .category = "government", .portal = "https://www.mppef.gob.ve/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.mppef.gob.ve/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29520,7 +29520,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q37288623", .name = "Ministry of the People's Power of Hydrocarbons (ministry, VE) - "
       "MinHidrocarburos",
     .name_ja = "Ministry of the People's Power of Hydrocarbons (ministry, VE) - MinHidrocarburos",
-    .category = "government", .portal = "http://www.minhidrocarburos.gob.ve/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "http://www.minhidrocarburos.gob.ve/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29541,7 +29541,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(ministry, VE) - Ministerio de Desarrollo Minero Ecológico e "
       "Industrias Básicas",
     .name_ja = "Ministry of the Popular Power of Ecological Mining Development (ministry, VE) - Ministerio de Desarrollo Minero Ecológico e Industrias Básicas",
-    .category = "government", .portal = "https://desarrollominero.gob.ve/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://desarrollominero.gob.ve/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29561,7 +29561,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q3814736", .name = "Venezuelan Ministry of Communications and Information (ministry, "
       "VE) - MIPPCI",
     .name_ja = "Venezuelan Ministry of Communications and Information (ministry, VE) - MIPPCI",
-    .category = "government", .portal = "https://mippci.gob.ve/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mippci.gob.ve/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29580,7 +29580,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q4141111", .name = "Ministry of Popular Power for Health (ministry, VE) - MPPS",
     .name_ja = "Ministry of Popular Power for Health (ministry, VE) - MPPS",
-    .category = "government", .portal = "https://mpps.gob.ve/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://mpps.gob.ve/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29600,7 +29600,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q4141450", .name = "Venezuelan Ministry of Defense (ministry, VE) - GJ. González "
       "López afianza el apresto operacional y consolida alianzas estrat",
     .name_ja = "Venezuelan Ministry of Defense (ministry, VE) - GJ. González López afianza el apresto operacional y consolida alianzas estrat",
-    .category = "government", .portal = "https://www.mindefensa.gob.ve/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.mindefensa.gob.ve/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29620,7 +29620,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16607779", .name = "Ministry of Popular Power for Labour and Social Security "
       "(ministry, VE) - MPPPST",
     .name_ja = "Ministry of Popular Power for Labour and Social Security (ministry, VE) - MPPPST",
-    .category = "government", .portal = "https://www.mpppst.gob.ve/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://www.mpppst.gob.ve/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29639,7 +29639,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q6126010", .name = "SAREN (government-organization, VE) - Saren",
     .name_ja = "SAREN (government-organization, VE) - Saren",
-    .category = "government", .portal = "https://www.saren.gob.ve/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.saren.gob.ve/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29658,7 +29658,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q109593830", .name = "INTT (government-organization, VE) - intt",
     .name_ja = "INTT (government-organization, VE) - intt",
-    .category = "government", .portal = "https://www.intt.gob.ve/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.intt.gob.ve/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29679,7 +29679,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, VN) - Quỹ Phát triển khoa học và công nghệ "
       "Quốc gia",
     .name_ja = "National Foundation for Science and Technology Development (government-agency, VN) - Quỹ Phát triển khoa học và công nghệ Quốc gia",
-    .category = "government", .portal = "https://nafosted.gov.vn/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://nafosted.gov.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29699,7 +29699,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q1522776", .name = "Vietnam Television (government-agency, VN) - english.vtv.vn - "
       "RSS Feed",
     .name_ja = "Vietnam Television (government-agency, VN) - english.vtv.vn - RSS Feed",
-    .category = "government", .portal = "https://english.vtv.vn/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://english.vtv.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29718,7 +29718,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q1522776_2", .name = "Vietnam Television (government-agency, VN) - BAO DIEN TU VTV",
     .name_ja = "Vietnam Television (government-agency, VN) - BAO DIEN TU VTV",
-    .category = "government", .portal = "https://vtv.vn/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://vtv.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29738,7 +29738,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29758,7 +29758,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_2", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Tin tức - Sự kiện",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Tin tức - Sự kiện",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29778,7 +29778,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_3", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Hoạt động của Sở",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Hoạt động của Sở",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29798,7 +29798,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_4", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Tin từ cơ sở giáo dục",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Tin từ cơ sở giáo dục",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29819,7 +29819,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, VN) - Tin Tức - Gương điển hình - Thi đua "
       "khen thưởng",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Gương điển hình - Thi đua khen thưởng",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29839,7 +29839,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_6", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Hoạt động đoàn thể",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Hoạt động đoàn thể",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29859,7 +29859,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_7", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Chính sách - Pháp luật",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Chính sách - Pháp luật",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29879,7 +29879,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_8", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Giáo dục mầm non",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Giáo dục mầm non",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29900,7 +29900,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, VN) - Tin Tức - Tăng cường tiếng Việt cho "
       "trẻ",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Tăng cường tiếng Việt cho trẻ",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29921,7 +29921,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, VN) - Tin Tức - Phổ cập GDMN cho trẻ 3-5 "
       "tuổi",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Phổ cập GDMN cho trẻ 3-5 tuổi",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29941,7 +29941,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_11", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Giáo dục phổ thông",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Giáo dục phổ thông",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29961,7 +29961,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_12", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Giáo dục dân tộc",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Giáo dục dân tộc",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -29982,7 +29982,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, VN) - Tin Tức - Giáo dục thường xuyên - Nghề "
       "nghiệp",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Giáo dục thường xuyên - Nghề nghiệp",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30002,7 +30002,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_14", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Đội ngũ nhà giáo",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Đội ngũ nhà giáo",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30022,7 +30022,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_15", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Tuyển sinh",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Tuyển sinh",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30042,7 +30042,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_16", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Thi và kiểm tra",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Thi và kiểm tra",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30063,7 +30063,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, VN) - Tin Tức - Kiểm định chất lượng - "
       "Trường chuẩn quốc gia",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Kiểm định chất lượng - Trường chuẩn quốc gia",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30084,7 +30084,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, VN) - Tin Tức - Chuyển đổi số - Khoa học "
       "công nghệ",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Chuyển đổi số - Khoa học công nghệ",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30104,7 +30104,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_19", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Chuyển đổi số giáo dục",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Chuyển đổi số giáo dục",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30125,7 +30125,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, VN) - Tin Tức - Khoa học công nghệ - Đổi mới "
       "sáng tạo",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Khoa học công nghệ - Đổi mới sáng tạo",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30145,7 +30145,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_21", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Thông báo",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Thông báo",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30165,7 +30165,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_22", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Công khai",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Công khai",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30185,7 +30185,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_23", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Cải cách hành chính",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Cải cách hành chính",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30206,7 +30206,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, VN) - Tin Tức - Tiếp công dân - Khiếu nại, "
       "tố cáo",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Tiếp công dân - Khiếu nại, tố cáo",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30226,7 +30226,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_25", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Tổng hợp",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Tổng hợp",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30246,7 +30246,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_26", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Quản lý giáo dục",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Quản lý giáo dục",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30266,7 +30266,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_27", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Công tác chủ nhiệm",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Công tác chủ nhiệm",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30286,7 +30286,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_28", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Công tác Đoàn",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Công tác Đoàn",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30306,7 +30306,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_29", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Toán học",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Toán học",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30326,7 +30326,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_30", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Vật lý",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Vật lý",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30346,7 +30346,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_31", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Hóa học",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Hóa học",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30366,7 +30366,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_32", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Sinh học",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Sinh học",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30386,7 +30386,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_33", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Văn học",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Văn học",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30406,7 +30406,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_34", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Địa lý",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Địa lý",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30426,7 +30426,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_35", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Lịch sử",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Lịch sử",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30446,7 +30446,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_36", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Công nghệ thông tin",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Công nghệ thông tin",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30466,7 +30466,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_37", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Các lĩnh vực khác",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Các lĩnh vực khác",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30486,7 +30486,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137734867_38", .name = "Dien Bien Department of Education and Training "
       "(government-agency, VN) - Tin Tức - Vật lý",
     .name_ja = "Dien Bien Department of Education and Training (government-agency, VN) - Tin Tức - Vật lý",
-    .category = "government", .portal = "https://dienbien.edu.vn/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://dienbien.edu.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30505,7 +30505,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141195108", .name = "Viện Thủy công (government-agency, VN) - Viện Thủy Công",
     .name_ja = "Viện Thủy công (government-agency, VN) - Viện Thủy Công",
-    .category = "government", .portal = "https://thuycong.ac.vn/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://thuycong.ac.vn/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30525,7 +30525,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q135095698", .name = "Ministry of Education and Culture – Government of Samoa "
       "(government-agency, WS) - Ministry of Education and Culture",
     .name_ja = "Ministry of Education and Culture – Government of Samoa (government-agency, WS) - Ministry of Education and Culture",
-    .category = "government", .portal = "https://www.mesc.gov.ws/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.mesc.gov.ws/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30545,7 +30545,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16358583", .name = "Institute of the History of Kosovo (government-agency, XK) - "
       "Instituti i Historisë \"Ali Hadri\" Prishtinë",
     .name_ja = "Institute of the History of Kosovo (government-agency, XK) - Instituti i Historisë \"Ali Hadri\" Prishtinë",
-    .category = "government", .portal = "https://ih-rks.org/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://ih-rks.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30565,7 +30565,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q16361105", .name = "National Council for European Integration (government-agency, "
       "XK) - Presidente e Republikës së Kosovës",
     .name_ja = "National Council for European Integration (government-agency, XK) - Presidente e Republikës së Kosovës",
-    .category = "government", .portal = "https://president-ksgov.net/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://president-ksgov.net/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30585,7 +30585,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q25567848", .name = "Institute for the Protection of Cultural Monuments of Kosovo "
       "(government-agency, XK) - Hidden Gems of Prishtina",
     .name_ja = "Institute for the Protection of Cultural Monuments of Kosovo (government-agency, XK) - Hidden Gems of Prishtina",
-    .category = "government", .portal = "https://hiddengemsofprishtina.com/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://hiddengemsofprishtina.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30604,7 +30604,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q2916579", .name = "Kosovo Police (police, XK) - Policia e Kosovës",
     .name_ja = "Kosovo Police (police, XK) - Policia e Kosovës",
-    .category = "government", .portal = "https://www.kosovopolice.com/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.kosovopolice.com/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30624,7 +30624,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q137919331", .name = "Water Services Regulatory Authority (Kosovo) (regulatory-agency, "
       "XK) - arru",
     .name_ja = "Water Services Regulatory Authority (Kosovo) (regulatory-agency, XK) - arru",
-    .category = "government", .portal = "https://arru-rks.org/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://arru-rks.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30643,7 +30643,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q7395787", .name = "Saba News Agency (government-agency, YE) - البث العام",
     .name_ja = "Saba News Agency (government-agency, YE) - البث العام",
-    .category = "government", .portal = "https://sabanew.net/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://sabanew.net/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30662,7 +30662,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q140051621", .name = "Financial Intelligence Centre (government-agency, ZA) - FIC",
     .name_ja = "Financial Intelligence Centre (government-agency, ZA) - FIC",
-    .category = "government", .portal = "https://www.fic.gov.za/",
+    .category = "government", .collector = "wdgov_police_security", .portal = "https://www.fic.gov.za/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30682,7 +30682,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2304309", .name = "South African Heritage Resources Agency (government-agency, ZA) "
       "- SAHRA 2025",
     .name_ja = "South African Heritage Resources Agency (government-agency, ZA) - SAHRA 2025",
-    .category = "government", .portal = "https://www.sahra.org.za/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.sahra.org.za/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30702,7 +30702,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q2872784", .name = "South African Civil Aviation Authority (government-agency, ZA) - "
       "SACAA",
     .name_ja = "South African Civil Aviation Authority (government-agency, ZA) - SACAA",
-    .category = "government", .portal = "https://www.caa.co.za/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.caa.co.za/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30721,7 +30721,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q7284198", .name = "Railway Safety Regulator (government-agency, ZA) - RSR",
     .name_ja = "Railway Safety Regulator (government-agency, ZA) - RSR",
-    .category = "government", .portal = "https://www.rsr.org.za/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.rsr.org.za/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30741,7 +30741,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q7565758", .name = "South African Nuclear Energy Corporation (government-agency, ZA) "
       "- Necsa",
     .name_ja = "South African Nuclear Energy Corporation (government-agency, ZA) - Necsa",
-    .category = "government", .portal = "https://www.necsa.co.za/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://www.necsa.co.za/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30761,7 +30761,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q18391585", .name = "National Arts Council of South Africa (government-agency, ZA) - "
       "National Arts Council",
     .name_ja = "National Arts Council of South Africa (government-agency, ZA) - National Arts Council",
-    .category = "government", .portal = "http://www.nac.org.za/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "http://www.nac.org.za/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30781,7 +30781,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30261816", .name = "Education Labour Relations Council (government-agency, ZA) - "
       "ELRC",
     .name_ja = "Education Labour Relations Council (government-agency, ZA) - ELRC",
-    .category = "government", .portal = "https://elrc.org.za/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://elrc.org.za/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30801,7 +30801,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30262047", .name = "South African National AIDS Council (government-agency, ZA) - "
       "SANAC",
     .name_ja = "South African National AIDS Council (government-agency, ZA) - SANAC",
-    .category = "government", .portal = "https://sanac.org.za/",
+    .category = "government", .collector = "wdgov_local_regional", .portal = "https://sanac.org.za/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30821,7 +30821,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q29015191", .name = "Central Statistical Office (government-agency, ZM) - Zambia "
       "Statistics Agency",
     .name_ja = "Central Statistical Office (government-agency, ZM) - Zambia Statistics Agency",
-    .category = "government", .portal = "https://www.zamstats.gov.zm/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.zamstats.gov.zm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30840,7 +30840,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q30262075", .name = "Surgical Society of Zambia (government-agency, ZM) - COSECSA",
     .name_ja = "Surgical Society of Zambia (government-agency, ZM) - COSECSA",
-    .category = "government", .portal = "https://www.cosecsa.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.cosecsa.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30860,7 +30860,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q119741637", .name = "Zambia Environmental Management Agency (regulatory-agency, ZM) - "
       "Zambia Environmental Management Agency",
     .name_ja = "Zambia Environmental Management Agency (regulatory-agency, ZM) - Zambia Environmental Management Agency",
-    .category = "government", .portal = "https://www.zema.org.zm/",
+    .category = "government", .collector = "wdgov_regulators_central_banks", .portal = "https://www.zema.org.zm/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30881,7 +30881,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, ZW) - Department of Research and Specialist "
       "Services - Home",
     .name_ja = "Department of Research and Specialist Services (government-agency, ZW) - Department of Research and Specialist Services - Home",
-    .category = "government", .portal = "https://www.drss.gov.zw/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.drss.gov.zw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30902,7 +30902,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, ZW) - Department of Research and Specialist "
       "Services - Home",
     .name_ja = "Department of Research and Specialist Services (government-agency, ZW) - Department of Research and Specialist Services - Home",
-    .category = "government", .portal = "https://www.drss.gov.zw/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://www.drss.gov.zw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30923,7 +30923,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q30261811", .name = "Forestry Commission (government-agency, ZW) - Forestry "
       "Commission of Zimbabwe",
     .name_ja = "Forestry Commission (government-agency, ZW) - Forestry Commission of Zimbabwe",
-    .category = "government", .portal = "https://forestry.co.zw/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://forestry.co.zw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30942,7 +30942,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q123951954", .name = "National Metrology Institute (government-agency, ZW) - SIRDC",
     .name_ja = "National Metrology Institute (government-agency, ZW) - SIRDC",
-    .category = "government", .portal = "https://sirdc.ac.zw/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://sirdc.ac.zw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30962,7 +30962,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q136437039", .name = "Environmental Management Agency (government-agency, ZW) - "
       "Environmental Management Agency",
     .name_ja = "Environmental Management Agency (government-agency, ZW) - Environmental Management Agency",
-    .category = "government", .portal = "https://ema.co.zw/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://ema.co.zw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -30982,7 +30982,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q139771540", .name = "Agricultural Research Council of Zimbabwe (government-agency, "
       "ZW) - Agricultural Research Council",
     .name_ja = "Agricultural Research Council of Zimbabwe (government-agency, ZW) - Agricultural Research Council",
-    .category = "government", .portal = "https://arczw.ac.zw/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://arczw.ac.zw/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -31002,7 +31002,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q60740327", .name = "National Environmental Standards and Regulations Enforcement "
       "Agency (government-agency, NG) - NESREA",
     .name_ja = "National Environmental Standards and Regulations Enforcement Agency (government-agency, NG) - NESREA",
-    .category = "government", .portal = "https://nesrea.gov.ng/",
+    .category = "government", .collector = "wdgov_economy_infrastructure", .portal = "https://nesrea.gov.ng/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -31022,7 +31022,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q110944005", .name = "Turkish Higher Education Quality Council (government-agency, TR) "
       "- Yükseköğretim Kalite Kurulu Başkanlığı",
     .name_ja = "Turkish Higher Education Quality Council (government-agency, TR) - Yükseköğretim Kalite Kurulu Başkanlığı",
-    .category = "government", .portal = "https://www.yokak.gov.tr/",
+    .category = "government", .collector = "wdgov_health_education", .portal = "https://www.yokak.gov.tr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -31042,7 +31042,7 @@ static const hp_source HP3B47_WDGOV[] = {
       "(government-agency, ET) - &#x1f5f3;&#xfe0f;CEHRO Hosts Policy "
       "Debate Among Political Parties and Civil Soc",
     .name_ja = "Consortium of Ethiopian Human Rights Organizations (government-agency, ET) - &#x1f5f3;&#xfe0f;CEHRO Hosts Policy Debate Among Political Parties and Civil Soc",
-    .category = "government", .portal = "https://cehro.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cehro.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -31060,7 +31060,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q140351626", .name = "Chiefs of Ontario (government-agency, CA) - Chiefs of Ontario",
     .name_ja = "Chiefs of Ontario (government-agency, CA) - Chiefs of Ontario",
-    .category = "government", .portal = "https://chiefs-of-ontario.org/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://chiefs-of-ontario.org/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -31079,7 +31079,7 @@ static const hp_source HP3B47_WDGOV[] = {
 
   { .id = "JO47_WD_Q141146099", .name = "Q141146099 (ministry, MG) - Midsp",
     .name_ja = "Q141146099 (ministry, MG) - Midsp",
-    .category = "government", .portal = "https://midsp.gov.mg/",
+    .category = "government", .collector = "wdgov_ministries", .portal = "https://midsp.gov.mg/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -31098,7 +31098,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q141665287", .name = "Mining Institute Ltd. Belgrade (government-agency, RS) - "
       "РУДАРСКИ ИНСТИТУТ   Павле Стјепановић, дипл.",
     .name_ja = "Mining Institute Ltd. Belgrade (government-agency, RS) - РУДАРСКИ ИНСТИТУТ   Павле Стјепановић, дипл.",
-    .category = "government", .portal = "https://ribeograd.ac.rs/",
+    .category = "government", .collector = "wdgov_universities_research", .portal = "https://ribeograd.ac.rs/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -31117,7 +31117,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q50041046", .name = "Israel Olive Oil Board (government-agency, IL) - ענף הזית במועצת "
       "הצמחים",
     .name_ja = "Israel Olive Oil Board (government-agency, IL) - ענף הזית במועצת הצמחים",
-    .category = "government", .portal = "https://www.oliveboard.org.il/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://www.oliveboard.org.il/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -31136,7 +31136,7 @@ static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q59536295", .name = "Centre National de Lutte Antiacridienne (government-agency, MR) "
       "- CNLA",
     .name_ja = "Centre National de Lutte Antiacridienne (government-agency, MR) - CNLA",
-    .category = "government", .portal = "https://cnla.mr/",
+    .category = "government", .collector = "wdgov_agencies", .portal = "https://cnla.mr/",
     .record_type = "government-notice",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,

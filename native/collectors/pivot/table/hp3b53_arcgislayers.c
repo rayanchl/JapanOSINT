@@ -30,7 +30,7 @@
 
 static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES_101420_PSPS_AREAS", .name = "services.arcgis.com — 101420_PSPS_Areas (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -57,7 +57,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES6_200812_CREEQ_SAMPL", .name = "services6.arcgis.com — "
       "200812_CREEQ_Sampling_Event_Information_Export (ArcGIS layer 0)",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "world_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "monitoring-site",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -84,7 +84,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_EXPLOITATION_PERMI", .name = "DRC Cadastre Minier — Exploitation Permit (ArcGIS "
       "DRCPortal_ActiveExploitationLayer_1 layer 0)",
-    .category = "government", .portal = "https://services1.arcgis.com",
+    .category = "government", .collector = "world_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "permit-record",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"permit\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -112,7 +112,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_WW8_BUSINESS_CLUSTERS", .name = "The Regional Municipality of York — Business Clusters (ArcGIS "
       "EnterprisePublic/BusinessDirectory layer 2)",
-    .category = "transport", .portal = "https://ww8.yorkmaps.ca",
+    .category = "transport", .collector = "world_gis_economy_business", .portal = "https://ww8.yorkmaps.ca",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"transport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -142,7 +142,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_WW8_BUSINESSES_BY_EMPLOYEE_S", .name = "The Regional Municipality of York — Businesses by Employee Size "
       "(ArcGIS EnterprisePublic/BusinessDirectory layer 3)",
-    .category = "transport", .portal = "https://ww8.yorkmaps.ca",
+    .category = "transport", .collector = "world_gis_economy_business", .portal = "https://ww8.yorkmaps.ca",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"transport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -172,7 +172,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_WW8_BUSINESSES_BY_DENSITY_HE", .name = "The Regional Municipality of York — Businesses by Density (Heat "
       "Map) (ArcGIS EnterprisePublic/BusinessDirectory layer 4)",
-    .category = "transport", .portal = "https://ww8.yorkmaps.ca",
+    .category = "transport", .collector = "world_gis_planning_zoning", .portal = "https://ww8.yorkmaps.ca",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"transport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -202,7 +202,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES6_ADDRESS_SCORES_ALL", .name = "East Dunbartonshire Council — Address Scores_All Criteria "
       "(ArcGIS 20_Minute_Analysis__Land___Addresses__WFL1 layer 0)",
-    .category = "government", .portal = "https://services6.arcgis.com",
+    .category = "government", .collector = "eu_gis_parcels_landuse", .portal = "https://services6.arcgis.com",
     .record_type = "address-point",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -232,7 +232,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES2_AB2011PARCELS", .name = "City of San Bernardino, California — AB2011Parcels (ArcGIS "
       "AB2011_SB6 layer 1)",
-    .category = "government", .portal = "https://services2.arcgis.com",
+    .category = "government", .collector = "jp_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "land-parcel",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"cadastre\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -258,7 +258,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES3_EVENTPOLYGON2019", .name = "NIFC — EventPolygon2019 (ArcGIS 2019_NIFS_OpenData layer 2)",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "us_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -284,7 +284,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "one row naming one layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES_BIKE_LANES", .name = "services.arcgis.com — Bike Lanes (ArcGIS Bike_Lanes layer 0)",
-    .category = "government", .portal = "https://services.arcgis.com",
+    .category = "government", .collector = "world_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -315,7 +315,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES6_200722_CREEQ_SAMPL", .name = "services6.arcgis.com — 200722_CREEQ_Sampling_Event_Information "
       "(ArcGIS layer 0)",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "world_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "monitoring-site",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -341,7 +341,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_PORTAL_LOT_M", .name = "NSW Spatial Services — Lot_M (ArcGIS Cadastre_History layer 3)",
-    .category = "government", .portal = "https://portal.spatial.nsw.gov.au",
+    .category = "government", .collector = "world_gis_parcels_landuse", .portal = "https://portal.spatial.nsw.gov.au",
     .record_type = "land-parcel",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"cadastre\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -370,7 +370,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_SCHOOLS", .name = "services.arcgis.com — Schools (ArcGIS "
       "15_Minute_Neighborhood_Destinations layer 2)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_education", .portal = "https://services.arcgis.com",
     .record_type = "facility",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -395,7 +395,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_AERIAL_PHOTOS", .name = "Tasmanian Land Information System public services — Aerial "
       "Photos (ArcGIS AerialPhotoViewer/AerialPhoto_TimeV2 layer 0)",
-    .category = "geospatial", .portal = "https://services.thelist.tas.gov.au",
+    .category = "geospatial", .collector = "world_gis_imagery_basemap", .portal = "https://services.thelist.tas.gov.au",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -427,7 +427,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GISSERVICES_MUNICIPAL_STORM", .name = "gisservices.dec.ny.gov — Municipal Storm Sewer System (MS4) "
       "(ArcGIS dil_permits_and_regs layer 0)",
-    .category = "environment", .portal = "https://gisservices.dec.ny.gov",
+    .category = "environment", .collector = "world_gis_utilities_infrastructure", .portal = "https://gisservices.dec.ny.gov",
     .record_type = "permit-record",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"permit\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -458,7 +458,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GISWEB_PROPERTY", .name = "Miami-Dade County FL ArcGIS service directory — Property (ArcGIS "
       "AddressSearchMap_PropertiesWithZip layer 1)",
-    .category = "government", .portal = "https://gisweb.miamidade.gov",
+    .category = "government", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "land-parcel",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"cadastre\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -489,7 +489,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_PORTAL_WATERFEATURE", .name = "NSW Spatial Services — WaterFeature (ArcGIS Cadastre_History "
       "layer 0)",
-    .category = "environment", .portal = "https://portal.spatial.nsw.gov.au",
+    .category = "environment", .collector = "world_gis_environment_hazards", .portal = "https://portal.spatial.nsw.gov.au",
     .record_type = "land-parcel",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\",\"cadastre\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -518,7 +518,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "over a cycle." },
 
   { .id = "JO53_AGS_SERVICES3_ADDRESSPOINTS", .name = "City of Corona, California — AddressPoints (ArcGIS layer 0)",
-    .category = "government", .portal = "https://services3.arcgis.com",
+    .category = "government", .collector = "jp_gis_parcels_landuse", .portal = "https://services3.arcgis.com",
     .record_type = "address-point",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -547,7 +547,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES9_C11201_POLYGONS", .name = "Saitama Prefecture — c11201_polygons (ArcGIS c11201_view layer "
       "0)",
-    .category = "environment", .portal = "https://services9.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -574,7 +574,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES9_C11203_POLYGONS", .name = "Saitama Prefecture — c11203_polygons (ArcGIS c11203_view layer "
       "0)",
-    .category = "environment", .portal = "https://services9.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -602,7 +602,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES_TRANSIT_CONTRACTS_A", .name = "City of Ottawa — "
       "Transit_Contracts_awarded_under_DOA_Q3_and_Q4_2022 (ArcGIS layer "
       "0)",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"transport\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -630,7 +630,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_ROADWAYS_CFEC", .name = "State of Oregon — Roadways_CFEC (ArcGIS "
       "05282025_ODOT_CFEC_MM_Ashland_Exsiting_Data layer 0)",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "us_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "transport-asset",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"transport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -657,7 +657,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES3_AREAS_WITH_NO_METE", .name = "City of Corona, California — Areas_With_No_Meter (ArcGIS layer "
       "0)",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -684,7 +684,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_DATA_GIS_CENTRESPLANTDIVERSI", .name = "data-gis.unep-wcmc.org — CentresPlantDiversityPoly2013 (ArcGIS "
       "Centres_of_Plant_Diversity_2013 layer 2)",
-    .category = "industry", .portal = "https://data-gis.unep-wcmc.org",
+    .category = "industry", .collector = "world_gis_other", .portal = "https://data-gis.unep-wcmc.org",
     .record_type = "facility",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -711,7 +711,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_2020_HSIP_INT", .name = "North Carolina Department of Transportation — 2020_HSIP_INT "
       "(ArcGIS layer 0)",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "us_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -737,7 +737,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_FREIGHT_ROUTES_CFEC", .name = "State of Oregon — Freight_Routes_CFEC (ArcGIS "
       "05282025_ODOT_CFEC_MM_Ashland_Freight layer 0)",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "us_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -763,7 +763,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES2_LIGHT04202023", .name = "services2.arcgis.com — Light04202023 (ArcGIS 04202023 layer 0)",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -789,7 +789,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES_20220515_DR_637_22", .name = "California Governor's Office of Emergency Services — 20220515_DR "
       "637-22_NM 04-22 FOR_Detailed Damage Asssessment051722 (ArcGIS "
       "20220515_DR_637_22_NM_04_22_FOR_Detailed_Damage_Asssessment0517",
-    .category = "government", .portal = "https://services.arcgis.com",
+    .category = "government", .collector = "us_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -817,7 +817,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_2019_PLANNING_DATA", .name = "Lexington-Fayette Urban County Government — "
       "2019_Planning_Database_Tract_Population (ArcGIS layer 0)",
-    .category = "government", .portal = "https://services1.arcgis.com",
+    .category = "government", .collector = "us_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -847,7 +847,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_2020_CENSUS_PLANNI", .name = "Lexington-Fayette Urban County Government — "
       "2020_Census_Planning_Database_Housing_Unit (ArcGIS layer 0)",
-    .category = "government", .portal = "https://services1.arcgis.com",
+    .category = "government", .collector = "us_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -879,7 +879,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES7_SURVEY", .name = "Gunma Prefecture bear appearance map (Survey123 results) — "
       "survey (ArcGIS "
       "survey123_71918ac195f9462caa142453b8bff394_stakeholder layer 0)",
-    .category = "environment", .portal = "https://services7.arcgis.com",
+    .category = "environment", .collector = "jp_gis_parcels_landuse", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -906,7 +906,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GIS_RAILWAY_STATIONS", .name = "gis.ekurhuleni.gov.za — Railway Stations (ArcGIS "
       "CoE_2023_ProcapMap_MIL1 layer 1)",
-    .category = "transport", .portal = "https://gis.ekurhuleni.gov.za",
+    .category = "transport", .collector = "world_gis_transport", .portal = "https://gis.ekurhuleni.gov.za",
     .record_type = "facility",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"transport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -931,7 +931,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GISN", .name = "Tel Aviv-Yafo municipality — מרכזי הורים בעיר (ArcGIS "
       "IView2____test layer 796)",
-    .category = "government", .portal = "https://gisn.tel-aviv.gov.il",
+    .category = "government", .collector = "world_gis_other", .portal = "https://gisn.tel-aviv.gov.il",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -957,7 +957,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GISWEB_ZIPCODE", .name = "Miami-Dade County FL ArcGIS service directory — ZipCode (ArcGIS "
       "AddressSearchMap_PropertiesWithZip layer 2)",
-    .category = "government", .portal = "https://gisweb.miamidade.gov",
+    .category = "government", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "address-point",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -984,7 +984,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_MAPS_MSP_ALLOWED_USE", .name = "maps.helcom.fi — MSP Allowed Use (ArcGIS "
       "BalticSea2Land/BalticSea2Land layer 248)",
-    .category = "geospatial", .portal = "https://maps.helcom.fi",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://maps.helcom.fi",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1011,7 +1011,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_NC_GRIDDED_SOIL_SUR", .name = "North Carolina Department of Transportation — NC Gridded Soil "
       "Survey gSSURGO (ArcGIS _NC_Gridded_Soil_Survey_gSSURGO layer 0)",
-    .category = "industry", .portal = "https://services.arcgis.com",
+    .category = "industry", .collector = "us_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"energy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1038,7 +1038,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_ALL_BIKE_PARKING", .name = "services.arcgis.com — All_Bike_Parking (ArcGIS "
       "All_Bike_Parking_View layer 0)",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "world_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "transport-asset",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1063,7 +1063,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_2019_PLANNING_DATA_1857", .name = "Lexington-Fayette Urban County Government — "
       "2019_Planning_Database_Tract_Operational (ArcGIS layer 0)",
-    .category = "government", .portal = "https://services1.arcgis.com",
+    .category = "government", .collector = "us_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1094,7 +1094,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES2_SHEET1", .name = "services2.arcgis.com — Sheet1 (ArcGIS 2020_Annual_Survey layer "
       "0)",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "world_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1120,7 +1120,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES6_AKITA_POLICE", .name = "Akita Prefectural Police: traffic accident map data — "
       "akita_police (ArcGIS layer 0)",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"crime\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1146,7 +1146,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_COAST_WATERSHEDS_FOR_CHARTS", .name = "NOAA Office for Coastal Management — watersheds for charts - "
       "composite (ArcGIS CCAP_Water_Quality/ccap_v2_hr_water_quality "
       "layer 11)",
-    .category = "environment", .portal = "https://coast.noaa.gov",
+    .category = "environment", .collector = "us_gis_environment_hazards", .portal = "https://coast.noaa.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1181,7 +1181,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_COAST_WATERSHEDS_PHASE1_PERC", .name = "NOAA Office for Coastal Management — watersheds phase1 - percent "
       "impervious (Zoomed out) (ArcGIS "
       "CCAP_Water_Quality/ccap_v2_hr_water_quality layer 0)",
-    .category = "environment", .portal = "https://coast.noaa.gov",
+    .category = "environment", .collector = "us_gis_environment_hazards", .portal = "https://coast.noaa.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1216,7 +1216,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_COAST_WATERSHEDS_PHASE1_PERC_1B36", .name = "NOAA Office for Coastal Management — watersheds phase1 - percent "
       "impervious (ArcGIS CCAP_Water_Quality/ccap_v2_hr_water_quality "
       "layer 1)",
-    .category = "environment", .portal = "https://coast.noaa.gov",
+    .category = "environment", .collector = "us_gis_environment_hazards", .portal = "https://coast.noaa.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1250,7 +1250,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_MAPS_MSP_RESTRICTED_USE", .name = "maps.helcom.fi — MSP Restricted Use (ArcGIS "
       "BalticSea2Land/BalticSea2Land layer 260)",
-    .category = "geospatial", .portal = "https://maps.helcom.fi",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://maps.helcom.fi",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1278,7 +1278,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_AP1_05_BARRIER_FENC", .name = "Hong Kong Highways Department Survey Division — 05_BARRIER_FENCE "
       "(ArcGIS layer 1)",
-    .category = "transport", .portal = "https://services-ap1.arcgis.com",
+    .category = "transport", .collector = "world_gis_transport", .portal = "https://services-ap1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1308,7 +1308,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_CLOSED_ROUTES", .name = "Iowa Department of Transportation — Closed_Routes (ArcGIS "
       "511_IA_Counties_View layer 0)",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "us_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1336,7 +1336,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES_2014_TO_2018_COLLIS", .name = "City of Ottawa — "
       "2014_to_2018_Collision_frequency_by_location_placed_on_centroid "
       "(ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "incident-record",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1366,7 +1366,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_2017_BUS_RIDERSHIP", .name = "City of Baton Rouge / Parish of East Baton Rouge — 2017 Bus "
       "Ridership- On (ArcGIS 2017_Bus_Ridership layer 0)",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"transport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1392,7 +1392,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_2017_BUS_RIDERSHIP_D933", .name = "City of Baton Rouge / Parish of East Baton Rouge — 2017 Bus "
       "Ridership- Off (ArcGIS 2017_Bus_Ridership layer 1)",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"transport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1418,7 +1418,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_2020_HSIP_BIKEPED", .name = "North Carolina Department of Transportation — 2020_HSIP_BIKEPED "
       "(ArcGIS layer 0)",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "us_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1444,7 +1444,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES6_AKITA_TRAFFICAPP_C", .name = "Akita Prefectural Police: traffic accident map data — "
       "Akita_TrafficApp_Count (ArcGIS layer 0)",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"transport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1471,7 +1471,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_BORGARVEFSJA_BV_HFANG", .name = "City of Reykjavik — bv_hfang (ArcGIS stjorinn layer 0)",
-    .category = "transport", .portal = "https://borgarvefsja.reykjavik.is",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://borgarvefsja.reykjavik.is",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1499,7 +1499,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GEOVISOR_AGENCIA_RAUL_MURILL", .name = "ANH — AGENCIA\\RAUL.MURILLO.Indicador_Hidrocarburos (ArcGIS "
       "Indicador_Hidrocarburos layer 0)",
-    .category = "infrastructure", .portal = "https://geovisor.anh.gov.co",
+    .category = "infrastructure", .collector = "world_gis_other", .portal = "https://geovisor.anh.gov.co",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1528,7 +1528,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_100_YEAR_REGULATORY", .name = "King County Roads — 100 Year Regulatory Floodplain (ArcGIS "
       "100_Year_Regulatory_Floodplain layer 1)",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "us_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1554,7 +1554,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES_2008_FIRS", .name = "services.arcgis.com — 2008_FIRS (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1583,7 +1583,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "over a cycle." },
 
   { .id = "JO53_AGS_SERVICES_2009_FIRS", .name = "services.arcgis.com — 2009_FIRS (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1612,7 +1612,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "over a cycle." },
 
   { .id = "JO53_AGS_SERVICES_2010_FIRS", .name = "services.arcgis.com — 2010_FIRS (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1641,7 +1641,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "over a cycle." },
 
   { .id = "JO53_AGS_SERVICES_2011_FIRS", .name = "services.arcgis.com — 2011_FIRS (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1670,7 +1670,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "over a cycle." },
 
   { .id = "JO53_AGS_SERVICES_2012_FIRS", .name = "services.arcgis.com — 2012_FIRS (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1700,7 +1700,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_DERIVENEWLOCATIONSO", .name = "services.arcgis.com — DeriveNewLocationsOutput (ArcGIS "
       "BSM_withinCoV layer 0)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1726,7 +1726,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_WATERSHED_O8_WITHI", .name = "Japan designated emergency evacuation sites (River Foundation — "
       "watershed_O8_Within (ArcGIS layer 13)",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1754,7 +1754,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_2010_WUINTERFACE", .name = "Mid-Region Metropolitan Planning Organization (New Mexico) — "
       "2010_WUInterface (ArcGIS layer 0)",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "us_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1779,7 +1779,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_CENSUS2020_BLOCKSP", .name = "services1.arcgis.com — Census2020_BlocksPOP (ArcGIS "
       "2020_Arizona_Census_Blocks_with_Decennial_Population layer 1)",
-    .category = "government", .portal = "https://services1.arcgis.com",
+    .category = "government", .collector = "world_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1813,7 +1813,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES2_GU_BLOCK_PROJAREAS", .name = "services2.arcgis.com — GU_Block_ProjAreas (ArcGIS "
       "050224_Guam_Deduplication_Challenge_Alpha_WFL1 layer 1)",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1841,7 +1841,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES2_GU_BLOCK_PROJAREAS_462F", .name = "services2.arcgis.com — GU_Block_ProjAreas (ArcGIS "
       "050224_Guam_Deduplication_Challenge_Alpha_WFL1 layer 2)",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1871,7 +1871,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "to Non-Hispanic White (ArcGIS "
       "Black_or_African_American_compared_to_Non_Hispanic_White_JV "
       "layer 2)",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1898,7 +1898,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES3_FA", .name = "Shibuya City food business permits and notifications — データ(FAなし) "
       "(ArcGIS 131130_000063519_FA_N layer 0)",
-    .category = "transport", .portal = "https://services3.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1925,7 +1925,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES3_FA_CEEC", .name = "Shibuya City food business permits and notifications — データ(FAあり) "
       "(ArcGIS 131130_000063519_FA_Y layer 0)",
-    .category = "transport", .portal = "https://services3.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1951,7 +1951,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES5_2024", .name = "Omihachiman City — 2024指定道路 (ArcGIS 2024shiteidouro layer 0)",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1976,7 +1976,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES6_STATEWIDE_HUC12_SU", .name = "services6.arcgis.com — Statewide_HUC12_Subwatershed_Scores "
       "(ArcGIS 2016_Results_Feature_Only layer 0)",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "world_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2003,7 +2003,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES8_SURVEY", .name = "Inzai City address points with polling district — survey (ArcGIS "
       "survey123_60c068d0ac9b425eb1693b7c754e11a8_results layer 0)",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2029,7 +2029,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES9_DEER_HOKAKU_DATA", .name = "Hokkaido Regional Forest Office: forest road gates and closures "
       "— deer_hokaku_data (ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2055,7 +2055,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES9_OBSERVED_TRACK", .name = "Hub'Eau France — Observed Track (ArcGIS "
       "Active_Hurricanes_Sampler layer 3)",
-    .category = "environment", .portal = "https://services9.arcgis.com",
+    .category = "environment", .collector = "eu_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "monitoring-site",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2078,7 +2078,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_JAKARTASATU_SLF_KAWASAN_BEBA", .name = "jakartasatu.jakarta.go.id — SLF Kawasan Bebas Air Tanah (ArcGIS "
       "Analisis_Kawasan_Bebas_Air_Tanah layer 0)",
-    .category = "geospatial", .portal = "https://jakartasatu.jakarta.go.id",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://jakartasatu.jakarta.go.id",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2107,7 +2107,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_JAKARTASATU_BANGUNAN_KAWASAN", .name = "jakartasatu.jakarta.go.id — Bangunan Kawasan Bebas Air Tanah "
       "(ArcGIS Analisis_Kawasan_Bebas_Air_Tanah layer 2)",
-    .category = "geospatial", .portal = "https://jakartasatu.jakarta.go.id",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://jakartasatu.jakarta.go.id",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2135,7 +2135,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_1_SKYLINE_BUS_ROUTE", .name = "services.arcgis.com — 1. Skyline Bus Routes (ArcGIS "
       "1_Skyline_Bus_Routes layer 0)",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "world_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"transport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2160,7 +2160,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_HECC_DECADEDATA", .name = "services.arcgis.com — HECC_DecadeData (ArcGIS "
       "10Years_of_Cleanups layer 0)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2186,7 +2186,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_RALEIGHCENSUSBLOCKG", .name = "City of Raleigh — RaleighCensusBlockGroups (ArcGIS "
       "2010_Raleigh_Census_Block_Groups layer 0)",
-    .category = "government", .portal = "https://services.arcgis.com",
+    .category = "government", .collector = "jp_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2214,7 +2214,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_2010_NON_URBANIZED", .name = "services.arcgis.com — 2010_Non_Urbanized_Area_5k_50K (ArcGIS "
       "layer 0)",
-    .category = "government", .portal = "https://services.arcgis.com",
+    .category = "government", .collector = "world_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2242,7 +2242,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_PHOTO_COVERAGE", .name = "Tasmanian Land Information System public services — Photo "
       "Coverage (ArcGIS AerialPhotoViewer/AerialPhoto_Time layer 0)",
-    .category = "geospatial", .portal = "https://services.thelist.tas.gov.au",
+    .category = "geospatial", .collector = "world_gis_culture_recreation", .portal = "https://services.thelist.tas.gov.au",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2273,7 +2273,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_WATERSHED_O6_WITHI", .name = "Japan designated emergency evacuation sites (River Foundation — "
       "watershed_O6_Within (ArcGIS layer 20)",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2302,7 +2302,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES1_COVIDCOUNTYSTATIST", .name = "Health Protection Surveillance Centre Ireland — "
       "CovidCountyStatisticsHPSCIreland (ArcGIS "
       "Covid19CountyStatisticsHPSCIreland layer 0)",
-    .category = "health", .portal = "https://services1.arcgis.com",
+    .category = "health", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2332,7 +2332,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES1_COVIDCOUNTYSTATIST_B3D3", .name = "Health Protection Surveillance Centre Ireland — "
       "CovidCountyStatisticsHPSCIre (ArcGIS "
       "Covid19CountyStatisticsHPSCIrelandPointData layer 0)",
-    .category = "health", .portal = "https://services1.arcgis.com",
+    .category = "health", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2360,7 +2360,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES2_ADAM_HOS_SUMMARY_T", .name = "Pennsylvania Emergency Management Agency — "
       "Adam_HOS_Summary_Table_V2 (ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "us_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2391,7 +2391,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES3", .name = "Hamamatsu City fire cisterns — 通行可能区間（ライン） (ArcGIS "
       "AvailableSection2_Line_ver1 layer 0)",
-    .category = "infrastructure", .portal = "https://services3.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2414,7 +2414,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES3_131130_AED", .name = "Shibuya City food business permits and notifications — "
       "131130_aed (ArcGIS layer 0)",
-    .category = "transport", .portal = "https://services3.arcgis.com",
+    .category = "transport", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2440,7 +2440,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES5", .name = "Omihachiman City — 認定路線網図 (ArcGIS 01120601_2024_ninteirosen "
       "layer 2)",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2465,7 +2465,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES6_AED", .name = "Sado City — AED (ArcGIS layer 1)",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2489,7 +2489,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_MERGEDFEATURES", .name = "City of Chicago — MergedFeatures (ArcGIS 2015_present_bike_racks "
       "layer 0)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_transport", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2515,7 +2515,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_DEMOGRAPHICS", .name = "Barbados Lands and Surveys Department — Demographics (ArcGIS "
       "2010_Demographics layer 0)",
-    .category = "transport", .portal = "https://services7.arcgis.com",
+    .category = "transport", .collector = "world_gis_boundaries", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2542,7 +2542,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_TEST_OPEN_TOCHIGI", .name = "Tochigi Prefecture — test_open_tochigi (ArcGIS open_tochigi "
       "layer 0)",
-    .category = "health", .portal = "https://services7.arcgis.com",
+    .category = "health", .collector = "jp_gis_health_social", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2569,7 +2569,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_POLYGONS", .name = "Prefeitura do Recife — Polygons (ArcGIS AGLOMERADOS_IBGE layer "
       "1)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "world_gis_other", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2596,7 +2596,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_WAZE_ALERT", .name = "Prefeitura do Recife — Waze_Alert (ArcGIS ALAGAMENTOS_08_04_2024 "
       "layer 0)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "world_gis_safety_emergency", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2622,7 +2622,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_ALAGAMENTOS", .name = "Prefeitura do Recife — ALAGAMENTOS (ArcGIS ALAGAMENTOS_11_03_24 "
       "layer 0)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "world_gis_other", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2648,7 +2648,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_CITYCENSUSDISTANCE", .name = "Rochester, NY Police Department — CityCensusDistanceMatrix "
       "(ArcGIS layer 0)",
-    .category = "government", .portal = "https://services7.arcgis.com",
+    .category = "government", .collector = "us_gis_boundaries", .portal = "https://services7.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2675,7 +2675,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES8_POLLSBYDISTRICT", .name = "Government of Newfoundland and Labrador — PollsByDistrict "
       "(ArcGIS 2025_NL_Provincial_Election_Polls_By_District_view layer "
       "0)",
-    .category = "government", .portal = "https://services8.arcgis.com",
+    .category = "government", .collector = "world_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2703,7 +2703,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GEOVISOR_GDB_TIERRAS_VERSION", .name = "ANH — GDB.Tierras_Version_Vigente_Geovisor (ArcGIS "
       "ANH_TIERRAS_EGDB_ATTACH layer 0)",
-    .category = "infrastructure", .portal = "https://geovisor.anh.gov.co",
+    .category = "infrastructure", .collector = "world_gis_parcels_landuse", .portal = "https://geovisor.anh.gov.co",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2734,7 +2734,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_AP1_STR_SUBWAY", .name = "Hong Kong Highways Department Survey Division — STR_SUBWAY "
       "(ArcGIS NON_STANDARDIZED_OBJECTS layer 19)",
-    .category = "transport", .portal = "https://services-ap1.arcgis.com",
+    .category = "transport", .collector = "world_gis_transport", .portal = "https://services-ap1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2761,7 +2761,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_AP1_STR_WALKWAY_COV", .name = "Hong Kong Highways Department Survey Division — STR_WALKWAY "
       "COVER (ArcGIS NON_STANDARDIZED_OBJECTS layer 20)",
-    .category = "transport", .portal = "https://services-ap1.arcgis.com",
+    .category = "transport", .collector = "world_gis_transport", .portal = "https://services-ap1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2788,7 +2788,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES_EU1_BOLLARD", .name = "Port of Rotterdam Authority (HbR) — Bollard (ArcGIS layer 0)",
-    .category = "ocean", .portal = "https://services-eu1.arcgis.com",
+    .category = "ocean", .collector = "eu_gis_other", .portal = "https://services-eu1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2813,7 +2813,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_GENERAL_ELECTION_20", .name = "King County Roads — General Election 2018 Turnout (ArcGIS "
       "2018GenTurnoutbyPrecinct layer 0)",
-    .category = "government", .portal = "https://services.arcgis.com",
+    .category = "government", .collector = "us_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2838,7 +2838,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES_311_BLIGHT_CALLS_AN", .name = "City of Baton Rouge / Parish of East Baton Rouge — 311 Blight "
       "Calls and Black Population (ArcGIS "
       "311_Blight_Calls_and_Black_Population layer 6)",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2866,7 +2866,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_CROP_MAPPING_2014", .name = "services.arcgis.com — Crop Mapping 2014 (ArcGIS "
       "2014_Crop_Mapping_WFL1 layer 0)",
-    .category = "agriculture", .portal = "https://services.arcgis.com",
+    .category = "agriculture", .collector = "world_gis_economy_business", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2897,7 +2897,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_MORTALITY_RATIO", .name = "services.arcgis.com — Mortality Ratio (ArcGIS "
       "_Mortality_Ratio_F90l3F layer 0)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2924,7 +2924,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_PHILADELPHIA_BIKE_N", .name = "services.arcgis.com — Philadelphia_Bike_Network_2024 (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2952,7 +2952,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES1_COUNTIES_SUMMARY", .name = "Georgia Emergency Management and Homeland Security Agency — "
       "Counties Summary (ArcGIS Blue_Sky_All_Categories_Summary layer "
       "1)",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "us_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2980,7 +2980,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES1_2023NSHM", .name = "services1.arcgis.com — 2023NSHM (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3006,7 +3006,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_WATERSHED_L1", .name = "Japan designated emergency evacuation sites (River Foundation — "
       "watershed_L1 (ArcGIS watershed_L1_202505 layer 1)",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3033,7 +3033,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_WATERSHED_R_O1", .name = "Japan designated emergency evacuation sites (River Foundation — "
       "watershed_r_O1 (ArcGIS watershed_r_O1_202505 layer 3)",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3060,7 +3060,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_CAF_AUCTION_OUTSID", .name = "services1.arcgis.com — CAF_Auction_Outside_ILEC (ArcGIS "
       "2016_08_10_CAFII_Auction_Maine layer 0)",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_economy_business", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3088,7 +3088,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_M", .name = "Kashiwazaki City fire hydrants — 標高値（m） (ArcGIS "
       "hyoko_point_20190214 layer 0)",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_imagery_basemap", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3114,7 +3114,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "reads it over a cycle." },
 
   { .id = "JO53_AGS_SERVICES1", .name = "Saku City — 土地利用 (ArcGIS tochiriyou layer 0)",
-    .category = "government", .portal = "https://services1.arcgis.com",
+    .category = "government", .collector = "jp_gis_parcels_landuse", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3143,7 +3143,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES1_COUNTRIES_2020_ADM", .name = "Health Protection Surveillance Centre Ireland — Countries, 2020 "
       "- Administrative Units (ArcGIS Countries2020AdministrativeUnits "
       "layer 0)",
-    .category = "government", .portal = "https://services1.arcgis.com",
+    .category = "government", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3174,7 +3174,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_CALIFORNIA_FIRE_PE", .name = "services1.arcgis.com — California Fire Perimeters (all) (ArcGIS "
       "2017_California_Fire_Perimeters_View layer 0)",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "world_gis_safety_emergency", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3202,7 +3202,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_CALIFORNIA_FIRE_PE_1F7F", .name = "services1.arcgis.com — California Fire Perimeters (all) (ArcGIS "
       "2018_California_Fire_Perimeters_View layer 0)",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "world_gis_safety_emergency", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3234,7 +3234,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_CALIFORNIA_FIRE_PE_1234", .name = "services1.arcgis.com — California Fire Perimeters (all) (ArcGIS "
       "2019_California_Fire_Perimeters_View layer 0)",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "world_gis_safety_emergency", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3262,7 +3262,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_CALIFORNIA_FIRE_PE_7AFB", .name = "services1.arcgis.com — California Fire Perimeters (all) (ArcGIS "
       "2020_California_Fire_Perimeters_View layer 0)",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "world_gis_safety_emergency", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3290,7 +3290,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_CALIFORNIA_FIRE_PE_42D6", .name = "services1.arcgis.com — California Fire Perimeters (all) (ArcGIS "
       "2021_California_Fire_Perimeters layer 0)",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "world_gis_safety_emergency", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3318,7 +3318,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_CENSUS2020_TRACTSP", .name = "services1.arcgis.com — Census2020_TractsPOP (ArcGIS "
       "2020_Arizona_Census_Tracts_with_Decennial_Population layer 1)",
-    .category = "government", .portal = "https://services1.arcgis.com",
+    .category = "government", .collector = "world_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3348,7 +3348,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES2_AADT_POINTS", .name = "City of Kirkland, Washington — AADT_Points (ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3373,7 +3373,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES5_CHIBAN", .name = "Kosai City — chiban (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3398,7 +3398,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "so the row reads it over a cycle." },
 
   { .id = "JO53_AGS_SERVICES5_CHIBAN_MOJI", .name = "Kosai City — chiban_moji (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3426,7 +3426,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES5_2024_132128_POLYGO", .name = "Hino City street lights (2024 extract) — 2024_132128_polygons "
       "(ArcGIS 2024_132128 layer 0)",
-    .category = "government", .portal = "https://services5.arcgis.com",
+    .category = "government", .collector = "jp_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3454,7 +3454,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES5_SHAPE", .name = "Hino City street lights (2024 extract) — "
       "区画整理事業完了地区の筆界データ（shape形式） (ArcGIS arcgisonline0327_shp layer 2)",
-    .category = "government", .portal = "https://services5.arcgis.com",
+    .category = "government", .collector = "jp_gis_parcels_landuse", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3482,7 +3482,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "take in one run, so the row reads it over a cycle." },
 
   { .id = "JO53_AGS_SERVICES6", .name = "Annaka City — 地番検索 (ArcGIS ChibanKensaku_view layer 0)",
-    .category = "government", .portal = "https://services6.arcgis.com",
+    .category = "government", .collector = "jp_gis_parcels_landuse", .portal = "https://services6.arcgis.com",
     .record_type = "land-parcel",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"cadastre\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3509,7 +3509,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES6_JAPAN_VER83", .name = "Miyagi Prefectural Police: traffic accident open data 2018-2025 "
       "— japan_ver83 (ArcGIS layer 0)",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3535,7 +3535,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES6_CLEARANCE", .name = "FAA NASR — Clearance (ArcGIS layer 0)",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "us_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3559,7 +3559,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "one row naming one layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES7_JOUSUI_HAISUIKAN", .name = "Gyoda City — jousui_haisuikan (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3584,7 +3584,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_2611606_FACES_DE_L", .name = "Prefeitura do Recife — 2611606_faces_de_logradouros_2022_IBGE "
       "(ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "world_gis_transport", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3613,7 +3613,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "reads it over a cycle." },
 
   { .id = "JO53_AGS_SERVICES7_BOUHANTOU", .name = "Oiso Town — bouhantou (ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_safety_emergency", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3637,7 +3637,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES7_HINANJO", .name = "Oiso Town — hinanjo (ArcGIS hinanjo_kinkyuuhinanbasyo layer 0)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_safety_emergency", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3662,7 +3662,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES8_2", .name = "MLIT Data Platform: national road bridge inspection register — "
       "人口集中地区 (令和2年度) (ArcGIS A16_20_00_DID layer 10)",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3692,7 +3692,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES8_5", .name = "MLIT Data Platform: national road bridge inspection register — "
       "大規模盛土造成地 (令和5年) (ArcGIS A54_23 layer 11)",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_environment_hazards", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3724,7 +3724,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES8_A002005212020DDSWC", .name = "Tokyo Fire Department public fire hydrants (as of 2025-04-01) — "
       "A002005212020DDSWC13107 (ArcGIS layer 0)",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3751,7 +3751,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES9_FORECAST_POSITION", .name = "Hub'Eau France — Forecast Position (ArcGIS "
       "Active_Hurricanes_Sampler layer 0)",
-    .category = "environment", .portal = "https://services9.arcgis.com",
+    .category = "environment", .collector = "eu_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3775,7 +3775,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES9_RIVERINFO", .name = "Low-cost flood sensor network status (ShinsuiWatcher) — "
       "RiverInfo (ArcGIS RiverInfo_2a934 layer 0)",
-    .category = "environment", .portal = "https://services9.arcgis.com",
+    .category = "environment", .collector = "world_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3799,7 +3799,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES9_2018_BP_HOMEPAGE_I", .name = "IMF PortWatch — 2018_BP_Homepage_Indicator (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://services9.arcgis.com",
+    .category = "environment", .collector = "world_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3827,7 +3827,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES9", .name = "NIES — 統計評価（年間値） (ArcGIS amedas_evaluation layer 0)",
-    .category = "environment", .portal = "https://services9.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3851,7 +3851,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES9_8D1D", .name = "NIES — 統計評価（月別値） (ArcGIS amedas_evaluation layer 1)",
-    .category = "environment", .portal = "https://services9.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3879,7 +3879,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_ARCGISSERVER_AQUIFERS", .name = "arcgisserver.digital.mass.gov — Aquifers (ArcGIS AGOL/Aquifers "
       "layer 0)",
-    .category = "government", .portal = "https://arcgisserver.digital.mass.gov",
+    .category = "government", .collector = "world_gis_environment_hazards", .portal = "https://arcgisserver.digital.mass.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3910,7 +3910,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_BORGARVEFSJA_LUK_VEFSJA_STOF", .name = "City of Reykjavik — LUK_VEFSJA.Stofnanir (ArcGIS stjorinn layer "
       "1)",
-    .category = "transport", .portal = "https://borgarvefsja.reykjavik.is",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://borgarvefsja.reykjavik.is",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3935,7 +3935,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_BORGARVEFSJA_BEKKIR", .name = "City of Reykjavik — Bekkir (ArcGIS stjorinn layer 4)",
-    .category = "transport", .portal = "https://borgarvefsja.reykjavik.is",
+    .category = "transport", .collector = "jp_gis_environment_hazards", .portal = "https://borgarvefsja.reykjavik.is",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3959,7 +3959,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_CALTRANS_GIS_CITY_TOWN_CDP_B", .name = "caltrans-gis.dot.ca.gov — City_Town_CDP_Boundaries (ArcGIS "
       "CEPS_V2 layer 2)",
-    .category = "government", .portal = "https://caltrans-gis.dot.ca.gov",
+    .category = "government", .collector = "world_gis_planning_zoning", .portal = "https://caltrans-gis.dot.ca.gov",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3984,7 +3984,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_GEOSERVICIOS_CITIES", .name = "SERNANP — Cities (ArcGIS SampleWorldCities layer 0)",
-    .category = "environment", .portal = "https://geoservicios.sernanp.gob.pe",
+    .category = "environment", .collector = "world_gis_environment_hazards", .portal = "https://geoservicios.sernanp.gob.pe",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4009,7 +4009,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_GIS_MASSACHUSETTS_TERCENTENA", .name = "Massachusetts Department of Transportation — Massachusetts "
       "Tercentenary Markers (ArcGIS Massachusetts_Tercentenary_Markers "
       "layer 0)",
-    .category = "transport", .portal = "https://gis.massdot.state.ma.us",
+    .category = "transport", .collector = "us_gis_transport", .portal = "https://gis.massdot.state.ma.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4036,7 +4036,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GIS_ORPHAN_WELLS", .name = "Texas Railroad Commission — Orphan Wells (ArcGIS "
       "rrc_public/RRC_Public_Viewer_Srvs layer 2)",
-    .category = "industry", .portal = "https://gis.rrc.texas.gov",
+    .category = "industry", .collector = "us_gis_other", .portal = "https://gis.rrc.texas.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4060,7 +4060,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GISSERVICES_BOAT_LAUNCH", .name = "gisservices.dec.ny.gov — Boat Launch (ArcGIS "
       "dec_backcountry_features layer 3)",
-    .category = "transport", .portal = "https://gisservices.dec.ny.gov",
+    .category = "transport", .collector = "world_gis_transport", .portal = "https://gisservices.dec.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4090,7 +4090,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_JAKARTASATU_JALAN_BEBAS_AIR", .name = "jakartasatu.jakarta.go.id — Jalan Bebas Air Tanah (ArcGIS "
       "Analisis_Kawasan_Bebas_Air_Tanah layer 1)",
-    .category = "geospatial", .portal = "https://jakartasatu.jakarta.go.id",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://jakartasatu.jakarta.go.id",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4117,7 +4117,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "directory advertises the rest." },
 
   { .id = "JO53_AGS_MAPPROD3_CITIES", .name = "NSW DCCEEW — Cities (ArcGIS SampleWorldCities layer 0)",
-    .category = "environment", .portal = "https://mapprod3.environment.nsw.gov.au",
+    .category = "environment", .collector = "world_gis_environment_hazards", .portal = "https://mapprod3.environment.nsw.gov.au",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4141,7 +4141,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_MAPPROD3_IBRA_SUBREGIONS", .name = "NSW DCCEEW — IBRA_SUBREGIONS (ArcGIS BCT/BOP_Polygon_Data layer "
       "0)",
-    .category = "environment", .portal = "https://mapprod3.environment.nsw.gov.au",
+    .category = "environment", .collector = "world_gis_environment_hazards", .portal = "https://mapprod3.environment.nsw.gov.au",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4172,7 +4172,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_CLOSED_POINTS", .name = "Iowa Department of Transportation — Closed_Points (ArcGIS "
       "511_IA_Counties_View layer 1)",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "us_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4197,7 +4197,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES", .name = "Muroran City — 道路台帳図 (ArcGIS dorodaicyou layer 0)",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4221,7 +4221,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES_DORODAICYOUZU", .name = "Muroran City — dorodaicyouzu (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4246,7 +4246,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_MARKET_VALUE_ANALYS", .name = "City of New Orleans (Real Time Crime Center) — Market Value "
       "Analysis, 2015 (ArcGIS 2015_NOLA_MVA layer 0)",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_economy_business", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4277,7 +4277,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_BLOCK80_SEATTLE", .name = "City of Seattle — block80_seattle (ArcGIS "
       "1980_Census_Blocks_-_Seattle layer 31)",
-    .category = "government", .portal = "https://services.arcgis.com",
+    .category = "government", .collector = "jp_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4304,7 +4304,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_FIRE_ORIGINS_MAJOR", .name = "NC OneMap — Fire_Origins_Major_Roads (ArcGIS "
       "10_Year_Roadside_Fire_History_WFL1 layer 0)",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "us_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "transport-asset",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"transport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4330,7 +4330,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_FIRE_ORIGINS_MAJOR_25C7", .name = "NC OneMap — Fire_Origins_Major_Roads (ArcGIS "
       "10_Year_Roadside_Fire_History_WFL1 layer 1)",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "us_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "transport-asset",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"transport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4356,7 +4356,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_803120_LAND_0203202", .name = "City of Brookhaven, Georgia — "
       "803120_land_02032026_EPSG4326_32616_26Q1 (ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4386,7 +4386,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_PROPOSED_PERMANENT", .name = "services.arcgis.com — Proposed Permanent Wall Easement (ArcGIS "
       "16116_032422 layer 3)",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "world_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4412,7 +4412,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_2009_2020_UPDATE_TI", .name = "City of Raleigh — 2009-2020_update_tiles (ArcGIS "
       "2009_2019_update_tiles layer 0)",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_imagery_basemap", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4437,7 +4437,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES_2010_2019", .name = "City of Raleigh — 2010-2019 (ArcGIS 2010_2019 layer 2)",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4462,7 +4462,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_2010_NON_TMA_URBANI", .name = "services.arcgis.com — 2010_Non_TMA_Urbanized_Area (ArcGIS layer "
       "0)",
-    .category = "government", .portal = "https://services.arcgis.com",
+    .category = "government", .collector = "world_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4489,7 +4489,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_CITIES_SUMMARY", .name = "Georgia Emergency Management and Homeland Security Agency — "
       "Cities Summary (ArcGIS Blue_Sky_All_Categories_Summary layer 2)",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "us_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4517,7 +4517,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_HUC12_WATERSHEDS", .name = "OKI Regional Council of Governments — HUC12_Watersheds (ArcGIS "
       "208_Watersheds_gdb layer 2)",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "us_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4545,7 +4545,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_WATERSHED_O7_WITHI", .name = "Japan designated emergency evacuation sites (River Foundation — "
       "watershed_O7_Within (ArcGIS layer 18)",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4573,7 +4573,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_20220325_SOE_HUMAN", .name = "Horizons Regional Council (NZ) — 20220325_SoE_HumanHealth "
       "(ArcGIS 20220325_Human_Health_SoE_Current_State layer 0)",
-    .category = "health", .portal = "https://services1.arcgis.com",
+    .category = "health", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"health\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4599,7 +4599,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_SOE_CONTACT_RECREA", .name = "Horizons Regional Council (NZ) — SOE_Contact_Recreation (ArcGIS "
       "20220325_Human_Health_SoE_Current_State layer 1)",
-    .category = "health", .portal = "https://services1.arcgis.com",
+    .category = "health", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"health\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4625,7 +4625,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES1_0DC0", .name = "Saku City — 道路 (ArcGIS douro layer 0)",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4653,7 +4653,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_2021POPDENSITY_POP", .name = "services1.arcgis.com — 2021PopDensity_POPC_0_18 (ArcGIS "
       "2021_Age_0_to_18_Population_Per_Sq_Mile layer 0)",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4681,7 +4681,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_FIRST_NATIONS", .name = "services1.arcgis.com — First Nations (ArcGIS "
       "Administrative_Locations_First_Nations layer 0)",
-    .category = "government", .portal = "https://services1.arcgis.com",
+    .category = "government", .collector = "world_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4709,7 +4709,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES2_AADT_POINTS_2024", .name = "City of Kirkland, Washington — AADT_Points_2024 (ArcGIS layer "
       "10)",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4734,7 +4734,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "naming one layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES2_201908CAFE", .name = "Urayasu City — 201908cafe (ArcGIS layer 0)",
-    .category = "government", .portal = "https://services2.arcgis.com",
+    .category = "government", .collector = "jp_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4757,7 +4757,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES3_ACCESSIBLE_PEDESTR", .name = "City of Toronto — Accessible_Pedestrian_Signal (ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services3.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_health_social", .portal = "https://services3.arcgis.com",
     .record_type = "transport-asset",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4782,7 +4782,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "naming one layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES5_PAPAMAMAOUENSYOPPU", .name = "Hidaka City (Saitama) — papamamaouensyoppu (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_health_social", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4807,7 +4807,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES5_GDB", .name = "Hino City street lights (2024 extract) — 換地図gdb (ArcGIS "
       "arcgisonline0327_shp layer 0)",
-    .category = "government", .portal = "https://services5.arcgis.com",
+    .category = "government", .collector = "jp_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4833,7 +4833,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES5_POLY2304", .name = "Mie Prefecture: traffic accidents involving elderly people — "
       "poly2304 (ArcGIS _poly2303pre layer 0)",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4858,7 +4858,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES6_CHIKUKUBUN", .name = "Tsukuba City — chikukubun (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4883,7 +4883,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES7_AED", .name = "Oiso Town — AED設置場所 (ArcGIS aed layer 0)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_safety_emergency", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4906,7 +4906,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "naming one layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES7_BWC_AUDIT", .name = "Rochester, NY Police Department — BWC_Audit (ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "us_gis_other", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4932,7 +4932,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES8_PER1_1718_FINAL", .name = "Great Basin Unified Air Pollution Control District — "
       "Per1_1718_Final (ArcGIS 1st_Step layer 1)",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "us_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4956,7 +4956,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES8_PER2_1718_FINAL", .name = "Great Basin Unified Air Pollution Control District — "
       "Per2_1718_Final (ArcGIS 1st_Step layer 2)",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "us_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4980,7 +4980,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES9_GPSNO1_190117_2005", .name = "Hokkaido Regional Forest Office: forest road gates and closures "
       "— GPSNo1_190117_200522_point (ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5005,7 +5005,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES9_AED", .name = "Aizuwakamatsu City — AED (ArcGIS AED_view layer 0)",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5029,7 +5029,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES9_BOUKAJUNBOUKACHIIK", .name = "Saitama Prefecture — boukajunboukachiiki (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://services9.arcgis.com",
+    .category = "environment", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5056,7 +5056,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES9_AVERAGE_NONLIFE_IN", .name = "IMF PortWatch — "
       "Average_nonlife_insurance_premium_to_GDP___map_layer (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://services9.arcgis.com",
+    .category = "environment", .collector = "world_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5081,7 +5081,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SRVAGS_CITIES", .name = "Servicio Geologico Colombiano — Cities (ArcGIS SampleWorldCities "
       "layer 0)",
-    .category = "geospatial", .portal = "https://srvags.sgc.gov.co",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://srvags.sgc.gov.co",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5105,7 +5105,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_CALTRANS_GIS_ADJUSTED_URBAN", .name = "caltrans-gis.dot.ca.gov — Adjusted_Urban_Area (ArcGIS CEPS_V2 "
       "layer 3)",
-    .category = "geospatial", .portal = "https://caltrans-gis.dot.ca.gov",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://caltrans-gis.dot.ca.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5133,7 +5133,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_CPUDGIPORTAL", .name = "Bangkok Metropolitan Administration — "
       "โครงการป้องกันและแก้ไขปัญหาการกัดเซาะ ชายฝั่งทะเลบางขุนเทียน "
       "(ArcGIS BANGKOK_SEA_WALL layer 0)",
-    .category = "infrastructure", .portal = "https://cpudgiportal.bangkok.go.th",
+    .category = "infrastructure", .collector = "world_gis_environment_hazards", .portal = "https://cpudgiportal.bangkok.go.th",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5160,7 +5160,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GEOSERVICIOS_SITIOS_PRIORITA", .name = "SERNANP — Sitios Prioritarios Nivel Regional (ArcGIS "
       "base_fisica/peru_sernanp_0101 layer 1)",
-    .category = "environment", .portal = "https://geoservicios.sernanp.gob.pe",
+    .category = "environment", .collector = "world_gis_boundaries", .portal = "https://geoservicios.sernanp.gob.pe",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5186,7 +5186,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GEOVISOR_GDB_AREA_POTENCIAL", .name = "ANH — GDB.Area_Potencial_Disponible (ArcGIS "
       "GDB_Area_Potencial_Disponible layer 0)",
-    .category = "infrastructure", .portal = "https://geovisor.anh.gov.co",
+    .category = "infrastructure", .collector = "world_gis_other", .portal = "https://geovisor.anh.gov.co",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5213,7 +5213,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GIS_COASTAL_COVERAGE_AREA", .name = "gis.charttools.noaa.gov — Coastal.Coverage_area (ArcGIS "
       "encdirect/enc_coverage layer 2)",
-    .category = "geospatial", .portal = "https://gis.charttools.noaa.gov",
+    .category = "geospatial", .collector = "world_gis_environment_hazards", .portal = "https://gis.charttools.noaa.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5239,7 +5239,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GIS_BOECITIES", .name = "California Geologic Energy Management Division — BOECities "
       "(ArcGIS Base/Base_BOECities layer 0)",
-    .category = "infrastructure", .portal = "https://gis.conservation.ca.gov",
+    .category = "infrastructure", .collector = "us_gis_other", .portal = "https://gis.conservation.ca.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5269,7 +5269,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GIS_GENERAL_FL_STATE_BNDY", .name = "Florida DOT — General FL State Bndy (ArcGIS Admin_Boundaries "
       "layer 1)",
-    .category = "government", .portal = "https://gis.fdot.gov",
+    .category = "government", .collector = "us_gis_boundaries", .portal = "https://gis.fdot.gov",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5295,7 +5295,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES_AP1_220328_HWL", .name = "MLIT Arakawa-Karyu River Office — 220328_HWL (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://services-ap1.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services-ap1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5321,7 +5321,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_AP1_EXPOSURE_POINTS", .name = "MLIT Arakawa-Karyu River Office — Exposure Points (ArcGIS "
       "ArakawaOIC_ExposurePoints layer 1)",
-    .category = "environment", .portal = "https://services-ap1.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services-ap1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5345,7 +5345,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "naming one layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES_DOROHYOUSHIKI", .name = "Muroran City — dorohyoushiki (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5368,7 +5368,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "one row naming one layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES_DOSEKIRYU_20220802", .name = "Muroran City — dosekiryu_20220802 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5394,7 +5394,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_BLOCK_GROUP80_SEATT", .name = "City of Seattle — block_group80_seattle (ArcGIS "
       "1980_Census_Block_Groups_-_Seattle layer 30)",
-    .category = "government", .portal = "https://services.arcgis.com",
+    .category = "government", .collector = "jp_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5422,7 +5422,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_TRACT80_KING_COUNTY", .name = "City of Seattle — tract80_king_county (ArcGIS "
       "1980_Census_Tracts_-_King_County_ layer 29)",
-    .category = "government", .portal = "https://services.arcgis.com",
+    .category = "government", .collector = "jp_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5449,7 +5449,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_BLOCK_GROUP90_SEATT", .name = "City of Seattle — block_group90_seattle (ArcGIS "
       "1990_Census_Block_Groups_-_Seattle layer 34)",
-    .category = "government", .portal = "https://services.arcgis.com",
+    .category = "government", .collector = "jp_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5476,7 +5476,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_10_YEAR_WATER_ELEVA", .name = "NC OneMap — 10-Year Water Elevation Data (ArcGIS 10_Year_Trends "
       "layer 2)",
-    .category = "environment", .portal = "https://services.arcgis.com",
+    .category = "environment", .collector = "us_gis_imagery_basemap", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5501,7 +5501,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_REGISTRO_ACTUAL_MOV", .name = "Cabildo Insular de La Palma — Registro Actual_Movilidad (ArcGIS "
       "_Registro_Actual_Movilidad_(vista) layer 0)",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5528,7 +5528,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_NRCAN_EARTHQUAKE_EV", .name = "services.arcgis.com — NRCAN_Earthquake_Events_Past_30_Days "
       "(ArcGIS layer 0)",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "world_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5555,7 +5555,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES_2010_DECENNIAL_CENS", .name = "services.arcgis.com — "
       "2010_Decennial_Census_Urbanized_Areas_with_Population (ArcGIS "
       "layer 0)",
-    .category = "government", .portal = "https://services.arcgis.com",
+    .category = "government", .collector = "world_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5582,7 +5582,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_AGRICULTURAL_DISTR", .name = "OKI Regional Council of Governments — Agricultural_District "
       "(ArcGIS layer 0)",
-    .category = "government", .portal = "https://services1.arcgis.com",
+    .category = "government", .collector = "us_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5609,7 +5609,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_2012_IDAHO_POS_JB", .name = "State of Idaho — 2012_IDAHO_POS_JB (ArcGIS "
       "2012_IDAHO_POS_JB_extra layer 0)",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "us_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5633,7 +5633,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES1_B2FD", .name = "Itami City — コミュニティ掲示板 (ArcGIS 02_18_Community_board layer 0)",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "jp_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5657,7 +5657,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_OFFICIAL_NGDA_LIST", .name = "services1.arcgis.com — Official_NGDA_List_Endorsed_by_FGDC "
       "(ArcGIS 20241010_Official_List_NGDA_Endorsed_by_FGDC layer 0)",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5683,7 +5683,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES1_F_4321_F_5571", .name = "Montgomery County (TX) — $F$4321:$F$5571 (ArcGIS BAR4S layer 0)",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "us_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5707,7 +5707,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_CABLE_WIRELINE_AVA", .name = "services1.arcgis.com — Cable Wireline Availability by Census "
       "Tract (ArcGIS 2015_04_23_POLR_Analysis_94_2 layer 0)",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "world_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5734,7 +5734,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_TELEPHONE_EXCHANGE", .name = "services1.arcgis.com — Telephone Exchanges (ArcGIS "
       "2015_04_23_POLR_Analysis_94_2 layer 1)",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_utilities_infrastructure", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5760,7 +5760,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES1_25_MILE_BUFFER", .name = "services1.arcgis.com — 25_mile_buffer (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5787,7 +5787,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_FUKUOKA_MESH", .name = "Fukuoka Prefecture wildlife damage control system: capture — "
       "Fukuoka_MESH (ArcGIS Fukuoka_MESH_view layer 0)",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5814,7 +5814,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_CENSUS2020_URBANAR", .name = "services1.arcgis.com — Census2020_UrbanAreas (ArcGIS "
       "2020_Arizona_Census_Urban_Areas layer 1)",
-    .category = "government", .portal = "https://services1.arcgis.com",
+    .category = "government", .collector = "world_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5845,7 +5845,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_MUNICIPALITIES", .name = "services1.arcgis.com — Municipalities (ArcGIS "
       "Administrative_Locations_Municipalities layer 0)",
-    .category = "government", .portal = "https://services1.arcgis.com",
+    .category = "government", .collector = "world_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5873,7 +5873,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES2_COASTALCONSTRUCTIO", .name = "services2.arcgis.com — CoastalConstructionControlLine_1978 "
       "(ArcGIS 1978_Coastal_Construction_Control_Line layer 0)",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "world_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5900,7 +5900,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES2_SOURCIALRESOURCE", .name = "Urayasu City — SourcialResource (ArcGIS 1212mihamamapparty layer "
       "0)",
-    .category = "government", .portal = "https://services2.arcgis.com",
+    .category = "government", .collector = "jp_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5924,7 +5924,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "naming one layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES2_2024URAHAN", .name = "Urayasu City — 2024urahan (ArcGIS layer 0)",
-    .category = "government", .portal = "https://services2.arcgis.com",
+    .category = "government", .collector = "jp_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5950,7 +5950,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES5_AED", .name = "Hidaka City (Saitama) — AED (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5974,7 +5974,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES5_2011_LSOAS_COUNTY", .name = "Durham County Council — 2011_LSOAs_County_Durham (ArcGIS layer "
       "0)",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "us_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6000,7 +6000,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "one row naming one layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES5_2011_MSOA_BOUNDARI", .name = "Durham County Council — 2011_MSOA_Boundaries (ArcGIS layer 0)",
-    .category = "government", .portal = "https://services5.arcgis.com",
+    .category = "government", .collector = "us_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6027,7 +6027,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES5_2011_MSOA_BOUNDARI_A5A3", .name = "Durham County Council — 2011_MSOA_Boundaries_new (ArcGIS layer "
       "0)",
-    .category = "government", .portal = "https://services5.arcgis.com",
+    .category = "government", .collector = "us_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6054,7 +6054,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES5_2011_OAS_COUNTY_DU", .name = "Durham County Council — 2011_OAs_County_Durham (ArcGIS layer 0)",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "us_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6080,7 +6080,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES5_2021_LSOA_BOUNDARI", .name = "Durham County Council — 2021_LSOA_Boundaries_in_County_Durham "
       "(ArcGIS layer 0)",
-    .category = "government", .portal = "https://services5.arcgis.com",
+    .category = "government", .collector = "us_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6107,7 +6107,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES5_WORLDWIDE_LUNG_CAN", .name = "City of Surrey, British Columbia — Worldwide Lung Cancer per "
       "100000 (ArcGIS 3d_Data_WFL layer 0)",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6129,7 +6129,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES5_WTRALRLOTSSEASDEMA", .name = "City of Surrey, British Columbia — wtrAlrLotsSeasDemand (ArcGIS "
       "AlrLotsSeasDemand layer 0)",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6154,7 +6154,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES5_BOUKASUISO", .name = "Ryugasaki City — boukasuiso (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_planning_zoning", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6179,7 +6179,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES5_POI0208_V01", .name = "Mie Prefecture: traffic accidents involving elderly people — "
       "poi0208_v01 (ArcGIS layer 0)",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6200,7 +6200,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES6_ATLASGRIDS", .name = "services6.arcgis.com — AtlasGrids (ArcGIS Atlas_Grids layer 0)",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_imagery_basemap", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6226,7 +6226,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_DIVVYNETWORK_2020", .name = "City of Chicago — DivvyNetwork_2020-07-20 (ArcGIS "
       "_divvynetwork_shapefiles layer 0)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_transport", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6250,7 +6250,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES7", .name = "Setagaya Ward — 自然_都市農業 (ArcGIS 06_natureAgriculture layer 0)",
-    .category = "agriculture", .portal = "https://services7.arcgis.com",
+    .category = "agriculture", .collector = "jp_gis_environment_hazards", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6274,7 +6274,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_CENSUS_DISTRICT_20", .name = "Qatar Planning and Statistics Authority — Census District 2020 "
       "(ArcGIS 1__Administrative_Boundary_2020_2_WFL1 layer 2)",
-    .category = "government", .portal = "https://services7.arcgis.com",
+    .category = "government", .collector = "world_gis_boundaries", .portal = "https://services7.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6301,7 +6301,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_CIS_IBGE", .name = "Prefeitura do Recife — cis_ibge (ArcGIS AGLOMERADOS_IBGE layer "
       "0)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "world_gis_boundaries", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6327,7 +6327,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_YOUTOCHIIKI", .name = "Nagaizumi Town crime-prevention lights — youtochiiki (ArcGIS "
       "layer 0)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_planning_zoning", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6355,7 +6355,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES8_CANDIDATEVOTESTEMP", .name = "Government of Newfoundland and Labrador — CandidateVotesTempla "
       "(ArcGIS 2025_NL_Provincial_Election_Votes_by_Candidate_view "
       "layer 0)",
-    .category = "government", .portal = "https://services8.arcgis.com",
+    .category = "government", .collector = "world_gis_elections_admin", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6382,7 +6382,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES8_BORDER_LINES", .name = "Tokyo Fire Department public fire hydrants (as of 2025-04-01) — "
       "border_lines (ArcGIS border layer 0)",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6408,7 +6408,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES9_5KMMESH_HOKKAIDO", .name = "Hokkaido Regional Forest Office: forest road gates and closures "
       "— 5kmmesh_hokkaido (ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6435,7 +6435,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES9_AGGREGATION_OF_KEN", .name = "IMF PortWatch — "
       "Aggregation_of_Kenya_ATMs_all_to_Kenya_District_Boundaries_2016_2 "
       "(ArcGIS layer 0)",
-    .category = "government", .portal = "https://services9.arcgis.com",
+    .category = "government", .collector = "world_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6465,7 +6465,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SIG_NUMERO_ENTRADA_SALIDA_ME", .name = "Municipalidad de Heredia — Numero Entrada Salida Mercedes "
       "(ArcGIS Sistema_de_Alcantarillado_Pluvial_MIL1 layer 5)",
-    .category = "economy", .portal = "https://sig.heredia.go.cr",
+    .category = "economy", .collector = "world_gis_utilities_infrastructure", .portal = "https://sig.heredia.go.cr",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6490,7 +6490,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SIG_E_S_F_MERCEDES", .name = "Municipalidad de Heredia — E_S_F Mercedes (ArcGIS "
       "Sistema_de_Alcantarillado_Pluvial_MIL1 layer 6)",
-    .category = "economy", .portal = "https://sig.heredia.go.cr",
+    .category = "economy", .collector = "world_gis_utilities_infrastructure", .portal = "https://sig.heredia.go.cr",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6518,7 +6518,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_WWW_MICRO_REGI_O_HIDROGR_FIC", .name = "ANA Brazil — Micro Região Hidrográfica (ArcGIS "
       "Divisoes_bacias_hidrograficas layer 2)",
-    .category = "geospatial", .portal = "https://www.snirh.gov.br",
+    .category = "geospatial", .collector = "world_gis_environment_hazards", .portal = "https://www.snirh.gov.br",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6544,7 +6544,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GEOSERVICIOS_SITIOS_PRIORITA_0CD5", .name = "SERNANP — Sitios Prioritarios Nivel Nacional (ArcGIS "
       "base_fisica/peru_sernanp_0101 layer 0)",
-    .category = "environment", .portal = "https://geoservicios.sernanp.gob.pe",
+    .category = "environment", .collector = "world_gis_environment_hazards", .portal = "https://geoservicios.sernanp.gob.pe",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6570,7 +6570,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GIS_COUNTIES", .name = "California Geologic Energy Management Division — Counties "
       "(ArcGIS Base/Base_Counties layer 0)",
-    .category = "infrastructure", .portal = "https://gis.conservation.ca.gov",
+    .category = "infrastructure", .collector = "us_gis_boundaries", .portal = "https://gis.conservation.ca.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6601,7 +6601,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_GIS_GS_COUNTIES", .name = "Texas Railroad Commission — GS_COUNTIES (ArcGIS "
       "SpatialDataServices layer 0)",
-    .category = "industry", .portal = "https://gis.rrc.texas.gov",
+    .category = "industry", .collector = "us_gis_boundaries", .portal = "https://gis.rrc.texas.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6627,7 +6627,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_MEDIAN_SALES_PRICE", .name = "City of New Orleans (Real Time Crime Center) — Median Sales "
       "Price ($), 2013 - Aug 2015 (ArcGIS 2015_NOLA_MVA layer 2)",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6658,7 +6658,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES_COEFFICIENT_OF_VARI", .name = "City of New Orleans (Real Time Crime Center) — Coefficient of "
       "Variance for Sales Price, 2013 - Aug 2015 (ArcGIS 2015_NOLA_MVA "
       "layer 3)",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6689,7 +6689,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES_OWNER_OCCUPIED_FORE", .name = "City of New Orleans (Real Time Crime Center) — Owner-Occupied "
       "Foreclosure  Rate (2013-14) + Sheriff Sales (2014-15) (ArcGIS "
       "2015_NOLA_MVA layer 4)",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6719,7 +6719,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_BEAUTY_SPA_AND_TATT", .name = "services.arcgis.com — Beauty, Spa, and Tattoo (ArcGIS "
       "Beauty_Spa_Tattoo_WFL1 layer 1)",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "world_gis_economy_business", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6744,7 +6744,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES1_0A24", .name = "Okaya City — 避難所 (ArcGIS bousai2020 layer 0)",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6768,7 +6768,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_20221013_CONTACTRE", .name = "Horizons Regional Council (NZ) — 20221013_ContactRec (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6792,7 +6792,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_AUSTINNEIGHBORHOOD", .name = "GCOOS / Texas A&M — AustinNeighborhoods (ArcGIS "
       "__femalecompsci_WFL1 layer 0)",
-    .category = "industry", .portal = "https://services1.arcgis.com",
+    .category = "industry", .collector = "us_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6818,7 +6818,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_AUSTINNEIGHBORHOOD_15EE", .name = "GCOOS / Texas A&M — AustinNeighborhoods (ArcGIS "
       "__femalecompsci_WFL1 layer 1)",
-    .category = "industry", .portal = "https://services1.arcgis.com",
+    .category = "industry", .collector = "us_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6844,7 +6844,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_AUSTINNEIGHBORHOOD_E7B9", .name = "GCOOS / Texas A&M — AustinNeighborhoods (ArcGIS "
       "__femalecompsci_WFL1 layer 2)",
-    .category = "industry", .portal = "https://services1.arcgis.com",
+    .category = "industry", .collector = "us_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6870,7 +6870,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_REGIONAL_DISTRICTS", .name = "services1.arcgis.com — Regional Districts (ArcGIS "
       "Administrative_Locations_Regional_Districts layer 0)",
-    .category = "government", .portal = "https://services1.arcgis.com",
+    .category = "government", .collector = "world_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6896,7 +6896,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES2", .name = "Kitakyushu City election poster boards — 飛行機と風景 (ArcGIS airplane "
       "layer 0)",
-    .category = "government", .portal = "https://services2.arcgis.com",
+    .category = "government", .collector = "jp_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6921,7 +6921,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES2_74D9", .name = "Kitakyushu City election poster boards — かわいい動物を投稿しよう！ (ArcGIS "
       "animal layer 0)",
-    .category = "government", .portal = "https://services2.arcgis.com",
+    .category = "government", .collector = "jp_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6946,7 +6946,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES2_ADD_OR_IMPROVE_CRO", .name = "City of Kirkland, Washington — Add or Improve Crosswalks (ArcGIS "
       "Add_or_Improve_Crosswalks layer 1)",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6969,7 +6969,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES3_AFRICA_COUNTRY_BOU", .name = "services3.arcgis.com — Africa Country Boundary (ArcGIS "
       "Africa_Country_Boundary layer 35)",
-    .category = "government", .portal = "https://services3.arcgis.com",
+    .category = "government", .collector = "world_gis_boundaries", .portal = "https://services3.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6995,7 +6995,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES3_BFA_DISTRICT_SANIT", .name = "services3.arcgis.com — BFA_District_Sanitaires_2022 (ArcGIS "
       "BFA_Districts_Sanitaires_2022 layer 0)",
-    .category = "government", .portal = "https://services3.arcgis.com",
+    .category = "government", .collector = "world_gis_health_social", .portal = "https://services3.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7021,7 +7021,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES3_BENCHMARKS", .name = "City of Temecula, California — Benchmarks (ArcGIS "
       "Benchmarks_Edit_Map_WFL1 layer 0)",
-    .category = "infrastructure", .portal = "https://services3.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_imagery_basemap", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7043,7 +7043,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES3_ACCESSPTS_OWENSTWP", .name = "services3.arcgis.com — AccessPts_OwensTwp (ArcGIS layer 1)",
-    .category = "government", .portal = "https://services3.arcgis.com",
+    .category = "government", .collector = "world_gis_other", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7068,7 +7068,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
   { .id = "JO53_AGS_SERVICES3_20201101_CAMERONPE", .name = "NIFC — 20201101_CameronPeak_COARF000636_Prog_10m_clipped (ArcGIS "
       "20201101_Progression_CameronPeak_COARF000636_ThompsonZone_WYMRF000408 "
       "layer 0)",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "us_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7095,7 +7095,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "one row naming one layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES5_BOKASUISO", .name = "Kosai City — bokasuiso (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7118,7 +7118,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES5_CITYAREANAGANO", .name = "Nagano Prefecture 10-minute rainfall observations (all gauges) — "
       "CityAreaNagano (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://services5.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7145,7 +7145,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES5_POI0100", .name = "Mie Prefecture: traffic accidents involving elderly people — "
       "poi0100 (ArcGIS layer 0)",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7168,7 +7168,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES5_063F", .name = "Omihachiman City — 橋梁施設 (ArcGIS d010_douroshisetsu layer 1)",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7192,7 +7192,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES6_2B2B", .name = "Annaka City — 土砂災害警戒区域 (ArcGIS DoshasaigaiKeikaikuiki_view layer "
       "0)",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7217,7 +7217,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES6_8052", .name = "Annaka City — 土砂災害特別警戒区域 (ArcGIS "
       "DoshasaigaiTokubetsuKeikaikuiki_view layer 0)",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7241,7 +7241,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES6_0A12", .name = "Annaka City — １級路線 (ArcGIS IkkyuuRosen_view layer 0)",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7265,7 +7265,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES6_KOHUN", .name = "Annaka City — Kohun (ArcGIS Kohun_view layer 0)",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7287,7 +7287,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES6_AED_D7C8", .name = "Sado City — AED (ArcGIS AED_view layer 1)",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7309,7 +7309,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES6_AIRSPACE_SCHEDULE", .name = "FAA NASR — Airspace_Schedule_Preview (ArcGIS layer 5)",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "us_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7334,7 +7334,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_CENSUS_ZONE_2020", .name = "Qatar Planning and Statistics Authority — Census Zone 2020 "
       "(ArcGIS 1__Administrative_Boundary_2020_2_WFL1 layer 1)",
-    .category = "government", .portal = "https://services7.arcgis.com",
+    .category = "government", .collector = "world_gis_boundaries", .portal = "https://services7.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7362,7 +7362,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_TOSHIKEIKAKUDOURO", .name = "Hachioji City crime-prevention street lights — toshikeikakudouro "
       "(ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_planning_zoning", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7388,7 +7388,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SIG_POZOS_SANITARIOS_MERCEDE", .name = "Municipalidad de Heredia — Pozos Sanitarios Mercedes (ArcGIS "
       "Sistema_de_Alcantarillado_Pluvial_MIL1 layer 3)",
-    .category = "economy", .portal = "https://sig.heredia.go.cr",
+    .category = "economy", .collector = "world_gis_utilities_infrastructure", .portal = "https://sig.heredia.go.cr",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7415,7 +7415,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "directory advertises the rest." },
 
   { .id = "JO53_AGS_GEOSERVICIOS_WORLD", .name = "SERNANP — World (ArcGIS SampleWorldCities layer 2)",
-    .category = "environment", .portal = "https://geoservicios.sernanp.gob.pe",
+    .category = "environment", .collector = "world_gis_environment_hazards", .portal = "https://geoservicios.sernanp.gob.pe",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7439,7 +7439,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "one row naming one layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_MAPPROD3_WORLD", .name = "NSW DCCEEW — World (ArcGIS SampleWorldCities layer 2)",
-    .category = "environment", .portal = "https://mapprod3.environment.nsw.gov.au",
+    .category = "environment", .collector = "world_gis_environment_hazards", .portal = "https://mapprod3.environment.nsw.gov.au",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7464,7 +7464,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_AP1_BOATING_AND_FIS", .name = "Moreton Bay Regional Council — Boating And Fishing (ArcGIS "
       "Boating_and_Fishing_Data layer 0)",
-    .category = "agriculture", .portal = "https://services-ap1.arcgis.com",
+    .category = "agriculture", .collector = "eu_gis_environment_hazards", .portal = "https://services-ap1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7489,7 +7489,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_AP1_BOOKABLE_SITE", .name = "Moreton Bay Regional Council — Bookable Site (ArcGIS "
       "Bookable_Site_Border layer 0)",
-    .category = "defense", .portal = "https://services-ap1.arcgis.com",
+    .category = "defense", .collector = "eu_gis_other", .portal = "https://services-ap1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7515,7 +7515,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_COUNTY", .name = "California Governor's Office of Emergency Services — County "
       "(ArcGIS 2023_SHMP_County_Summaries_Formatted layer 23)",
-    .category = "government", .portal = "https://services.arcgis.com",
+    .category = "government", .collector = "us_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7543,7 +7543,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "one row naming one layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES_1_MILE", .name = "City of Houston GIS (Houston TranStar) — 1_MILE (ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7569,7 +7569,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES_ASSEMBLY_DISTRICTS", .name = "services.arcgis.com — Assembly Districts (ArcGIS "
       "Assembly_Districts layer 0)",
-    .category = "government", .portal = "https://services.arcgis.com",
+    .category = "government", .collector = "world_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "boundary-area",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7594,7 +7594,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES1_FUKUOKA_CITY", .name = "Fukuoka Prefecture wildlife damage control system: capture — "
       "Fukuoka_CITY (ArcGIS Fukuoka_CITY_view layer 0)",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7619,7 +7619,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "one row naming one layer, and the directory advertises the rest." },
 
   { .id = "JO53_AGS_SERVICES5_BLUETOAD", .name = "City of Surrey, British Columbia — BlueTOAD (ArcGIS layer 0)",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7643,7 +7643,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES6_HYOGO_FREE_WI_FI_L", .name = "Hyogo prefecture traffic accident points (johokikaku layer) — "
       "Hyogo_Free_Wi_Fi_List (ArcGIS layer 0)",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7668,7 +7668,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES7_EXPANSIONPHASE1_DR", .name = "City of Chicago — ExpansionPhase1_draft_2020-07-15 (ArcGIS "
       "_divvynetwork_shapefiles layer 1)",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_transport", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7692,7 +7692,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SERVICES9_20190926", .name = "Aizuwakamatsu City — 家屋倒壊エリア_20190926 (ArcGIS KAOKUTOUKAI layer "
       "0)",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7718,7 +7718,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_SRVAGS_WORLD", .name = "Servicio Geologico Colombiano — World (ArcGIS SampleWorldCities "
       "layer 2)",
-    .category = "geospatial", .portal = "https://srvags.sgc.gov.co",
+    .category = "geospatial", .collector = "world_gis_other", .portal = "https://srvags.sgc.gov.co",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7743,7 +7743,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_WWW_MESO_REGI_O_HIDROGR_FICA", .name = "ANA Brazil — Meso Região Hidrográfica (ArcGIS "
       "Divisoes_bacias_hidrograficas layer 1)",
-    .category = "geospatial", .portal = "https://www.snirh.gov.br",
+    .category = "geospatial", .collector = "world_gis_boundaries", .portal = "https://www.snirh.gov.br",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7769,7 +7769,7 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
 
   { .id = "JO53_AGS_WWW_DNAEE_SUBBACIAS", .name = "ANA Brazil — DNAEE - subbacias (ArcGIS "
       "Divisoes_bacias_hidrograficas layer 3)",
-    .category = "geospatial", .portal = "https://www.snirh.gov.br",
+    .category = "geospatial", .collector = "world_gis_boundaries", .portal = "https://www.snirh.gov.br",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,

@@ -24,7 +24,7 @@
 static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_AEE11D85EC", .name = "Dun Laoghaire Rathdown County Council — Boundary",
     .name_ja = "Dun Laoghaire Rathdown County Council — Boundary",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -50,7 +50,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_D6582032AA", .name = "Dun Laoghaire Rathdown County Council — "
       "DecidedPlanningApplications",
     .name_ja = "Dun Laoghaire Rathdown County Council — DecidedPlanningApplications",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -74,7 +74,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9FAFBB6B7F", .name = "Dun Laoghaire Rathdown County Council — Boundary Plan Areas",
     .name_ja = "Dun Laoghaire Rathdown County Council — Boundary Plan Areas",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -99,7 +99,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F2B075F2D8", .name = "Dun Laoghaire Rathdown County Council — Land Use Zoning",
     .name_ja = "Dun Laoghaire Rathdown County Council — Land Use Zoning",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -124,7 +124,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4D9A027BD2", .name = "Dun Laoghaire Rathdown County Council — LandUseZoning",
     .name_ja = "Dun Laoghaire Rathdown County Council — LandUseZoning",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -150,7 +150,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_9BD6BE46AA", .name = "Dun Laoghaire Rathdown County Council — Live Planning "
       "Applications",
     .name_ja = "Dun Laoghaire Rathdown County Council — Live Planning Applications",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -174,7 +174,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F8F2192D74", .name = "Dun Laoghaire Rathdown County Council — urbanAtlas_Buffer",
     .name_ja = "Dun Laoghaire Rathdown County Council — urbanAtlas_Buffer",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -199,7 +199,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_04CFECB38F", .name = "Dun Laoghaire Rathdown County Council — "
       "DLR_Local_Election_Boundaries_New_2019",
     .name_ja = "Dun Laoghaire Rathdown County Council — DLR_Local_Election_Boundaries_New_2019",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -224,7 +224,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A00A928F45", .name = "Dun Laoghaire Rathdown County Council — Playground Opportunty",
     .name_ja = "Dun Laoghaire Rathdown County Council — Playground Opportunty",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -249,7 +249,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_D5FAC44D49", .name = "Dun Laoghaire Rathdown County Council — To protect and/or "
       "provide for Institutional Use in open lands",
     .name_ja = "Dun Laoghaire Rathdown County Council — To protect and/or provide for Institutional Use in open lands",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -275,7 +275,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C7DAE2A18A", .name = "Dun Laoghaire Rathdown County Council — dlrBusStops",
     .name_ja = "Dun Laoghaire Rathdown County Council — dlrBusStops",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -299,7 +299,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E0EB22FD22", .name = "Dun Laoghaire Rathdown County Council — UrbanAtlas_Land_Cover",
     .name_ja = "Dun Laoghaire Rathdown County Council — UrbanAtlas_Land_Cover",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -323,7 +323,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F27233D901", .name = "Dun Laoghaire Rathdown County Council — dlr_Playgrounds",
     .name_ja = "Dun Laoghaire Rathdown County Council — dlr_Playgrounds",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -348,7 +348,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_B1211AFF64", .name = "Carlow County Council — "
       "Carlow_County_Development_Plan_2022_to_2028_and_Active_Local_Area_Plan_Land_Use_Zonings",
     .name_ja = "Carlow County Council — Carlow_County_Development_Plan_2022_to_2028_and_Active_Local_Area_Plan_Land_Use_Zonings",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -374,7 +374,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4C84CF502A", .name = "Telford and Wrekin Council — Voting Locations",
     .name_ja = "Telford and Wrekin Council — Voting Locations",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -398,7 +398,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F2F96B0C53", .name = "Telford and Wrekin Council — Voting Precincts",
     .name_ja = "Telford and Wrekin Council — Voting Precincts",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -422,7 +422,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F70763F9BE", .name = "Telford and Wrekin Council — Electoral Districts",
     .name_ja = "Telford and Wrekin Council — Electoral Districts",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -447,7 +447,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D51204B335", .name = "Birmingham City Council — BCC_WARDS_3857",
     .name_ja = "Birmingham City Council — BCC_WARDS_3857",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -471,7 +471,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C7B1B872C1", .name = "Birmingham City Council — Wards",
     .name_ja = "Birmingham City Council — Wards",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -495,7 +495,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_921C5ABA7E", .name = "Sandnes kommune — "
       "Hydrant_Buffer_Dissolve:Hydrant_Buffer_Dissolve",
     .name_ja = "Sandnes kommune — Hydrant_Buffer_Dissolve:Hydrant_Buffer_Dissolve",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -520,7 +520,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_3A3517D625", .name = "Amt für Geodaten u. Kataster - Landeshauptstadt Dresden — "
       "Hochwasserschutzanlagen_LTV_3d_Mauern",
     .name_ja = "Amt für Geodaten u. Kataster - Landeshauptstadt Dresden — Hochwasserschutzanlagen_LTV_3d_Mauern",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -546,7 +546,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_A701533690", .name = "Amt für Geodaten u. Kataster - Landeshauptstadt Dresden — "
       "Hochwasserschutzanlagen_LTV_3d_Deiche_puf20m",
     .name_ja = "Amt für Geodaten u. Kataster - Landeshauptstadt Dresden — Hochwasserschutzanlagen_LTV_3d_Deiche_puf20m",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -573,7 +573,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_846D1F9E43", .name = "Amt für Geodaten u. Kataster - Landeshauptstadt Dresden — "
       "Hochwassermarken_Bilder_LHD_Web",
     .name_ja = "Amt für Geodaten u. Kataster - Landeshauptstadt Dresden — Hochwassermarken_Bilder_LHD_Web",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -604,7 +604,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_165DBBC441", .name = "Amt für Geodaten u. Kataster - Landeshauptstadt Dresden — "
       "Hochwasserschutzanlagen_LTV_3d_TSP",
     .name_ja = "Amt für Geodaten u. Kataster - Landeshauptstadt Dresden — Hochwasserschutzanlagen_LTV_3d_TSP",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -630,7 +630,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_C291F95336", .name = "Amt für Geodaten u. Kataster - Landeshauptstadt Dresden — "
       "Pegel_Augustusbruecke_Info",
     .name_ja = "Amt für Geodaten u. Kataster - Landeshauptstadt Dresden — Pegel_Augustusbruecke_Info",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -654,7 +654,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4C3E9CF2DE", .name = "Kent County Council — Completed Flood Defence Capital Projects",
     .name_ja = "Kent County Council — Completed Flood Defence Capital Projects",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -679,7 +679,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FC17B3ADA3", .name = "Kent County Council — Active_AQMA",
     .name_ja = "Kent County Council — Active_AQMA",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -703,7 +703,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_24C7EBD6A3", .name = "Kent County Council — KCC Wardens By Wards",
     .name_ja = "Kent County Council — KCC Wardens By Wards",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -728,7 +728,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B72EC58828", .name = "Kent County Council — Kent_Wards",
     .name_ja = "Kent County Council — Kent_Wards",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -752,7 +752,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_74633594AF", .name = "Kent County Council — IMP_ukpn_secondary_sites_kent",
     .name_ja = "Kent County Council — IMP_ukpn_secondary_sites_kent",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -776,7 +776,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B2761C9436", .name = "Kent County Council — LM4.1",
     .name_ja = "Kent County Council — LM4.1",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -800,7 +800,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B9A78670A9", .name = "Kent County Council — LM1.1",
     .name_ja = "Kent County Council — LM1.1",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -824,7 +824,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_477539FEAE", .name = "Kent County Council — LM2.1",
     .name_ja = "Kent County Council — LM2.1",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -848,7 +848,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EB9BB25136", .name = "Kent County Council — LM3.1",
     .name_ja = "Kent County Council — LM3.1",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -872,7 +872,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A5D11C16CD", .name = "Wokingham Borough Council — Public Rights of Way",
     .name_ja = "Wokingham Borough Council — Public Rights of Way",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -896,7 +896,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B0A0638569", .name = "Wokingham Borough Council — Planning_Applications",
     .name_ja = "Wokingham Borough Council — Planning_Applications",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -921,7 +921,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_69F0F0F4C3", .name = "Wokingham Borough Council — Flood_Zones_polygons",
     .name_ja = "Wokingham Borough Council — Flood_Zones_polygons",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -945,7 +945,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8270BB749D", .name = "Wokingham Borough Council — Play Areas",
     .name_ja = "Wokingham Borough Council — Play Areas",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -970,7 +970,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_FF9EA69974", .name = "Wokingham Borough Council — "
       "Surface_Water_Spatial_Planning_1in100_Depths",
     .name_ja = "Wokingham Borough Council — Surface_Water_Spatial_Planning_1in100_Depths",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -995,7 +995,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7EDF494A89", .name = "Wokingham Borough Council — SAFETY_HAZARD_AREA_MNS",
     .name_ja = "Wokingham Borough Council — SAFETY_HAZARD_AREA_MNS",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1020,7 +1020,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_C1337C889F", .name = "Wokingham Borough Council — "
       "Surface_Water_Spatial_Planning_1in30_Depths",
     .name_ja = "Wokingham Borough Council — Surface_Water_Spatial_Planning_1in30_Depths",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1046,7 +1046,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_2AE7C5E568", .name = "Wokingham Borough Council — "
       "Surface_Water_Spatial_Planning_1in1000_Depths",
     .name_ja = "Wokingham Borough Council — Surface_Water_Spatial_Planning_1in1000_Depths",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1071,7 +1071,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_543068A90E", .name = "Wokingham Borough Council — Great Crested Newt Impact Risk Zones",
     .name_ja = "Wokingham Borough Council — Great Crested Newt Impact Risk Zones",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1096,7 +1096,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_1C96041CF6", .name = "Wokingham Borough Council — Aerodrome Safeguarding: Farnborough "
       "Consultation Zone",
     .name_ja = "Wokingham Borough Council — Aerodrome Safeguarding: Farnborough Consultation Zone",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1122,7 +1122,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_8644C264EB", .name = "Wokingham Borough Council — Aerodrome Safeguarding: Odiham "
       "Consultation Zone",
     .name_ja = "Wokingham Borough Council — Aerodrome Safeguarding: Odiham Consultation Zone",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1146,7 +1146,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F03E7CF9FD", .name = "Wokingham Borough Council — Water Utility Consultation Zones",
     .name_ja = "Wokingham Borough Council — Water Utility Consultation Zones",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1171,7 +1171,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_559097FDC3", .name = "Wokingham Borough Council — National Trust Land",
     .name_ja = "Wokingham Borough Council — National Trust Land",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1195,7 +1195,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D3F18930AB", .name = "Wokingham Borough Council — Highways England - Motorways",
     .name_ja = "Wokingham Borough Council — Highways England - Motorways",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1219,7 +1219,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_35ED0B2240", .name = "Wokingham Borough Council — Network Rail - Railways",
     .name_ja = "Wokingham Borough Council — Network Rail - Railways",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1243,7 +1243,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_37E47879FA", .name = "Wicklow County Council — Blessington Settlement Boundary",
     .name_ja = "Wicklow County Council — Blessington Settlement Boundary",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1268,7 +1268,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_20D80F3502", .name = "Wicklow County Council — Flood_Zone_A",
     .name_ja = "Wicklow County Council — Flood_Zone_A",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1291,7 +1291,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_108F5A635A", .name = "Wicklow County Council — BlessingtonZoningNewBoundary",
     .name_ja = "Wicklow County Council — BlessingtonZoningNewBoundary",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1315,7 +1315,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5265183099", .name = "Wicklow County Council — Flood_Zone_B_CDP_2022_2028",
     .name_ja = "Wicklow County Council — Flood_Zone_B_CDP_2022_2028",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1339,7 +1339,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_56FE14B1BC", .name = "Wicklow County Council — Flood_Zone_B",
     .name_ja = "Wicklow County Council — Flood_Zone_B",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1362,7 +1362,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_779A5E6C3D", .name = "Wicklow County Council — Playgrounds_WIW",
     .name_ja = "Wicklow County Council — Playgrounds_WIW",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1385,7 +1385,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8896BAE247", .name = "Wicklow County Council — call_for_sites_v1",
     .name_ja = "Wicklow County Council — call_for_sites_v1",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1410,7 +1410,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_2BBBBE80BE", .name = "Causeway Coast and Glens Borough Council — "
       "Aggregation_of_Master_Contact_Sheet_to_Wards",
     .name_ja = "Causeway Coast and Glens Borough Council — Aggregation_of_Master_Contact_Sheet_to_Wards",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1436,7 +1436,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_40CD75588C", .name = "Causeway Coast and Glens Borough Council — CCGBC_Wards",
     .name_ja = "Causeway Coast and Glens Borough Council — CCGBC_Wards",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1460,7 +1460,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EE353D987E", .name = "Causeway Coast and Glens Borough Council — CCGDC-Wards",
     .name_ja = "Causeway Coast and Glens Borough Council — CCGDC-Wards",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1484,7 +1484,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2396BC1670", .name = "Causeway Coast and Glens Borough Council — Polling_Stations",
     .name_ja = "Causeway Coast and Glens Borough Council — Polling_Stations",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1509,7 +1509,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_8ACF2E0B19", .name = "Causeway Coast and Glens Borough Council — "
       "wardsccgbc_SummarizeWithin",
     .name_ja = "Causeway Coast and Glens Borough Council — wardsccgbc_SummarizeWithin",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1533,7 +1533,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6980901DD4", .name = "Causeway Coast and Glens Borough Council — Electoral_Ward",
     .name_ja = "Causeway Coast and Glens Borough Council — Electoral_Ward",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1557,7 +1557,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6661724480", .name = "Causeway Coast and Glens Borough Council — DEA",
     .name_ja = "Causeway Coast and Glens Borough Council — DEA",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1581,7 +1581,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_1ADDE7080E", .name = "Causeway Coast and Glens Borough Council — "
       "Parliamentary_Constituency",
     .name_ja = "Causeway Coast and Glens Borough Council — Parliamentary_Constituency",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1605,7 +1605,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B5DC2D63A7", .name = "Tunbridge Wells Borough Council — Sheet1",
     .name_ja = "Tunbridge Wells Borough Council — Sheet1",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "eu_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1629,7 +1629,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2BD9215B8E", .name = "Tunbridge Wells Borough Council — TWBC_Boundary",
     .name_ja = "Tunbridge Wells Borough Council — TWBC_Boundary",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1653,7 +1653,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_24F9766BDC", .name = "Tunbridge Wells Borough Council — TWBC_Wards",
     .name_ja = "Tunbridge Wells Borough Council — TWBC_Wards",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1677,7 +1677,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CCBBE58237", .name = "Uttlesford District Council — UTT_Parish",
     .name_ja = "Uttlesford District Council — UTT_Parish",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1701,7 +1701,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DD07F255C3", .name = "Uttlesford District Council — Flood_Storage_Areas",
     .name_ja = "Uttlesford District Council — Flood_Storage_Areas",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1725,7 +1725,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CD9C656907", .name = "Uttlesford District Council — PROW_2021",
     .name_ja = "Uttlesford District Council — PROW_2021",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1750,7 +1750,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_FF75AA80EB", .name = "Uttlesford District Council — "
       "CORPDATA.DOE_Hazardous_installation",
     .name_ja = "Uttlesford District Council — CORPDATA.DOE_Hazardous_installation",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1774,7 +1774,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DD22457AD7", .name = "Uttlesford District Council — Air_quality_management_poly",
     .name_ja = "Uttlesford District Council — Air_quality_management_poly",
-    .category = "environment", .portal = "https://services.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1798,7 +1798,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5444784045", .name = "Uttlesford District Council — Flood_Zone_2",
     .name_ja = "Uttlesford District Council — Flood_Zone_2",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1822,7 +1822,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_162B33370D", .name = "Uttlesford District Council — Carver_Barracks_Safeguarding",
     .name_ja = "Uttlesford District Council — Carver_Barracks_Safeguarding",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1847,7 +1847,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F4D713CFB6", .name = "Uttlesford District Council — PollingDistrict",
     .name_ja = "Uttlesford District Council — PollingDistrict",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1871,7 +1871,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5D49A2EEBB", .name = "Uttlesford District Council — CORPDATA.Road_classifications_line",
     .name_ja = "Uttlesford District Council — CORPDATA.Road_classifications_line",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1895,7 +1895,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8080A8D8D9", .name = "Uttlesford District Council — Flood_Zone_3",
     .name_ja = "Uttlesford District Council — Flood_Zone_3",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1919,7 +1919,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F8D702C27E", .name = "Uttlesford District Council — Polling_District_UDC",
     .name_ja = "Uttlesford District Council — Polling_District_UDC",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1945,7 +1945,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C8B0757579", .name = "Uttlesford District Council — Stansted Safeguarding Zones",
     .name_ja = "Uttlesford District Council — Stansted Safeguarding Zones",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1969,7 +1969,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F5198E28A3", .name = "Uttlesford District Council — PollingDistrict",
     .name_ja = "Uttlesford District Council — PollingDistrict",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1993,7 +1993,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A837E8FAF4", .name = "Uttlesford District Council — District_Boundary",
     .name_ja = "Uttlesford District Council — District_Boundary",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2017,7 +2017,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6335097B2C", .name = "Uttlesford District Council — CORPDATA.lp_poor_air_quality_zones",
     .name_ja = "Uttlesford District Council — CORPDATA.lp_poor_air_quality_zones",
-    .category = "environment", .portal = "https://services.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2042,7 +2042,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_7466F5164D", .name = "Uttlesford District Council — Local plan - county wildlife "
       "sites_Update01122024",
     .name_ja = "Uttlesford District Council — Local plan - county wildlife sites_Update01122024",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2066,7 +2066,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2756597D14", .name = "Uttlesford District Council — CORPDATA.Road_classifications_poly",
     .name_ja = "Uttlesford District Council — CORPDATA.Road_classifications_poly",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2090,7 +2090,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_47642E4D45", .name = "Uttlesford District Council — Reg19LP_Boundary",
     .name_ja = "Uttlesford District Council — Reg19LP_Boundary",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2114,7 +2114,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DECF787C7A", .name = "Uttlesford District Council — UDC_Wards",
     .name_ja = "Uttlesford District Council — UDC_Wards",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2139,7 +2139,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_544B3351BD", .name = "Offaly County Council — FloodExtentHighProb",
     .name_ja = "Offaly County Council — FloodExtentHighProb",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2162,7 +2162,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_992F7AF47F", .name = "Uttlesford District Council — Duxford_Aerodrome_Safeguarding",
     .name_ja = "Uttlesford District Council — Duxford_Aerodrome_Safeguarding",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2186,7 +2186,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9AE0300278", .name = "Uttlesford District Council — lp_poor_air_quality_zones",
     .name_ja = "Uttlesford District Council — lp_poor_air_quality_zones",
-    .category = "environment", .portal = "https://services.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2210,7 +2210,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_ECED717A7E", .name = "Uttlesford District Council — UTT_Wards",
     .name_ja = "Uttlesford District Council — UTT_Wards",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2234,7 +2234,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BA609D5011", .name = "Offaly County Council — Flood_Extents",
     .name_ja = "Offaly County Council — Flood_Extents",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2257,7 +2257,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EAF2296D9F", .name = "Uttlesford District Council — Local plan - ancient woodland",
     .name_ja = "Uttlesford District Council — Local plan - ancient woodland",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2281,7 +2281,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A7B841BB21", .name = "Uttlesford District Council — MSA_Sand_Gravel",
     .name_ja = "Uttlesford District Council — MSA_Sand_Gravel",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2306,7 +2306,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_134264B26F", .name = "Uttlesford District Council — "
       "CORPDATA.Air_quality_management_poly",
     .name_ja = "Uttlesford District Council — CORPDATA.Air_quality_management_poly",
-    .category = "environment", .portal = "https://services.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2330,7 +2330,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9759741A4E", .name = "Uttlesford District Council — Reg19LP_Development Limits",
     .name_ja = "Uttlesford District Council — Reg19LP_Development Limits",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2354,7 +2354,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F7C1DFD39B", .name = "Uttlesford District Council — County electoral divisions",
     .name_ja = "Uttlesford District Council — County electoral divisions",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2380,7 +2380,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9F8496B512", .name = "Offaly County Council — FloodExtentLowProb",
     .name_ja = "Offaly County Council — FloodExtentLowProb",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2403,7 +2403,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DCDA09FDC1", .name = "Offaly County Council — GrandCanalBlueway_polyline",
     .name_ja = "Offaly County Council — GrandCanalBlueway_polyline",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2426,7 +2426,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C2C986E729", .name = "Uttlesford District Council — Cambridge_Airport_Safeguarding",
     .name_ja = "Uttlesford District Council — Cambridge_Airport_Safeguarding",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2450,7 +2450,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_96151D177C", .name = "Offaly County Council — GrandCanalBlueway2_polyline",
     .name_ja = "Offaly County Council — GrandCanalBlueway2_polyline",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2473,7 +2473,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_12B7920AA5", .name = "Uttlesford District Council — CORPDATA.Stan_air_leqs",
     .name_ja = "Uttlesford District Council — CORPDATA.Stan_air_leqs",
-    .category = "environment", .portal = "https://services.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2497,7 +2497,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_18FD246257", .name = "Offaly County Council — Zoning 2014-2020",
     .name_ja = "Offaly County Council — Zoning 2014-2020",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2521,7 +2521,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C0423D2095", .name = "Uttlesford District Council — Great_Dunmow_Housing_Growth_TDA",
     .name_ja = "Uttlesford District Council — Great_Dunmow_Housing_Growth_TDA",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2545,7 +2545,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3C32E186DC", .name = "Uttlesford District Council — MSA_Chalk",
     .name_ja = "Uttlesford District Council — MSA_Chalk",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2569,7 +2569,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_602AB1AB58", .name = "Uttlesford District Council — Reg19LPGeological_Site_Points",
     .name_ja = "Uttlesford District Council — Reg19LPGeological_Site_Points",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2593,7 +2593,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E4DB4DB685", .name = "Offaly County Council — FloodExtentMediumProb",
     .name_ja = "Offaly County Council — FloodExtentMediumProb",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2618,7 +2618,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_7E12F49083", .name = "Uttlesford District Council — "
       "CORPDATA.Stansted_airport_high_not_area",
     .name_ja = "Uttlesford District Council — CORPDATA.Stansted_airport_high_not_area",
-    .category = "environment", .portal = "https://services.arcgis.com",
+    .category = "environment", .collector = "eu_gis_transport", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2642,7 +2642,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_57CBE5B3B8", .name = "Uttlesford District Council — Local_plan_residential_land",
     .name_ja = "Uttlesford District Council — Local_plan_residential_land",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2666,7 +2666,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_58BD92209C", .name = "Uttlesford District Council — MSA_Brickearth",
     .name_ja = "Uttlesford District Council — MSA_Brickearth",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2690,7 +2690,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E1A9824668", .name = "Uttlesford District Council — Local plan - conservation areas",
     .name_ja = "Uttlesford District Council — Local plan - conservation areas",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2715,7 +2715,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_BDC54A89A0", .name = "Uttlesford District Council — "
       "District_Borough_Unitary_Ward_Essex",
     .name_ja = "Uttlesford District Council — District_Borough_Unitary_Ward_Essex",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2741,7 +2741,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0F16988F6A", .name = "Uttlesford District Council — Reg19LP_District_Edge",
     .name_ja = "Uttlesford District Council — Reg19LP_District_Edge",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2765,7 +2765,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1F58256E29", .name = "Uttlesford District Council — CORPDATA.Stan_air_aero_direct",
     .name_ja = "Uttlesford District Council — CORPDATA.Stan_air_aero_direct",
-    .category = "environment", .portal = "https://services.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2789,7 +2789,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4684B62FD5", .name = "Uttlesford District Council — Local_plan_miscellaneous",
     .name_ja = "Uttlesford District Council — Local_plan_miscellaneous",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2813,7 +2813,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_63C106A656", .name = "Uttlesford District Council — MSA_Brick_Clay",
     .name_ja = "Uttlesford District Council — MSA_Brick_Clay",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2838,7 +2838,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_65710C4FC2", .name = "Uttlesford District Council — Local plan - countryside "
       "protection zone",
     .name_ja = "Uttlesford District Council — Local plan - countryside protection zone",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2862,7 +2862,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4F914E8F6F", .name = "Uttlesford District Council — Reg19LP_Conservation Area",
     .name_ja = "Uttlesford District Council — Reg19LP_Conservation Area",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2886,7 +2886,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6BD7F4A379", .name = "Uttlesford District Council — Parish_Region_Essex",
     .name_ja = "Uttlesford District Council — Parish_Region_Essex",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2911,7 +2911,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EFD8CDBD48", .name = "Uttlesford District Council — CORPDATA.Stan_air_6km_zone",
     .name_ja = "Uttlesford District Council — CORPDATA.Stan_air_6km_zone",
-    .category = "environment", .portal = "https://services.arcgis.com",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2935,7 +2935,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_ADB7900069", .name = "Uttlesford District Council — Local_plan_landscape_areas",
     .name_ja = "Uttlesford District Council — Local_plan_landscape_areas",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2959,7 +2959,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7B81EF6A04", .name = "Uttlesford District Council — Local plan - development limits",
     .name_ja = "Uttlesford District Council — Local plan - development limits",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2983,7 +2983,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_38B3A12D31", .name = "Uttlesford District Council — Reg19LP_TownLocal_Centre_Boundary",
     .name_ja = "Uttlesford District Council — Reg19LP_TownLocal_Centre_Boundary",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3008,7 +3008,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_3AFC5F279D", .name = "Uttlesford District Council — "
       "Local_plan_ground_water_protection_zone",
     .name_ja = "Uttlesford District Council — Local_plan_ground_water_protection_zone",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3032,7 +3032,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E1F6D8FBD8", .name = "Uttlesford District Council — Local plan - district boundary",
     .name_ja = "Uttlesford District Council — Local plan - district boundary",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3056,7 +3056,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4ACDC8C96A", .name = "Uttlesford District Council — Reg19LP_Primary_Frontages",
     .name_ja = "Uttlesford District Council — Reg19LP_Primary_Frontages",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3080,7 +3080,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9FF4F048B9", .name = "Uttlesford District Council — Local plan - employment land",
     .name_ja = "Uttlesford District Council — Local plan - employment land",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3104,7 +3104,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E0A44A8AED", .name = "Uttlesford District Council — Reg19LP_Secondary_Frontages",
     .name_ja = "Uttlesford District Council — Reg19LP_Secondary_Frontages",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3128,7 +3128,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B4B7F14F65", .name = "Roscommon County Council — Architectural Conservation Areas",
     .name_ja = "Roscommon County Council — Architectural Conservation Areas",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3152,7 +3152,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D26ABFB0C6", .name = "Roscommon County Council — Ballaghaderreen LAP 2017-2023",
     .name_ja = "Roscommon County Council — Ballaghaderreen LAP 2017-2023",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3177,7 +3177,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9ABB50BB99", .name = "Roscommon County Council — Ballaghaderreen LAP 2012-2018",
     .name_ja = "Roscommon County Council — Ballaghaderreen LAP 2012-2018",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3202,7 +3202,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D29672DF90", .name = "Roscommon County Council — Boyle LAP 2012-2018",
     .name_ja = "Roscommon County Council — Boyle LAP 2012-2018",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3226,7 +3226,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3C9D5A102D", .name = "Roscommon County Council — Boyle LAP 2015-2021",
     .name_ja = "Roscommon County Council — Boyle LAP 2015-2021",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3250,7 +3250,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0F0A3C14BD", .name = "Roscommon County Council — Castlerea LAP 2012-2018",
     .name_ja = "Roscommon County Council — Castlerea LAP 2012-2018",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3274,7 +3274,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7B9E8315B0", .name = "Roscommon County Council — Cootehall LAP 2009-2015",
     .name_ja = "Roscommon County Council — Cootehall LAP 2009-2015",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3298,7 +3298,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7C5788AB72", .name = "Roscommon County Council — Cortober LAP 2014-2020",
     .name_ja = "Roscommon County Council — Cortober LAP 2014-2020",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3322,7 +3322,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_18345BFF8A", .name = "Roscommon County Council — Hodson Bay LAP 2014-2020",
     .name_ja = "Roscommon County Council — Hodson Bay LAP 2014-2020",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3346,7 +3346,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_37A2C33EFE", .name = "Roscommon County Council — Castlerea LAP 2016-2022",
     .name_ja = "Roscommon County Council — Castlerea LAP 2016-2022",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3371,7 +3371,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_CA9F66F4C4", .name = "Roscommon County Council — Scenic Views - Roscommon CDP "
       "2022-2028",
     .name_ja = "Roscommon County Council — Scenic Views - Roscommon CDP 2022-2028",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3395,7 +3395,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_11C337041B", .name = "Roscommon County Council — Elphin LAP 2014-2020",
     .name_ja = "Roscommon County Council — Elphin LAP 2014-2020",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3419,7 +3419,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C1B323B008", .name = "Roscommon County Council — Lough Key LAP 2015-2021",
     .name_ja = "Roscommon County Council — Lough Key LAP 2015-2021",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3443,7 +3443,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_732E511FBD", .name = "Roscommon County Council — Monksland Bellanamullia LAP 2016-2022",
     .name_ja = "Roscommon County Council — Monksland Bellanamullia LAP 2016-2022",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3468,7 +3468,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_33A0BF40F0", .name = "Roscommon County Council — Planning_Points_Finder_Historical",
     .name_ja = "Roscommon County Council — Planning_Points_Finder_Historical",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3493,7 +3493,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D0F115B0D4", .name = "Roscommon County Council — Monksland Bellanamullia LAP 2010-2016",
     .name_ja = "Roscommon County Council — Monksland Bellanamullia LAP 2010-2016",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3518,7 +3518,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7DC1DA39A0", .name = "Roscommon County Council — Planning_Sites_Finder_Historical",
     .name_ja = "Roscommon County Council — Planning_Sites_Finder_Historical",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3544,7 +3544,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_620CF67926", .name = "Roscommon County Council — Roosky LAP 2009-2015",
     .name_ja = "Roscommon County Council — Roosky LAP 2009-2015",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3569,7 +3569,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_EAECB139DA", .name = "Roscommon County Council — Scenic Views Extents - Roscommon CDP "
       "2022-2028",
     .name_ja = "Roscommon County Council — Scenic Views Extents - Roscommon CDP 2022-2028",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3593,7 +3593,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_79A269D29A", .name = "Roscommon County Council — Planning_Sites_Finder",
     .name_ja = "Roscommon County Council — Planning_Sites_Finder",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3618,7 +3618,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_76EC0A1C1B", .name = "Roscommon County Council — Planning_Points_Finder",
     .name_ja = "Roscommon County Council — Planning_Points_Finder",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3644,7 +3644,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_17D1D8EDCD", .name = "Roscommon County Council — Scenic Routes - Roscommon CDP "
       "2022-2028",
     .name_ja = "Roscommon County Council — Scenic Routes - Roscommon CDP 2022-2028",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3669,7 +3669,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_33535F3A06", .name = "Roscommon County Council — Record of Protected Structures - "
       "Roscommon CDP 2022-2028",
     .name_ja = "Roscommon County Council — Record of Protected Structures - Roscommon CDP 2022-2028",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3695,7 +3695,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_E6248A0F28", .name = "Roscommon County Council — Architectural Conservation Areas - "
       "Roscommon CDP 2022-2028",
     .name_ja = "Roscommon County Council — Architectural Conservation Areas - Roscommon CDP 2022-2028",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3721,7 +3721,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_FC154A9D93", .name = "Roscommon County Council — Settlement Boundaries - Roscommon CDP "
       "2022-2028",
     .name_ja = "Roscommon County Council — Settlement Boundaries - Roscommon CDP 2022-2028",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3746,7 +3746,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_DCA09007EC", .name = "Roscommon County Council — Town Core Residential Opportunity "
       "Sites - Roscommon CDP 2022-2028",
     .name_ja = "Roscommon County Council — Town Core Residential Opportunity Sites - Roscommon CDP 2022-2028",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3772,7 +3772,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_50778DD33D", .name = "Roscommon County Council — Core Retail Areas - Roscommon CDP "
       "2022-2028",
     .name_ja = "Roscommon County Council — Core Retail Areas - Roscommon CDP 2022-2028",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3796,7 +3796,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3371B39CF4", .name = "Comunidad de Madrid — Contru_Catastro_Urbana_ZI",
     .name_ja = "Comunidad de Madrid — Contru_Catastro_Urbana_ZI",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3820,7 +3820,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_25ED09CAC0", .name = "Comunidad de Madrid — TM_Urbanismo",
     .name_ja = "Comunidad de Madrid — TM_Urbanismo",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3844,7 +3844,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_87BE476CAE", .name = "Chelmsford City Council — Wards_Chelm",
     .name_ja = "Chelmsford City Council — Wards_Chelm",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3868,7 +3868,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EE7BAD03C6", .name = "Chelmsford City Council — wards",
     .name_ja = "Chelmsford City Council — wards",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3892,7 +3892,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_0BA67491BC", .name = "Communauté d'Agglomération de Lens-Liévin — 1. Typologie des "
       "propriétaires (2021)",
     .name_ja = "Communauté d'Agglomération de Lens-Liévin — 1. Typologie des propriétaires (2021)",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3917,7 +3917,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_295892C66F", .name = "Communauté d'Agglomération de Lens-Liévin — 2. Secteur du "
       "propriétaire (2021)",
     .name_ja = "Communauté d'Agglomération de Lens-Liévin — 2. Secteur du propriétaire (2021)",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3942,7 +3942,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_530B7C5364", .name = "Communauté d'Agglomération de Lens-Liévin — 3. Type d'occupation "
       "(2021)",
     .name_ja = "Communauté d'Agglomération de Lens-Liévin — 3. Type d'occupation (2021)",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3967,7 +3967,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_2D682BCCF9", .name = "Communauté d'Agglomération de Lens-Liévin — 4. Type de vacance "
       "(2021)",
     .name_ja = "Communauté d'Agglomération de Lens-Liévin — 4. Type de vacance (2021)",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3992,7 +3992,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_25CB6696FE", .name = "Communauté d'Agglomération de Lens-Liévin — 5. Pourcentage de "
       "surface bâtie (2021)",
     .name_ja = "Communauté d'Agglomération de Lens-Liévin — 5. Pourcentage de surface bâtie (2021)",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4017,7 +4017,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_E87F55FCF5", .name = "Communauté d'Agglomération de Lens-Liévin — 6. Présence de bâti "
       "(2021)",
     .name_ja = "Communauté d'Agglomération de Lens-Liévin — 6. Présence de bâti (2021)",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4042,7 +4042,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_6F8667D426", .name = "Communauté d'Agglomération de Lens-Liévin — 7. Âge du bâti "
       "(2021)",
     .name_ja = "Communauté d'Agglomération de Lens-Liévin — 7. Âge du bâti (2021)",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4067,7 +4067,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_F6F845CBF4", .name = "Communauté d'Agglomération de Lens-Liévin — 8. Somme de la "
       "valeur locative (2021)",
     .name_ja = "Communauté d'Agglomération de Lens-Liévin — 8. Somme de la valeur locative (2021)",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4092,7 +4092,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_1CBDF1179A", .name = "Lancashire County Council — LCC LLFA Priority Surface Water "
       "Flood Risk Catchments",
     .name_ja = "Lancashire County Council — LCC LLFA Priority Surface Water Flood Risk Catchments",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4119,7 +4119,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_7CDD3794BD", .name = "Lancashire County Council — LCC LLFA Surface Water Flood Risk "
       "Areas",
     .name_ja = "Lancashire County Council — LCC LLFA Surface Water Flood Risk Areas",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4144,7 +4144,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_652A9098A4", .name = "Lancashire County Council — RoFSW Extent 1in100",
     .name_ja = "Lancashire County Council — RoFSW Extent 1in100",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4168,7 +4168,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C936AC97C3", .name = "Mid Ulster Council — DEA",
     .name_ja = "Mid Ulster Council — DEA",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4191,7 +4191,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_94C65DD06F", .name = "Mid Ulster Council — MUDC_EWards",
     .name_ja = "Mid Ulster Council — MUDC_EWards",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4214,7 +4214,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AB929E5AD6", .name = "Mid Ulster Council — MUDC_Wards",
     .name_ja = "Mid Ulster Council — MUDC_Wards",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4238,7 +4238,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_676067FD0F", .name = "Mid Ulster Council — Mid_ulster_wards",
     .name_ja = "Mid Ulster Council — Mid_ulster_wards",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4261,7 +4261,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B4687617A9", .name = "Mid Ulster Council — BDYWARD",
     .name_ja = "Mid Ulster Council — BDYWARD",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4284,7 +4284,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DAD25D1A84", .name = "Mid Ulster Council — MUDC_Industrialsites",
     .name_ja = "Mid Ulster Council — MUDC_Industrialsites",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4308,7 +4308,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A96D752865", .name = "Mid Ulster Council — commencements_wards",
     .name_ja = "Mid Ulster Council — commencements_wards",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4333,7 +4333,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9C408822AC", .name = "Mid Ulster Council — TOC",
     .name_ja = "Mid Ulster Council — TOC",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4357,7 +4357,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7CF4858CB6", .name = "Mid Ulster Council — TOC",
     .name_ja = "Mid Ulster Council — TOC",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4380,7 +4380,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0A83475315", .name = "Mid Ulster Council — MUDC_WardWASHING_BAY",
     .name_ja = "Mid Ulster Council — MUDC_WardWASHING_BAY",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4404,7 +4404,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3AEC54216B", .name = "Mid Ulster Council — MUDC_WardWASHING_BAY",
     .name_ja = "Mid Ulster Council — MUDC_WardWASHING_BAY",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4428,7 +4428,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4911CE8BD2", .name = "Mid Ulster Council — MUDC_WardVALLEY",
     .name_ja = "Mid Ulster Council — MUDC_WardVALLEY",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4452,7 +4452,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9D476FFFE9", .name = "Mid Ulster Council — MUDC_WardVALLEY",
     .name_ja = "Mid Ulster Council — MUDC_WardVALLEY",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4476,7 +4476,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E2F47A5BCF", .name = "Mid Ulster Council — MUDC_WardTOWN_PARKS_EAST",
     .name_ja = "Mid Ulster Council — MUDC_WardTOWN_PARKS_EAST",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4500,7 +4500,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3F2E90B72D", .name = "Mid Ulster Council — MUDC_WardTOBERMORE",
     .name_ja = "Mid Ulster Council — MUDC_WardTOBERMORE",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4524,7 +4524,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3574049CC4", .name = "Mid Ulster Council — MUDC_WardTOWN_PARKS_EAST",
     .name_ja = "Mid Ulster Council — MUDC_WardTOWN_PARKS_EAST",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4548,7 +4548,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_77DA9982DA", .name = "Mid Ulster Council — MUDC_WardTHE_LOUP",
     .name_ja = "Mid Ulster Council — MUDC_WardTHE_LOUP",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4572,7 +4572,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_96AD03DBA7", .name = "Mid Ulster Council — MUDC_WardTOBERMORE",
     .name_ja = "Mid Ulster Council — MUDC_WardTOBERMORE",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4596,7 +4596,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2CF5EE882F", .name = "Mid Ulster Council — MUDC_WardSWATRAGH",
     .name_ja = "Mid Ulster Council — MUDC_WardSWATRAGH",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4620,7 +4620,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F8AE5562AC", .name = "Mid Ulster Council — MUDC_WardTHE_LOUP",
     .name_ja = "Mid Ulster Council — MUDC_WardTHE_LOUP",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4644,7 +4644,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0D58FE3A80", .name = "Mid Ulster Council — MUDC_WardSTEWARTSTOWN",
     .name_ja = "Mid Ulster Council — MUDC_WardSTEWARTSTOWN",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4668,7 +4668,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B52955A98F", .name = "Mid Ulster Council — MUDC_WardSWATRAGH",
     .name_ja = "Mid Ulster Council — MUDC_WardSWATRAGH",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4692,7 +4692,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3A48F0452B", .name = "Mid Ulster Council — MUDC_WardSTEWARTSTOWN",
     .name_ja = "Mid Ulster Council — MUDC_WardSTEWARTSTOWN",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4716,7 +4716,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FA942FD9EA", .name = "Bassetlaw District Council — Bus Stop",
     .name_ja = "Bassetlaw District Council — Bus Stop",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4740,7 +4740,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A1990CB18D", .name = "Bassetlaw District Council — BassetlawBoundary",
     .name_ja = "Bassetlaw District Council — BassetlawBoundary",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4764,7 +4764,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C59FAC9E2B", .name = "Bassetlaw District Council — DBO.Ward_Councillors",
     .name_ja = "Bassetlaw District Council — DBO.Ward_Councillors",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4788,7 +4788,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1DAEF57FD1", .name = "Bassetlaw District Council — Wards",
     .name_ja = "Bassetlaw District Council — Wards",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4812,7 +4812,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EE3DD38C9B", .name = "Bassetlaw District Council — DBO.Notts_County_Council",
     .name_ja = "Bassetlaw District Council — DBO.Notts_County_Council",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4836,7 +4836,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_18D705FF78", .name = "Bassetlaw District Council — LocalCouncillor",
     .name_ja = "Bassetlaw District Council — LocalCouncillor",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4860,7 +4860,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4762BA0FE1", .name = "Bassetlaw District Council — Household ward data",
     .name_ja = "Bassetlaw District Council — Household ward data",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4885,7 +4885,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E7F55FD0C1", .name = "Bassetlaw District Council — Neighbourhood Plan Status",
     .name_ja = "Bassetlaw District Council — Neighbourhood Plan Status",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4909,7 +4909,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7F77B13364", .name = "Bassetlaw District Council — Play Areas",
     .name_ja = "Bassetlaw District Council — Play Areas",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4933,7 +4933,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B90C7029B4", .name = "Bassetlaw District Council — Ward_Boundary",
     .name_ja = "Bassetlaw District Council — Ward_Boundary",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4957,7 +4957,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D09C87023F", .name = "Bassetlaw District Council — IMD 2025",
     .name_ja = "Bassetlaw District Council — IMD 2025",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4981,7 +4981,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3417593423", .name = "South Dublin County Council — Architectural_Conservation_Areas",
     .name_ja = "South Dublin County Council — Architectural_Conservation_Areas",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5006,7 +5006,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CF8A102015", .name = "South Dublin County Council — Cycleways (Cycle South Dublin)",
     .name_ja = "South Dublin County Council — Cycleways (Cycle South Dublin)",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5031,7 +5031,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5B4E2C0057", .name = "South Dublin County Council — Allotments",
     .name_ja = "South Dublin County Council — Allotments",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5055,7 +5055,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2A23AB3FC0", .name = "South Dublin County Council — Cycleways (Cycle South Dublin)",
     .name_ja = "South Dublin County Council — Cycleways (Cycle South Dublin)",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5079,7 +5079,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AAB6AB96C1", .name = "South Dublin County Council — Allotment Locations SDCC",
     .name_ja = "South Dublin County Council — Allotment Locations SDCC",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5103,7 +5103,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_88F2E2EB40", .name = "South Dublin County Council — Flood Zone A",
     .name_ja = "South Dublin County Council — Flood Zone A",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5126,7 +5126,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_73234AA25F", .name = "South Dublin County Council — Flood Zone B",
     .name_ja = "South Dublin County Council — Flood Zone B",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5149,7 +5149,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D950F0BD22", .name = "South Dublin County Council — All_Playgrounds",
     .name_ja = "South Dublin County Council — All_Playgrounds",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5173,7 +5173,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_99FF6D192D", .name = "South Dublin County Council — Record_of_Protected_Structures",
     .name_ja = "South Dublin County Council — Record_of_Protected_Structures",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5198,7 +5198,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6ACC5FA209", .name = "South Dublin County Council — SDCC_Existing_Cycleways",
     .name_ja = "South Dublin County Council — SDCC_Existing_Cycleways",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5222,7 +5222,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6C6397BC07", .name = "South Dublin County Council — Special Areas of Conservation",
     .name_ja = "South Dublin County Council — Special Areas of Conservation",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5247,7 +5247,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2558366731", .name = "South Dublin County Council — Route 1: Lucan",
     .name_ja = "South Dublin County Council — Route 1: Lucan",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5271,7 +5271,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9538D66CF5", .name = "South Dublin County Council — SRR",
     .name_ja = "South Dublin County Council — SRR",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5296,7 +5296,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B9733D26ED", .name = "South Dublin County Council — SRR",
     .name_ja = "South Dublin County Council — SRR",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5320,7 +5320,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DD9C3BCE90", .name = "South Dublin County Council — Pavilions",
     .name_ja = "South Dublin County Council — Pavilions",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5344,7 +5344,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_099F338EC9", .name = "South Dublin County Council — Outdoor Exercise Equipment",
     .name_ja = "South Dublin County Council — Outdoor Exercise Equipment",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5368,7 +5368,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2D44EF1E23", .name = "South Dublin County Council — Route 2: Clondalkin",
     .name_ja = "South Dublin County Council — Route 2: Clondalkin",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5392,7 +5392,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EAB6CB877E", .name = "South Dublin County Council — Use Zoning Objectives",
     .name_ja = "South Dublin County Council — Use Zoning Objectives",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5417,7 +5417,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DB4064DB89", .name = "South Dublin County Council — Playgrounds",
     .name_ja = "South Dublin County Council — Playgrounds",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5442,7 +5442,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_477813DFAB", .name = "South Dublin County Council — Use Zoning Objectives",
     .name_ja = "South Dublin County Council — Use Zoning Objectives",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5466,7 +5466,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BEF0A7BEB5", .name = "South Dublin County Council — Pavilions",
     .name_ja = "South Dublin County Council — Pavilions",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5490,7 +5490,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D0B142AEF3", .name = "South Dublin County Council — Route 3: Saggart",
     .name_ja = "South Dublin County Council — Route 3: Saggart",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5514,7 +5514,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BD21B9F746", .name = "South Dublin County Council — Playgrounds",
     .name_ja = "South Dublin County Council — Playgrounds",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5539,7 +5539,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_95FDE6D2FF", .name = "South Dublin County Council — Route 4: Tallaght",
     .name_ja = "South Dublin County Council — Route 4: Tallaght",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5563,7 +5563,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AD8DF60913", .name = "Harrow Council — Wards_Data",
     .name_ja = "Harrow Council — Wards_Data",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5587,7 +5587,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_908467E284", .name = "Harrow Council — Bus_Stops",
     .name_ja = "Harrow Council — Bus_Stops",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5610,7 +5610,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FD4EBFFECE", .name = "South Dublin County Council — Route 5: Kimmage",
     .name_ja = "South Dublin County Council — Route 5: Kimmage",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5635,7 +5635,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_89AA912E03", .name = "South Dublin County Council — Sli na Slainte, Hiking Trails & "
       "Fitwalk Circuits",
     .name_ja = "South Dublin County Council — Sli na Slainte, Hiking Trails & Fitwalk Circuits",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5660,7 +5660,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FEBA2B68F5", .name = "South Dublin County Council — Route 6: Ballyboden",
     .name_ja = "South Dublin County Council — Route 6: Ballyboden",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5684,7 +5684,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_20573C1605", .name = "South Dublin County Council — Route 7: N81",
     .name_ja = "South Dublin County Council — Route 7: N81",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5708,7 +5708,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_29514D717F", .name = "South Dublin County Council — Parks and Open Spaces",
     .name_ja = "South Dublin County Council — Parks and Open Spaces",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5732,7 +5732,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_400DEC2D37", .name = "Ayuntamiento de Torrelodones — TPC_NUMPOL",
     .name_ja = "Ayuntamiento de Torrelodones — TPC_NUMPOL",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5756,7 +5756,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D6AE8C84C6", .name = "Ayuntamiento de Torrelodones — Callejeros",
     .name_ja = "Ayuntamiento de Torrelodones — Callejeros",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5780,7 +5780,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_456A883A91", .name = "Ayuntamiento de Torrelodones — lineas",
     .name_ja = "Ayuntamiento de Torrelodones — lineas",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5804,7 +5804,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C211FB4217", .name = "Ayuntamiento de Torrelodones — Parcelas",
     .name_ja = "Ayuntamiento de Torrelodones — Parcelas",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5828,7 +5828,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_07831FF94C", .name = "Ayuntamiento de Torrelodones — decoracion_catastro",
     .name_ja = "Ayuntamiento de Torrelodones — decoracion_catastro",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5852,7 +5852,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3648CE7B42", .name = "Ayuntamiento de Torrelodones — poligonos",
     .name_ja = "Ayuntamiento de Torrelodones — poligonos",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5876,7 +5876,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_37D498A0AF", .name = "Ayuntamiento de Torrelodones — fondo_viario",
     .name_ja = "Ayuntamiento de Torrelodones — fondo_viario",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5900,7 +5900,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1A46E7AB95", .name = "Communauté d'Agglomération d'Épinal — Stationnement handicapé",
     .name_ja = "Communauté d'Agglomération d'Épinal — Stationnement handicapé",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5924,7 +5924,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9ED82AB64E", .name = "Communauté d'Agglomération d'Épinal — ERP communautaires",
     .name_ja = "Communauté d'Agglomération d'Épinal — ERP communautaires",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5949,7 +5949,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_48F00083F8", .name = "Communauté d'Agglomération d'Épinal — Pour les personnes en "
       "fauteuil",
     .name_ja = "Communauté d'Agglomération d'Épinal — Pour les personnes en fauteuil",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5974,7 +5974,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BE73D119CC", .name = "Communauté d'Agglomération d'Épinal — Arrêtés linéaires",
     .name_ja = "Communauté d'Agglomération d'Épinal — Arrêtés linéaires",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5998,7 +5998,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1A8072448D", .name = "Communauté d'Agglomération d'Épinal — Arrêtés ponctuels",
     .name_ja = "Communauté d'Agglomération d'Épinal — Arrêtés ponctuels",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6022,7 +6022,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_67EEE0822F", .name = "Communauté d'Agglomération d'Épinal — zones_départ_pente5m",
     .name_ja = "Communauté d'Agglomération d'Épinal — zones_départ_pente5m",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6046,7 +6046,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CC52381EE5", .name = "Communauté d'Agglomération d'Épinal — DOC_URBA_CAE",
     .name_ja = "Communauté d'Agglomération d'Épinal — DOC_URBA_CAE",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6071,7 +6071,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_8CA9505145", .name = "Communauté d'Agglomération d'Épinal — Territoire à risques "
       "importants d'inondation (TRI) d'Épinal",
     .name_ja = "Communauté d'Agglomération d'Épinal — Territoire à risques importants d'inondation (TRI) d'Épinal",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6098,7 +6098,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_95EC7AF19B", .name = "Communauté d'Agglomération d'Épinal — Pour les personnes à "
       "mobilité réduite",
     .name_ja = "Communauté d'Agglomération d'Épinal — Pour les personnes à mobilité réduite",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6123,7 +6123,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6979F6FDD8", .name = "Communauté d'Agglomération d'Épinal — OCS_Intersect",
     .name_ja = "Communauté d'Agglomération d'Épinal — OCS_Intersect",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6148,7 +6148,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_3576720433", .name = "Communauté d'Agglomération d'Épinal — Ralentisseus (coussin "
       "berlinois, dos d'âne)",
     .name_ja = "Communauté d'Agglomération d'Épinal — Ralentisseus (coussin berlinois, dos d'âne)",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6173,7 +6173,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EB60C86466", .name = "Communauté d'Agglomération d'Épinal — $A$1:$G$128 par TYPE",
     .name_ja = "Communauté d'Agglomération d'Épinal — $A$1:$G$128 par TYPE",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6197,7 +6197,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C7F9913FC8", .name = "Communauté d'Agglomération d'Épinal — Stationnements pour vélos",
     .name_ja = "Communauté d'Agglomération d'Épinal — Stationnements pour vélos",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6221,7 +6221,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7D026C02F2", .name = "Communauté d'Agglomération d'Épinal — Zone_LIDAR",
     .name_ja = "Communauté d'Agglomération d'Épinal — Zone_LIDAR",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6245,7 +6245,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_022A1A063D", .name = "Communauté d'Agglomération d'Épinal — $A$1:$G$125 par TYPE",
     .name_ja = "Communauté d'Agglomération d'Épinal — $A$1:$G$125 par TYPE",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6269,7 +6269,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_89F6EA2526", .name = "Communauté d'Agglomération d'Épinal — Stationnements réservés",
     .name_ja = "Communauté d'Agglomération d'Épinal — Stationnements réservés",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6294,7 +6294,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E8C03ADAE8", .name = "Communauté d'Agglomération d'Épinal — ZONE HYDROGRAPHIQUE",
     .name_ja = "Communauté d'Agglomération d'Épinal — ZONE HYDROGRAPHIQUE",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6319,7 +6319,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A5B5014679", .name = "Communauté d'Agglomération d'Épinal — Rues concernées",
     .name_ja = "Communauté d'Agglomération d'Épinal — Rues concernées",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6343,7 +6343,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4FABB25085", .name = "Communauté d'Agglomération d'Épinal — dgouv_parcelles",
     .name_ja = "Communauté d'Agglomération d'Épinal — dgouv_parcelles",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6368,7 +6368,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_B39AEA0D37", .name = "Communauté d'Agglomération d'Épinal — Pour les personnes à "
       "déficience auditive",
     .name_ja = "Communauté d'Agglomération d'Épinal — Pour les personnes à déficience auditive",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6394,7 +6394,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_C8DFBEB50D", .name = "Communauté d'Agglomération d'Épinal — arretes permanents - "
       "Points",
     .name_ja = "Communauté d'Agglomération d'Épinal — arretes permanents - Points",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6418,7 +6418,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_756CF2EFD5", .name = "Communauté d'Agglomération d'Épinal — dgouv_section",
     .name_ja = "Communauté d'Agglomération d'Épinal — dgouv_section",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6443,7 +6443,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_386C8A6882", .name = "Communauté d'Agglomération d'Épinal — Limite des périmètres de "
       "gestion",
     .name_ja = "Communauté d'Agglomération d'Épinal — Limite des périmètres de gestion",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6469,7 +6469,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_BF800CCDBD", .name = "Communauté d'Agglomération d'Épinal — "
       "Zones_de_circulation_en_projet",
     .name_ja = "Communauté d'Agglomération d'Épinal — Zones_de_circulation_en_projet",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6495,7 +6495,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_47CC10A5FF", .name = "Communauté d'Agglomération d'Épinal — arretes permanents - "
       "lineaires",
     .name_ja = "Communauté d'Agglomération d'Épinal — arretes permanents - lineaires",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6519,7 +6519,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1807DDA1F2", .name = "Communauté d'Agglomération d'Épinal — Pistes cyclables",
     .name_ja = "Communauté d'Agglomération d'Épinal — Pistes cyclables",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6544,7 +6544,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_4AD922147B", .name = "Communauté d'Agglomération d'Épinal — Pour les personnes à "
       "déficience visuelle",
     .name_ja = "Communauté d'Agglomération d'Épinal — Pour les personnes à déficience visuelle",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6569,7 +6569,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F7706CB864", .name = "Communauté d'Agglomération d'Épinal — Systeme endiguement BRM",
     .name_ja = "Communauté d'Agglomération d'Épinal — Systeme endiguement BRM",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_safety_emergency", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6595,7 +6595,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_ECDA525D17", .name = "Communauté d'Agglomération d'Épinal — "
       "Zones_de_circulation_existantes",
     .name_ja = "Communauté d'Agglomération d'Épinal — Zones_de_circulation_existantes",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6620,7 +6620,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_05132D216C", .name = "Communauté d'Agglomération d'Épinal — Schéma vélos (DDT)",
     .name_ja = "Communauté d'Agglomération d'Épinal — Schéma vélos (DDT)",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6645,7 +6645,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_878DB5BC04", .name = "Communauté d'Agglomération d'Épinal — Pour les personnes à "
       "déficience mentale",
     .name_ja = "Communauté d'Agglomération d'Épinal — Pour les personnes à déficience mentale",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6671,7 +6671,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_BD66C2FE4F", .name = "Communauté d'Agglomération d'Épinal — Classement continuité "
       "écologique - liste 1",
     .name_ja = "Communauté d'Agglomération d'Épinal — Classement continuité écologique - liste 1",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_safety_emergency", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6698,7 +6698,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_00645884A4", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — "
       "service_de_proximite_urbanisme",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — service_de_proximite_urbanisme",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6723,7 +6723,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2B72B74919", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Les AOC",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Les AOC",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6748,7 +6748,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_E080790000", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Périmètre OPAH "
       "RU 2023 / 2028",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Périmètre OPAH RU 2023 / 2028",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6774,7 +6774,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_2DB537275F", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Zonage "
       "d'urbanisme",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Zonage d'urbanisme",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6799,7 +6799,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_2A59D75252", .name = "Communauté d'Agglomération d'Épinal — Zones de circulation "
       "particulières",
     .name_ja = "Communauté d'Agglomération d'Épinal — Zones de circulation particulières",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6823,7 +6823,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D3AE363A79", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Colonnes",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Colonnes",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6847,7 +6847,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DC5B63B896", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — zonage",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — zonage",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6872,7 +6872,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_DBD38538F0", .name = "Communauté d'Agglomération d'Épinal — Classement continuité "
       "écologique - liste 2",
     .name_ja = "Communauté d'Agglomération d'Épinal — Classement continuité écologique - liste 2",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_safety_emergency", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6898,7 +6898,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BEA49394DA", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Périmètre PIG",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Périmètre PIG",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6923,7 +6923,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_827D51F9AD", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — "
       "AGGLO.SIG.zonage_igp",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — AGGLO.SIG.zonage_igp",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6947,7 +6947,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_682C2315EE", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Communes",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Communes",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6971,7 +6971,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_45382EE145", .name = "Communauté d'Agglomération d'Épinal — Communes et EPTB",
     .name_ja = "Communauté d'Agglomération d'Épinal — Communes et EPTB",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6997,7 +6997,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_4D15CAD789", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Axe "
       "prioritaire façades",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Axe prioritaire façades",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7023,7 +7023,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_62147FA32C", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Axe "
       "prioritaire façades et vitrines",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Axe prioritaire façades et vitrines",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7050,7 +7050,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_E21BB30B49", .name = "Communauté d'Agglomération d'Épinal — Zone vulnérable "
       "(Communes_BDP)",
     .name_ja = "Communauté d'Agglomération d'Épinal — Zone vulnérable (Communes_BDP)",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7076,7 +7076,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_C67689D36A", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Propriétés "
       "concernées par l'axe prioritaire (façade et/ou vitrine)",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Propriétés concernées par l'axe prioritaire (façade et/ou vitrine)",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7103,7 +7103,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_F886D962A0", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Propriétés "
       "concernées par l'axe prioritaire (façade)",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Propriétés concernées par l'axe prioritaire (façade)",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7130,7 +7130,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_3C2DD4F03B", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Périmètre "
       "action façade",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — Périmètre action façade",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7155,7 +7155,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_D0AB72FB35", .name = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — CAHM hors "
       "périmètre action façade",
     .name_ja = "Communauté d'Agglomération HÉRAULT MÉDITERRANÉE — CAHM hors périmètre action façade",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7179,7 +7179,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9A7F0DADD0", .name = "Leeds City Council — AW_WardsResults2",
     .name_ja = "Leeds City Council — AW_WardsResults2",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7203,7 +7203,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3E089BB061", .name = "Leeds City Council — Leeds_City_Council_Wards",
     .name_ja = "Leeds City Council — Leeds_City_Council_Wards",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7227,7 +7227,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D0935F7B39", .name = "Leeds City Council — LCC_Wards",
     .name_ja = "Leeds City Council — LCC_Wards",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7251,7 +7251,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BC50C5B204", .name = "Leeds City Council — Leeds_ward",
     .name_ja = "Leeds City Council — Leeds_ward",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7275,7 +7275,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5E260308D4", .name = "Leeds City Council — Locality_Working_Areas",
     .name_ja = "Leeds City Council — Locality_Working_Areas",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7299,7 +7299,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DEC53507D4", .name = "Leeds City Council — LSOA_2011_Detailed_with_ward_2018_lookups",
     .name_ja = "Leeds City Council — LSOA_2011_Detailed_with_ward_2018_lookups",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7323,7 +7323,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_24A5E0ED22", .name = "Leeds City Council — OSM_Cycleroutes_lines",
     .name_ja = "Leeds City Council — OSM_Cycleroutes_lines",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7347,7 +7347,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_56615AB860", .name = "Leeds City Council — Priority_Wards_2018",
     .name_ja = "Leeds City Council — Priority_Wards_2018",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7371,7 +7371,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B764855686", .name = "Leeds City Council — Polling_Districts",
     .name_ja = "Leeds City Council — Polling_Districts",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7395,7 +7395,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0AD9B43437", .name = "Leeds City Council — Ward_Boundaries",
     .name_ja = "Leeds City Council — Ward_Boundaries",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7419,7 +7419,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B724F70EB0", .name = "Leeds City Council — Ward_NINO_Points_Sept24",
     .name_ja = "Leeds City Council — Ward_NINO_Points_Sept24",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7443,7 +7443,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_045FCC8CD6", .name = "Leeds City Council — WGS_1984_PublicHealth_CCGs_WardBased",
     .name_ja = "Leeds City Council — WGS_1984_PublicHealth_CCGs_WardBased",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7466,7 +7466,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_535E914FCC", .name = "Leeds City Council — OSM_Cycleroutes_points",
     .name_ja = "Leeds City Council — OSM_Cycleroutes_points",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7489,7 +7489,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2650219292", .name = "Leeds City Council — Wards_2024_WEST_YORKSHIRE",
     .name_ja = "Leeds City Council — Wards_2024_WEST_YORKSHIRE",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7513,7 +7513,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_09FE3FBF93", .name = "Leeds City Council — Ward_NINO_Sept2324",
     .name_ja = "Leeds City Council — Ward_NINO_Sept2324",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7537,7 +7537,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2B4EE82A75", .name = "Leeds City Council — Wards_Changes_2018",
     .name_ja = "Leeds City Council — Wards_Changes_2018",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7561,7 +7561,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F6F118888F", .name = "Leeds City Council — Wards_May_2024_WY_BFC",
     .name_ja = "Leeds City Council — Wards_May_2024_WY_BFC",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7584,7 +7584,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2A62C280A6", .name = "Leeds City Council — Wards_Erase",
     .name_ja = "Leeds City Council — Wards_Erase",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7607,7 +7607,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_89404183B3", .name = "Leeds City Council — Wards_new",
     .name_ja = "Leeds City Council — Wards_new",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7630,7 +7630,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BB75CA2BD6", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — APP_Espacios_Icas",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — APP_Espacios_Icas",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7654,7 +7654,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_ECBCF20A3D", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — Accesibilidad_Tramos_vias",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Accesibilidad_Tramos_vias",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7679,7 +7679,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_3B2DCDB310", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — "
       "Accesibilidad_Tramos_vias_3",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Accesibilidad_Tramos_vias_3",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7704,7 +7704,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_6250C714D4", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — "
       "Accesibilidad_Tramos_vias_4_1",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Accesibilidad_Tramos_vias_4_1",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7729,7 +7729,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_84EFB2D8D1", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — "
       "Accesibilidad_Tramos_vias_5",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Accesibilidad_Tramos_vias_5",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7754,7 +7754,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_AD24105E2A", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — "
       "Accesibilidad_Tramos_vias_6",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Accesibilidad_Tramos_vias_6",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7779,7 +7779,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_FD24D683F8", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — "
       "Accesibilidad_Tramos_vias_4_2",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Accesibilidad_Tramos_vias_4_2",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7804,7 +7804,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_873702B048", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — "
       "Accesibilidad_comercio_y_hosteleria",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Accesibilidad_comercio_y_hosteleria",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7828,7 +7828,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3E5CD94639", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — Aparcabicicletas",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Aparcabicicletas",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7853,7 +7853,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_56C7D14BCD", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — "
       "Ayto_Educacion_Colegios_DATOS",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Ayto_Educacion_Colegios_DATOS",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_education", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7877,7 +7877,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_26B9310080", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — Anexo_Inversiones_2017",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Anexo_Inversiones_2017",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7901,7 +7901,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_87C2D3D978", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — Accesibilidad_obstaculos1",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Accesibilidad_obstaculos1",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7925,7 +7925,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D398B5EC17", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — Barrios_de_Sevilla",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Barrios_de_Sevilla",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7949,7 +7949,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F99363997C", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — Ayuntamiento",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Ayuntamiento",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7973,7 +7973,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_031430B4CD", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — _Parcelario GU 2004",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — _Parcelario GU 2004",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7998,7 +7998,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_E4AC7E582B", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — "
       "Accesibilidad_Tramos_vias_8",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Accesibilidad_Tramos_vias_8",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8022,7 +8022,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6762F440CF", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — Conservacion_Patrimonio",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Conservacion_Patrimonio",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8046,7 +8046,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7966DB0D69", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — Cuadricula_A3",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Cuadricula_A3",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8070,7 +8070,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_13BD40C81B", .name = "IDE.SEVILLA Ayuntamiento de Sevilla — "
       "Contenedores_de_papel_con_carga_lateral",
     .name_ja = "IDE.SEVILLA Ayuntamiento de Sevilla — Contenedores_de_papel_con_carga_lateral",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8095,7 +8095,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FB56057F2D", .name = "Conseil départemental de l'Aisne — 12T_2016_2017",
     .name_ja = "Conseil départemental de l'Aisne — 12T_2016_2017",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8118,7 +8118,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_838D665C0D", .name = "Conseil départemental de l'Aisne — Salage_2024_2025",
     .name_ja = "Conseil départemental de l'Aisne — Salage_2024_2025",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8142,7 +8142,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8BA3209F4B", .name = "Conseil départemental de l'Aisne — 7_5T_2016_2017",
     .name_ja = "Conseil départemental de l'Aisne — 7_5T_2016_2017",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8165,7 +8165,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_635B860425", .name = "Conseil départemental de l'Aisne — Evènements routiers",
     .name_ja = "Conseil départemental de l'Aisne — Evènements routiers",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8190,7 +8190,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_72FED55284", .name = "Conseil départemental de l'Aisne — FRANCEIRIS_COMMUNE_AISNE",
     .name_ja = "Conseil départemental de l'Aisne — FRANCEIRIS_COMMUNE_AISNE",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8214,7 +8214,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_658B72B3AF", .name = "Conseil départemental de l'Aisne — FRANCEIRIS_COMMUNE_SYNTHESE",
     .name_ja = "Conseil départemental de l'Aisne — FRANCEIRIS_COMMUNE_SYNTHESE",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8238,7 +8238,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F31A42F31A", .name = "Galway County Council — District Court Areas",
     .name_ja = "Galway County Council — District Court Areas",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8262,7 +8262,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B538BD66CF", .name = "Galway County Council — An Cheathru Rua LAP 2015 2021",
     .name_ja = "Galway County Council — An Cheathru Rua LAP 2015 2021",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8286,7 +8286,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6D517A44D4", .name = "Galway County Council — Athenry LAP 2012 to 2022",
     .name_ja = "Galway County Council — Athenry LAP 2012 to 2022",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8310,7 +8310,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6AB6BD4F83", .name = "Galway County Council — Athenry LAP Flood Zone A 2024 2030",
     .name_ja = "Galway County Council — Athenry LAP Flood Zone A 2024 2030",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8334,7 +8334,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_45347B2E60", .name = "Galway County Council — LAP_Athenry_2024_2030",
     .name_ja = "Galway County Council — LAP_Athenry_2024_2030",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8359,7 +8359,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A15FFB52ED", .name = "Galway County Council — Ballinasloe_LAP_2015_2021",
     .name_ja = "Galway County Council — Ballinasloe_LAP_2015_2021",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8383,7 +8383,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DCDAC3793E", .name = "Galway County Council — An Spideal LAP 2015 2021",
     .name_ja = "Galway County Council — An Spideal LAP 2015 2021",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8407,7 +8407,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7440D0172A", .name = "Galway County Council — Baile Chlair LAP 2015 2021",
     .name_ja = "Galway County Council — Baile Chlair LAP 2015 2021",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8431,7 +8431,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_47E7679A2E", .name = "Galway County Council — Townlands Boundaries",
     .name_ja = "Galway County Council — Townlands Boundaries",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8455,7 +8455,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D242D95423", .name = "Galway County Council — An Bearna LAP 2015 2021",
     .name_ja = "Galway County Council — An Bearna LAP 2015 2021",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8479,7 +8479,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_53CD6213D5", .name = "Galway County Council — Ballinasloe LAP 2022 2028",
     .name_ja = "Galway County Council — Ballinasloe LAP 2022 2028",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8503,7 +8503,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5D21567515", .name = "Galway County Council — Ballinasloe LAP Flood Zone B 2022 2028",
     .name_ja = "Galway County Council — Ballinasloe LAP Flood Zone B 2022 2028",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8528,7 +8528,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F00B00BE41", .name = "Galway County Council — Athenry LAP Flood Zone B 2024 2030",
     .name_ja = "Galway County Council — Athenry LAP Flood Zone B 2024 2030",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8552,7 +8552,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CC208C06B0", .name = "Galway County Council — Land Use Zonings",
     .name_ja = "Galway County Council — Land Use Zonings",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8576,7 +8576,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8BD8A613A6", .name = "Galway County Council — DED Boundaries",
     .name_ja = "Galway County Council — DED Boundaries",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8600,7 +8600,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_71906BA680", .name = "Galway County Council — Ballinasloe LAP Flood Zone A 2022 2028",
     .name_ja = "Galway County Council — Ballinasloe LAP Flood Zone A 2022 2028",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8625,7 +8625,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_473223EE46", .name = "Galway County Council — View Points",
     .name_ja = "Galway County Council — View Points",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8650,7 +8650,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_98CE0D52B9", .name = "Galway County Council — GCC_PlanningRegisterHistorical",
     .name_ja = "Galway County Council — GCC_PlanningRegisterHistorical",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8673,7 +8673,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A211666842", .name = "Galway County Council — GCC_Playgrounds",
     .name_ja = "Galway County Council — GCC_Playgrounds",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8698,7 +8698,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6B2413D68C", .name = "Galway County Council — GCC_PlanningRegisterPts_95_15",
     .name_ja = "Galway County Council — GCC_PlanningRegisterPts_95_15",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8723,7 +8723,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0940D27270", .name = "Galway County Council — GCC_GTPS",
     .name_ja = "Galway County Council — GCC_GTPS",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8747,7 +8747,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_89FB830F34", .name = "Galway County Council — GCC_PlanningRegisterPts_16",
     .name_ja = "Galway County Council — GCC_PlanningRegisterPts_16",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8772,7 +8772,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1F8E4949BA", .name = "Galway County Council — GCC_PlanningLAPCurrentZonesCombined",
     .name_ja = "Galway County Council — GCC_PlanningLAPCurrentZonesCombined",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8797,7 +8797,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7A758FA75E", .name = "Galway County Council — Clifden LAP 2018 to 2024",
     .name_ja = "Galway County Council — Clifden LAP 2018 to 2024",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8821,7 +8821,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1B76ACC53E", .name = "Galway County Council — Clar Boundary",
     .name_ja = "Galway County Council — Clar Boundary",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8844,7 +8844,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_081145F5D2", .name = "Galway County Council — View Points Angles",
     .name_ja = "Galway County Council — View Points Angles",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8868,7 +8868,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3BF533F7DD", .name = "Galway County Council — Gaeltacht Areas",
     .name_ja = "Galway County Council — Gaeltacht Areas",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8892,7 +8892,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_46670EBDA0", .name = "Galway County Council — Scenic Routes",
     .name_ja = "Galway County Council — Scenic Routes",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8916,7 +8916,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2390C10CC3", .name = "Galway County Council — Local Authority Administrative Area",
     .name_ja = "Galway County Council — Local Authority Administrative Area",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8940,7 +8940,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_925BFE2137", .name = "Galway County Council — BriarhillIGC Indicative Green Corridor",
     .name_ja = "Galway County Council — BriarhillIGC Indicative Green Corridor",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8964,7 +8964,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_977CB0F3D0", .name = "Galway County Council — County Boundary",
     .name_ja = "Galway County Council — County Boundary",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8987,7 +8987,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0F467628A7", .name = "Galway County Council — Strategic Economic Corridor",
     .name_ja = "Galway County Council — Strategic Economic Corridor",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9011,7 +9011,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0DF0B55ABA", .name = "Galway County Council — Urban Fringe",
     .name_ja = "Galway County Council — Urban Fringe",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9035,7 +9035,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_344DB2693D", .name = "Galway County Council — Architectural Conservation Areas",
     .name_ja = "Galway County Council — Architectural Conservation Areas",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9060,7 +9060,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_795B0DD6E4", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — "
       "BufferedFeatures",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — BufferedFeatures",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9084,7 +9084,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_38F457E357", .name = "Galway County Council — Settlement Boundaries",
     .name_ja = "Galway County Council — Settlement Boundaries",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9109,7 +9109,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_DBFB51E344", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — "
       "BufferedFeatures",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — BufferedFeatures",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9134,7 +9134,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_DD998427C2", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — "
       "BufferedFeatures",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — BufferedFeatures",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9159,7 +9159,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_B7AA34CB0F", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — PROPOSED "
       "POLLING BOUNDARIES",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — PROPOSED POLLING BOUNDARIES",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9184,7 +9184,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_DE762C9851", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — "
       "RCBC_WARDS",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — RCBC_WARDS",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9209,7 +9209,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_225DD1C2E3", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — "
       "RCBC_Ward_Boundaries",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — RCBC_Ward_Boundaries",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9234,7 +9234,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_1BB753DB6F", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — Boundary "
       "of Redcar & Cleveland Local Plan",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — Boundary of Redcar & Cleveland Local Plan",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9260,7 +9260,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_53091607A1", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — LGBCE "
       "2018 WARDS",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — LGBCE 2018 WARDS",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9284,7 +9284,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_62B0524C33", .name = "Cork City Council — Area of High Landscape Value",
     .name_ja = "Cork City Council — Area of High Landscape Value",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9308,7 +9308,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A6C82AC3AE", .name = "Cork City Council — Parks: Existing and Proposed",
     .name_ja = "Cork City Council — Parks: Existing and Proposed",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9333,7 +9333,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_40E09459FE", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — N 4 6km "
       "Special Protection Areas (SPA) Buffer Zone",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — N 4 6km Special Protection Areas (SPA) Buffer Zone",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9359,7 +9359,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_9243DC34D8", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — CURRENT "
       "WARDS",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — CURRENT WARDS",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9383,7 +9383,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_19D7D240B3", .name = "Cork City Council — Landscape Preservation Zones (LPZ) 2022",
     .name_ja = "Cork City Council — Landscape Preservation Zones (LPZ) 2022",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9408,7 +9408,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_CA948FFF55", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — LS 4_ED 6 "
       "South Tees Development Corporation",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — LS 4_ED 6 South Tees Development Corporation",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9433,7 +9433,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0154121901", .name = "Cork City Council — Long Term Strategic Development Lands",
     .name_ja = "Cork City Council — Long Term Strategic Development Lands",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9458,7 +9458,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_06B4A6B21A", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — TA 3 "
       "Extension to Dockside Road",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — TA 3 Extension to Dockside Road",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9483,7 +9483,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B6F6F30BB4", .name = "Cork City Council — Architectural Conservation Areas 2022",
     .name_ja = "Cork City Council — Architectural Conservation Areas 2022",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9509,7 +9509,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_2B2882A54E", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — ED 7 "
       "Cleveland Gate & Morgan Drive Mixed Commercial Development",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — ED 7 Cleveland Gate & Morgan Drive Mixed Commercial Development",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9535,7 +9535,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_3D903BC3A1", .name = "City of Bradford Metropolitan District Council — "
       "Current_bus_stops",
     .name_ja = "City of Bradford Metropolitan District Council — Current_bus_stops",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9560,7 +9560,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_F41C45E554", .name = "City of Bradford Metropolitan District Council — "
       "Ground_Water_Flood_Risk",
     .name_ja = "City of Bradford Metropolitan District Council — Ground_Water_Flood_Risk",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9586,7 +9586,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_41C60887AD", .name = "City of Bradford Metropolitan District Council — "
       "CORPDATA.Electoral_Review_Wards",
     .name_ja = "City of Bradford Metropolitan District Council — CORPDATA.Electoral_Review_Wards",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9612,7 +9612,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_A803E52C1B", .name = "City of Bradford Metropolitan District Council — "
       "Historic_Flood_Incidents",
     .name_ja = "City of Bradford Metropolitan District Council — Historic_Flood_Incidents",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "eu_gis_safety_emergency", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9636,7 +9636,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5709AF5513", .name = "City of Bradford Metropolitan District Council — AADT 10000",
     .name_ja = "City of Bradford Metropolitan District Council — AADT 10000",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9660,7 +9660,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9B2BAF8755", .name = "Cork City Council — Cork City Zoning 2022",
     .name_ja = "Cork City Council — Cork City Zoning 2022",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9686,7 +9686,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_B6FE3CCD92", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — H 3 "
       "Housing Allocations",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — H 3 Housing Allocations",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9711,7 +9711,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_492AFD4CE6", .name = "Conseil départemental du Pas-de-Calais — CER",
     .name_ja = "Conseil départemental du Pas-de-Calais — CER",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9737,7 +9737,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_4EB54A793B", .name = "City of Bradford Metropolitan District Council — AADT "
       "10000_Buffer",
     .name_ja = "City of Bradford Metropolitan District Council — AADT 10000_Buffer",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9761,7 +9761,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D0EC7E3772", .name = "Conseil départemental du Pas-de-Calais — Aire_Covoiturage",
     .name_ja = "Conseil départemental du Pas-de-Calais — Aire_Covoiturage",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9787,7 +9787,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_55C74BBC8B", .name = "Redcar and Cleveland Borough Council - ArcGIS Online — SD 6 "
       "Potentially suitable areas for small scale turbines",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — SD 6 Potentially suitable areas for small scale turbines",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_imagery_basemap", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9812,7 +9812,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D3817FCDBF", .name = "Conseil départemental du Pas-de-Calais — Isochronie_CER_Detail",
     .name_ja = "Conseil départemental du Pas-de-Calais — Isochronie_CER_Detail",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9836,7 +9836,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_763EB9FC89", .name = "City of Bradford Metropolitan District Council — Diffuser Tube",
     .name_ja = "City of Bradford Metropolitan District Council — Diffuser Tube",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9862,7 +9862,7 @@ static const hp_source HP3B60_EU[] = {
       "Potentially suitable areas for medium and small scale solar "
       "development",
     .name_ja = "Redcar and Cleveland Borough Council - ArcGIS Online — SD 6 Potentially suitable areas for medium and small scale solar development",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_imagery_basemap", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9888,7 +9888,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_11B0283E0C", .name = "Conseil départemental du Pas-de-Calais — SRV_Ligne",
     .name_ja = "Conseil départemental du Pas-de-Calais — SRV_Ligne",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9912,7 +9912,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2834D811EF", .name = "City of Bradford Metropolitan District Council — Automatic",
     .name_ja = "City of Bradford Metropolitan District Council — Automatic",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9937,7 +9937,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_A29E6B22F4", .name = "Conseil départemental du Pas-de-Calais — "
       "Isochronie_CER_Detail_Fusion",
     .name_ja = "Conseil départemental du Pas-de-Calais — Isochronie_CER_Detail_Fusion",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9961,7 +9961,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F4B7ADF81F", .name = "City of Bradford Metropolitan District Council — QMAS Boundaries",
     .name_ja = "City of Bradford Metropolitan District Council — QMAS Boundaries",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9985,7 +9985,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B0C89E50DF", .name = "Conseil départemental du Pas-de-Calais — Commune_HDF",
     .name_ja = "Conseil départemental du Pas-de-Calais — Commune_HDF",
-    .category = "transport", .portal = "https://services1.arcgis.com",
+    .category = "transport", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10009,7 +10009,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_747875B4FA", .name = "Conseil départemental du Pas-de-Calais — SRV_Jalonnement",
     .name_ja = "Conseil départemental du Pas-de-Calais — SRV_Jalonnement",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10035,7 +10035,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_5797BBC9B8", .name = "Conseil départemental du Pas-de-Calais — "
       "Isochronie_CER_Detail_resource_plus_proche",
     .name_ja = "Conseil départemental du Pas-de-Calais — Isochronie_CER_Detail_resource_plus_proche",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10059,7 +10059,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_438C67EF9A", .name = "City of Bradford Metropolitan District Council — Clean Air Zone",
     .name_ja = "City of Bradford Metropolitan District Council — Clean Air Zone",
-    .category = "environment", .portal = "https://services1.arcgis.com",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10084,7 +10084,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_CA20D833E1", .name = "Conseil départemental du Pas-de-Calais — "
       "Isochronie_CER_Generaliser_Fusion",
     .name_ja = "Conseil départemental du Pas-de-Calais — Isochronie_CER_Generaliser_Fusion",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10109,7 +10109,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_86E598786C", .name = "City of Bradford Metropolitan District Council — CodePoint "
       "Bradford",
     .name_ja = "City of Bradford Metropolitan District Council — CodePoint Bradford",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10135,7 +10135,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_99581D2EF3", .name = "City of Bradford Metropolitan District Council — Westminster "
       "Const Bradford",
     .name_ja = "City of Bradford Metropolitan District Council — Westminster Const Bradford",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10159,7 +10159,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1F54AEE614", .name = "Gemeinde Nordstemmen — Geh_Radwege",
     .name_ja = "Gemeinde Nordstemmen — Geh_Radwege",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10183,7 +10183,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D072E67669", .name = "Gemeinde Nordstemmen — Straßen-Zustand",
     .name_ja = "Gemeinde Nordstemmen — Straßen-Zustand",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10207,7 +10207,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_53EDD58718", .name = "Gemeinde Nordstemmen — Straßen-Material",
     .name_ja = "Gemeinde Nordstemmen — Straßen-Material",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10231,7 +10231,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D83F599583", .name = "Gemeinde Nordstemmen — Gehweg-Zustand",
     .name_ja = "Gemeinde Nordstemmen — Gehweg-Zustand",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10255,7 +10255,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5E46C7894E", .name = "Gemeinde Nordstemmen — Gehweg-Material",
     .name_ja = "Gemeinde Nordstemmen — Gehweg-Material",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10279,7 +10279,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_61302B962E", .name = "Gemeinde Nordstemmen — Kanaldeckel",
     .name_ja = "Gemeinde Nordstemmen — Kanaldeckel",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10303,7 +10303,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_87FF1C43EE", .name = "Hertfordshire County Council — Hemel",
     .name_ja = "Hertfordshire County Council — Hemel",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10327,7 +10327,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DC7D95588A", .name = "Hertfordshire County Council — WAT4",
     .name_ja = "Hertfordshire County Council — WAT4",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10351,7 +10351,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8051D1E1B9", .name = "Hertfordshire County Council — Buntingford",
     .name_ja = "Hertfordshire County Council — Buntingford",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10374,7 +10374,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_025DCEF58C", .name = "Hertfordshire County Council — WGC2",
     .name_ja = "Hertfordshire County Council — WGC2",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10397,7 +10397,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_507B78EEF0", .name = "Hertfordshire County Council — Hemel2",
     .name_ja = "Hertfordshire County Council — Hemel2",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10420,7 +10420,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_49FF74450C", .name = "Hertfordshire County Council — WAT3",
     .name_ja = "Hertfordshire County Council — WAT3",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10444,7 +10444,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_84B0342D6C", .name = "Hertfordshire County Council — Stevenage_CycleProposal",
     .name_ja = "Hertfordshire County Council — Stevenage_CycleProposal",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10468,7 +10468,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4A3936C3C7", .name = "Hertfordshire County Council — WGC1",
     .name_ja = "Hertfordshire County Council — WGC1",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10492,7 +10492,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_87AE4FD488", .name = "Hertfordshire County Council — Footpath_Improvements",
     .name_ja = "Hertfordshire County Council — Footpath_Improvements",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10517,7 +10517,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0A1F7319ED", .name = "Hertfordshire County Council — IMD19_byWard",
     .name_ja = "Hertfordshire County Council — IMD19_byWard",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10541,7 +10541,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C336245882", .name = "Hertfordshire County Council — STA2",
     .name_ja = "Hertfordshire County Council — STA2",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10565,7 +10565,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6346A2DD05", .name = "Hertfordshire County Council — Bus_Stops",
     .name_ja = "Hertfordshire County Council — Bus_Stops",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10589,7 +10589,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_96A0D70AEB", .name = "Hertfordshire County Council — HAA_Point_Example",
     .name_ja = "Hertfordshire County Council — HAA_Point_Example",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10613,7 +10613,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D811030F4B", .name = "Hertfordshire County Council — NaturalFloodManagement_Hotspots",
     .name_ja = "Hertfordshire County Council — NaturalFloodManagement_Hotspots",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10637,7 +10637,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_586BF8ED53", .name = "Hertfordshire County Council — Education Planning Areas",
     .name_ja = "Hertfordshire County Council — Education Planning Areas",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_education", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10662,7 +10662,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_80930472E0", .name = "Hertfordshire County Council — WAT1",
     .name_ja = "Hertfordshire County Council — WAT1",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10686,7 +10686,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_55E357A6EC", .name = "Hertfordshire County Council — STA1",
     .name_ja = "Hertfordshire County Council — STA1",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10710,7 +10710,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_07DD7E69E4", .name = "Hertfordshire County Council — Traffic_Calming",
     .name_ja = "Hertfordshire County Council — Traffic_Calming",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10735,7 +10735,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A93CB0683C", .name = "Hertfordshire County Council — HHPF Health Action Areas",
     .name_ja = "Hertfordshire County Council — HHPF Health Action Areas",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10759,7 +10759,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_79671B08FB", .name = "Hertfordshire County Council — WAT2",
     .name_ja = "Hertfordshire County Council — WAT2",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10784,7 +10784,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_A9EB46DB33", .name = "Hertfordshire County Council — Secondary Education Planning "
       "Areas",
     .name_ja = "Hertfordshire County Council — Secondary Education Planning Areas",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_education", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10808,7 +10808,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_ABE1CCF987", .name = "Kerry County Council — Flood_Zone_A_(Material_Alterations)",
     .name_ja = "Kerry County Council — Flood_Zone_A_(Material_Alterations)",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10831,7 +10831,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BB51C44894", .name = "Kerry County Council — Preserve_Walls",
     .name_ja = "Kerry County Council — Preserve_Walls",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10855,7 +10855,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EC5C61BF6D", .name = "Kerry County Council — Flood_Zone_B_(Material_Alterations)",
     .name_ja = "Kerry County Council — Flood_Zone_B_(Material_Alterations)",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10878,7 +10878,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_907E51D9A0", .name = "Hertfordshire County Council — Segregated_Cycle_Way",
     .name_ja = "Hertfordshire County Council — Segregated_Cycle_Way",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10903,7 +10903,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3717EC5029", .name = "Kerry County Council — Points",
     .name_ja = "Kerry County Council — Points",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10926,7 +10926,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9F8F3A6F3E", .name = "Hertfordshire County Council — District Wards",
     .name_ja = "Hertfordshire County Council — District Wards",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10950,7 +10950,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_048CD17162", .name = "Kerry County Council — Protected Structures",
     .name_ja = "Kerry County Council — Protected Structures",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10974,7 +10974,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FA7F8FBD6F", .name = "Hertfordshire County Council — Shared_Use_Mixed_Traffic",
     .name_ja = "Hertfordshire County Council — Shared_Use_Mixed_Traffic",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10999,7 +10999,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2B7ADEE33A", .name = "Hertfordshire County Council — Service Settlement Areas",
     .name_ja = "Hertfordshire County Council — Service Settlement Areas",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11023,7 +11023,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_90B9597843", .name = "Kerry County Council — Architectural Conservation Areas (ACA)",
     .name_ja = "Kerry County Council — Architectural Conservation Areas (ACA)",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11047,7 +11047,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2B7C705A5A", .name = "Kerry County Council — Var4_ListowelWalkways_13042026",
     .name_ja = "Kerry County Council — Var4_ListowelWalkways_13042026",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11071,7 +11071,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_25D5A3F16F", .name = "Hertfordshire County Council — Nickey_Line_Improvements",
     .name_ja = "Hertfordshire County Council — Nickey_Line_Improvements",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11095,7 +11095,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_25B174A2F0", .name = "Hertfordshire County Council — LGR - 4 Unitaries",
     .name_ja = "Hertfordshire County Council — LGR - 4 Unitaries",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11119,7 +11119,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A229F1A01F", .name = "Kerry County Council — Preserve Stone Walls/Fences",
     .name_ja = "Kerry County Council — Preserve Stone Walls/Fences",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11143,7 +11143,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AB0FE16CA9", .name = "Kerry County Council — CFRAM_FloodZone_A",
     .name_ja = "Kerry County Council — CFRAM_FloodZone_A",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11167,7 +11167,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_08DEDC331A", .name = "Hertfordshire County Council — Green_Loop",
     .name_ja = "Hertfordshire County Council — Green_Loop",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11191,7 +11191,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_272D8EA32E", .name = "Kerry County Council — NIFM ext fc 1% PD",
     .name_ja = "Kerry County Council — NIFM ext fc 1% PD",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11215,7 +11215,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3E66C034E0", .name = "Kerry County Council — CFRAM_FloodZone_B",
     .name_ja = "Kerry County Council — CFRAM_FloodZone_B",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11239,7 +11239,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E3906BCDFE", .name = "Kerry County Council — NIFM ext fc 0.1% PD",
     .name_ja = "Kerry County Council — NIFM ext fc 0.1% PD",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11263,7 +11263,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_285CE58AF4", .name = "Kerry County Council — NIFM 1% PD",
     .name_ja = "Kerry County Council — NIFM 1% PD",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11288,7 +11288,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_18E27EFAC2", .name = "Conseil départemental du Loiret — Cadastre Napoléonien - "
       "Obstacles écoulement",
     .name_ja = "Conseil départemental du Loiret — Cadastre Napoléonien - Obstacles écoulement",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11313,7 +11313,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_DCD8BCD305", .name = "Conseil départemental du Loiret — Cadastre Napoléonien - "
       "Détourage des feuilles",
     .name_ja = "Conseil départemental du Loiret — Cadastre Napoléonien - Détourage des feuilles",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11338,7 +11338,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7DDBF7FA8A", .name = "Conseil départemental du Loiret — DDT_ZONE_ALEA_PPRI_LOIRE",
     .name_ja = "Conseil départemental du Loiret — DDT_ZONE_ALEA_PPRI_LOIRE",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11363,7 +11363,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_0B29A6CDC6", .name = "Conseil départemental du Loiret — Cadastre Napoléonien - "
       "Toponymes",
     .name_ja = "Conseil départemental du Loiret — Cadastre Napoléonien - Toponymes",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_imagery_basemap", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11387,7 +11387,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0251663DB8", .name = "Conseil départemental du Loiret — DDT_ZONE_ALEA_PPRI_LOING",
     .name_ja = "Conseil départemental du Loiret — DDT_ZONE_ALEA_PPRI_LOING",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11411,7 +11411,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3F93E36801", .name = "Kerry County Council — NIFM 0.1% PD",
     .name_ja = "Kerry County Council — NIFM 0.1% PD",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11435,7 +11435,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5F1E305FD7", .name = "Conseil départemental du Loiret — DDT_PERIMETRE_PPRIS_CD45",
     .name_ja = "Conseil départemental du Loiret — DDT_PERIMETRE_PPRIS_CD45",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11459,7 +11459,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D743F0F835", .name = "Kerry County Council — NCFHM ext cc 0.5% PD",
     .name_ja = "Kerry County Council — NCFHM ext cc 0.5% PD",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11483,7 +11483,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7B957EB80B", .name = "Conseil départemental du Loiret — ETABLISSEMENTS_PA_PH",
     .name_ja = "Conseil départemental du Loiret — ETABLISSEMENTS_PA_PH",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11508,7 +11508,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_A114480BDF", .name = "Conseil départemental du Loiret — Cadastre Napoléonien - Cours "
       "d'eau",
     .name_ja = "Conseil départemental du Loiret — Cadastre Napoléonien - Cours d'eau",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11533,7 +11533,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5D2753AC11", .name = "Kerry County Council — NCFHM ext cc 0.1% PD",
     .name_ja = "Kerry County Council — NCFHM ext cc 0.1% PD",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11557,7 +11557,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4A8A280C22", .name = "Kerry County Council — Var3_ncfhm_ext_c_c_0200",
     .name_ja = "Kerry County Council — Var3_ncfhm_ext_c_c_0200",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11582,7 +11582,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_0C2CB9E417", .name = "Conseil départemental du Loiret — "
       "FORET_BOIS_CLASSES_RISQUE_INCENDIE",
     .name_ja = "Conseil départemental du Loiret — FORET_BOIS_CLASSES_RISQUE_INCENDIE",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_safety_emergency", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11606,7 +11606,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5F78C679C9", .name = "Conseil départemental du Loiret — INSTALLATION_INDUSTRIELLE_ICPE",
     .name_ja = "Conseil départemental du Loiret — INSTALLATION_INDUSTRIELLE_ICPE",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11631,7 +11631,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_B8CE91CCDC", .name = "Conseil départemental du Loiret — Cadastre Napoléonien - Plan "
       "d'eau",
     .name_ja = "Conseil départemental du Loiret — Cadastre Napoléonien - Plan d'eau",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11655,7 +11655,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6AE7A5AE8E", .name = "Conseil départemental du Loiret — NUC_CENTRALE",
     .name_ja = "Conseil départemental du Loiret — NUC_CENTRALE",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11680,7 +11680,7 @@ static const hp_source HP3B60_EU[] = {
       "politique de la ville (QPV) classés en zone d'intervention "
       "prioritaire (50 000€)",
     .name_ja = "Conseil départemental du Loiret — Quartiers prioritaires de la politique de la ville (QPV) classés en zone d'intervention prioritaire (50 000€)",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11705,7 +11705,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FD817F3D8B", .name = "Kerry County Council — Flood Zone A",
     .name_ja = "Kerry County Council — Flood Zone A",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11729,7 +11729,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_31FC6964C9", .name = "Conseil départemental du Loiret — ZIOLD_DEBROUSSAILLEMENT",
     .name_ja = "Conseil départemental du Loiret — ZIOLD_DEBROUSSAILLEMENT",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11753,7 +11753,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0F707299D3", .name = "Conseil départemental du Loiret — TMD_RESEAU_ROUTIER",
     .name_ja = "Conseil départemental du Loiret — TMD_RESEAU_ROUTIER",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11778,7 +11778,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_03111D45B0", .name = "Conseil départemental du Loiret — "
       "SUIVI_SUB_PolMOB_SIG_v20241001_WGS84",
     .name_ja = "Conseil départemental du Loiret — SUIVI_SUB_PolMOB_SIG_v20241001_WGS84",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11805,7 +11805,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_5C6ED27B06", .name = "Conseil départemental du Loiret — Chemins inscrits au PDIPR en "
       "2017",
     .name_ja = "Conseil départemental du Loiret — Chemins inscrits au PDIPR en 2017",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11829,7 +11829,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_367D33AFAA", .name = "Kerry County Council — Flood Zone B",
     .name_ja = "Kerry County Council — Flood Zone B",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11853,7 +11853,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2B69640B0C", .name = "Conseil départemental du Loiret — Zonages médecins",
     .name_ja = "Conseil départemental du Loiret — Zonages médecins",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11877,7 +11877,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E377E54DC8", .name = "Conseil départemental du Loiret — TMD_RESEAUX_ZONE_SURETE_500M",
     .name_ja = "Conseil départemental du Loiret — TMD_RESEAUX_ZONE_SURETE_500M",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11901,7 +11901,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_54E58107AC", .name = "Conseil départemental du Loiret — NUC_ZONE_SURETE_2KM",
     .name_ja = "Conseil départemental du Loiret — NUC_ZONE_SURETE_2KM",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11925,7 +11925,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2CC2D8C4FE", .name = "Conseil départemental du Loiret — Itinéraires de randonnées 2010",
     .name_ja = "Conseil départemental du Loiret — Itinéraires de randonnées 2010",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11949,7 +11949,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A266096B68", .name = "Conseil départemental du Loiret — ZONAGES_ARS_FUSION",
     .name_ja = "Conseil départemental du Loiret — ZONAGES_ARS_FUSION",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11973,7 +11973,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0F2B23DEDF", .name = "Conseil départemental du Loiret — Kinésithérapeutes",
     .name_ja = "Conseil départemental du Loiret — Kinésithérapeutes",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11997,7 +11997,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_420653E542", .name = "Conseil départemental du Loiret — Cantons_detailles",
     .name_ja = "Conseil départemental du Loiret — Cantons_detailles",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12026,7 +12026,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_37B33D9C96", .name = "Conseil départemental du Loiret — NUC_ZONE_SURETE_5KM",
     .name_ja = "Conseil départemental du Loiret — NUC_ZONE_SURETE_5KM",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12050,7 +12050,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F5E425FFF8", .name = "Conseil départemental du Loiret — PDIPR_CHEMINS_RURAUX",
     .name_ja = "Conseil départemental du Loiret — PDIPR_CHEMINS_RURAUX",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12074,7 +12074,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0D7CED53F5", .name = "Conseil départemental du Loiret — Dentistes",
     .name_ja = "Conseil départemental du Loiret — Dentistes",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12098,7 +12098,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1086CAA1E2", .name = "Conseil départemental du Loiret — Département",
     .name_ja = "Conseil départemental du Loiret — Département",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12122,7 +12122,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_77F882FADD", .name = "Conseil départemental du Loiret — NUC_ZONE_SURETE_10KM",
     .name_ja = "Conseil départemental du Loiret — NUC_ZONE_SURETE_10KM",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12146,7 +12146,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_543EE0059C", .name = "Conseil départemental du Loiret — Département",
     .name_ja = "Conseil départemental du Loiret — Département",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12170,7 +12170,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D04E582CF7", .name = "Conseil départemental du Loiret — Cantons",
     .name_ja = "Conseil départemental du Loiret — Cantons",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12195,7 +12195,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C47BDF4083", .name = "Conseil départemental du Loiret — Sage-femmes",
     .name_ja = "Conseil départemental du Loiret — Sage-femmes",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12219,7 +12219,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FD033D34E9", .name = "Conseil départemental du Loiret — Cantons",
     .name_ja = "Conseil départemental du Loiret — Cantons",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12243,7 +12243,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A158D221C2", .name = "Conseil départemental du Loiret — NUC_ZONE_SURETE_20KM",
     .name_ja = "Conseil départemental du Loiret — NUC_ZONE_SURETE_20KM",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12267,7 +12267,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8EE2BE05E3", .name = "Conseil départemental du Loiret — Orthophonistes",
     .name_ja = "Conseil départemental du Loiret — Orthophonistes",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_imagery_basemap", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12291,7 +12291,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_50635CA2E6", .name = "Conseil départemental du Loiret — Intercommunalités",
     .name_ja = "Conseil départemental du Loiret — Intercommunalités",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12316,7 +12316,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E274165229", .name = "Conseil départemental du Loiret — Intercommunalités",
     .name_ja = "Conseil départemental du Loiret — Intercommunalités",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12340,7 +12340,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_69CF1BF818", .name = "Conseil départemental du Loiret — NUC_ZONE_SURETE_30KM",
     .name_ja = "Conseil départemental du Loiret — NUC_ZONE_SURETE_30KM",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12364,7 +12364,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FB6C4CDFA7", .name = "Northumberland County Council — Article 4 Direction Area",
     .name_ja = "Northumberland County Council — Article 4 Direction Area",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12389,7 +12389,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AC45A4CC0D", .name = "Conseil départemental du Loiret — Infimiers",
     .name_ja = "Conseil départemental du Loiret — Infimiers",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12413,7 +12413,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_43D08A6AEA", .name = "Conseil départemental du Loiret — Communes",
     .name_ja = "Conseil départemental du Loiret — Communes",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12437,7 +12437,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7CAD296E12", .name = "Conseil départemental du Loiret — Communes",
     .name_ja = "Conseil départemental du Loiret — Communes",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12461,7 +12461,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6025A95820", .name = "Northumberland County Council — NorthumberlandCountyBoundary",
     .name_ja = "Northumberland County Council — NorthumberlandCountyBoundary",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12485,7 +12485,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_379BE6F56B", .name = "Conseil départemental du Loiret — NUC_ZONE_SURETE_40KM",
     .name_ja = "Conseil départemental du Loiret — NUC_ZONE_SURETE_40KM",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12509,7 +12509,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E1F47D6D4A", .name = "Northumberland County Council — Core_Strategy_Delivery_Areas",
     .name_ja = "Northumberland County Council — Core_Strategy_Delivery_Areas",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12533,7 +12533,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4B20A386E5", .name = "Northumberland County Council — Voting Jurisdictions",
     .name_ja = "Northumberland County Council — Voting Jurisdictions",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12558,7 +12558,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2C55331CB5", .name = "Northumberland County Council — Most Votes Received",
     .name_ja = "Northumberland County Council — Most Votes Received",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12583,7 +12583,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FBC58BAAE0", .name = "Conseil départemental du Loiret — IPA",
     .name_ja = "Conseil départemental du Loiret — IPA",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12607,7 +12607,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E650D26027", .name = "Northumberland County Council — ElectoralDivisionGeobalancedBig",
     .name_ja = "Northumberland County Council — ElectoralDivisionGeobalancedBig",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12632,7 +12632,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_9BA6B5A91A", .name = "Northumberland County Council — "
       "ElectoralDivisionGeobalancedBigSeabuffered",
     .name_ja = "Northumberland County Council — ElectoralDivisionGeobalancedBigSeabuffered",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12656,7 +12656,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AB732F8701", .name = "Northumberland County Council — ElectoralDivisions",
     .name_ja = "Northumberland County Council — ElectoralDivisions",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12681,7 +12681,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_9DBF0107F3", .name = "Northumberland County Council — "
       "ElectoralDivisionGeobalancedSmall",
     .name_ja = "Northumberland County Council — ElectoralDivisionGeobalancedSmall",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12705,7 +12705,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4C39B7F852", .name = "Northumberland County Council — ElectoralDivisionsSeabuffered",
     .name_ja = "Northumberland County Council — ElectoralDivisionsSeabuffered",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12730,7 +12730,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_13D6F28780", .name = "Northumberland County Council — "
       "ElectoralDivisionGeobalancedSmallSeabuffered",
     .name_ja = "Northumberland County Council — ElectoralDivisionGeobalancedSmallSeabuffered",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12754,7 +12754,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D6955F4885", .name = "Northumberland County Council — Flood Warning Areas",
     .name_ja = "Northumberland County Council — Flood Warning Areas",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_safety_emergency", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12778,7 +12778,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_39952FDDF3", .name = "Northumberland County Council — Flood_Zone_3",
     .name_ja = "Northumberland County Council — Flood_Zone_3",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12802,7 +12802,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F730346C07", .name = "Northumberland County Council — Flood_Zone_2",
     .name_ja = "Northumberland County Council — Flood_Zone_2",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12826,7 +12826,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AC0F9200F7", .name = "Northumberland County Council — Flood_Zone_1",
     .name_ja = "Northumberland County Council — Flood_Zone_1",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12850,7 +12850,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_13B6AFE224", .name = "Northumberland County Council — IDOX Planning Apps",
     .name_ja = "Northumberland County Council — IDOX Planning Apps",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12875,7 +12875,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_819081199E", .name = "Conseil départemental du Loiret — Pédicures/podologues",
     .name_ja = "Conseil départemental du Loiret — Pédicures/podologues",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12900,7 +12900,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_E12F18B2F3", .name = "Northumberland County Council — National Grid Planning "
       "Consultation Buffer",
     .name_ja = "Northumberland County Council — National Grid Planning Consultation Buffer",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_imagery_basemap", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12925,7 +12925,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_C22EF3EF0E", .name = "Northumberland County Council — LGBCE Final Parish Wards "
       "Recommendation",
     .name_ja = "Northumberland County Council — LGBCE Final Parish Wards Recommendation",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12950,7 +12950,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A93BC7161C", .name = "Northumberland County Council — NCC Neighbourhood Plans",
     .name_ja = "Northumberland County Council — NCC Neighbourhood Plans",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12974,7 +12974,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C9CF36ED2D", .name = "Northumberland County Council — DevelopmentPlanPolygon",
     .name_ja = "Northumberland County Council — DevelopmentPlanPolygon",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13000,7 +13000,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3E5B17C6DD", .name = "Conseil départemental du Loiret — Orthoptistes",
     .name_ja = "Conseil départemental du Loiret — Orthoptistes",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_imagery_basemap", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13024,7 +13024,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D36CE43A15", .name = "Landkreis Schwandorf — Ueberschwemmungsgebiete",
     .name_ja = "Landkreis Schwandorf — Ueberschwemmungsgebiete",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13048,7 +13048,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_756DFC7855", .name = "Landkreis Schwandorf — Bauleitpläne",
     .name_ja = "Landkreis Schwandorf — Bauleitpläne",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13072,7 +13072,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A2E84398A7", .name = "Landkreis Schwandorf — Historische Ueberschwemmungsgebiete",
     .name_ja = "Landkreis Schwandorf — Historische Ueberschwemmungsgebiete",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13096,7 +13096,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4FB8728028", .name = "Landkreis Schwandorf — Wasserschutzgebiete",
     .name_ja = "Landkreis Schwandorf — Wasserschutzgebiete",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13121,7 +13121,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C2AED0F7EE", .name = "County Donegal Maps — Buildings Data URBAN Level",
     .name_ja = "County Donegal Maps — Buildings Data URBAN Level",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13145,7 +13145,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C344F2F4F4", .name = "County Donegal Maps — AcceptableForAugmentation",
     .name_ja = "County Donegal Maps — AcceptableForAugmentation",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13169,7 +13169,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_288CB3942F", .name = "County Donegal Maps — Smokey_Coal_Ban_Area_Letterkenny",
     .name_ja = "County Donegal Maps — Smokey_Coal_Ban_Area_Letterkenny",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13192,7 +13192,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1B4582B562", .name = "County Donegal Maps — Buildings_Data_Rural_Level",
     .name_ja = "County Donegal Maps — Buildings_Data_Rural_Level",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13216,7 +13216,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C7102E502F", .name = "County Donegal Maps — NotAcceptable",
     .name_ja = "County Donegal Maps — NotAcceptable",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13240,7 +13240,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_449BA7495B", .name = "County Donegal Maps — Applications since 2010",
     .name_ja = "County Donegal Maps — Applications since 2010",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13265,7 +13265,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F841AB8AEE", .name = "County Donegal Maps — Donegal_Lden_Contours",
     .name_ja = "County Donegal Maps — Donegal_Lden_Contours",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13289,7 +13289,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0EAB574470", .name = "County Donegal Maps — Playgrounds_MUGAs",
     .name_ja = "County Donegal Maps — Playgrounds_MUGAs",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13313,7 +13313,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AC1CCCC2E6", .name = "County Donegal Maps — Donegal Cycle Route",
     .name_ja = "County Donegal Maps — Donegal Cycle Route",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13337,7 +13337,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DF7521D46E", .name = "County Donegal Maps — Planning_applications_renewable_energy",
     .name_ja = "County Donegal Maps — Planning_applications_renewable_energy",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13362,7 +13362,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2541DCA8DE", .name = "County Donegal Maps — hydrants",
     .name_ja = "County Donegal Maps — hydrants",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13385,7 +13385,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_96232E57F1", .name = "County Donegal Maps — WinterGrittingRoutes20152016",
     .name_ja = "County Donegal Maps — WinterGrittingRoutes20152016",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13409,7 +13409,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_25235C977D", .name = "County Donegal Maps — Buildings Data LGD Level",
     .name_ja = "County Donegal Maps — Buildings Data LGD Level",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13433,7 +13433,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_629FED3BFD", .name = "County Donegal Maps — OpenToConsideration",
     .name_ja = "County Donegal Maps — OpenToConsideration",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13457,7 +13457,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_28933848CB", .name = "County Donegal Maps — Applications 2005To2009",
     .name_ja = "County Donegal Maps — Applications 2005To2009",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13482,7 +13482,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8471A13DA1", .name = "County Donegal Maps — Donegal_Lnight_Contours",
     .name_ja = "County Donegal Maps — Donegal_Lnight_Contours",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13506,7 +13506,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BCBD030591", .name = "County Donegal Maps — RuralAreaTypes",
     .name_ja = "County Donegal Maps — RuralAreaTypes",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13530,7 +13530,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C14E1BDA10", .name = "County Donegal Maps — Buildings Data ED WARD Level",
     .name_ja = "County Donegal Maps — Buildings Data ED WARD Level",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13554,7 +13554,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5197D9F912", .name = "County Donegal Maps — Applications 2000To2004",
     .name_ja = "County Donegal Maps — Applications 2000To2004",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13579,7 +13579,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_89A37E475A", .name = "County Donegal Maps — ScenicAmenity",
     .name_ja = "County Donegal Maps — ScenicAmenity",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13603,7 +13603,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_58F47C61C3", .name = "County Donegal Maps — Applications pre 2000",
     .name_ja = "County Donegal Maps — Applications pre 2000",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13628,7 +13628,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6A135029D6", .name = "Höörs kommun — Lekplatser",
     .name_ja = "Höörs kommun — Lekplatser",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13652,7 +13652,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E51D5A496C", .name = "Bristol City Council — AnnualMeanNO2",
     .name_ja = "Bristol City Council — AnnualMeanNO2",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13676,7 +13676,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2B59A6DA35", .name = "Bristol City Council — Bristol_Wards_Draft_Proposal",
     .name_ja = "Bristol City Council — Bristol_Wards_Draft_Proposal",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13700,7 +13700,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_A661F4D582", .name = "Bristol City Council — "
       "ASB_incidents_reported_to_the_Police_in_Bristol_(by_Ward)",
     .name_ja = "Bristol City Council — ASB_incidents_reported_to_the_Police_in_Bristol_(by_Ward)",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_safety_emergency", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13726,7 +13726,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_92F8E48A3D", .name = "Bristol City Council — BristolWards",
     .name_ja = "Bristol City Council — BristolWards",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13750,7 +13750,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4945934E6C", .name = "Bristol City Council — AnnualMeanNO2pre2025",
     .name_ja = "Bristol City Council — AnnualMeanNO2pre2025",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13776,7 +13776,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_85C6131F8C", .name = "Bristol City Council — Trees",
     .name_ja = "Bristol City Council — Trees",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13801,7 +13801,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_2E0E0CFA79", .name = "Bristol City Council — "
       "Children_in_Social_Care_within_Bristol_(by_Ward)",
     .name_ja = "Bristol City Council — Children_in_Social_Care_within_Bristol_(by_Ward)",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_health_social", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13826,7 +13826,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_80ABA30EAB", .name = "Bristol City Council — 2028 Wards Draft Recommendations",
     .name_ja = "Bristol City Council — 2028 Wards Draft Recommendations",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13850,7 +13850,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5024E20B05", .name = "Bristol City Council — Clean air zone",
     .name_ja = "Bristol City Council — Clean air zone",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13874,7 +13874,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_22E1CAC58E", .name = "Bristol City Council — country_of_birth_by_ward",
     .name_ja = "Bristol City Council — country_of_birth_by_ward",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13899,7 +13899,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BB8FDEB981", .name = "Bristol City Council — car_availability_in_bristol_by_ward",
     .name_ja = "Bristol City Council — car_availability_in_bristol_by_ward",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13925,7 +13925,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A8AFE6BFFA", .name = "Bristol City Council — Woodlands",
     .name_ja = "Bristol City Council — Woodlands",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13950,7 +13950,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C4F6BC5A4E", .name = "Bristol City Council — Disability_(by_Ward)",
     .name_ja = "Bristol City Council — Disability_(by_Ward)",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_health_social", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13975,7 +13975,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_A8C174368F", .name = "Bristol City Council — "
       "Crime_(recorded_by_Police)_by_selected_offence_groups_in_Bristol_(by_Ward)",
     .name_ja = "Bristol City Council — Crime_(recorded_by_Police)_by_selected_offence_groups_in_Bristol_(by_Ward)",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_safety_emergency", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14002,7 +14002,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_51DDBC37A7", .name = "Bristol City Council — "
       "education_and_health_care_plans_in_bristol_by_ward",
     .name_ja = "Bristol City Council — education_and_health_care_plans_in_bristol_by_ward",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_health_social", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14029,7 +14029,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C06571FC63", .name = "Bristol City Council — ethnicity",
     .name_ja = "Bristol City Council — ethnicity",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14053,7 +14053,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F76F95A0AC", .name = "Bristol City Council — Parks_Events_Venues_attributes",
     .name_ja = "Bristol City Council — Parks_Events_Venues_attributes",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14079,7 +14079,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_B32567DC83", .name = "Bristol City Council — "
       "household_size_and_bedrooms_2011_census_by_2016_ward",
     .name_ja = "Bristol City Council — household_size_and_bedrooms_2011_census_by_2016_ward",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14105,7 +14105,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_35522C3D5C", .name = "Bristol City Council — Parks_Events_Access",
     .name_ja = "Bristol City Council — Parks_Events_Access",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14129,7 +14129,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EC05AF2904", .name = "Bristol City Council — Deer Park Pasture",
     .name_ja = "Bristol City Council — Deer Park Pasture",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14153,7 +14153,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8ADC0D1412", .name = "Bristol City Council — Parks_Events_Sites_final",
     .name_ja = "Bristol City Council — Parks_Events_Sites_final",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14177,7 +14177,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EA978A5C54", .name = "Bristol City Council — Parks_Events_Hazards",
     .name_ja = "Bristol City Council — Parks_Events_Hazards",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14201,7 +14201,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5560945AD2", .name = "Bristol City Council — Off-Road Cycle Trail Surface",
     .name_ja = "Bristol City Council — Off-Road Cycle Trail Surface",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14226,7 +14226,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B5E6AE90A2", .name = "Bristol City Council — Parks_Events_Venues",
     .name_ja = "Bristol City Council — Parks_Events_Venues",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14250,7 +14250,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FFD2BEA943", .name = "Bristol City Council — Park User Facilities",
     .name_ja = "Bristol City Council — Park User Facilities",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14274,7 +14274,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AF0F1F2798", .name = "Bristol City Council — Parks_Events_Sites",
     .name_ja = "Bristol City Council — Parks_Events_Sites",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14298,7 +14298,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9060C6FAD9", .name = "Bristol City Council — Park Furniture",
     .name_ja = "Bristol City Council — Park Furniture",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14322,7 +14322,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DC22C4A360", .name = "Bristol City Council — Childrens Play Equipment",
     .name_ja = "Bristol City Council — Childrens Play Equipment",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14346,7 +14346,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E75F60DA63", .name = "Bristol City Council — Contract Features",
     .name_ja = "Bristol City Council — Contract Features",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14371,7 +14371,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_55A379AB25", .name = "Renfrewshire Council — Air Quality Monitoring Areas Revoked",
     .name_ja = "Renfrewshire Council — Air Quality Monitoring Areas Revoked",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14395,7 +14395,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_50CCADF3D7", .name = "Renfrewshire Council — Council Boundary - Renfrewshire",
     .name_ja = "Renfrewshire Council — Council Boundary - Renfrewshire",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14420,7 +14420,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_632FA55638", .name = "Renfrewshire Council — Tenant Association Areas",
     .name_ja = "Renfrewshire Council — Tenant Association Areas",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14444,7 +14444,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C6E9E565D3", .name = "Renfrewshire Council — Renfrewshire - Council Boundary",
     .name_ja = "Renfrewshire Council — Renfrewshire - Council Boundary",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14469,7 +14469,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FCC8758C38", .name = "Renfrewshire Council — CAG_Playground",
     .name_ja = "Renfrewshire Council — CAG_Playground",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14492,7 +14492,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_89F53F7CD9", .name = "Renfrewshire Council — Land_Capability_for_Forestry_",
     .name_ja = "Renfrewshire Council — Land_Capability_for_Forestry_",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14516,7 +14516,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8B66938D55", .name = "Renfrewshire Council — Wards_2002_til_2007",
     .name_ja = "Renfrewshire Council — Wards_2002_til_2007",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14540,7 +14540,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_58E8E9330B", .name = "Renfrewshire Council — Gardens",
     .name_ja = "Renfrewshire Council — Gardens",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14564,7 +14564,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_307D7DE4DD", .name = "Renfrewshire Council — Flood Events",
     .name_ja = "Renfrewshire Council — Flood Events",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14588,7 +14588,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EE29DA542D", .name = "Renfrewshire Council — RCWardBoundaries",
     .name_ja = "Renfrewshire Council — RCWardBoundaries",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14612,7 +14612,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_10CE521E93", .name = "Renfrewshire Council — Smoke Control Zones",
     .name_ja = "Renfrewshire Council — Smoke Control Zones",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14636,7 +14636,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_28D0701C58", .name = "Renfrewshire Council — Billboards_Point",
     .name_ja = "Renfrewshire Council — Billboards_Point",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14659,7 +14659,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3F7A6E6A69", .name = "Renfrewshire Council — Ward Boundaries - Renfrewshire",
     .name_ja = "Renfrewshire Council — Ward Boundaries - Renfrewshire",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14684,7 +14684,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B9C3AD6577", .name = "Renfrewshire Council — TRAs",
     .name_ja = "Renfrewshire Council — TRAs",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14708,7 +14708,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_45C4335399", .name = "Renfrewshire Council — Renfrewshire - Ward Boundaries",
     .name_ja = "Renfrewshire Council — Renfrewshire - Ward Boundaries",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14733,7 +14733,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9D0E5D5E7A", .name = "Renfrewshire Council — Scotia_Economic_Risk_Scores_Renfrewshire",
     .name_ja = "Renfrewshire Council — Scotia_Economic_Risk_Scores_Renfrewshire",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_economy_business", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14758,7 +14758,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4A78977D2A", .name = "Renfrewshire Council — Flood Prevention Schemes",
     .name_ja = "Renfrewshire Council — Flood Prevention Schemes",
-    .category = "safety", .portal = "https://services2.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14782,7 +14782,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_ACEC63BB93", .name = "Renfrewshire Council — Council Boundaries - Scotland",
     .name_ja = "Renfrewshire Council — Council Boundaries - Scotland",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14807,7 +14807,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FF9377C6D9", .name = "Renfrewshire Council — Digital_Sites_Pt",
     .name_ja = "Renfrewshire Council — Digital_Sites_Pt",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14830,7 +14830,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6B3D9A96DF", .name = "Renfrewshire Council — Letting Areas",
     .name_ja = "Renfrewshire Council — Letting Areas",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14854,7 +14854,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_35DA616DCB", .name = "Renfrewshire Council — Tree Management and Inspection",
     .name_ja = "Renfrewshire Council — Tree Management and Inspection",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14878,7 +14878,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FC2D9F63CE", .name = "Renfrewshire Council — Children in Low Income Families (%)",
     .name_ja = "Renfrewshire Council — Children in Low Income Families (%)",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_health_social", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14902,7 +14902,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2D8CAF7C09", .name = "Renfrewshire Council — Trees",
     .name_ja = "Renfrewshire Council — Trees",
-    .category = "transport", .portal = "https://services2.arcgis.com",
+    .category = "transport", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14928,7 +14928,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_EE7DB5C77D", .name = "Renfrewshire Council — Scottish Parliamentary Constituencies - "
       "Renfrewshire",
     .name_ja = "Renfrewshire Council — Scottish Parliamentary Constituencies - Renfrewshire",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14953,7 +14953,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D804F3D3B1", .name = "Renfrewshire Council — Trees",
     .name_ja = "Renfrewshire Council — Trees",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14977,7 +14977,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_956B1B3469", .name = "Renfrewshire Council — Tree Management and Inspection",
     .name_ja = "Renfrewshire Council — Tree Management and Inspection",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15002,7 +15002,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E71656A878", .name = "Renfrewshire Council — Ward Boundaries (2017)",
     .name_ja = "Renfrewshire Council — Ward Boundaries (2017)",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15027,7 +15027,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_C7A426E61A", .name = "Renfrewshire Council — Renfrewshire - Scottish Parliamentary "
       "Constituencies",
     .name_ja = "Renfrewshire Council — Renfrewshire - Scottish Parliamentary Constituencies",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15052,7 +15052,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_122763A803", .name = "Renfrewshire Council — Woodland Management Areas",
     .name_ja = "Renfrewshire Council — Woodland Management Areas",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15076,7 +15076,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_93FAE315D0", .name = "Renfrewshire Council — Discovery_Shelters",
     .name_ja = "Renfrewshire Council — Discovery_Shelters",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15100,7 +15100,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_7F56B709DC", .name = "Renfrewshire Council — Scottish Parliamentary Constituencies - "
       "Scotland",
     .name_ja = "Renfrewshire Council — Scottish Parliamentary Constituencies - Scotland",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15125,7 +15125,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_76B4554F39", .name = "Renfrewshire Council — Household Count",
     .name_ja = "Renfrewshire Council — Household Count",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15149,7 +15149,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4DE8E2E167", .name = "Renfrewshire Council — Woodland Blocks",
     .name_ja = "Renfrewshire Council — Woodland Blocks",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15175,7 +15175,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_920EEED21A", .name = "Renfrewshire Council — Renfrewshire - Scottish Parliamentary "
       "Region",
     .name_ja = "Renfrewshire Council — Renfrewshire - Scottish Parliamentary Region",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15200,7 +15200,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_96017EE6BF", .name = "Renfrewshire Council — Trees",
     .name_ja = "Renfrewshire Council — Trees",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15224,7 +15224,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6D743402A3", .name = "Renfrewshire Council — Scottish Parliamentary Regions - Scotland",
     .name_ja = "Renfrewshire Council — Scottish Parliamentary Regions - Scotland",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15249,7 +15249,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_249F82EBAA", .name = "Renfrewshire Council — AdvertisingShelters",
     .name_ja = "Renfrewshire Council — AdvertisingShelters",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15273,7 +15273,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DAF6211F5A", .name = "Renfrewshire Council — Renfrewshire Population Density",
     .name_ja = "Renfrewshire Council — Renfrewshire Population Density",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15299,7 +15299,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_2AD5F5B503", .name = "Renfrewshire Council — UK Parliamentary Constituencies - "
       "Renfrewshire",
     .name_ja = "Renfrewshire Council — UK Parliamentary Constituencies - Renfrewshire",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15324,7 +15324,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AC847F35ED", .name = "Renfrewshire Council — Woodland Blocks",
     .name_ja = "Renfrewshire Council — Woodland Blocks",
-    .category = "environment", .portal = "https://services2.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15350,7 +15350,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_7A4D3567AF", .name = "Renfrewshire Council — Renfrewshire - UK Parliamentary "
       "Contituencies",
     .name_ja = "Renfrewshire Council — Renfrewshire - UK Parliamentary Contituencies",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15375,7 +15375,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9DE82C30E9", .name = "Renfrewshire Council — Digital_Sites",
     .name_ja = "Renfrewshire Council — Digital_Sites",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15399,7 +15399,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_48060AA068", .name = "Renfrewshire Council — Renfrewshire Council - Ward Boundaries "
       "2016",
     .name_ja = "Renfrewshire Council — Renfrewshire Council - Ward Boundaries 2016",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15424,7 +15424,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_940B1CC888", .name = "Renfrewshire Council — UK Parliamentary Constituencies - "
       "Scotland",
     .name_ja = "Renfrewshire Council — UK Parliamentary Constituencies - Scotland",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15449,7 +15449,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FD080A8DA2", .name = "Renfrewshire Council — Scotland - Council Boundaries",
     .name_ja = "Renfrewshire Council — Scotland - Council Boundaries",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15475,7 +15475,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_6D32D64F5A", .name = "Renfrewshire Council — Scotland - Scottish Parliamentary "
       "Constituencies",
     .name_ja = "Renfrewshire Council — Scotland - Scottish Parliamentary Constituencies",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15500,7 +15500,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6C1810AEB2", .name = "Renfrewshire Council — Scotland - Scottish Parliamentary Regions",
     .name_ja = "Renfrewshire Council — Scotland - Scottish Parliamentary Regions",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15525,7 +15525,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2C8F77A755", .name = "Município de Porto de Mós — Limite de freguesia (CAOP 2017)",
     .name_ja = "Município de Porto de Mós — Limite de freguesia (CAOP 2017)",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15549,7 +15549,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BC1B71A4AE", .name = "Município de Porto de Mós — Área de Intervenção do Plano",
     .name_ja = "Município de Porto de Mós — Área de Intervenção do Plano",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15573,7 +15573,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E5F8033F10", .name = "Município de Porto de Mós — Área de Intervenção do Plano",
     .name_ja = "Município de Porto de Mós — Área de Intervenção do Plano",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15597,7 +15597,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_282706C9FF", .name = "Município de Porto de Mós — Entrada dos Lotes",
     .name_ja = "Município de Porto de Mós — Entrada dos Lotes",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15621,7 +15621,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_784B160D87", .name = "Município de Porto de Mós — Entrada dos Lotes",
     .name_ja = "Município de Porto de Mós — Entrada dos Lotes",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15645,7 +15645,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DD3A21D9D1", .name = "Município de Porto de Mós — Linhas elétricas de Alta Tensão",
     .name_ja = "Município de Porto de Mós — Linhas elétricas de Alta Tensão",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15668,7 +15668,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_00FF42C738", .name = "Município de Porto de Mós — Loteamentos em Vigor",
     .name_ja = "Município de Porto de Mós — Loteamentos em Vigor",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15693,7 +15693,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_68C604425C", .name = "Município de Porto de Mós — Linhas elétricas de Média e Baixa "
       "Tensão",
     .name_ja = "Município de Porto de Mós — Linhas elétricas de Média e Baixa Tensão",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15717,7 +15717,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FABD06C4D6", .name = "Município de Porto de Mós — Zonas inundáveis",
     .name_ja = "Município de Porto de Mós — Zonas inundáveis",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15741,7 +15741,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_977F5FBD04", .name = "Município de Porto de Mós — Itinerário Complementar (IC2/EN1)",
     .name_ja = "Município de Porto de Mós — Itinerário Complementar (IC2/EN1)",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15764,7 +15764,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_35A00C6BEB", .name = "Município de Porto de Mós — Património Arqueológico",
     .name_ja = "Município de Porto de Mós — Património Arqueológico",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15788,7 +15788,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6C853ABCF2", .name = "Município de Porto de Mós — Estrada Nacional (EN243)",
     .name_ja = "Município de Porto de Mós — Estrada Nacional (EN243)",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15811,7 +15811,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BAADE97383", .name = "Município de Porto de Mós — Árvores",
     .name_ja = "Município de Porto de Mós — Árvores",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15836,7 +15836,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_9D4B330E91", .name = "Município de Porto de Mós — Estrada Nacional Desclassificada "
       "(ant. EN243)",
     .name_ja = "Município de Porto de Mós — Estrada Nacional Desclassificada (ant. EN243)",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15860,7 +15860,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F292F81A41", .name = "Município de Porto de Mós — Limites de Lotes",
     .name_ja = "Município de Porto de Mós — Limites de Lotes",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15884,7 +15884,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1F43E42889", .name = "Município de Porto de Mós — Eixos de via",
     .name_ja = "Município de Porto de Mós — Eixos de via",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15909,7 +15909,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_72F6ADAA9D", .name = "Município de Porto de Mós — Espaços verdes de proteção e "
       "enquadramento",
     .name_ja = "Município de Porto de Mós — Espaços verdes de proteção e enquadramento",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15934,7 +15934,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_A1330D2EE8", .name = "Communauté d'Agglomération Plaine Vallée — "
       "95369_ZONE_URBA_20190516",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — 95369_ZONE_URBA_20190516",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15958,7 +15958,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_56801C24B1", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15982,7 +15982,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_04B27E8822", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16006,7 +16006,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9F8F993778", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16030,7 +16030,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_380DC04D7F", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16054,7 +16054,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B391E1FC68", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16078,7 +16078,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_98FEC56CA8", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16102,7 +16102,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_10E90DAAD5", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16126,7 +16126,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C47F1816D7", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16150,7 +16150,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_90187FA6F4", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16174,7 +16174,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E32A84E31A", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16198,7 +16198,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_637991D7C0", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16222,7 +16222,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2B7DCBF2C0", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16246,7 +16246,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E9C17095E9", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16270,7 +16270,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A375C3DF0E", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16294,7 +16294,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_803D89BC17", .name = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
     .name_ja = "Communauté d'Agglomération Plaine Vallée — BATIMENTS",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16318,7 +16318,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C6E554DC7D", .name = "Diputació de Barcelona — PotencialPlaques",
     .name_ja = "Diputació de Barcelona — PotencialPlaques",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16342,7 +16342,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_91B5B27CC4", .name = "Diputació de Barcelona — PotencialPlaques_Simplify",
     .name_ja = "Diputació de Barcelona — PotencialPlaques_Simplify",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16366,7 +16366,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9A77AD4208", .name = "Stadt Köln — Wohnungsbauprogramm",
     .name_ja = "Stadt Köln — Wohnungsbauprogramm",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16390,7 +16390,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7CEA6413CD", .name = "Ville de Sallanches — BATICAD2021",
     .name_ja = "Ville de Sallanches — BATICAD2021",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16413,7 +16413,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7DE598D416", .name = "Ville de Sallanches — DPU",
     .name_ja = "Ville de Sallanches — DPU",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16436,7 +16436,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B31CC99F8F", .name = "Ville de Sallanches — HABILLAGE_SURF",
     .name_ja = "Ville de Sallanches — HABILLAGE_SURF",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16459,7 +16459,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_70CB1F6EEB", .name = "Ville de Sallanches — INFO_LIN",
     .name_ja = "Ville de Sallanches — INFO_LIN",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16482,7 +16482,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_476ED07BD7", .name = "Stadt Köln — Wohnungsbauprogramm (Priorität)",
     .name_ja = "Stadt Köln — Wohnungsbauprogramm (Priorität)",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16506,7 +16506,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6DC66A22DA", .name = "Ville de Sallanches — INFO_SURF",
     .name_ja = "Ville de Sallanches — INFO_SURF",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16529,7 +16529,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3BD6459A72", .name = "Ville de Sallanches — PARCELLESCAD2021",
     .name_ja = "Ville de Sallanches — PARCELLESCAD2021",
-    .category = "infrastructure", .portal = "https://services2.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16553,7 +16553,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FEDD708929", .name = "Ville de Sallanches — PRESCRIPTION_PCT",
     .name_ja = "Ville de Sallanches — PRESCRIPTION_PCT",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16577,7 +16577,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_844475D7C3", .name = "Ville de Sallanches — PRESCRIPTION_LIN",
     .name_ja = "Ville de Sallanches — PRESCRIPTION_LIN",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16601,7 +16601,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C2CD643C76", .name = "Ville de Sallanches — PRESCRIPTION_SURF",
     .name_ja = "Ville de Sallanches — PRESCRIPTION_SURF",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16625,7 +16625,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B926A61DE6", .name = "Ville de Sallanches — ZONE_URBA",
     .name_ja = "Ville de Sallanches — ZONE_URBA",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16648,7 +16648,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CABE2BB44E", .name = "Ville de Sallanches — ZONE_LUTTE_BRUIT",
     .name_ja = "Ville de Sallanches — ZONE_LUTTE_BRUIT",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16672,7 +16672,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_773616435C", .name = "Stadt Köln — Wohnungsbauprogramm (Status)",
     .name_ja = "Stadt Köln — Wohnungsbauprogramm (Status)",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16696,7 +16696,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_22D9B7D6D2", .name = "Comune di Riccione — Giunzione",
     .name_ja = "Comune di Riccione — Giunzione",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16720,7 +16720,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7DB8139416", .name = "Comune di Riccione — Numeri civici",
     .name_ja = "Comune di Riccione — Numeri civici",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16744,7 +16744,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F79D969271", .name = "Comune di Riccione — Numeri civici L",
     .name_ja = "Comune di Riccione — Numeri civici L",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16768,7 +16768,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C32A136085", .name = "Comune di Riccione — STRADE",
     .name_ja = "Comune di Riccione — STRADE",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16791,7 +16791,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_82346EA01B", .name = "Comune di Riccione — Elemento stradale",
     .name_ja = "Comune di Riccione — Elemento stradale",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16815,7 +16815,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1096AAE54A", .name = "Comune di Riccione — Aree civici",
     .name_ja = "Comune di Riccione — Aree civici",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16839,7 +16839,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8E7A715F21", .name = "Comune di Riccione — Aree Pubbliche",
     .name_ja = "Comune di Riccione — Aree Pubbliche",
-    .category = "geospatial", .portal = "https://services2.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services2.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16863,7 +16863,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BA7F76952E", .name = "Laois County Council — Playgrounds_in_Laois",
     .name_ja = "Laois County Council — Playgrounds_in_Laois",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16887,7 +16887,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7C272127CC", .name = "Ville de Liège — arrets_complets",
     .name_ja = "Ville de Liège — arrets_complets",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16911,7 +16911,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D71356207A", .name = "Landkreis Lüchow-Dannenberg — Bebauungsplan",
     .name_ja = "Landkreis Lüchow-Dannenberg — Bebauungsplan",
-    .category = "infrastructure", .portal = "https://services3.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16935,7 +16935,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3D658FB27E", .name = "Landkreis Lüchow-Dannenberg — Bahnstrecken",
     .name_ja = "Landkreis Lüchow-Dannenberg — Bahnstrecken",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16959,7 +16959,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_991A3EBCF3", .name = "Ville de Liège — Impact des des travaux",
     .name_ja = "Ville de Liège — Impact des des travaux",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16983,7 +16983,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_31C9716778", .name = "Landkreis Lüchow-Dannenberg — Satzungen",
     .name_ja = "Landkreis Lüchow-Dannenberg — Satzungen",
-    .category = "infrastructure", .portal = "https://services3.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17007,7 +17007,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C970C983E3", .name = "Landkreis Lüchow-Dannenberg — Radwegenetz_DAN",
     .name_ja = "Landkreis Lüchow-Dannenberg — Radwegenetz_DAN",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17031,7 +17031,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_165620552C", .name = "Landkreis Lüchow-Dannenberg — Buergermobil_Orte_Nach",
     .name_ja = "Landkreis Lüchow-Dannenberg — Buergermobil_Orte_Nach",
-    .category = "transport", .portal = "https://services3.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17055,7 +17055,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7E8987E07F", .name = "Ville de Liège — lignes_completes",
     .name_ja = "Ville de Liège — lignes_completes",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17079,7 +17079,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8A7A0FFAD3", .name = "Landkreis Lüchow-Dannenberg — Kompensationsfläche",
     .name_ja = "Landkreis Lüchow-Dannenberg — Kompensationsfläche",
-    .category = "infrastructure", .portal = "https://services3.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17103,7 +17103,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D3CE9D76F6", .name = "Landkreis Lüchow-Dannenberg — BSR_Zone",
     .name_ja = "Landkreis Lüchow-Dannenberg — BSR_Zone",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17127,7 +17127,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_89EF76C20C", .name = "Landkreis Lüchow-Dannenberg — touristisches_Radwegenetz",
     .name_ja = "Landkreis Lüchow-Dannenberg — touristisches_Radwegenetz",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17151,7 +17151,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A28E52B0BE", .name = "Landkreis Lüchow-Dannenberg — Buergermobil_Orte_Ab",
     .name_ja = "Landkreis Lüchow-Dannenberg — Buergermobil_Orte_Ab",
-    .category = "transport", .portal = "https://services3.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17176,7 +17176,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A1DEFDA17E", .name = "Landkreis Lüchow-Dannenberg — Flächennutzungsplan",
     .name_ja = "Landkreis Lüchow-Dannenberg — Flächennutzungsplan",
-    .category = "infrastructure", .portal = "https://services3.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17200,7 +17200,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BB0A364311", .name = "Ville de Liège — LimComVilleDeLiege",
     .name_ja = "Ville de Liège — LimComVilleDeLiege",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17223,7 +17223,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6940563964", .name = "Landkreis Lüchow-Dannenberg — FFH",
     .name_ja = "Landkreis Lüchow-Dannenberg — FFH",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17247,7 +17247,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7FAA8AC296", .name = "Canterbury City Council — Air_Quality_Management_Areas_2018",
     .name_ja = "Canterbury City Council — Air_Quality_Management_Areas_2018",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17272,7 +17272,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9E69C6F0D1", .name = "Landkreis Lüchow-Dannenberg — Bürgermobil",
     .name_ja = "Landkreis Lüchow-Dannenberg — Bürgermobil",
-    .category = "transport", .portal = "https://services3.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17296,7 +17296,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8B97F2CA7F", .name = "Canterbury City Council — Canterbury_Planning_applications_2019",
     .name_ja = "Canterbury City Council — Canterbury_Planning_applications_2019",
-    .category = "infrastructure", .portal = "https://services3.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17322,7 +17322,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_FE7DF4FBA7", .name = "Canterbury City Council — "
       "Find_Locations_in_Planning_Application_Finder_Canterbury_CCC_Data_Planning_Application_Finder",
     .name_ja = "Canterbury City Council — Find_Locations_in_Planning_Application_Finder_Canterbury_CCC_Data_Planning_Application_Finder",
-    .category = "infrastructure", .portal = "https://services3.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17349,7 +17349,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_ED61D4027C", .name = "Landkreis Lüchow-Dannenberg — FNP (differenziert nach "
       "Bauflächentyp)",
     .name_ja = "Landkreis Lüchow-Dannenberg — FNP (differenziert nach Bauflächentyp)",
-    .category = "infrastructure", .portal = "https://services3.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17374,7 +17374,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_34673325FD", .name = "Landkreis Lüchow-Dannenberg — LSG",
     .name_ja = "Landkreis Lüchow-Dannenberg — LSG",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17398,7 +17398,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_62858B8F0A", .name = "Ville de Liège — Etat des travaux",
     .name_ja = "Ville de Liège — Etat des travaux",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17422,7 +17422,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_785942CE15", .name = "Landkreis Lüchow-Dannenberg — Haltestellen",
     .name_ja = "Landkreis Lüchow-Dannenberg — Haltestellen",
-    .category = "transport", .portal = "https://services3.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17447,7 +17447,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0A27A2C0E9", .name = "Ville de Liège — VDL_AXERUES_SHANKS",
     .name_ja = "Ville de Liège — VDL_AXERUES_SHANKS",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17471,7 +17471,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_31AB278951", .name = "Landkreis Lüchow-Dannenberg — Busliniennetz",
     .name_ja = "Landkreis Lüchow-Dannenberg — Busliniennetz",
-    .category = "transport", .portal = "https://services3.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17496,7 +17496,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_236ABF5C22", .name = "Landkreis Lüchow-Dannenberg — Naturpark_Elbhoehe_Wendland",
     .name_ja = "Landkreis Lüchow-Dannenberg — Naturpark_Elbhoehe_Wendland",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17521,7 +17521,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_79B5432C6A", .name = "Canterbury City Council — Boundary of Urban Area",
     .name_ja = "Canterbury City Council — Boundary of Urban Area",
-    .category = "infrastructure", .portal = "https://services3.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17545,7 +17545,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A51EDD4AAA", .name = "Ville de Liège — LIM_COM_INVERS",
     .name_ja = "Ville de Liège — LIM_COM_INVERS",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17568,7 +17568,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_04CDF2C733", .name = "Landkreis Lüchow-Dannenberg — Mitfahrbänke",
     .name_ja = "Landkreis Lüchow-Dannenberg — Mitfahrbänke",
-    .category = "transport", .portal = "https://services3.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17592,7 +17592,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A19D7DFB1B", .name = "Landkreis Lüchow-Dannenberg — NSG",
     .name_ja = "Landkreis Lüchow-Dannenberg — NSG",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17616,7 +17616,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B33075E4D0", .name = "Canterbury City Council — District Boundary",
     .name_ja = "Canterbury City Council — District Boundary",
-    .category = "infrastructure", .portal = "https://services3.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17640,7 +17640,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F622EBE07E", .name = "Landkreis Lüchow-Dannenberg — VSG",
     .name_ja = "Landkreis Lüchow-Dannenberg — VSG",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17664,7 +17664,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_58B12903DA", .name = "Canterbury City Council — Parish Councils",
     .name_ja = "Canterbury City Council — Parish Councils",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17688,7 +17688,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3F7D3AE9C8", .name = "Landkreis Lüchow-Dannenberg — Landesbus 7000",
     .name_ja = "Landkreis Lüchow-Dannenberg — Landesbus 7000",
-    .category = "transport", .portal = "https://services3.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17712,7 +17712,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_06C279D3A5", .name = "Landkreis Lüchow-Dannenberg — WTrinkBrunnen",
     .name_ja = "Landkreis Lüchow-Dannenberg — WTrinkBrunnen",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17736,7 +17736,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5087EE9E5A", .name = "Canterbury City Council — Air Quality Management Areas 2018",
     .name_ja = "Canterbury City Council — Air Quality Management Areas 2018",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17761,7 +17761,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0C0CEBA1DE", .name = "Landkreis Lüchow-Dannenberg — WSG",
     .name_ja = "Landkreis Lüchow-Dannenberg — WSG",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17785,7 +17785,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_73C16B0EE9", .name = "Canterbury City Council — Flood Zone 2",
     .name_ja = "Canterbury City Council — Flood Zone 2",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17808,7 +17808,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F92EF0A0CB", .name = "Canterbury City Council — Flood Zone 3",
     .name_ja = "Canterbury City Council — Flood Zone 3",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17831,7 +17831,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_53ACBA7594", .name = "Canterbury City Council — Area of Archaeological Importance HE12",
     .name_ja = "Canterbury City Council — Area of Archaeological Importance HE12",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17855,7 +17855,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D3F322D981", .name = "Canterbury City Council — Conservation Area HE6",
     .name_ja = "Canterbury City Council — Conservation Area HE6",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17879,7 +17879,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_566628137C", .name = "Argyll and Bute Council — Bus_stops",
     .name_ja = "Argyll and Bute Council — Bus_stops",
-    .category = "transport", .portal = "https://services3.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17904,7 +17904,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_16D70DFCF2", .name = "Argyll and Bute Council — "
       "Flood_Defence_Improvement_Works_(PDFs_-_Internal_use_only)",
     .name_ja = "Argyll and Bute Council — Flood_Defence_Improvement_Works_(PDFs_-_Internal_use_only)",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17930,7 +17930,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_947AAC30D1", .name = "Argyll and Bute Council — LDP2_EX20_DMZones",
     .name_ja = "Argyll and Bute Council — LDP2_EX20_DMZones",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17954,7 +17954,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D15A39D346", .name = "Argyll and Bute Council — Parks_Playing_Fields_Play_Grounds",
     .name_ja = "Argyll and Bute Council — Parks_Playing_Fields_Play_Grounds",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17978,7 +17978,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E2BA6470F1", .name = "Stadt Goslar — Öffentlicher Parkplatz, Parkhaus",
     .name_ja = "Stadt Goslar — Öffentlicher Parkplatz, Parkhaus",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18001,7 +18001,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E586A22455", .name = "Stadt Goslar — Gemeinsamer Geh- und Radweg",
     .name_ja = "Stadt Goslar — Gemeinsamer Geh- und Radweg",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18024,7 +18024,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F1C06AD4CB", .name = "Stadt Goslar — Parkbereiche",
     .name_ja = "Stadt Goslar — Parkbereiche",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18048,7 +18048,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DC585F3DBF", .name = "Stadt Goslar — Parkplätze und Parkhäuser",
     .name_ja = "Stadt Goslar — Parkplätze und Parkhäuser",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18072,7 +18072,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6D1886858E", .name = "Stadt Goslar — Parkzone - Straße",
     .name_ja = "Stadt Goslar — Parkzone - Straße",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18096,7 +18096,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0118EDFF11", .name = "Stadt Goslar — Parkbereiche_Linie",
     .name_ja = "Stadt Goslar — Parkbereiche_Linie",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18120,7 +18120,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_92658B1AAA", .name = "Stadt Goslar — Gemeinsamer Geh- und Radweg - Schraffur",
     .name_ja = "Stadt Goslar — Gemeinsamer Geh- und Radweg - Schraffur",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "eu_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18144,7 +18144,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3248D89654", .name = "Stadt Goslar — Fußgängerzone",
     .name_ja = "Stadt Goslar — Fußgängerzone",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18167,7 +18167,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_99571B6F18", .name = "Melton Borough Council — Flood_Zone_3",
     .name_ja = "Melton Borough Council — Flood_Zone_3",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18190,7 +18190,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AF538694E9", .name = "Melton Borough Council — Melton_Ward_Boundaries",
     .name_ja = "Melton Borough Council — Melton_Ward_Boundaries",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18214,7 +18214,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_82E8705BEC", .name = "Melton Borough Council — Flood_Zone_3b",
     .name_ja = "Melton Borough Council — Flood_Zone_3b",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18238,7 +18238,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BAD51DB856", .name = "Melton Borough Council — National_Cycleway_Route",
     .name_ja = "Melton Borough Council — National_Cycleway_Route",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18261,7 +18261,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0B93A9BFC6", .name = "Aberdeen City Council ArcGIS Online — Academy School Catchments",
     .name_ja = "Aberdeen City Council ArcGIS Online — Academy School Catchments",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_education", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18285,7 +18285,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0DBED3C12D", .name = "Melton Borough Council — MBC_Ward_Boundary",
     .name_ja = "Melton Borough Council — MBC_Ward_Boundary",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18309,7 +18309,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5B3D4F30C1", .name = "Aberdeen City Council ArcGIS Online — Bus Facilities",
     .name_ja = "Aberdeen City Council ArcGIS Online — Bus Facilities",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18333,7 +18333,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B3C040E182", .name = "Aberdeen City Council ArcGIS Online — City Boundary",
     .name_ja = "Aberdeen City Council ArcGIS Online — City Boundary",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18357,7 +18357,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_2D11F8A4AE", .name = "Aberdeen City Council ArcGIS Online — Air Quality - Diffusion "
       "Tubes",
     .name_ja = "Aberdeen City Council ArcGIS Online — Air Quality - Diffusion Tubes",
-    .category = "environment", .portal = "https://services5.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18381,7 +18381,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_71291C2A68", .name = "Aberdeen City Council ArcGIS Online — LEZ - Low Emission Zone",
     .name_ja = "Aberdeen City Council ArcGIS Online — LEZ - Low Emission Zone",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18405,7 +18405,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F2C4EB397E", .name = "Aberdeen City Council ArcGIS Online — Flood Schemes",
     .name_ja = "Aberdeen City Council ArcGIS Online — Flood Schemes",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18429,7 +18429,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_42453DC8F9", .name = "Aberdeen City Council ArcGIS Online — Noise Management Areas "
       "Round 2 - Road",
     .name_ja = "Aberdeen City Council ArcGIS Online — Noise Management Areas Round 2 - Road",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18453,7 +18453,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_89357C4FDB", .name = "Aberdeen City Council ArcGIS Online — Flood Studies",
     .name_ja = "Aberdeen City Council ArcGIS Online — Flood Studies",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18478,7 +18478,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_FCAC91B120", .name = "Aberdeen City Council ArcGIS Online — Air Quality Management "
       "Areas",
     .name_ja = "Aberdeen City Council ArcGIS Online — Air Quality Management Areas",
-    .category = "environment", .portal = "https://services5.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18502,7 +18502,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AB7DBC4C81", .name = "Aberdeen City Council ArcGIS Online — Electoral Wards 2017",
     .name_ja = "Aberdeen City Council ArcGIS Online — Electoral Wards 2017",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18528,7 +18528,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_55CB91B332", .name = "Aberdeen City Council ArcGIS Online — Noise Management Areas "
       "Round 3- Road and Rail",
     .name_ja = "Aberdeen City Council ArcGIS Online — Noise Management Areas Round 3- Road and Rail",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18553,7 +18553,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_42D1F44A7B", .name = "Ayuntamiento de Santander — Aparca_Bici_ETRS89",
     .name_ja = "Ayuntamiento de Santander — Aparca_Bici_ETRS89",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18577,7 +18577,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B250CCE6C3", .name = "Ayuntamiento de Santander — Edificios_ETRS89",
     .name_ja = "Ayuntamiento de Santander — Edificios_ETRS89",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18601,7 +18601,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3FAF6377A1", .name = "Ayuntamiento de Santander — FUENTES_ETRS89",
     .name_ja = "Ayuntamiento de Santander — FUENTES_ETRS89",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18626,7 +18626,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E4EDB73815", .name = "Ayuntamiento de Santander — Hojas_2019_ETRS89",
     .name_ja = "Ayuntamiento de Santander — Hojas_2019_ETRS89",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18650,7 +18650,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8F40E3E829", .name = "Ayuntamiento de Santander — Hojas_ETRS89",
     .name_ja = "Ayuntamiento de Santander — Hojas_ETRS89",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18674,7 +18674,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A1B5F2711F", .name = "Ayuntamiento de Santander — Paradas_Bici_ETRS89",
     .name_ja = "Ayuntamiento de Santander — Paradas_Bici_ETRS89",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18697,7 +18697,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C09D6B5AB7", .name = "Ayuntamiento de Santander — ParadasBus",
     .name_ja = "Ayuntamiento de Santander — ParadasBus",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18721,7 +18721,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3A9E8BBF87", .name = "Ayuntamiento de Santander — LineasBus",
     .name_ja = "Ayuntamiento de Santander — LineasBus",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18745,7 +18745,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BA99F4E5D1", .name = "Ayuntamiento de Santander — RutasBus",
     .name_ja = "Ayuntamiento de Santander — RutasBus",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18769,7 +18769,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8452F73F2A", .name = "Ayuntamiento de Santander — Vertices2010_ETRS89",
     .name_ja = "Ayuntamiento de Santander — Vertices2010_ETRS89",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18792,7 +18792,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_345093374E", .name = "Ayuntamiento de Santander — Zonas_Ola_ETRS89",
     .name_ja = "Ayuntamiento de Santander — Zonas_Ola_ETRS89",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18816,7 +18816,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DB6024A7DD", .name = "Ayuntamiento de Santander — survey",
     .name_ja = "Ayuntamiento de Santander — survey",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18841,7 +18841,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8D75F068F1", .name = "Ville de MOUGINS — VALLON_PPRI_R0",
     .name_ja = "Ville de MOUGINS — VALLON_PPRI_R0",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18865,7 +18865,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9E76302276", .name = "Ville de MOUGINS — PPRI_ZONAGE",
     .name_ja = "Ville de MOUGINS — PPRI_ZONAGE",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "eu_gis_planning_zoning", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18888,7 +18888,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B526763366", .name = "Ville de MOUGINS — zonage_final_20190717",
     .name_ja = "Ville de MOUGINS — zonage_final_20190717",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "eu_gis_planning_zoning", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18912,7 +18912,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6D6686A698", .name = "Ville de MOUGINS — bassins_versants_06085",
     .name_ja = "Ville de MOUGINS — bassins_versants_06085",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18936,7 +18936,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D8B1503C46", .name = "Ville de MOUGINS — zonage_final_20190717",
     .name_ja = "Ville de MOUGINS — zonage_final_20190717",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "eu_gis_planning_zoning", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18960,7 +18960,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D477C162AD", .name = "Mid & East Antrim Borough Council — MEA_PlayAreas2024",
     .name_ja = "Mid & East Antrim Borough Council — MEA_PlayAreas2024",
-    .category = "environment", .portal = "https://services5.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18985,7 +18985,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DDC414E97B", .name = "Rutland County Council — Snow_Routes_lines",
     .name_ja = "Rutland County Council — Snow_Routes_lines",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19009,7 +19009,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E92FCFD098", .name = "Mid & East Antrim Borough Council — NI Forestry Boundaries",
     .name_ja = "Mid & East Antrim Borough Council — NI Forestry Boundaries",
-    .category = "environment", .portal = "https://services5.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19034,7 +19034,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_EE6CCC16C5", .name = "Mid & East Antrim Borough Council — Mid & East Antrim Borough "
       "Council Play Areas",
     .name_ja = "Mid & East Antrim Borough Council — Mid & East Antrim Borough Council Play Areas",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19058,7 +19058,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E568DF6500", .name = "Mid & East Antrim Borough Council — TranslinkBusStopsMEABCClip",
     .name_ja = "Mid & East Antrim Borough Council — TranslinkBusStopsMEABCClip",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19082,7 +19082,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_696DE70858", .name = "Mid & East Antrim Borough Council — MEA_WARDS",
     .name_ja = "Mid & East Antrim Borough Council — MEA_WARDS",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19107,7 +19107,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_C3A006663D", .name = "Provincia Autonoma di Trento — Campionamento campi "
       "elettromagnetici",
     .name_ja = "Provincia Autonoma di Trento — Campionamento campi elettromagnetici",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19131,7 +19131,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_80016B3DCE", .name = "Provincia Autonoma di Trento — RTV Impianti",
     .name_ja = "Provincia Autonoma di Trento — RTV Impianti",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19157,7 +19157,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_F866104731", .name = "Provincia Autonoma di Trento — Campionamenti campo elettrico "
       "bassa frequenza",
     .name_ja = "Provincia Autonoma di Trento — Campionamenti campo elettrico bassa frequenza",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19182,7 +19182,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_A1D8646CC1", .name = "Provincia Autonoma di Trento — Campionamenti magnetico bassa "
       "frequenza",
     .name_ja = "Provincia Autonoma di Trento — Campionamenti magnetico bassa frequenza",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19206,7 +19206,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0B04C86587", .name = "Provincia Autonoma di Trento — Stazioni Radiobase",
     .name_ja = "Provincia Autonoma di Trento — Stazioni Radiobase",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19230,7 +19230,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B7A43806C7", .name = "Brighton & Hove City Council — Road_Link",
     .name_ja = "Brighton & Hove City Council — Road_Link",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19255,7 +19255,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3F0EAA1A50", .name = "Brighton & Hove City Council — WardsJan12",
     .name_ja = "Brighton & Hove City Council — WardsJan12",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19280,7 +19280,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_C3EFC602C5", .name = "Brighton & Hove City Council — "
       "Feature_Class_Upload_to_Online_(Test)_wards",
     .name_ja = "Brighton & Hove City Council — Feature_Class_Upload_to_Online_(Test)_wards",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19305,7 +19305,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_524AB7C45B", .name = "Brighton & Hove City Council — RetailAssetsSep18",
     .name_ja = "Brighton & Hove City Council — RetailAssetsSep18",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_economy_business", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19330,7 +19330,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_5F64366822", .name = "Fingal County Council — ACA - Architectural Conservation Area as "
       "per Fingal County Council Development Plan 2017 to 2023FCC",
     .name_ja = "Fingal County Council — ACA - Architectural Conservation Area as per Fingal County Council Development Plan 2017 to 2023FCC",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19356,7 +19356,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9B7540C978", .name = "Brighton & Hove City Council — Car_Parks",
     .name_ja = "Brighton & Hove City Council — Car_Parks",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_culture_recreation", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19380,7 +19380,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1337E2E700", .name = "Fingal County Council — Additional Cycleways",
     .name_ja = "Fingal County Council — Additional Cycleways",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19404,7 +19404,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DF960B9EAA", .name = "Fingal County Council — NaPTAN_StopPoints",
     .name_ja = "Fingal County Council — NaPTAN_StopPoints",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19428,7 +19428,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B7F32920A6", .name = "Fingal County Council — RNIS_daa_contour_ITM",
     .name_ja = "Fingal County Council — RNIS_daa_contour_ITM",
-    .category = "environment", .portal = "https://services5.arcgis.com",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19452,7 +19452,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CE4338A640", .name = "Fingal County Council — Eligible Entities for Wifi FCC",
     .name_ja = "Fingal County Council — Eligible Entities for Wifi FCC",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19476,7 +19476,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6E09311B31", .name = "Brighton & Hove City Council — Traffic_Location_With_Count",
     .name_ja = "Brighton & Hove City Council — Traffic_Location_With_Count",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19500,7 +19500,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9C477CEA2A", .name = "Fingal County Council — Balbriggan_DZ_Boundary",
     .name_ja = "Fingal County Council — Balbriggan_DZ_Boundary",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19524,7 +19524,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D5178A883D", .name = "Fingal County Council — Baldoyle_Howth_CyclewayFCC",
     .name_ja = "Fingal County Council — Baldoyle_Howth_CyclewayFCC",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19547,7 +19547,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3F976ED3F3", .name = "Fingal County Council — HSIP_daa_contour_ITM",
     .name_ja = "Fingal County Council — HSIP_daa_contour_ITM",
-    .category = "environment", .portal = "https://services5.arcgis.com",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19570,7 +19570,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C184DE2F51", .name = "Fingal County Council — Scenario_2019_Lden",
     .name_ja = "Fingal County Council — Scenario_2019_Lden",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19593,7 +19593,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_65C9362C27", .name = "Fingal County Council — CE Draft Dublin Airport Noise Zones",
     .name_ja = "Fingal County Council — CE Draft Dublin Airport Noise Zones",
-    .category = "environment", .portal = "https://services5.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19619,7 +19619,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_385EA4A942", .name = "Fingal County Council — Small Areas (Census 2011)FCC",
     .name_ja = "Fingal County Council — Small Areas (Census 2011)FCC",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19643,7 +19643,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D2AEC97ABB", .name = "Brighton & Hove City Council — Air_Quality",
     .name_ja = "Brighton & Hove City Council — Air_Quality",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19667,7 +19667,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_46A62F8B2E", .name = "Fingal County Council — Dublin Airport Noise Indicators",
     .name_ja = "Fingal County Council — Dublin Airport Noise Indicators",
-    .category = "environment", .portal = "https://services5.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19692,7 +19692,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E6941F2717", .name = "Fingal County Council — Champion_School_Weather_Stations_FCC",
     .name_ja = "Fingal County Council — Champion_School_Weather_Stations_FCC",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19716,7 +19716,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5B412679A4", .name = "Fingal County Council — Scenario_2019_Lnight_Poly",
     .name_ja = "Fingal County Council — Scenario_2019_Lnight_Poly",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19740,7 +19740,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_20CF8B496E", .name = "Fingal County Council — Dublin Airport Noise Zones",
     .name_ja = "Fingal County Council — Dublin Airport Noise Zones",
-    .category = "environment", .portal = "https://services5.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19766,7 +19766,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_4E45F2813C", .name = "Fingal County Council — Dublin Airport Noise Zones Development "
       "Plan 2023-2029 _FCC",
     .name_ja = "Fingal County Council — Dublin Airport Noise Zones Development Plan 2023-2029 _FCC",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19792,7 +19792,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_08918A030E", .name = "Brighton & Hove City Council — BHCC_UABoundary_OK",
     .name_ja = "Brighton & Hove City Council — BHCC_UABoundary_OK",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19816,7 +19816,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_333A8892D7", .name = "Fingal County Council — Local Electoral Areas_FCC",
     .name_ja = "Fingal County Council — Local Electoral Areas_FCC",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19842,7 +19842,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_5DCBD9405E", .name = "Fingal County Council — Development Plan 2023-2029 Local "
       "Objective Points_FCC",
     .name_ja = "Fingal County Council — Development Plan 2023-2029 Local Objective Points_FCC",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19868,7 +19868,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_9DBFD7815C", .name = "Fingal County Council — Development Plan 2023 2029 LAP Local "
       "Area Plans_FCC",
     .name_ja = "Fingal County Council — Development Plan 2023 2029 LAP Local Area Plans_FCC",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19894,7 +19894,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_BE61ADDD38", .name = "Fingal County Council — Dev Plan 2023-2029 ACA Architectural "
       "Conservation Areas_FCC",
     .name_ja = "Fingal County Council — Dev Plan 2023-2029 ACA Architectural Conservation Areas_FCC",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19919,7 +19919,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_21E2EECD97", .name = "Fingal County Council — County_and_City_Boundaries",
     .name_ja = "Fingal County Council — County_and_City_Boundaries",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19944,7 +19944,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_67AF7CDD1D", .name = "Fingal County Council — Dev Plan 2023-2029 RPS Record of "
       "Protected Structures_FCC",
     .name_ja = "Fingal County Council — Dev Plan 2023-2029 RPS Record of Protected Structures_FCC",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19971,7 +19971,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_1DF6303F72", .name = "Fingal County Council — FCC Development Plan 2023-2029 Specific "
       "Objective Zoning",
     .name_ja = "Fingal County Council — FCC Development Plan 2023-2029 Specific Objective Zoning",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19996,7 +19996,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_84F9166842", .name = "Fingal County Council — TownlandsFCC",
     .name_ja = "Fingal County Council — TownlandsFCC",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20021,7 +20021,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_5C5B6916D0", .name = "Fingal County Council — FCC Development Plan 2023-2029 Specific "
       "Objectives Areas",
     .name_ja = "Fingal County Council — FCC Development Plan 2023-2029 Specific Objectives Areas",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20046,7 +20046,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E67CAD70F5", .name = "Fingal County Council — Electoral DivisionsFCC",
     .name_ja = "Fingal County Council — Electoral DivisionsFCC",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20070,7 +20070,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4FD416026E", .name = "Provincia di Perugia — Catasto Provincia Perugia Punti",
     .name_ja = "Provincia di Perugia — Catasto Provincia Perugia Punti",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20094,7 +20094,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_113705E636", .name = "Provincia di Perugia — Emergenze storico architettoniche",
     .name_ja = "Provincia di Perugia — Emergenze storico architettoniche",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20118,7 +20118,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_601004EB32", .name = "Fingal County Council — County BoundaryFCC",
     .name_ja = "Fingal County Council — County BoundaryFCC",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20142,7 +20142,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_18CCCD5EA2", .name = "Provincia di Perugia — Cave approvate nei PRG comunali",
     .name_ja = "Provincia di Perugia — Cave approvate nei PRG comunali",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20166,7 +20166,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_143CCAAA0E", .name = "Provincia di Perugia — Aree ammassamento",
     .name_ja = "Provincia di Perugia — Aree ammassamento",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20190,7 +20190,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CDF20E876D", .name = "Durham County Council — Community_Needs_Index_by_Ward",
     .name_ja = "Durham County Council — Community_Needs_Index_by_Ward",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20215,7 +20215,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_C28AEC7CD9", .name = "Durham County Council — "
       "County_Durham_Final_Parish_Wards_(Nov_2023)",
     .name_ja = "Durham County Council — County_Durham_Final_Parish_Wards_(Nov_2023)",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20240,7 +20240,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2BA7F4FEF5", .name = "Durham County Council — Free_School_Meals_by_Electoral_Ward",
     .name_ja = "Durham County Council — Free_School_Meals_by_Electoral_Ward",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20264,7 +20264,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D5041C7DB7", .name = "Durham County Council — LILEE_Fuel_Poverty_by_Ward",
     .name_ja = "Durham County Council — LILEE_Fuel_Poverty_by_Ward",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20289,7 +20289,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_EC0AAFEE04", .name = "Provincia di Perugia — Localizzazione presenze archeologiche "
       "(rif. data acquisizione 2001)",
     .name_ja = "Provincia di Perugia — Localizzazione presenze archeologiche (rif. data acquisizione 2001)",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20314,7 +20314,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_84E5D36CDF", .name = "Fingal County Council — Map Sheet Grid",
     .name_ja = "Fingal County Council — Map Sheet Grid",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_imagery_basemap", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20338,7 +20338,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C4BFE3204B", .name = "Provincia di Perugia — Stazioni FS-FCU",
     .name_ja = "Provincia di Perugia — Stazioni FS-FCU",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20362,7 +20362,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CAA9F6B54B", .name = "Durham County Council — Ward_Poverty_Summary",
     .name_ja = "Durham County Council — Ward_Poverty_Summary",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20386,7 +20386,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_679ADA4ED7", .name = "Provincia di Perugia — Limiti Comunali adeguati nei PRG comunali",
     .name_ja = "Provincia di Perugia — Limiti Comunali adeguati nei PRG comunali",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20410,7 +20410,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A3DE385584", .name = "Provincia di Perugia — Limiti della Provincia di Perugia",
     .name_ja = "Provincia di Perugia — Limiti della Provincia di Perugia",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20434,7 +20434,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_85DA727984", .name = "Provincia di Perugia — Limiti Comunali provincia di Perugia",
     .name_ja = "Provincia di Perugia — Limiti Comunali provincia di Perugia",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20459,7 +20459,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0B873DAA38", .name = "Fingal County Council — Additional Cycle Routes",
     .name_ja = "Fingal County Council — Additional Cycle Routes",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20483,7 +20483,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9122A1DF72", .name = "Landkreis Spree-Neiße — Poller",
     .name_ja = "Landkreis Spree-Neiße — Poller",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20507,7 +20507,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4ED700BA2F", .name = "Provincia di Perugia — Aree ad alta Esposizione Panoramica",
     .name_ja = "Provincia di Perugia — Aree ad alta Esposizione Panoramica",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20531,7 +20531,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_733D1CABC4", .name = "Landkreis Spree-Neiße — HeideRW2019_Planung2015",
     .name_ja = "Landkreis Spree-Neiße — HeideRW2019_Planung2015",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20555,7 +20555,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B6FB5530C0", .name = "Landkreis Spree-Neiße — RW-Modernisierungsabschnitte",
     .name_ja = "Landkreis Spree-Neiße — RW-Modernisierungsabschnitte",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20579,7 +20579,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C1E786C04B", .name = "Landkreis Spree-Neiße — m50",
     .name_ja = "Landkreis Spree-Neiße — m50",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20602,7 +20602,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E907BBD50B", .name = "Landkreis Spree-Neiße — rw_routen_spn",
     .name_ja = "Landkreis Spree-Neiße — rw_routen_spn",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20626,7 +20626,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5BAA987DFE", .name = "Landkreis Spree-Neiße — Altlastenstandorte",
     .name_ja = "Landkreis Spree-Neiße — Altlastenstandorte",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20651,7 +20651,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0246A9D02C", .name = "Landkreis Spree-Neiße — m1000",
     .name_ja = "Landkreis Spree-Neiße — m1000",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20674,7 +20674,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8B3624AED3", .name = "Landkreis Spree-Neiße — Zielnetz Radverkehr Brandenburg (SPN)",
     .name_ja = "Landkreis Spree-Neiße — Zielnetz Radverkehr Brandenburg (SPN)",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20698,7 +20698,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_70A9921D93", .name = "Landkreis Spree-Neiße — rw_routen_spn",
     .name_ja = "Landkreis Spree-Neiße — rw_routen_spn",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20722,7 +20722,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3156CD8FB9", .name = "Landkreis Spree-Neiße — rw_routen_spn",
     .name_ja = "Landkreis Spree-Neiße — rw_routen_spn",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20746,7 +20746,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_90E4BCAF63", .name = "Landkreis Spree-Neiße — rw_routen_spn",
     .name_ja = "Landkreis Spree-Neiße — rw_routen_spn",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20770,7 +20770,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C63A77649C", .name = "Landkreis Spree-Neiße — rw_routen_spn",
     .name_ja = "Landkreis Spree-Neiße — rw_routen_spn",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20794,7 +20794,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BD6BFCAB19", .name = "Landkreis Spree-Neiße — rw_routen_spn",
     .name_ja = "Landkreis Spree-Neiße — rw_routen_spn",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20818,7 +20818,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9703DB820A", .name = "Landkreis Spree-Neiße — rw_routen_spn",
     .name_ja = "Landkreis Spree-Neiße — rw_routen_spn",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20842,7 +20842,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_59ABECB162", .name = "Landkreis Spree-Neiße — Materialumschlagplätze",
     .name_ja = "Landkreis Spree-Neiße — Materialumschlagplätze",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20865,7 +20865,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2EF663E766", .name = "Landkreis Spree-Neiße — Knoten",
     .name_ja = "Landkreis Spree-Neiße — Knoten",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20889,7 +20889,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_90B018AA07", .name = "Landkreis Spree-Neiße — Infotafeln",
     .name_ja = "Landkreis Spree-Neiße — Infotafeln",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20913,7 +20913,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2288DF2F48", .name = "Landkreis Spree-Neiße — Netzknoten",
     .name_ja = "Landkreis Spree-Neiße — Netzknoten",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20937,7 +20937,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F52873564F", .name = "Landkreis Spree-Neiße — Netzknoten",
     .name_ja = "Landkreis Spree-Neiße — Netzknoten",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20961,7 +20961,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_997B2D85B3", .name = "Landkreis Spree-Neiße — Pfosten",
     .name_ja = "Landkreis Spree-Neiße — Pfosten",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20985,7 +20985,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_ED122C2C8B", .name = "Landkreis Spree-Neiße — brückenfotos_arcadis2018",
     .name_ja = "Landkreis Spree-Neiße — brückenfotos_arcadis2018",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21009,7 +21009,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_24E674FD10", .name = "Landkreis Spree-Neiße — Altlastenverdachtsflächen",
     .name_ja = "Landkreis Spree-Neiße — Altlastenverdachtsflächen",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21033,7 +21033,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1E8D8F79A2", .name = "Landkreis Spree-Neiße — brücken_schön_2019_06",
     .name_ja = "Landkreis Spree-Neiße — brücken_schön_2019_06",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21057,7 +21057,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_520EF8974F", .name = "Landkreis Spree-Neiße — Planung_Achse",
     .name_ja = "Landkreis Spree-Neiße — Planung_Achse",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21080,7 +21080,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0FDD42B4F3", .name = "Landkreis Spree-Neiße — Materialumschlagplätze_Puffer",
     .name_ja = "Landkreis Spree-Neiße — Materialumschlagplätze_Puffer",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21104,7 +21104,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B84E14EA35", .name = "Landkreis Spree-Neiße — Planung_Fläche",
     .name_ja = "Landkreis Spree-Neiße — Planung_Fläche",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21128,7 +21128,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_88F4E75993", .name = "Landkreis Spree-Neiße — Blattschnitt_Vorentwürfe",
     .name_ja = "Landkreis Spree-Neiße — Blattschnitt_Vorentwürfe",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21152,7 +21152,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F96ECCF34A", .name = "Landkreis Spree-Neiße — Blattschnitt_Rahmen",
     .name_ja = "Landkreis Spree-Neiße — Blattschnitt_Rahmen",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21176,7 +21176,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6825CF90C8", .name = "Ville de Lorient — Arbre",
     .name_ja = "Ville de Lorient — Arbre",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21200,7 +21200,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_48254F1603", .name = "Ville de Lorient — stationnement vélo",
     .name_ja = "Ville de Lorient — stationnement vélo",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21223,7 +21223,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D197FCF4A4", .name = "Ville de Lorient — Organismes de réussite éducative",
     .name_ja = "Ville de Lorient — Organismes de réussite éducative",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21247,7 +21247,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4A11E31A34", .name = "Ville de Lorient — étape liaison cyclable",
     .name_ja = "Ville de Lorient — étape liaison cyclable",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21271,7 +21271,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D200C59415", .name = "Ville de Lorient — ressource_commerce",
     .name_ja = "Ville de Lorient — ressource_commerce",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21295,7 +21295,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_85DB18BDEC", .name = "Ville de Lorient — liaison maritime",
     .name_ja = "Ville de Lorient — liaison maritime",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21319,7 +21319,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DB62C01797", .name = "Ville de Lorient — Points d'interêt 1924",
     .name_ja = "Ville de Lorient — Points d'interêt 1924",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21343,7 +21343,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_00BBE47489", .name = "Ville de Lorient — liaison cyclable",
     .name_ja = "Ville de Lorient — liaison cyclable",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21367,7 +21367,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_12280A135F", .name = "Ville de Lorient — Canicule - vigilance rouge",
     .name_ja = "Ville de Lorient — Canicule - vigilance rouge",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21391,7 +21391,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4619D5A3C9", .name = "Ville de Lorient — aménagement cyclable",
     .name_ja = "Ville de Lorient — aménagement cyclable",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21415,7 +21415,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0223E77030", .name = "Ville de Lorient — Voies actuelles",
     .name_ja = "Ville de Lorient — Voies actuelles",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21439,7 +21439,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_59F66957C1", .name = "Ville de Lorient — Bâtiments",
     .name_ja = "Ville de Lorient — Bâtiments",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21463,7 +21463,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A07F5C7AA4", .name = "Ville de Lorient — borne de recharge électrique",
     .name_ja = "Ville de Lorient — borne de recharge électrique",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21487,7 +21487,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_09E49EBA1E", .name = "Ville de Lorient — Limites actuelles de Lorient",
     .name_ja = "Ville de Lorient — Limites actuelles de Lorient",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21511,7 +21511,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8A2988F23A", .name = "Ville de Lorient — point et objet d'intérêt",
     .name_ja = "Ville de Lorient — point et objet d'intérêt",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21535,7 +21535,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E43BB72164", .name = "Ville de Lorient — Bâtiments étiquettes",
     .name_ja = "Ville de Lorient — Bâtiments étiquettes",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21559,7 +21559,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_28870098A9", .name = "Ville de Lorient — Lieux extérieurs",
     .name_ja = "Ville de Lorient — Lieux extérieurs",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21583,7 +21583,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8771FD2E57", .name = "Ville de Lorient — Curiosités",
     .name_ja = "Ville de Lorient — Curiosités",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21607,7 +21607,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_47DE206DE5", .name = "Ville de Lorient — points d'eau",
     .name_ja = "Ville de Lorient — points d'eau",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21631,7 +21631,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C4F6B8B019", .name = "Ville de Lorient — Toponymes des lieux nommés de 1924",
     .name_ja = "Ville de Lorient — Toponymes des lieux nommés de 1924",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21655,7 +21655,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3E5B29F7E7", .name = "Ville de Lorient — Points et objets d'intérêt",
     .name_ja = "Ville de Lorient — Points et objets d'intérêt",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21679,7 +21679,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E6013F99F3", .name = "Ville de Lorient — Stations de tramway de 1924",
     .name_ja = "Ville de Lorient — Stations de tramway de 1924",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21703,7 +21703,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_241CAB504D", .name = "Ville de Lorient — Quartiers administratifs (points)",
     .name_ja = "Ville de Lorient — Quartiers administratifs (points)",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21727,7 +21727,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6D828C880E", .name = "Ayuntamiento de Toledo — UNIDADES_URBANISTICAS_NOMBRES",
     .name_ja = "Ayuntamiento de Toledo — UNIDADES_URBANISTICAS_NOMBRES",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21751,7 +21751,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3E65F9B6DD", .name = "North Yorkshire Council (Former HDC) — Hambleton",
     .name_ja = "North Yorkshire Council (Former HDC) — Hambleton",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21774,7 +21774,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4E42E607EE", .name = "North Yorkshire Council (Former HDC) — Parish Election Results",
     .name_ja = "North Yorkshire Council (Former HDC) — Parish Election Results",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21799,7 +21799,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_528B621A3A", .name = "North Yorkshire Council (Former HDC) — District Election Results",
     .name_ja = "North Yorkshire Council (Former HDC) — District Election Results",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21823,7 +21823,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B43736C59B", .name = "North Yorkshire Council (Former HDC) — County Election Results",
     .name_ja = "North Yorkshire Council (Former HDC) — County Election Results",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21847,7 +21847,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_BEC403C9E5", .name = "North Yorkshire Council (Former HDC) — Parliamentary Election "
       "Results",
     .name_ja = "North Yorkshire Council (Former HDC) — Parliamentary Election Results",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21871,7 +21871,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_24C7D6DF76", .name = "North Yorkshire Council (Former HDC) — European Election Results",
     .name_ja = "North Yorkshire Council (Former HDC) — European Election Results",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21895,7 +21895,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_134A37BC76", .name = "Ayuntamiento de Coslada — AYTO_CARGOS_EXP_V4",
     .name_ja = "Ayuntamiento de Coslada — AYTO_CARGOS_EXP_V4",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21919,7 +21919,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D939D3EAEF", .name = "Ayuntamiento de Coslada — AYTO_CARGOS_EXP_v3",
     .name_ja = "Ayuntamiento de Coslada — AYTO_CARGOS_EXP_v3",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21943,7 +21943,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1EB88BE8C3", .name = "Ayuntamiento de Coslada — GIA_CAE_2019",
     .name_ja = "Ayuntamiento de Coslada — GIA_CAE_2019",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21967,7 +21967,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CE9E057E6A", .name = "Ayuntamiento de Coslada — Contenedores",
     .name_ja = "Ayuntamiento de Coslada — Contenedores",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21991,7 +21991,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BDFF88A48E", .name = "Ayuntamiento de Coslada — Parcelas_para_Mailing",
     .name_ja = "Ayuntamiento de Coslada — Parcelas_para_Mailing",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22015,7 +22015,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_183EE21A43", .name = "Ayuntamiento de Coslada — Secciones_Catastrales",
     .name_ja = "Ayuntamiento de Coslada — Secciones_Catastrales",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22039,7 +22039,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E346260E43", .name = "Ayuntamiento de Coslada — Planta 0 Actividades QGIS",
     .name_ja = "Ayuntamiento de Coslada — Planta 0 Actividades QGIS",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22063,7 +22063,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_11CE8AFDA2", .name = "Ayuntamiento de Coslada — Papeleras",
     .name_ja = "Ayuntamiento de Coslada — Papeleras",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22087,7 +22087,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_88ED73C13E", .name = "Ayuntamiento de Coslada — Pipican",
     .name_ja = "Ayuntamiento de Coslada — Pipican",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22110,7 +22110,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2470D20F75", .name = "Ayuntamiento de Coslada — Papel_y_vidrio_ETRS89",
     .name_ja = "Ayuntamiento de Coslada — Papel_y_vidrio_ETRS89",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22134,7 +22134,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_886CBF4306", .name = "Ayuntamiento de Coslada — Viviendas_sinID",
     .name_ja = "Ayuntamiento de Coslada — Viviendas_sinID",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22158,7 +22158,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7755DD0F43", .name = "Doncaster Council — Air Quality Management Areas",
     .name_ja = "Doncaster Council — Air Quality Management Areas",
-    .category = "environment", .portal = "https://services5.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22182,7 +22182,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D29BF7D3E5", .name = "North Lanarkshire Council — Bus_Stops",
     .name_ja = "North Lanarkshire Council — Bus_Stops",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22206,7 +22206,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_BCE4242F73", .name = "North Lanarkshire Council — "
       "Wards1and4_ExcelToTable1_XYTableToPoint",
     .name_ja = "North Lanarkshire Council — Wards1and4_ExcelToTable1_XYTableToPoint",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22231,7 +22231,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5BC6983A1F", .name = "West Oxfordshire District Council — Air_Quality_Management_Areas",
     .name_ja = "West Oxfordshire District Council — Air_Quality_Management_Areas",
-    .category = "environment", .portal = "https://services5.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22255,7 +22255,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F7E06F08BA", .name = "West Oxfordshire District Council — Flood_Zone_2_3",
     .name_ja = "West Oxfordshire District Council — Flood_Zone_2_3",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22278,7 +22278,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DE10F1803E", .name = "West Oxfordshire District Council — Ward_Boundaries",
     .name_ja = "West Oxfordshire District Council — Ward_Boundaries",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22302,7 +22302,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D694695FCE", .name = "West Oxfordshire District Council — Carterton_Wards",
     .name_ja = "West Oxfordshire District Council — Carterton_Wards",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22326,7 +22326,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_BED202A123", .name = "West Oxfordshire District Council — "
       "West_Oxfordshire_Air_Quality_Management_Areas",
     .name_ja = "West Oxfordshire District Council — West_Oxfordshire_Air_Quality_Management_Areas",
-    .category = "environment", .portal = "https://services5.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22350,7 +22350,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_78BF5BA508", .name = "West Oxfordshire District Council — Local_Plan_2031_Hub_Layers",
     .name_ja = "West Oxfordshire District Council — Local_Plan_2031_Hub_Layers",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22374,7 +22374,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_24BBBA138F", .name = "Moray Council — wards_MC",
     .name_ja = "Moray Council — wards_MC",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22397,7 +22397,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F0A6BE94C7", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22421,7 +22421,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0BFD361F6C", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22445,7 +22445,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3C08228313", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22469,7 +22469,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_866590A4B1", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22493,7 +22493,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2E19462131", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22517,7 +22517,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EF5B9B45E7", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22541,7 +22541,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_04408FE091", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22565,7 +22565,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FE3ED52156", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22589,7 +22589,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B6CDEB9470", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22613,7 +22613,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2D69FB059B", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22637,7 +22637,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8F0717A794", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22661,7 +22661,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_64A0310E5D", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22685,7 +22685,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AB7FE05B5B", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22709,7 +22709,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5E422A4A19", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22733,7 +22733,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F7C910F00E", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22757,7 +22757,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DCF964FAD2", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22781,7 +22781,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C18C6587CA", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22805,7 +22805,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_556B4183AB", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22829,7 +22829,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_357094E898", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22853,7 +22853,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C9410DAD81", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22877,7 +22877,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3686CBE51A", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22901,7 +22901,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B0FE3183FC", .name = "Município de Mafra — REOT2024_OB_313_Bio_AreasClassificadas",
     .name_ja = "Município de Mafra — REOT2024_OB_313_Bio_AreasClassificadas",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22926,7 +22926,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A16D935014", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22950,7 +22950,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C3C7DC7E6C", .name = "Município de Mafra — REOT2024_OB_311_Agua_CursosAgua_Sthahler",
     .name_ja = "Município de Mafra — REOT2024_OB_311_Agua_CursosAgua_Sthahler",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22974,7 +22974,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4A1659364E", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22999,7 +22999,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_8D3D96977F", .name = "Município de Mafra — "
       "REOT2024_OB_311_Agua_EspacosPermeaveisSoloUrbano",
     .name_ja = "Município de Mafra — REOT2024_OB_311_Agua_EspacosPermeaveisSoloUrbano",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23024,7 +23024,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_333487E587", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23049,7 +23049,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_085330C9BF", .name = "Município de Mafra — "
       "REOT2024_OB_312_Solo_AptidaoUsoSolo_AB_SoloUrbano",
     .name_ja = "Município de Mafra — REOT2024_OB_312_Solo_AptidaoUsoSolo_AB_SoloUrbano",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23074,7 +23074,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EBCAECD957", .name = "Município de Mafra — REOT2024_OB_311_Agua_PPMESoloUrbano",
     .name_ja = "Município de Mafra — REOT2024_OB_311_Agua_PPMESoloUrbano",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23099,7 +23099,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F41B1F05D4", .name = "Município de Mafra — REOT2024_OB_313_Bio_ConetividadeNivelCopado",
     .name_ja = "Município de Mafra — REOT2024_OB_313_Bio_ConetividadeNivelCopado",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23124,7 +23124,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_095AF56B1D", .name = "Município de Mafra — REOT2024_OB_311_Agua_CulturasRegadio",
     .name_ja = "Município de Mafra — REOT2024_OB_311_Agua_CulturasRegadio",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23149,7 +23149,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4AADCED518", .name = "Município de Mafra — REOT2024_OB_313_Bio_ConetividadeNivelSolo",
     .name_ja = "Município de Mafra — REOT2024_OB_313_Bio_ConetividadeNivelSolo",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23175,7 +23175,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_88E56B1DEF", .name = "Município de Mafra — "
       "REOT2024_OB_313_Bio_ServicosEco_AprovisionamentoAlimentar",
     .name_ja = "Município de Mafra — REOT2024_OB_313_Bio_ServicosEco_AprovisionamentoAlimentar",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23202,7 +23202,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_B43F65AD5E", .name = "Município de Mafra — "
       "REOT2024_OB_313_Bio_FlorestasMeiosNaturaisSeminaturais",
     .name_ja = "Município de Mafra — REOT2024_OB_313_Bio_FlorestasMeiosNaturaisSeminaturais",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23228,7 +23228,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_026C4B8472", .name = "Município de Mafra — "
       "REOT2024_OB_313_Bio_ServicosEco_ArmazenamentoCarbono",
     .name_ja = "Município de Mafra — REOT2024_OB_313_Bio_ServicosEco_ArmazenamentoCarbono",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23253,7 +23253,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3D37BB7928", .name = "Município de Mafra — REOT2024_OB_311_Agua_AlbufeiraLagoa",
     .name_ja = "Município de Mafra — REOT2024_OB_311_Agua_AlbufeiraLagoa",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23278,7 +23278,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_C52DFF497C", .name = "Município de Mafra — "
       "REOT2024_OB_312_Solo_ReservaAgricolaNacional",
     .name_ja = "Município de Mafra — REOT2024_OB_312_Solo_ReservaAgricolaNacional",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23303,7 +23303,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7D520959D7", .name = "Município de Mafra — REOT2024_OB_311_Agua_Pomares",
     .name_ja = "Município de Mafra — REOT2024_OB_311_Agua_Pomares",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23328,7 +23328,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4B95928B6D", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23352,7 +23352,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_19293653EC", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23376,7 +23376,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2BBD004D7C", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23400,7 +23400,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A8DD02410F", .name = "Município de Mafra — REOT2024_OB_311_Agua_LeitoCursoAgua",
     .name_ja = "Município de Mafra — REOT2024_OB_311_Agua_LeitoCursoAgua",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23424,7 +23424,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F580E1BE3B", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23448,7 +23448,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A11577A818", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23472,7 +23472,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FEC7F70627", .name = "Município de Mafra — Município",
     .name_ja = "Município de Mafra — Município",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23496,7 +23496,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_198E9C1E0C", .name = "Município de Mafra — REOT2024_OB_311_Agua_Estufas",
     .name_ja = "Município de Mafra — REOT2024_OB_311_Agua_Estufas",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23521,7 +23521,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0DDB8ECFCB", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23545,7 +23545,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_82581F0F72", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23570,7 +23570,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_FCE22E19BA", .name = "Município de Mafra — "
       "REOT2024_OB_312_Solo_SuperficiesAgricolasCOSc2021",
     .name_ja = "Município de Mafra — REOT2024_OB_312_Solo_SuperficiesAgricolasCOSc2021",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23595,7 +23595,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BC4B637B62", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23619,7 +23619,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9FF2D5EE5B", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23643,7 +23643,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8C7E1FBAFE", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23667,7 +23667,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E69E98CA4A", .name = "Município de Mafra — Freguesia",
     .name_ja = "Município de Mafra — Freguesia",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23692,7 +23692,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_4DEC4DD077", .name = "Município de Mafra — "
       "REOT2024_OB_313_Bio_ServicosEco_PolinizacaoCulturas",
     .name_ja = "Município de Mafra — REOT2024_OB_313_Bio_ServicosEco_PolinizacaoCulturas",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23718,7 +23718,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_272210BBFD", .name = "Município de Mafra — "
       "REOT2024_OB_313_Bio_ServicosEco_QualidadeHabitats",
     .name_ja = "Município de Mafra — REOT2024_OB_313_Bio_ServicosEco_QualidadeHabitats",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23743,7 +23743,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_03FA251F80", .name = "Município de Mafra — REOT2024_OB_313_Bio_ServicosEco_Recreacao",
     .name_ja = "Município de Mafra — REOT2024_OB_313_Bio_ServicosEco_Recreacao",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23769,7 +23769,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_389F41A5C0", .name = "Município de Mafra — "
       "REOT2024_OB_313_Bio_ServicosEco_ProducaoAgua",
     .name_ja = "Município de Mafra — REOT2024_OB_313_Bio_ServicosEco_ProducaoAgua",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23795,7 +23795,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_5D8C2245DB", .name = "Município de Mafra — "
       "REOT2024_OB_313_Bio_ServicosEco_RetencaoHidrogenio",
     .name_ja = "Município de Mafra — REOT2024_OB_313_Bio_ServicosEco_RetencaoHidrogenio",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23821,7 +23821,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_38D1EA742F", .name = "Município de Mafra — "
       "REOT2024_OB_313_Bio_ServicosEco_RetencaoSedimentos",
     .name_ja = "Município de Mafra — REOT2024_OB_313_Bio_ServicosEco_RetencaoSedimentos",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23846,7 +23846,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F0D8F09B6F", .name = "VILLE DE TOURNAI — Liaisons_cyclables_lines",
     .name_ja = "VILLE DE TOURNAI — Liaisons_cyclables_lines",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23870,7 +23870,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A1623E8262", .name = "East Dunbartonshire Council — MergedFeatures",
     .name_ja = "East Dunbartonshire Council — MergedFeatures",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23894,7 +23894,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A1DA24D2D0", .name = "East Dunbartonshire Council — Flood_Risk_Area",
     .name_ja = "East Dunbartonshire Council — Flood_Risk_Area",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23918,7 +23918,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0EFF1B56A1", .name = "East Dunbartonshire Council — EDC_Bus_Stops",
     .name_ja = "East Dunbartonshire Council — EDC_Bus_Stops",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23942,7 +23942,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DB2718A6C9", .name = "East Dunbartonshire Council — Community Council Boundaries",
     .name_ja = "East Dunbartonshire Council — Community Council Boundaries",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23966,7 +23966,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0E91C946C2", .name = "East Dunbartonshire Council — Playgrounds",
     .name_ja = "East Dunbartonshire Council — Playgrounds",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23990,7 +23990,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A5D3D806C4", .name = "East Dunbartonshire Council — Recreational_Walkway_Cycleway",
     .name_ja = "East Dunbartonshire Council — Recreational_Walkway_Cycleway",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24014,7 +24014,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_417F71AA65", .name = "East Dunbartonshire Council — PointClustersOutput",
     .name_ja = "East Dunbartonshire Council — PointClustersOutput",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24037,7 +24037,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_18359F09AC", .name = "East Dunbartonshire Council — PointClustersOutput",
     .name_ja = "East Dunbartonshire Council — PointClustersOutput",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24060,7 +24060,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B814C8765A", .name = "East Dunbartonshire Council — Playgrounds",
     .name_ja = "East Dunbartonshire Council — Playgrounds",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24084,7 +24084,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1907970002", .name = "East Dunbartonshire Council — Airport_Noise_Contours",
     .name_ja = "East Dunbartonshire Council — Airport_Noise_Contours",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24108,7 +24108,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E8093D8C4D", .name = "East Dunbartonshire Council — travelareas",
     .name_ja = "East Dunbartonshire Council — travelareas",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24132,7 +24132,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7F003DEE7C", .name = "East Dunbartonshire Council — travelareas",
     .name_ja = "East Dunbartonshire Council — travelareas",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24156,7 +24156,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E1665AE354", .name = "East Dunbartonshire Council — no2_tubes_2019",
     .name_ja = "East Dunbartonshire Council — no2_tubes_2019",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24180,7 +24180,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1B3B4FBB4C", .name = "East Dunbartonshire Council — Listed Buildings in Greenbelt",
     .name_ja = "East Dunbartonshire Council — Listed Buildings in Greenbelt",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24204,7 +24204,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_07492AF488", .name = "East Dunbartonshire Council — Airport_Bird_Circle",
     .name_ja = "East Dunbartonshire Council — Airport_Bird_Circle",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24228,7 +24228,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_94B3BD06DB", .name = "East Dunbartonshire Council — designed landscapes and gardens",
     .name_ja = "East Dunbartonshire Council — designed landscapes and gardens",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24252,7 +24252,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C4CC8F34F4", .name = "East Dunbartonshire Council — PointClustersOutput",
     .name_ja = "East Dunbartonshire Council — PointClustersOutput",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24275,7 +24275,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EE3981856C", .name = "East Dunbartonshire Council — Airport_zone",
     .name_ja = "East Dunbartonshire Council — Airport_zone",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24299,7 +24299,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EC097362F9", .name = "East Dunbartonshire Council — Cemetery Extensions",
     .name_ja = "East Dunbartonshire Council — Cemetery Extensions",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24323,7 +24323,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2458A3AF92", .name = "East Dunbartonshire Council — Archaeoligal Sites",
     .name_ja = "East Dunbartonshire Council — Archaeoligal Sites",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24347,7 +24347,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_130E7536D8", .name = "East Dunbartonshire Council — flood defenses",
     .name_ja = "East Dunbartonshire Council — flood defenses",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24371,7 +24371,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3FCF14021D", .name = "East Dunbartonshire Council — Forth & Clyde Canal Feed",
     .name_ja = "East Dunbartonshire Council — Forth & Clyde Canal Feed",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24395,7 +24395,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9C9D5CAC2C", .name = "East Dunbartonshire Council — Forth & Clyde Canal",
     .name_ja = "East Dunbartonshire Council — Forth & Clyde Canal",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24419,7 +24419,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6F7EC2B9AD", .name = "East Dunbartonshire Council — Open Space Audit Sites",
     .name_ja = "East Dunbartonshire Council — Open Space Audit Sites",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24443,7 +24443,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8E53B9E58F", .name = "East Dunbartonshire Council — Green Network Stepping Stones",
     .name_ja = "East Dunbartonshire Council — Green Network Stepping Stones",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24466,7 +24466,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_233A836635", .name = "East Dunbartonshire Council — Green Network Hub",
     .name_ja = "East Dunbartonshire Council — Green Network Hub",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24489,7 +24489,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7909D6825D", .name = "East Dunbartonshire Council — Core Paths",
     .name_ja = "East Dunbartonshire Council — Core Paths",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24513,7 +24513,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2EA65C924E", .name = "East Dunbartonshire Council — Open Space Audit Sites",
     .name_ja = "East Dunbartonshire Council — Open Space Audit Sites",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24537,7 +24537,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1FFA0F738C", .name = "Mayo County Council — FZA_20220322",
     .name_ja = "Mayo County Council — FZA_20220322",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24561,7 +24561,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_09E9842FFA", .name = "Mayo County Council — CDP_Plan_Boundary",
     .name_ja = "Mayo County Council — CDP_Plan_Boundary",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24586,7 +24586,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_61366D359E", .name = "East Dunbartonshire Council — Local Nature Conservation Sites "
       "(important wildlife corridors)",
     .name_ja = "East Dunbartonshire Council — Local Nature Conservation Sites (important wildlife corridors)",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24611,7 +24611,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_98ABA5DA85", .name = "Mayo County Council — June_2021Outdoor_Recreational_Facilities",
     .name_ja = "Mayo County Council — June_2021Outdoor_Recreational_Facilities",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24636,7 +24636,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CB20E8002E", .name = "Mayo County Council — FZB_20220322",
     .name_ja = "Mayo County Council — FZB_20220322",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24662,7 +24662,7 @@ static const hp_source HP3B60_EU[] = {
       "High++ End Future Scenario. 0.5%AEP (1 in 200 year) Flood "
       "Extents",
     .name_ja = "Mayo County Council — National Coastal Flood Extents 2021 - High++ End Future Scenario. 0.5%AEP (1 in 200 year) Flood Extents",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24688,7 +24688,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A5BDF34342", .name = "Mayo County Council — LAP_PlanBoundary",
     .name_ja = "Mayo County Council — LAP_PlanBoundary",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24712,7 +24712,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_145F4924CB", .name = "Mayo County Council — T II Boundaries",
     .name_ja = "Mayo County Council — T II Boundaries",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24738,7 +24738,7 @@ static const hp_source HP3B60_EU[] = {
       "High++ End Future Scenario. 0.1% AEP (1 in 1000 year) Flood "
       "Extents",
     .name_ja = "Mayo County Council — National Coastal Flood Extents 2021 - High++ End Future Scenario. 0.1% AEP (1 in 1000 year) Flood Extents",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24764,7 +24764,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_75FDDFA1B9", .name = "Mayo County Council — LAP_Boundaries",
     .name_ja = "Mayo County Council — LAP_Boundaries",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24788,7 +24788,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_3E791EF364", .name = "East Dunbartonshire Council — Regionally Important Geological "
       "Site",
     .name_ja = "East Dunbartonshire Council — Regionally Important Geological Site",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24813,7 +24813,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_CF78FC9B9F", .name = "Mayo County Council — National Coastal Flood Extents 2021 - "
       "High++ End Future Scenario. 10% AEP (1 in 10 year) Flood Extents",
     .name_ja = "Mayo County Council — National Coastal Flood Extents 2021 - High++ End Future Scenario. 10% AEP (1 in 10 year) Flood Extents",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24839,7 +24839,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C4D0835548", .name = "Mayo County Council — Opportunity Site Claremorris",
     .name_ja = "Mayo County Council — Opportunity Site Claremorris",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24863,7 +24863,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_73D6CD4272", .name = "North Ayrshire Council — bus_stops",
     .name_ja = "North Ayrshire Council — bus_stops",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24887,7 +24887,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_666919319E", .name = "North Ayrshire Council — bus_routes",
     .name_ja = "North Ayrshire Council — bus_routes",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24911,7 +24911,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F44E3BF943", .name = "Mayo County Council — LAP_Agriculture",
     .name_ja = "Mayo County Council — LAP_Agriculture",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24936,7 +24936,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_DB642C1DFE", .name = "East Riding of Yorkshire Council — Areas Susceptible to "
       "Groundwater Flooding",
     .name_ja = "East Riding of Yorkshire Council — Areas Susceptible to Groundwater Flooding",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24960,7 +24960,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DC6046BAE1", .name = "Mayo County Council — T II Strategic Residential Reserve TierI",
     .name_ja = "Mayo County Council — T II Strategic Residential Reserve TierI",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24984,7 +24984,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_420406A000", .name = "East Dunbartonshire Council — Greenspace Audit Sites",
     .name_ja = "East Dunbartonshire Council — Greenspace Audit Sites",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25008,7 +25008,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9DF139678D", .name = "Mayo County Council — LAP_OpenSpace",
     .name_ja = "Mayo County Council — LAP_OpenSpace",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25032,7 +25032,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_089194C724", .name = "East Riding of Yorkshire Council — Volunteer Count by Ward",
     .name_ja = "East Riding of Yorkshire Council — Volunteer Count by Ward",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25056,7 +25056,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0FB938339B", .name = "East Riding of Yorkshire Council — ERYC Cycle Network",
     .name_ja = "East Riding of Yorkshire Council — ERYC Cycle Network",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25080,7 +25080,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_773E07FFE3", .name = "Mayo County Council — T II Agriculture",
     .name_ja = "Mayo County Council — T II Agriculture",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_economy_business", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25104,7 +25104,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B30E1F510C", .name = "East Riding of Yorkshire Council — ER Boundary",
     .name_ja = "East Riding of Yorkshire Council — ER Boundary",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25127,7 +25127,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6213689EE4", .name = "Mayo County Council — Westport House Demesne",
     .name_ja = "Mayo County Council — Westport House Demesne",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25152,7 +25152,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_3A27963DEC", .name = "East Riding of Yorkshire Council — During COVID: Mar 20 to Jan "
       "21 monthly average DV cases",
     .name_ja = "East Riding of Yorkshire Council — During COVID: Mar 20 to Jan 21 monthly average DV cases",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_health_social", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25178,7 +25178,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_92C349A5AC", .name = "East Riding of Yorkshire Council — Bus Stops & Shelters - Town "
       "Retail Centres",
     .name_ja = "East Riding of Yorkshire Council — Bus Stops & Shelters - Town Retail Centres",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25202,7 +25202,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_42EE901E4F", .name = "East Riding of Yorkshire Council — Historic Flooding",
     .name_ja = "East Riding of Yorkshire Council — Historic Flooding",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25227,7 +25227,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_ABDBF09AEC", .name = "East Riding of Yorkshire Council — LPU_Minerals Safeguarding "
       "Areas_Adoption_URL2025",
     .name_ja = "East Riding of Yorkshire Council — LPU_Minerals Safeguarding Areas_Adoption_URL2025",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25252,7 +25252,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_50E48D9258", .name = "East Riding of Yorkshire Council — Flood Storage Areas",
     .name_ja = "East Riding of Yorkshire Council — Flood Storage Areas",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25276,7 +25276,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0C31766958", .name = "East Riding of Yorkshire Council — Ward_ER_drug_off",
     .name_ja = "East Riding of Yorkshire Council — Ward_ER_drug_off",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_health_social", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25300,7 +25300,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1B8E0EBCD6", .name = "Mayo County Council — T II Existing Residential",
     .name_ja = "Mayo County Council — T II Existing Residential",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25324,7 +25324,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B845A331C8", .name = "East Riding of Yorkshire Council — HLSPS2025_FINAL",
     .name_ja = "East Riding of Yorkshire Council — HLSPS2025_FINAL",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25348,7 +25348,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E18123CBB5", .name = "Mayo County Council — LAP_Recreation and Amenities",
     .name_ja = "Mayo County Council — LAP_Recreation and Amenities",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25373,7 +25373,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_4FB5F582A3", .name = "East Riding of Yorkshire Council — Automatic Air Quality "
       "Monitoring Stations",
     .name_ja = "East Riding of Yorkshire Council — Automatic Air Quality Monitoring Stations",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25399,7 +25399,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_FAC2D6902C", .name = "East Riding of Yorkshire Council — "
       "LPU_Allocations_Adoption_URL2025",
     .name_ja = "East Riding of Yorkshire Council — LPU_Allocations_Adoption_URL2025",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25425,7 +25425,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_C7812716D2", .name = "East Riding of Yorkshire Council — Pre-COVID: Apr 19 to Feb 20 "
       "monthly average DV cases",
     .name_ja = "East Riding of Yorkshire Council — Pre-COVID: Apr 19 to Feb 20 monthly average DV cases",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_health_social", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25449,7 +25449,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BE37019EC1", .name = "East Riding of Yorkshire Council — All Bus Stops & Shelters",
     .name_ja = "East Riding of Yorkshire Council — All Bus Stops & Shelters",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25474,7 +25474,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_BA521982A7", .name = "East Riding of Yorkshire Council — LPU Humber SAMM ZOI Adoption "
       "URL2025",
     .name_ja = "East Riding of Yorkshire Council — LPU Humber SAMM ZOI Adoption URL2025",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25499,7 +25499,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1A8F5CF41C", .name = "East Riding of Yorkshire Council — NO2 Diffusion Tubes",
     .name_ja = "East Riding of Yorkshire Council — NO2 Diffusion Tubes",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25523,7 +25523,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1946137D7C", .name = "Mayo County Council — T II Residential Medium Density",
     .name_ja = "Mayo County Council — T II Residential Medium Density",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25547,7 +25547,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1697524198", .name = "Mayo County Council — LAP_Tourism and Leisure",
     .name_ja = "Mayo County Council — LAP_Tourism and Leisure",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25572,7 +25572,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_85441AE25F", .name = "East Riding of Yorkshire Council — Pre-COVID to During COVID "
       "Change",
     .name_ja = "East Riding of Yorkshire Council — Pre-COVID to During COVID Change",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_health_social", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25596,7 +25596,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A854787D65", .name = "East Riding of Yorkshire Council — NO2 Diffusion Tubes",
     .name_ja = "East Riding of Yorkshire Council — NO2 Diffusion Tubes",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25620,7 +25620,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8E838637CD", .name = "East Riding of Yorkshire Council — East Riding Boundary",
     .name_ja = "East Riding of Yorkshire Council — East Riding Boundary",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25644,7 +25644,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C775EDCDF2", .name = "East Riding of Yorkshire Council — NO2 Diffusion Tubes",
     .name_ja = "East Riding of Yorkshire Council — NO2 Diffusion Tubes",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25668,7 +25668,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_23832CB830", .name = "East Riding of Yorkshire Council — NO2 Diffusion Tubes",
     .name_ja = "East Riding of Yorkshire Council — NO2 Diffusion Tubes",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25692,7 +25692,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_44B51E0982", .name = "East Riding of Yorkshire Council — Reservoirs and Ponds",
     .name_ja = "East Riding of Yorkshire Council — Reservoirs and Ponds",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25716,7 +25716,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CEAC1CD47B", .name = "East Riding of Yorkshire Council — NO2 Diffusion Tubes",
     .name_ja = "East Riding of Yorkshire Council — NO2 Diffusion Tubes",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25740,7 +25740,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0676E9E058", .name = "Mayo County Council — LAP_Strategic Residential Reserve",
     .name_ja = "Mayo County Council — LAP_Strategic Residential Reserve",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25764,7 +25764,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_07FF274C7C", .name = "Mayo County Council — T II Recreation & Amenities",
     .name_ja = "Mayo County Council — T II Recreation & Amenities",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25788,7 +25788,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_90F6FE00E8", .name = "East Riding of Yorkshire Council — ER Boundary",
     .name_ja = "East Riding of Yorkshire Council — ER Boundary",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25811,7 +25811,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8FE060731C", .name = "East Riding of Yorkshire Council — Play_Spaces_Assessment",
     .name_ja = "East Riding of Yorkshire Council — Play_Spaces_Assessment",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25835,7 +25835,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F12A21EDA2", .name = "South Lanarkshire Council — CouncilWardsByCouncillor",
     .name_ja = "South Lanarkshire Council — CouncilWardsByCouncillor",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25859,7 +25859,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_05E9D957F5", .name = "South Lanarkshire Council — CouncilWards",
     .name_ja = "South Lanarkshire Council — CouncilWards",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25884,7 +25884,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_FECAC74B68", .name = "Belfast City Council — "
       "Hate_crime_and_incidents_2018_Wards_2014_region",
     .name_ja = "Belfast City Council — Hate_crime_and_incidents_2018_Wards_2014_region",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_elections_admin", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25909,7 +25909,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_63B0636022", .name = "South Lanarkshire Council — Water Access Point Triangle",
     .name_ja = "South Lanarkshire Council — Water Access Point Triangle",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25933,7 +25933,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8DEC5DA470", .name = "South Lanarkshire Council — Green Belt Outer Edge",
     .name_ja = "South Lanarkshire Council — Green Belt Outer Edge",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25957,7 +25957,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_836948CE4F", .name = "South Lanarkshire Council — Clyde Gateway",
     .name_ja = "South Lanarkshire Council — Clyde Gateway",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25981,7 +25981,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_11FCFF4658", .name = "South Lanarkshire Council — Level Crossing",
     .name_ja = "South Lanarkshire Council — Level Crossing",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26005,7 +26005,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8142313330", .name = "South Lanarkshire Council — P+R Station Proposals Subset",
     .name_ja = "South Lanarkshire Council — P+R Station Proposals Subset",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26029,7 +26029,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2D4EF93749", .name = "South Lanarkshire Council — P+R Bus Rail Proposals",
     .name_ja = "South Lanarkshire Council — P+R Bus Rail Proposals",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26053,7 +26053,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2B6B48E583", .name = "South Lanarkshire Council — Railway",
     .name_ja = "South Lanarkshire Council — Railway",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26077,7 +26077,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BAC32A1E52", .name = "South Lanarkshire Council — Listed Building",
     .name_ja = "South Lanarkshire Council — Listed Building",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26101,7 +26101,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7E9758AF37", .name = "Junta de Comunidades de Castilla-La Mancha — Catastro_Minero",
     .name_ja = "Junta de Comunidades de Castilla-La Mancha — Catastro_Minero",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26126,7 +26126,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_B88F735B02", .name = "Junta de Comunidades de Castilla-La Mancha — "
       "Catastro_2019_MUP112_Buff10m",
     .name_ja = "Junta de Comunidades de Castilla-La Mancha — Catastro_2019_MUP112_Buff10m",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26151,7 +26151,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_94DFCF137E", .name = "Junta de Comunidades de Castilla-La Mancha — "
       "Catastro_2019_MUP118_Buff20m",
     .name_ja = "Junta de Comunidades de Castilla-La Mancha — Catastro_2019_MUP118_Buff20m",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26177,7 +26177,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_EA3DA218A7", .name = "Junta de Comunidades de Castilla-La Mancha — "
       "Cuadricula_Minera_ETRS89",
     .name_ja = "Junta de Comunidades de Castilla-La Mancha — Cuadricula_Minera_ETRS89",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26202,7 +26202,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_B753658A65", .name = "Junta de Comunidades de Castilla-La Mancha — "
       "Cuadricula_Minera_ED50",
     .name_ja = "Junta de Comunidades de Castilla-La Mancha — Cuadricula_Minera_ED50",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26227,7 +26227,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_99CB4E5F9A", .name = "Junta de Comunidades de Castilla-La Mancha — "
       "Recintos_SIGPAC24_Originales_Tabla_parcelas PC_CATASTRO_prov",
     .name_ja = "Junta de Comunidades de Castilla-La Mancha — Recintos_SIGPAC24_Originales_Tabla_parcelas PC_CATASTRO_prov",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26253,7 +26253,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A7FB533582", .name = "Junta de Comunidades de Castilla-La Mancha — Zonificacion_2024",
     .name_ja = "Junta de Comunidades de Castilla-La Mancha — Zonificacion_2024",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26279,7 +26279,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_B196810477", .name = "Junta de Comunidades de Castilla-La Mancha — "
       "piscifactorias_clm_polig",
     .name_ja = "Junta de Comunidades de Castilla-La Mancha — piscifactorias_clm_polig",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26303,7 +26303,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AFCADE0AC2", .name = "Stadt Chemnitz — GewEinzugsGebiete",
     .name_ja = "Stadt Chemnitz — GewEinzugsGebiete",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26327,7 +26327,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_39C3D1C0A0", .name = "Stadt Chemnitz — BiotopeFlaechen",
     .name_ja = "Stadt Chemnitz — BiotopeFlaechen",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26351,7 +26351,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E9C7BED593", .name = "Stadt Chemnitz — Baeume",
     .name_ja = "Stadt Chemnitz — Baeume",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26374,7 +26374,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BF01ACEC0B", .name = "Stadt Chemnitz — GrundWasserFlurabstd",
     .name_ja = "Stadt Chemnitz — GrundWasserFlurabstd",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26399,7 +26399,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_CFB2C57C7E", .name = "Junta de Comunidades de Castilla-La Mancha — Reserva Biosfera "
       "Mancha Húmeda. Zona Núcleo",
     .name_ja = "Junta de Comunidades de Castilla-La Mancha — Reserva Biosfera Mancha Húmeda. Zona Núcleo",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26424,7 +26424,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0A7A1B7B7E", .name = "Stadt Chemnitz — GewNetz",
     .name_ja = "Stadt Chemnitz — GewNetz",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26448,7 +26448,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_74CD0D38AE", .name = "Stadt Chemnitz — Brunnen",
     .name_ja = "Stadt Chemnitz — Brunnen",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26471,7 +26471,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0F948F4F5D", .name = "Stadt Chemnitz — Kuehle_Gebaeude",
     .name_ja = "Stadt Chemnitz — Kuehle_Gebaeude",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26495,7 +26495,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5D55AD93C6", .name = "Stadt Chemnitz — BiotopeLinien",
     .name_ja = "Stadt Chemnitz — BiotopeLinien",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26518,7 +26518,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DFB4CB2E8A", .name = "Stadt Chemnitz — Refillstationen",
     .name_ja = "Stadt Chemnitz — Refillstationen",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26543,7 +26543,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_CA036138DD", .name = "Junta de Comunidades de Castilla-La Mancha — Reserva Biosfera "
       "Mancha Húmeda. Zona Tampón",
     .name_ja = "Junta de Comunidades de Castilla-La Mancha — Reserva Biosfera Mancha Húmeda. Zona Tampón",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26568,7 +26568,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_12EE9DEEE9", .name = "Stadt Chemnitz — Relevante_Gruenflaechen",
     .name_ja = "Stadt Chemnitz — Relevante_Gruenflaechen",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26592,7 +26592,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_39B6932894", .name = "Stadt Chemnitz — WA_HRB",
     .name_ja = "Stadt Chemnitz — WA_HRB",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26616,7 +26616,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_19B2DE1FEE", .name = "Stadt Chemnitz — Trinkwasserbrunnen",
     .name_ja = "Stadt Chemnitz — Trinkwasserbrunnen",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26639,7 +26639,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_229EA819B8", .name = "Stadt Chemnitz — Hochwasserschutzanlagen",
     .name_ja = "Stadt Chemnitz — Hochwasserschutzanlagen",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26663,7 +26663,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4EE05F6ADB", .name = "Stadt Chemnitz — Schutzgebiete_Flaechen",
     .name_ja = "Stadt Chemnitz — Schutzgebiete_Flaechen",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26687,7 +26687,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_433CAECEAE", .name = "Stadt Chemnitz — BiotopePunkte",
     .name_ja = "Stadt Chemnitz — BiotopePunkte",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26710,7 +26710,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_84DA6B558E", .name = "Stadt Chemnitz — Schutzgebiete_Punkte",
     .name_ja = "Stadt Chemnitz — Schutzgebiete_Punkte",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26734,7 +26734,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DF4A955EBD", .name = "Stadt Chemnitz — Trinkwasserschutzgebiete",
     .name_ja = "Stadt Chemnitz — Trinkwasserschutzgebiete",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26758,7 +26758,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D8207F1853", .name = "Stadt Chemnitz — Ueberschwemmungsgebiete_Chemnitz",
     .name_ja = "Stadt Chemnitz — Ueberschwemmungsgebiete_Chemnitz",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26783,7 +26783,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_28A41FC762", .name = "Junta de Comunidades de Castilla-La Mancha — Reserva Biosfera "
       "Mancha Húmeda. Zona de Transición",
     .name_ja = "Junta de Comunidades de Castilla-La Mancha — Reserva Biosfera Mancha Húmeda. Zona de Transición",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26808,7 +26808,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_96BF4C7CA2", .name = "Stadt Chemnitz — UeberschwGefGebiete",
     .name_ja = "Stadt Chemnitz — UeberschwGefGebiete",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26833,7 +26833,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_13699C321F", .name = "Meath County Council — DAA - Dublin Airport - Aircraft Noise "
       "Zones",
     .name_ja = "Meath County Council — DAA - Dublin Airport - Aircraft Noise Zones",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26858,7 +26858,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B886CB258E", .name = "Meath County Council — Movement - Access Point",
     .name_ja = "Meath County Council — Movement - Access Point",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26882,7 +26882,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_A19EF3B764", .name = "Meath County Council — Strategic Flood Risk Assessment - Flood "
       "Zone A",
     .name_ja = "Meath County Council — Strategic Flood Risk Assessment - Flood Zone A",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26908,7 +26908,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_BBE0F2022C", .name = "Meath County Council — DAA - Dublin Airport - Aircraft Noise "
       "Zones",
     .name_ja = "Meath County Council — DAA - Dublin Airport - Aircraft Noise Zones",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26933,7 +26933,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CE77E78B8D", .name = "Meath County Council — Airport Public Safety Zone",
     .name_ja = "Meath County Council — Airport Public Safety Zone",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26957,7 +26957,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_09C458C03D", .name = "Meath County Council — Admin Boundary - County Boundary",
     .name_ja = "Meath County Council — Admin Boundary - County Boundary",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26982,7 +26982,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_64B53EEB01", .name = "Meath County Council — County Overview - RSES Settlement "
       "Hierarchy",
     .name_ja = "Meath County Council — County Overview - RSES Settlement Hierarchy",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27007,7 +27007,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_AE0E19A80B", .name = "Meath County Council — Strategic Flood Risk Assessment - Flood "
       "Zone B",
     .name_ja = "Meath County Council — Strategic Flood Risk Assessment - Flood Zone B",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27032,7 +27032,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B8EAE838B7", .name = "Meath County Council — Admin Boundary - County Boundary",
     .name_ja = "Meath County Council — Admin Boundary - County Boundary",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27057,7 +27057,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FEFD5E5274", .name = "Meath County Council — Airport Noise Protection Zones",
     .name_ja = "Meath County Council — Airport Noise Protection Zones",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27081,7 +27081,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3A39E38822", .name = "Meath County Council — County Overview - County Strategy Index",
     .name_ja = "Meath County Council — County Overview - County Strategy Index",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27106,7 +27106,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_F3AE89F6BB", .name = "Meath County Council — Strategic Flood Risk Assessment - Areas "
       "Benefitting from Defences",
     .name_ja = "Meath County Council — Strategic Flood Risk Assessment - Areas Benefitting from Defences",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27132,7 +27132,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_512610D21C", .name = "Meath County Council — Glint and Glare Safeguarding",
     .name_ja = "Meath County Council — Glint and Glare Safeguarding",
-    .category = "environment", .portal = "https://services6.arcgis.com",
+    .category = "environment", .collector = "eu_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27157,7 +27157,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_7C48517AC9", .name = "Meath County Council — County Overview - Settlement and Rural "
       "Node Location",
     .name_ja = "Meath County Council — County Overview - Settlement and Rural Node Location",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27181,7 +27181,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EEE8961768", .name = "Meath County Council — Specific Objective - MasterPlan Boundary",
     .name_ja = "Meath County Council — Specific Objective - MasterPlan Boundary",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27206,7 +27206,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2A8335FE18", .name = "Meath County Council — Admin Boundary - County Boundary",
     .name_ja = "Meath County Council — Admin Boundary - County Boundary",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27231,7 +27231,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_8B9A8915E9", .name = "Meath County Council — Specific Objective - Residential Phasing "
       "Location",
     .name_ja = "Meath County Council — Specific Objective - Residential Phasing Location",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27256,7 +27256,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_02E97979B9", .name = "Meath County Council — Specific Objective - Future Gateway "
       "Building",
     .name_ja = "Meath County Council — Specific Objective - Future Gateway Building",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27280,7 +27280,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9536E21532", .name = "Meath County Council — Specific Objective - Residential Phasing",
     .name_ja = "Meath County Council — Specific Objective - Residential Phasing",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27305,7 +27305,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8594576C19", .name = "Meath County Council — Specific Objective - Spot Objective",
     .name_ja = "Meath County Council — Specific Objective - Spot Objective",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27329,7 +27329,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C7512C59ED", .name = "Meath County Council — Land Use Zoning - Settlement Boundary",
     .name_ja = "Meath County Council — Land Use Zoning - Settlement Boundary",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27355,7 +27355,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_0DC2DFE6BF", .name = "Meath County Council — Specific Objective - Residential Phasing "
       "Location",
     .name_ja = "Meath County Council — Specific Objective - Residential Phasing Location",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27379,7 +27379,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_07D3D467EC", .name = "Meath County Council — Land Use Zoning - Land Use Zoning "
       "Objective",
     .name_ja = "Meath County Council — Land Use Zoning - Land Use Zoning Objective",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "eu_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27405,7 +27405,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_B9D4C4AB10", .name = "Meath County Council — Specific Objective - Transport Indicative "
       "Road Route",
     .name_ja = "Meath County Council — Specific Objective - Transport Indicative Road Route",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27429,7 +27429,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_52DB6A1A54", .name = "Middlesbrough Council — Thorntree_Park",
     .name_ja = "Middlesbrough Council — Thorntree_Park",
-    .category = "environment", .portal = "https://services7.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27453,7 +27453,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1574942250", .name = "Middlesbrough Council — Stewart_Park",
     .name_ja = "Middlesbrough Council — Stewart_Park",
-    .category = "environment", .portal = "https://services7.arcgis.com",
+    .category = "environment", .collector = "eu_gis_culture_recreation", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27477,7 +27477,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C17E977DB4", .name = "Westmeath County Council — Land Use Zoning",
     .name_ja = "Westmeath County Council — Land Use Zoning",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27501,7 +27501,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F08CA125A9", .name = "Westmeath County Council — Flood",
     .name_ja = "Westmeath County Council — Flood",
-    .category = "safety", .portal = "https://services7.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27525,7 +27525,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_203F66CE2C", .name = "Middlesbrough Council — Stainton_Quarry",
     .name_ja = "Middlesbrough Council — Stainton_Quarry",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27549,7 +27549,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F79170C49B", .name = "Westmeath County Council — Land Use Zoning",
     .name_ja = "Westmeath County Council — Land Use Zoning",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27573,7 +27573,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F5D1FF34B5", .name = "Westmeath County Council — Flooding - Low Probability",
     .name_ja = "Westmeath County Council — Flooding - Low Probability",
-    .category = "safety", .portal = "https://services7.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27597,7 +27597,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_599D6C9212", .name = "Westmeath County Council — Naptan Bus Stop Points",
     .name_ja = "Westmeath County Council — Naptan Bus Stop Points",
-    .category = "transport", .portal = "https://services7.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27622,7 +27622,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9F1281724C", .name = "Middlesbrough Council — Schools_in_Middlesbrough",
     .name_ja = "Middlesbrough Council — Schools_in_Middlesbrough",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_education", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27646,7 +27646,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_212CFFFD51", .name = "Westmeath County Council — Fire Hydrants",
     .name_ja = "Westmeath County Council — Fire Hydrants",
-    .category = "safety", .portal = "https://services7.arcgis.com",
+    .category = "safety", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27670,7 +27670,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4DF66EA2D4", .name = "Middlesbrough Council — Recycling_Bring_Sites",
     .name_ja = "Middlesbrough Council — Recycling_Bring_Sites",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27694,7 +27694,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_82E8892295", .name = "Middlesbrough Council — Public_Transport",
     .name_ja = "Middlesbrough Council — Public_Transport",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27718,7 +27718,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_97E3DE93D6", .name = "Middlesbrough Council — Public_Computer_access",
     .name_ja = "Middlesbrough Council — Public_Computer_access",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27742,7 +27742,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A01CAB86C1", .name = "Middlesbrough Council — Playgrounds_in_Middlesbrough",
     .name_ja = "Middlesbrough Council — Playgrounds_in_Middlesbrough",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27766,7 +27766,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_03EFF205F6", .name = "East Renfrewshire Council — East Renfrewshire Council Wards",
     .name_ja = "East Renfrewshire Council — East Renfrewshire Council Wards",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27791,7 +27791,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_17D382C230", .name = "Antrim and Newtownabbey Borough Council — "
       "OSNI_WARD2012_LARGESCALE_ANBC_CLIP",
     .name_ja = "Antrim and Newtownabbey Borough Council — OSNI_WARD2012_LARGESCALE_ANBC_CLIP",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27816,7 +27816,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_CF1716B889", .name = "Antrim and Newtownabbey Borough Council — "
       "OSNI_WARD93_LARGESCALE_ANBC_CLIP",
     .name_ja = "Antrim and Newtownabbey Borough Council — OSNI_WARD93_LARGESCALE_ANBC_CLIP",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27841,7 +27841,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_FF98E954D5", .name = "Antrim and Newtownabbey Borough Council — "
       "OSNI_DEA2012_LARGESCALE_ANBC_CLIP",
     .name_ja = "Antrim and Newtownabbey Borough Council — OSNI_DEA2012_LARGESCALE_ANBC_CLIP",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27865,7 +27865,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_34931436D9", .name = "Gateshead Council AGOL — Monitoring_Locations",
     .name_ja = "Gateshead Council AGOL — Monitoring_Locations",
-    .category = "environment", .portal = "https://services7.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27888,7 +27888,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_4BE8E58BA0", .name = "Gateshead Council AGOL — Gateshead_Ward_Boundary_Line",
     .name_ja = "Gateshead Council AGOL — Gateshead_Ward_Boundary_Line",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27912,7 +27912,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A3D4C908F1", .name = "Gateshead Council AGOL — New_Cycleway",
     .name_ja = "Gateshead Council AGOL — New_Cycleway",
-    .category = "transport", .portal = "https://services7.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27936,7 +27936,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_2381EC918E", .name = "Gateshead Council AGOL — Bus Stops - Service Frequency (one "
       "week)",
     .name_ja = "Gateshead Council AGOL — Bus Stops - Service Frequency (one week)",
-    .category = "transport", .portal = "https://services7.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27961,7 +27961,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7A20792EC4", .name = "Gateshead Council AGOL — Ward Boundaries",
     .name_ja = "Gateshead Council AGOL — Ward Boundaries",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27985,7 +27985,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_275DFA2EE9", .name = "Gateshead Council AGOL — Wards",
     .name_ja = "Gateshead Council AGOL — Wards",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28008,7 +28008,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DDAF9CEEDD", .name = "Gateshead Council AGOL — POI_ev_charging_posts",
     .name_ja = "Gateshead Council AGOL — POI_ev_charging_posts",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28033,7 +28033,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B4558E05FB", .name = "Gateshead Council AGOL — Existing_Cycleways",
     .name_ja = "Gateshead Council AGOL — Existing_Cycleways",
-    .category = "transport", .portal = "https://services7.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28057,7 +28057,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CCA0CEFEC2", .name = "Gateshead Council AGOL — Bus_Stops",
     .name_ja = "Gateshead Council AGOL — Bus_Stops",
-    .category = "transport", .portal = "https://services7.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28080,7 +28080,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F52631D818", .name = "Gateshead Council AGOL — GIS_LIVE_CORPDATA_RightsOfWay_GH_GH_LI",
     .name_ja = "Gateshead Council AGOL — GIS_LIVE_CORPDATA_RightsOfWay_GH_GH_LI",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28104,7 +28104,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_21A1673844", .name = "Communauté Urbaine de Dunkerque — TSR_zonages",
     .name_ja = "Communauté Urbaine de Dunkerque — TSR_zonages",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28127,7 +28127,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CEB2ADB830", .name = "Communauté Urbaine de Dunkerque — Masque PLUIHD",
     .name_ja = "Communauté Urbaine de Dunkerque — Masque PLUIHD",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28150,7 +28150,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DCFE322EAE", .name = "Communauté Urbaine de Dunkerque — Zonage pluvial",
     .name_ja = "Communauté Urbaine de Dunkerque — Zonage pluvial",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28174,7 +28174,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0B20AE4A32", .name = "Gateshead Council AGOL — Potential Tree Planting Sites",
     .name_ja = "Gateshead Council AGOL — Potential Tree Planting Sites",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_environment_hazards", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28198,7 +28198,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_B98D586FEB", .name = "Communauté Urbaine de Dunkerque — Patrimoine architectural "
       "remarquable point",
     .name_ja = "Communauté Urbaine de Dunkerque — Patrimoine architectural remarquable point",
-    .category = "culture", .portal = "https://services7.arcgis.com",
+    .category = "culture", .collector = "eu_gis_culture_recreation", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28222,7 +28222,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_CF3FD4570B", .name = "Gateshead Council AGOL — New_Cycleway",
     .name_ja = "Gateshead Council AGOL — New_Cycleway",
-    .category = "transport", .portal = "https://services7.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28246,7 +28246,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_ED590DE3E4", .name = "Communauté Urbaine de Dunkerque — Coefficient de biotope par "
       "surface",
     .name_ja = "Communauté Urbaine de Dunkerque — Coefficient de biotope par surface",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28270,7 +28270,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_98597D8B6F", .name = "Gateshead Council AGOL — Existing_Cycleways",
     .name_ja = "Gateshead Council AGOL — Existing_Cycleways",
-    .category = "transport", .portal = "https://services7.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28294,7 +28294,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E0647B06A0", .name = "Communauté Urbaine de Dunkerque — OAP Patrimoine",
     .name_ja = "Communauté Urbaine de Dunkerque — OAP Patrimoine",
-    .category = "culture", .portal = "https://services7.arcgis.com",
+    .category = "culture", .collector = "eu_gis_culture_recreation", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28319,7 +28319,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_90222A78AA", .name = "Gateshead Council AGOL — "
       "Figure4_1_Strategic_green_infrastructure",
     .name_ja = "Gateshead Council AGOL — Figure4_1_Strategic_green_infrastructure",
-    .category = "environment", .portal = "https://services7.arcgis.com",
+    .category = "environment", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28343,7 +28343,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F8D816D740", .name = "Communauté Urbaine de Dunkerque — Arbres remarquables",
     .name_ja = "Communauté Urbaine de Dunkerque — Arbres remarquables",
-    .category = "environment", .portal = "https://services7.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28367,7 +28367,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7E9C027791", .name = "Gateshead Council AGOL — Flood_Warning_Areas",
     .name_ja = "Gateshead Council AGOL — Flood_Warning_Areas",
-    .category = "safety", .portal = "https://services7.arcgis.com",
+    .category = "safety", .collector = "eu_gis_safety_emergency", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28391,7 +28391,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_45292AA661", .name = "Communauté Urbaine de Dunkerque — Alignements d'arbres",
     .name_ja = "Communauté Urbaine de Dunkerque — Alignements d'arbres",
-    .category = "environment", .portal = "https://services7.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28415,7 +28415,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8041124DA2", .name = "Communauté Urbaine de Dunkerque — Linéaire commercial",
     .name_ja = "Communauté Urbaine de Dunkerque — Linéaire commercial",
-    .category = "environment", .portal = "https://services7.arcgis.com",
+    .category = "environment", .collector = "eu_gis_economy_business", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28440,7 +28440,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_1CCD2F8416", .name = "Communauté Urbaine de Dunkerque — Secteurs de dérogation de la "
       "loi Barnier",
     .name_ja = "Communauté Urbaine de Dunkerque — Secteurs de dérogation de la loi Barnier",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28464,7 +28464,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7A623FBE60", .name = "Cartografía Ayuntamiento Guadalajara — FI_Urbano",
     .name_ja = "Cartografía Ayuntamiento Guadalajara — FI_Urbano",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28489,7 +28489,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_8A58EEC647", .name = "Cartografía Ayuntamiento Guadalajara — PARCELA Catastral "
       "20250117",
     .name_ja = "Cartografía Ayuntamiento Guadalajara — PARCELA Catastral 20250117",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28513,7 +28513,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6E4A828211", .name = "Cartografía Ayuntamiento Guadalajara — PARCELAMunicipales1Ha",
     .name_ja = "Cartografía Ayuntamiento Guadalajara — PARCELAMunicipales1Ha",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28538,7 +28538,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_090D3A62F0", .name = "Cartografía Ayuntamiento Guadalajara — Solares Ayuntamiento de "
       "Guadalajara. Limpieza Periodica",
     .name_ja = "Cartografía Ayuntamiento Guadalajara — Solares Ayuntamiento de Guadalajara. Limpieza Periodica",
-    .category = "geospatial", .portal = "https://services7.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28564,7 +28564,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_88E20EC817", .name = "Cartografía Ayuntamiento Guadalajara — FI_Rustico",
     .name_ja = "Cartografía Ayuntamiento Guadalajara — FI_Rustico",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28588,7 +28588,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A111EA7CBF", .name = "Cartografía Ayuntamiento Guadalajara — Parcelas_dadasdeBAJA",
     .name_ja = "Cartografía Ayuntamiento Guadalajara — Parcelas_dadasdeBAJA",
-    .category = "infrastructure", .portal = "https://services7.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services7.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28613,7 +28613,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_94F5ECC537", .name = "Kommunalverbund — Wümme-Radweg",
     .name_ja = "Kommunalverbund — Wümme-Radweg",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28638,7 +28638,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_822F1048B5", .name = "Protezione Civile della Regione Lazio — "
       "Regione_Lazio___Protezione_Civile",
     .name_ja = "Protezione Civile della Regione Lazio — Regione_Lazio___Protezione_Civile",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28663,7 +28663,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2649332EF5", .name = "Lancaster City Council — Lancaster City Council District",
     .name_ja = "Lancaster City Council — Lancaster City Council District",
-    .category = "environment", .portal = "https://services8.arcgis.com",
+    .category = "environment", .collector = "eu_gis_elections_admin", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28687,7 +28687,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_96A43216A8", .name = "Kommunalverbund — Weser-Radweg (D9)",
     .name_ja = "Kommunalverbund — Weser-Radweg (D9)",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28711,7 +28711,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_7BE4E323F8", .name = "Lancaster City Council — "
       "CountyDistrictActiveBus_Stops_Buffer_400m",
     .name_ja = "Lancaster City Council — CountyDistrictActiveBus_Stops_Buffer_400m",
-    .category = "transport", .portal = "https://services8.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28736,7 +28736,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FF85EF92F7", .name = "Lancaster City Council — ONS_Population_Density_by_Ward_2021",
     .name_ja = "Lancaster City Council — ONS_Population_Density_by_Ward_2021",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28761,7 +28761,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_708A27414B", .name = "Lancaster City Council — Neighbourhood Plan Areas",
     .name_ja = "Lancaster City Council — Neighbourhood Plan Areas",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28785,7 +28785,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_388599B1CC", .name = "Lancaster City Council — Phase 1 Wards",
     .name_ja = "Lancaster City Council — Phase 1 Wards",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28809,7 +28809,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_7176FC119A", .name = "Lancaster City Council — Nitrogen Dioxide Diffusion Tubes (click "
       "on dot to see details)",
     .name_ja = "Lancaster City Council — Nitrogen Dioxide Diffusion Tubes (click on dot to see details)",
-    .category = "environment", .portal = "https://services8.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28837,7 +28837,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1DF30ADECB", .name = "Lancaster City Council — Bare_Ward",
     .name_ja = "Lancaster City Council — Bare_Ward",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28860,7 +28860,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_7E87D7A52D", .name = "Kommunalverbund — Hunte-Radweg",
     .name_ja = "Kommunalverbund — Hunte-Radweg",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28883,7 +28883,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DAF25059F7", .name = "Lancaster City Council — Wards 2023",
     .name_ja = "Lancaster City Council — Wards 2023",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28907,7 +28907,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3D5AA3F6E2", .name = "Lancaster City Council — Lancaster District",
     .name_ja = "Lancaster City Council — Lancaster District",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28931,7 +28931,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C082C9867C", .name = "Lancaster City Council — Phase 2 Wards",
     .name_ja = "Lancaster City Council — Phase 2 Wards",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28955,7 +28955,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_7E173BD2B5", .name = "Lancaster City Council — Air Quality Management Area (zoom in to "
       "view)",
     .name_ja = "Lancaster City Council — Air Quality Management Area (zoom in to view)",
-    .category = "environment", .portal = "https://services8.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28979,7 +28979,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9B15074313", .name = "Lancaster City Council — Bolton_&_Slyne_Ward",
     .name_ja = "Lancaster City Council — Bolton_&_Slyne_Ward",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29003,7 +29003,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_36C8B6F976", .name = "Kommunalverbund — Radfernweg Hamburg-Bremen",
     .name_ja = "Kommunalverbund — Radfernweg Hamburg-Bremen",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29027,7 +29027,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_36BC62F89A", .name = "Lancaster City Council — T1 Junction 33 Park and Ride",
     .name_ja = "Lancaster City Council — T1 Junction 33 Park and Ride",
-    .category = "environment", .portal = "https://services8.arcgis.com",
+    .category = "environment", .collector = "eu_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29051,7 +29051,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1B9C519F22", .name = "Lancaster City Council — Phase 3 Wards",
     .name_ja = "Lancaster City Council — Phase 3 Wards",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29074,7 +29074,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_F8C13CEDE8", .name = "Lancaster City Council — Bowerham_Ward",
     .name_ja = "Lancaster City Council — Bowerham_Ward",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29097,7 +29097,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_380E85A159", .name = "Copeland Borough Council — CBCOwnedPlaygrounds_region",
     .name_ja = "Copeland Borough Council — CBCOwnedPlaygrounds_region",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29121,7 +29121,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_735CD985AF", .name = "Kommunalverbund — Brückenradweg Osnabrück-Bremen",
     .name_ja = "Kommunalverbund — Brückenradweg Osnabrück-Bremen",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29146,7 +29146,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_265DEA8F2F", .name = "Copeland Borough Council — "
       "Conditional_Planning_Applications_Edit",
     .name_ja = "Copeland Borough Council — Conditional_Planning_Applications_Edit",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29171,7 +29171,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_387C31CE36", .name = "Lancaster City Council — Sustainable Settlements",
     .name_ja = "Lancaster City Council — Sustainable Settlements",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29195,7 +29195,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_204F37F548", .name = "Lancaster City Council — Bulk_Ward",
     .name_ja = "Lancaster City Council — Bulk_Ward",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29218,7 +29218,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_361FD4C1B5", .name = "Copeland Borough Council — Cumberland_F_Ward_polys290426",
     .name_ja = "Copeland Borough Council — Cumberland_F_Ward_polys290426",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29242,7 +29242,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_2551BEC7EF", .name = "Kommunalverbund — D-Route 7: Pilgerroute",
     .name_ja = "Kommunalverbund — D-Route 7: Pilgerroute",
-    .category = "transport", .portal = "https://services8.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29266,7 +29266,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_01AEBAB450", .name = "Copeland Borough Council — Cumberland_ParishWards_290426",
     .name_ja = "Copeland Borough Council — Cumberland_ParishWards_290426",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29291,7 +29291,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A261C06EAE", .name = "Copeland Borough Council — Copeland_Wards_LGBCE",
     .name_ja = "Copeland Borough Council — Copeland_Wards_LGBCE",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29315,7 +29315,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_66A398E8CD", .name = "Copeland Borough Council — Flood_Defences",
     .name_ja = "Copeland Borough Council — Flood_Defences",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29339,7 +29339,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_DB301C040B", .name = "Copeland Borough Council — Proposed_Cumberland_Wards",
     .name_ja = "Copeland Borough Council — Proposed_Cumberland_Wards",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29363,7 +29363,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6A614134EC", .name = "Copeland Borough Council — Wards_May_2019_Boundaries_UK_BFC",
     .name_ja = "Copeland Borough Council — Wards_May_2019_Boundaries_UK_BFC",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29387,7 +29387,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_97944117AD", .name = "Lancaster City Council — Scheduled Ancient Monument*",
     .name_ja = "Lancaster City Council — Scheduled Ancient Monument*",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29411,7 +29411,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_037097C0EE", .name = "Lancaster City Council — Carnforth_&_Millhead_Ward",
     .name_ja = "Lancaster City Council — Carnforth_&_Millhead_Ward",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29435,7 +29435,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C9EB32A10F", .name = "Kommunalverbund — D-Route 9: Weser - Romantische Straße Radweg",
     .name_ja = "Kommunalverbund — D-Route 9: Weser - Romantische Straße Radweg",
-    .category = "transport", .portal = "https://services8.arcgis.com",
+    .category = "transport", .collector = "eu_gis_environment_hazards", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29459,7 +29459,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0E8FAA39E1", .name = "Copeland Borough Council — Floodzone_3",
     .name_ja = "Copeland Borough Council — Floodzone_3",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29483,7 +29483,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E407F02D87", .name = "Lancaster City Council — SC5 - Recreation Opportunity Areas",
     .name_ja = "Lancaster City Council — SC5 - Recreation Opportunity Areas",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29507,7 +29507,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9E62A9ECB6", .name = "Lancaster City Council — Castle_Ward",
     .name_ja = "Lancaster City Council — Castle_Ward",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29530,7 +29530,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_77227E3D07", .name = "Kommunalverbund — Premiumroute D15 in Bremen",
     .name_ja = "Kommunalverbund — Premiumroute D15 in Bremen",
-    .category = "transport", .portal = "https://services8.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29553,7 +29553,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FBD4CD90E6", .name = "Copeland Borough Council — Floodzone_2",
     .name_ja = "Copeland Borough Council — Floodzone_2",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29577,7 +29577,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E1F6247741", .name = "Lancaster City Council — MAAP - Key Public Space^",
     .name_ja = "Lancaster City Council — MAAP - Key Public Space^",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29601,7 +29601,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_5381B19855", .name = "Lancaster City Council — Ellel_Ward",
     .name_ja = "Lancaster City Council — Ellel_Ward",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29625,7 +29625,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_DA4396A542", .name = "Lancaster City Council — TC1 - Retail Hierarchy for Lancaster "
       "District",
     .name_ja = "Lancaster City Council — TC1 - Retail Hierarchy for Lancaster District",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29649,7 +29649,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EB10D7A1D3", .name = "Lancaster City Council — Halton_with_Aughton_Ward",
     .name_ja = "Lancaster City Council — Halton_with_Aughton_Ward",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29674,7 +29674,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_2569E2BC8E", .name = "Lancaster City Council — Infrastructure Requirement and Delivery "
       "for Growth",
     .name_ja = "Lancaster City Council — Infrastructure Requirement and Delivery for Growth",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29699,7 +29699,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8760EB7026", .name = "Clare County Council — NS2_BUS_STOPS",
     .name_ja = "Clare County Council — NS2_BUS_STOPS",
-    .category = "transport", .portal = "https://services8.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29724,7 +29724,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_47865412D5", .name = "Clare County Council — Limerick Agglomeration",
     .name_ja = "Clare County Council — Limerick Agglomeration",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29747,7 +29747,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_15C9B67C8B", .name = "Clare County Council — NS1_BUS_STOPS",
     .name_ja = "Clare County Council — NS1_BUS_STOPS",
-    .category = "transport", .portal = "https://services8.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29772,7 +29772,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_199EBFBC49", .name = "Clare County Council — Clare_County_Boundary",
     .name_ja = "Clare County Council — Clare_County_Boundary",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29795,7 +29795,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_144CBA8433", .name = "Clare County Council — Bus Routes",
     .name_ja = "Clare County Council — Bus Routes",
-    .category = "transport", .portal = "https://services8.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29819,7 +29819,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_1A499A36F0", .name = "Clare County Council — Major Road (>3 million vehicle "
       "passages/year)",
     .name_ja = "Clare County Council — Major Road (>3 million vehicle passages/year)",
-    .category = "transport", .portal = "https://services8.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29845,7 +29845,7 @@ static const hp_source HP3B60_EU[] = {
       "criterion of 10 or more people expected to be highly annoyed per "
       "100 sqm)",
     .name_ja = "Clare County Council — Most Important Areas (MIA - based on a criterion of 10 or more people expected to be highly annoyed per 100 sqm)",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29870,7 +29870,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E031EAEE3C", .name = "Clare County Council — Noise Lden",
     .name_ja = "Clare County Council — Noise Lden",
-    .category = "environment", .portal = "https://services8.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29894,7 +29894,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D942050FED", .name = "Clare County Council — Noise Lnight",
     .name_ja = "Clare County Council — Noise Lnight",
-    .category = "environment", .portal = "https://services8.arcgis.com",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29918,7 +29918,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_65D08C3BEF", .name = "Conseil départemental de Haute-Marne — GRAPHE_PLO",
     .name_ja = "Conseil départemental de Haute-Marne — GRAPHE_PLO",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29942,7 +29942,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_247728C066", .name = "Conseil départemental de Haute-Marne — PLOS",
     .name_ja = "Conseil départemental de Haute-Marne — PLOS",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29965,7 +29965,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_EC7201830D", .name = "Conseil départemental de Haute-Marne — TVS",
     .name_ja = "Conseil départemental de Haute-Marne — TVS",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29988,7 +29988,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BC02C8EF30", .name = "Conseil départemental de Haute-Marne — GRAPHE_PLO",
     .name_ja = "Conseil départemental de Haute-Marne — GRAPHE_PLO",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30012,7 +30012,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B84F0311D8", .name = "Conseil départemental de Haute-Marne — GRAPHE_ARC",
     .name_ja = "Conseil départemental de Haute-Marne — GRAPHE_ARC",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30036,7 +30036,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_418D65771D", .name = "Conseil départemental de Haute-Marne — SITES",
     .name_ja = "Conseil départemental de Haute-Marne — SITES",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30059,7 +30059,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_66C994C48F", .name = "Conseil départemental de Haute-Marne — GRAPHE_ARC",
     .name_ja = "Conseil départemental de Haute-Marne — GRAPHE_ARC",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30083,7 +30083,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_B1013BB314", .name = "Conseil départemental de Haute-Marne — CANTON_RGRP",
     .name_ja = "Conseil départemental de Haute-Marne — CANTON_RGRP",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30107,7 +30107,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C391E8F458", .name = "Conseil départemental de Haute-Marne — COM_PL_AGGLOS",
     .name_ja = "Conseil départemental de Haute-Marne — COM_PL_AGGLOS",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30131,7 +30131,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C6DF65B8A9", .name = "Conseil départemental de Haute-Marne — ROUTES",
     .name_ja = "Conseil départemental de Haute-Marne — ROUTES",
-    .category = "transport", .portal = "https://services8.arcgis.com",
+    .category = "transport", .collector = "eu_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30154,7 +30154,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_37198464BF", .name = "Conseil départemental de Haute-Marne — COM_PL_AGGLOS",
     .name_ja = "Conseil départemental de Haute-Marne — COM_PL_AGGLOS",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30178,7 +30178,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C617B240F0", .name = "Conseil départemental de Haute-Marne — COM_PL_CANTON_2015",
     .name_ja = "Conseil départemental de Haute-Marne — COM_PL_CANTON_2015",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30202,7 +30202,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_1717C5E70E", .name = "Conseil départemental de Haute-Marne — AGGLOS",
     .name_ja = "Conseil départemental de Haute-Marne — AGGLOS",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30226,7 +30226,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0846E69466", .name = "Peterborough City Council — PCC Wards 2016",
     .name_ja = "Peterborough City Council — PCC Wards 2016",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_elections_admin", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30250,7 +30250,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_C289470709", .name = "Conseil départemental de Haute-Marne — COM_PL_DEPARTEMENT",
     .name_ja = "Conseil départemental de Haute-Marne — COM_PL_DEPARTEMENT",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30274,7 +30274,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0BA9B256FE", .name = "Conseil départemental de Haute-Marne — COM_PL_CANTON_2015",
     .name_ja = "Conseil départemental de Haute-Marne — COM_PL_CANTON_2015",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30299,7 +30299,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_16709EB511", .name = "Conseil départemental de Haute-Marne — CANTON",
     .name_ja = "Conseil départemental de Haute-Marne — CANTON",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30323,7 +30323,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D3D13569D0", .name = "Conseil départemental de Haute-Marne — COM_PL_DEPARTEMENT",
     .name_ja = "Conseil départemental de Haute-Marne — COM_PL_DEPARTEMENT",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30347,7 +30347,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_3DF5C8362B", .name = "Conseil départemental de Haute-Marne — CLOCHERS",
     .name_ja = "Conseil départemental de Haute-Marne — CLOCHERS",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30371,7 +30371,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FF72D6246E", .name = "Conseil départemental de Haute-Marne — COMMUNES",
     .name_ja = "Conseil départemental de Haute-Marne — COMMUNES",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30395,7 +30395,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_8AA3A42868", .name = "Conseil départemental de Haute-Marne — DEPARTEMENT",
     .name_ja = "Conseil départemental de Haute-Marne — DEPARTEMENT",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30419,7 +30419,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_D3C9C188BA", .name = "Woking Borough Council — ward_and_councillors",
     .name_ja = "Woking Borough Council — ward_and_councillors",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30443,7 +30443,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_059A9BEE6B", .name = "Mairie de Saint-Germain-en-Laye — Iris_Pop",
     .name_ja = "Mairie de Saint-Germain-en-Laye — Iris_Pop",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30467,7 +30467,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_970CAC37CF", .name = "Mairie de Saint-Germain-en-Laye — Parcelle",
     .name_ja = "Mairie de Saint-Germain-en-Laye — Parcelle",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_parcels_landuse", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30490,7 +30490,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_FC8EDF018E", .name = "Mairie de Saint-Germain-en-Laye — sig.opendata.s_zonage",
     .name_ja = "Mairie de Saint-Germain-en-Laye — sig.opendata.s_zonage",
-    .category = "transport", .portal = "https://services8.arcgis.com",
+    .category = "transport", .collector = "eu_gis_planning_zoning", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30514,7 +30514,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_705113FC4F", .name = "Mairie de Saint-Germain-en-Laye — sig.opendata.s_zonage",
     .name_ja = "Mairie de Saint-Germain-en-Laye — sig.opendata.s_zonage",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_planning_zoning", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30539,7 +30539,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_E6E0332E80", .name = "Mairie de Saint-Germain-en-Laye — zonage_stationnement",
     .name_ja = "Mairie de Saint-Germain-en-Laye — zonage_stationnement",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30563,7 +30563,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_0873CA7B17", .name = "Lisburn & Castlereagh City Council — LCCC DEA",
     .name_ja = "Lisburn & Castlereagh City Council — LCCC DEA",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30587,7 +30587,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A74B875F50", .name = "Lisburn & Castlereagh City Council — LCCC DEA 65-74",
     .name_ja = "Lisburn & Castlereagh City Council — LCCC DEA 65-74",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30611,7 +30611,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_9B8AF8B6CD", .name = "Lisburn & Castlereagh City Council — LCCC DEA 75+",
     .name_ja = "Lisburn & Castlereagh City Council — LCCC DEA 75+",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30635,7 +30635,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_AE2CC94B29", .name = "Comune di Ancona — Aggregated Polygons",
     .name_ja = "Comune di Ancona — Aggregated Polygons",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30660,7 +30660,7 @@ static const hp_source HP3B60_EU[] = {
   { .id = "JO60_EUGIS_6A82992BC0", .name = "West Dunbartonshire Council — "
       "Loch_Lomond_and_The_Trossachs_National_Park_Designated_Boundary2",
     .name_ja = "West Dunbartonshire Council — Loch_Lomond_and_The_Trossachs_National_Park_Designated_Boundary2",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "eu_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30686,7 +30686,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_6F809A4EBB", .name = "West Dunbartonshire Council — Artificial Coastal Defences",
     .name_ja = "West Dunbartonshire Council — Artificial Coastal Defences",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30710,7 +30710,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_A0E61B3EB4", .name = "West Dunbartonshire Council — WDC_1KM_FRM_FH_COASTAL_CC_DIFF",
     .name_ja = "West Dunbartonshire Council — WDC_1KM_FRM_FH_COASTAL_CC_DIFF",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30735,7 +30735,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BADEC17D2D", .name = "West Dunbartonshire Council — WDC_1KM_FRM_FH_RIVER_M_CC_DIFF",
     .name_ja = "West Dunbartonshire Council — WDC_1KM_FRM_FH_RIVER_M_CC_DIFF",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "eu_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30760,7 +30760,7 @@ static const hp_source HP3B60_EU[] = {
 
   { .id = "JO60_EUGIS_BB0DB1DF47", .name = "West Dunbartonshire Council — WDC_1km_FRM_FH_SURFACE_DIFF",
     .name_ja = "West Dunbartonshire Council — WDC_1km_FRM_FH_SURFACE_DIFF",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "eu_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"europe\",\"government\",\"gis\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,

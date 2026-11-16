@@ -24,7 +24,7 @@
 static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_US_GEONAMES_1_E7863C", .name = "carto.nationalmap.gov — Incorporated Places (Civil) (ArcGIS "
       "layer 1)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -47,7 +47,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_GEONAMES_2_B6F062", .name = "carto.nationalmap.gov — Unincorporated Places (Census) (ArcGIS "
       "layer 2)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -69,7 +69,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryMultipoint." },
 
   { .id = "JO58_AGS_US_GEONAMES_3_8430C9", .name = "carto.nationalmap.gov — Populated Places (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -91,7 +91,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryMultipoint." },
 
   { .id = "JO58_AGS_US_GEONAMES_5_3FB69D", .name = "carto.nationalmap.gov — Landforms (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -113,7 +113,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryMultipoint." },
 
   { .id = "JO58_AGS_US_GEONAMES_6_F6D964", .name = "carto.nationalmap.gov — Streams (Mouth) (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -136,7 +136,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_GEONAMES_7_45366A", .name = "carto.nationalmap.gov — Other Hydrographic Features (ArcGIS "
       "layer 7)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -158,7 +158,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_GEONAMES_8_B77759", .name = "carto.nationalmap.gov — Antarctica (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -181,7 +181,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_GEONAMES_12_F2D4BC", .name = "carto.nationalmap.gov — Historical Cultural-Political Points "
       "(ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -204,7 +204,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_GEONAMES_14_37D22B", .name = "carto.nationalmap.gov — Historical Physical Points (ArcGIS layer "
       "14)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -226,7 +226,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryMultipoint." },
 
   { .id = "JO58_AGS_US_MAP_INDICES_1_CDD649", .name = "carto.nationalmap.gov — 1x1 Degree labels (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -249,7 +249,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_MAP_INDICES_2_6D9A82", .name = "carto.nationalmap.gov — 30x60 Minute (1:100K) labels (ArcGIS "
       "layer 2)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -272,7 +272,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_MAP_INDICES_3_153C8C", .name = "carto.nationalmap.gov — 15 Minute (1:63K) labels (ArcGIS layer "
       "3)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -295,7 +295,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_MAP_INDICES_4_153914", .name = "carto.nationalmap.gov — 7.5 Minute (1:24K) labels (ArcGIS layer "
       "4)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -317,7 +317,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAP_INDICES_5_939725", .name = "carto.nationalmap.gov — 3.75 Minute labels (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -339,7 +339,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAP_INDICES_7_99DB72", .name = "carto.nationalmap.gov — 1x1 Degree Index (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -362,7 +362,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_MAP_INDICES_8_F7F14B", .name = "carto.nationalmap.gov — 30x60 Minute (1:100K) Index (ArcGIS "
       "layer 8)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -384,7 +384,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAP_INDICES_9_4CB1AD", .name = "carto.nationalmap.gov — 15 Minute (1:63K) Index (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -407,7 +407,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_MAP_INDICES_10_C97115", .name = "carto.nationalmap.gov — 7.5 Minute (1:24K) Index (ArcGIS layer "
       "10)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -429,7 +429,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAP_INDICES_11_1D5E9F", .name = "carto.nationalmap.gov — 3.75 Minute Index (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -451,7 +451,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SELECTABLE_POLYGONS_7_8B4336", .name = "carto.nationalmap.gov — 1x1 Degree Index (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -473,7 +473,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SELECTABLE_POLYGONS_8_67BA23", .name = "carto.nationalmap.gov — 1:100K Index (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -495,7 +495,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SELECTABLE_POLYGONS_9_EFA19E", .name = "carto.nationalmap.gov — 1:63K Index (AK) (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -517,7 +517,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SELECTABLE_POLYGONS_10_DBE973", .name = "carto.nationalmap.gov — 1:24K Index (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -539,7 +539,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SELECTABLE_POLYGONS_12_B974DE", .name = "carto.nationalmap.gov — Region (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -561,7 +561,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SELECTABLE_POLYGONS_13_ECCB75", .name = "carto.nationalmap.gov — Subregion (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -583,7 +583,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SELECTABLE_POLYGONS_14_ECCB04", .name = "carto.nationalmap.gov — Subbasin (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -605,7 +605,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_STRUCTURES_2_22F344", .name = "carto.nationalmap.gov — Cemeteries (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -627,7 +627,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_3_059F19", .name = "carto.nationalmap.gov — Post Offices (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -649,7 +649,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_4_283776", .name = "carto.nationalmap.gov — City/Town Halls (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -671,7 +671,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_5_CA2D3E", .name = "carto.nationalmap.gov — Courthouses (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -693,7 +693,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_6_8D83A6", .name = "carto.nationalmap.gov — State Capitols (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -715,7 +715,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_7_FEA17E", .name = "carto.nationalmap.gov — State Supreme Courts (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -737,7 +737,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_8_A2B612", .name = "carto.nationalmap.gov — The White House (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -759,7 +759,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_9_12D196", .name = "carto.nationalmap.gov — U.S. Capitol (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -781,7 +781,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_10_3B2A44", .name = "carto.nationalmap.gov — U.S. Supreme Court (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -804,7 +804,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_STRUCTURES_11_447F87", .name = "carto.nationalmap.gov — Historic Sites/Points of Interest "
       "(ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -827,7 +827,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_STRUCTURES_14_077452", .name = "carto.nationalmap.gov — Hospitals/Medical Centers (ArcGIS layer "
       "14)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_health_social", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -849,7 +849,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_15_F9DC5A", .name = "carto.nationalmap.gov — Ambulance Services (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -872,7 +872,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_STRUCTURES_16_207E89", .name = "carto.nationalmap.gov — Fire Stations/EMS Stations (ArcGIS layer "
       "16)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -894,7 +894,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_18_F26E1A", .name = "carto.nationalmap.gov — Police Stations (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -917,7 +917,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_STRUCTURES_19_19C4C7", .name = "carto.nationalmap.gov — Prisons/Correctional Facilities (ArcGIS "
       "layer 19)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -939,7 +939,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_21_F5B4A3", .name = "carto.nationalmap.gov — Colleges/Universities (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -962,7 +962,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_STRUCTURES_22_789BE1", .name = "carto.nationalmap.gov — Technical/Trade Schools (ArcGIS layer "
       "22)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -984,7 +984,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_23_087FC7", .name = "carto.nationalmap.gov — Schools (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1006,7 +1006,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_25_C01C68", .name = "carto.nationalmap.gov — Campgrounds (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1028,7 +1028,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_26_E8775D", .name = "carto.nationalmap.gov — Trailheads (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1050,7 +1050,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_28_C9DA73", .name = "carto.nationalmap.gov — Shelters (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1072,7 +1072,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_29_5ECE39", .name = "carto.nationalmap.gov — Picnic Areas (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1094,7 +1094,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_30_370718", .name = "carto.nationalmap.gov — Headquarters (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1117,7 +1117,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_STRUCTURES_31_C112EB", .name = "carto.nationalmap.gov — Visitor/Information Centers (ArcGIS "
       "layer 31)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1139,7 +1139,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_32_868942", .name = "carto.nationalmap.gov — Ranger Stations (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1161,7 +1161,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_34_036ED7", .name = "carto.nationalmap.gov — Alaska Pipeline (ArcGIS layer 34)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1183,7 +1183,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_STRUCTURES_37_BB1019", .name = "carto.nationalmap.gov — Cemeteries (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1205,7 +1205,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_38_29851A", .name = "carto.nationalmap.gov — Post Offices (ArcGIS layer 38)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1227,7 +1227,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_STRUCTURES_39_122EA1", .name = "carto.nationalmap.gov — City/Town Halls (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1249,7 +1249,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_2_EA1830", .name = "carto.nationalmap.gov — Roads 10M-Scale labels (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1271,7 +1271,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_3_4C9A8C", .name = "carto.nationalmap.gov — Roads 1M-Scale labels (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1293,7 +1293,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_4_C7FDD3", .name = "carto.nationalmap.gov — Ferries 1M-Scale labels (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1315,7 +1315,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_5_EB4CE2", .name = "carto.nationalmap.gov — National Trail labels (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1337,7 +1337,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_6_1C343B", .name = "carto.nationalmap.gov — Rail 1M-Scale labels (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1359,7 +1359,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_8_0E76BB", .name = "carto.nationalmap.gov — Roads 10M-Scale (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1381,7 +1381,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_9_CCC744", .name = "carto.nationalmap.gov — Roads 1M-Scale (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1403,7 +1403,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_10_2AFC95", .name = "carto.nationalmap.gov — Ferries 1M-Scale (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1425,7 +1425,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_11_AFB1B8", .name = "carto.nationalmap.gov — National Trails (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1447,7 +1447,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_12_92EE2C", .name = "carto.nationalmap.gov — Rail 1M-Scale (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1469,7 +1469,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_16_C095A5", .name = "carto.nationalmap.gov — Interstate labels (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1491,7 +1491,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_17_BC20FF", .name = "carto.nationalmap.gov — US Route labels (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1513,7 +1513,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_18_5E9644", .name = "carto.nationalmap.gov — State Route labels (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1535,7 +1535,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_22_F803F0", .name = "carto.nationalmap.gov — USFS Road Shields (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1557,7 +1557,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_24_C3D278", .name = "carto.nationalmap.gov — Trail labels (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1579,7 +1579,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_25_BD949A", .name = "carto.nationalmap.gov — Railroad labels (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1601,7 +1601,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_27_5A09FB", .name = "carto.nationalmap.gov — Airports (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1623,7 +1623,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_28_D8EDF4", .name = "carto.nationalmap.gov — Airport Runways (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1645,7 +1645,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_37_C6806E", .name = "carto.nationalmap.gov — Trails (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1667,7 +1667,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_TRANSPORTATION_38_5F7AFF", .name = "carto.nationalmap.gov — Railroads (ArcGIS layer 38)",
-    .category = "geospatial", .portal = "https://carto.nationalmap.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://carto.nationalmap.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1689,7 +1689,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_ALL_0_0B071E", .name = "gis.fema.gov — Designated Counties - General (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1712,7 +1712,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_DECS_ALL_1_8EF61D", .name = "gis.fema.gov — Emergency Designated Counties - General (ArcGIS "
       "layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1734,7 +1734,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_ALL_0_D120B5", .name = "gis.fema.gov — Designated Counties - General (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1757,7 +1757,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_DECS_ALL_1_6F79BB", .name = "gis.fema.gov — Emergency Designated Counties - General (ArcGIS "
       "layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1779,7 +1779,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_1_BD77D3", .name = "gis.fema.gov — DR-4955-FL (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1802,7 +1802,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_DECS_2_09FB3B", .name = "gis.fema.gov — DR-4954-Zuni Tribe of the Zuni Reservation, New "
       "Mexico:IR (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1824,7 +1824,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_3_757B25", .name = "gis.fema.gov — DR-4953-WV (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1846,7 +1846,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_4_9547C0", .name = "gis.fema.gov — DR-4952-HI (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1868,7 +1868,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_5_3A6650", .name = "gis.fema.gov — DR-4951-HI (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1890,7 +1890,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_6_DF28C6", .name = "gis.fema.gov — DR-4950-OK (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1912,7 +1912,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_7_06659F", .name = "gis.fema.gov — DR-4949-WI (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1934,7 +1934,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_8_4A775F", .name = "gis.fema.gov — DR-4948-UT (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1956,7 +1956,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_9_F8565D", .name = "gis.fema.gov — DR-4947-NH (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1978,7 +1978,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_10_276EDC", .name = "gis.fema.gov — DR-4946-GU (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2000,7 +2000,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_11_62F0D9", .name = "gis.fema.gov — DR-4945-OH (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2022,7 +2022,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_12_CB906C", .name = "gis.fema.gov — DR-4944-CO (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2044,7 +2044,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_13_4D1EFB", .name = "gis.fema.gov — DR-4943-KS (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2066,7 +2066,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_14_9D6228", .name = "gis.fema.gov — DR-4942-IA (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2089,7 +2089,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_DECS_15_258D52", .name = "gis.fema.gov — DR-4941-Oglala Sioux Tribe of the Pine Ridge "
       "Reservation, South Dakota:IR (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2112,7 +2112,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_16_4CE5E6", .name = "gis.fema.gov — DR-4940-KS (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2134,7 +2134,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_17_B963B0", .name = "gis.fema.gov — DR-4939-MO (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2156,7 +2156,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_18_893771", .name = "gis.fema.gov — DR-4938-SD (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2178,7 +2178,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_19_916F64", .name = "gis.fema.gov — DR-4937-KY (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2200,7 +2200,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_20_53FBFF", .name = "gis.fema.gov — DR-4936-HI (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2222,7 +2222,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_21_6F847D", .name = "gis.fema.gov — DR-4935-TX (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2244,7 +2244,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_22_CA06B6", .name = "gis.fema.gov — DR-4934-ND (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2266,7 +2266,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_23_C36A91", .name = "gis.fema.gov — DR-4933-IN (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2288,7 +2288,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_24_165215", .name = "gis.fema.gov — DR-4932-WV (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2310,7 +2310,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_25_1C106C", .name = "gis.fema.gov — DR-4931-MP (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2332,7 +2332,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_26_B1FAE5", .name = "gis.fema.gov — DR-4930-MS (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2354,7 +2354,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_27_293CE0", .name = "gis.fema.gov — DR-4929-MO (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2376,7 +2376,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_28_EE428D", .name = "gis.fema.gov — DR-4928-NE (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2398,7 +2398,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_29_CA182F", .name = "gis.fema.gov — DR-4927-LA (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2420,7 +2420,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_30_BF9FAF", .name = "gis.fema.gov — DR-4926-KS (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2442,7 +2442,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_31_EF6228", .name = "gis.fema.gov — DR-4925-MI (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2464,7 +2464,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_32_6E4938", .name = "gis.fema.gov — DR-4924-MO (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2487,7 +2487,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_DECS_33_E1EB24", .name = "gis.fema.gov — DR-4923-Oneida Tribe of Wisconsin:IR (ArcGIS "
       "layer 33)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2509,7 +2509,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_34_4A1167", .name = "gis.fema.gov — DR-4922-MS (ArcGIS layer 34)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2531,7 +2531,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_35_04695A", .name = "gis.fema.gov — DR-4921-GU (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2553,7 +2553,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_36_007E7C", .name = "gis.fema.gov — DR-4920-NE (ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2576,7 +2576,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_DECS_37_69AC81", .name = "gis.fema.gov — DR-4919-Mashpee Wampanoag Tribe of "
       "Massachusetts:IR (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2598,7 +2598,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_38_5912B4", .name = "gis.fema.gov — DR-4918-NM (ArcGIS layer 38)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2620,7 +2620,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_39_077AB4", .name = "gis.fema.gov — DR-4917-ID (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2642,7 +2642,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_40_660E7D", .name = "gis.fema.gov — DR-4916-DE (ArcGIS layer 40)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2664,7 +2664,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_1_509FBA", .name = "gis.fema.gov — DR-4955-FL (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2687,7 +2687,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_DECS_2_84A83C", .name = "gis.fema.gov — DR-4954-Zuni Tribe of the Zuni Reservation, New "
       "Mexico:IR (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2709,7 +2709,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_3_44582E", .name = "gis.fema.gov — DR-4953-WV (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2731,7 +2731,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_4_004429", .name = "gis.fema.gov — DR-4952-HI (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2753,7 +2753,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_5_5D5666", .name = "gis.fema.gov — DR-4951-HI (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2775,7 +2775,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_6_4D49D1", .name = "gis.fema.gov — DR-4950-OK (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2797,7 +2797,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_7_907783", .name = "gis.fema.gov — DR-4949-WI (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2819,7 +2819,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_8_FC1BFA", .name = "gis.fema.gov — DR-4948-UT (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2841,7 +2841,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_9_D507E6", .name = "gis.fema.gov — DR-4947-NH (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2863,7 +2863,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_10_EB4B7F", .name = "gis.fema.gov — DR-4946-GU (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2885,7 +2885,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_11_91968F", .name = "gis.fema.gov — DR-4945-OH (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2907,7 +2907,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_12_9D54EF", .name = "gis.fema.gov — DR-4944-CO (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2929,7 +2929,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_13_7F23BD", .name = "gis.fema.gov — DR-4943-KS (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2951,7 +2951,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_14_874B3D", .name = "gis.fema.gov — DR-4942-IA (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2974,7 +2974,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_DECS_15_612B7F", .name = "gis.fema.gov — DR-4941-Oglala Sioux Tribe of the Pine Ridge "
       "Reservation, South Dakota:IR (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2997,7 +2997,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_16_70F750", .name = "gis.fema.gov — DR-4940-KS (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3019,7 +3019,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_17_5BEFA4", .name = "gis.fema.gov — DR-4939-MO (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3041,7 +3041,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_18_47F92D", .name = "gis.fema.gov — DR-4938-SD (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3063,7 +3063,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_19_6944A6", .name = "gis.fema.gov — DR-4937-KY (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3085,7 +3085,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_20_94E76F", .name = "gis.fema.gov — DR-4936-HI (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3107,7 +3107,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_21_C6FBB8", .name = "gis.fema.gov — DR-4935-TX (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3129,7 +3129,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_22_8B4769", .name = "gis.fema.gov — DR-4934-ND (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3151,7 +3151,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_23_70BC3C", .name = "gis.fema.gov — DR-4933-IN (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3173,7 +3173,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_24_5A7F1C", .name = "gis.fema.gov — DR-4932-WV (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3195,7 +3195,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_25_D43412", .name = "gis.fema.gov — DR-4931-MP (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3217,7 +3217,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_26_67E05D", .name = "gis.fema.gov — DR-4930-MS (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3239,7 +3239,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_27_4CC5A8", .name = "gis.fema.gov — DR-4929-MO (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3261,7 +3261,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_28_F24EC6", .name = "gis.fema.gov — DR-4928-NE (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3283,7 +3283,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_29_199AA9", .name = "gis.fema.gov — DR-4927-LA (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3305,7 +3305,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_30_FEA299", .name = "gis.fema.gov — DR-4926-KS (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3327,7 +3327,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_31_B2312B", .name = "gis.fema.gov — DR-4925-MI (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3349,7 +3349,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_32_51F672", .name = "gis.fema.gov — DR-4924-MO (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3372,7 +3372,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_DECS_33_493887", .name = "gis.fema.gov — DR-4923-Oneida Tribe of Wisconsin:IR (ArcGIS "
       "layer 33)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3394,7 +3394,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_34_329C29", .name = "gis.fema.gov — DR-4922-MS (ArcGIS layer 34)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3416,7 +3416,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_35_AD53E0", .name = "gis.fema.gov — DR-4921-GU (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3438,7 +3438,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_36_B00C8D", .name = "gis.fema.gov — DR-4920-NE (ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3461,7 +3461,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_DECS_37_7E95B8", .name = "gis.fema.gov — DR-4919-Mashpee Wampanoag Tribe of "
       "Massachusetts:IR (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3483,7 +3483,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_38_9CF9D5", .name = "gis.fema.gov — DR-4918-NM (ArcGIS layer 38)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3505,7 +3505,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DECS_39_3932E5", .name = "gis.fema.gov — DR-4917-ID (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3527,7 +3527,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_DIRECT_HOUSING_MISS_0_C42580", .name = "gis.fema.gov — Direct Housing Missions (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3549,7 +3549,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_DIRECT_HOUSING_MISS_0_A0046B", .name = "gis.fema.gov — Direct Housing Missions (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3571,7 +3571,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_DRC_SERVICES_RELATE_0_CEB0B0", .name = "gis.fema.gov — DRC_Open (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3593,7 +3593,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_DRC_SERVICES_RELATE_0_2209F3", .name = "gis.fema.gov — DRC_Open (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3615,7 +3615,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_DRC_0_685EAA", .name = "gis.fema.gov — Open DRC (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3637,7 +3637,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_DRC_1_E4332F", .name = "gis.fema.gov — Archive - Closed DRC Locations (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3659,7 +3659,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_DRC_0_141580", .name = "gis.fema.gov — Open DRC (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3681,7 +3681,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_DRC_1_6CD294", .name = "gis.fema.gov — Archive - Closed DRC Locations (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3704,7 +3704,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_0_71FA1D", .name = "gis.fema.gov — Total IA Applicants Aggregated to 1KM USNG (Apps "
       "> 10) (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3728,7 +3728,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_1_75A87B", .name = "gis.fema.gov — Total IA Applicants Aggregated to 5KM USNG (Apps "
       "> 10) (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3752,7 +3752,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_2_CB42CC", .name = "gis.fema.gov — Total IA Inspections Aggregated to 1KM USNG (Apps "
       "> 10) (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3776,7 +3776,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_3_85C169", .name = "gis.fema.gov — Total IA Inspections Aggregated to 5KM USNG (Apps "
       "> 10) (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3800,7 +3800,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_4_49722E", .name = "gis.fema.gov — Total IA Eligibility Aggregated to 1KM USNG (Apps "
       "> 10) (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3824,7 +3824,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_5_9A853C", .name = "gis.fema.gov — Total IA Eligibility Aggregated to 5KM USNG (Apps "
       "> 10) (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3848,7 +3848,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_6_30695A", .name = "gis.fema.gov — Total IA IHP Awards Aggregated to 1KM USNG (Apps "
       "> 10) (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3872,7 +3872,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_7_A318C1", .name = "gis.fema.gov — Total IA IHP Awards Aggregated to 5KM USNG (Apps "
       "> 10) (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3896,7 +3896,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_0_75DB31", .name = "gis.fema.gov — Total IA Applicants Aggregated to 1KM USNG (Apps "
       "> 10) (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3920,7 +3920,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_1_C23CA1", .name = "gis.fema.gov — Total IA Applicants Aggregated to 5KM USNG (Apps "
       "> 10) (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3944,7 +3944,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_2_1583F3", .name = "gis.fema.gov — Total IA Inspections Aggregated to 1KM USNG (Apps "
       "> 10) (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3968,7 +3968,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_3_7F84B4", .name = "gis.fema.gov — Total IA Inspections Aggregated to 5KM USNG (Apps "
       "> 10) (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3992,7 +3992,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_4_AA1148", .name = "gis.fema.gov — Total IA Eligibility Aggregated to 1KM USNG (Apps "
       "> 10) (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4016,7 +4016,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_5_5FCCD0", .name = "gis.fema.gov — Total IA Eligibility Aggregated to 5KM USNG (Apps "
       "> 10) (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4040,7 +4040,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_6_EC5567", .name = "gis.fema.gov — Total IA IHP Awards Aggregated to 1KM USNG (Apps "
       "> 10) (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4064,7 +4064,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_AGGREGATE_USNG_7_010ED5", .name = "gis.fema.gov — Total IA IHP Awards Aggregated to 5KM USNG (Apps "
       "> 10) (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4088,7 +4088,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_APPLICANTS_0_30FA0E", .name = "gis.fema.gov — Total IA Applicants Aggregated to ZipCode (Apps > "
       "10) (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4111,7 +4111,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_APPLICANTS_1_B43341", .name = "gis.fema.gov — Total IA Applicants Aggregated to Counties "
       "(ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4134,7 +4134,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_APPLICANTS_0_2182F0", .name = "gis.fema.gov — Total IA Applicants Aggregated to ZipCode (Apps > "
       "10) (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4157,7 +4157,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_IA_APPLICANTS_1_0E9A0C", .name = "gis.fema.gov — Total IA Applicants Aggregated to Counties "
       "(ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4179,7 +4179,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_IPAWS_ARCHIVE_0_C84B54", .name = "gis.fema.gov — STATES (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4201,7 +4201,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_IPAWS_ARCHIVE_0_7C8D21", .name = "gis.fema.gov — STATES (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4223,7 +4223,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_JFOS_ICS_0_963ABF", .name = "gis.fema.gov — Active Disaster Labels (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4245,7 +4245,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_JFOS_ICS_1_9EBD0C", .name = "gis.fema.gov — Open Joint Field Offices (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4267,7 +4267,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_JFOS_ICS_0_E36F99", .name = "gis.fema.gov — Active Disaster Labels (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4289,7 +4289,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_JFOS_ICS_1_44EC7A", .name = "gis.fema.gov — Open Joint Field Offices (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4311,7 +4311,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_JFOS_0_B75DC2", .name = "gis.fema.gov — Open Joint Field Offices (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4333,7 +4333,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_JFOS_0_8CF2CA", .name = "gis.fema.gov — Open Joint Field Offices (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4356,7 +4356,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_RECOVERY_SUPPORT_FU_1_42B454", .name = "gis.fema.gov — Recovery Support Function Activations (ArcGIS "
       "layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4380,7 +4380,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_RECOVERY_SUPPORT_FU_1_A17795", .name = "gis.fema.gov — Recovery Support Function Activations (ArcGIS "
       "layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4403,7 +4403,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_REGHQS_0_4D7F7C", .name = "gis.fema.gov — FEMA Regional Offices (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4425,7 +4425,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_REGHQS_1_AC5B87", .name = "gis.fema.gov — State Outlines (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4447,7 +4447,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_FEMA_REGHQS_2_D76A86", .name = "gis.fema.gov — FEMA Regions (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4469,7 +4469,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FEMA_REGHQS_0_5C0B14", .name = "gis.fema.gov — FEMA Regional Offices (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4491,7 +4491,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_REGHQS_1_A71F02", .name = "gis.fema.gov — State Outlines (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4513,7 +4513,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_FEMA_REGHQS_2_7C1F0F", .name = "gis.fema.gov — FEMA Regions (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4536,7 +4536,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_STATE_EOC_0_0FAD3E", .name = "gis.fema.gov — State Emergency Operations Centers (EOC) (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4559,7 +4559,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_FEMA_STATE_EOC_0_92F90D", .name = "gis.fema.gov — State Emergency Operations Centers (EOC) (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4581,7 +4581,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_USAR_HOME_LOCATIONS_0_E877C3", .name = "gis.fema.gov — USAR Home Locations (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4603,7 +4603,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FEMA_USAR_HOME_LOCATIONS_0_CF5650", .name = "gis.fema.gov — USAR Home Locations (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4625,7 +4625,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_0_963089", .name = "gis.fema.gov — Open Shelters (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4647,7 +4647,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_1_BD698E", .name = "gis.fema.gov — Closed Shelters (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4669,7 +4669,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_3_D66F31", .name = "gis.fema.gov — Alert Shelters (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4691,7 +4691,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_4_C0A386", .name = "gis.fema.gov — Total Population (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4713,7 +4713,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_5_1026E2", .name = "gis.fema.gov — Shelter Locations (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4735,7 +4735,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_6_665A3B", .name = "gis.fema.gov — Shelter Population Types (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4757,7 +4757,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_7_B9BE77", .name = "gis.fema.gov — Shelter Wheelchair Accessible (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4779,7 +4779,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_8_4EA2BE", .name = "gis.fema.gov — Shelter ADA Compliant (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4801,7 +4801,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_9_B1FB61", .name = "gis.fema.gov — Generator Onsite (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4823,7 +4823,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_10_47433D", .name = "gis.fema.gov — Evacuation Type Code (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4845,7 +4845,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_11_54E1C0", .name = "gis.fema.gov — Post Impact Capacity (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4867,7 +4867,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_12_0C6EB4", .name = "gis.fema.gov — Evacuation Capacity (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4889,7 +4889,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_13_239475", .name = "gis.fema.gov — Pet Accommodations (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4911,7 +4911,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_14_74D3E7", .name = "gis.fema.gov — Shelter in 100 yr Floodplain (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4933,7 +4933,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_15_5ECF9D", .name = "gis.fema.gov — Shelter in 500 yr Floodplain (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4955,7 +4955,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_16_82C482", .name = "gis.fema.gov — Shelter in SLOSH Surge Area (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4977,7 +4977,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_0_C47BE1", .name = "gis.fema.gov — Open Shelters (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4999,7 +4999,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_1_F3ABAE", .name = "gis.fema.gov — Closed Shelters (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5021,7 +5021,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_3_E8431B", .name = "gis.fema.gov — Alert Shelters (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5043,7 +5043,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_4_4C7F1B", .name = "gis.fema.gov — Total Population (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5065,7 +5065,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_5_DA8404", .name = "gis.fema.gov — Shelter Locations (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5087,7 +5087,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_6_B3A873", .name = "gis.fema.gov — Shelter Population Types (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5109,7 +5109,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_7_0446BC", .name = "gis.fema.gov — Shelter Wheelchair Accessible (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5131,7 +5131,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_8_D00D99", .name = "gis.fema.gov — Shelter ADA Compliant (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5153,7 +5153,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_9_37E664", .name = "gis.fema.gov — Generator Onsite (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5175,7 +5175,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_10_55329A", .name = "gis.fema.gov — Evacuation Type Code (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5197,7 +5197,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_11_C10E05", .name = "gis.fema.gov — Post Impact Capacity (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5219,7 +5219,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_12_673298", .name = "gis.fema.gov — Evacuation Capacity (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5241,7 +5241,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_13_861421", .name = "gis.fema.gov — Pet Accommodations (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5263,7 +5263,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_14_2C82A4", .name = "gis.fema.gov — Shelter in 100 yr Floodplain (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5285,7 +5285,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_15_869C24", .name = "gis.fema.gov — Shelter in 500 yr Floodplain (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5307,7 +5307,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_FEMA_NSS_16_4BAAE8", .name = "gis.fema.gov — Shelter in SLOSH Surge Area (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5329,7 +5329,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_OPENSHELTERS_0_5C7AEC", .name = "gis.fema.gov — FEMA Open Shelters (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5351,7 +5351,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NSS_OPENSHELTERS_0_180395", .name = "gis.fema.gov — FEMA Open Shelters (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5373,7 +5373,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARTNER_AMTRAK_TRAIN_STA_0_D5B46E", .name = "gis.fema.gov — Amtrak Train Delay Status (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5395,7 +5395,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARTNER_AMTRAK_TRAIN_STA_0_6B842D", .name = "gis.fema.gov — Amtrak Train Delay Status (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5418,7 +5418,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PARTNER_BORDERPORTS_CBP_0_4B522F", .name = "gis.fema.gov — Border Ports of Entry - Wait Times (ArcGIS layer "
       "0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5441,7 +5441,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PARTNER_BORDERPORTS_CBP_0_0C14A3", .name = "gis.fema.gov — Border Ports of Entry - Wait Times (ArcGIS layer "
       "0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5463,7 +5463,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARTNER_DAY_1_FIRE_WEATH_0_2E5D40", .name = "gis.fema.gov — Day 1 Fire Weather Outlook (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5485,7 +5485,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_DAY_1_FIRE_WEATH_1_90F4BD", .name = "gis.fema.gov — Day 1 Fire Weather Outlook Dry (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5507,7 +5507,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_DAY_1_FIRE_WEATH_0_318969", .name = "gis.fema.gov — Day 1 Fire Weather Outlook (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5529,7 +5529,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_DAY_1_FIRE_WEATH_1_C96888", .name = "gis.fema.gov — Day 1 Fire Weather Outlook Dry (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5551,7 +5551,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_DOE_CRUDE_OIL_PR_0_FE9859", .name = "gis.fema.gov — Crude Oil Production (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5573,7 +5573,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_DOE_CRUDE_OIL_PR_0_859A23", .name = "gis.fema.gov — Crude Oil Production (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5595,7 +5595,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_DROUGHT_CURRENT_0_28B5D0", .name = "gis.fema.gov — Drought_Current (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5617,7 +5617,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_DROUGHT_CURRENT_0_555FE7", .name = "gis.fema.gov — Drought_Current (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5639,7 +5639,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_EXCESSIVE_RAINFA_0_A7CBBD", .name = "gis.fema.gov — Excessive_Rainfall_Day_1 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5661,7 +5661,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_EXCESSIVE_RAINFA_0_7C2DF4", .name = "gis.fema.gov — Excessive_Rainfall_Day_1 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5683,7 +5683,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_FAA_MAJOR_AIRPOR_0_859669", .name = "gis.fema.gov — FAA Major Airport Delay Status (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5706,7 +5706,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARTNER_FAA_MAJOR_AIRPOR_0_278F2C", .name = "gis.fema.gov — FAA Major Airport Delay Status (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5729,7 +5729,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARTNER_FIRE_LIST_CURREN_0_969E44", .name = "gis.fema.gov — Fire List Current (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5751,7 +5751,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARTNER_FIRE_LIST_CURREN_0_5794F7", .name = "gis.fema.gov — Fire List Current (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5773,7 +5773,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARTNER_ICE_ACCUMULATION_0_21C736", .name = "gis.fema.gov — ICE_ACCUMULATION_Day1 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5795,7 +5795,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_ICE_ACCUMULATION_1_DD664E", .name = "gis.fema.gov — ICE_ACCUMULATION_Day2 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5817,7 +5817,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_ICE_ACCUMULATION_3_7FE4FA", .name = "gis.fema.gov — ICE_ACCUMULATION_Day1_3 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5839,7 +5839,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_ICE_ACCUMULATION_0_B3B4F6", .name = "gis.fema.gov — ICE_ACCUMULATION_Day1 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5861,7 +5861,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_ICE_ACCUMULATION_1_332EBB", .name = "gis.fema.gov — ICE_ACCUMULATION_Day2 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5883,7 +5883,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_ICE_ACCUMULATION_3_9F47B6", .name = "gis.fema.gov — ICE_ACCUMULATION_Day1_3 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5905,7 +5905,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARTNER_IHS_FACILITIES_0_7762B3", .name = "gis.fema.gov — IHS_FACILITIES (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5927,7 +5927,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARTNER_IHS_FACILITIES_0_17EF33", .name = "gis.fema.gov — IHS_FACILITIES (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5949,7 +5949,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARTNER_INTERSTATE_REST__0_170CA3", .name = "gis.fema.gov — Highway Rest Stops (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5971,7 +5971,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARTNER_INTERSTATE_REST__0_D284CB", .name = "gis.fema.gov — Highway Rest Stops (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5993,7 +5993,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARTNER_NUCLEAR_PLANT_PO_0_B1757A", .name = "gis.fema.gov — Nuclear_Power_Plant_Reactor (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6016,7 +6016,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARTNER_NUCLEAR_PLANT_PO_0_134218", .name = "gis.fema.gov — Nuclear_Power_Plant_Reactor (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6040,7 +6040,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PARTNER_OPERATING_NUCLEA_0_99B5A8", .name = "gis.fema.gov — Operating_Nuclear_Power_Plant_Sites (ArcGIS layer "
       "0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6064,7 +6064,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PARTNER_OPERATING_NUCLEA_0_7D2E42", .name = "gis.fema.gov — Operating_Nuclear_Power_Plant_Sites (ArcGIS layer "
       "0)",
-    .category = "geospatial", .portal = "https://gis.fema.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gis.fema.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6088,7 +6088,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_RADAR_RADAR_BASE_REFLECT_2_AF224C", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/radar/radar_base_reflectivity/MapServer/2 "
       "— Footprint (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/radar/radar_base_reflectivity/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/radar/radar_base_reflectivity/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6112,7 +6112,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_0_E78365", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/0 "
       "— Observed River Stages (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6136,7 +6136,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_3_8A138D", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/3 "
       "— River Stages 72 hour Forecast (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6160,7 +6160,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_4_61E626", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/4 "
       "— River Stages 96 hour Forecast (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6184,7 +6184,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_5_C79023", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/5 "
       "— River Stages 120 hour Forecast (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6208,7 +6208,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_6_C7CFAE", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/6 "
       "— River Stages 144 hour Forecast (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/6",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/6",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6232,7 +6232,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_7_743D8C", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/7 "
       "— River Stages 168 hour Forecast (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/7",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/7",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6256,7 +6256,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_8_7218A5", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/8 "
       "— River Stages 192 hour Forecast (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/8",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/8",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6280,7 +6280,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_9_7221A5", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/9 "
       "— River Stages 216 hour Forecast (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/9",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/9",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6304,7 +6304,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_10_24BA8C", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/10 "
       "— River Stages 240 hour Forecast (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/10",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/10",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6328,7 +6328,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_11_111511", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/11 "
       "— River Stages 264 hour Forecast (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/11",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/11",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6352,7 +6352,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_12_C51CC2", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/12 "
       "— River Stages 288 hour Forecast (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/12",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/12",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6376,7 +6376,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_13_BDC118", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/13 "
       "— River Stages 312 hour Forecast (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/13",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/13",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6400,7 +6400,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_14_B26C10", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/14 "
       "— River Stages 336 hour Forecast (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/14",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/14",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6424,7 +6424,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WATER_RIV_GAUGES_15_EE88F6", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/15 "
       "— Full Forecast Period Stages (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/15",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/15",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6448,7 +6448,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WWA_WATCH_WARN_ADV_1_24A272", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/WWA/watch_warn_adv/FeatureServer/1 "
       "— WatchesWarnings (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/WWA/watch_warn_adv/FeatureServer/1",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/WWA/watch_warn_adv/FeatureServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6472,7 +6472,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_WWA_WATCH_WARN_ADV_1_A23DC5", .name = "mapservices.weather.noaa.gov/eventdriven/rest/services/WWA/watch_warn_adv/MapServer/1 "
       "— WatchesWarnings (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/WWA/watch_warn_adv/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://mapservices.weather.noaa.gov/eventdriven/rest/services/WWA/watch_warn_adv/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6496,7 +6496,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_BUILDINGFOOTPRINTS_1_E1C1A0", .name = "gisservices.its.ny.gov — Building Footprint County Overview "
       "(ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6519,7 +6519,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_BUILDINGFOOTPRINTS_2_2096D9", .name = "gisservices.its.ny.gov — NYS Building Footprints (ArcGIS layer "
       "2)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6542,7 +6542,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_BUILDINGFOOTPRINTS_1_50DD1A", .name = "gisservices.its.ny.gov — Building Footprint County Overview "
       "(ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6565,7 +6565,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_BUILDINGFOOTPRINTS_2_1CB3F4", .name = "gisservices.its.ny.gov — NYS Building Footprints (ArcGIS layer "
       "2)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6587,7 +6587,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_GAS_STATION_0_6B08B5", .name = "gisservices.its.ny.gov — OCS_HURR_EVAC_RAMP_PTS (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6610,7 +6610,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_GAS_STATION_1_D0D250", .name = "gisservices.its.ny.gov — OCS_HURR_EVAC_RAMP_BUFF (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6632,7 +6632,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_GAS_STATION_2_FBA035", .name = "gisservices.its.ny.gov — OCS_LI_HURR_EVAC_ROUTE (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6654,7 +6654,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_GAS_STATION_3_C6328A", .name = "gisservices.its.ny.gov — OCS_EVAC_ROUTE_BUFF (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6676,7 +6676,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_GAS_STATION_4_1A9577", .name = "gisservices.its.ny.gov — 100 Year Flood (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6698,7 +6698,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_GAS_STATION_5_6640C8", .name = "gisservices.its.ny.gov — 500 Year Flood (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6720,7 +6720,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_ASSEMBLY_DISTRICTS_0_BDFC89", .name = "gisservices.its.ny.gov — NYS Assembly Districts (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6742,7 +6742,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_ASSEMBLY_DISTRICTS_0_CDD1B4", .name = "gisservices.its.ny.gov — NYS Assembly Districts (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6764,7 +6764,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_0_4896BB", .name = "gisservices.its.ny.gov — State (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6786,7 +6786,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_1_AA82D5", .name = "gisservices.its.ny.gov — State_Shoreline (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6808,7 +6808,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_2_71E2BD", .name = "gisservices.its.ny.gov — Counties (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6830,7 +6830,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_3_C8B6B7", .name = "gisservices.its.ny.gov — Counties_Shoreline (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6852,7 +6852,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_4_FC9A69", .name = "gisservices.its.ny.gov — Cities (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6874,7 +6874,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_5_019ADC", .name = "gisservices.its.ny.gov — Towns (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6896,7 +6896,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_6_A926DF", .name = "gisservices.its.ny.gov — Cities_Towns (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6918,7 +6918,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_7_63BA14", .name = "gisservices.its.ny.gov — Villages (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6940,7 +6940,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_8_8EF402", .name = "gisservices.its.ny.gov — Indian_Territories (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6962,7 +6962,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_0_7A3304", .name = "gisservices.its.ny.gov — State (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6984,7 +6984,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_1_FA6E32", .name = "gisservices.its.ny.gov — State_Shoreline (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7006,7 +7006,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_2_AB8926", .name = "gisservices.its.ny.gov — Counties (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7028,7 +7028,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_3_82095B", .name = "gisservices.its.ny.gov — Counties_Shoreline (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7050,7 +7050,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_4_56764A", .name = "gisservices.its.ny.gov — Cities (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7072,7 +7072,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_5_AC6646", .name = "gisservices.its.ny.gov — Towns (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7094,7 +7094,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_6_9AB162", .name = "gisservices.its.ny.gov — Cities_Towns (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7116,7 +7116,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_7_C15CB1", .name = "gisservices.its.ny.gov — Villages (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7138,7 +7138,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_CIVIL_BOUNDARIES_8_40092F", .name = "gisservices.its.ny.gov — Indian_Territories (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7161,7 +7161,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_CONGRESSIONAL_DISTRI_0_6AC06A", .name = "gisservices.its.ny.gov — NYS Congressional Districts (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7184,7 +7184,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_CONGRESSIONAL_DISTRI_0_332AA9", .name = "gisservices.its.ny.gov — NYS Congressional Districts (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7206,7 +7206,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_EXITS_0_B6A4B9", .name = "gisservices.its.ny.gov — Exit_NYC (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7228,7 +7228,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_EXITS_1_135478", .name = "gisservices.its.ny.gov — Exit (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7250,7 +7250,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_EXITS_0_9226AC", .name = "gisservices.its.ny.gov — Exit_NYC (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7272,7 +7272,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_EXITS_1_E52815", .name = "gisservices.its.ny.gov — Exit (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7294,7 +7294,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_HOLLOWFI_1_CB3166", .name = "gisservices.its.ny.gov — HUC8 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7316,7 +7316,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_HOLLOWFI_4_8574E6", .name = "gisservices.its.ny.gov — Hydrography Area All (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7339,7 +7339,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_HOLLOWFI_5_D38E10", .name = "gisservices.its.ny.gov — Hydrography Area AreaSqKm >= 10 (ArcGIS "
       "layer 5)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7362,7 +7362,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_HOLLOWFI_6_7E68F6", .name = "gisservices.its.ny.gov — Hydrography Area AreaSqKm >= 25 (ArcGIS "
       "layer 6)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7385,7 +7385,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_HOLLOWFI_8_D2B37D", .name = "gisservices.its.ny.gov — Hydrography Waterbody Intermittent "
       "(ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7408,7 +7408,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_HOLLOWFI_9_00B098", .name = "gisservices.its.ny.gov — Hydrography Waterbody All (ArcGIS layer "
       "9)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7431,7 +7431,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_HOLLOWFI_10_854F14", .name = "gisservices.its.ny.gov — Hydrography Waterbody AreaSqKm >= .01 "
       "(ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7455,7 +7455,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_HOLLOWFI_11_DA89FA", .name = "gisservices.its.ny.gov — Hydrography Waterbody AreaSqKm >= .25 "
       "(ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7479,7 +7479,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_HOLLOWFI_12_8ADA2A", .name = "gisservices.its.ny.gov — Hydrography Waterbody AreaSqKm >= .5 "
       "(ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7503,7 +7503,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_HOLLOWFI_13_33D9EA", .name = "gisservices.its.ny.gov — Hydrography Waterbody AreaSqKm >= 5 "
       "(ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7526,7 +7526,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_HOLLOWFI_14_DD0869", .name = "gisservices.its.ny.gov — Hydrography Waterbody AreaSqKm >= 10 "
       "(ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7549,7 +7549,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_HOLLOWFI_15_52471A", .name = "gisservices.its.ny.gov — Hydrography Flowline (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7571,7 +7571,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_1_120E34", .name = "gisservices.its.ny.gov — HUC8 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7593,7 +7593,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_4_81E054", .name = "gisservices.its.ny.gov — Hydrography Area All (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7616,7 +7616,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_5_A5DD9D", .name = "gisservices.its.ny.gov — Hydrography Area AreaSqKm >= 10 (ArcGIS "
       "layer 5)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7639,7 +7639,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_6_15774E", .name = "gisservices.its.ny.gov — Hydrography Area AreaSqKm >= 25 (ArcGIS "
       "layer 6)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7662,7 +7662,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_8_64067E", .name = "gisservices.its.ny.gov — Hydrography Waterbody Intermittent "
       "(ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7685,7 +7685,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_9_42E7F2", .name = "gisservices.its.ny.gov — Hydrography Waterbody All (ArcGIS layer "
       "9)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7708,7 +7708,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_10_EDB3FB", .name = "gisservices.its.ny.gov — Hydrography Waterbody AreaSqKm >= .01 "
       "(ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7731,7 +7731,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_11_C49B91", .name = "gisservices.its.ny.gov — Hydrography Waterbody AreaSqKm >= .25 "
       "(ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7754,7 +7754,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_12_108E2E", .name = "gisservices.its.ny.gov — Hydrography Waterbody AreaSqKm >= .5 "
       "(ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7777,7 +7777,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_13_FFAE0B", .name = "gisservices.its.ny.gov — Hydrography Waterbody AreaSqKm >= 5 "
       "(ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7800,7 +7800,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_14_F06120", .name = "gisservices.its.ny.gov — Hydrography Waterbody AreaSqKm >= 10 "
       "(ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7822,7 +7822,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_HYDROGRAPHY_15_AB561F", .name = "gisservices.its.ny.gov — Hydrography Flowline (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7844,7 +7844,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_NYS_MESONET_0_FE7B20", .name = "gisservices.its.ny.gov — Mesonet Stations (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7866,7 +7866,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_PLACE_POINTS_0_280D5C", .name = "gisservices.its.ny.gov — NYS_Place_Points (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7888,7 +7888,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_PLACE_POINTS_0_49A8E6", .name = "gisservices.its.ny.gov — NYS_Place_Points (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7910,7 +7910,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_1_FE937C", .name = "gisservices.its.ny.gov — Schools K-12 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7932,7 +7932,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_2_92952B", .name = "gisservices.its.ny.gov — Public K-12 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7954,7 +7954,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_3_EDAE54", .name = "gisservices.its.ny.gov — Private K-12 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7976,7 +7976,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_4_69AA50", .name = "gisservices.its.ny.gov — Charter K-12 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7998,7 +7998,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_5_F8B41A", .name = "gisservices.its.ny.gov — BOCES (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8020,7 +8020,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_6_4D8952", .name = "gisservices.its.ny.gov — State Operated Schools (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8043,7 +8043,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_7_DA8A17", .name = "gisservices.its.ny.gov — Other Schools for Students with "
       "Disabilities (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_health_social", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8066,7 +8066,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_8_FF951E", .name = "gisservices.its.ny.gov — Non IMF Public and Private Institutions "
       "(ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8088,7 +8088,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_9_8B65A1", .name = "gisservices.its.ny.gov — Colleges (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8110,7 +8110,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_10_F9C7E3", .name = "gisservices.its.ny.gov — District Offices (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8132,7 +8132,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_11_3C3B5D", .name = "gisservices.its.ny.gov — Feeding Sites (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8154,7 +8154,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_12_3AEE16", .name = "gisservices.its.ny.gov — Proprietary (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8177,7 +8177,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_13_FABD7C", .name = "gisservices.its.ny.gov — Approved Preschool Programs for SWD "
       "(ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_health_social", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8200,7 +8200,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_14_749C85", .name = "gisservices.its.ny.gov — Kindergartens All Buildings (ArcGIS "
       "layer 14)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_health_social", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8222,7 +8222,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_15_3B0B82", .name = "gisservices.its.ny.gov — Libraries (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8245,7 +8245,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_16_21BEB1", .name = "gisservices.its.ny.gov — Schools for at Risk Youth (ArcGIS layer "
       "16)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8267,7 +8267,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_17_303702", .name = "gisservices.its.ny.gov — BOCES Districts (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8289,7 +8289,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_18_2CEB18", .name = "gisservices.its.ny.gov — School Districts (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8311,7 +8311,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_1_55D4A7", .name = "gisservices.its.ny.gov — Schools K-12 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8333,7 +8333,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_2_ADAA81", .name = "gisservices.its.ny.gov — Public K-12 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8355,7 +8355,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_3_06BBE4", .name = "gisservices.its.ny.gov — Private K-12 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8377,7 +8377,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_4_A6B733", .name = "gisservices.its.ny.gov — Charter K-12 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8399,7 +8399,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_5_6BF41D", .name = "gisservices.its.ny.gov — BOCES (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8421,7 +8421,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_6_BE5F0F", .name = "gisservices.its.ny.gov — State Operated Schools (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8444,7 +8444,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_7_8AA982", .name = "gisservices.its.ny.gov — Other Schools for Students with "
       "Disabilities (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_health_social", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8467,7 +8467,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_8_A9583C", .name = "gisservices.its.ny.gov — Non IMF Public and Private Institutions "
       "(ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8489,7 +8489,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_9_C1676D", .name = "gisservices.its.ny.gov — Colleges (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8511,7 +8511,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_10_A773BD", .name = "gisservices.its.ny.gov — District Offices (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8533,7 +8533,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_11_C1A5AC", .name = "gisservices.its.ny.gov — Feeding Sites (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8555,7 +8555,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_12_D4B567", .name = "gisservices.its.ny.gov — Proprietary (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8578,7 +8578,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_13_65EAFC", .name = "gisservices.its.ny.gov — Approved Preschool Programs for SWD "
       "(ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_health_social", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8601,7 +8601,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_14_9082B6", .name = "gisservices.its.ny.gov — Kindergartens All Buildings (ArcGIS "
       "layer 14)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_health_social", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8623,7 +8623,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_15_669D14", .name = "gisservices.its.ny.gov — Libraries (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8646,7 +8646,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_16_CED50F", .name = "gisservices.its.ny.gov — Schools for at Risk Youth (ArcGIS layer "
       "16)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8668,7 +8668,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_17_C54E99", .name = "gisservices.its.ny.gov — BOCES Districts (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8690,7 +8690,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_SCHOOLS_18_2DD149", .name = "gisservices.its.ny.gov — School Districts (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8712,7 +8712,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_SENATE_DISTRICTS_0_AEFA51", .name = "gisservices.its.ny.gov — NYS Senate Districts (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8734,7 +8734,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_SENATE_DISTRICTS_0_C5FB45", .name = "gisservices.its.ny.gov — NYS Senate Districts (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8756,7 +8756,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_0_DD5058", .name = "gisservices.its.ny.gov — Exit_NYC (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8778,7 +8778,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_1_B63456", .name = "gisservices.its.ny.gov — Exit (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8800,7 +8800,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_2_3A3AA7", .name = "gisservices.its.ny.gov — Berkshire Spur & TSP (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8823,7 +8823,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_4_59FD3E", .name = "gisservices.its.ny.gov — StreetSegments 1:1 to 1:2,200 (ArcGIS "
       "layer 4)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8846,7 +8846,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_5_98C2A7", .name = "gisservices.its.ny.gov — StreetSegments 1:2,201 to 1:4,500 "
       "(ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8869,7 +8869,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_6_9C6E94", .name = "gisservices.its.ny.gov — StreetSegments 1:4,501 to 1:9,000 "
       "(ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8892,7 +8892,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_7_A68A6E", .name = "gisservices.its.ny.gov — StreetSegments 1:9,001 to 1:18,000 "
       "(ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8915,7 +8915,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_8_CFA2E1", .name = "gisservices.its.ny.gov — StreetSegments 1:18,001 to 1:36,100 "
       "(ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8938,7 +8938,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_9_96DCFE", .name = "gisservices.its.ny.gov — StreetSegments 1:36,101 to 1:72,200 "
       "(ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8961,7 +8961,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_10_9897FF", .name = "gisservices.its.ny.gov — StreetSegments 1:72,201 to 1:144,400 "
       "(ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8984,7 +8984,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_11_4F8BF4", .name = "gisservices.its.ny.gov — StreetSegments 1:144,401 to 1:288,800 "
       "(ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9007,7 +9007,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_12_44F1FE", .name = "gisservices.its.ny.gov — StreetSegments 1:288,801 to 1:577,700 "
       "(ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9030,7 +9030,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_13_0937E6", .name = "gisservices.its.ny.gov — StreetSegments 1:577,701 to 1:1,155,500 "
       "(ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9053,7 +9053,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_14_70CC49", .name = "gisservices.its.ny.gov — StreetSegments 1:1,155,501 to "
       "1:2,311,100 (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9076,7 +9076,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_ORTHO_15_7E9EBB", .name = "gisservices.its.ny.gov — StreetSegments 1:1:2,311,101 to "
       "1:4,622,400 (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9098,7 +9098,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_NYS_STREETS_0_726194", .name = "gisservices.its.ny.gov — Exit_NYC (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9120,7 +9120,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_STREETS_1_B73710", .name = "gisservices.its.ny.gov — Exit (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9142,7 +9142,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_NYS_STREETS_2_D68221", .name = "gisservices.its.ny.gov — Berkshire Spur & TSP (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9165,7 +9165,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_4_3428A2", .name = "gisservices.its.ny.gov — StreetSegments 1:1 to 1:2,200 (ArcGIS "
       "layer 4)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9188,7 +9188,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_5_180E40", .name = "gisservices.its.ny.gov — StreetSegments 1:2,201 to 1:4,500 "
       "(ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9211,7 +9211,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_6_0D6876", .name = "gisservices.its.ny.gov — StreetSegments 1:4,501 to 1:9,000 "
       "(ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9234,7 +9234,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_7_CC3EED", .name = "gisservices.its.ny.gov — StreetSegments 1:9,001 to 1:18,000 "
       "(ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9257,7 +9257,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_8_64A88F", .name = "gisservices.its.ny.gov — StreetSegments 1:18,001 to 1:36,100 "
       "(ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9280,7 +9280,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_9_6415BE", .name = "gisservices.its.ny.gov — StreetSegments 1:36,101 to 1:72,200 "
       "(ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9303,7 +9303,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_10_01F6B9", .name = "gisservices.its.ny.gov — StreetSegments 1:72,201 to 1:144,400 "
       "(ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9326,7 +9326,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_11_C7EA05", .name = "gisservices.its.ny.gov — StreetSegments 1:144,401 to 1:288,800 "
       "(ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9349,7 +9349,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_12_E40549", .name = "gisservices.its.ny.gov — StreetSegments 1:288,801 to 1:577,700 "
       "(ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9372,7 +9372,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_13_8D9B0A", .name = "gisservices.its.ny.gov — StreetSegments 1:577,701 to 1:1,155,500 "
       "(ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9395,7 +9395,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_14_B4C06F", .name = "gisservices.its.ny.gov — StreetSegments 1:1,155,501 to "
       "1:2,311,100 (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9418,7 +9418,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_STREETS_15_4B5A35", .name = "gisservices.its.ny.gov — StreetSegments 1:1:2,311,101 to "
       "1:4,622,400 (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9441,7 +9441,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_TAX_PARCEL_CENTROID__0_CA410C", .name = "gisservices.its.ny.gov — NYS_Tax_Parcel_Centroid_Points (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9465,7 +9465,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_TAX_PARCELS_PUBLIC_0_5D7B86", .name = "gisservices.its.ny.gov — NYS_Tax_Parcels_Public_Footprint "
       "(ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9487,7 +9487,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_TAX_PARCELS_PUBLIC_1_58389C", .name = "gisservices.its.ny.gov — NYS_Tax_Parcels_Public (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9510,7 +9510,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_TAX_PARCELS_PUBLIC_0_B62B67", .name = "gisservices.its.ny.gov — NYS_Tax_Parcels_Public_Footprint "
       "(ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9532,7 +9532,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_NYS_TAX_PARCELS_PUBLIC_1_9DB679", .name = "gisservices.its.ny.gov — NYS_Tax_Parcels_Public (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9555,7 +9555,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_TAX_PARCELS_STATE_OW_0_B85447", .name = "gisservices.its.ny.gov — NYS_Tax_Parcels_State_Owned (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9578,7 +9578,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_NYS_TAX_PARCELS_STATE_OW_0_A60C5E", .name = "gisservices.its.ny.gov — NYS_Tax_Parcels_State_Owned (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9601,7 +9601,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_REGIONAL_ECONOMIC_DEVELO_0_A74BDD", .name = "gisservices.its.ny.gov — Regional Economic Development Councils "
       "(ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9625,7 +9625,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_REGIONAL_ECONOMIC_DEVELO_0_45C09D", .name = "gisservices.its.ny.gov — Regional Economic Development Councils "
       "(ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisservices.its.ny.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisservices.its.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9648,7 +9648,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_BGS_SERVICES_ASSETMANAGE_19_91CED7", .name = "maps.vcgi.vermont.gov — BGS Owned Occupancy (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9670,7 +9670,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_BGS_SERVICES_ASSETMANAGE_29_FA5261", .name = "maps.vcgi.vermont.gov — BGS Building Numbers (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9692,7 +9692,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_BGS_SERVICES_ASSETMANAGE_30_DCD17F", .name = "maps.vcgi.vermont.gov — Risk Management (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9714,7 +9714,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_BGS_SERVICES_ASSETMANAGE_32_47D4AD", .name = "maps.vcgi.vermont.gov — Leasing Regions (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9736,7 +9736,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_BGS_SERVICES_ASSETMANAGE_33_F39594", .name = "maps.vcgi.vermont.gov — DFM Regions (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9758,7 +9758,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_BGS_SERVICES_ASSETMANAGE_55_A40396", .name = "maps.vcgi.vermont.gov — CAPCON_02052020 (ArcGIS layer 55)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9781,7 +9781,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_BGS_SERVICES_ASSETMANAGE_78_118F88", .name = "maps.vcgi.vermont.gov — BGS Supported Buildings (ArcGIS layer "
       "78)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9803,7 +9803,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_BGS_SERVICES_ASSETMANAGE_84_BED8E7", .name = "maps.vcgi.vermont.gov — BGS Project Status (ArcGIS layer 84)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9825,7 +9825,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_BGS_SERVICES_ASSETMANAGE_87_D4C8FC", .name = "maps.vcgi.vermont.gov — BGS Projects (ArcGIS layer 87)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9847,7 +9847,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_CO_3_58D9B9", .name = "maps.vcgi.vermont.gov — 200-20 ft contours (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9870,7 +9870,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_CO_4_061B4D", .name = "maps.vcgi.vermont.gov — 100-20 ft contours (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9893,7 +9893,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_HI_2_7C0D26", .name = "maps.vcgi.vermont.gov — Lake and Pond Labels (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9916,7 +9916,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_HI_3_5435D5", .name = "maps.vcgi.vermont.gov — Lake Champlain (5K) (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9939,7 +9939,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_HI_4_10BD35", .name = "maps.vcgi.vermont.gov — Lakes and Ponds (5K) (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9962,7 +9962,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_HI_5_602D49", .name = "maps.vcgi.vermont.gov — Lakes and Ponds (100K) (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9985,7 +9985,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_HI_7_C7ED94", .name = "maps.vcgi.vermont.gov — River and Stream Names (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10008,7 +10008,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_HI_8_C7E161", .name = "maps.vcgi.vermont.gov — Rivers (5K) (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10031,7 +10031,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_HI_9_DBE67A", .name = "maps.vcgi.vermont.gov — Streams (5K) (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10055,7 +10055,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_HI_10_3D07F1", .name = "maps.vcgi.vermont.gov — Rivers and Streams (100K) (ArcGIS layer "
       "10)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10078,7 +10078,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_HI_12_86C6FB", .name = "maps.vcgi.vermont.gov — 400-100 ft contours (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10101,7 +10101,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_HI_13_2B1B0E", .name = "maps.vcgi.vermont.gov — 200-40 ft contours (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10124,7 +10124,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_HI_14_3E6FDE", .name = "maps.vcgi.vermont.gov — 100-20 ft contours (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10148,7 +10148,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_EGC_SERVICES_MAP_VCGI_LI_1_B85CDB", .name = "maps.vcgi.vermont.gov — ElevationContours_CN1T_1ft (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10172,7 +10172,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_7_6127B6", .name = "maps.vcgi.vermont.gov — VT Data - Cable Routes 2017 (ArcGIS "
       "layer 7)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10196,7 +10196,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_8_05D2F7", .name = "maps.vcgi.vermont.gov — VT Data - Drive Test ATT (ArcGIS layer "
       "8)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10220,7 +10220,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_9_B0C95B", .name = "maps.vcgi.vermont.gov — VT Data - Drive Test Sprint (ArcGIS "
       "layer 9)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10244,7 +10244,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_10_EB6BF8", .name = "maps.vcgi.vermont.gov — VT Data - Drive Test T-Mobile (ArcGIS "
       "layer 10)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10268,7 +10268,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_11_61F6D3", .name = "maps.vcgi.vermont.gov — VT Data - Drive Test US Cellular (ArcGIS "
       "layer 11)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10292,7 +10292,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_12_37A366", .name = "maps.vcgi.vermont.gov — VT Data - Drive Test Verizon (ArcGIS "
       "layer 12)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10316,7 +10316,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_13_6F110D", .name = "maps.vcgi.vermont.gov — VT Data - Drive Test VTel Wireless "
       "(ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10340,7 +10340,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_14_82C8F6", .name = "maps.vcgi.vermont.gov — VT Data - Drive Test Blocks (ArcGIS "
       "layer 14)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10364,7 +10364,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_22_44198C", .name = "maps.vcgi.vermont.gov — VT Data - Wireless Challenge Blocks "
       "(ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10388,7 +10388,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_30_8945C1", .name = "maps.vcgi.vermont.gov — VT Data - Fiber Routes 2017 (ArcGIS "
       "layer 30)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10412,7 +10412,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_31_3AD86A", .name = "maps.vcgi.vermont.gov — VT Data - Broadband Status 2019 (ArcGIS "
       "layer 31)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10436,7 +10436,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_32_8E35FF", .name = "maps.vcgi.vermont.gov — VT Data - Cable Routes 2019 (ArcGIS "
       "layer 32)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10460,7 +10460,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_33_D6E550", .name = "maps.vcgi.vermont.gov — VT Data - Fiber Routes 2019 (ArcGIS "
       "layer 33)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10484,7 +10484,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_38_53957F", .name = "maps.vcgi.vermont.gov — VT Data - Electric Substations (ArcGIS "
       "layer 38)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10508,7 +10508,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_35_73F7EB", .name = "maps.vcgi.vermont.gov — VT Data - WEC Utility Poles (ArcGIS "
       "layer 35)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10532,7 +10532,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_36_77AF34", .name = "maps.vcgi.vermont.gov — VT Data - WEC Utility Lines (ArcGIS "
       "layer 36)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10556,7 +10556,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_40_EC473A", .name = "maps.vcgi.vermont.gov — VT Data - Electric Utility Franchise "
       "Areas (ArcGIS layer 40)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10580,7 +10580,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_41_A30487", .name = "maps.vcgi.vermont.gov — VT Data - Telephone Wirecenter Areas "
       "(ArcGIS layer 41)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10604,7 +10604,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_44_416BBD", .name = "maps.vcgi.vermont.gov — VT Data - Tower sites approved by VT PUC "
       "(ArcGIS layer 44)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10628,7 +10628,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_46_3695BB", .name = "maps.vcgi.vermont.gov — VT Data - SOV-owned fiber routes (ArcGIS "
       "layer 46)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10652,7 +10652,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_48_9E19C5", .name = "maps.vcgi.vermont.gov — VT Data - Broadband Status 2021 (ArcGIS "
       "layer 48)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10676,7 +10676,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_49_782385", .name = "maps.vcgi.vermont.gov — VT Data - Cable Routes 2021 (ArcGIS "
       "layer 49)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10700,7 +10700,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_50_40936B", .name = "maps.vcgi.vermont.gov — VT Data - Fiber Routes 2021 (ArcGIS "
       "layer 50)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10724,7 +10724,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_52_EB37DC", .name = "maps.vcgi.vermont.gov — VT Data - Broadband RDS 2021 (ArcGIS "
       "layer 52)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10748,7 +10748,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_54_A2C5EA", .name = "maps.vcgi.vermont.gov — VT Data - Broadband Status 2022 (ArcGIS "
       "layer 54)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10772,7 +10772,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_55_9AF4B5", .name = "maps.vcgi.vermont.gov — VT Data - Cable Routes 2022 (ArcGIS "
       "layer 55)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10796,7 +10796,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_56_C4F523", .name = "maps.vcgi.vermont.gov — VT Data - Fiber Routes 2022 (ArcGIS "
       "layer 56)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10820,7 +10820,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_59_BD7DEF", .name = "maps.vcgi.vermont.gov — VT Data - VoiceTest Totals 2022 (ArcGIS "
       "layer 59)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10844,7 +10844,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_60_633A14", .name = "maps.vcgi.vermont.gov — VT Data - SpeedTest Totals 2022 (ArcGIS "
       "layer 60)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10868,7 +10868,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_61_D7DDD4", .name = "maps.vcgi.vermont.gov — VT Data - VoiceTest Results 2022 (ArcGIS "
       "layer 61)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10892,7 +10892,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_OPENDATA_PS_62_50A601", .name = "maps.vcgi.vermont.gov — VT Data - SpeedTest Results 2022 (ArcGIS "
       "layer 62)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10915,7 +10915,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_2_F1DA1B", .name = "maps.vcgi.vermont.gov — Vermont Wire Centers (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10939,7 +10939,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_0_0D02A8", .name = "maps.vcgi.vermont.gov — Electric Utility Service Territories "
       "(ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10962,7 +10962,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_11_B0BC3B", .name = "maps.vcgi.vermont.gov — Broadband Status 2019 (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10985,7 +10985,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_12_0C831F", .name = "maps.vcgi.vermont.gov — Cable Systems 2017 (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11008,7 +11008,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_13_AB6A22", .name = "maps.vcgi.vermont.gov — Cable Systems 2019 (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11031,7 +11031,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_14_D70A48", .name = "maps.vcgi.vermont.gov — Fiber Systems 2017 (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11054,7 +11054,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_15_AC2D17", .name = "maps.vcgi.vermont.gov — Fiber Systems 2019 (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11077,7 +11077,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_16_F535BE", .name = "maps.vcgi.vermont.gov — PSD Fiber (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11100,7 +11100,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_17_58CE2F", .name = "maps.vcgi.vermont.gov — 248a Towers (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11123,7 +11123,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_18_E11935", .name = "maps.vcgi.vermont.gov — Electric Substations (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11146,7 +11146,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_20_BB39F9", .name = "maps.vcgi.vermont.gov — CI2020 Locations (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11169,7 +11169,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_23_655180", .name = "maps.vcgi.vermont.gov — LECAP 2020 Locations (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11192,7 +11192,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_21_ABDD7C", .name = "maps.vcgi.vermont.gov — MicroCell 2018 (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11216,7 +11216,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_26_CBA1C7", .name = "maps.vcgi.vermont.gov — CI 2021 Eligible Locations (ArcGIS layer "
       "26)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11240,7 +11240,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_30_084C2F", .name = "maps.vcgi.vermont.gov — RDOF Territories in Vermont (ArcGIS "
       "layer 30)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11264,7 +11264,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_31_C88984", .name = "maps.vcgi.vermont.gov — Locations in RDOF Vermont Territory "
       "(ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11288,7 +11288,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_36_86D518", .name = "maps.vcgi.vermont.gov — Locations Eligible for Pole Discount "
       "(ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11312,7 +11312,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_PSD_SERVICES_PSD_PUBLISH_40_36B879", .name = "maps.vcgi.vermont.gov — Telephone Central Offices (ArcGIS layer "
       "40)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11335,7 +11335,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_ESRICMP_BU_0_023C3E", .name = "maps.vcgi.vermont.gov — Town Boundaries (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11359,7 +11359,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_ESRICMP_BU_1_FC5853", .name = "maps.vcgi.vermont.gov — "
       "ESRICMP_export20211027_BuildingFootprints (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11383,7 +11383,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_ESRICMP_BU_2_D3305F", .name = "maps.vcgi.vermont.gov — "
       "ESRICMP_BuildingFootprintsVT_Ready2Publish (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11407,7 +11407,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_0_C182A7", .name = "maps.vcgi.vermont.gov — Index_HISTORIC_VTORTHO5KV1_1974_1992 "
       "(ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11431,7 +11431,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_4_F9C7DB", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_2015 (ArcGIS "
       "layer 4)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11455,7 +11455,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_5_FA198C", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_2014 (ArcGIS "
       "layer 5)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11479,7 +11479,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_6_F7274C", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_2013 (ArcGIS "
       "layer 6)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11503,7 +11503,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_7_9D8536", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_2012 (ArcGIS "
       "layer 7)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11527,7 +11527,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_8_4C95E1", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_2011 (ArcGIS "
       "layer 8)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11551,7 +11551,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_9_527DC9", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_2010 (ArcGIS "
       "layer 9)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11575,7 +11575,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_10_2A01D2", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_2009 (ArcGIS "
       "layer 10)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11599,7 +11599,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_11_EA0824", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_2008 (ArcGIS "
       "layer 11)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11623,7 +11623,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_12_3978F6", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_2007 (ArcGIS "
       "layer 12)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11647,7 +11647,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_13_1967E6", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_2006 (ArcGIS "
       "layer 13)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11671,7 +11671,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_14_1D33DD", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_2000 (ArcGIS "
       "layer 14)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11695,7 +11695,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_15_D80432", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_1999 (ArcGIS "
       "layer 15)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11719,7 +11719,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_16_4BF661", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_1998 (ArcGIS "
       "layer 16)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11743,7 +11743,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_17_8B187D", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_1996 (ArcGIS "
       "layer 17)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11767,7 +11767,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_18_67D09C", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_1995 (ArcGIS "
       "layer 18)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11791,7 +11791,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_19_4EDE98", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_PAN_1994 (ArcGIS "
       "layer 19)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11815,7 +11815,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_20_A3CD75", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_CLRIR_2015 (ArcGIS "
       "layer 20)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11839,7 +11839,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_21_156E73", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_CLRIR_2014 (ArcGIS "
       "layer 21)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11863,7 +11863,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_22_862DBC", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_CLRIR_2013 (ArcGIS "
       "layer 22)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11887,7 +11887,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_23_3EE8E4", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_CLRIR_2012 (ArcGIS "
       "layer 23)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11911,7 +11911,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_24_8D7708", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_5M_CLRIR_2011 (ArcGIS "
       "layer 24)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11935,7 +11935,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_25_C0D43E", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_3M_CLRIR_2013 (ArcGIS "
       "layer 25)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11959,7 +11959,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_26_855495", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_2M_PAN_2013 (ArcGIS "
       "layer 26)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11983,7 +11983,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_27_959194", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_2M_CLRIR_2013 (ArcGIS "
       "layer 27)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12007,7 +12007,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_28_01D00C", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_16M_PAN_2004 (ArcGIS "
       "layer 28)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12031,7 +12031,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_29_1F911C", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_16M_CLR_2004 (ArcGIS "
       "layer 29)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12055,7 +12055,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_30_ADC181", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_16M_CIR_2004 (ArcGIS "
       "layer 30)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12079,7 +12079,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_31_F03141", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_15M_PAN_2013 (ArcGIS "
       "layer 31)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12103,7 +12103,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_32_2ECFD3", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_15M_CLRIR_2013 (ArcGIS "
       "layer 32)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12127,7 +12127,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_33_D16826", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_15M_CLR_2006 (ArcGIS "
       "layer 33)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12151,7 +12151,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_34_44F79E", .name = "maps.vcgi.vermont.gov — Index_VTORTHO_0_13M_PAN_2000 (ArcGIS "
       "layer 34)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12175,7 +12175,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_44_9DE739", .name = "maps.vcgi.vermont.gov — Index_MISC_0_3M_CLR_2009 (ArcGIS layer "
       "44)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12199,7 +12199,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_45_82A6B1", .name = "maps.vcgi.vermont.gov — Index_MISC_0_3M_CLR_2008 (ArcGIS layer "
       "45)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12223,7 +12223,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_46_E8EBCE", .name = "maps.vcgi.vermont.gov — Index_MISC_0_3M_CIR_2012 (ArcGIS layer "
       "46)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12247,7 +12247,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_18950_AA4B1C", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_HILSHD0p35M2023 "
       "(ArcGIS layer 18950)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12271,7 +12271,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_18949_87678F", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_NDSM0p35M2023 "
       "(ArcGIS layer 18949)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12295,7 +12295,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_18948_A72B69", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_DSMLR0p35M2023 "
       "(ArcGIS layer 18948)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12319,7 +12319,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_18946_01E120", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_DSMFR0p35M2023 "
       "(ArcGIS layer 18946)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12343,7 +12343,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_18944_40234D", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHF0p35M2023 "
       "(ArcGIS layer 18944)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12367,7 +12367,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_1888_BBE81D", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHE1MLCB (ArcGIS "
       "layer 1888)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12391,7 +12391,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_1879_CDB8DC", .name = "maps.vcgi.vermont.gov — Index_EmergencyFlood_LCBINUNDATION "
       "(ArcGIS layer 1879)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12415,7 +12415,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_171_C77053", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_ASPECT0p7M2017 "
       "(ArcGIS layer 171)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12439,7 +12439,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_170_0D8F2B", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_HILSHD0p7M2017 "
       "(ArcGIS layer 170)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12463,7 +12463,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_169_C41E97", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_NDSM0p7M2017 "
       "(ArcGIS layer 169)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12487,7 +12487,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_168_558662", .name = "maps.vcgi.vermont.gov — Index_ElevationSlope_SLOPE0p7M2017 "
       "(ArcGIS layer 168)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12511,7 +12511,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_117_BD53DF", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_ASPECT0p7M2016 "
       "(ArcGIS layer 117)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12535,7 +12535,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_144_1F57E1", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_ASPECT1M2009 "
       "(ArcGIS layer 144)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12559,7 +12559,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_143_39C54F", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_ASPECT1p6M2008 "
       "(ArcGIS layer 143)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12583,7 +12583,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_142_960F41", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_ASPECT1p6M2010 "
       "(ArcGIS layer 142)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12607,7 +12607,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_141_58C333", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_ASPECT1p6M2012 "
       "(ArcGIS layer 141)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12631,7 +12631,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_140_159AD4", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_ASPECT2M2012 "
       "(ArcGIS layer 140)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12655,7 +12655,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_139_10D83C", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_ASPECT3p2M2004 "
       "(ArcGIS layer 139)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12679,7 +12679,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_94_2F6F9A", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_ASPECT0p7M2015 "
       "(ArcGIS layer 94)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12703,7 +12703,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_93_339D38", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_ASPECT0p7M2014 "
       "(ArcGIS layer 93)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12727,7 +12727,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_92_2FFF63", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_ASPECT0p7M2013 "
       "(ArcGIS layer 92)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12751,7 +12751,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_79_00894A", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_ASPECT1M2005 "
       "(ArcGIS layer 79)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12775,7 +12775,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_53_45ABF7", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_ASPECT10M (ArcGIS "
       "layer 53)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12799,7 +12799,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_134_6F0AFC", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHF0p7M2017 (ArcGIS "
       "layer 134)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12823,7 +12823,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_115_DB2825", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHF0p7M2016 (ArcGIS "
       "layer 115)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12847,7 +12847,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_103_AC9486", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHE0p7M2015 (ArcGIS "
       "layer 103)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12871,7 +12871,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_102_A2B27E", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHE0p7M2014 (ArcGIS "
       "layer 102)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12895,7 +12895,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_101_DF9921", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHE0p7M2013 (ArcGIS "
       "layer 101)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12919,7 +12919,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_74_B1404F", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEM1M2005 (ArcGIS "
       "layer 74)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12943,7 +12943,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_73_F03C98", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEM1M2009 (ArcGIS "
       "layer 73)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12967,7 +12967,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_72_E82552", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEM3p2M2004 (ArcGIS "
       "layer 72)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12991,7 +12991,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_71_A4546A", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHF0p7M2013 (ArcGIS "
       "layer 71)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13015,7 +13015,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_70_69E33E", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHF0p7M2014 (ArcGIS "
       "layer 70)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13039,7 +13039,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_69_4A4FE0", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHF1p6M2008 (ArcGIS "
       "layer 69)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13063,7 +13063,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_68_90079C", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHF1p6M2010 (ArcGIS "
       "layer 68)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13087,7 +13087,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_67_D00283", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHF1p6M2012 (ArcGIS "
       "layer 67)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13111,7 +13111,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_66_140B6D", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHF2M2012 (ArcGIS "
       "layer 66)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13135,7 +13135,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_81_09A161", .name = "maps.vcgi.vermont.gov — Index_ElevationDEM_DEMHF0p7M2015 (ArcGIS "
       "layer 81)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13159,7 +13159,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_136_078D47", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_DSM0p7M2017 (ArcGIS "
       "layer 136)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13183,7 +13183,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_148_42E414", .name = "maps.vcgi.vermont.gov — Index_ElevationOther_DSM1p6M2008 (ArcGIS "
       "layer 148)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13206,7 +13206,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_0_EFDF77", .name = "maps.vcgi.vermont.gov — Airports (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13230,7 +13230,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_1_938C21", .name = "maps.vcgi.vermont.gov — Cities and Village Centers (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13253,7 +13253,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_2_38761A", .name = "maps.vcgi.vermont.gov — City Points (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13276,7 +13276,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_3_8ED881", .name = "maps.vcgi.vermont.gov — Interstate Exits (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13299,7 +13299,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_4_472DF5", .name = "maps.vcgi.vermont.gov — Mountains and Hills (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13322,7 +13322,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_7_0AF0D7", .name = "maps.vcgi.vermont.gov — Interstates Shields (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13345,7 +13345,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_8_BD0DC7", .name = "maps.vcgi.vermont.gov — US Highway Shields (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13368,7 +13368,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_9_4C75F7", .name = "maps.vcgi.vermont.gov — State Highway Shields (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13391,7 +13391,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_10_2F88D6", .name = "maps.vcgi.vermont.gov — Road Names (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13414,7 +13414,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_12_E9C761", .name = "maps.vcgi.vermont.gov — Interstate (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13437,7 +13437,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_13_0FDADB", .name = "maps.vcgi.vermont.gov — US Highways (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13460,7 +13460,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_14_1FCC2C", .name = "maps.vcgi.vermont.gov — State Highways (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13483,7 +13483,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_15_588743", .name = "maps.vcgi.vermont.gov — Roads - Major Roads (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13507,7 +13507,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_16_84FAFC", .name = "maps.vcgi.vermont.gov — Roads - Public (VTrans) (ArcGIS layer "
       "16)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13530,7 +13530,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_17_C62529", .name = "maps.vcgi.vermont.gov — Roads - Private (E911) (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13553,7 +13553,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_18_6B5319", .name = "maps.vcgi.vermont.gov — Driveways (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13576,7 +13576,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_19_25E49A", .name = "maps.vcgi.vermont.gov — Rail Lines (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13599,7 +13599,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_20_F6EDCA", .name = "maps.vcgi.vermont.gov — Town Boundaries (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13622,7 +13622,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_21_43D767", .name = "maps.vcgi.vermont.gov — VT State Boundary (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13645,7 +13645,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_22_5191EF", .name = "maps.vcgi.vermont.gov — County Boundaries (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13668,7 +13668,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_25_223D98", .name = "maps.vcgi.vermont.gov — Lake and Pond Labels (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13691,7 +13691,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_26_E0C2E3", .name = "maps.vcgi.vermont.gov — Lake Champlain (5K) (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13714,7 +13714,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_27_8F5986", .name = "maps.vcgi.vermont.gov — Lakes and Ponds (5K) (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13737,7 +13737,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_28_87FCD2", .name = "maps.vcgi.vermont.gov — Lakes and Ponds (100K) (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13760,7 +13760,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_30_428121", .name = "maps.vcgi.vermont.gov — River and Stream Names (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13783,7 +13783,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_31_F8AC1D", .name = "maps.vcgi.vermont.gov — Rivers (5K) (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13806,7 +13806,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_32_842272", .name = "maps.vcgi.vermont.gov — Streams (5K) (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13830,7 +13830,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_33_E0629B", .name = "maps.vcgi.vermont.gov — Rivers and Streams (100K) (ArcGIS layer "
       "33)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13854,7 +13854,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_34_CE7759", .name = "maps.vcgi.vermont.gov — Buildings Address Labels (ArcGIS layer "
       "34)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13877,7 +13877,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_35_76659A", .name = "maps.vcgi.vermont.gov — Buildings (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13900,7 +13900,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_40_5502E4", .name = "maps.vcgi.vermont.gov — 400-100 ft contours (ArcGIS layer 40)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13923,7 +13923,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_41_E3BDE6", .name = "maps.vcgi.vermont.gov — 200-40 ft contours (ArcGIS layer 41)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13946,7 +13946,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_42_36D995", .name = "maps.vcgi.vermont.gov — 200-20 ft contours (ArcGIS layer 42)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13969,7 +13969,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_0_B41A45", .name = "maps.vcgi.vermont.gov — Airports (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13993,7 +13993,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_1_0AE099", .name = "maps.vcgi.vermont.gov — Cities and Village Centers (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14016,7 +14016,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_2_FDD0C7", .name = "maps.vcgi.vermont.gov — City Points (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14039,7 +14039,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_3_2CFA22", .name = "maps.vcgi.vermont.gov — Interstate Exits (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14062,7 +14062,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_4_D8C00F", .name = "maps.vcgi.vermont.gov — Mountains and Hills (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14085,7 +14085,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_7_56D244", .name = "maps.vcgi.vermont.gov — Interstates Shields (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14108,7 +14108,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_8_A8DD28", .name = "maps.vcgi.vermont.gov — US Highway Shields (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14131,7 +14131,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_9_81608B", .name = "maps.vcgi.vermont.gov — State Highway Shields (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14154,7 +14154,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_10_0402F3", .name = "maps.vcgi.vermont.gov — Road Names (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14177,7 +14177,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_12_F3CC5A", .name = "maps.vcgi.vermont.gov — Interstate (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14200,7 +14200,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_13_821A5B", .name = "maps.vcgi.vermont.gov — US Highways (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14223,7 +14223,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_14_555E84", .name = "maps.vcgi.vermont.gov — State Highways (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14246,7 +14246,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_15_A62DCD", .name = "maps.vcgi.vermont.gov — Roads - Major Roads (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14270,7 +14270,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_16_AF398C", .name = "maps.vcgi.vermont.gov — Roads - Public (VTrans) (ArcGIS layer "
       "16)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14293,7 +14293,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_17_D39295", .name = "maps.vcgi.vermont.gov — Roads - Private (E911) (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14316,7 +14316,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_18_9306F6", .name = "maps.vcgi.vermont.gov — Driveways (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14339,7 +14339,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_19_BF02B2", .name = "maps.vcgi.vermont.gov — Rail Lines (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14362,7 +14362,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_20_87DA47", .name = "maps.vcgi.vermont.gov — Town Boundaries (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14385,7 +14385,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_22_7A43BB", .name = "maps.vcgi.vermont.gov — County Boundaries (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14408,7 +14408,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_25_D9B6CC", .name = "maps.vcgi.vermont.gov — Lake and Pond Labels (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14431,7 +14431,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_26_F20305", .name = "maps.vcgi.vermont.gov — Lake Champlain (5K) (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14454,7 +14454,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_27_5F61C0", .name = "maps.vcgi.vermont.gov — Lakes and Ponds (5K) (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14477,7 +14477,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_31_DD6F5A", .name = "maps.vcgi.vermont.gov — Rivers (5K) (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14500,7 +14500,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_35_9FDD4E", .name = "maps.vcgi.vermont.gov — Buildings (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14523,7 +14523,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_40_F4B6BF", .name = "maps.vcgi.vermont.gov — 400-100 ft contours (ArcGIS layer 40)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14546,7 +14546,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_41_007D27", .name = "maps.vcgi.vermont.gov — 200-40 ft contours (ArcGIS layer 41)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14569,7 +14569,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_42_C38065", .name = "maps.vcgi.vermont.gov — 200-20 ft contours (ArcGIS layer 42)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14592,7 +14592,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_0_866E5E", .name = "maps.vcgi.vermont.gov — Airports (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14616,7 +14616,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_1_9891B2", .name = "maps.vcgi.vermont.gov — Cities and Village Centers (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14639,7 +14639,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_2_2BD87E", .name = "maps.vcgi.vermont.gov — City Points (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14662,7 +14662,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_3_DE5FA8", .name = "maps.vcgi.vermont.gov — Interstate Exits (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14685,7 +14685,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_4_9EC998", .name = "maps.vcgi.vermont.gov — Mountains and Hills (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14708,7 +14708,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_7_B55252", .name = "maps.vcgi.vermont.gov — Interstates Shields (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14731,7 +14731,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_8_FFCF41", .name = "maps.vcgi.vermont.gov — US Highway Shields (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14754,7 +14754,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_9_942F28", .name = "maps.vcgi.vermont.gov — State Highway Shields (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14777,7 +14777,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_10_9750BC", .name = "maps.vcgi.vermont.gov — Road Names (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14800,7 +14800,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_12_F49033", .name = "maps.vcgi.vermont.gov — Interstate (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14823,7 +14823,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_13_0CA505", .name = "maps.vcgi.vermont.gov — US Highways (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14846,7 +14846,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_14_8240E0", .name = "maps.vcgi.vermont.gov — State Highways (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14869,7 +14869,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_15_AE3AA0", .name = "maps.vcgi.vermont.gov — Roads - Major Roads (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14893,7 +14893,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_16_B7868F", .name = "maps.vcgi.vermont.gov — Roads - Public (VTrans) (ArcGIS layer "
       "16)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14916,7 +14916,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_17_33CB21", .name = "maps.vcgi.vermont.gov — Roads - Private (E911) (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14939,7 +14939,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_18_2F5043", .name = "maps.vcgi.vermont.gov — Driveways (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14962,7 +14962,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_19_DFB7D3", .name = "maps.vcgi.vermont.gov — Rail Lines (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14985,7 +14985,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_20_8E861F", .name = "maps.vcgi.vermont.gov — Town Boundaries (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15008,7 +15008,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_21_30B3B4", .name = "maps.vcgi.vermont.gov — VT State Boundary (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15031,7 +15031,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_25_36CFE0", .name = "maps.vcgi.vermont.gov — Lake and Pond Labels (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15054,7 +15054,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_31_579956", .name = "maps.vcgi.vermont.gov — Rivers (5K) (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15078,7 +15078,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_33_69EBF1", .name = "maps.vcgi.vermont.gov — Rivers and Streams (100K) (ArcGIS layer "
       "33)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15101,7 +15101,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_35_9EFC7B", .name = "maps.vcgi.vermont.gov — Buildings (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15124,7 +15124,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_40_F9F4FC", .name = "maps.vcgi.vermont.gov — 400-100 ft contours (ArcGIS layer 40)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15147,7 +15147,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_41_4DAA0A", .name = "maps.vcgi.vermont.gov — 200-40 ft contours (ArcGIS layer 41)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15170,7 +15170,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_SERVICES_VCGI_BASEM_42_2EF1D2", .name = "maps.vcgi.vermont.gov — 200-20 ft contours (ArcGIS layer 42)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15194,7 +15194,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_AGRICUL_0_448906", .name = "maps.vcgi.vermont.gov — Soils - Prime Agriculture (ArcGIS layer "
       "0)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15218,7 +15218,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_BOUNDAR_451_0BA778", .name = "maps.vcgi.vermont.gov — School Supervisory Unions (ArcGIS layer "
       "451)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15242,7 +15242,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_BOUNDAR_454_52BE98", .name = "maps.vcgi.vermont.gov — Unified High and Middle School Districts "
       "(ArcGIS layer 454)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15265,7 +15265,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_BOUNDAR_453_E16B9D", .name = "maps.vcgi.vermont.gov — School Districts (ArcGIS layer 453)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15289,7 +15289,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_BOUNDAR_1_78F662", .name = "maps.vcgi.vermont.gov — House Districts 2022 - VT (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15313,7 +15313,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_BOUNDAR_3_DB5AD5", .name = "maps.vcgi.vermont.gov — Senate Districts 2022 - VT (ArcGIS layer "
       "3)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15337,7 +15337,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_BOUNDAR_2_7082A3", .name = "maps.vcgi.vermont.gov — Regional Planning Commission boundaries "
       "(ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15361,7 +15361,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_BOUNDAR_6_512872", .name = "maps.vcgi.vermont.gov — US National Grid Index - VT (ArcGIS "
       "layer 6)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15384,7 +15384,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_ELEVATI_2_D51156", .name = "maps.vcgi.vermont.gov — 400-100 ft contours (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15407,7 +15407,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_ELEVATI_3_8A4080", .name = "maps.vcgi.vermont.gov — 200-40 ft contours (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15431,7 +15431,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_ELEVATI_6_18CEB4", .name = "maps.vcgi.vermont.gov — Lake Champlain bathymetry (ft) (ArcGIS "
       "layer 6)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15455,7 +15455,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_ENVIRON_10_1EB339", .name = "maps.vcgi.vermont.gov — Habitat Blocks and Wildlife Corridors "
       "(ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15478,7 +15478,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_ENVIRON_11_EAB897", .name = "maps.vcgi.vermont.gov — Hazardous Waste Sites (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15502,7 +15502,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_ENVIRON_12_E6CFC2", .name = "maps.vcgi.vermont.gov — Hazardous Waste Generators (ArcGIS layer "
       "12)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15526,7 +15526,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_ENVIRON_13_AFAB2A", .name = "maps.vcgi.vermont.gov — Ice Damage Assessment (1998) (ArcGIS "
       "layer 13)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15550,7 +15550,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_ENVIRON_14_0EFBF5", .name = "maps.vcgi.vermont.gov — Natural Areas designated by State of VT "
       "(ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15573,7 +15573,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_ENVIRON_17_2CE969", .name = "maps.vcgi.vermont.gov — Groundwater (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15596,7 +15596,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_ENVIRON_18_6F3116", .name = "maps.vcgi.vermont.gov — Surface water (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15620,7 +15620,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_ENVIRON_30_98F9EB", .name = "maps.vcgi.vermont.gov — Wind - Large Commercial 70 meter (ArcGIS "
       "layer 30)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15644,7 +15644,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_ENVIRON_31_C52787", .name = "maps.vcgi.vermont.gov — Wind - Small Commercial 50 meter (ArcGIS "
       "layer 31)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15668,7 +15668,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_ENVIRON_32_F7AEE4", .name = "maps.vcgi.vermont.gov — Wind - Residential 30 meter (ArcGIS "
       "layer 32)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15691,7 +15691,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_GEOLOGI_2_84E723", .name = "maps.vcgi.vermont.gov — Point features (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15714,7 +15714,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_GEOLOGI_3_19EFB8", .name = "maps.vcgi.vermont.gov — Linear features (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15737,7 +15737,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_GEOLOGI_5_09645D", .name = "maps.vcgi.vermont.gov — Historic mines (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15760,7 +15760,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_GEOLOGI_10_78C31B", .name = "maps.vcgi.vermont.gov — Soil units (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15784,7 +15784,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_GEOLOGI_11_146C6E", .name = "maps.vcgi.vermont.gov — Soils - Prime Agriculture (ArcGIS layer "
       "11)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15807,7 +15807,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_RECREAT_4_B0D5EA", .name = "maps.vcgi.vermont.gov — Trails - E911 database (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15831,7 +15831,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_UTILITI_24_611A4F", .name = "maps.vcgi.vermont.gov — Poles - VT Electric Coop (ArcGIS layer "
       "24)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15855,7 +15855,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_US_VCGI_VTIMV_VTIMV_UTILITI_12_BDF2D5", .name = "maps.vcgi.vermont.gov — Electric Utility Franchise Areas (ArcGIS "
       "layer 12)",
-    .category = "geospatial", .portal = "https://maps.vcgi.vermont.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://maps.vcgi.vermont.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15879,7 +15879,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__1_F6AF73", .name = "image.discomap.eea.europa.eu — O3 at rural background stations "
       "(ArcGIS layer 1)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15903,7 +15903,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__2_E3AE35", .name = "image.discomap.eea.europa.eu — O3 at urban and sub-urban "
       "background stations (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15926,7 +15926,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__4_7D1266", .name = "image.discomap.eea.europa.eu — Boundary (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15948,7 +15948,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__5_2A9461", .name = "image.discomap.eea.europa.eu — Footprint (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15971,7 +15971,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__9_6A57B1", .name = "image.discomap.eea.europa.eu — AOT40 (forests) at rural "
       "background stations (ArcGIS layer 9)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15994,7 +15994,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__11_A2DEDE", .name = "image.discomap.eea.europa.eu — Boundary (ArcGIS layer 11)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16016,7 +16016,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__12_964E17", .name = "image.discomap.eea.europa.eu — Footprint (ArcGIS layer 12)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16040,7 +16040,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__15_5FE2BE", .name = "image.discomap.eea.europa.eu — AOT40 (crops) at rural background "
       "stations (ArcGIS layer 15)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_economy_business", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16063,7 +16063,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__17_602FF0", .name = "image.discomap.eea.europa.eu — Boundary (ArcGIS layer 17)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16085,7 +16085,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__18_349FF7", .name = "image.discomap.eea.europa.eu — Footprint (ArcGIS layer 18)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16109,7 +16109,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__21_66DEB2", .name = "image.discomap.eea.europa.eu — SOMO35 at rural background "
       "stations (ArcGIS layer 21)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16133,7 +16133,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__22_BDD419", .name = "image.discomap.eea.europa.eu — SOMO35 at urban and sub-urban "
       "background stations (ArcGIS layer 22)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16156,7 +16156,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__24_5B3D58", .name = "image.discomap.eea.europa.eu — Boundary (ArcGIS layer 24)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16178,7 +16178,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_AIRBASE_O3_INTERPOLATED__25_881BF2", .name = "image.discomap.eea.europa.eu — Footprint (ArcGIS layer 25)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16202,7 +16202,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PM10_INTERPOLATE_1_63C758", .name = "image.discomap.eea.europa.eu — 36th PM10 at urban and sub-urban "
       "background stations (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16226,7 +16226,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PM10_INTERPOLATE_2_C99C6C", .name = "image.discomap.eea.europa.eu — 36th PM10 at rural background "
       "stations (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16249,7 +16249,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_PM10_INTERPOLATE_4_761945", .name = "image.discomap.eea.europa.eu — Boundary (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16272,7 +16272,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_AIRBASE_PM10_INTERPOLATE_5_6A2202", .name = "image.discomap.eea.europa.eu — Footprint (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16296,7 +16296,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PM10_INTERPOLATE_8_BC1C26", .name = "image.discomap.eea.europa.eu — PM10 at urban and sub-urban "
       "background stations (ArcGIS layer 8)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16320,7 +16320,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PM10_INTERPOLATE_9_9AD7CC", .name = "image.discomap.eea.europa.eu — PM10 at rural background stations "
       "(ArcGIS layer 9)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16343,7 +16343,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_PM10_INTERPOLATE_11_FBF732", .name = "image.discomap.eea.europa.eu — Boundary (ArcGIS layer 11)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16366,7 +16366,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_AIRBASE_PM10_INTERPOLATE_12_06F2B1", .name = "image.discomap.eea.europa.eu — Footprint (ArcGIS layer 12)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16390,7 +16390,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PM2_5_INTERPOLAT_1_2166D1", .name = "image.discomap.eea.europa.eu — PM2.5 at urban and sub-urban "
       "background stations (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16414,7 +16414,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PM2_5_INTERPOLAT_2_58F939", .name = "image.discomap.eea.europa.eu — PM2.5 at rural background "
       "stations (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16437,7 +16437,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_PM2_5_INTERPOLAT_4_518203", .name = "image.discomap.eea.europa.eu — Boundary (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16460,7 +16460,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_AIRBASE_PM2_5_INTERPOLAT_5_BF8770", .name = "image.discomap.eea.europa.eu — Footprint (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16484,7 +16484,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CLC_PLUS_CLCPLUS2018_WM_1_69AA5D", .name = "image.discomap.eea.europa.eu — CLCplus2018_WM_vector (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16508,7 +16508,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CLMS_STORYMAP_WATER_CLMS_0_26E660", .name = "image.discomap.eea.europa.eu — Catchment_Guadalquivir_Merge "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16532,7 +16532,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_COASTALZONES_CZ_COASTALZ_0_760426", .name = "image.discomap.eea.europa.eu — Coastal Zones 2012 vector (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16556,7 +16556,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_COASTALZONES_CZ_COASTALZ_0_D95254", .name = "image.discomap.eea.europa.eu — Coastal Zones 2018 vector (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16580,7 +16580,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_COASTALZONES_CZ_COASTALZ_0_434BB8", .name = "image.discomap.eea.europa.eu — Coastal Zones Change 2012-2018 "
       "vector (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16604,7 +16604,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_MULTICOUNTRY_MULTI_0_B66C94", .name = "image.discomap.eea.europa.eu — NUTS.dbo.MultiCountryDataSet "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16627,7 +16627,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_NUTS_NUTS_2021_REG_0_67BC9B", .name = "image.discomap.eea.europa.eu — NUTS3_1M_2021 (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16650,7 +16650,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_NUTS_NUTS_2021_1_148855", .name = "image.discomap.eea.europa.eu — NUTS_2021 (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16672,7 +16672,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_NUTS_NUTS_2024_REG_0_34828F", .name = "image.discomap.eea.europa.eu — NUTS3_1M_2024 (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16695,7 +16695,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_NUTS_NUTS_2024_0_4BCF8A", .name = "image.discomap.eea.europa.eu — NUTS_2024 (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16718,7 +16718,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_0_58AC78", .name = "image.discomap.eea.europa.eu — Regional Cartography (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16741,7 +16741,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_1_4FCA98", .name = "image.discomap.eea.europa.eu — Addresses (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16765,7 +16765,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_2_21EE2B", .name = "image.discomap.eea.europa.eu — Administrative units (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16788,7 +16788,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_3_35FBB7", .name = "image.discomap.eea.europa.eu — Agriculture (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_economy_business", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16811,7 +16811,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_4_33FA3A", .name = "image.discomap.eea.europa.eu — Area_management (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16834,7 +16834,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_5_B96E78", .name = "image.discomap.eea.europa.eu — Atmospheric (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16857,7 +16857,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_6_86C31E", .name = "image.discomap.eea.europa.eu — BioGeographic (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16880,7 +16880,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_7_B3B29B", .name = "image.discomap.eea.europa.eu — Building (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16903,7 +16903,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_8_A42DEE", .name = "image.discomap.eea.europa.eu — Cadastre (ArcGIS layer 8)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16926,7 +16926,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_9_75AA4E", .name = "image.discomap.eea.europa.eu — CoordinateRefSys (ArcGIS layer 9)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16949,7 +16949,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_10_87A0BC", .name = "image.discomap.eea.europa.eu — Elevation (ArcGIS layer 10)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16972,7 +16972,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_11_D1406C", .name = "image.discomap.eea.europa.eu — EMF (ArcGIS layer 11)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16996,7 +16996,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_12_5F5306", .name = "image.discomap.eea.europa.eu — EnviromentFacilities (ArcGIS "
       "layer 12)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17019,7 +17019,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_13_CB4F21", .name = "image.discomap.eea.europa.eu — GeoGridSys (ArcGIS layer 13)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17042,7 +17042,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_14_C81F96", .name = "image.discomap.eea.europa.eu — GeoNames (ArcGIS layer 14)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17065,7 +17065,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_15_E43DBA", .name = "image.discomap.eea.europa.eu — Geology (ArcGIS layer 15)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17089,7 +17089,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_16_F1FB2E", .name = "image.discomap.eea.europa.eu — HabitatsAndBiotopes (ArcGIS layer "
       "16)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17112,7 +17112,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_17_D3E2DE", .name = "image.discomap.eea.europa.eu — Hidrography (ArcGIS layer 17)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17136,7 +17136,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_18_183A64", .name = "image.discomap.eea.europa.eu — HumanHealthSafety (ArcGIS layer "
       "18)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_safety_emergency", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17159,7 +17159,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_19_D4DC41", .name = "image.discomap.eea.europa.eu — Land Cover (ArcGIS layer 19)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17182,7 +17182,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_20_76E1BB", .name = "image.discomap.eea.europa.eu — Land Use (ArcGIS layer 20)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17206,7 +17206,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_21_AFBEEE", .name = "image.discomap.eea.europa.eu — MeteorologicalFeatures (ArcGIS "
       "layer 21)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17230,7 +17230,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_22_33360C", .name = "image.discomap.eea.europa.eu — MineralResources (ArcGIS layer "
       "22)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17254,7 +17254,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_23_41F299", .name = "image.discomap.eea.europa.eu — NaturalRiskZones (ArcGIS layer "
       "23)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17278,7 +17278,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_24_64769E", .name = "image.discomap.eea.europa.eu — OceanographicFeatures (ArcGIS "
       "layer 24)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17301,7 +17301,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_25_BE9FF6", .name = "image.discomap.eea.europa.eu — Orthoimagery (ArcGIS layer 25)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17324,7 +17324,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_26_AB71DD", .name = "image.discomap.eea.europa.eu — Population (ArcGIS layer 26)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17348,7 +17348,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_27_B81E0F", .name = "image.discomap.eea.europa.eu — ProductionIndustrialFacilities "
       "(ArcGIS layer 27)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_economy_business", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17371,7 +17371,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_28_8B895E", .name = "image.discomap.eea.europa.eu — ProtectedSites (ArcGIS layer 28)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17394,7 +17394,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_29_E5770C", .name = "image.discomap.eea.europa.eu — SeaRegions (ArcGIS layer 29)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17417,7 +17417,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_30_EC27E8", .name = "image.discomap.eea.europa.eu — Soil (ArcGIS layer 30)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17441,7 +17441,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_31_67AD78", .name = "image.discomap.eea.europa.eu — SpeciesDistribution (ArcGIS layer "
       "31)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17465,7 +17465,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_32_9D4EA6", .name = "image.discomap.eea.europa.eu — StatisticalUnits (ArcGIS layer "
       "32)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17489,7 +17489,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_33_F13F94", .name = "image.discomap.eea.europa.eu — Transport network (ArcGIS layer "
       "33)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_transport", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17513,7 +17513,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_34_496A59", .name = "image.discomap.eea.europa.eu — UtilityGovServices (ArcGIS layer "
       "34)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_utilities_infrastructure", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17537,7 +17537,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_0_C92B6F", .name = "image.discomap.eea.europa.eu — Regional Cartography (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17560,7 +17560,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_1_A5835B", .name = "image.discomap.eea.europa.eu — Addresses (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17584,7 +17584,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_2_2524E8", .name = "image.discomap.eea.europa.eu — Administrative units (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17607,7 +17607,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_3_74B52E", .name = "image.discomap.eea.europa.eu — Agriculture (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_economy_business", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17630,7 +17630,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_4_6F82AD", .name = "image.discomap.eea.europa.eu — Area management (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17653,7 +17653,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_5_341321", .name = "image.discomap.eea.europa.eu — Atmospheric (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17676,7 +17676,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_6_B578A1", .name = "image.discomap.eea.europa.eu — BioGeographic (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17699,7 +17699,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_7_F040F4", .name = "image.discomap.eea.europa.eu — Building (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17722,7 +17722,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_8_C6A361", .name = "image.discomap.eea.europa.eu — Cadastre (ArcGIS layer 8)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17745,7 +17745,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_9_54D0FB", .name = "image.discomap.eea.europa.eu — CoordinateRefSys (ArcGIS layer 9)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17768,7 +17768,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_10_9D28F1", .name = "image.discomap.eea.europa.eu — Elevation (ArcGIS layer 10)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17791,7 +17791,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_11_513FC7", .name = "image.discomap.eea.europa.eu — EMF (ArcGIS layer 11)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17815,7 +17815,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_12_C5AE60", .name = "image.discomap.eea.europa.eu — EnviromentFacilities (ArcGIS "
       "layer 12)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17838,7 +17838,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_13_5C10CF", .name = "image.discomap.eea.europa.eu — GeoGridSys (ArcGIS layer 13)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17861,7 +17861,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_14_B98313", .name = "image.discomap.eea.europa.eu — GeoNames (ArcGIS layer 14)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17884,7 +17884,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_15_D4252E", .name = "image.discomap.eea.europa.eu — Geology (ArcGIS layer 15)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17908,7 +17908,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_16_55C9FC", .name = "image.discomap.eea.europa.eu — HabitatsAndBiotopes (ArcGIS layer "
       "16)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17931,7 +17931,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_17_180833", .name = "image.discomap.eea.europa.eu — Hydrography (ArcGIS layer 17)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17955,7 +17955,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_18_66207A", .name = "image.discomap.eea.europa.eu — HumanHealthSafety (ArcGIS layer "
       "18)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_safety_emergency", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17978,7 +17978,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_19_C27DA7", .name = "image.discomap.eea.europa.eu — Land Cover (ArcGIS layer 19)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18001,7 +18001,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_20_D139E5", .name = "image.discomap.eea.europa.eu — Land Use (ArcGIS layer 20)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18025,7 +18025,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_21_3619F0", .name = "image.discomap.eea.europa.eu — MeteorologicalFeatures (ArcGIS "
       "layer 21)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18049,7 +18049,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_22_E91928", .name = "image.discomap.eea.europa.eu — MineralResources (ArcGIS layer "
       "22)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18073,7 +18073,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_23_FF4462", .name = "image.discomap.eea.europa.eu — NaturalRiskZones (ArcGIS layer "
       "23)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18097,7 +18097,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_24_DD80FB", .name = "image.discomap.eea.europa.eu — OceanographicFeatures (ArcGIS "
       "layer 24)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18120,7 +18120,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_25_FE664D", .name = "image.discomap.eea.europa.eu — Orthoimagery (ArcGIS layer 25)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18143,7 +18143,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_26_67E453", .name = "image.discomap.eea.europa.eu — Population (ArcGIS layer 26)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18167,7 +18167,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_27_9F9978", .name = "image.discomap.eea.europa.eu — ProductionIndustrialFacilities "
       "(ArcGIS layer 27)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_economy_business", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18190,7 +18190,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_28_3E630C", .name = "image.discomap.eea.europa.eu — ProtectedSites (ArcGIS layer 28)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18213,7 +18213,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_29_870AF2", .name = "image.discomap.eea.europa.eu — SeaRegions (ArcGIS layer 29)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18236,7 +18236,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_30_56301E", .name = "image.discomap.eea.europa.eu — Soil (ArcGIS layer 30)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18260,7 +18260,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_31_2D14E5", .name = "image.discomap.eea.europa.eu — SpeciesDistribution (ArcGIS layer "
       "31)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18284,7 +18284,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_32_6C0DD9", .name = "image.discomap.eea.europa.eu — StatisticalUnits (ArcGIS layer "
       "32)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18308,7 +18308,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_33_55F82B", .name = "image.discomap.eea.europa.eu — Transport network (ArcGIS layer "
       "33)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_transport", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18332,7 +18332,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORDA_STATISTICS_THEMATI_34_65E6BA", .name = "image.discomap.eea.europa.eu — UtilityGovServices (ArcGIS layer "
       "34)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_utilities_infrastructure", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18356,7 +18356,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA1990_2000_WM_0_977DBF", .name = "image.discomap.eea.europa.eu — Corine Land Change 1990-2000 "
       "vector (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18380,7 +18380,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2000_2006_WM_0_37935F", .name = "image.discomap.eea.europa.eu — Corine Land Change 2000-2006 "
       "vector (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18404,7 +18404,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2000_0_E1F913", .name = "image.discomap.eea.europa.eu — Corine Land Change 2000 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18427,7 +18427,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2006_2012_WM_0_FECCAE", .name = "image.discomap.eea.europa.eu — Corine Land Change 2012 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18451,7 +18451,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2006_2012_WM_3_438140", .name = "image.discomap.eea.europa.eu — "
       "U2012_CHA0612_V2020_20u1_FR_REU_WM (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18475,7 +18475,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2006_2012_WM_4_BD2254", .name = "image.discomap.eea.europa.eu — "
       "U2012_CHA0612_V2020_20u1_FR_MYT_WM (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18499,7 +18499,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2006_2012_WM_5_7DDAC9", .name = "image.discomap.eea.europa.eu — "
       "U2012_CHA0612_V2020_20u1_FR_MTQ_WM (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18523,7 +18523,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2006_2012_WM_6_56178A", .name = "image.discomap.eea.europa.eu — "
       "U2012_CHA0612_V2020_20u1_FR_GUF_WM (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18547,7 +18547,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2006_2012_WM_7_40508C", .name = "image.discomap.eea.europa.eu — "
       "U2012_CHA0612_V2020_20u1_FR_GLP_WM (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18571,7 +18571,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2006_0_A96F6C", .name = "image.discomap.eea.europa.eu — Corine Land Change 2006 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18594,7 +18594,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2012_2018_LAEA_0_5DEDF8", .name = "image.discomap.eea.europa.eu — Corine Land Cover 2018 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18618,7 +18618,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2012_2018_WM_0_B24CB8", .name = "image.discomap.eea.europa.eu — Corine Land Cover 2018 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18642,7 +18642,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2012_2018_WM_3_E10156", .name = "image.discomap.eea.europa.eu — "
       "U2018_CHA1218_V2020_20u1_FR_REU_WM (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18666,7 +18666,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2012_2018_WM_4_871018", .name = "image.discomap.eea.europa.eu — "
       "U2018_CHA1218_V2020_20u1_FR_MYT_WM (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18690,7 +18690,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2012_2018_WM_5_97CA2A", .name = "image.discomap.eea.europa.eu — "
       "U2018_CHA1218_V2020_20u1_FR_MTQ_WM (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18714,7 +18714,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2012_2018_WM_6_D42FF5", .name = "image.discomap.eea.europa.eu — "
       "U2018_CHA1218_V2020_20u1_FR_GUF_WM (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18738,7 +18738,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2012_2018_WM_7_6C6A87", .name = "image.discomap.eea.europa.eu — "
       "U2018_CHA1218_V2020_20u1_FR_GLP_WM (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18762,7 +18762,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CHA2012_0_BE01DC", .name = "image.discomap.eea.europa.eu — Corine Land Change 2012 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18785,7 +18785,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC1990_WM_0_6219EB", .name = "image.discomap.eea.europa.eu — Corine Land Cover 1990 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18808,7 +18808,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC1990_0_5B360E", .name = "image.discomap.eea.europa.eu — Corine Land Cover 1990 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18831,7 +18831,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2000_WM_0_60CB7F", .name = "image.discomap.eea.europa.eu — Corine Land Cover 2000 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18854,7 +18854,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2000_0_21ABD4", .name = "image.discomap.eea.europa.eu — Corine Land Cover 2000 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18877,7 +18877,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2006_WM_0_2CB258", .name = "image.discomap.eea.europa.eu — Corine Land Cover 2006 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18900,7 +18900,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2006_WM_3_F9AF12", .name = "image.discomap.eea.europa.eu — "
       "U2012_CLC2006_V2020_20u1_FR_REU_WM (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18923,7 +18923,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2006_WM_4_890148", .name = "image.discomap.eea.europa.eu — "
       "U2012_CLC2006_V2020_20u1_FR_MYT_WM (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18946,7 +18946,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2006_WM_5_E2D4DF", .name = "image.discomap.eea.europa.eu — "
       "U2012_CLC2006_V2020_20u1_FR_MTQ_WM (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18969,7 +18969,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2006_WM_6_830814", .name = "image.discomap.eea.europa.eu — "
       "U2012_CLC2006_V2020_20u1_FR_GUF_WM (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18992,7 +18992,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2006_WM_7_324C7F", .name = "image.discomap.eea.europa.eu — "
       "U2012_CLC2006_V2020_20u1_FR_GLP_WM (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19015,7 +19015,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2006_0_D2F358", .name = "image.discomap.eea.europa.eu — Corine Land Cover 2006 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19038,7 +19038,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2012_WM_0_9C658D", .name = "image.discomap.eea.europa.eu — Corine Land Cover 2012 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19061,7 +19061,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2012_WM_3_CB71AE", .name = "image.discomap.eea.europa.eu — "
       "U2018_CLC2012_V2020_20u1_FR_REU_WM (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19084,7 +19084,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2012_WM_4_5B173A", .name = "image.discomap.eea.europa.eu — "
       "U2018_CLC2012_V2020_20u1_FR_MYT_WM (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19107,7 +19107,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2012_WM_5_46B8D0", .name = "image.discomap.eea.europa.eu — "
       "U2018_CLC2012_V2020_20u1_FR_MTQ_WM (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19130,7 +19130,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2012_WM_6_C74640", .name = "image.discomap.eea.europa.eu — "
       "U2018_CLC2012_V2020_20u1_FR_GUF_WM (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19153,7 +19153,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2012_WM_7_CEA807", .name = "image.discomap.eea.europa.eu — "
       "U2018_CLC2012_V2020_20u1_FR_GLP_WM (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19176,7 +19176,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2012_0_22E4E0", .name = "image.discomap.eea.europa.eu — Corine Land Cover 2012 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19199,7 +19199,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2018_LAEA_0_024AF3", .name = "image.discomap.eea.europa.eu — Corine Land Cover 2018 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19222,7 +19222,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2018_WM_0_EE60CF", .name = "image.discomap.eea.europa.eu — Corine Land Cover 2018 vector "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19245,7 +19245,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2018_WM_3_5B41DD", .name = "image.discomap.eea.europa.eu — "
       "CLC2018_CLC2018_V2018_20u1_FR_REU_WM (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19268,7 +19268,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2018_WM_4_C6F371", .name = "image.discomap.eea.europa.eu — "
       "CLC2018_CLC2018_V2018_20u1_FR_MYT_WM (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19291,7 +19291,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2018_WM_5_213129", .name = "image.discomap.eea.europa.eu — "
       "CLC2018_CLC2018_V2018_20u1_FR_MTQ_WM (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19314,7 +19314,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2018_WM_6_8C8734", .name = "image.discomap.eea.europa.eu — "
       "CLC2018_CLC2018_V2018_20u1_FR_Guf_WM (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19337,7 +19337,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CORINE_CLC2018_WM_7_4E1C64", .name = "image.discomap.eea.europa.eu — "
       "CLC2018_CLC2018_V2018_20u1_FR_GLP_WM (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19360,7 +19360,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_ESM2012_R_0_1BB872", .name = "image.discomap.eea.europa.eu — Download_tiles_WM (ArcGIS layer "
       "0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19384,7 +19384,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_ESM2015_R_0_17EEF3", .name = "image.discomap.eea.europa.eu — Download_tiles_WM (ArcGIS layer "
       "0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19407,7 +19407,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_EUELEV_DE_0_0BF2D1", .name = "image.discomap.eea.europa.eu — DEM_V11_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19431,7 +19431,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_EUHYDRO_R_0_0C46B1", .name = "image.discomap.eea.europa.eu — RiverNetworkDatabase - "
       "DownloadLayer (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19454,7 +19454,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_DLT_2_0_038796", .name = "image.discomap.eea.europa.eu — DLT_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19477,7 +19477,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_DLT_2_0_81C187", .name = "image.discomap.eea.europa.eu — DLT_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19500,7 +19500,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_FADSL_0_068235", .name = "image.discomap.eea.europa.eu — FADSL_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19523,7 +19523,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_FADSL_0_DD3524", .name = "image.discomap.eea.europa.eu — FADSL_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19546,7 +19546,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_FTY_2_0_9B0914", .name = "image.discomap.eea.europa.eu — FTY_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19569,7 +19569,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_FTY_2_0_A18867", .name = "image.discomap.eea.europa.eu — FTY_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19592,7 +19592,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_GRA_2_0_36AF08", .name = "image.discomap.eea.europa.eu — GRA_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19615,7 +19615,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_GRAVP_0_B85C6D", .name = "image.discomap.eea.europa.eu — GRAVPI_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19638,7 +19638,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_IMC_0_0_134680", .name = "image.discomap.eea.europa.eu — IMC_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19661,7 +19661,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_IMC_2_0_45A29F", .name = "image.discomap.eea.europa.eu — IMC_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19684,7 +19684,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_IMC_2_0_B3FFD6", .name = "image.discomap.eea.europa.eu — IMC_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19707,7 +19707,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_IMC_2_0_D6C7E0", .name = "image.discomap.eea.europa.eu — IMC_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19730,7 +19730,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_IMCC__0_D6E75B", .name = "image.discomap.eea.europa.eu — IMCC_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19753,7 +19753,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_IMCC__0_DDA059", .name = "image.discomap.eea.europa.eu — IMCC_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19776,7 +19776,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_IMCC__0_83BCEE", .name = "image.discomap.eea.europa.eu — IMCC_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19799,7 +19799,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_IMCC__0_BE58D0", .name = "image.discomap.eea.europa.eu — IMCC_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19822,7 +19822,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_IMD_2_0_9B7FEA", .name = "image.discomap.eea.europa.eu — IMD_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19845,7 +19845,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_DOWNLOADLAYERS_HRL_IMD_2_0_1F0576", .name = "image.discomap.eea.europa.eu — IMD_Download (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://image.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://image.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19869,7 +19869,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_ART17_2019_202_6_C721A2", .name = "bio.discomap.eea.europa.eu — art17_species_2019_2024_public "
       "(ArcGIS layer 6)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19893,7 +19893,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_ART17_2019_202_5_E5ECE6", .name = "bio.discomap.eea.europa.eu — art17_habitats_2019_2024 (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19917,7 +19917,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_ART17_HABITATS_1_6875D5", .name = "bio.discomap.eea.europa.eu — Art17 habitat conservation status "
       "2007-2012 (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19941,7 +19941,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_ART17_HABITATS_2_83164B", .name = "bio.discomap.eea.europa.eu — Art17 species conservation status "
       "2007-2012 (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19965,7 +19965,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_ART17_HABITATS_4_110649", .name = "bio.discomap.eea.europa.eu — Art17 habitat conservation status "
       "2013-2018 (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -19989,7 +19989,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_ART17_HABITATS_5_68F953", .name = "bio.discomap.eea.europa.eu — Art17 species conservation status "
       "2013-2018 (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20013,7 +20013,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_HABITATSDIRECT_1_707E26", .name = "bio.discomap.eea.europa.eu — Distribution habitat 2013_2018 "
       "(ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20037,7 +20037,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_HABITATSDIRECT_2_CCC0EF", .name = "bio.discomap.eea.europa.eu — ART17 habitat 2013_2018 "
       "conservation status (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20062,7 +20062,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_HABITATSDIRECT_3_FE4676", .name = "bio.discomap.eea.europa.eu — Distribution species 2013_2018 "
       "(ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20086,7 +20086,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_HABITATSDIRECT_4_569537", .name = "bio.discomap.eea.europa.eu — ART17 species 2013_2018 "
       "conservation status (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20111,7 +20111,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_HABITATSDIRECT_6_9CAF55", .name = "bio.discomap.eea.europa.eu — Distribution habitat 2007-2012 "
       "(ArcGIS layer 6)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20135,7 +20135,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_HABITATSDIRECT_7_C3B01A", .name = "bio.discomap.eea.europa.eu — ART17 habitats 2007_2012 "
       "conservation status (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20160,7 +20160,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_HABITATSDIRECT_8_E9D15A", .name = "bio.discomap.eea.europa.eu — Distribution species 2007_2012 "
       "(ArcGIS layer 8)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20184,7 +20184,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE17_HABITATSDIRECT_9_283B8F", .name = "bio.discomap.eea.europa.eu — ART17 species 2007_2012 "
       "conservation status (ArcGIS layer 9)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20209,7 +20209,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE_12_ART12_BIRDS_2_0_9A6B87", .name = "bio.discomap.eea.europa.eu — ART12 BIRDS 2019-2024 distribution "
       "- public (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20233,7 +20233,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE_12_BIRDSDIRECTIV_1_6AE057", .name = "bio.discomap.eea.europa.eu — ART12 birds distribution (reporting "
       "2008-2012) (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20258,7 +20258,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ARTICLE_12_BIRDSDIRECTIV_3_53BD4C", .name = "bio.discomap.eea.europa.eu — ART12 birds distribution (reporting "
       "2013-2018) (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20284,7 +20284,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_ARTICLE_12_BIRDSDIRECTIV_4_EF38C2", .name = "bio.discomap.eea.europa.eu — ART12 birds distribution (reporting "
       "2013-2018) - with short-term MS population trend (ArcGIS layer "
       "4)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20309,7 +20309,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_IAS_INVASIVE_ALIEN_S_0_12E789", .name = "bio.discomap.eea.europa.eu — Invasive Alien Species (IAS) - of "
       "national concern (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20334,7 +20334,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_IAS_INVASIVE_ALIEN_S_0_D1C56E", .name = "bio.discomap.eea.europa.eu — Invasive Alien Species (IAS) - of "
       "union concern (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20358,7 +20358,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000_DYNA_WM_0_F6CBF5", .name = "bio.discomap.eea.europa.eu — Query Sites (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20381,7 +20381,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000_DYNA_WM_2_6F5E90", .name = "bio.discomap.eea.europa.eu — Scale under 1:10,000,000 (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20404,7 +20404,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000_DYNA_WM_3_E0B344", .name = "bio.discomap.eea.europa.eu — Scale between 1:100.000 and "
       "1:10,000,000 (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20428,7 +20428,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000_DYNA_WM_4_5D8CDC", .name = "bio.discomap.eea.europa.eu — Scale above 1:100,000 (ArcGIS layer "
       "4)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20451,7 +20451,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000_DYNA_WM_6_49DF58", .name = "bio.discomap.eea.europa.eu — Scale under 1:10,000,000 (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20474,7 +20474,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000_DYNA_WM_7_AB60D8", .name = "bio.discomap.eea.europa.eu — Scale between 1:100,000 and "
       "1:10,000,000 (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20498,7 +20498,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000_DYNA_WM_8_5D0283", .name = "bio.discomap.eea.europa.eu — Scale above 1:100,000 (ArcGIS layer "
       "8)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20520,7 +20520,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000HATCH_DYNA_0_F58B7A", .name = "bio.discomap.eea.europa.eu — Query Sites (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20544,7 +20544,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000HATCH_DYNA_2_385452", .name = "bio.discomap.eea.europa.eu — Scale under 1:10,000,000 (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20568,7 +20568,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000HATCH_DYNA_3_E57593", .name = "bio.discomap.eea.europa.eu — Scale between 1:100.000 and "
       "1:10,000,000 (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20592,7 +20592,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000HATCH_DYNA_4_9231E8", .name = "bio.discomap.eea.europa.eu — Scale above 1:100,000 (ArcGIS layer "
       "4)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20616,7 +20616,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000HATCH_DYNA_6_3D98CB", .name = "bio.discomap.eea.europa.eu — Scale under 1:10,000,000 (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20640,7 +20640,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000HATCH_DYNA_7_7D9B1A", .name = "bio.discomap.eea.europa.eu — Scale between 1:100,000 and "
       "1:10,000,000 (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20664,7 +20664,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000HATCH_DYNA_8_DA7D2E", .name = "bio.discomap.eea.europa.eu — Scale above 1:100,000 (ArcGIS layer "
       "8)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20687,7 +20687,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000HATCH_WM_J_0_055295", .name = "bio.discomap.eea.europa.eu — Query Sites (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20711,7 +20711,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIO_NATURA2000HATCH_WM_J_2_454258", .name = "bio.discomap.eea.europa.eu — Scale under 1:10,000,000 (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20735,7 +20735,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIOREGIONS_BIOGEOGRAPHIC_0_BDF1BC", .name = "bio.discomap.eea.europa.eu — Biogeographical regions (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20759,7 +20759,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BIOREGIONS_BIOGEOGRAPHIC_0_33C04C", .name = "bio.discomap.eea.europa.eu — Biogeographical regions (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20783,7 +20783,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BISE_ECOSYSTEMS_31_BIOGE_0_C792B3", .name = "bio.discomap.eea.europa.eu — Biogeographical Regions (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20806,7 +20806,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BISE_ECOSYSTEMS_31_MSFD_0_91A834", .name = "bio.discomap.eea.europa.eu — European Seas (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20828,7 +20828,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BISE_NUTS0_MARINE_0_52CF90", .name = "bio.discomap.eea.europa.eu — NUTS0_Marine (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20851,7 +20851,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_EUNIS_COASTAL_DISTRIBUTI_0_987171", .name = "bio.discomap.eea.europa.eu — Coastal_Distribution (ArcGIS layer "
       "0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20874,7 +20874,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_EUNIS_FOREST_DISTRIBUTIO_0_A29232", .name = "bio.discomap.eea.europa.eu — Forest (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20897,7 +20897,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_EUNIS_GRASSLAND_DISTRIBU_0_4CEAF8", .name = "bio.discomap.eea.europa.eu — Grassland (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20920,7 +20920,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_EUNIS_HETHLAND_DISTRIBUT_0_9F0BEE", .name = "bio.discomap.eea.europa.eu — Heathlands (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20944,7 +20944,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_EUNIS_SALTMARSHES_DISTRI_0_804EE0", .name = "bio.discomap.eea.europa.eu — SaltmarshesDistribution (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20968,7 +20968,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_EUNIS_SPARSELY_DISTRIBUT_0_0E00C3", .name = "bio.discomap.eea.europa.eu — Sparsely_vegetated_habitats (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -20992,7 +20992,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_EUNIS_VEGETATED_DISTRIBU_0_D6A7BF", .name = "bio.discomap.eea.europa.eu — Vegetated_man_habitats (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21015,7 +21015,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_EUNIS_WETLANDS_DISTRIBUT_0_FF20C6", .name = "bio.discomap.eea.europa.eu — Wetland (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21038,7 +21038,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_INTERNAL_ASSESSMENTATLAS_1_6AFD4D", .name = "bio.discomap.eea.europa.eu — Green (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21061,7 +21061,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_INTERNAL_ASSESSMENTATLAS_2_E41DE7", .name = "bio.discomap.eea.europa.eu — Water (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21085,7 +21085,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_INTERNAL_ASSESSMENTATLAS_3_1B93B8", .name = "bio.discomap.eea.europa.eu — Green Economy & Water (ArcGIS layer "
       "3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21108,7 +21108,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_INTERNAL_ASSESSMENTATLAS_5_E9EFDB", .name = "bio.discomap.eea.europa.eu — Who is Who (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21131,7 +21131,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_INTERNAL_ASSESSMENTATLAS_6_A78EAE", .name = "bio.discomap.eea.europa.eu — Non-EEA (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21154,7 +21154,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_INTERNAL_ASSESSMENTATLAS_7_7A374F", .name = "bio.discomap.eea.europa.eu — EEA's NFP (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21177,7 +21177,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_INTERNAL_ASSESSMENTATLAS_8_A8D0C0", .name = "bio.discomap.eea.europa.eu — WGEMA (ArcGIS layer 8)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21200,7 +21200,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA38_W_0_7B0626", .name = "bio.discomap.eea.europa.eu — Borders (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21222,7 +21222,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA38_W_1_A8B9EF", .name = "bio.discomap.eea.europa.eu — Lakes (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21244,7 +21244,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA38_W_2_23BD38", .name = "bio.discomap.eea.europa.eu — Countries EIONET (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21267,7 +21267,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA38_W_3_822FC1", .name = "bio.discomap.eea.europa.eu — Sea (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21289,7 +21289,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA38_W_1_AA916B", .name = "bio.discomap.eea.europa.eu — Borders (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21312,7 +21312,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA38_W_2_0C9414", .name = "bio.discomap.eea.europa.eu — Lakes (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21335,7 +21335,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA38_W_3_72512B", .name = "bio.discomap.eea.europa.eu — Countries (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21358,7 +21358,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA38_W_4_FC44C2", .name = "bio.discomap.eea.europa.eu — Sea (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21380,7 +21380,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA39_W_1_5C6148", .name = "bio.discomap.eea.europa.eu — Borders (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21402,7 +21402,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA39_W_2_65748D", .name = "bio.discomap.eea.europa.eu — Lakes (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21424,7 +21424,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA39_W_3_9DA008", .name = "bio.discomap.eea.europa.eu — Countries (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21446,7 +21446,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA39_W_4_99B584", .name = "bio.discomap.eea.europa.eu — Sea (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21468,7 +21468,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA39_W_1_2126BB", .name = "bio.discomap.eea.europa.eu — Borders (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21491,7 +21491,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA39_W_2_4EACBE", .name = "bio.discomap.eea.europa.eu — Lakes (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21514,7 +21514,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA39_W_3_B03282", .name = "bio.discomap.eea.europa.eu — Countries (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21537,7 +21537,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA39_W_4_238498", .name = "bio.discomap.eea.europa.eu — Sea (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21559,7 +21559,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA_COU_1_88954D", .name = "bio.discomap.eea.europa.eu — Borders (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21582,7 +21582,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA_COU_2_69FB4C", .name = "bio.discomap.eea.europa.eu — Lakes (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21605,7 +21605,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA_COU_3_F6CD6B", .name = "bio.discomap.eea.europa.eu — Countries (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21628,7 +21628,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EEA_COU_4_14E9A0", .name = "bio.discomap.eea.europa.eu — Sea (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21651,7 +21651,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_27_W_0_3962EC", .name = "bio.discomap.eea.europa.eu — Borders (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21674,7 +21674,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_27_W_1_C9B6DC", .name = "bio.discomap.eea.europa.eu — Lakes (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21697,7 +21697,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_27_W_2_22DFA1", .name = "bio.discomap.eea.europa.eu — Countries (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21720,7 +21720,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_27_W_3_5D2C4F", .name = "bio.discomap.eea.europa.eu — Sea (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21742,7 +21742,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_27_W_0_AD62A1", .name = "bio.discomap.eea.europa.eu — Borders (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21764,7 +21764,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_27_W_1_A866CC", .name = "bio.discomap.eea.europa.eu — Lakes (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21786,7 +21786,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_27_W_2_8B6463", .name = "bio.discomap.eea.europa.eu — Countries (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21808,7 +21808,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_27_W_3_F243D4", .name = "bio.discomap.eea.europa.eu — Sea (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21830,7 +21830,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_28_W_0_A54469", .name = "bio.discomap.eea.europa.eu — Borders (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21853,7 +21853,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_28_W_1_40D740", .name = "bio.discomap.eea.europa.eu — Lakes (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21876,7 +21876,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_28_W_2_86900E", .name = "bio.discomap.eea.europa.eu — Countries (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21899,7 +21899,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_28_W_3_0A3423", .name = "bio.discomap.eea.europa.eu — Sea (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21921,7 +21921,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_28_W_0_36CEF6", .name = "bio.discomap.eea.europa.eu — Borders (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21943,7 +21943,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_28_W_1_E059BE", .name = "bio.discomap.eea.europa.eu — Lakes (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21965,7 +21965,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_28_W_2_CEDD42", .name = "bio.discomap.eea.europa.eu — Countries (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -21987,7 +21987,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_BASEMAP_EU_28_W_3_A1E077", .name = "bio.discomap.eea.europa.eu — Sea (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22009,7 +22009,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_COUNTRIES_LAYMA_0_263281", .name = "bio.discomap.eea.europa.eu — Countries (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22031,7 +22031,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_EEABUILDINGS_DY_0_37313D", .name = "bio.discomap.eea.europa.eu — Fourth_floor (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22054,7 +22054,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_EEABUILDINGS_DY_1_C16426", .name = "bio.discomap.eea.europa.eu — Third_floor (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22077,7 +22077,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_EEABUILDINGS_DY_2_A45653", .name = "bio.discomap.eea.europa.eu — Second_floor (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22100,7 +22100,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_EEABUILDINGS_DY_3_435A30", .name = "bio.discomap.eea.europa.eu — First_floor (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22123,7 +22123,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_EEABUILDINGS_DY_4_F0C90D", .name = "bio.discomap.eea.europa.eu — Ground_floor (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22146,7 +22146,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_INTERNAL_EEABUILDINGS_DY_5_9D46E9", .name = "bio.discomap.eea.europa.eu — Basement_level (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22170,7 +22170,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_INTERNAL_EPRTRRBDS_DYNA__0_A3D386", .name = "bio.discomap.eea.europa.eu — EPRTRweb.SDE.RBDs_v1_3 (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22194,7 +22194,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_INTERNAL_EPRTRRBDS_DYNA__1_8C349E", .name = "bio.discomap.eea.europa.eu — EPRTRweb.SDE.RBDs_v1_3_wgs84_25 "
       "(ArcGIS layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22218,7 +22218,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_INTERNAL_EPRTRRBDS_DYNA__2_A4A29A", .name = "bio.discomap.eea.europa.eu — EPRTRweb.SDE.RBDs_v1_3_wgs84_100 "
       "(ArcGIS layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22242,7 +22242,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_INTERNAL_EPRTRRBDS_DYNA__3_ED2603", .name = "bio.discomap.eea.europa.eu — RBDs_v1_3_wgs84_1000 (ArcGIS layer "
       "3)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22266,7 +22266,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_INTERNAL_EPRTRRBDS_DYNA__4_811BAF", .name = "bio.discomap.eea.europa.eu — RBDs_v1_3_wgs84_5000 (ArcGIS layer "
       "4)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22290,7 +22290,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_INTERNAL_EUROBOUNDARIES__0_32BCFE", .name = "bio.discomap.eea.europa.eu — European Boundaries (ArcGIS layer "
       "0)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22314,7 +22314,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_INTERNAL_EUROBOUNDARIES__1_136EE4", .name = "bio.discomap.eea.europa.eu — European Regional Level 1 (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22338,7 +22338,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_INTERNAL_EUROBOUNDARIES__2_90D8BD", .name = "bio.discomap.eea.europa.eu — European Regional Level 2 (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://bio.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://bio.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22362,7 +22362,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_0_CC5C20", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22386,7 +22386,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_1_ACE4DE", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22410,7 +22410,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_2_769253", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22434,7 +22434,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_3_D9013E", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22458,7 +22458,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_4_F1DF89", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22482,7 +22482,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_5_2DDE22", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22506,7 +22506,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_6_E2A72A", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22530,7 +22530,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_0_7A5825", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22554,7 +22554,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_1_55D67F", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22578,7 +22578,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_2_DFD6F4", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22602,7 +22602,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_3_2C6218", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22626,7 +22626,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_4_D0BD88", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22650,7 +22650,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_5_9B31C8", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22674,7 +22674,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_6_81BED5", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22698,7 +22698,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_0_BA038F", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22722,7 +22722,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_1_10170E", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22746,7 +22746,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_2_EB6567", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22770,7 +22770,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_3_6068FC", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22794,7 +22794,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_4_95D19A", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22818,7 +22818,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_5_BBF7A8", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22842,7 +22842,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_6_EAE324", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22866,7 +22866,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_0_A52E81", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22890,7 +22890,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_1_CDD64D", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22914,7 +22914,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_2_F3EBB1", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22938,7 +22938,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_3_B1D166", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22962,7 +22962,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_4_99E158", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -22986,7 +22986,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_5_84936F", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23010,7 +23010,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_6_616FE2", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23034,7 +23034,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_0_61B2C8", .name = "water.discomap.eea.europa.eu — Bathing water quality (1) (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23058,7 +23058,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_1_86264C", .name = "water.discomap.eea.europa.eu — Bathing water quality (2) (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23082,7 +23082,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_2_EAA4C0", .name = "water.discomap.eea.europa.eu — Bathing water quality (3) (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23106,7 +23106,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_3_D50234", .name = "water.discomap.eea.europa.eu — Bathing water quality (4) (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23130,7 +23130,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_4_3ED327", .name = "water.discomap.eea.europa.eu — Bathing water quality (5) (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23154,7 +23154,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_5_05A949", .name = "water.discomap.eea.europa.eu — Bathing water quality (6) (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23178,7 +23178,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_6_401F36", .name = "water.discomap.eea.europa.eu — Bathing water quality (7) (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23201,7 +23201,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_7_1D2DEA", .name = "water.discomap.eea.europa.eu — Country borders (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23225,7 +23225,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_0_D212AE", .name = "water.discomap.eea.europa.eu — Bathing water quality (1) (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23249,7 +23249,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_1_A1272E", .name = "water.discomap.eea.europa.eu — Bathing water quality (2) (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23273,7 +23273,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_2_66879F", .name = "water.discomap.eea.europa.eu — Bathing water quality (3) (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23297,7 +23297,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_3_9B3F3F", .name = "water.discomap.eea.europa.eu — Bathing water quality (4) (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23321,7 +23321,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_4_B33061", .name = "water.discomap.eea.europa.eu — Bathing water quality (5) (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23345,7 +23345,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_5_B5B41C", .name = "water.discomap.eea.europa.eu — Bathing water quality (6) (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23369,7 +23369,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_6_58AC31", .name = "water.discomap.eea.europa.eu — Bathing water quality (7) (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23392,7 +23392,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_7_26A6F7", .name = "water.discomap.eea.europa.eu — Country borders (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23416,7 +23416,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_0_B40429", .name = "water.discomap.eea.europa.eu — Bathing water quality (1) (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23440,7 +23440,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_1_F835A4", .name = "water.discomap.eea.europa.eu — Bathing water quality (2) (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23464,7 +23464,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_2_C2F201", .name = "water.discomap.eea.europa.eu — Bathing water quality (3) (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23488,7 +23488,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_3_2FD276", .name = "water.discomap.eea.europa.eu — Bathing water quality (4) (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23512,7 +23512,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_4_64C1E8", .name = "water.discomap.eea.europa.eu — Bathing water quality (5) (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23535,7 +23535,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_10_556927", .name = "water.discomap.eea.europa.eu — Country borders (ArcGIS layer 10)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23559,7 +23559,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_5_439C79", .name = "water.discomap.eea.europa.eu — Bathing water quality (6) (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23583,7 +23583,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_6_BE9F5F", .name = "water.discomap.eea.europa.eu — Bathing water quality (7) (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23607,7 +23607,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_0_0C5079", .name = "water.discomap.eea.europa.eu — Bathing water quality (1) (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23631,7 +23631,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_1_AD8D5C", .name = "water.discomap.eea.europa.eu — Bathing water quality (2) (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23655,7 +23655,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_2_8CB959", .name = "water.discomap.eea.europa.eu — Bathing water quality (3) (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23679,7 +23679,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_3_81C4EB", .name = "water.discomap.eea.europa.eu — Bathing water quality (4) (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23703,7 +23703,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_4_EDE751", .name = "water.discomap.eea.europa.eu — Bathing water quality (5) (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23726,7 +23726,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_10_33A4FA", .name = "water.discomap.eea.europa.eu — Country borders (ArcGIS layer 10)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23750,7 +23750,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_5_064C76", .name = "water.discomap.eea.europa.eu — Bathing water quality (6) (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23774,7 +23774,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_6_2811D5", .name = "water.discomap.eea.europa.eu — Bathing water quality (7) (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23797,7 +23797,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_11_04A85A", .name = "water.discomap.eea.europa.eu — Country borders (ArcGIS layer 11)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23821,7 +23821,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_0_168028", .name = "water.discomap.eea.europa.eu — Bathing water quality (1) (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23845,7 +23845,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_1_5AAD09", .name = "water.discomap.eea.europa.eu — Bathing water quality (2) (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23869,7 +23869,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_2_78B1C3", .name = "water.discomap.eea.europa.eu — Bathing water quality (3) (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23893,7 +23893,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_3_1F8C1D", .name = "water.discomap.eea.europa.eu — Bathing water quality (4) (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23917,7 +23917,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_4_5D8453", .name = "water.discomap.eea.europa.eu — Bathing water quality (5) (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23941,7 +23941,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_5_BFD270", .name = "water.discomap.eea.europa.eu — Bathing water quality (6) (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23965,7 +23965,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_6_05F784", .name = "water.discomap.eea.europa.eu — Bathing water quality (7) (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -23988,7 +23988,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_11_60C364", .name = "water.discomap.eea.europa.eu — Country borders (ArcGIS layer 11)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24012,7 +24012,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_14_1428AD", .name = "water.discomap.eea.europa.eu — Bathing water quality (symbol) "
       "(ArcGIS layer 14)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24036,7 +24036,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_3_7C5CD1", .name = "water.discomap.eea.europa.eu — Bathing water quality (point) "
       "(ArcGIS layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24060,7 +24060,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_13_3EA8FB", .name = "water.discomap.eea.europa.eu — Bathing water quality - for chart "
       "(ArcGIS layer 13)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24084,7 +24084,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_5_FA9EB3", .name = "water.discomap.eea.europa.eu — Percent of excellent bathing "
       "waters (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24107,7 +24107,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_11_52166B", .name = "water.discomap.eea.europa.eu — Country borders (ArcGIS layer 11)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24131,7 +24131,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_14_2EE234", .name = "water.discomap.eea.europa.eu — Bathing water quality (symbol) "
       "(ArcGIS layer 14)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24155,7 +24155,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_3_220FB0", .name = "water.discomap.eea.europa.eu — Bathing water quality (point) "
       "(ArcGIS layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24179,7 +24179,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_13_B1571A", .name = "water.discomap.eea.europa.eu — Bathing water quality - for chart "
       "(ArcGIS layer 13)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24203,7 +24203,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_5_DAE463", .name = "water.discomap.eea.europa.eu — Percent of excellent bathing "
       "waters (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24227,7 +24227,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_0_D20F1D", .name = "water.discomap.eea.europa.eu — Bathing water quality (1) (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24251,7 +24251,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_1_E67A27", .name = "water.discomap.eea.europa.eu — Bathing water quality (2) (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24275,7 +24275,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_2_0E06B0", .name = "water.discomap.eea.europa.eu — Bathing water quality (3) (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24299,7 +24299,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_3_077A98", .name = "water.discomap.eea.europa.eu — Bathing water quality (4) (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24323,7 +24323,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_4_D2E431", .name = "water.discomap.eea.europa.eu — Bathing water quality (5) (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24346,7 +24346,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_10_F14C00", .name = "water.discomap.eea.europa.eu — Country borders (ArcGIS layer 10)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24370,7 +24370,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_5_E8944E", .name = "water.discomap.eea.europa.eu — Bathing water quality (6) (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24394,7 +24394,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_6_20C29B", .name = "water.discomap.eea.europa.eu — Bathing water quality (7) (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24418,7 +24418,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_1_74F98E", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24442,7 +24442,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_2_7FB371", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24466,7 +24466,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_4_4FAC4E", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24490,7 +24490,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_5_1AFBEF", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24514,7 +24514,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_6_A76D4B", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24538,7 +24538,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_7_2AC72A", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 7)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24562,7 +24562,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BATHINGWATER_BATHINGWATE_8_798F9F", .name = "water.discomap.eea.europa.eu — Bathing water quality (ArcGIS "
       "layer 8)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24586,7 +24586,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_BAPMAPFEB26_0_BD7C56", .name = "water.discomap.eea.europa.eu — EEADMZ1balbarini_XYTableToPoint12 "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24610,7 +24610,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_BAPMAPREVIS_0_902A7B", .name = "water.discomap.eea.europa.eu — EEADMZ1balbarini_XYTableToPoint12 "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24633,7 +24633,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_EQS_0_EB79EF", .name = "water.discomap.eea.europa.eu — AboveEQS (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24655,7 +24655,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_EQS_1_943613", .name = "water.discomap.eea.europa.eu — BelowEQS (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24677,7 +24677,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_EQS_2_8AAE42", .name = "water.discomap.eea.europa.eu — BelowLOQ (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24700,7 +24700,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_MAP_0_B23D5D", .name = "water.discomap.eea.europa.eu — EEADMZ1balbarini_XYTableToPoint14 "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24723,7 +24723,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_MAPREVISEDM_0_D2DA19", .name = "water.discomap.eea.europa.eu — EEADMZ1balbarini_XYTableToPoint13 "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24747,7 +24747,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_MAPREVISEDM_1_48924D", .name = "water.discomap.eea.europa.eu — EEADMZ1balbarini_XYTableToPoint11 "
       "(ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24771,7 +24771,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_MAPREVISEDO_0_46679B", .name = "water.discomap.eea.europa.eu — EEADMZ1balbarini_XYTableToPoint8 "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24795,7 +24795,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_MAPREVISEDO_0_F6A4E0", .name = "water.discomap.eea.europa.eu — EEADMZ1balbarini_XYTableToPoint7 "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24818,7 +24818,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_REVISEDMAPJ_0_D1CAF2", .name = "water.discomap.eea.europa.eu — AboveEQS (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24840,7 +24840,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_REVISEDMAPJ_1_65DCBA", .name = "water.discomap.eea.europa.eu — BelowEQS (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24862,7 +24862,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_REVISEDMAPJ_2_42201D", .name = "water.discomap.eea.europa.eu — BelowLOQ (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24884,7 +24884,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_REVISEDMAP_0_01B446", .name = "water.discomap.eea.europa.eu — AboveEQS (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24906,7 +24906,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_REVISEDMAP_1_64C0A2", .name = "water.discomap.eea.europa.eu — BelowEQS (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24928,7 +24928,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BENZOAPYRENE_REVISEDMAP_2_D0503E", .name = "water.discomap.eea.europa.eu — BelowLOQ (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24951,7 +24951,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CIP_CIPMAPOCT_0_2110A6", .name = "water.discomap.eea.europa.eu — EEADMZ1balbarini_XYTableToPoint10 "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24974,7 +24974,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CIP_CIPMAPOCT_1_51E326", .name = "water.discomap.eea.europa.eu — EEADMZ1balbarini_XYTableToPoint9 "
       "(ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -24997,7 +24997,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CIP_CIPMAPOCT_2_7D0E89", .name = "water.discomap.eea.europa.eu — EEADMZ1balbarini_XYTableToPoint8 "
       "(ArcGIS layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25020,7 +25020,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CIP_MAPCIPREVISEDFEB26_0_00BEFC", .name = "water.discomap.eea.europa.eu — EEADMZ1balbarini_XYTableToPoint15 "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25044,7 +25044,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CIP_MAPCIPSURFACEWATERVE_0_2273FC", .name = "water.discomap.eea.europa.eu — EEADMZ1balbarini_XYTableLimitNew "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25068,7 +25068,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CIP_MAPNOV25_0_3706BE", .name = "water.discomap.eea.europa.eu — EEADMZ1balbarini_XYTableToPoint11 "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25091,7 +25091,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CPWATERRESOURCES_AVERAGE_0_CB077D", .name = "water.discomap.eea.europa.eu — Average price of water supply and "
       "sanitation services in main EU cities (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_utilities_infrastructure", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25115,7 +25115,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_CPWATERRESOURCES_COSTOFR_0_8FE77B", .name = "water.discomap.eea.europa.eu — RBDAgriculture (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25138,7 +25138,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CPWATERRESOURCES_COSTOFR_1_02C118", .name = "water.discomap.eea.europa.eu — RDBHouseholds (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25161,7 +25161,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CPWATERRESOURCES_COSTOFR_2_4732E2", .name = "water.discomap.eea.europa.eu — RDBIndustry (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25185,7 +25185,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ECRINS_ECRINS_EUROPEANDR_0_086405", .name = "water.discomap.eea.europa.eu — FunctionalRiverBasinDistricts "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25209,7 +25209,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ECRINS_ECRINS_EUROPEANDR_1_242272", .name = "water.discomap.eea.europa.eu — DrainageNetwork_WM (ArcGIS layer "
       "1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_utilities_infrastructure", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25233,7 +25233,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ECRINS_ECRINS_FUNCTIONAL_0_832CDD", .name = "water.discomap.eea.europa.eu — FunctionalRiverBasinDistricts_WM "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25257,7 +25257,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ECRINS_ECRINS_FUNCTIONAL_1_4D210E", .name = "water.discomap.eea.europa.eu — FunctionalElementaryCatchments_WM "
       "(ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_education", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25280,7 +25280,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_FLOOD_FLOODPLAIN_TYPES_C_0_7E18AB", .name = "water.discomap.eea.europa.eu — Floodplain area (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25303,7 +25303,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_FLOOD_FLOODPLAIN_TYPES_C_1_2DD2C8", .name = "water.discomap.eea.europa.eu — EEA39 Countries (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25327,7 +25327,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_FLOOD_FLOODPLAIN_TYPES_C_2_77A5C2", .name = "water.discomap.eea.europa.eu — European floodplain types (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25351,7 +25351,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_FLOOD_FLOODPLAIN_TYPES_F_0_D707BD", .name = "water.discomap.eea.europa.eu — Floodplain type area "
       "(subcatchments) (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25375,7 +25375,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_FLOOD_FLOODPLAIN_TYPES_F_1_EF8BC8", .name = "water.discomap.eea.europa.eu — Floodplain type (potential "
       "flood-prone area) (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25399,7 +25399,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_FLOOD_POTENTIAL_FLOOD_PR_0_F9C956", .name = "water.discomap.eea.europa.eu — Potential flood prone area extent "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25423,7 +25423,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_FLOODSDIRECTIVE_FLOODS20_0_D21F7E", .name = "water.discomap.eea.europa.eu — "
       "AreaOfPotentialSignificantFloodRiskPoint (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25447,7 +25447,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_FLOODSDIRECTIVE_FLOODS20_1_DC489B", .name = "water.discomap.eea.europa.eu — "
       "AreaOfPotentialSignificantFloodRiskLine (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25471,7 +25471,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_FLOODSDIRECTIVE_FLOODS20_2_76FF6B", .name = "water.discomap.eea.europa.eu — "
       "AreaOfPotentialSignificantFloodRiskPolygon (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25495,7 +25495,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_FLOODSDIRECTIVE_FLOODS20_0_6A1A3E", .name = "water.discomap.eea.europa.eu — UnitsOfManagement (ArcGIS layer "
       "0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25519,7 +25519,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_FLOODSDIRECTIVE_FLOODS20_0_F44AD4", .name = "water.discomap.eea.europa.eu — FloodsHazardAreaPoint (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25543,7 +25543,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_FLOODSDIRECTIVE_FLOODS20_1_55652F", .name = "water.discomap.eea.europa.eu — FloodsHazardAreaLine (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25567,7 +25567,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_FLOODSDIRECTIVE_FLOODS20_2_21EDBD", .name = "water.discomap.eea.europa.eu — FloodsHazardAreaPolygon (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25591,7 +25591,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_FLOODSDIRECTIVE_FLOODS20_2_3CFAC7", .name = "water.discomap.eea.europa.eu — FloodsRiskZonePolygon (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25615,7 +25615,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_FLOODSDIRECTIVE_FLOODS20_0_8C56BC", .name = "water.discomap.eea.europa.eu — UnitsOfManagement (ArcGIS layer "
       "0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25638,7 +25638,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_MARINE_BEAT_ASSESSMENT_0_5C6DF1", .name = "water.discomap.eea.europa.eu — Mammals BQR (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25660,7 +25660,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_MARINE_BEAT_ASSESSMENT_1_7C0616", .name = "water.discomap.eea.europa.eu — Birds BQR (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25682,7 +25682,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_MARINE_BEAT_ASSESSMENT_2_FB44B5", .name = "water.discomap.eea.europa.eu — Fish BQR (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25704,7 +25704,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_MARINE_BEAT_ASSESSMENT_3_213227", .name = "water.discomap.eea.europa.eu — Pelagic Habitats (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25727,7 +25727,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_MARINE_BEAT_ASSESSMENT_4_FBB31F", .name = "water.discomap.eea.europa.eu — Benthic Habitats (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25750,7 +25750,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_MARINE_BEAT_ASSESSMENT_5_845833", .name = "water.discomap.eea.europa.eu — Worst BQR BEAT+ (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25774,7 +25774,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_BEAT_ASSESSMENT_6_FD6D94", .name = "water.discomap.eea.europa.eu — Worst Group BEAT+ (ArcGIS layer "
       "6)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25798,7 +25798,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_CHASE_CONTAMINANT_0_66F1D9", .name = "water.discomap.eea.europa.eu — CHASE classification of "
       "biological effects of contaminant status (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25823,7 +25823,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_CHASE_CONTAMINANT_0_E352E7", .name = "water.discomap.eea.europa.eu — CHASE classification of "
       "contaminant status in biota (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25848,7 +25848,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_MARINE_CHASE_CONTAMINANT_0_FEDC2F", .name = "water.discomap.eea.europa.eu — CHASE classification of "
       "contamination status excluding mercury (Hg) and PBDEs (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25873,7 +25873,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_CHASE_CONTAMINANT_0_6815E5", .name = "water.discomap.eea.europa.eu — CHASE classification of "
       "contamination status excluding mercury (Hg) (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25898,7 +25898,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_CHASE_CONTAMINANT_0_9B1225", .name = "water.discomap.eea.europa.eu — CHASE classification of "
       "contamination status excluding metals (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25923,7 +25923,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_CHASE_CONTAMINANT_0_524E02", .name = "water.discomap.eea.europa.eu — CHASE classification of "
       "contamination status excluding PBDEs (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25948,7 +25948,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_CHASE_CONTAMINANT_0_3DBF7F", .name = "water.discomap.eea.europa.eu — CHASE classification of "
       "contaminant status in seawater (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25972,7 +25972,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_CHASE_CONTAMINANT_0_6CC1A0", .name = "water.discomap.eea.europa.eu — CHASE classification of "
       "contaminant status in sediments (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -25997,7 +25997,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_MARINE_CHASE_CONTAMINANT_0_677970", .name = "water.discomap.eea.europa.eu — Mapping of ’problem areas’ and "
       "’non-problem areas’ in Europe’s seas, based on CHASE+ "
       "classification (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26021,7 +26021,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_MARINE_COMBINED_EFFECTS__1_69D8FD", .name = "water.discomap.eea.europa.eu — Area of interest (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26044,7 +26044,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_MARINE_COMBINED_EFFECTS__1_8D1388", .name = "water.discomap.eea.europa.eu — Area of interest (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26067,7 +26067,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_MARINE_COMBINED_EFFECTS__1_F89C6E", .name = "water.discomap.eea.europa.eu — Area of interest (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26091,7 +26091,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_EEA_MARINE_ASSESS_0_CC04AA", .name = "water.discomap.eea.europa.eu — Buffer_1nm_coastline (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26115,7 +26115,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_EEA_MARINE_ASSESS_1_1B920D", .name = "water.discomap.eea.europa.eu — Buffer_12nm_coastline (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26139,7 +26139,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_EEA_MARINE_ASSESS_2_1C753C", .name = "water.discomap.eea.europa.eu — Buffer_END_coastline (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26163,7 +26163,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_EEA_MARINE_ASSESS_0_F284EB", .name = "water.discomap.eea.europa.eu — EEA marine assessment areas "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26187,7 +26187,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_EUROPESEAS_2018_0_A261BD", .name = "water.discomap.eea.europa.eu — MSFD Mediterranean subregions "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26211,7 +26211,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_EUROPESEAS_2018_1_528490", .name = "water.discomap.eea.europa.eu — MSFD Atlantic subregions (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26235,7 +26235,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_EUROPESEAS_2018_2_AC36AB", .name = "water.discomap.eea.europa.eu — Other surrounding seas of Europe "
       "(ArcGIS layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26259,7 +26259,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_EUROPESEAS_2018_3_A60456", .name = "water.discomap.eea.europa.eu — MSFD Marine regions (ArcGIS layer "
       "3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26283,7 +26283,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_FISHERIES_EFFORTI_3_7BA537", .name = "water.discomap.eea.europa.eu — Gear type: Static (ArcGIS layer "
       "3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26306,7 +26306,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_MARINE_FISHERIES_EFFORTI_2_F2499E", .name = "water.discomap.eea.europa.eu — Gear type: Towed (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26330,7 +26330,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_FISHERIES_EFFORTI_0_AA96A0", .name = "water.discomap.eea.europa.eu — Gear type: Mobile (ArcGIS layer "
       "0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26354,7 +26354,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_FISHERIES_EFFORTI_2_2C34C7", .name = "water.discomap.eea.europa.eu — Small scale vessels (ArcGIS layer "
       "2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26378,7 +26378,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_FISHERIES_EFFORTI_0_6666A8", .name = "water.discomap.eea.europa.eu — Large scale vessels (ArcGIS layer "
       "0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26402,7 +26402,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_FISHERIES_LANDING_0_B95C18", .name = "water.discomap.eea.europa.eu — Gear type: Static (ArcGIS layer "
       "0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26426,7 +26426,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_FISHERIES_LANDING_2_2ADD9C", .name = "water.discomap.eea.europa.eu — Gear type: Mobile (ArcGIS layer "
       "2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26449,7 +26449,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_MARINE_FISHERIES_LANDING_3_447A28", .name = "water.discomap.eea.europa.eu — Gear type: Towed (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26473,7 +26473,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_FISHERIES_LANDING_0_7C0001", .name = "water.discomap.eea.europa.eu — Small scale vessels (ArcGIS layer "
       "0)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26497,7 +26497,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_MARINE_FISHERIES_LANDING_2_75203C", .name = "water.discomap.eea.europa.eu — Large scale vessels (ArcGIS layer "
       "2)",
-    .category = "environment", .portal = "https://water.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://water.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26521,7 +26521,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_0_378ECD", .name = "air.discomap.eea.europa.eu — NOx emissions from non-industrial "
       "combustion, t/grid (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26545,7 +26545,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_1_C2603F", .name = "air.discomap.eea.europa.eu — NOx emissions from road transport, "
       "t/grid (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26569,7 +26569,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_2_C6D0AC", .name = "air.discomap.eea.europa.eu — NOx emissions from other mobile "
       "sources, t/grid (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26593,7 +26593,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_3_D7D948", .name = "air.discomap.eea.europa.eu — SO2 emissions from non-industrial "
       "combustion, t/grid (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26617,7 +26617,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_4_DBA7D9", .name = "air.discomap.eea.europa.eu — SO2 emissions from road transport, "
       "t/grid (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26641,7 +26641,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_5_CB0F63", .name = "air.discomap.eea.europa.eu — SO2 emissions from other mobile "
       "sources, t/grid (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26665,7 +26665,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_6_81ABE4", .name = "air.discomap.eea.europa.eu — CO emissions from non-industrial "
       "combustion, t/grid (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26689,7 +26689,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_7_4C93DF", .name = "air.discomap.eea.europa.eu — CO emissions from road transport, "
       "t/grid (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26713,7 +26713,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_8_1DD880", .name = "air.discomap.eea.europa.eu — CO emissions from other mobile "
       "sources, t/grid (ArcGIS layer 8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26737,7 +26737,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_9_0DB6D0", .name = "air.discomap.eea.europa.eu — PM10 emissions from non-industrial "
       "combustion, t/grid (ArcGIS layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26761,7 +26761,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_10_31931F", .name = "air.discomap.eea.europa.eu — PM10 emissions from road transport, "
       "t/grid (ArcGIS layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26785,7 +26785,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_11_9CFCF1", .name = "air.discomap.eea.europa.eu — PM10 emissions from other mobile "
       "sources, t/grid (ArcGIS layer 11)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26809,7 +26809,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_12_9A5023", .name = "air.discomap.eea.europa.eu — PM10 emissions from agricultural "
       "sources t/grid (ArcGIS layer 12)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26833,7 +26833,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEAIR_DYNA_13_0910FD", .name = "air.discomap.eea.europa.eu — NH3 emissions from agricultural "
       "sources t/grid (ArcGIS layer 13)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26857,7 +26857,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_0_F217A4", .name = "air.discomap.eea.europa.eu — NOX emissions from diffuse "
       "industrial releases, [t/grid] (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26881,7 +26881,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_1_FC2864", .name = "air.discomap.eea.europa.eu — NOX emissions from non-industrial "
       "combustion, [t/grid] (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26905,7 +26905,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_2_01B416", .name = "air.discomap.eea.europa.eu — NOX emissions from road transport, "
       "[t/grid] (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26929,7 +26929,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_3_C64B82", .name = "air.discomap.eea.europa.eu — NOX emissions from domestic "
       "shipping, [t/grid] (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26953,7 +26953,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_4_FA5C3A", .name = "air.discomap.eea.europa.eu — NOX emissions from domestic "
       "aviation, [t/grid] (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -26977,7 +26977,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_5_87A728", .name = "air.discomap.eea.europa.eu — SO2 emissions from diffuse "
       "industrial releases, [t/grid] (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27001,7 +27001,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_6_782827", .name = "air.discomap.eea.europa.eu — SO2 emissions from non-industrial "
       "combustion, [t/grid] (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27025,7 +27025,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_7_78F55B", .name = "air.discomap.eea.europa.eu — SO2 emissions from road transport, "
       "[t/grid] (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27049,7 +27049,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_8_1F1DE1", .name = "air.discomap.eea.europa.eu — SO2 emissions from domestic "
       "shipping, [t/grid] (ArcGIS layer 8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27073,7 +27073,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_9_F0EA57", .name = "air.discomap.eea.europa.eu — SO2 emissions from domestic "
       "aviation, [t/grid] (ArcGIS layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27097,7 +27097,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_10_35C2A6", .name = "air.discomap.eea.europa.eu — PM10 emissions from diffuse "
       "industrial releases, [t/grid] (ArcGIS layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27121,7 +27121,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_11_45CD3A", .name = "air.discomap.eea.europa.eu — PM10 emissions from non-industrial "
       "combustion, [t/grid] (ArcGIS layer 11)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27145,7 +27145,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_12_321618", .name = "air.discomap.eea.europa.eu — PM10 emissions from road transport, "
       "[t/grid] (ArcGIS layer 12)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27169,7 +27169,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_13_C10758", .name = "air.discomap.eea.europa.eu — PM10 emissions from domestic "
       "shipping, [t/grid] (ArcGIS layer 13)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27193,7 +27193,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_14_103095", .name = "air.discomap.eea.europa.eu — PM10 emissions from domestic "
       "aviation, [t/grid] (ArcGIS layer 14)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27217,7 +27217,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_15_0199E1", .name = "air.discomap.eea.europa.eu — PM10 emissions from agriculture, "
       "[t/grid] (ArcGIS layer 15)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27241,7 +27241,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_16_929AF4", .name = "air.discomap.eea.europa.eu — NH3 emissions from agriculture, "
       "[t/grid] (ArcGIS layer 16)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27265,7 +27265,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_17_F47E1F", .name = "air.discomap.eea.europa.eu — CO emissions from diffuse "
       "industrial releases, [t/grid] (ArcGIS layer 17)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27289,7 +27289,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_18_39ABCB", .name = "air.discomap.eea.europa.eu — CO emissions from non-industrial "
       "combustion, [t/grid] (ArcGIS layer 18)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27313,7 +27313,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_19_AE57C4", .name = "air.discomap.eea.europa.eu — CO emissions from road transport, "
       "[t/grid] (ArcGIS layer 19)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27337,7 +27337,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_20_B0DA1F", .name = "air.discomap.eea.europa.eu — CO emissions from domestic "
       "shipping, [t/grid] (ArcGIS layer 20)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27361,7 +27361,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_21_D641EB", .name = "air.discomap.eea.europa.eu — CO emissions from domestic "
       "aviation, [t/grid] (ArcGIS layer 21)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27385,7 +27385,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_22_F816E4", .name = "air.discomap.eea.europa.eu — CO2 emissions from diffuse "
       "industrial releases, [kt/grid] (ArcGIS layer 22)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27409,7 +27409,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_23_604CE6", .name = "air.discomap.eea.europa.eu — CO2 emissions from non-industrial "
       "combustion, [kt/grid] (ArcGIS layer 23)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27433,7 +27433,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_24_0F1985", .name = "air.discomap.eea.europa.eu — CO2 emissions from road transport, "
       "[kt/grid] (ArcGIS layer 24)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27457,7 +27457,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_25_9DB150", .name = "air.discomap.eea.europa.eu — CO2 emissions from domestic "
       "shipping, [kt/grid] (ArcGIS layer 25)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27481,7 +27481,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_26_C5A029", .name = "air.discomap.eea.europa.eu — CO2 emissions from domestic "
       "aviation, [kt/grid] (ArcGIS layer 26)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27505,7 +27505,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_27_42707C", .name = "air.discomap.eea.europa.eu — NOX emissions from international "
       "shipping, [t/grid] (ArcGIS layer 27)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27529,7 +27529,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_28_A00878", .name = "air.discomap.eea.europa.eu — SO2 emissions from international "
       "shipping, [t/grid] (ArcGIS layer 28)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27553,7 +27553,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_29_FD591F", .name = "air.discomap.eea.europa.eu — PM10 emissions from international "
       "shipping, [t/grid] (ArcGIS layer 29)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27577,7 +27577,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_30_9BBD71", .name = "air.discomap.eea.europa.eu — CO emissions from international "
       "shipping, [t/grid] (ArcGIS layer 30)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27601,7 +27601,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_31_115D55", .name = "air.discomap.eea.europa.eu — CO2 emissions from international "
       "shipping, [kt/grid] (ArcGIS layer 31)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_imagery_basemap", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27626,7 +27626,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_0_6B7C88", .name = "air.discomap.eea.europa.eu — Nutrient-N emissions from "
       "atmospheric deposition (kg/ha surface water RBDSU) (ArcGIS layer "
       "0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27651,7 +27651,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_1_744EC7", .name = "air.discomap.eea.europa.eu — Cadmium emissions from atmospheric "
       "deposition (kg/ha surface water RBDSU) (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27676,7 +27676,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_2_71B23F", .name = "air.discomap.eea.europa.eu — Lead emissions from atmospheric "
       "deposition (kg/ha surface water RBDSU) (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27701,7 +27701,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_3_F7D723", .name = "air.discomap.eea.europa.eu — Mercury emissions from atmospheric "
       "deposition (kg/ha surface water RBDSU) (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27726,7 +27726,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_4_21088C", .name = "air.discomap.eea.europa.eu — Nutrient-P emissions from "
       "agriculture (kg/ha surface water RBDSU) (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27750,7 +27750,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_5_6C33A5", .name = "air.discomap.eea.europa.eu — Nutrient-N emissions from "
       "agriculture (kg/ha surface water RBDSU) (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27774,7 +27774,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_6_39C030", .name = "air.discomap.eea.europa.eu — Cadmium emissions from road "
       "transport (kg/ha surface water RBDSU) (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27798,7 +27798,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_7_2DB95A", .name = "air.discomap.eea.europa.eu — Lead emissions from road transport "
       "(kg/ha surface water RBDSU) (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27822,7 +27822,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_8_F2CA0A", .name = "air.discomap.eea.europa.eu — Nickel emissions from road "
       "transport (kg/ha surface water RBDSU (ArcGIS layer 8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27846,7 +27846,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_9_D5D9A4", .name = "air.discomap.eea.europa.eu — Anthracene emissions from road "
       "transport (kg/ha surface water RBDSU) (ArcGIS layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27871,7 +27871,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_10_221573", .name = "air.discomap.eea.europa.eu — Fluoranthene emissions from road "
       "transport (kg/ha surface water RBDSU) (ArcGIS layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27896,7 +27896,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_11_5FA641", .name = "air.discomap.eea.europa.eu — Copper emissions from road "
       "transport (kg/ha surface water RBDSU) (ArcGIS layer 11)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27920,7 +27920,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_12_DE4A35", .name = "air.discomap.eea.europa.eu — Zinc emissions from road transport "
       "(kg/ha surface water RBDSU) (ArcGIS layer 12)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27944,7 +27944,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_13_5967A1", .name = "air.discomap.eea.europa.eu — TOC emissions from UWWTPs not in "
       "E-PRTR (kg/ha surface water RBDSU) (ArcGIS layer 13)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27968,7 +27968,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_14_1D8DFB", .name = "air.discomap.eea.europa.eu — Nutrient-P emissions from UWWTPs "
       "not in E-PRTR (kg/ha surface water RBDSU) (ArcGIS layer 14)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -27993,7 +27993,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_15_23AF20", .name = "air.discomap.eea.europa.eu — Nutrient-N emissions from UWWTPs "
       "not in E-PRTR (kg/ha surface water RBDSU) (ArcGIS layer 15)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28018,7 +28018,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_16_53B068", .name = "air.discomap.eea.europa.eu — Cadmium emissions from UWWTPs not "
       "in E-PRTR (kg/ha surface water RBDSU) (ArcGIS layer 16)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28043,7 +28043,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_17_996BBE", .name = "air.discomap.eea.europa.eu — Lead emissions from UWWTPs not in "
       "E-PRTR (kg/ha surface water RBDSU) (ArcGIS layer 17)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28068,7 +28068,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_18_331E1E", .name = "air.discomap.eea.europa.eu — Mercury emissions from UWWTPs not "
       "in E-PRTR (kg/ha surface water RBDSU) (ArcGIS layer 18)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28093,7 +28093,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_19_DF2CBA", .name = "air.discomap.eea.europa.eu — Nickel emissions from UWWTPs not in "
       "E-PRTR (kg/ha surface water RBDSU) (ArcGIS layer 19)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28118,7 +28118,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_20_8417A3", .name = "air.discomap.eea.europa.eu — Anthracene emissions from UWWTPs "
       "not in E-PRTR (kg/ha surface water RBDSU) (ArcGIS layer 20)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28143,7 +28143,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_21_C76168", .name = "air.discomap.eea.europa.eu — Fluoranthene emissions from UWWTPs "
       "not in E-PRTR (kg/ha surface water RBDSU) (ArcGIS layer 21)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28168,7 +28168,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_22_B3DF20", .name = "air.discomap.eea.europa.eu — Copper emissions from UWWTPs not in "
       "E-PRTR (kg/ha surface water RBDSU) (ArcGIS layer 22)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28193,7 +28193,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_23_C531AE", .name = "air.discomap.eea.europa.eu — Zinc emissions from UWWTPs not in "
       "E-PRTR (kg/ha surface water RBDSU) (ArcGIS layer 23)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28218,7 +28218,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_24_FFF368", .name = "air.discomap.eea.europa.eu — TOC emissions from un-connected "
       "households (kg/ha surface water RBDSU) (ArcGIS layer 24)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28244,7 +28244,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_25_2A1AE9", .name = "air.discomap.eea.europa.eu — Nutrient-P emissions from "
       "un-connected households (kg/ha surface water RBDSU) (ArcGIS "
       "layer 25)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28270,7 +28270,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_26_0813EB", .name = "air.discomap.eea.europa.eu — Nutrient-N emissions from "
       "un-connected households (kg/ha surface water RBDSU) (ArcGIS "
       "layer 26)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28295,7 +28295,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_27_829463", .name = "air.discomap.eea.europa.eu — Cadmium emissions from un-connected "
       "households (kg/ha surface water RBDSU) (ArcGIS layer 27)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28320,7 +28320,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_28_50393F", .name = "air.discomap.eea.europa.eu — Lead emissions from un-connected "
       "households (kg/ha surface water RBDSU) (ArcGIS layer 28)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28345,7 +28345,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_29_CC732E", .name = "air.discomap.eea.europa.eu — Mercury emissions from un-connected "
       "households (kg/ha surface water RBDSU) (ArcGIS layer 29)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28370,7 +28370,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_30_39592B", .name = "air.discomap.eea.europa.eu — Nickel emissions from un-connected "
       "households (kg/ha surface water RBDSU) (ArcGIS layer 30)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28396,7 +28396,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_31_D0BF1A", .name = "air.discomap.eea.europa.eu — Anthracene emissions from "
       "un-connected households (kg/ha surface water RBDSU) (ArcGIS "
       "layer 31)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28422,7 +28422,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_32_D73C2F", .name = "air.discomap.eea.europa.eu — Fluoranthene emissions from "
       "un-connected households (kg/ha surface water RBDSU) (ArcGIS "
       "layer 32)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28447,7 +28447,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_33_6B1EEE", .name = "air.discomap.eea.europa.eu — Copper emissions from un-connected "
       "households (kg/ha surface water RBDSU) (ArcGIS layer 33)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28472,7 +28472,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_34_42ADEB", .name = "air.discomap.eea.europa.eu — Zinc emissions from un-connected "
       "households (kg/ha surface water RBDSU) (ArcGIS layer 34)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28497,7 +28497,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_35_596BE7", .name = "air.discomap.eea.europa.eu — TOC emissions from inland "
       "navigation (kg/ha surface water RBDSU) (ArcGIS layer 35)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28521,7 +28521,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_36_E82614", .name = "air.discomap.eea.europa.eu — Nutrient-P emissions from inland "
       "navigation (kg/ha surface water RBDSU) (ArcGIS layer 36)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28546,7 +28546,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_37_6F3AA7", .name = "air.discomap.eea.europa.eu — Nutrient-N emissions from inland "
       "navigation (kg/ha surface water RBDSU) (ArcGIS layer 37)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28571,7 +28571,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_38_6EA02F", .name = "air.discomap.eea.europa.eu — Anthracene emissions from inland "
       "navigation (kg/ha surface water RBDSU) (ArcGIS layer 38)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28596,7 +28596,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_EPRTRDIFFUSEEMISSION_39_416E77", .name = "air.discomap.eea.europa.eu — Fluoranthene emissions from inland "
       "navigation (kg/ha surface water RBDSU) (ArcGIS layer 39)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28620,7 +28620,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_AIR_EPRTRFACILITIES_DYNA_0_033AA5", .name = "air.discomap.eea.europa.eu — Facilities (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28643,7 +28643,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIR_EPRTRFACILITIES_DYNA_1_03E920", .name = "air.discomap.eea.europa.eu — Facility Details (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28667,7 +28667,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIR_IED_CLUSTERS_WM_0_364060", .name = "air.discomap.eea.europa.eu — ly_IED_SiteClusters_WM (ArcGIS "
       "layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28689,7 +28689,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIR_IED_SITEMAP_0_E135E0", .name = "air.discomap.eea.europa.eu — ied_SiteMap (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28711,7 +28711,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIR_WHEATYIELDLOSSES_0_672EBE", .name = "air.discomap.eea.europa.eu — WheatYieldLosses (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28733,7 +28733,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_AIR_WHEATYIELDLOSSES_1_DC155D", .name = "air.discomap.eea.europa.eu — WheatYieldLosses (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28755,7 +28755,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_AIR_WHEATYIELDLOSSES_2_B71BF1", .name = "air.discomap.eea.europa.eu — WheatYieldLosses (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28777,7 +28777,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_AIRBASE_AIRBASE_STATIONS_1_671503", .name = "air.discomap.eea.europa.eu — Airbase_Stations (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28801,7 +28801,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_2_97F458", .name = "air.discomap.eea.europa.eu — As in PM10 (aerosol) (ArcGIS layer "
       "2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28823,7 +28823,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_4_C5E114", .name = "air.discomap.eea.europa.eu — As (aerosol) (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28846,7 +28846,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_6_BA4E2B", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "6)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28869,7 +28869,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_7_1C3988", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 7)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28892,7 +28892,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_8_84C6FE", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28915,7 +28915,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_9_55F1ED", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28938,7 +28938,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_10_DE192F", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28961,7 +28961,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_12_7DFCF2", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "12)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -28984,7 +28984,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_13_1C1F43", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 13)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29007,7 +29007,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_14_75F948", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 14)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29030,7 +29030,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_15_B25794", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 15)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29053,7 +29053,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_16_EEDD81", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 16)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29076,7 +29076,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_18_9FBA16", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "18)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29099,7 +29099,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_19_6FAC61", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 19)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29122,7 +29122,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_20_18737B", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 20)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29145,7 +29145,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_21_41B6D5", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 21)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29168,7 +29168,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_22_59E076", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 22)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29191,7 +29191,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_24_403F68", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "24)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29214,7 +29214,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_25_10015F", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 25)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29237,7 +29237,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_26_EA80AA", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 26)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29260,7 +29260,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_27_8E860E", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 27)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29283,7 +29283,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_28_FC7CD3", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 28)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29306,7 +29306,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_30_EA8954", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "30)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29329,7 +29329,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_31_53097C", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 31)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29352,7 +29352,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_32_BFFD38", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 32)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29375,7 +29375,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_33_2065C8", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 33)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29398,7 +29398,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_34_FCBA54", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 34)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29420,7 +29420,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_ARSENIC_AS_35_2E6E12", .name = "air.discomap.eea.europa.eu — Airbase_Stations (ArcGIS layer 35)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29442,7 +29442,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_1_27FECD", .name = "air.discomap.eea.europa.eu — Annual Mean (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29465,7 +29465,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_2_8BBEA3", .name = "air.discomap.eea.europa.eu — based on annual averages (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29488,7 +29488,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_3_4179B3", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29511,7 +29511,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_4_A064AB", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29534,7 +29534,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_5_1CC16E", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29557,7 +29557,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_6_E9F9A9", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 6)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29580,7 +29580,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_7_E6C189", .name = "air.discomap.eea.europa.eu — based on two weekly values (ArcGIS "
       "layer 7)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29603,7 +29603,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_8_02E027", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29626,7 +29626,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_9_9A947E", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29649,7 +29649,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_10_43F270", .name = "air.discomap.eea.europa.eu — based on two daily value (ArcGIS "
       "layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29672,7 +29672,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_12_951737", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "12)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29695,7 +29695,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_13_BCD09F", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 13)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29718,7 +29718,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_14_4C19EB", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 14)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29741,7 +29741,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_15_FFFD20", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 15)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29764,7 +29764,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_16_F077E7", .name = "air.discomap.eea.europa.eu — based on two weekly values (ArcGIS "
       "layer 16)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29787,7 +29787,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_17_2CC852", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 17)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29810,7 +29810,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_18_4E4FBD", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 18)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29833,7 +29833,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_19_D44BAD", .name = "air.discomap.eea.europa.eu — based on two daily value (ArcGIS "
       "layer 19)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29856,7 +29856,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_21_5B6D33", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "21)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29879,7 +29879,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_22_17FF70", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 22)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29902,7 +29902,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_23_8A2545", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 23)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29925,7 +29925,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_24_BEA57C", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 24)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29948,7 +29948,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_25_48E4C2", .name = "air.discomap.eea.europa.eu — based on two weekly values (ArcGIS "
       "layer 25)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29971,7 +29971,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_26_205E0F", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 26)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -29994,7 +29994,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_27_025578", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 27)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30017,7 +30017,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_28_402A97", .name = "air.discomap.eea.europa.eu — based on two daily value (ArcGIS "
       "layer 28)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30040,7 +30040,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_30_A6E2B7", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "30)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30063,7 +30063,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_31_3F217D", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 31)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30086,7 +30086,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_32_D4D7F5", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 32)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30109,7 +30109,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_33_812B78", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 33)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30132,7 +30132,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_34_647CE4", .name = "air.discomap.eea.europa.eu — based on two weekly values (ArcGIS "
       "layer 34)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30155,7 +30155,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_35_F2C5B5", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 35)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30178,7 +30178,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_36_0E16E9", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 36)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30201,7 +30201,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_37_B4B422", .name = "air.discomap.eea.europa.eu — based on two daily value (ArcGIS "
       "layer 37)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30224,7 +30224,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZENE_C6H6_39_CDA91F", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "39)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30247,7 +30247,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_2_394720", .name = "air.discomap.eea.europa.eu — BaP in PM10 (aerosol) (ArcGIS layer "
       "2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30271,7 +30271,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_3_F5B30F", .name = "air.discomap.eea.europa.eu — BaP in PM10 (air+aerosol) (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30294,7 +30294,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_5_BF7ECA", .name = "air.discomap.eea.europa.eu — BaP (air+aerosol) (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30317,7 +30317,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_7_C316D1", .name = "air.discomap.eea.europa.eu — Annual mean (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30341,7 +30341,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_8_C0E590", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30365,7 +30365,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_9_FF87FB", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30389,7 +30389,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_10_0F391D", .name = "air.discomap.eea.europa.eu — based on three monthly values "
       "(ArcGIS layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30413,7 +30413,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_11_5B1446", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 11)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30437,7 +30437,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_13_100C55", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "13)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30461,7 +30461,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_14_16FF30", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 14)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30485,7 +30485,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_15_E35880", .name = "air.discomap.eea.europa.eu — based on three monthly values "
       "(ArcGIS layer 15)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30509,7 +30509,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_16_7D3BDF", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 16)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30533,7 +30533,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_18_4A3A86", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "18)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30557,7 +30557,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_19_2D1C0B", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 19)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30581,7 +30581,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_20_01C339", .name = "air.discomap.eea.europa.eu — based on three monthly values "
       "(ArcGIS layer 20)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30605,7 +30605,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_21_9F901E", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 21)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30629,7 +30629,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_23_4EC5EB", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "23)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30653,7 +30653,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_24_8BA955", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 24)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30677,7 +30677,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_25_C3A0EA", .name = "air.discomap.eea.europa.eu — based on three monthly values "
       "(ArcGIS layer 25)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30701,7 +30701,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_26_E488D0", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 26)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30725,7 +30725,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_28_36F1A3", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "28)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30749,7 +30749,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_29_F9949F", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 29)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30773,7 +30773,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_30_54A40C", .name = "air.discomap.eea.europa.eu — based on three monthly values "
       "(ArcGIS layer 30)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30797,7 +30797,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_31_05211A", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 31)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30820,7 +30820,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_BENZO_A_PYRENE_B_32_08F064", .name = "air.discomap.eea.europa.eu — Airbase_Stations (ArcGIS layer 32)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30844,7 +30844,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_2_7BC8F0", .name = "air.discomap.eea.europa.eu — Cd in PM10 (aerosol) (ArcGIS layer "
       "2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30866,7 +30866,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_4_30683A", .name = "air.discomap.eea.europa.eu — Cd (aerosol) (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30888,7 +30888,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_6_6DDC91", .name = "air.discomap.eea.europa.eu — Annual Mean (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30911,7 +30911,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_7_0108E5", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "7)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30934,7 +30934,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_8_1D7BF4", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30957,7 +30957,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_9_653D5B", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -30980,7 +30980,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_10_2CFFF1", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31003,7 +31003,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_11_3CC7B9", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 11)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31026,7 +31026,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_13_4B6470", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "13)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31049,7 +31049,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_14_FFB647", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 14)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31072,7 +31072,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_15_B0AD7F", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 15)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31095,7 +31095,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_16_769C3D", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 16)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31118,7 +31118,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_17_A20D99", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 17)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31141,7 +31141,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_19_AD47B1", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "19)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31164,7 +31164,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_20_33D5BA", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 20)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31187,7 +31187,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_21_8688D2", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 21)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31210,7 +31210,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_22_98B962", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 22)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31233,7 +31233,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_23_89C847", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 23)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31256,7 +31256,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_25_69D13B", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "25)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31279,7 +31279,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_26_F4D370", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 26)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31302,7 +31302,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_27_3B5017", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 27)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31325,7 +31325,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_28_9893B8", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 28)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31348,7 +31348,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_29_26C479", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 29)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31371,7 +31371,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_31_C8B788", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "31)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31394,7 +31394,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_32_911DC0", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 32)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31417,7 +31417,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_33_F6FA92", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 33)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31440,7 +31440,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_34_E2FADA", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 34)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31463,7 +31463,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_35_BD33AF", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 35)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31485,7 +31485,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_CADMIUM_CD_36_7D2C03", .name = "air.discomap.eea.europa.eu — Airbase_Stations (ArcGIS layer 36)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31507,7 +31507,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_CARBON_MONOXIDE__1_0DA23C", .name = "air.discomap.eea.europa.eu — Annual Mean (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31531,7 +31531,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CARBON_MONOXIDE__3_6007B8", .name = "air.discomap.eea.europa.eu — based on daily maximum value "
       "(ArcGIS layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31555,7 +31555,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CARBON_MONOXIDE__4_16E55C", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31579,7 +31579,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CARBON_MONOXIDE__7_39C833", .name = "air.discomap.eea.europa.eu — based on daily maximum value "
       "(ArcGIS layer 7)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31603,7 +31603,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CARBON_MONOXIDE__8_8D4053", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31627,7 +31627,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CARBON_MONOXIDE__11_4BBA4E", .name = "air.discomap.eea.europa.eu — based on daily maximum value "
       "(ArcGIS layer 11)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31651,7 +31651,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CARBON_MONOXIDE__12_6B71D7", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 12)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31675,7 +31675,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CARBON_MONOXIDE__15_7D9983", .name = "air.discomap.eea.europa.eu — based on daily maximum value "
       "(ArcGIS layer 15)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31699,7 +31699,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CARBON_MONOXIDE__16_119962", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 16)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31723,7 +31723,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CARBON_MONOXIDE__19_0E316D", .name = "air.discomap.eea.europa.eu — based on daily maximum value "
       "(ArcGIS layer 19)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31747,7 +31747,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_CARBON_MONOXIDE__20_7E23E2", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 20)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31770,7 +31770,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_CARBON_MONOXIDE__21_2B3DE3", .name = "air.discomap.eea.europa.eu — Airbase_Stations (ArcGIS layer 21)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31794,7 +31794,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_2_A15234", .name = "air.discomap.eea.europa.eu — Pb in PM10 (aerosol) (ArcGIS layer "
       "2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31816,7 +31816,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_4_364E18", .name = "air.discomap.eea.europa.eu — Pb (aerosol) (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31838,7 +31838,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_6_5E5C31", .name = "air.discomap.eea.europa.eu — Annual Mean (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31861,7 +31861,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_7_B463A0", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "7)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31884,7 +31884,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_8_DAC5B4", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31907,7 +31907,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_9_F53FB9", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31930,7 +31930,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_10_DB5EC9", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31953,7 +31953,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_11_DF8146", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 11)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31976,7 +31976,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_13_7E1C6D", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "13)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -31999,7 +31999,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_14_72A1D3", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 14)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32022,7 +32022,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_15_A6509B", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 15)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32045,7 +32045,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_16_A7985F", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 16)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32068,7 +32068,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_17_777AF2", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 17)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32091,7 +32091,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_19_90DE0D", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "19)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32114,7 +32114,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_20_4EB556", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 20)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32137,7 +32137,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_21_DDA1B4", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 21)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32160,7 +32160,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_22_9C42AC", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 22)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32183,7 +32183,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_23_305DE3", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 23)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32206,7 +32206,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_25_8AE7BB", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "25)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32229,7 +32229,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_26_F6F706", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 26)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32252,7 +32252,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_27_FDC21E", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 27)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32275,7 +32275,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_28_17866E", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 28)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32298,7 +32298,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_29_EC183E", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 29)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32321,7 +32321,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_31_1562C8", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "31)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32344,7 +32344,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_32_3EA8B8", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 32)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32367,7 +32367,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_33_6BFAC4", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 33)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32390,7 +32390,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_34_CDC25F", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 34)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32413,7 +32413,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_35_1C5DD9", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 35)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32435,7 +32435,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_LEAD_PB_36_65DECF", .name = "air.discomap.eea.europa.eu — Airbase_Stations (ArcGIS layer 36)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32458,7 +32458,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_2_802947", .name = "air.discomap.eea.europa.eu — Ni in PM10 (aerosol) (ArcGIS layer "
       "2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32480,7 +32480,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_4_EFC04C", .name = "air.discomap.eea.europa.eu — Ni (aerosol) (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32502,7 +32502,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_6_2979C8", .name = "air.discomap.eea.europa.eu — Annual Mean (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32525,7 +32525,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_7_68101A", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "7)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32548,7 +32548,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_8_C45890", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32571,7 +32571,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_9_4EBBBF", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32594,7 +32594,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_10_6430F1", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32617,7 +32617,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_11_C32EDA", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 11)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32640,7 +32640,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_13_3983B1", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "13)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32663,7 +32663,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_14_DC640B", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 14)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32686,7 +32686,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_15_2C8E1B", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 15)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32709,7 +32709,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_16_8BAE87", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 16)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32732,7 +32732,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_17_24428D", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 17)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32755,7 +32755,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_19_0B3E87", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "19)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32778,7 +32778,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_20_E6AE9B", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 20)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32801,7 +32801,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_21_A4A710", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 21)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32824,7 +32824,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_22_0BA82D", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 22)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32847,7 +32847,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_23_3EE5C1", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 23)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32870,7 +32870,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_25_D0953C", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "25)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32893,7 +32893,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_26_8FE167", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 26)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32916,7 +32916,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_27_24FE7C", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 27)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32939,7 +32939,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_28_7D993C", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 28)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32962,7 +32962,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_29_95B25B", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 29)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -32985,7 +32985,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_31_DE5A57", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "31)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33008,7 +33008,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_32_348850", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 32)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33031,7 +33031,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_33_F648A0", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 33)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33054,7 +33054,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_34_C17510", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 34)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33077,7 +33077,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_35_6C56F9", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 35)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33099,7 +33099,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_NICKEL_NI_36_8A2A9F", .name = "air.discomap.eea.europa.eu — Airbase_Stations (ArcGIS layer 36)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33122,7 +33122,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_2_55C533", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33146,7 +33146,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_3_1975D7", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33170,7 +33170,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_4_0A2A97", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33194,7 +33194,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_5_6FE2E7", .name = "air.discomap.eea.europa.eu — based on monthly values (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33218,7 +33218,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_11_621570", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 11)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33242,7 +33242,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_12_9395B6", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 12)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33266,7 +33266,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_13_3A30F4", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 13)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33290,7 +33290,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_20_727C50", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 20)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33314,7 +33314,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_21_43826F", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 21)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33338,7 +33338,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_22_3B80DE", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 22)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33362,7 +33362,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_29_119A5C", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 29)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33386,7 +33386,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_30_DA7E94", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 30)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33410,7 +33410,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_31_C4612F", .name = "air.discomap.eea.europa.eu — based on yearly values (ArcGIS "
       "layer 31)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33434,7 +33434,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_38_1803D5", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 38)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33458,7 +33458,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_NITROGEN_DIOXIDE_39_DF54B1", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 39)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33482,7 +33482,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_1_34A385", .name = "air.discomap.eea.europa.eu — based on daily 8 hour max (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33504,7 +33504,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_3_C7160D", .name = "air.discomap.eea.europa.eu — Annual Mean (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33527,7 +33527,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_5_EB73EB", .name = "air.discomap.eea.europa.eu — based on daily maximum value "
       "(ArcGIS layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33550,7 +33550,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_6_8386E8", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33573,7 +33573,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_9_A43895", .name = "air.discomap.eea.europa.eu — based on daily maximum value "
       "(ArcGIS layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33596,7 +33596,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_10_39A74B", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33619,7 +33619,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_12_01F970", .name = "air.discomap.eea.europa.eu — based on daily 8 hour max (ArcGIS "
       "layer 12)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33642,7 +33642,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_15_73E01A", .name = "air.discomap.eea.europa.eu — based on daily maximum value "
       "(ArcGIS layer 15)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33665,7 +33665,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_16_A00C7C", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 16)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33688,7 +33688,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_19_BF2AF2", .name = "air.discomap.eea.europa.eu — based on daily maximum value "
       "(ArcGIS layer 19)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33711,7 +33711,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_20_3D1F33", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 20)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33734,7 +33734,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_23_21F4B3", .name = "air.discomap.eea.europa.eu — based on daily maximum value "
       "(ArcGIS layer 23)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33757,7 +33757,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_24_6E221C", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 24)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33780,7 +33780,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_26_065BFB", .name = "air.discomap.eea.europa.eu — based on daily 8 hour max (ArcGIS "
       "layer 26)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33803,7 +33803,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_28_635986", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 28)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33825,7 +33825,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_OZONE_O3_29_4C8F1C", .name = "air.discomap.eea.europa.eu — Airbase_Stations (ArcGIS layer 29)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33847,7 +33847,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_1_38D39B", .name = "air.discomap.eea.europa.eu — Annual Mean (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33871,7 +33871,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_2_FAA2A2", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33895,7 +33895,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_3_CAA8BD", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33919,7 +33919,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_8_285057", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33943,7 +33943,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_9_273778", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33967,7 +33967,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_14_AE47D3", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "14)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -33991,7 +33991,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_15_F09C90", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 15)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34015,7 +34015,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_20_938589", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "20)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34039,7 +34039,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_21_3DF50B", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 21)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34063,7 +34063,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_26_11CF4C", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "26)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34087,7 +34087,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_27_EEE7FB", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 27)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34111,7 +34111,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_32_6B76B9", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "32)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34135,7 +34135,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_34_DB8B04", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "34)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34159,7 +34159,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_36_E7788C", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "36)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34182,7 +34182,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_37_78C4EE", .name = "air.discomap.eea.europa.eu — Airbase_Stations (ArcGIS layer 37)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34205,7 +34205,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_1_5A8216", .name = "air.discomap.eea.europa.eu — Annual Mean (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34229,7 +34229,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_2_99348D", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34253,7 +34253,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_3_2E1453", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34277,7 +34277,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_4_D0BC44", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34301,7 +34301,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_5_283BD3", .name = "air.discomap.eea.europa.eu — based on two daily value (ArcGIS "
       "layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34325,7 +34325,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_6_B652CC", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 6)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34349,7 +34349,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_8_AE9A6C", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34373,7 +34373,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_9_D4C249", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34397,7 +34397,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_10_C60583", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34421,7 +34421,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_11_9A468E", .name = "air.discomap.eea.europa.eu — based on two daily value (ArcGIS "
       "layer 11)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34445,7 +34445,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_12_FB30AF", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 12)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34469,7 +34469,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_14_77D79E", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "14)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34493,7 +34493,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_15_02CF0D", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 15)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34517,7 +34517,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_16_C91E90", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 16)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34541,7 +34541,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_17_DB9F60", .name = "air.discomap.eea.europa.eu — based on two daily value (ArcGIS "
       "layer 17)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34565,7 +34565,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_18_F77D2D", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 18)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34589,7 +34589,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_20_EDE628", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "20)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34613,7 +34613,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_21_9ACF47", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 21)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34637,7 +34637,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_22_DFC291", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 22)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34661,7 +34661,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_23_E0DB83", .name = "air.discomap.eea.europa.eu — based on two daily value (ArcGIS "
       "layer 23)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34685,7 +34685,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_24_18F063", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 24)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34709,7 +34709,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_26_27B3CF", .name = "air.discomap.eea.europa.eu — based on daily values (ArcGIS layer "
       "26)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34733,7 +34733,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_27_66A2D8", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 27)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34757,7 +34757,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_28_09B0C0", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 28)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34781,7 +34781,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_29_09A387", .name = "air.discomap.eea.europa.eu — based on two daily value (ArcGIS "
       "layer 29)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34805,7 +34805,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_30_823BF9", .name = "air.discomap.eea.europa.eu — based on weekly values (ArcGIS "
       "layer 30)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34828,7 +34828,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_PARTICULATE_MATT_31_F04BC5", .name = "air.discomap.eea.europa.eu — Airbase_Stations (ArcGIS layer 31)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34851,7 +34851,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRBASE_SULPHUR_DIOXIDE__1_90F1B4", .name = "air.discomap.eea.europa.eu — Annual Mean (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34875,7 +34875,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_SULPHUR_DIOXIDE__3_967FE6", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34899,7 +34899,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_SULPHUR_DIOXIDE__5_D4139D", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34923,7 +34923,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_SULPHUR_DIOXIDE__10_31AD9A", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34947,7 +34947,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_SULPHUR_DIOXIDE__12_18E9D3", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 12)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34971,7 +34971,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_SULPHUR_DIOXIDE__16_5BFFC9", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 16)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -34995,7 +34995,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_SULPHUR_DIOXIDE__19_18C2E7", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 19)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35019,7 +35019,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_SULPHUR_DIOXIDE__26_2E0D74", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 26)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35043,7 +35043,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_SULPHUR_DIOXIDE__33_3C5F7A", .name = "air.discomap.eea.europa.eu — based on hourly values (ArcGIS "
       "layer 33)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35067,7 +35067,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_AIRBASE_SULPHUR_DIOXIDE__35_F40C62", .name = "air.discomap.eea.europa.eu — based on variable time intervals "
       "(ArcGIS layer 35)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35090,7 +35090,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRQUALITY_AIRQUALITYDOW_0_722E12", .name = "air.discomap.eea.europa.eu — AQ Stations (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35113,7 +35113,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AIRQUALITY_AIRQUALITYZON_0_372367", .name = "air.discomap.eea.europa.eu — Countries (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35135,7 +35135,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_AIRQUALITY_AQ_STATISTICS_0_61029B", .name = "air.discomap.eea.europa.eu — Exceedance (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35158,7 +35158,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_AQMOBILE_AQI_NUTS3_0_4F9BED", .name = "air.discomap.eea.europa.eu — nuts3 (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35180,7 +35180,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_AQMOBILE_MODELLEDEXTENT_0_2763BA", .name = "air.discomap.eea.europa.eu — Layer (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35202,7 +35202,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_0_0AEED0", .name = "air.discomap.eea.europa.eu — capitals (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35225,7 +35225,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_1_1A1D2C", .name = "air.discomap.eea.europa.eu — cities (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35248,7 +35248,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_2_24059F", .name = "air.discomap.eea.europa.eu — countryborder (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35271,7 +35271,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_3_C3A5FA", .name = "air.discomap.eea.europa.eu — rivermedium (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35294,7 +35294,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_4_D286A7", .name = "air.discomap.eea.europa.eu — riverlarge (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35317,7 +35317,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_5_DE3FC6", .name = "air.discomap.eea.europa.eu — river (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35340,7 +35340,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_6_0A9204", .name = "air.discomap.eea.europa.eu — coastline (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35363,7 +35363,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_7_2B4DB5", .name = "air.discomap.eea.europa.eu — lakesmall (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35386,7 +35386,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_8_74E3D6", .name = "air.discomap.eea.europa.eu — lakemedium (ArcGIS layer 8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35409,7 +35409,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_9_FC9F53", .name = "air.discomap.eea.europa.eu — lakelarge (ArcGIS layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35432,7 +35432,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_10_00279F", .name = "air.discomap.eea.europa.eu — outside coverage (ArcGIS layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35455,7 +35455,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_11_F6D771", .name = "air.discomap.eea.europa.eu — sea (ArcGIS layer 11)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35478,7 +35478,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_12_7717F6", .name = "air.discomap.eea.europa.eu — countries (ArcGIS layer 12)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35501,7 +35501,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_CA_13_015206", .name = "air.discomap.eea.europa.eu — land (ArcGIS layer 13)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35524,7 +35524,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_0_7729DE", .name = "air.discomap.eea.europa.eu — capitals (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35547,7 +35547,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_1_7E6808", .name = "air.discomap.eea.europa.eu — cities (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35570,7 +35570,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_3_F08E4D", .name = "air.discomap.eea.europa.eu — rivermedium (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35593,7 +35593,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_4_28EEFD", .name = "air.discomap.eea.europa.eu — riverlarge (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35616,7 +35616,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_5_608E8A", .name = "air.discomap.eea.europa.eu — river (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35639,7 +35639,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_6_96A4D4", .name = "air.discomap.eea.europa.eu — coastline (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35662,7 +35662,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_7_EFC52C", .name = "air.discomap.eea.europa.eu — lakesmall (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35685,7 +35685,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_8_13B539", .name = "air.discomap.eea.europa.eu — lakemedium (ArcGIS layer 8)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35708,7 +35708,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_9_9254D9", .name = "air.discomap.eea.europa.eu — lakelarge (ArcGIS layer 9)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35731,7 +35731,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_10_6F26E5", .name = "air.discomap.eea.europa.eu — outside coverage (ArcGIS layer 10)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35754,7 +35754,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_11_F724D7", .name = "air.discomap.eea.europa.eu — sea (ArcGIS layer 11)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35776,7 +35776,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_12_4C8FA6", .name = "air.discomap.eea.europa.eu — countries (ArcGIS layer 12)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35799,7 +35799,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_13_F8C20F", .name = "air.discomap.eea.europa.eu — land (ArcGIS layer 13)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_parcels_landuse", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35823,7 +35823,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CARPATHIANS_CARPATHIANSC_1_A7F05D", .name = "air.discomap.eea.europa.eu — AdministrativeUnit_2 (ArcGIS layer "
       "1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35847,7 +35847,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CARPATHIANS_CARPATHIANSC_2_6D285E", .name = "air.discomap.eea.europa.eu — AdministrativeUnit_3 (ArcGIS layer "
       "2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35870,7 +35870,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CARPATHIANS_CARPATHIANSC_4_208178", .name = "air.discomap.eea.europa.eu — LAU1 (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35893,7 +35893,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CARPATHIANS_CARPATHIANSC_5_BA8ABD", .name = "air.discomap.eea.europa.eu — NUTS2 (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35916,7 +35916,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CARPATHIANS_CARPATHIANSC_6_1BF6D2", .name = "air.discomap.eea.europa.eu — LAU2 (ArcGIS layer 6)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35939,7 +35939,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_CARPATHIANS_CARPATHIANSC_7_2F95C4", .name = "air.discomap.eea.europa.eu — NUTS3 (ArcGIS layer 7)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35963,7 +35963,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CARPATHIANS_VIRGINFOREST_0_6FB6DF", .name = "air.discomap.eea.europa.eu — VirginForestInventory_Dec2019 "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -35987,7 +35987,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_CARPATHIANS_VIRGINFOREST_1_A568F0", .name = "air.discomap.eea.europa.eu — QuasiVirginForest_Dec2019 (ArcGIS "
       "layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36012,7 +36012,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_DEGURBA_AQ_CENSUS_6CLUST_0_B02EAD", .name = "air.discomap.eea.europa.eu — "
       "AQ_census_2021_DEGURBA_CNTR_shares_6clusters_data_XYTableToPoint "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36037,7 +36037,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_DEGURBA_CENSUS_AQ_2021_0_0FB560", .name = "air.discomap.eea.europa.eu — "
       "census2021v2_1989_country_AQ2021_REDEGURBA (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36061,7 +36061,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_DEGURBA_DEGURBA_NUTS0_EM_0_1CBB17", .name = "air.discomap.eea.europa.eu — "
       "NUTS0_EMP_share_urban_degrees_quintiles_EU_OTH (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36085,7 +36085,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_DEGURBA_DEGURBA_NUTS0_EM_1_8FF105", .name = "air.discomap.eea.europa.eu — "
       "DEGURBA_NUTS0_EMP_share_quintiles_OTH (ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36109,7 +36109,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_DEGURBA_DEGURBA_NUTS0_PM_0_CDED7B", .name = "air.discomap.eea.europa.eu — DEGURBA_NUTS0_pm25_quintiles_EU_OTH "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36133,7 +36133,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_DEGURBA_DEGURBA_PM25_0_E6D2EE", .name = "air.discomap.eea.europa.eu — NUTS0_pm25_country_quintiles_OTH "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36156,7 +36156,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_DEGURBA_DEGURBA_PM25_1_F1C923", .name = "air.discomap.eea.europa.eu — NUTS0_pm25_country_quintiles_EU_OTH "
       "(ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36179,7 +36179,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_DEGURBA_DEGURBA_PM25_2_5EAB96", .name = "air.discomap.eea.europa.eu — DEGURBA_NUTS0_pm25_quintiles_OTH "
       "(ArcGIS layer 2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36202,7 +36202,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_DEGURBA_DEGURBA_PM25_3_712F02", .name = "air.discomap.eea.europa.eu — DEGURBA_NUTS0_pm25_quintiles_EU_OTH "
       "(ArcGIS layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36226,7 +36226,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_DEGURBA_ES_5C_KMEANGIS_0_66DBA2", .name = "air.discomap.eea.europa.eu — "
       "projected_scaled_coord_6PCs_AQ_census_2021_DEGURBA_CNTR_shares_ES_PCA_nocoord_MultivariateClustering_5C "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36252,7 +36252,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_DEGURBA_EU_4_KCLUSTERS_R_0_05D085", .name = "air.discomap.eea.europa.eu — "
       "AQ_census_2021_DEGURBA_CNTR_shares_EU_raw_4clusters_coord_data "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36277,7 +36277,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_DEGURBA_NUTS0_EMP_SHARE__0_783F86", .name = "air.discomap.eea.europa.eu — "
       "NUTS0_EMP_share_urban_degrees_quintiles_EU_OTH (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36303,7 +36303,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_DEGURBA_PM25_CENSUS_PL_R_0_1D0EFB", .name = "air.discomap.eea.europa.eu — "
       "AQ_census_2021_DEGURBA_CNTR_shares_PL_raw_PM25_HDBSCAN_21_22_30 "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36330,7 +36330,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_DEGURBA_SPAIN_CDATA_0_3D0D1E", .name = "air.discomap.eea.europa.eu — "
       "AQ_census_2021_DEGURBA_CNTR_shares_ES_PCA_all_dataset_projected_map_C "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36356,7 +36356,7 @@ static const hp_source HP3B58_ARCGIS[] = {
   { .id = "JO58_AGS_EU_DEGURBA_SPAIN_CDATA_1_E87FB7", .name = "air.discomap.eea.europa.eu — "
       "AQ_census_2021_DEGURBA_CNTR_shares_ES_PCA_all_dataset_projected_polC "
       "(ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36381,7 +36381,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_3_YEARS_A_0_7B40C8", .name = "air.discomap.eea.europa.eu — Years of life lost (rate) due to "
       "PM2.5 (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36406,7 +36406,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_3_YEARS_A_0_F65CF1", .name = "air.discomap.eea.europa.eu — Years of life lost (rate) due to "
       "PM2.5 (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36430,7 +36430,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_3_YEARS_A_3_52E540", .name = "air.discomap.eea.europa.eu — Years of life lost (rate) due to "
       "NO2 (ArcGIS layer 3)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36454,7 +36454,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_3_YEARS_A_2_4FEADF", .name = "air.discomap.eea.europa.eu — Years of life lost (rate) due to O3 "
       "(ArcGIS layer 2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36477,7 +36477,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_ADAPT_CHA_2_637893", .name = "air.discomap.eea.europa.eu — Heatwave_days_rate (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_health_social", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36500,7 +36500,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_ADAPT_HEA_0_5AEDCC", .name = "air.discomap.eea.europa.eu — Heatwave_days (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_health_social", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36524,7 +36524,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_AIR_POLLU_0_6B589F", .name = "air.discomap.eea.europa.eu — "
       "AQ_census_2021_PCA_6all_dataset_projected (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36549,7 +36549,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_AIR_POLLU_0_0BB476", .name = "air.discomap.eea.europa.eu — Air quality and demographic "
       "hotspots (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_utilities_infrastructure", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36572,7 +36572,7 @@ static const hp_source HP3B58_ARCGIS[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_AIR_POLLU_0_59C49D", .name = "air.discomap.eea.europa.eu — Other clusters (ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36596,7 +36596,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_AIR_POLLU_4_222A1C", .name = "air.discomap.eea.europa.eu — Lowest 20% GDP and Most polluted "
       "20% regions (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36620,7 +36620,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_AIR_POLLU_2_72D15A", .name = "air.discomap.eea.europa.eu — Sum of Air Pollution Population "
       "Weighted Average [ug/m3] (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36645,7 +36645,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_AIR_POLLU_5_08C294", .name = "air.discomap.eea.europa.eu — GDP (Purchasing power standard per "
       "inhabitant) (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36669,7 +36669,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_AIR_POLLU_4_23B1D2", .name = "air.discomap.eea.europa.eu — Lowest 20% GDP and Most polluted "
       "20% regions (ArcGIS layer 4)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36693,7 +36693,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_AIR_POLLU_2_FF8AB9", .name = "air.discomap.eea.europa.eu — Sum of Air Pollution Population "
       "Weighted Average [ug/m3] (ArcGIS layer 2)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36718,7 +36718,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_AIR_POLLU_5_A89719", .name = "air.discomap.eea.europa.eu — GDP (Purchasing power standard per "
       "inhabitant) (ArcGIS layer 5)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_environment_hazards", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36742,7 +36742,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_CENSUS_20_0_5451BA", .name = "air.discomap.eea.europa.eu — Census_2021_UPDATED_AND_PERCENT "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36766,7 +36766,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_DALY_HIGH_0_87B4A4", .name = "air.discomap.eea.europa.eu — DALY_Countries_01M_HOT_65_89 "
       "(ArcGIS layer 0)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -36790,7 +36790,7 @@ static const hp_source HP3B58_ARCGIS[] = {
 
   { .id = "JO58_AGS_EU_ENVHEALTHATLAS_DALY_HIGH_1_EE3F43", .name = "air.discomap.eea.europa.eu — DALY_Countries_01M_HOT_ALL_AGES "
       "(ArcGIS layer 1)",
-    .category = "environment", .portal = "https://air.discomap.eea.europa.eu",
+    .category = "environment", .collector = "eu_gis_boundaries", .portal = "https://air.discomap.eea.europa.eu",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,

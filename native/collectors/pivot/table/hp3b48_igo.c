@@ -24,7 +24,7 @@
 static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q677691", .name = "ICLEI – Local Governments for Sustainability - ICLEI",
     .name_ja = "ICLEI – Local Governments for Sustainability - ICLEI",
-    .category = "international", .portal = "https://iclei.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://iclei.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -44,7 +44,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q107569", .name = "Club of Rome - Club of Rome",
     .name_ja = "Club of Rome - Club of Rome",
-    .category = "international", .portal = "https://www.clubofrome.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.clubofrome.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -64,7 +64,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1506755", .name = "World Association of Chefs Societies - WORLDCHEFS",
     .name_ja = "World Association of Chefs Societies - WORLDCHEFS",
-    .category = "international", .portal = "https://worldchefs.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://worldchefs.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -84,7 +84,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q72781", .name = "Privacy International - Privacy International News Feed",
     .name_ja = "Privacy International - Privacy International News Feed",
-    .category = "international", .portal = "https://www.privacyinternational.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.privacyinternational.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -104,7 +104,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2844165", .name = "Amphibian Ark - Amphibian Ark",
     .name_ja = "Amphibian Ark - Amphibian Ark",
-    .category = "international", .portal = "https://www.amphibianark.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.amphibianark.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -125,7 +125,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q2867813", .name = "International Association of Visual Semiotics - International "
       "Association for Visual Semiotics",
     .name_ja = "International Association of Visual Semiotics - International Association for Visual Semiotics",
-    .category = "international", .portal = "https://aisviavs.wordpress.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://aisviavs.wordpress.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -146,7 +146,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q2867813_2", .name = "International Association of Visual Semiotics - Comments on: The "
       "IAVS",
     .name_ja = "International Association of Visual Semiotics - Comments on: The IAVS",
-    .category = "international", .portal = "https://aisviavs.wordpress.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://aisviavs.wordpress.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -166,7 +166,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2974848", .name = "United Cities and Local Governments of Africa - UCLGA",
     .name_ja = "United Cities and Local Governments of Africa - UCLGA",
-    .category = "international", .portal = "https://www.uclga.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.uclga.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -186,7 +186,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5440763", .name = "Federation of Asian Bishops' Conferences - FABC",
     .name_ja = "Federation of Asian Bishops' Conferences - FABC",
-    .category = "international", .portal = "https://fabc.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://fabc.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -206,7 +206,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5564371", .name = "Girl Geek Dinners - Girl Geek Dinners",
     .name_ja = "Girl Geek Dinners - Girl Geek Dinners",
-    .category = "international", .portal = "https://girlgeekdinners.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://girlgeekdinners.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -226,7 +226,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5570568", .name = "Global Citizen - Global Citizen",
     .name_ja = "Global Citizen - Global Citizen",
-    .category = "international", .portal = "https://www.globalcitizen.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.globalcitizen.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -246,7 +246,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5570628", .name = "Global Security Institute - Global Security Institute",
     .name_ja = "Global Security Institute - Global Security Institute",
-    .category = "international", .portal = "https://gsinstitute.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://gsinstitute.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -266,7 +266,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5636894", .name = "Habitat International Coalition - HIC GS",
     .name_ja = "Habitat International Coalition - HIC GS",
-    .category = "international", .portal = "https://hic-net.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://hic-net.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -286,7 +286,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1697014", .name = "Leo Club - Leo Club Italia",
     .name_ja = "Leo Club - Leo Club Italia",
-    .category = "international", .portal = "https://leoclub.it/",
+    .category = "international", .collector = "igo_associations", .portal = "https://leoclub.it/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -306,7 +306,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q707083", .name = "Young Christian Workers - JOCI-IYCW - Accueil",
     .name_ja = "Young Christian Workers - JOCI-IYCW - Accueil",
-    .category = "international", .portal = "https://joci.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://joci.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -326,7 +326,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q707083_2", .name = "Young Christian Workers - JOCI-IYCW - Accueil",
     .name_ja = "Young Christian Workers - JOCI-IYCW - Accueil",
-    .category = "international", .portal = "https://joci.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://joci.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -346,7 +346,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q707083_3", .name = "Young Christian Workers - CIJOC ICYCW",
     .name_ja = "Young Christian Workers - CIJOC ICYCW",
-    .category = "international", .portal = "http://www.cijoc.org/",
+    .category = "international", .collector = "igo_associations", .portal = "http://www.cijoc.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -367,7 +367,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q735279", .name = "Committee on Data for Science and Technology - CODATA, Committee "
       "on Data of the ISC",
     .name_ja = "Committee on Data for Science and Technology - CODATA, Committee on Data of the ISC",
-    .category = "international", .portal = "https://codata.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://codata.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -388,7 +388,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q740384", .name = "The International Committee for the Conservation of the "
       "Industrial Heritage - TICCIH",
     .name_ja = "The International Committee for the Conservation of the Industrial Heritage - TICCIH",
-    .category = "international", .portal = "https://ticcih.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://ticcih.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -409,7 +409,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q4783192", .name = "Arab Information and Communication Technologies Organization - "
       "AICTO",
     .name_ja = "Arab Information and Communication Technologies Organization - AICTO",
-    .category = "international", .portal = "https://www.aicto.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.aicto.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -429,7 +429,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4809530", .name = "Association for Uncrewed Vehicle Systems International - AUVSI",
     .name_ja = "Association for Uncrewed Vehicle Systems International - AUVSI",
-    .category = "international", .portal = "https://www.auvsi.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.auvsi.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -449,7 +449,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4809530_2", .name = "Association for Uncrewed Vehicle Systems International - AUVSI",
     .name_ja = "Association for Uncrewed Vehicle Systems International - AUVSI",
-    .category = "international", .portal = "https://www.auvsi.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.auvsi.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -469,7 +469,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4844407", .name = "International Society of Political Psychology - ISPP",
     .name_ja = "International Society of Political Psychology - ISPP",
-    .category = "international", .portal = "https://ispp.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://ispp.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -489,7 +489,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5011160", .name = "CHIMES Society - Moleac.com",
     .name_ja = "CHIMES Society - Moleac.com",
-    .category = "international", .portal = "https://moleac.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://moleac.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -509,7 +509,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5013378", .name = "COMSTECH - COMSTECH",
     .name_ja = "COMSTECH - COMSTECH",
-    .category = "international", .portal = "https://comstech.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://comstech.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -530,7 +530,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q5029991", .name = "Canadian Federation of University Women - Canadian Federation of "
       "University Women",
     .name_ja = "Canadian Federation of University Women - Canadian Federation of University Women",
-    .category = "international", .portal = "https://www.cfuw.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.cfuw.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -550,7 +550,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q909683", .name = "NATO Tiger Association - NATO Tigers",
     .name_ja = "NATO Tiger Association - NATO Tigers",
-    .category = "international", .portal = "https://www.natotigers.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.natotigers.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -571,7 +571,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q911204", .name = "Danube Commission - Danube Commission – Donaukommission – "
       "Commission du Danube –",
     .name_ja = "Danube Commission - Danube Commission – Donaukommission – Commission du Danube –",
-    .category = "international", .portal = "https://www.danubecommission.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.danubecommission.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -591,7 +591,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q151991_4", .name = "European Southern Observatory - ESO Recruitment Portal",
     .name_ja = "European Southern Observatory - ESO Recruitment Portal",
-    .category = "international", .portal = "https://recruitment.eso.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://recruitment.eso.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -611,7 +611,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q689768", .name = "Women's International League for Peace and Freedom - WILPF",
     .name_ja = "Women's International League for Peace and Freedom - WILPF",
-    .category = "international", .portal = "https://www.wilpf.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.wilpf.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -631,7 +631,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q748999", .name = "World Federation of Trade Unions - WFTU",
     .name_ja = "World Federation of Trade Unions - WFTU",
-    .category = "international", .portal = "https://www.wftucentral.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.wftucentral.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -651,7 +651,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q7203726", .name = "Plazi - Home on Plazi",
     .name_ja = "Plazi - Home on Plazi",
-    .category = "international", .portal = "https://plazi.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://plazi.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -671,7 +671,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q7209034", .name = "Polar Libraries Colloquy - Polar Libraries Colloquy",
     .name_ja = "Polar Libraries Colloquy - Polar Libraries Colloquy",
-    .category = "international", .portal = "https://polarlibraries.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://polarlibraries.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -691,7 +691,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q7259796", .name = "Pump Aid - Pump Aid",
     .name_ja = "Pump Aid - Pump Aid",
-    .category = "international", .portal = "https://pumpaid.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://pumpaid.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -711,7 +711,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q7680168", .name = "Talloires Network - Talloires Network of Engaged Universities",
     .name_ja = "Talloires Network - Talloires Network of Engaged Universities",
-    .category = "international", .portal = "https://talloiresnetwork.tufts.edu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://talloiresnetwork.tufts.edu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -731,7 +731,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4288518", .name = "International Youth Nuclear Congress - IYNC",
     .name_ja = "International Youth Nuclear Congress - IYNC",
-    .category = "international", .portal = "https://iync.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://iync.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -751,7 +751,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4426267", .name = "Air Force Interoperability Council - Air Standards",
     .name_ja = "Air Force Interoperability Council - Air Standards",
-    .category = "international", .portal = "https://www.airstandards.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.airstandards.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -772,7 +772,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q4542328", .name = "Khmers Kampuchea-Krom Federation - KKF   Khmers Kampuchea-Krom "
       "Federation",
     .name_ja = "Khmers Kampuchea-Krom Federation - KKF   Khmers Kampuchea-Krom Federation",
-    .category = "international", .portal = "https://khmerkrom.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://khmerkrom.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -792,7 +792,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4728711", .name = "All European Academies - ALLEA",
     .name_ja = "All European Academies - ALLEA",
-    .category = "international", .portal = "https://allea.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://allea.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -812,7 +812,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4783148", .name = "Arab Bank for Economic Development in Africa - badea",
     .name_ja = "Arab Bank for Economic Development in Africa - badea",
-    .category = "international", .portal = "https://www.badea.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.badea.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -832,7 +832,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q785701", .name = "Guidelines International Network - GIN",
     .name_ja = "Guidelines International Network - GIN",
-    .category = "international", .portal = "https://g-i-n.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://g-i-n.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -853,7 +853,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q1666544", .name = "Graduate Women International - Graduate Women International "
       "(GWI)",
     .name_ja = "Graduate Women International - Graduate Women International (GWI)",
-    .category = "international", .portal = "https://graduatewomen.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://graduatewomen.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -874,7 +874,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q1666741", .name = "International Maritime Rescue Federation - International "
       "Maritime Rescue Federation",
     .name_ja = "International Maritime Rescue Federation - International Maritime Rescue Federation",
-    .category = "international", .portal = "https://www.international-maritime-rescue.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.international-maritime-rescue.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -896,7 +896,7 @@ static const hp_source HP3B48_IGO[] = {
       "Forces with Military Status - FIEP   International Association "
       "of Gendarmeries and Police Forces with Military",
     .name_ja = "FIEP - International Association of Gendarmeries and Police Forces with Military Status - FIEP   International Association of Gendarmeries and Police Forces with Military",
-    .category = "international", .portal = "https://www.fiep.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.fiep.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -916,7 +916,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q3075387", .name = "Asia–Europe Foundation - Asia-Europe Foundation (ASEF)",
     .name_ja = "Asia–Europe Foundation - Asia-Europe Foundation (ASEF)",
-    .category = "international", .portal = "https://asef.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://asef.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -936,7 +936,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q6048328", .name = "International Association for Official Statistics - IAOS",
     .name_ja = "International Association for Official Statistics - IAOS",
-    .category = "international", .portal = "https://iaos-isi.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://iaos-isi.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -956,7 +956,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q6048336", .name = "International Association for Near-Death Studies - IANDS",
     .name_ja = "International Association for Near-Death Studies - IANDS",
-    .category = "international", .portal = "https://iands.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://iands.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -977,7 +977,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6048375", .name = "International Association for the Study of the Commons - The "
       "International Association for the Study of the Commons",
     .name_ja = "International Association for the Study of the Commons - The International Association for the Study of the Commons",
-    .category = "international", .portal = "https://iasc-commons.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://iasc-commons.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -997,7 +997,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q6048468", .name = "International Association of Exhibitions and Events - IAEE",
     .name_ja = "International Association of Exhibitions and Events - IAEE",
-    .category = "international", .portal = "https://www.iaee.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.iaee.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1018,7 +1018,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6048786", .name = "International Bottled Water Association - Bottled Water   IBWA   "
       "Bottled Water",
     .name_ja = "International Bottled Water Association - Bottled Water   IBWA   Bottled Water",
-    .category = "international", .portal = "https://bottledwater.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://bottledwater.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1039,7 +1039,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6049828", .name = "International Coordination Meeting of Youth Organisations - "
       "ICMYO old site",
     .name_ja = "International Coordination Meeting of Youth Organisations - ICMYO old site",
-    .category = "international", .portal = "https://icmyo.wordpress.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://icmyo.wordpress.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1060,7 +1060,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6049875", .name = "International Council for Adult Education - Looking Back to Move "
       "Forward: ICAE Marks 50 Years Since its First World Assembly",
     .name_ja = "International Council for Adult Education - Looking Back to Move Forward: ICAE Marks 50 Years Since its First World Assembly",
-    .category = "international", .portal = "http://icae.global/",
+    .category = "international", .collector = "igo_associations", .portal = "http://icae.global/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1081,7 +1081,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6049887", .name = "International Council for Philosophy and Humanistic Studies - "
       "International Council for Philosophy and Human Sciences",
     .name_ja = "International Council for Philosophy and Humanistic Studies - International Council for Philosophy and Human Sciences",
-    .category = "international", .portal = "https://cipsh.one/",
+    .category = "international", .collector = "igo_associations", .portal = "https://cipsh.one/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1101,7 +1101,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q6049906", .name = "International Council of Onomastic Sciences - ICOS",
     .name_ja = "International Council of Onomastic Sciences - ICOS",
-    .category = "international", .portal = "https://icosweb.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://icosweb.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1122,7 +1122,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6050339", .name = "International Executive Resources Group - International "
       "Executive Resource Group",
     .name_ja = "International Executive Resources Group - International Executive Resource Group",
-    .category = "international", .portal = "https://www.iergglobal.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.iergglobal.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1142,7 +1142,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q6050406", .name = "International Federation of Agricultural Journalists - IFAJ",
     .name_ja = "International Federation of Agricultural Journalists - IFAJ",
-    .category = "international", .portal = "https://www.ifaj.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.ifaj.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1163,7 +1163,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6050420", .name = "International Federation of Business and Professional Women - "
       "www.bpw-international.org Blog Feed",
     .name_ja = "International Federation of Business and Professional Women - www.bpw-international.org Blog Feed",
-    .category = "international", .portal = "https://www.bpw-international.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.bpw-international.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1184,7 +1184,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6050619", .name = "International Foodservice Distributors Association - "
       "International Foodservice Distributors Association",
     .name_ja = "International Foodservice Distributors Association - International Foodservice Distributors Association",
-    .category = "international", .portal = "https://ifdaonline.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://ifdaonline.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1205,7 +1205,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q1165433", .name = "Multimedia over Coax Alliance - MoCA – Multimedia over Coax "
       "Alliance",
     .name_ja = "Multimedia over Coax Alliance - MoCA – Multimedia over Coax Alliance",
-    .category = "international", .portal = "https://mocalliance.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://mocalliance.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1225,7 +1225,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1210996", .name = "Atheist Alliance International - Atheist Alliance International",
     .name_ja = "Atheist Alliance International - Atheist Alliance International",
-    .category = "international", .portal = "https://atheistalliance.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://atheistalliance.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1246,7 +1246,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q7833652", .name = "Trans Atlantic Consumer Dialogue - TACD   Transatlantic Consumer "
       "Dialogue",
     .name_ja = "Trans Atlantic Consumer Dialogue - TACD   Transatlantic Consumer Dialogue",
-    .category = "international", .portal = "https://tacd.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://tacd.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1267,7 +1267,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q7834704", .name = "Transnational Association of Christian Colleges and Schools - "
       "TRACS",
     .name_ja = "Transnational Association of Christian Colleges and Schools - TRACS",
-    .category = "international", .portal = "https://www.tracs.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.tracs.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1287,7 +1287,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q7886609", .name = "Union of Ibero-American Capital Cities - UCCI",
     .name_ja = "Union of Ibero-American Capital Cities - UCCI",
-    .category = "international", .portal = "https://ciudadesiberoamericanas.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://ciudadesiberoamericanas.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1307,7 +1307,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q8035540", .name = "World Clown Association - World Clown Association",
     .name_ja = "World Clown Association - World Clown Association",
-    .category = "international", .portal = "https://worldclown.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://worldclown.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1327,7 +1327,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q8348482", .name = "Comisión Administradora del Río Uruguay - C.A.R.U.",
     .name_ja = "Comisión Administradora del Río Uruguay - C.A.R.U.",
-    .category = "international", .portal = "https://caru.org.uy/",
+    .category = "international", .collector = "igo_associations", .portal = "https://caru.org.uy/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1347,7 +1347,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q9256216", .name = "Eurofish - Eurofish",
     .name_ja = "Eurofish - Eurofish",
-    .category = "international", .portal = "https://eurofish.dk/",
+    .category = "international", .collector = "igo_associations", .portal = "https://eurofish.dk/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1367,7 +1367,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q9256216_2", .name = "Eurofish - Eurofish",
     .name_ja = "Eurofish - Eurofish",
-    .category = "international", .portal = "https://eurofish.dk/",
+    .category = "international", .collector = "igo_associations", .portal = "https://eurofish.dk/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1387,7 +1387,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q133207", .name = "Muslim Brotherhood - إخوان أونلاين",
     .name_ja = "Muslim Brotherhood - إخوان أونلاين",
-    .category = "international", .portal = "https://ikhwanonline.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://ikhwanonline.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1407,7 +1407,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4288167", .name = "International Association for Suicide Prevention - IASP",
     .name_ja = "International Association for Suicide Prevention - IASP",
-    .category = "international", .portal = "https://www.iasp.info/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.iasp.info/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1427,7 +1427,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q3917324", .name = "World Association of Belarusians - ЗБС \"Бацькаўшчына\"",
     .name_ja = "World Association of Belarusians - ЗБС \"Бацькаўшчына\"",
-    .category = "international", .portal = "https://zbsb.info/",
+    .category = "international", .collector = "igo_associations", .portal = "https://zbsb.info/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1447,7 +1447,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4130823", .name = "Hague Conference on Private International Law - HCCH   News",
     .name_ja = "Hague Conference on Private International Law - HCCH   News",
-    .category = "international", .portal = "https://www.hcch.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.hcch.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1467,7 +1467,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q6052211", .name = "International OCD Foundation - International OCD Foundation",
     .name_ja = "International OCD Foundation - International OCD Foundation",
-    .category = "international", .portal = "https://iocdf.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://iocdf.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1487,7 +1487,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q6053396", .name = "International Society for Philosophy of Music Education - ISPME",
     .name_ja = "International Society for Philosophy of Music Education - ISPME",
-    .category = "international", .portal = "https://ispme.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://ispme.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1507,7 +1507,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q6053396_2", .name = "International Society for Philosophy of Music Education - ISPME",
     .name_ja = "International Society for Philosophy of Music Education - ISPME",
-    .category = "international", .portal = "https://ispme.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://ispme.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1529,7 +1529,7 @@ static const hp_source HP3B48_IGO[] = {
       "HOPOS – The International Society for History of Philosophy of "
       "Science",
     .name_ja = "International Society for the History of Philosophy of Science - HOPOS – The International Society for History of Philosophy of Science",
-    .category = "international", .portal = "http://hopos.org/",
+    .category = "international", .collector = "igo_associations", .portal = "http://hopos.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1550,7 +1550,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6053726", .name = "International Stuttering Association - International Stuttering "
       "Association",
     .name_ja = "International Stuttering Association - International Stuttering Association",
-    .category = "international", .portal = "https://www.isastutter.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.isastutter.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1571,7 +1571,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6054110", .name = "International Union of Muslim Scholars - الاتحاد العالمي للعلماء "
       "المسلمين",
     .name_ja = "International Union of Muslim Scholars - الاتحاد العالمي للعلماء المسلمين",
-    .category = "international", .portal = "https://iumsonline.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://iumsonline.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1592,7 +1592,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6100970", .name = "Iwokrama International Centre for Rain Forest Conservation and "
       "Development - Iwokrama International Centre",
     .name_ja = "Iwokrama International Centre for Rain Forest Conservation and Development - Iwokrama International Centre",
-    .category = "international", .portal = "https://iwokrama.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://iwokrama.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1612,7 +1612,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q129516", .name = "International Academy of Sciences San Marino - AIS San-Marino",
     .name_ja = "International Academy of Sciences San Marino - AIS San-Marino",
-    .category = "international", .portal = "http://www.ais-sanmarino.org/",
+    .category = "international", .collector = "igo_associations", .portal = "http://www.ais-sanmarino.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1633,7 +1633,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q1865122", .name = "Bahá'í International Community - Bahá’í International Community "
       "- Representative Offices",
     .name_ja = "Bahá'í International Community - Bahá’í International Community - Representative Offices",
-    .category = "international", .portal = "https://www.bic.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.bic.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1653,7 +1653,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1939300", .name = "Council for German Orthography - Rechtschreibrat",
     .name_ja = "Council for German Orthography - Rechtschreibrat",
-    .category = "international", .portal = "https://www.rechtschreibrat.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.rechtschreibrat.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1673,7 +1673,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1666759", .name = "International Mobile Satellite Organization - IMSO",
     .name_ja = "International Mobile Satellite Organization - IMSO",
-    .category = "international", .portal = "https://imso.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://imso.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1694,7 +1694,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q1666896", .name = "International Society for Augmentative and Alternative "
       "Communication - ISAAC",
     .name_ja = "International Society for Augmentative and Alternative Communication - ISAAC",
-    .category = "international", .portal = "https://isaac-online.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://isaac-online.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1715,7 +1715,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q1667263", .name = "International Society for Folk Narrative Research - The "
       "International Society For Folk Narrative Research",
     .name_ja = "International Society for Folk Narrative Research - The International Society For Folk Narrative Research",
-    .category = "international", .portal = "https://isfnr.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://isfnr.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1736,7 +1736,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q1667326", .name = "International Cocoa Organization - International Cocoa "
       "Organization",
     .name_ja = "International Cocoa Organization - International Cocoa Organization",
-    .category = "international", .portal = "https://www.icco.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.icco.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1756,7 +1756,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5124582", .name = "Civil Society Coalition on Climate Change - CSCCC",
     .name_ja = "Civil Society Coalition on Climate Change - CSCCC",
-    .category = "international", .portal = "https://www.csccc.info/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.csccc.info/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1776,7 +1776,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5133453", .name = "Climate Vulnerable Forum - CVFV20.Org",
     .name_ja = "Climate Vulnerable Forum - CVFV20.Org",
-    .category = "international", .portal = "https://cvfv20.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://cvfv20.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1797,7 +1797,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q5153868", .name = "Commonwealth Telecommunications Organisation - Commonwealth "
       "Telecommunications Organisation",
     .name_ja = "Commonwealth Telecommunications Organisation - Commonwealth Telecommunications Organisation",
-    .category = "international", .portal = "https://www.cto.int/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.cto.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1817,7 +1817,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5159809", .name = "Confederation of European Paper Industries - www.cepi.org",
     .name_ja = "Confederation of European Paper Industries - www.cepi.org",
-    .category = "international", .portal = "https://www.cepi.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.cepi.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1837,7 +1837,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5327596", .name = "EastWest Institute - John Edwin Mroz Global Leadership Institute",
     .name_ja = "EastWest Institute - John Edwin Mroz Global Leadership Institute",
-    .category = "international", .portal = "https://mrozinstitute.charleston.edu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://mrozinstitute.charleston.edu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1857,7 +1857,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5412231", .name = "European Anti Poverty Network - EAPN",
     .name_ja = "European Anti Poverty Network - EAPN",
-    .category = "international", .portal = "https://www.eapn.eu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.eapn.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1877,7 +1877,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1559556", .name = "Pax Christi International - PAX Christi International",
     .name_ja = "Pax Christi International - PAX Christi International",
-    .category = "international", .portal = "https://paxchristi.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://paxchristi.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1898,7 +1898,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q1563473", .name = "International Clarinet Association - International Clarinet "
       "Association",
     .name_ja = "International Clarinet Association - International Clarinet Association",
-    .category = "international", .portal = "https://clarinet.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://clarinet.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1918,7 +1918,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1571188", .name = "World Youth Alliance - World Youth Alliance",
     .name_ja = "World Youth Alliance - World Youth Alliance",
-    .category = "international", .portal = "https://wya.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://wya.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1938,7 +1938,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1586624", .name = "World Forum on Shooting Activities - WFSA",
     .name_ja = "World Forum on Shooting Activities - WFSA",
-    .category = "international", .portal = "https://www.wfsa.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.wfsa.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1959,7 +1959,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q842988", .name = "Association of East Asian Research Universities - Agenda Dunia & "
       "Nasional – Peristiwa Penting Hari Ini",
     .name_ja = "Association of East Asian Research Universities - Agenda Dunia & Nasional – Peristiwa Penting Hari Ini",
-    .category = "international", .portal = "https://www.aearu.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.aearu.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -1980,7 +1980,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q844554", .name = "International Union of Tenants - A.P.D.L.C celebrates "
       "International Tenants’ Day",
     .name_ja = "International Union of Tenants - A.P.D.L.C celebrates International Tenants’ Day",
-    .category = "international", .portal = "https://www.iut.nu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.iut.nu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2000,7 +2000,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1114688", .name = "International Commission against Impunity in Guatemala - ⚖ CICIG",
     .name_ja = "International Commission against Impunity in Guatemala - ⚖ CICIG",
-    .category = "international", .portal = "https://www.cicig.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.cicig.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2020,7 +2020,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q3356047", .name = "CICOPA - CICOPA",
     .name_ja = "CICOPA - CICOPA",
-    .category = "international", .portal = "https://www.cicopa.coop/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.cicopa.coop/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2040,7 +2040,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q3456835", .name = "International Network of Basin Organizations - RIOB",
     .name_ja = "International Network of Basin Organizations - RIOB",
-    .category = "international", .portal = "https://www.inbo-news.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.inbo-news.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2060,7 +2060,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1376816", .name = "European Network of Forensic Science Institutes - ENFSI",
     .name_ja = "European Network of Forensic Science Institutes - ENFSI",
-    .category = "international", .portal = "https://enfsi.eu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://enfsi.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2081,7 +2081,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q3866537", .name = "Movement Coordination Centre Europe - Movement Coordination "
       "Centre Europe",
     .name_ja = "Movement Coordination Centre Europe - Movement Coordination Centre Europe",
-    .category = "international", .portal = "https://mcce-mil.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://mcce-mil.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2101,7 +2101,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5970551", .name = "iERA - iERA",
     .name_ja = "iERA - iERA",
-    .category = "international", .portal = "https://iera.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://iera.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2121,7 +2121,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5972067", .name = "Independent Music Companies Association - IMPALA",
     .name_ja = "Independent Music Companies Association - IMPALA",
-    .category = "international", .portal = "https://www.impalamusic.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.impalamusic.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2142,7 +2142,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6048154", .name = "International Alliance for Women in Music - International "
       "Alliance for Women in Music",
     .name_ja = "International Alliance for Women in Music - International Alliance for Women in Music",
-    .category = "international", .portal = "https://iawm.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://iawm.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2163,7 +2163,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6048317", .name = "International Association for Measurement and Evaluation of "
       "Communication - AMEC",
     .name_ja = "International Association for Measurement and Evaluation of Communication - AMEC",
-    .category = "international", .portal = "https://amecorg.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://amecorg.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2183,7 +2183,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q6690164", .name = "Love146 - Love146",
     .name_ja = "Love146 - Love146",
-    .category = "international", .portal = "https://love146.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://love146.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2203,7 +2203,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q6942609", .name = "Musicians Without Borders - Musicians without Borders",
     .name_ja = "Musicians Without Borders - Musicians without Borders",
-    .category = "international", .portal = "https://www.musicianswithoutborders.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.musicianswithoutborders.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2223,7 +2223,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q7122288", .name = "Pacific Alliance - Alianza del Pacífico.",
     .name_ja = "Pacific Alliance - Alianza del Pacífico.",
-    .category = "international", .portal = "https://alianzapacifico.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://alianzapacifico.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2243,7 +2243,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2303368", .name = "World Federation of Right to Die Societies - WFRTDS",
     .name_ja = "World Federation of Right to Die Societies - WFRTDS",
-    .category = "international", .portal = "https://wfrtds.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://wfrtds.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2263,7 +2263,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2328638", .name = "European Go Federation - European Go Federation",
     .name_ja = "European Go Federation - European Go Federation",
-    .category = "international", .portal = "https://www.eurogofed.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.eurogofed.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2283,7 +2283,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2328638_2", .name = "European Go Federation - European Go Federation",
     .name_ja = "European Go Federation - European Go Federation",
-    .category = "international", .portal = "https://www.eurogofed.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.eurogofed.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2303,7 +2303,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q14816384", .name = "Football Supporters Europe - Football Supporters Europe",
     .name_ja = "Football Supporters Europe - Football Supporters Europe",
-    .category = "international", .portal = "https://www.fanseurope.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.fanseurope.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2323,7 +2323,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q15627507", .name = "International Amateur Theatre Association - AITA/IATA",
     .name_ja = "International Amateur Theatre Association - AITA/IATA",
-    .category = "international", .portal = "https://www.aitaiata.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.aitaiata.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2343,7 +2343,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q16002010", .name = "African Union of Broadcasting - AUB-UAR",
     .name_ja = "African Union of Broadcasting - AUB-UAR",
-    .category = "international", .portal = "https://www.uar-aub.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.uar-aub.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2363,7 +2363,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q17006726", .name = "Medicines Patent Pool - MPP",
     .name_ja = "Medicines Patent Pool - MPP",
-    .category = "international", .portal = "https://medicinespatentpool.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://medicinespatentpool.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2384,7 +2384,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q1639820", .name = "International Association of Geodesy - geodesy.science – IAG "
       "website",
     .name_ja = "International Association of Geodesy - geodesy.science – IAG website",
-    .category = "international", .portal = "https://geodesy.science/",
+    .category = "international", .collector = "igo_associations", .portal = "https://geodesy.science/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2404,7 +2404,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1643206", .name = "Pax Romana - ICMICA – MIIC – Pax Romana",
     .name_ja = "Pax Romana - ICMICA – MIIC – Pax Romana",
-    .category = "international", .portal = "http://www.icmica-miic.org/",
+    .category = "international", .collector = "igo_associations", .portal = "http://www.icmica-miic.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2425,7 +2425,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q1665196", .name = "World Federation for Chess Composition - WORLD FEDERATION FOR "
       "CHESS COMPOSITION",
     .name_ja = "World Federation for Chess Composition - WORLD FEDERATION FOR CHESS COMPOSITION",
-    .category = "international", .portal = "https://www.wfcc.ch/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.wfcc.ch/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2445,7 +2445,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1665759", .name = "Inter-American Defense Board - Inter-American Defense Board",
     .name_ja = "Inter-American Defense Board - Inter-American Defense Board",
-    .category = "international", .portal = "https://jid.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://jid.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2465,7 +2465,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2024454", .name = "Online Film Critics Society - Online Film Critics Society",
     .name_ja = "Online Film Critics Society - Online Film Critics Society",
-    .category = "international", .portal = "https://ofcs.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://ofcs.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2485,7 +2485,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2072349", .name = "CIPA - CIPA Heritage Documentation",
     .name_ja = "CIPA - CIPA Heritage Documentation",
-    .category = "international", .portal = "https://www.cipaheritagedocumentation.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.cipaheritagedocumentation.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2505,7 +2505,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q17022457", .name = "International Disability and Development Consortium - IDDC",
     .name_ja = "International Disability and Development Consortium - IDDC",
-    .category = "international", .portal = "https://www.iddcconsortium.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.iddcconsortium.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2526,7 +2526,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q17075015", .name = "European Association of Institutions in Higher Education - "
       "EURASHE",
     .name_ja = "European Association of Institutions in Higher Education - EURASHE",
-    .category = "international", .portal = "https://www.eurashe.eu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.eurashe.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2547,7 +2547,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q17081558", .name = "International Geothermal Association - International Geothermal "
       "Association",
     .name_ja = "International Geothermal Association - International Geothermal Association",
-    .category = "international", .portal = "https://worldgeothermal.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://worldgeothermal.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2567,7 +2567,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q17087845", .name = "International Playing-Card Society - IPCS",
     .name_ja = "International Playing-Card Society - IPCS",
-    .category = "international", .portal = "https://www.i-p-c-s.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.i-p-c-s.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2587,7 +2587,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q18395004", .name = "United Nations Global Pulse - UN Global Pulse",
     .name_ja = "United Nations Global Pulse - UN Global Pulse",
-    .category = "international", .portal = "https://www.unglobalpulse.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.unglobalpulse.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2607,7 +2607,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q18553830", .name = "European Council of Skeptical Organisations - European Skeptics",
     .name_ja = "European Council of Skeptical Organisations - European Skeptics",
-    .category = "international", .portal = "https://www.ecso.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.ecso.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2628,7 +2628,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q18553830_2", .name = "European Council of Skeptical Organisations - News Archive - "
       "European Skeptics",
     .name_ja = "European Council of Skeptical Organisations - News Archive - European Skeptics",
-    .category = "international", .portal = "https://www.ecso.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.ecso.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2649,7 +2649,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q18553830_3", .name = "European Council of Skeptical Organisations - News Archive - "
       "European Skeptics",
     .name_ja = "European Council of Skeptical Organisations - News Archive - European Skeptics",
-    .category = "international", .portal = "https://www.ecso.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.ecso.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2669,7 +2669,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q18553830_4", .name = "European Council of Skeptical Organisations - European Skeptics",
     .name_ja = "European Council of Skeptical Organisations - European Skeptics",
-    .category = "international", .portal = "https://www.ecso.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.ecso.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2690,7 +2690,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q18553830_5", .name = "European Council of Skeptical Organisations - Organizations "
       "Archive - European Skeptics",
     .name_ja = "European Council of Skeptical Organisations - Organizations Archive - European Skeptics",
-    .category = "international", .portal = "https://www.ecso.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.ecso.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2710,7 +2710,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q19859997", .name = "Asia Pacific Geoparks Network - Asia Pacific Geoparks Network",
     .name_ja = "Asia Pacific Geoparks Network - Asia Pacific Geoparks Network",
-    .category = "international", .portal = "https://asiapacificgeoparks.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://asiapacificgeoparks.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2730,7 +2730,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q948485", .name = "TECHO - TECHO Latam",
     .name_ja = "TECHO - TECHO Latam",
-    .category = "international", .portal = "https://techo.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://techo.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2750,7 +2750,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q951292", .name = "Fimcap - FIMCAP",
     .name_ja = "Fimcap - FIMCAP",
-    .category = "international", .portal = "https://fimcap.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://fimcap.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2771,7 +2771,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q994643", .name = "Federation of Associations for Hunting and Conservation of the "
       "EU - FACE",
     .name_ja = "Federation of Associations for Hunting and Conservation of the EU - FACE",
-    .category = "international", .portal = "https://www.face.eu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.face.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2791,7 +2791,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q10278302", .name = "European Logistics Association - European Logistics Association",
     .name_ja = "European Logistics Association - European Logistics Association",
-    .category = "international", .portal = "https://www.elalog.eu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.elalog.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2811,7 +2811,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q10532966", .name = "ISIA - Internationaler Skilehrerverband",
     .name_ja = "ISIA - Internationaler Skilehrerverband",
-    .category = "international", .portal = "https://isia.ski/",
+    .category = "international", .collector = "igo_associations", .portal = "https://isia.ski/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2831,7 +2831,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q10720499", .name = "Worldskills International - WorldSkills",
     .name_ja = "Worldskills International - WorldSkills",
-    .category = "international", .portal = "http://feeds.feedburner.com/",
+    .category = "international", .collector = "igo_associations", .portal = "http://feeds.feedburner.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2852,7 +2852,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q11202105", .name = "Platform of European Memory and Conscience - Platform of "
       "European Memory and Conscience",
     .name_ja = "Platform of European Memory and Conscience - Platform of European Memory and Conscience",
-    .category = "international", .portal = "https://www.memoryandconscience.eu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.memoryandconscience.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2872,7 +2872,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q11969399", .name = "Folklore Fellows - Folklore Fellows",
     .name_ja = "Folklore Fellows - Folklore Fellows",
-    .category = "international", .portal = "https://www.folklorefellows.fi/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.folklorefellows.fi/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2892,7 +2892,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q11985120", .name = "European Microlight Federation - European Microlight Federation",
     .name_ja = "European Microlight Federation - European Microlight Federation",
-    .category = "international", .portal = "https://emf.aero/",
+    .category = "international", .collector = "igo_associations", .portal = "https://emf.aero/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2912,7 +2912,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2549011", .name = "World Draughts Federation - FMJD",
     .name_ja = "World Draughts Federation - FMJD",
-    .category = "international", .portal = "http://fmjd.org/",
+    .category = "international", .collector = "igo_associations", .portal = "http://fmjd.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2931,7 +2931,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2622118", .name = "New Acropolis - Nueva Acrópolis",
     .name_ja = "New Acropolis - Nueva Acrópolis",
-    .category = "international", .portal = "https://www.acropolis.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.acropolis.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2952,7 +2952,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q2629175", .name = "International Association for Analytical Psychology - "
       "International Association of Analytical Psychology – IAAP",
     .name_ja = "International Association for Analytical Psychology - International Association of Analytical Psychology – IAAP",
-    .category = "international", .portal = "https://iaap.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://iaap.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2973,7 +2973,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q5413210", .name = "European Society for Translation Studies - European Society for "
       "Translation Studies",
     .name_ja = "European Society for Translation Studies - European Society for Translation Studies",
-    .category = "international", .portal = "https://est-translationstudies.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://est-translationstudies.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -2993,7 +2993,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1354497", .name = "World Peace Council - World Peace Council",
     .name_ja = "World Peace Council - World Peace Council",
-    .category = "international", .portal = "https://www.wpc-in.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.wpc-in.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3013,7 +3013,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1376533", .name = "European Digital Rights - European Digital Rights (EDRi)",
     .name_ja = "European Digital Rights - European Digital Rights (EDRi)",
-    .category = "international", .portal = "https://edri.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://edri.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3033,7 +3033,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q20747451", .name = "European Heritage Heads Forum - European Heritage Heads Forum",
     .name_ja = "European Heritage Heads Forum - European Heritage Heads Forum",
-    .category = "international", .portal = "https://ehhf.eu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://ehhf.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3054,7 +3054,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q21546325", .name = "ORU Fogar - ORU. Régions Unies - Regiones Unidas - Regions "
       "United - Oru Fogar",
     .name_ja = "ORU Fogar - ORU. Régions Unies - Regiones Unidas - Regions United - Oru Fogar",
-    .category = "international", .portal = "http://www.regionsunies-fogar.org/",
+    .category = "international", .collector = "igo_associations", .portal = "http://www.regionsunies-fogar.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3075,7 +3075,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q23038092", .name = "Global Research Collaboration for Infectious Disease "
       "Preparedness - GLOPID-R",
     .name_ja = "Global Research Collaboration for Infectious Disease Preparedness - GLOPID-R",
-    .category = "international", .portal = "https://www.glopid-r.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.glopid-r.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3095,7 +3095,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q23047642", .name = "Global Virus Network - Global Virus Network",
     .name_ja = "Global Virus Network - Global Virus Network",
-    .category = "international", .portal = "https://gvn.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://gvn.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3115,7 +3115,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q24190853", .name = "CANZUK International - CANZUK International",
     .name_ja = "CANZUK International - CANZUK International",
-    .category = "international", .portal = "https://www.canzukinternational.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.canzukinternational.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3135,7 +3135,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q24896411", .name = "Covenant Christian Coalition - CCC",
     .name_ja = "Covenant Christian Coalition - CCC",
-    .category = "international", .portal = "https://www.ccc.one/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.ccc.one/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3155,7 +3155,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q24896411_2", .name = "Covenant Christian Coalition - CCC",
     .name_ja = "Covenant Christian Coalition - CCC",
-    .category = "international", .portal = "https://www.ccc.one/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.ccc.one/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3175,7 +3175,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q25452777", .name = "European Union of Science Journalists' Associations - EUSJA",
     .name_ja = "European Union of Science Journalists' Associations - EUSJA",
-    .category = "international", .portal = "https://www.eusja.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.eusja.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3196,7 +3196,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q2647520", .name = "World Council for Renewable Energy - EUROSOLAR   The European "
       "Association for Renewable Energy",
     .name_ja = "World Council for Renewable Energy - EUROSOLAR   The European Association for Renewable Energy",
-    .category = "international", .portal = "https://www.eurosolar.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.eurosolar.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3216,7 +3216,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2652007", .name = "Global Network of People living with HIV/AIDS - GNP+",
     .name_ja = "Global Network of People living with HIV/AIDS - GNP+",
-    .category = "international", .portal = "https://gnpplus.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://gnpplus.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3236,7 +3236,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1340188", .name = "Medieval Chronicle Society - The Medieval Chronicle",
     .name_ja = "Medieval Chronicle Society - The Medieval Chronicle",
-    .category = "international", .portal = "https://medievalchronicle.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://medievalchronicle.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3257,7 +3257,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q1352600", .name = "International Amateur Radio Union - International Amateur Radio "
       "Union (IARU)",
     .name_ja = "International Amateur Radio Union - International Amateur Radio Union (IARU)",
-    .category = "international", .portal = "https://www.iaru.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.iaru.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3278,7 +3278,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q12036534", .name = "International Federation of Language Teacher Associations - "
       "International Federation of Language Teacher Associations",
     .name_ja = "International Federation of Language Teacher Associations - International Federation of Language Teacher Associations",
-    .category = "international", .portal = "https://fiplv.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://fiplv.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3299,7 +3299,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q12223977", .name = "UMAC - International Council of Museums Committee for University "
       "Museums and Collection",
     .name_ja = "UMAC - International Council of Museums Committee for University Museums and Collection",
-    .category = "international", .portal = "https://umac.icom.museum/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://umac.icom.museum/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3319,7 +3319,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q12369343", .name = "World Cultural Council - World Cultural Council",
     .name_ja = "World Cultural Council - World Cultural Council",
-    .category = "international", .portal = "https://www.consejoculturalmundial.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.consejoculturalmundial.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3340,7 +3340,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q50285478", .name = "International Society for Inventory Research - International "
       "Society for Inventory Research",
     .name_ja = "International Society for Inventory Research - International Society for Inventory Research",
-    .category = "international", .portal = "https://isir.hu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://isir.hu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3361,7 +3361,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q54556161", .name = "United Nations Latin American Institute for the Prevention of "
       "Crime and the Treatment of Offenders - ILANUD",
     .name_ja = "United Nations Latin American Institute for the Prevention of Crime and the Treatment of Offenders - ILANUD",
-    .category = "international", .portal = "https://www.ilanud.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.ilanud.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3382,7 +3382,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q54556161_2", .name = "United Nations Latin American Institute for the Prevention of "
       "Crime and the Treatment of Offenders - ILANUD",
     .name_ja = "United Nations Latin American Institute for the Prevention of Crime and the Treatment of Offenders - ILANUD",
-    .category = "international", .portal = "https://www.ilanud.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.ilanud.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3402,7 +3402,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q55075164", .name = "European Personnel Recovery Centre - EPRC",
     .name_ja = "European Personnel Recovery Centre - EPRC",
-    .category = "international", .portal = "https://www.eprc.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.eprc.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3422,7 +3422,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q55614261", .name = "Ice Sheet Mass Balance Inter-comparison Exercise - IMBIE",
     .name_ja = "Ice Sheet Mass Balance Inter-comparison Exercise - IMBIE",
-    .category = "international", .portal = "https://imbie.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://imbie.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3442,7 +3442,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q56256781", .name = "Health for África - Health for Africa",
     .name_ja = "Health for África - Health for Africa",
-    .category = "international", .portal = "http://healthforafrica.es/",
+    .category = "international", .collector = "igo_associations", .portal = "http://healthforafrica.es/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3462,7 +3462,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q56320911", .name = "Alliance of Independent Recognized Members of Sport - AIMS",
     .name_ja = "Alliance of Independent Recognized Members of Sport - AIMS",
-    .category = "international", .portal = "https://aims.sport/",
+    .category = "international", .collector = "igo_associations", .portal = "https://aims.sport/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3483,7 +3483,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q56326685", .name = "World Federation of the Deaf Youth Section - Page not found – "
       "World Federation of the Deaf Youth Section (WFDYS)",
     .name_ja = "World Federation of the Deaf Youth Section - Page not found – World Federation of the Deaf Youth Section (WFDYS)",
-    .category = "international", .portal = "https://wfdys.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://wfdys.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3504,7 +3504,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q63970094", .name = "Pacific Rim Research Libraries Alliance - Pacific Rim Research "
       "Libraries Alliance",
     .name_ja = "Pacific Rim Research Libraries Alliance - Pacific Rim Research Libraries Alliance",
-    .category = "international", .portal = "https://pacificrimlibraries.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://pacificrimlibraries.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3524,7 +3524,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q68559888", .name = "Amsterdam Time Machine - Amsterdam Time Machine",
     .name_ja = "Amsterdam Time Machine - Amsterdam Time Machine",
-    .category = "international", .portal = "https://www.amsterdamtimemachine.nl/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.amsterdamtimemachine.nl/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3544,7 +3544,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q75720752", .name = "European Union of Christian Democratic Workers - EUCDW",
     .name_ja = "European Union of Christian Democratic Workers - EUCDW",
-    .category = "international", .portal = "https://www.eucdw.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.eucdw.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3564,7 +3564,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q88402135", .name = "African Civil Aviation Commission - AFCAC",
     .name_ja = "African Civil Aviation Commission - AFCAC",
-    .category = "international", .portal = "https://www.afcac.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.afcac.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3584,7 +3584,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q89794347", .name = "MILMED CoE - NATO MILMED COE News and Events",
     .name_ja = "MILMED CoE - NATO MILMED COE News and Events",
-    .category = "international", .portal = "https://www.coemed.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.coemed.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3605,7 +3605,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q89913719", .name = "International Association for  Classical Archaeology - AIAC – "
       "Associazione Internazionale di Archeologia Classica",
     .name_ja = "International Association for  Classical Archaeology - AIAC – Associazione Internazionale di Archeologia Classica",
-    .category = "international", .portal = "https://www.aiac.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.aiac.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3625,7 +3625,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q429283", .name = "Mediterranean Science Commission - CIESM",
     .name_ja = "Mediterranean Science Commission - CIESM",
-    .category = "international", .portal = "https://ciesm.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://ciesm.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3646,7 +3646,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q189966", .name = "Economic Community of Central African States - Site Web Officiel "
       "de la CEEAC",
     .name_ja = "Economic Community of Central African States - Site Web Officiel de la CEEAC",
-    .category = "international", .portal = "https://www.ceeac-eccas.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.ceeac-eccas.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3666,7 +3666,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q511252", .name = "International Federation of BodyBuilding & Fitness - IFBB",
     .name_ja = "International Federation of BodyBuilding & Fitness - IFBB",
-    .category = "international", .portal = "https://ifbb.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://ifbb.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3687,7 +3687,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q541113", .name = "International Association for Religious Freedom - The "
       "International Association for Religious Freedom",
     .name_ja = "International Association for Religious Freedom - The International Association for Religious Freedom",
-    .category = "international", .portal = "https://iarf.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://iarf.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3707,7 +3707,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q252420", .name = "International Peace Bureau - IPB – International Peace Bureau",
     .name_ja = "International Peace Bureau - IPB – International Peace Bureau",
-    .category = "international", .portal = "https://ipb.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://ipb.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3728,7 +3728,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q333536", .name = "Asian–African Legal Consultative Organization - Asian African "
       "Legal Consultative Organization",
     .name_ja = "Asian–African Legal Consultative Organization - Asian African Legal Consultative Organization",
-    .category = "international", .portal = "https://www.aalco.int/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.aalco.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3749,7 +3749,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q333536_2", .name = "Asian–African Legal Consultative Organization - Asian African "
       "Legal Consultative Organization",
     .name_ja = "Asian–African Legal Consultative Organization - Asian African Legal Consultative Organization",
-    .category = "international", .portal = "http://arabic.aalco.int/",
+    .category = "international", .collector = "igo_associations", .portal = "http://arabic.aalco.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3770,7 +3770,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q333536_3", .name = "Asian–African Legal Consultative Organization - Asian African "
       "Legal Consultative Organization",
     .name_ja = "Asian–African Legal Consultative Organization - Asian African Legal Consultative Organization",
-    .category = "international", .portal = "http://arabic.aalco.int/",
+    .category = "international", .collector = "igo_associations", .portal = "http://arabic.aalco.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3791,7 +3791,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q333536_4", .name = "Asian–African Legal Consultative Organization - Asian African "
       "Legal Consultative Organization",
     .name_ja = "Asian–African Legal Consultative Organization - Asian African Legal Consultative Organization",
-    .category = "international", .portal = "http://arabic.aalco.int/",
+    .category = "international", .collector = "igo_associations", .portal = "http://arabic.aalco.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3811,7 +3811,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q333727", .name = "International Seabed Authority - International Seabed Authority",
     .name_ja = "International Seabed Authority - International Seabed Authority",
-    .category = "international", .portal = "https://isa.org.jm/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://isa.org.jm/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3831,7 +3831,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q333727_2", .name = "International Seabed Authority - International Seabed Authority",
     .name_ja = "International Seabed Authority - International Seabed Authority",
-    .category = "international", .portal = "https://isa.org.jm/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://isa.org.jm/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3850,7 +3850,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2106133", .name = "Fur Free Alliance - Fur Free Alliance",
     .name_ja = "Fur Free Alliance - Fur Free Alliance",
-    .category = "international", .portal = "https://www.furfreealliance.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.furfreealliance.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3871,7 +3871,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q2199269", .name = "European Journalism Training Association - EJTA – European "
       "Journalism Training Association",
     .name_ja = "European Journalism Training Association - EJTA – European Journalism Training Association",
-    .category = "international", .portal = "https://ejta.eu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://ejta.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3891,7 +3891,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2296759", .name = "Socialist International Women - Socialist International Women",
     .name_ja = "Socialist International Women - Socialist International Women",
-    .category = "international", .portal = "https://www.socintwomen.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.socintwomen.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3911,7 +3911,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q352378", .name = "Adaptation Fund - Adaptation Fund",
     .name_ja = "Adaptation Fund - Adaptation Fund",
-    .category = "international", .portal = "https://www.adaptation-fund.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.adaptation-fund.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3931,7 +3931,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q352378_2", .name = "Adaptation Fund - Adaptation Fund",
     .name_ja = "Adaptation Fund - Adaptation Fund",
-    .category = "international", .portal = "http://www.adaptation-fund.org/",
+    .category = "international", .collector = "igo_associations", .portal = "http://www.adaptation-fund.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3951,7 +3951,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q369760", .name = "Nuclear Energy Agency - OECD Nuclear Energy Agency Archive Feed",
     .name_ja = "Nuclear Energy Agency - OECD Nuclear Energy Agency Archive Feed",
-    .category = "international", .portal = "https://us14.campaign-archive.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://us14.campaign-archive.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3972,7 +3972,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q25932145", .name = "International Youth Organization for Ibero-America - Organismo "
       "Internacional de Juventud para Iberoamérica",
     .name_ja = "International Youth Organization for Ibero-America - Organismo Internacional de Juventud para Iberoamérica",
-    .category = "international", .portal = "https://oij.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://oij.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -3993,7 +3993,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q28104143", .name = "World Federation of Orthodontists - World Federation of "
       "Orthodontists",
     .name_ja = "World Federation of Orthodontists - World Federation of Orthodontists",
-    .category = "international", .portal = "https://www.wfo.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.wfo.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4013,7 +4013,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q28127157", .name = "Global Fishing Watch - Global Fishing Watch",
     .name_ja = "Global Fishing Watch - Global Fishing Watch",
-    .category = "international", .portal = "https://globalfishingwatch.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://globalfishingwatch.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4033,7 +4033,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q28134544", .name = "Am Yisrael Foundation - AmYisrael Foundation",
     .name_ja = "Am Yisrael Foundation - AmYisrael Foundation",
-    .category = "international", .portal = "https://www.amyisraelfoundation.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.amyisraelfoundation.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4055,7 +4055,7 @@ static const hp_source HP3B48_IGO[] = {
       "public inland navigation - CESNI – Comité Européen pour "
       "l’Élaboration de Standards dans le domai",
     .name_ja = "European Committee for drawing up standards in the field of public inland navigation - CESNI – Comité Européen pour l’Élaboration de Standards dans le domai",
-    .category = "international", .portal = "https://www.cesni.eu/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.cesni.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4076,7 +4076,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q29577703", .name = "European Health Telematics Association - Home - European eHealth "
       "Multidisciplinary Stakeholder Platform",
     .name_ja = "European Health Telematics Association - Home - European eHealth Multidisciplinary Stakeholder Platform",
-    .category = "international", .portal = "https://www.ehtel.eu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.ehtel.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4097,7 +4097,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q29577703_2", .name = "European Health Telematics Association - Home - European eHealth "
       "Multidisciplinary Stakeholder Platform",
     .name_ja = "European Health Telematics Association - Home - European eHealth Multidisciplinary Stakeholder Platform",
-    .category = "international", .portal = "https://www.ehtel.eu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.ehtel.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4117,7 +4117,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q30255602", .name = "European Centre for Executive Development - CEDEP",
     .name_ja = "European Centre for Executive Development - CEDEP",
-    .category = "international", .portal = "https://cedep.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://cedep.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4137,7 +4137,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q30596094", .name = "Desert Locust Control Organization for Eastern Africa - DLCO-EA",
     .name_ja = "Desert Locust Control Organization for Eastern Africa - DLCO-EA",
-    .category = "international", .portal = "https://dlco-ea.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://dlco-ea.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4157,7 +4157,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q50128129", .name = "Forum of Slavic Cultures - FSK – forum slovanskih kultur",
     .name_ja = "Forum of Slavic Cultures - FSK – forum slovanskih kultur",
-    .category = "international", .portal = "https://www.fsk.si/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.fsk.si/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4179,7 +4179,7 @@ static const hp_source HP3B48_IGO[] = {
       "a Workers International - International Workers Committee – "
       "Comité ouvrier international – Co",
     .name_ja = "International Workers Committee Against War and Exploitation for a Workers International - International Workers Committee – Comité ouvrier international – Co",
-    .category = "international", .portal = "https://coi-iwc.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://coi-iwc.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4199,7 +4199,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q139570587", .name = "Animal Interfaith Alliance - Animal Interfaith Alliance",
     .name_ja = "Animal Interfaith Alliance - Animal Interfaith Alliance",
-    .category = "international", .portal = "https://animal-interfaith-alliance.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://animal-interfaith-alliance.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4220,7 +4220,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q141395447", .name = "European Consortium for Accreditation in higher education - The "
       "European Consortium for Accreditation in Higher Education",
     .name_ja = "European Consortium for Accreditation in higher education - The European Consortium for Accreditation in Higher Education",
-    .category = "international", .portal = "https://ecahe.eu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://ecahe.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4240,7 +4240,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q141528914", .name = "Africa-EU Energy Partnership - Africa-EU Energy Partnership",
     .name_ja = "Africa-EU Energy Partnership - Africa-EU Energy Partnership",
-    .category = "international", .portal = "https://africa-eu-energy-partnership.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://africa-eu-energy-partnership.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4261,7 +4261,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q2838174", .name = "St. Joan's International Alliance - St. Joan's International "
       "Alliance",
     .name_ja = "St. Joan's International Alliance - St. Joan's International Alliance",
-    .category = "international", .portal = "https://stjoansinternationalalliance.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://stjoansinternationalalliance.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4281,7 +4281,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2843021", .name = "American Society of Plumbing Engineers - ASPE",
     .name_ja = "American Society of Plumbing Engineers - ASPE",
-    .category = "international", .portal = "https://aspe.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://aspe.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4301,7 +4301,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q383924", .name = "Africa Rice Center - africarice-French",
     .name_ja = "Africa Rice Center - africarice-French",
-    .category = "international", .portal = "https://www.africarice-fr.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.africarice-fr.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4321,7 +4321,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q386559", .name = "IAPTI - IAPTI",
     .name_ja = "IAPTI - IAPTI",
-    .category = "international", .portal = "https://www.iapti.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.iapti.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4341,7 +4341,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q389812", .name = "Aga Khan Development Network - AKDN – Latest news",
     .name_ja = "Aga Khan Development Network - AKDN – Latest news",
-    .category = "international", .portal = "https://the.akdn/",
+    .category = "international", .collector = "igo_associations", .portal = "https://the.akdn/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4361,7 +4361,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q389812_2", .name = "Aga Khan Development Network - AKDN – Press releases",
     .name_ja = "Aga Khan Development Network - AKDN – Press releases",
-    .category = "international", .portal = "https://the.akdn/",
+    .category = "international", .collector = "igo_associations", .portal = "https://the.akdn/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4382,7 +4382,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q97172111", .name = "NATO Counter Intelligence Centre of Excellence - NATO CI COE "
       "MARKS ITS 11TH ANNIVERSARY",
     .name_ja = "NATO Counter Intelligence Centre of Excellence - NATO CI COE MARKS ITS 11TH ANNIVERSARY",
-    .category = "international", .portal = "https://cicoe.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://cicoe.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4403,7 +4403,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q97285650", .name = "Open & Agile Smart Cities - Open & Agile Smart Cities & "
       "Communities",
     .name_ja = "Open & Agile Smart Cities - Open & Agile Smart Cities & Communities",
-    .category = "international", .portal = "https://oascities.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://oascities.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4423,7 +4423,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q100714569", .name = "Project Encephalon - Project Encephalon",
     .name_ja = "Project Encephalon - Project Encephalon",
-    .category = "international", .portal = "https://www.projectencephalon.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.projectencephalon.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4443,7 +4443,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q104693488", .name = "Hana Human Rights Organization - Hana Human Rights Organization",
     .name_ja = "Hana Human Rights Organization - Hana Human Rights Organization",
-    .category = "international", .portal = "https://hanahr.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://hanahr.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4463,7 +4463,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q105730365", .name = "Global Partnership on Artificial Intelligence - OECD.AI",
     .name_ja = "Global Partnership on Artificial Intelligence - OECD.AI",
-    .category = "international", .portal = "https://wp.oecd.ai/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://wp.oecd.ai/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4483,7 +4483,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q106565796", .name = "Basic Internet Foundation - Basic Internet Foundation",
     .name_ja = "Basic Internet Foundation - Basic Internet Foundation",
-    .category = "international", .portal = "https://basicinternet.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://basicinternet.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4503,7 +4503,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q170", .name = "Pirate Parties International - Pirate Parties International",
     .name_ja = "Pirate Parties International - Pirate Parties International",
-    .category = "international", .portal = "https://pp-international.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://pp-international.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4523,7 +4523,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q170_2", .name = "Pirate Parties International - Pirate Parties International",
     .name_ja = "Pirate Parties International - Pirate Parties International",
-    .category = "international", .portal = "https://pp-international.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://pp-international.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4543,7 +4543,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q107524147", .name = "Simply Neuroscience - Simply Neuroscience",
     .name_ja = "Simply Neuroscience - Simply Neuroscience",
-    .category = "international", .portal = "https://www.simplyneuroscience.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.simplyneuroscience.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4564,7 +4564,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q107710249", .name = "Coordination Group for Meteorological Satellites - CGMS – "
       "Website",
     .name_ja = "Coordination Group for Meteorological Satellites - CGMS – Website",
-    .category = "international", .portal = "https://cgms-info.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://cgms-info.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4584,7 +4584,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q108392119", .name = "World Pantheist Movement - World Pantheism",
     .name_ja = "World Pantheist Movement - World Pantheism",
-    .category = "international", .portal = "https://pantheism.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://pantheism.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4605,7 +4605,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q28346", .name = "International Union of Pure and Applied Physics - IUPAP: The "
       "International Union of Pure and Applied Physics",
     .name_ja = "International Union of Pure and Applied Physics - IUPAP: The International Union of Pure and Applied Physics",
-    .category = "international", .portal = "https://iupap.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://iupap.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4625,7 +4625,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q607301", .name = "Latin American Integration Association - ALADI",
     .name_ja = "Latin American Integration Association - ALADI",
-    .category = "international", .portal = "https://www.aladi.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.aladi.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4646,7 +4646,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q111342754", .name = "Intergovernmental Coordination Committee of the Cuenca del Plata "
       "countries - CIC Plata",
     .name_ja = "Intergovernmental Coordination Committee of the Cuenca del Plata countries - CIC Plata",
-    .category = "international", .portal = "https://cicplata.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://cicplata.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4666,7 +4666,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q113470638", .name = "Global Anti-Scam Organization - Global Anti-Scam Org",
     .name_ja = "Global Anti-Scam Organization - Global Anti-Scam Org",
-    .category = "international", .portal = "https://www.globalantiscam.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.globalantiscam.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4687,7 +4687,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q115206083", .name = "Asian Buddhist Conference for Peace - The Asian Buddhists "
       "Conference for Peace",
     .name_ja = "Asian Buddhist Conference for Peace - The Asian Buddhists Conference for Peace",
-    .category = "international", .portal = "https://abcp.mn/",
+    .category = "international", .collector = "igo_associations", .portal = "https://abcp.mn/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4708,7 +4708,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q115799917", .name = "Conference of Ministers of Justice of the Ibero-American "
       "Countries - COMJIB",
     .name_ja = "Conference of Ministers of Justice of the Ibero-American Countries - COMJIB",
-    .category = "international", .portal = "https://comjib.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://comjib.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4729,7 +4729,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q116431005", .name = "International Federation of Societies and Institutes for the "
       "Study of the Renaissance - FISIER",
     .name_ja = "International Federation of Societies and Institutes for the Study of the Renaissance - FISIER",
-    .category = "international", .portal = "https://fisieronline.wordpress.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://fisieronline.wordpress.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4749,7 +4749,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q116799857", .name = "International Red Locust Control Organisation - RedLocust",
     .name_ja = "International Red Locust Control Organisation - RedLocust",
-    .category = "international", .portal = "https://redlocust.org.zm/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://redlocust.org.zm/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4770,7 +4770,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q116854537", .name = "International Alliance of Waste Pickers - Home - International "
       "Alliance of Waste Pickers",
     .name_ja = "International Alliance of Waste Pickers - Home - International Alliance of Waste Pickers",
-    .category = "international", .portal = "https://wastepickersinternational.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://wastepickersinternational.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4790,7 +4790,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q592938", .name = "Blue Shield International - Blue Shield International",
     .name_ja = "Blue Shield International - Blue Shield International",
-    .category = "international", .portal = "https://theblueshield.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://theblueshield.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4811,7 +4811,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q42584", .name = "Fédération Internationale Féline - Fédération Internationale "
       "Féline",
     .name_ja = "Fédération Internationale Féline - Fédération Internationale Féline",
-    .category = "international", .portal = "https://fifeweb.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://fifeweb.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4831,7 +4831,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q602399", .name = "Amazon Cooperation Treaty Organization - OTCA",
     .name_ja = "Amazon Cooperation Treaty Organization - OTCA",
-    .category = "international", .portal = "https://otca.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://otca.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4852,7 +4852,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q607269", .name = "FIAPF - Fiapf   International Federation of Film Producers "
       "Associations",
     .name_ja = "FIAPF - Fiapf   International Federation of Film Producers Associations",
-    .category = "international", .portal = "https://fiapf.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://fiapf.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4873,7 +4873,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q579663", .name = "International Union of Geological Sciences - International Union "
       "of Geological Sciences",
     .name_ja = "International Union of Geological Sciences - International Union of Geological Sciences",
-    .category = "international", .portal = "https://www.iugs.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.iugs.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4894,7 +4894,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q117499321", .name = "Center for Application and Climatological Forecasting of Central "
       "Africa - CAPC-AC",
     .name_ja = "Center for Application and Climatological Forecasting of Central Africa - CAPC-AC",
-    .category = "international", .portal = "https://capc-ac.net/",
+    .category = "international", .collector = "igo_associations", .portal = "https://capc-ac.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4914,7 +4914,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q128794194", .name = "Global Encryption Coalition - Global Encryption Coalition",
     .name_ja = "Global Encryption Coalition - Global Encryption Coalition",
-    .category = "international", .portal = "https://www.globalencryption.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.globalencryption.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4936,7 +4936,7 @@ static const hp_source HP3B48_IGO[] = {
       "Cooperation - Moroccan Youth Council for Diplomatic and "
       "International Cooperation News",
     .name_ja = "Moroccan Youth Council for Diplomatic and International Cooperation - Moroccan Youth Council for Diplomatic and International Cooperation News",
-    .category = "international", .portal = "https://www.mycdic.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.mycdic.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4957,7 +4957,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q466807", .name = "Association for Information Science and Technology - Association "
       "for Information Science and Technology   ASIS&T",
     .name_ja = "Association for Information Science and Technology - Association for Information Science and Technology   ASIS&T",
-    .category = "international", .portal = "https://www.asist.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.asist.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4977,7 +4977,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q134311209", .name = "ACT for Bharat - Lorem ipsum dolor",
     .name_ja = "ACT for Bharat - Lorem ipsum dolor",
-    .category = "international", .portal = "https://act4bharat.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://act4bharat.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -4997,7 +4997,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q134955363", .name = "Re-Action Collective - Re-Action Collective",
     .name_ja = "Re-Action Collective - Re-Action Collective",
-    .category = "international", .portal = "https://re-action-collective.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://re-action-collective.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5017,7 +5017,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q135456466", .name = "International Federation of Press Cutting Agencies - FIBEP",
     .name_ja = "International Federation of Press Cutting Agencies - FIBEP",
-    .category = "international", .portal = "https://www.fibep.info/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.fibep.info/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5037,7 +5037,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q138511417", .name = "International Mountain Museums Alliance - IALP Mountain Museums",
     .name_ja = "International Mountain Museums Alliance - IALP Mountain Museums",
-    .category = "international", .portal = "https://www.mountainmuseums.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.mountainmuseums.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5057,7 +5057,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2838374", .name = "Q2838374 - ALT",
     .name_ja = "Q2838374 - ALT",
-    .category = "international", .portal = "https://alt-perubolivia.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://alt-perubolivia.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5077,7 +5077,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4412419", .name = "Q4412419 - News - The Northern Forum",
     .name_ja = "Q4412419 - News - The Northern Forum",
-    .category = "international", .portal = "https://www.northernforum.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.northernforum.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5097,7 +5097,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q28793142", .name = "Q28793142 - SNETP",
     .name_ja = "Q28793142 - SNETP",
-    .category = "international", .portal = "https://snetp.eu/",
+    .category = "international", .collector = "igo_associations", .portal = "https://snetp.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5117,7 +5117,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q79385610", .name = "Q79385610 - The International Legal Forum",
     .name_ja = "Q79385610 - The International Legal Forum",
-    .category = "international", .portal = "https://www.ilfngo.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.ilfngo.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5137,7 +5137,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q110472146", .name = "Q110472146 - Nederlandsche Tafelronde",
     .name_ja = "Q110472146 - Nederlandsche Tafelronde",
-    .category = "international", .portal = "https://roundtable.nl/",
+    .category = "international", .collector = "igo_associations", .portal = "https://roundtable.nl/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5157,7 +5157,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q136356060", .name = "Q136356060 - Assembleia Geral da LusNIC em Luanda",
     .name_ja = "Q136356060 - Assembleia Geral da LusNIC em Luanda",
-    .category = "international", .portal = "https://lusnic.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://lusnic.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5177,7 +5177,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q140073659", .name = "Q140073659 - МФСТ- IFST",
     .name_ja = "Q140073659 - МФСТ- IFST",
-    .category = "international", .portal = "https://mfst.info/",
+    .category = "international", .collector = "igo_associations", .portal = "https://mfst.info/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5197,7 +5197,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q141453400", .name = "Q141453400 - Shield",
     .name_ja = "Q141453400 - Shield",
-    .category = "international", .portal = "https://www.congress-shield.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.congress-shield.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5217,7 +5217,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q141453400_2", .name = "Q141453400 - Shield",
     .name_ja = "Q141453400 - Shield",
-    .category = "international", .portal = "https://www.congress-shield.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://www.congress-shield.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5237,7 +5237,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q141453400_3", .name = "Q141453400 - منظمة الدرع الدولية",
     .name_ja = "Q141453400 - منظمة الدرع الدولية",
-    .category = "international", .portal = "https://congressshield.org/",
+    .category = "international", .collector = "igo_associations", .portal = "https://congressshield.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5257,7 +5257,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1505172", .name = "Mano River Union - Mano River Union Secretariat",
     .name_ja = "Mano River Union - Mano River Union Secretariat",
-    .category = "international", .portal = "https://www.mru.int/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.mru.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5277,7 +5277,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1563503", .name = "HELCOM - HELCOM",
     .name_ja = "HELCOM - HELCOM",
-    .category = "international", .portal = "https://helcom.fi/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://helcom.fi/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5297,7 +5297,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1642145", .name = "West Nordic Council - Ny formand for Vestnordisk Råd",
     .name_ja = "West Nordic Council - Ny formand for Vestnordisk Råd",
-    .category = "international", .portal = "https://www.vestnordisk.is/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.vestnordisk.is/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5317,7 +5317,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1940250", .name = "Economic and Monetary Community of Central Africa - CEMAC",
     .name_ja = "Economic and Monetary Community of Central Africa - CEMAC",
-    .category = "international", .portal = "https://cemac.int/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://cemac.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5337,7 +5337,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2029890", .name = "Senegal River Basin Development Authority - Portail omvs",
     .name_ja = "Senegal River Basin Development Authority - Portail omvs",
-    .category = "international", .portal = "https://www.portail-omvs.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.portail-omvs.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5358,7 +5358,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q193272", .name = "Economic Community of West African States - Economic Community "
       "of West African States (ECOWAS)",
     .name_ja = "Economic Community of West African States - Economic Community of West African States (ECOWAS)",
-    .category = "international", .portal = "https://www.ecowas.int/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.ecowas.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5378,7 +5378,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4654167", .name = "ASEAN Centre for Biodiversity - ASEAN Centre for Biodiversity",
     .name_ja = "ASEAN Centre for Biodiversity - ASEAN Centre for Biodiversity",
-    .category = "international", .portal = "https://www.aseanbiodiversity.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.aseanbiodiversity.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5399,7 +5399,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q4971473", .name = "British-Irish Intergovernmental Conference - The British-Irish "
       "Council",
     .name_ja = "British-Irish Intergovernmental Conference - The British-Irish Council",
-    .category = "international", .portal = "https://www.britishirishcouncil.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.britishirishcouncil.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5419,7 +5419,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5011840", .name = "CIRDAP - CIRDAP – Enabling Rural Communities",
     .name_ja = "CIRDAP - CIRDAP – Enabling Rural Communities",
-    .category = "international", .portal = "https://cirdap.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://cirdap.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5439,7 +5439,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q6052294", .name = "International Pacific Halibut Commission - IPHC",
     .name_ja = "International Pacific Halibut Commission - IPHC",
-    .category = "international", .portal = "https://www.iphc.int/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.iphc.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5460,7 +5460,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q6123232", .name = "Secretariat for Central American Economic Integration - "
       "Secretaría de Integración Económica Centroamericana (SIECA)",
     .name_ja = "Secretariat for Central American Economic Integration - Secretaría de Integración Económica Centroamericana (SIECA)",
-    .category = "international", .portal = "https://www.sieca.int/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.sieca.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5480,7 +5480,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q294278", .name = "Organisation of African, Caribbean and Pacific States - OACPS",
     .name_ja = "Organisation of African, Caribbean and Pacific States - OACPS",
-    .category = "international", .portal = "https://www.oacps.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.oacps.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5500,7 +5500,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q326816", .name = "GUAM Organization for Democracy and Economic Development - GUAM",
     .name_ja = "GUAM Organization for Democracy and Economic Development - GUAM",
-    .category = "international", .portal = "https://guam-organization.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://guam-organization.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5520,7 +5520,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2826699", .name = "ASECNA - ASECNA Online - Accueil",
     .name_ja = "ASECNA - ASECNA Online - Accueil",
-    .category = "international", .portal = "https://www.asecna.aero/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.asecna.aero/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5540,7 +5540,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2826699_2", .name = "ASECNA - ASECNA Online - Accueil",
     .name_ja = "ASECNA - ASECNA Online - Accueil",
-    .category = "international", .portal = "https://www.asecna.aero/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.asecna.aero/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5560,7 +5560,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q3046245", .name = "EUMETNET - Eumetnet",
     .name_ja = "EUMETNET - Eumetnet",
-    .category = "international", .portal = "https://www.eumetnet.eu/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.eumetnet.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5580,7 +5580,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q333612", .name = "Partners in Population and Development - PPD",
     .name_ja = "Partners in Population and Development - PPD",
-    .category = "international", .portal = "http://www.partners-popdev.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "http://www.partners-popdev.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5601,7 +5601,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q28381783", .name = "Arab Institute for Training and Research in Statistics - المعهد "
       "العربي للتدريب و البحوث الاحصائية",
     .name_ja = "Arab Institute for Training and Research in Statistics - المعهد العربي للتدريب و البحوث الاحصائية",
-    .category = "international", .portal = "http://www.aitrs.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "http://www.aitrs.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5622,7 +5622,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q30262804", .name = "West African Health Organisation - West African Health "
       "Organisation - Promoting better health through regional inte",
     .name_ja = "West African Health Organisation - West African Health Organisation - Promoting better health through regional inte",
-    .category = "international", .portal = "https://www.wahooas.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.wahooas.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5642,7 +5642,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q30626488", .name = "Asian-Pacific Postal Union - Asian-Pacific Postal Union",
     .name_ja = "Asian-Pacific Postal Union - Asian-Pacific Postal Union",
-    .category = "international", .portal = "https://appu-bureau.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://appu-bureau.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5663,7 +5663,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q31341020", .name = "Gambia River Development Organization - Site Web du Projet "
       "Energie OMVG",
     .name_ja = "Gambia River Development Organization - Site Web du Projet Energie OMVG",
-    .category = "international", .portal = "https://www.pe-omvg.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.pe-omvg.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5683,7 +5683,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q67881509", .name = "Southeast Europe Transport Community - Transport Community",
     .name_ja = "Southeast Europe Transport Community - Transport Community",
-    .category = "international", .portal = "https://www.transport-community.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.transport-community.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5703,7 +5703,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q3075649", .name = "Commonwealth Foundation - Commonwealth Foundation",
     .name_ja = "Commonwealth Foundation - Commonwealth Foundation",
-    .category = "international", .portal = "https://commonwealthfoundation.com/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://commonwealthfoundation.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5723,7 +5723,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q3076178", .name = "North Atlantic Marine Mammal Commission - NAMMCO",
     .name_ja = "North Atlantic Marine Mammal Commission - NAMMCO",
-    .category = "international", .portal = "https://nammco.no/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://nammco.no/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5743,7 +5743,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q3356053", .name = "Latin American Energy Organization - OLACDE",
     .name_ja = "Latin American Energy Organization - OLACDE",
-    .category = "international", .portal = "https://www.olacde.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.olacde.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5763,7 +5763,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q392805", .name = "Central European Initiative - Open Calls",
     .name_ja = "Central European Initiative - Open Calls",
-    .category = "international", .portal = "https://www.cei.int/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.cei.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5784,7 +5784,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q109312829", .name = "Permanent Commission for the South Pacific - CPPS - Comisión "
       "Permanente del Pacífico Sur",
     .name_ja = "Permanent Commission for the South Pacific - CPPS - Comisión Permanente del Pacífico Sur",
-    .category = "international", .portal = "https://www.cpps-int.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.cpps-int.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5805,7 +5805,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q109312829_2", .name = "Permanent Commission for the South Pacific - CPPS - Comisión "
       "Permanente del Pacífico Sur",
     .name_ja = "Permanent Commission for the South Pacific - CPPS - Comisión Permanente del Pacífico Sur",
-    .category = "international", .portal = "https://www.cpps-int.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.cpps-int.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5826,7 +5826,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q127981543", .name = "Non-Aligned Movement Centre for South-South Technical "
       "Cooperation - NAM CSSTC",
     .name_ja = "Non-Aligned Movement Centre for South-South Technical Cooperation - NAM CSSTC",
-    .category = "international", .portal = "https://www.csstc.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.csstc.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5846,7 +5846,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q47488", .name = "International Criminal Court - RSS feed for ICC news",
     .name_ja = "International Criminal Court - RSS feed for ICC news",
-    .category = "international", .portal = "https://www.icc-cpi.int/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.icc-cpi.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5866,7 +5866,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q47488_2", .name = "International Criminal Court - RSS feed for ICC Court records",
     .name_ja = "International Criminal Court - RSS feed for ICC Court records",
-    .category = "international", .portal = "https://www.icc-cpi.int/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.icc-cpi.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5886,7 +5886,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q789769", .name = "Council of the Baltic Sea States - CBSS",
     .name_ja = "Council of the Baltic Sea States - CBSS",
-    .category = "international", .portal = "https://cbss.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://cbss.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5906,7 +5906,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q244323", .name = "Visegrád Group - The Visegrad Group - From the Visegrad Group",
     .name_ja = "Visegrád Group - The Visegrad Group - From the Visegrad Group",
-    .category = "international", .portal = "https://www.visegradgroup.eu/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.visegradgroup.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5926,7 +5926,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q16831766", .name = "Heads of Medicines Agencies - Recently Published About HMA",
     .name_ja = "Heads of Medicines Agencies - Recently Published About HMA",
-    .category = "international", .portal = "https://www.hma.eu/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.hma.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5946,7 +5946,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q23714964", .name = "Central European Defence Cooperation - Mors",
     .name_ja = "Central European Defence Cooperation - Mors",
-    .category = "international", .portal = "https://cedc.info/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://cedc.info/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5967,7 +5967,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q577526", .name = "D-8 Organization for Economic Cooperation - D-8 Organization for "
       "Economic Cooperation",
     .name_ja = "D-8 Organization for Economic Cooperation - D-8 Organization for Economic Cooperation",
-    .category = "international", .portal = "https://developing8.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://developing8.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -5988,7 +5988,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q822499", .name = "Regional African Satellite Communication Organization - "
       "Connecting Africa",
     .name_ja = "Regional African Satellite Communication Organization - Connecting Africa",
-    .category = "international", .portal = "https://rascom.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://rascom.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6009,7 +6009,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q605177", .name = "International Cospas-Sarsat Programme - International "
       "Cospas-Sarsat Programme - International COSPAS-SARSAT",
     .name_ja = "International Cospas-Sarsat Programme - International Cospas-Sarsat Programme - International COSPAS-SARSAT",
-    .category = "international", .portal = "http://www.cospas-sarsat.int/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "http://www.cospas-sarsat.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6030,7 +6030,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q605177_2", .name = "International Cospas-Sarsat Programme - International "
       "Cospas-Sarsat Programme - International COSPAS-SARSAT",
     .name_ja = "International Cospas-Sarsat Programme - International Cospas-Sarsat Programme - International COSPAS-SARSAT",
-    .category = "international", .portal = "http://www.cospas-sarsat.int/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "http://www.cospas-sarsat.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6051,7 +6051,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q605177_3", .name = "International Cospas-Sarsat Programme - International "
       "Cospas-Sarsat Programme - International COSPAS-SARSAT",
     .name_ja = "International Cospas-Sarsat Programme - International Cospas-Sarsat Programme - International COSPAS-SARSAT",
-    .category = "international", .portal = "http://www.cospas-sarsat.int/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "http://www.cospas-sarsat.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6071,7 +6071,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q134603560", .name = "AALCO Hong Kong Regional Arbitration Centre - AALCO",
     .name_ja = "AALCO Hong Kong Regional Arbitration Centre - AALCO",
-    .category = "international", .portal = "https://aalcohkrac.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://aalcohkrac.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6091,7 +6091,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q135456867", .name = "ID5 - ID5",
     .name_ja = "ID5 - ID5",
-    .category = "international", .portal = "https://id-five.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://id-five.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6111,7 +6111,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q135456867_2", .name = "ID5 - ID5",
     .name_ja = "ID5 - ID5",
-    .category = "international", .portal = "https://id-five.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://id-five.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6131,7 +6131,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q136680547", .name = "Mercator Ocean International - Mercator Ocean International",
     .name_ja = "Mercator Ocean International - Mercator Ocean International",
-    .category = "international", .portal = "https://www.mercator-ocean.eu/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.mercator-ocean.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6152,7 +6152,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q141528931", .name = "West African Science Service Centre on Climate Change and "
       "Adapted Land Use - WASCAL",
     .name_ja = "West African Science Service Centre on Climate Change and Adapted Land Use - WASCAL",
-    .category = "international", .portal = "https://wascal.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://wascal.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6172,7 +6172,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q141737208", .name = "CAREC Institute - CARECInstitute",
     .name_ja = "CAREC Institute - CARECInstitute",
-    .category = "international", .portal = "https://www.carecinstitute.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.carecinstitute.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6193,7 +6193,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q1114955", .name = "Permanent Interstate Committee for drought control in the Sahel "
       "- Bienvenue sur le Portail Web du CILSS",
     .name_ja = "Permanent Interstate Committee for drought control in the Sahel - Bienvenue sur le Portail Web du CILSS",
-    .category = "international", .portal = "https://www.cilss.int/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.cilss.int/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6213,7 +6213,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1115631", .name = "Indian Ocean Commission - Commission de l'océan Indien",
     .name_ja = "Indian Ocean Commission - Commission de l'océan Indien",
-    .category = "international", .portal = "https://www.commissionoceanindien.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.commissionoceanindien.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6233,7 +6233,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1142738", .name = "International Institute of Tropical Agriculture - IITA",
     .name_ja = "International Institute of Tropical Agriculture - IITA",
-    .category = "international", .portal = "https://iita.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://iita.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6254,7 +6254,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q1414657", .name = "The Global Fund to Fight AIDS, Tuberculosis and Malaria - Latest "
       "from the Global Fund",
     .name_ja = "The Global Fund to Fight AIDS, Tuberculosis and Malaria - Latest from the Global Fund",
-    .category = "international", .portal = "https://www.theglobalfund.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.theglobalfund.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6274,7 +6274,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1192641", .name = "UNIDROIT - UNIDROIT",
     .name_ja = "UNIDROIT - UNIDROIT",
-    .category = "international", .portal = "https://www.unidroit.org/",
+    .category = "international", .collector = "igo_intergovernmental", .portal = "https://www.unidroit.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6294,7 +6294,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q6841107", .name = "Midas Interactive Entertainment - Midas Interactive",
     .name_ja = "Midas Interactive Entertainment - Midas Interactive",
-    .category = "international", .portal = "https://midasinteractive.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://midasinteractive.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6313,7 +6313,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q18001341", .name = "increpare games - increpare games",
     .name_ja = "increpare games - increpare games",
-    .category = "international", .portal = "https://www.increpare.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.increpare.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6332,7 +6332,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q18151782", .name = "Nightdive Studios - Nightdive Studios",
     .name_ja = "Nightdive Studios - Nightdive Studios",
-    .category = "international", .portal = "https://nightdivestudios.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://nightdivestudios.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6351,7 +6351,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1474023", .name = "Funatics Software - Funatics Software GmbH",
     .name_ja = "Funatics Software - Funatics Software GmbH",
-    .category = "international", .portal = "https://www.funatics.de/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.funatics.de/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6370,7 +6370,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1493042", .name = "Game Arts - 株式会社ゲームアーツ 公式サイト",
     .name_ja = "Game Arts - 株式会社ゲームアーツ 公式サイト",
-    .category = "international", .portal = "https://www.gamearts.co.jp/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.gamearts.co.jp/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6389,7 +6389,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q12062864", .name = "Creoteam - Creoteam",
     .name_ja = "Creoteam - Creoteam",
-    .category = "international", .portal = "https://creoteam.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://creoteam.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6408,7 +6408,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q26720075", .name = "Wube software - Factorio Blog",
     .name_ja = "Wube software - Factorio Blog",
-    .category = "international", .portal = "https://www.factorio.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.factorio.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6428,7 +6428,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q28222801", .name = "Survios - Survios",
     .name_ja = "Survios - Survios",
-    .category = "international", .portal = "https://survios.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://survios.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6447,7 +6447,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q28222801_2", .name = "Survios - Comments on: Home",
     .name_ja = "Survios - Comments on: Home",
-    .category = "international", .portal = "https://survios.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://survios.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6466,7 +6466,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q60161310", .name = "Undertow Games - Undertow Games",
     .name_ja = "Undertow Games - Undertow Games",
-    .category = "international", .portal = "https://undertowgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://undertowgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6485,7 +6485,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q60616868", .name = "The Family Collective - the Family",
     .name_ja = "The Family Collective - the Family",
-    .category = "international", .portal = "https://thefamily.tv/",
+    .category = "international", .collector = "igo_other", .portal = "https://thefamily.tv/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6504,7 +6504,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q60629919", .name = "Kasedo Games - Facelift",
     .name_ja = "Kasedo Games - Facelift",
-    .category = "international", .portal = "https://www.kasedogames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.kasedogames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6523,7 +6523,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q60634040", .name = "The Hidden Levels - The Hidden Levels",
     .name_ja = "The Hidden Levels - The Hidden Levels",
-    .category = "international", .portal = "http://thehiddenlevels.com/",
+    .category = "international", .collector = "igo_other", .portal = "http://thehiddenlevels.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6542,7 +6542,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q48967969", .name = "AtariAge - AtariAge - Have you played Atari today?",
     .name_ja = "AtariAge - AtariAge - Have you played Atari today?",
-    .category = "international", .portal = "https://www.atariage.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.atariage.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6561,7 +6561,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q52021004", .name = "Ysbryd Games - ysbryd games",
     .name_ja = "Ysbryd Games - ysbryd games",
-    .category = "international", .portal = "https://www.ysbryd.net/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.ysbryd.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6580,7 +6580,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q52021004_2", .name = "Ysbryd Games - Comments on: Frontpage",
     .name_ja = "Ysbryd Games - Comments on: Frontpage",
-    .category = "international", .portal = "https://www.ysbryd.net/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.ysbryd.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6599,7 +6599,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q52152915", .name = "Amused Sloth - Amused Sloth",
     .name_ja = "Amused Sloth - Amused Sloth",
-    .category = "international", .portal = "https://www.amusedsloth.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.amusedsloth.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6618,7 +6618,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q52153177", .name = "Osgoode Media - Osgoode Media",
     .name_ja = "Osgoode Media - Osgoode Media",
-    .category = "international", .portal = "https://osgoodemedia.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://osgoodemedia.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6637,7 +6637,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q52164641", .name = "HexWar Games - HexWar",
     .name_ja = "HexWar Games - HexWar",
-    .category = "international", .portal = "https://pme.hexwar.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://pme.hexwar.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6657,7 +6657,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q52730802", .name = "Imperium42 Game Studio - Senior Backend Engineer   Imperium42 "
       "Studios",
     .name_ja = "Imperium42 Game Studio - Senior Backend Engineer   Imperium42 Studios",
-    .category = "international", .portal = "https://imperium42.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://imperium42.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6676,7 +6676,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q54121489", .name = "Chubby Pixel - Chubby Pixel",
     .name_ja = "Chubby Pixel - Chubby Pixel",
-    .category = "international", .portal = "https://chubbypixel.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://chubbypixel.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6695,7 +6695,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q54121489_2", .name = "Chubby Pixel - Chubby Pixel",
     .name_ja = "Chubby Pixel - Chubby Pixel",
-    .category = "international", .portal = "https://chubbypixel.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://chubbypixel.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6714,7 +6714,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2549114", .name = "CI Games S.A. - CI Games",
     .name_ja = "CI Games S.A. - CI Games",
-    .category = "international", .portal = "https://cigames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://cigames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6733,7 +6733,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2602093", .name = "Sumo Digital - Sumo Digital",
     .name_ja = "Sumo Digital - Sumo Digital",
-    .category = "international", .portal = "https://www.sumo-digital.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.sumo-digital.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6752,7 +6752,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2617855", .name = "Arc System Works - ARC SYSTEM WORKS OFFICIAL WEB SITE",
     .name_ja = "Arc System Works - ARC SYSTEM WORKS OFFICIAL WEB SITE",
-    .category = "international", .portal = "https://www.arcsystemworks.jp/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.arcsystemworks.jp/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6771,7 +6771,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2617855_2", .name = "Arc System Works - Arc System Works",
     .name_ja = "Arc System Works - Arc System Works",
-    .category = "international", .portal = "https://www.arcsystemworks.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.arcsystemworks.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6790,7 +6790,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q30595072", .name = "M2H - M2H · Writing",
     .name_ja = "M2H - M2H · Writing",
-    .category = "international", .portal = "https://www.m2h.nl/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.m2h.nl/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6809,7 +6809,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q30644872", .name = "Raw Fury - Raw Fury",
     .name_ja = "Raw Fury - Raw Fury",
-    .category = "international", .portal = "https://rawfury.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://rawfury.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6828,7 +6828,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1692707", .name = "Eidos Interactive - SQUARE ENIX Official - News",
     .name_ja = "Eidos Interactive - SQUARE ENIX Official - News",
-    .category = "international", .portal = "https://square-enix-games.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://square-enix-games.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6847,7 +6847,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q63430387", .name = "CuiCui Studios - Cuicui Studios",
     .name_ja = "CuiCui Studios - Cuicui Studios",
-    .category = "international", .portal = "https://www.cuicuistudios.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.cuicuistudios.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6866,7 +6866,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q64014139", .name = "Pathea Games - Pathea",
     .name_ja = "Pathea Games - Pathea",
-    .category = "international", .portal = "https://pathea.net/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://pathea.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6885,7 +6885,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q7050580", .name = "Nordcurrent - Nordcurrent",
     .name_ja = "Nordcurrent - Nordcurrent",
-    .category = "international", .portal = "https://nordcurrent.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://nordcurrent.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6904,7 +6904,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q7131061", .name = "Panic - Panic Blog",
     .name_ja = "Panic - Panic Blog",
-    .category = "international", .portal = "http://www.panic.com/",
+    .category = "international", .collector = "igo_associations", .portal = "http://www.panic.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6923,7 +6923,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q629821", .name = "Obsidian Entertainment - Obsidian",
     .name_ja = "Obsidian Entertainment - Obsidian",
-    .category = "international", .portal = "https://www.obsidian.net/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.obsidian.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6942,7 +6942,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q655493", .name = "Petroglyph Games - Petroglyph",
     .name_ja = "Petroglyph Games - Petroglyph",
-    .category = "international", .portal = "https://petroglyphgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://petroglyphgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6961,7 +6961,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q54303510", .name = "Vision Games - Vision Games Publishing",
     .name_ja = "Vision Games - Vision Games Publishing",
-    .category = "international", .portal = "http://visiongamespublishing.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "http://visiongamespublishing.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6980,7 +6980,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q54309902", .name = "Tapps Games - TappsGames",
     .name_ja = "Tapps Games - TappsGames",
-    .category = "international", .portal = "https://tappsgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://tappsgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -6999,7 +6999,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q54897956", .name = "White Giant RPG Studios - White Giant RPG Studios",
     .name_ja = "White Giant RPG Studios - White Giant RPG Studios",
-    .category = "international", .portal = "https://whitegiantrpg.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://whitegiantrpg.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7018,7 +7018,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q55091126", .name = "LavaMind - LavaMind",
     .name_ja = "LavaMind - LavaMind",
-    .category = "international", .portal = "https://www.lavamind.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.lavamind.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7037,7 +7037,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q7577242", .name = "Spil Games - azerion",
     .name_ja = "Spil Games - azerion",
-    .category = "international", .portal = "https://www.azerion.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.azerion.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7056,7 +7056,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q7643396", .name = "Supergiant Games - Supergiant Games Blog",
     .name_ja = "Supergiant Games - Supergiant Games Blog",
-    .category = "international", .portal = "https://www.supergiantgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.supergiantgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7075,7 +7075,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q7864546", .name = "UFO Interactive Games - ufointeractive",
     .name_ja = "UFO Interactive Games - ufointeractive",
-    .category = "international", .portal = "https://www.ufointeractivegames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.ufointeractivegames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7094,7 +7094,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q7959294", .name = "Wadjet Eye Games - Wadjet Eye Games",
     .name_ja = "Wadjet Eye Games - Wadjet Eye Games",
-    .category = "international", .portal = "https://wadjeteyegames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://wadjeteyegames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7113,7 +7113,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q10341236", .name = "Orange Pixel - Orangepixel",
     .name_ja = "Orange Pixel - Orangepixel",
-    .category = "international", .portal = "https://orangepixel.net/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://orangepixel.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7132,7 +7132,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q10852200", .name = "propeller - propeller Official Website",
     .name_ja = "propeller - propeller Official Website",
-    .category = "international", .portal = "https://www.propeller-game.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.propeller-game.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7152,7 +7152,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q60993169", .name = "Game Cores - 机核",
     .name_ja = "Game Cores - 机核",
-    .category = "international", .portal = "https://www.gcores.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.gcores.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7171,7 +7171,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q62501511", .name = "Goblinz Studio - Goblinz Studio",
     .name_ja = "Goblinz Studio - Goblinz Studio",
-    .category = "international", .portal = "https://goblinzstudio.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://goblinzstudio.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7190,7 +7190,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q32900502", .name = "Wispfire - Wispfire",
     .name_ja = "Wispfire - Wispfire",
-    .category = "international", .portal = "https://wispfire.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://wispfire.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7209,7 +7209,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q33198526", .name = "IMGN.PRO - IMGN.PRO",
     .name_ja = "IMGN.PRO - IMGN.PRO",
-    .category = "international", .portal = "https://imgn.pro/",
+    .category = "international", .collector = "igo_other", .portal = "https://imgn.pro/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7228,7 +7228,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q33252900", .name = "Ludeon Studios - Ludeon Studios",
     .name_ja = "Ludeon Studios - Ludeon Studios",
-    .category = "international", .portal = "https://ludeon.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://ludeon.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7247,7 +7247,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q33252900_2", .name = "Ludeon Studios - Ludeon Studios",
     .name_ja = "Ludeon Studios - Ludeon Studios",
-    .category = "international", .portal = "https://ludeon.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://ludeon.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7266,7 +7266,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q33252900_3", .name = "Ludeon Studios - Ludeon Studios",
     .name_ja = "Ludeon Studios - Ludeon Studios",
-    .category = "international", .portal = "https://ludeon.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://ludeon.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7285,7 +7285,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q33465537", .name = "Young Horses - Young Horses Games",
     .name_ja = "Young Horses - Young Horses Games",
-    .category = "international", .portal = "https://younghorsesgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://younghorsesgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7304,7 +7304,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q58886464", .name = "Kodera Software - Koder makes Games",
     .name_ja = "Kodera Software - Koder makes Games",
-    .category = "international", .portal = "https://games.kodera.pl/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://games.kodera.pl/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7323,7 +7323,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q18358383", .name = "Sickhead Games - Game Porting Services   Sickhead Games",
     .name_ja = "Sickhead Games - Game Porting Services   Sickhead Games",
-    .category = "international", .portal = "https://www.sickhead.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.sickhead.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7342,7 +7342,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q18462390", .name = "Brasoft - legendarynames.com",
     .name_ja = "Brasoft - legendarynames.com",
-    .category = "international", .portal = "https://legendarynames.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://legendarynames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7361,7 +7361,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q15232085", .name = "Lexis Numérique - Lexis Numérique",
     .name_ja = "Lexis Numérique - Lexis Numérique",
-    .category = "international", .portal = "https://www.lexis-numerique.fr/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.lexis-numerique.fr/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7380,7 +7380,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q15905487", .name = "Firedog Studio - 火狗創意有限公司",
     .name_ja = "Firedog Studio - 火狗創意有限公司",
-    .category = "international", .portal = "https://www.firedogstudio.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.firedogstudio.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7399,7 +7399,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q47498862", .name = "Chorus Worldwide - Chorus Worldwide",
     .name_ja = "Chorus Worldwide - Chorus Worldwide",
-    .category = "international", .portal = "https://chorusworldwide.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://chorusworldwide.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7418,7 +7418,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q66796984", .name = "Dear Villagers - Dear Villagers",
     .name_ja = "Dear Villagers - Dear Villagers",
-    .category = "international", .portal = "https://dearvillagers.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://dearvillagers.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7437,7 +7437,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q67050943", .name = "AppSir - AppSir Games",
     .name_ja = "AppSir - AppSir Games",
-    .category = "international", .portal = "https://www.appsirgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.appsirgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7457,7 +7457,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q67050943_2", .name = "AppSir - AppSir Games",
     .name_ja = "AppSir - AppSir Games",
-    .category = "international", .portal = "https://www.appsirgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.appsirgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7476,7 +7476,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q68094551", .name = "Return To Adventure Mountain, LLC - Return To Adventure Mountain",
     .name_ja = "Return To Adventure Mountain, LLC - Return To Adventure Mountain",
-    .category = "international", .portal = "https://returntoadventuremountain.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://returntoadventuremountain.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7495,7 +7495,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q85671146", .name = "Magic Design Studios - magicdesignstudios",
     .name_ja = "Magic Design Studios - magicdesignstudios",
-    .category = "international", .portal = "https://www.magicdesignstudios.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.magicdesignstudios.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7514,7 +7514,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q98599250", .name = "Draw Distance - Drawdistance – Game Developer",
     .name_ja = "Draw Distance - Drawdistance – Game Developer",
-    .category = "international", .portal = "https://drawdistance.dev/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://drawdistance.dev/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7533,7 +7533,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q98882067", .name = "Team Reptile - Team Reptile",
     .name_ja = "Team Reptile - Team Reptile",
-    .category = "international", .portal = "https://team-reptile.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://team-reptile.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7552,7 +7552,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q2340010", .name = "Croteam - Croteam",
     .name_ja = "Croteam - Croteam",
-    .category = "international", .portal = "https://www.croteam.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.croteam.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7571,7 +7571,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q912702", .name = "Tactics - Tactics.ne.jp – オンラインカジノ",
     .name_ja = "Tactics - Tactics.ne.jp – オンラインカジノ",
-    .category = "international", .portal = "https://tactics.ne.jp/",
+    .category = "international", .collector = "igo_other", .portal = "https://tactics.ne.jp/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7590,7 +7590,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q918638", .name = "Funcom - Funcom",
     .name_ja = "Funcom - Funcom",
-    .category = "international", .portal = "https://www.funcom.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.funcom.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7609,7 +7609,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q11293405", .name = "Overdose - love-juice.jp",
     .name_ja = "Overdose - love-juice.jp",
-    .category = "international", .portal = "https://www.love-juice.jp/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.love-juice.jp/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7628,7 +7628,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4047302", .name = "PQube - PQube",
     .name_ja = "PQube - PQube",
-    .category = "international", .portal = "https://pqube.co.uk/",
+    .category = "international", .collector = "igo_other", .portal = "https://pqube.co.uk/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7647,7 +7647,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q94658505", .name = "3goo - 3GOO Japan",
     .name_ja = "3goo - 3GOO Japan",
-    .category = "international", .portal = "https://3goo.co.jp/",
+    .category = "international", .collector = "igo_other", .portal = "https://3goo.co.jp/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7666,7 +7666,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q96278593", .name = "Toge Productions - Toge Productions",
     .name_ja = "Toge Productions - Toge Productions",
-    .category = "international", .portal = "https://www.togeproductions.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.togeproductions.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7685,7 +7685,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q21405666", .name = "SkyBox Labs - SkyBox Labs",
     .name_ja = "SkyBox Labs - SkyBox Labs",
-    .category = "international", .portal = "https://skyboxlabs.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://skyboxlabs.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7704,7 +7704,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q22127855", .name = "Digital Cute - Digital Cute",
     .name_ja = "Digital Cute - Digital Cute",
-    .category = "international", .portal = "https://digitalcute.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://digitalcute.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7723,7 +7723,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q23795636", .name = "Northway Games - Northway Games",
     .name_ja = "Northway Games - Northway Games",
-    .category = "international", .portal = "https://northwaygames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://northwaygames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7742,7 +7742,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q24080184", .name = "Brace Yourself Games - Brace Yourself Games",
     .name_ja = "Brace Yourself Games - Brace Yourself Games",
-    .category = "international", .portal = "https://braceyourselfgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://braceyourselfgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7761,7 +7761,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q24256223", .name = "Transhuman Design - Transhuman Design",
     .name_ja = "Transhuman Design - Transhuman Design",
-    .category = "international", .portal = "https://thd.vg/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://thd.vg/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7780,7 +7780,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q24707091", .name = "Finji - Finji",
     .name_ja = "Finji - Finji",
-    .category = "international", .portal = "https://finji.co/",
+    .category = "international", .collector = "igo_other", .portal = "https://finji.co/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7799,7 +7799,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q104828536", .name = "Aldorlea Games - Aldorlea Games RSS Feed",
     .name_ja = "Aldorlea Games - Aldorlea Games RSS Feed",
-    .category = "international", .portal = "http://feeds.feedburner.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "http://feeds.feedburner.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7818,7 +7818,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q104830657", .name = "Glitch - GLITCH",
     .name_ja = "Glitch - GLITCH",
-    .category = "international", .portal = "https://heyglitch.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://heyglitch.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7837,7 +7837,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q105010204", .name = "Flamebait Games - Flamebait Games",
     .name_ja = "Flamebait Games - Flamebait Games",
-    .category = "international", .portal = "https://www.flamebaitgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.flamebaitgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7856,7 +7856,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q105324891", .name = "Graffiti Games - Graffiti Games",
     .name_ja = "Graffiti Games - Graffiti Games",
-    .category = "international", .portal = "https://www.graffitigames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.graffitigames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7875,7 +7875,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q55663530", .name = "Indie Glue - Indie Glue",
     .name_ja = "Indie Glue - Indie Glue",
-    .category = "international", .portal = "https://indieglue.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://indieglue.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7894,7 +7894,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q55839772", .name = "Necrosoft Games - Necrosoft Games",
     .name_ja = "Necrosoft Games - Necrosoft Games",
-    .category = "international", .portal = "https://necrosoftgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://necrosoftgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7913,7 +7913,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q55998360", .name = "Toshiba EMI Ltd. - SHOTO Creative Studio",
     .name_ja = "Toshiba EMI Ltd. - SHOTO Creative Studio",
-    .category = "international", .portal = "https://toshiba-emi.co.jp/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://toshiba-emi.co.jp/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7932,7 +7932,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q56151092", .name = "No More Robots - No More Robots",
     .name_ja = "No More Robots - No More Robots",
-    .category = "international", .portal = "https://nomorerobots.io/",
+    .category = "international", .collector = "igo_other", .portal = "https://nomorerobots.io/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7951,7 +7951,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q56545189", .name = "Oh, a Rock! Studios - Oh, a Rock! Studios",
     .name_ja = "Oh, a Rock! Studios - Oh, a Rock! Studios",
-    .category = "international", .portal = "https://oharock.wordpress.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://oharock.wordpress.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7970,7 +7970,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q56683352", .name = "Digerati - DIGERATI",
     .name_ja = "Digerati - DIGERATI",
-    .category = "international", .portal = "https://www.digerati.games/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.digerati.games/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -7989,7 +7989,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q56849899", .name = "Crystalline Green Ltd. - Crystalline Green",
     .name_ja = "Crystalline Green Ltd. - Crystalline Green",
-    .category = "international", .portal = "https://www.crystallinegreen.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.crystallinegreen.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8008,7 +8008,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4644252", .name = "8-4 - 8-4",
     .name_ja = "8-4 - 8-4",
-    .category = "international", .portal = "https://8-4.jp/",
+    .category = "international", .collector = "igo_other", .portal = "https://8-4.jp/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8027,7 +8027,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4904930", .name = "Big Ant Studios - Big Ant Studios",
     .name_ja = "Big Ant Studios - Big Ant Studios",
-    .category = "international", .portal = "https://bigant.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://bigant.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8047,7 +8047,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q118111635", .name = "Game Seer - Game funding and financing, we are gaming investors "
       "– Game Seer",
     .name_ja = "Game Seer - Game funding and financing, we are gaming investors – Game Seer",
-    .category = "international", .portal = "https://www.game-seer.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.game-seer.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8066,7 +8066,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q118370061", .name = "Firesquid - Firesquid",
     .name_ja = "Firesquid - Firesquid",
-    .category = "international", .portal = "https://firesquid.games/",
+    .category = "international", .collector = "igo_other", .portal = "https://firesquid.games/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8085,7 +8085,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q121268991", .name = "Shiravune - Shiravune",
     .name_ja = "Shiravune - Shiravune",
-    .category = "international", .portal = "https://shiravune.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://shiravune.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8104,7 +8104,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q122040867", .name = "Bitmap Soft - Bitmap Soft",
     .name_ja = "Bitmap Soft - Bitmap Soft",
-    .category = "international", .portal = "https://www.bitmapsoft.co.uk/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.bitmapsoft.co.uk/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8123,7 +8123,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q122040867_2", .name = "Bitmap Soft - Shop - Bitmap Soft",
     .name_ja = "Bitmap Soft - Shop - Bitmap Soft",
-    .category = "international", .portal = "https://www.bitmapsoft.co.uk/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.bitmapsoft.co.uk/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8142,7 +8142,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q986326", .name = "The Iconfactory - The Breakroom",
     .name_ja = "The Iconfactory - The Breakroom",
-    .category = "international", .portal = "https://blog.iconfactory.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://blog.iconfactory.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8161,7 +8161,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q109060082", .name = "Motorsport Games - Motorsport Games",
     .name_ja = "Motorsport Games - Motorsport Games",
-    .category = "international", .portal = "https://motorsportgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://motorsportgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8180,7 +8180,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q109081377", .name = "Hidden Trap - Hidden Trap",
     .name_ja = "Hidden Trap - Hidden Trap",
-    .category = "international", .portal = "https://hiddentrap.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://hiddentrap.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8199,7 +8199,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q109381699", .name = "RedDeerGames - Nintendo Switch, Xbox, Playstation",
     .name_ja = "RedDeerGames - Nintendo Switch, Xbox, Playstation",
-    .category = "international", .portal = "https://www.reddeergames.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.reddeergames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8218,7 +8218,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q109532700", .name = "PixelHeart - PixelHeart",
     .name_ja = "PixelHeart - PixelHeart",
-    .category = "international", .portal = "https://www.pixelheart.eu/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.pixelheart.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8237,7 +8237,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q109532985", .name = "No Gravity Games - No Gravity Games",
     .name_ja = "No Gravity Games - No Gravity Games",
-    .category = "international", .portal = "https://nogravitygames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://nogravitygames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8256,7 +8256,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q107492286", .name = "MSXdev - MSXdev Contest",
     .name_ja = "MSXdev - MSXdev Contest",
-    .category = "international", .portal = "https://www.msxdev.org/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.msxdev.org/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8275,7 +8275,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q107633566", .name = "Pixmain - Pixmain",
     .name_ja = "Pixmain - Pixmain",
-    .category = "international", .portal = "https://www.pixmain.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.pixmain.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8294,7 +8294,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q108099290", .name = "2tainment - 2tainment",
     .name_ja = "2tainment - 2tainment",
-    .category = "international", .portal = "https://www.2tainment.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.2tainment.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8313,7 +8313,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q108142468", .name = "Ultimate Games - ULTIMATE GAMES S.A.",
     .name_ja = "Ultimate Games - ULTIMATE GAMES S.A.",
-    .category = "international", .portal = "https://ultimate-games.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://ultimate-games.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8332,7 +8332,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q108169843", .name = "Falling Squirrel - Falling Squirrel Inc.",
     .name_ja = "Falling Squirrel - Falling Squirrel Inc.",
-    .category = "international", .portal = "https://www.fallingsquirrel.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.fallingsquirrel.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8351,7 +8351,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q108304729", .name = "Onion Games - Onion Games",
     .name_ja = "Onion Games - Onion Games",
-    .category = "international", .portal = "https://oniongames.jp/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://oniongames.jp/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8370,7 +8370,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q108304729_2", .name = "Onion Games - Onion Games",
     .name_ja = "Onion Games - Onion Games",
-    .category = "international", .portal = "https://oniongames.jp/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://oniongames.jp/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8389,7 +8389,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q108325233", .name = "Blayze Games - BlayzeGames",
     .name_ja = "Blayze Games - BlayzeGames",
-    .category = "international", .portal = "https://blayzegames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://blayzegames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8408,7 +8408,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q123916300", .name = "Shady Corner Games - Shady Corner Games",
     .name_ja = "Shady Corner Games - Shady Corner Games",
-    .category = "international", .portal = "https://shadycorner.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://shadycorner.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8427,7 +8427,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q123929950", .name = "Spiral Up Games - Spiral Up Games",
     .name_ja = "Spiral Up Games - Spiral Up Games",
-    .category = "international", .portal = "https://www.spiralupgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.spiralupgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8446,7 +8446,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q124153192", .name = "Shifty Eye Games - Shifty Eye Games",
     .name_ja = "Shifty Eye Games - Shifty Eye Games",
-    .category = "international", .portal = "https://shiftyeyegames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://shiftyeyegames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8465,7 +8465,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q125526068", .name = "funkitron - funkitron",
     .name_ja = "funkitron - funkitron",
-    .category = "international", .portal = "https://www.funkitron.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.funkitron.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8484,7 +8484,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q125660356", .name = "Symbolic Software - Symbolic Software",
     .name_ja = "Symbolic Software - Symbolic Software",
-    .category = "international", .portal = "https://symbolic.software/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://symbolic.software/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8503,7 +8503,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q125714477", .name = "Cyna Games - Kyodai Mahjongg",
     .name_ja = "Cyna Games - Kyodai Mahjongg",
-    .category = "international", .portal = "https://cynagames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://cynagames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8522,7 +8522,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q125769152", .name = "Visual Impact - Visual Impact",
     .name_ja = "Visual Impact - Visual Impact",
-    .category = "international", .portal = "https://viprod.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://viprod.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8541,7 +8541,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q109829037", .name = "Snow Cannon Games - Snow Cannon Games",
     .name_ja = "Snow Cannon Games - Snow Cannon Games",
-    .category = "international", .portal = "https://www.snowcannongames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.snowcannongames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8560,7 +8560,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q109928554", .name = "Gameplay First - Gameplay First",
     .name_ja = "Gameplay First - Gameplay First",
-    .category = "international", .portal = "https://www.gameplay1st.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.gameplay1st.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8579,7 +8579,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q109949399", .name = "Brave At Night - Brave At Night   Creators of Yes, Your Grace",
     .name_ja = "Brave At Night - Brave At Night   Creators of Yes, Your Grace",
-    .category = "international", .portal = "https://www.braveatnight.co.uk/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.braveatnight.co.uk/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8598,7 +8598,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q109996611", .name = "BUG-Studio - BUG-Studio",
     .name_ja = "BUG-Studio - BUG-Studio",
-    .category = "international", .portal = "https://bug-studio.net/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://bug-studio.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8617,7 +8617,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q110060955", .name = "Rogue Games - Rogue Games Inc",
     .name_ja = "Rogue Games - Rogue Games Inc",
-    .category = "international", .portal = "https://rogueco.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://rogueco.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8636,7 +8636,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q126952860", .name = "COSEN Co., Ltd. - COSEN",
     .name_ja = "COSEN Co., Ltd. - COSEN",
-    .category = "international", .portal = "https://cosen-net.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://cosen-net.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8655,7 +8655,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q129196160", .name = "Funbox Media - Funbox Media",
     .name_ja = "Funbox Media - Funbox Media",
-    .category = "international", .portal = "https://funboxmedia.co.uk/",
+    .category = "international", .collector = "igo_other", .portal = "https://funboxmedia.co.uk/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8674,7 +8674,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q129203351", .name = "NPC Studio - Fields of Mistria",
     .name_ja = "NPC Studio - Fields of Mistria",
-    .category = "international", .portal = "https://www.fieldsofmistria.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.fieldsofmistria.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8693,7 +8693,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q130453595", .name = "Reco Technology - Recotechnology",
     .name_ja = "Reco Technology - Recotechnology",
-    .category = "international", .portal = "https://recotech.es/",
+    .category = "international", .collector = "igo_other", .portal = "https://recotech.es/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8713,7 +8713,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q130453597", .name = "Winking Skywalker Entertainment - Winking Studios – Art "
       "Outsourcing 2D / 3D",
     .name_ja = "Winking Skywalker Entertainment - Winking Studios – Art Outsourcing 2D / 3D",
-    .category = "international", .portal = "https://www.winkingworks.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.winkingworks.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8732,7 +8732,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q131386431", .name = "Playground Productions - Playground Productions",
     .name_ja = "Playground Productions - Playground Productions",
-    .category = "international", .portal = "https://playground-productions.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://playground-productions.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8751,7 +8751,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1372258", .name = "Tokuma Shoten - 徳間書店｜お知らせRSS",
     .name_ja = "Tokuma Shoten - 徳間書店｜お知らせRSS",
-    .category = "international", .portal = "https://www.tokuma.jp/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.tokuma.jp/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8770,7 +8770,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1389810", .name = "Software 2000 - maja.cloud",
     .name_ja = "Software 2000 - maja.cloud",
-    .category = "international", .portal = "https://maja.cloud/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://maja.cloud/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8789,7 +8789,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q100371924", .name = "Coatsink - Coatsink®",
     .name_ja = "Coatsink - Coatsink®",
-    .category = "international", .portal = "https://coatsink.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://coatsink.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8808,7 +8808,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q101214003", .name = "Enhance - Enhance",
     .name_ja = "Enhance - Enhance",
-    .category = "international", .portal = "https://enhance-experience.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://enhance-experience.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8827,7 +8827,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q102424219", .name = "United Label - United Label",
     .name_ja = "United Label - United Label",
-    .category = "international", .portal = "https://unitedlabelgames.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://unitedlabelgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8846,7 +8846,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q137650268", .name = "ConcernedApe LLC -",
     .name_ja = "ConcernedApe LLC -",
-    .category = "international", .portal = "https://www.concernedape.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.concernedape.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8865,7 +8865,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q137823494", .name = "Nokta Games - Nokta Games",
     .name_ja = "Nokta Games - Nokta Games",
-    .category = "international", .portal = "https://supermarketsimulator.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://supermarketsimulator.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8884,7 +8884,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q138774078", .name = "Baltverge Games - Baltverge Games",
     .name_ja = "Baltverge Games - Baltverge Games",
-    .category = "international", .portal = "https://baltverge.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://baltverge.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8903,7 +8903,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q139379148", .name = "The Fun Pimps - The Fun Pimps",
     .name_ja = "The Fun Pimps - The Fun Pimps",
-    .category = "international", .portal = "https://thefunpimps.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://thefunpimps.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8922,7 +8922,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q139379443", .name = "RubberBandGames - RubberBandGames",
     .name_ja = "RubberBandGames - RubberBandGames",
-    .category = "international", .portal = "https://www.rubberbandgames.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.rubberbandgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8941,7 +8941,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1361716", .name = "D3 Publisher - 505 Go! Inc.",
     .name_ja = "D3 Publisher - 505 Go! Inc.",
-    .category = "international", .portal = "https://d3go.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://d3go.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8960,7 +8960,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q140696814", .name = "Skystone Games - (WIP - Ang) Dev",
     .name_ja = "Skystone Games - (WIP - Ang) Dev",
-    .category = "international", .portal = "https://www.skystone.games/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.skystone.games/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8979,7 +8979,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q141223163", .name = "Wristwork - Wristwork News",
     .name_ja = "Wristwork - Wristwork News",
-    .category = "international", .portal = "https://www.wristwork.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.wristwork.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -8998,7 +8998,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q112988000", .name = "Big Sugar Games - BIG SUGAR",
     .name_ja = "Big Sugar Games - BIG SUGAR",
-    .category = "international", .portal = "https://bigsugar.games/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://bigsugar.games/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9017,7 +9017,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q113285238", .name = "RunServer - RunServer games",
     .name_ja = "RunServer - RunServer games",
-    .category = "international", .portal = "https://runserver.net/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://runserver.net/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9036,7 +9036,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q113400696", .name = "Halycon Media - Halycon.de",
     .name_ja = "Halycon Media - Halycon.de",
-    .category = "international", .portal = "https://www.halycon.de/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.halycon.de/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9055,7 +9055,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q113672867", .name = "MD Games - MD Games",
     .name_ja = "MD Games - MD Games",
-    .category = "international", .portal = "https://mdgamespublishing.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://mdgamespublishing.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9074,7 +9074,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q114664931", .name = "Awfully Nice Studios - Awfully Nice Studios",
     .name_ja = "Awfully Nice Studios - Awfully Nice Studios",
-    .category = "international", .portal = "https://www.awfullynicestudios.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.awfullynicestudios.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9093,7 +9093,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q110637367", .name = "Leoful - Leoful",
     .name_ja = "Leoful - Leoful",
-    .category = "international", .portal = "https://leoful.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://leoful.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9112,7 +9112,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q110645087", .name = "2Awesome Studio - 2Awesome Studio",
     .name_ja = "2Awesome Studio - 2Awesome Studio",
-    .category = "international", .portal = "https://www.2awesomestudio.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.2awesomestudio.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9131,7 +9131,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q111342143", .name = "34BigThings - 34BigThings",
     .name_ja = "34BigThings - 34BigThings",
-    .category = "international", .portal = "https://34bigthings.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://34bigthings.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9150,7 +9150,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q3576010", .name = "Zoo Corporation - ZOO GAMES",
     .name_ja = "Zoo Corporation - ZOO GAMES",
-    .category = "international", .portal = "https://game.zoo.jp/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://game.zoo.jp/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9169,7 +9169,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q3579482", .name = "Editions Pix'n Love - Smart Bolg Title",
     .name_ja = "Editions Pix'n Love - Smart Bolg Title",
-    .category = "international", .portal = "http://www.editionspixnlove.com/",
+    .category = "international", .collector = "igo_other", .portal = "http://www.editionspixnlove.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9188,7 +9188,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q3777372", .name = "Giochi Preziosi - Giochi Preziosi",
     .name_ja = "Giochi Preziosi - Giochi Preziosi",
-    .category = "international", .portal = "https://giochipreziosi.it/",
+    .category = "international", .collector = "igo_other", .portal = "https://giochipreziosi.it/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9207,7 +9207,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q116166351", .name = "DreadXP - DreadXP",
     .name_ja = "DreadXP - DreadXP",
-    .category = "international", .portal = "https://dreadxp.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://dreadxp.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9226,7 +9226,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q116764888", .name = "ESDigital Games - ESDigital Games",
     .name_ja = "ESDigital Games - ESDigital Games",
-    .category = "international", .portal = "https://esdigital.games/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://esdigital.games/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9245,7 +9245,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q116766167", .name = "Wild River Games - Wild River Games",
     .name_ja = "Wild River Games - Wild River Games",
-    .category = "international", .portal = "https://wildriver.games/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://wildriver.games/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9264,7 +9264,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q116977097", .name = "Dream-Up - XTrem Racing – New Car",
     .name_ja = "Dream-Up - XTrem Racing – New Car",
-    .category = "international", .portal = "https://www.dream-up.eu/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.dream-up.eu/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9283,7 +9283,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q14428", .name = "Capcom - 株式会社カプコン｜更新情報",
     .name_ja = "Capcom - 株式会社カプコン｜更新情報",
-    .category = "international", .portal = "https://www.capcom.co.jp/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.capcom.co.jp/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9303,7 +9303,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q26188", .name = "Kalypso Media - Kalypso Media Group GmbH",
     .name_ja = "Kalypso Media - Kalypso Media Group GmbH",
-    .category = "international", .portal = "https://www.kalypsomedia.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.kalypsomedia.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9322,7 +9322,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q105641121", .name = "Boss Team Games - Boss Team Games",
     .name_ja = "Boss Team Games - Boss Team Games",
-    .category = "international", .portal = "https://bossteamgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://bossteamgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9341,7 +9341,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q106256666", .name = "R74n - R74n Newsletter",
     .name_ja = "R74n - R74n Newsletter",
-    .category = "international", .portal = "https://news.r74n.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://news.r74n.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9360,7 +9360,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q106438156", .name = "Amanotes - Amanotes Pte. Ltd,",
     .name_ja = "Amanotes - Amanotes Pte. Ltd,",
-    .category = "international", .portal = "https://www.amanotes.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.amanotes.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9379,7 +9379,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q106918849", .name = "Klabater - Klabater",
     .name_ja = "Klabater - Klabater",
-    .category = "international", .portal = "https://klabater.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://klabater.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9398,7 +9398,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q107185395", .name = "Super X Studios - Super X Studios",
     .name_ja = "Super X Studios - Super X Studios",
-    .category = "international", .portal = "https://www.superxstudios.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.superxstudios.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9417,7 +9417,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q107337014", .name = "Redhill Games - Redhill Games",
     .name_ja = "Redhill Games - Redhill Games",
-    .category = "international", .portal = "https://www.redhillgames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.redhillgames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9436,7 +9436,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q615181", .name = "Q615181 - SSG Main Site",
     .name_ja = "Q615181 - SSG Main Site",
-    .category = "international", .portal = "http://www.ssg.com.au/",
+    .category = "international", .collector = "igo_other", .portal = "http://www.ssg.com.au/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9456,7 +9456,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q1142226", .name = "Q1142226 - 日本ファルコム 公式サイト",
     .name_ja = "Q1142226 - 日本ファルコム 公式サイト",
-    .category = "international", .portal = "https://www.falcom.co.jp/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.falcom.co.jp/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9475,7 +9475,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q4037549", .name = "Q4037549 - Dotemu",
     .name_ja = "Q4037549 - Dotemu",
-    .category = "international", .portal = "https://www.dotemu.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.dotemu.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9494,7 +9494,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q5431587", .name = "Q5431587 - Hentai Manga, Doujin, and Games - FAKKU (RSS)",
     .name_ja = "Q5431587 - Hentai Manga, Doujin, and Games - FAKKU (RSS)",
-    .category = "international", .portal = "https://feeds.feedburner.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://feeds.feedburner.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9513,7 +9513,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q21189808", .name = "Q21189808 - tinyBuild",
     .name_ja = "Q21189808 - tinyBuild",
-    .category = "international", .portal = "https://www.tinybuild.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.tinybuild.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9532,7 +9532,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q26715541", .name = "Q26715541 - Dinosaur Polo Club",
     .name_ja = "Q26715541 - Dinosaur Polo Club",
-    .category = "international", .portal = "https://dinopoloclub.com/",
+    .category = "international", .collector = "igo_associations", .portal = "https://dinopoloclub.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9551,7 +9551,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q28405991", .name = "Q28405991 - Wales Interactive",
     .name_ja = "Q28405991 - Wales Interactive",
-    .category = "international", .portal = "https://www.walesinteractive.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.walesinteractive.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9570,7 +9570,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q59222994", .name = "Q59222994 - Plug In Digital",
     .name_ja = "Q59222994 - Plug In Digital",
-    .category = "international", .portal = "https://plugindigital.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://plugindigital.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9589,7 +9589,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q112998973", .name = "Q112998973 - Kagura Games",
     .name_ja = "Q112998973 - Kagura Games",
-    .category = "international", .portal = "https://www.kaguragames.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.kaguragames.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9608,7 +9608,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q112998973_2", .name = "Q112998973 - Kagura Games",
     .name_ja = "Q112998973 - Kagura Games",
-    .category = "international", .portal = "https://kaguragamesjp.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://kaguragamesjp.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9627,7 +9627,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q131546232", .name = "Q131546232 - Rablo Games – Official Website",
     .name_ja = "Q131546232 - Rablo Games – Official Website",
-    .category = "international", .portal = "https://rablo.games/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://rablo.games/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9646,7 +9646,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q133128146", .name = "Q133128146 - Reef Entertainment",
     .name_ja = "Q133128146 - Reef Entertainment",
-    .category = "international", .portal = "https://www.reef-entertainment.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://www.reef-entertainment.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9666,7 +9666,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q135687459", .name = "Q135687459 - 270sims – US Presidential Election and Historical "
       "Political Game Creator",
     .name_ja = "Q135687459 - 270sims – US Presidential Election and Historical Political Game Creator",
-    .category = "international", .portal = "https://270sims.com/",
+    .category = "commercial", .collector = "igo_companies_blogs", .portal = "https://270sims.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9685,7 +9685,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q136471257", .name = "Q136471257 - Moonlight Kids - Making The Wild at Heart",
     .name_ja = "Q136471257 - Moonlight Kids - Making The Wild at Heart",
-    .category = "international", .portal = "https://www.moonlightkids.co/",
+    .category = "international", .collector = "igo_other", .portal = "https://www.moonlightkids.co/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9704,7 +9704,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q139426939", .name = "Q139426939 - Neuroticfly",
     .name_ja = "Q139426939 - Neuroticfly",
-    .category = "international", .portal = "https://neuroticfly.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://neuroticfly.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9723,7 +9723,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q140954994", .name = "Q140954994 - Slug Disco",
     .name_ja = "Q140954994 - Slug Disco",
-    .category = "international", .portal = "https://slugdisco.com/",
+    .category = "international", .collector = "igo_other", .portal = "https://slugdisco.com/",
     .record_type = "organisation-notice",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9742,7 +9742,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q51856931", .name = "Paleozoic (think-tank, XX) - PALEOZOIC",
     .name_ja = "Paleozoic (think-tank, XX) - PALEOZOIC",
-    .category = "government", .portal = "https://paleozoicblog.tumblr.com/",
+    .category = "government", .collector = "igo_other", .portal = "https://paleozoicblog.tumblr.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9763,7 +9763,7 @@ static const hp_source HP3B48_IGO[] = {
       "(international-organization, XX) - The Society for the "
       "Preservation of Natural History Collections",
     .name_ja = "Society for the Preservation of Natural History Collections (international-organization, XX) - The Society for the Preservation of Natural History Collections",
-    .category = "government", .portal = "https://spnhc.org/",
+    .category = "government", .collector = "igo_associations", .portal = "https://spnhc.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9782,7 +9782,7 @@ static const hp_source HP3B48_IGO[] = {
 
   { .id = "JO48_IGO_Q107291476", .name = "Q107291476 (think-tank, XX) - PsychoFlux Ent.",
     .name_ja = "Q107291476 (think-tank, XX) - PsychoFlux Ent.",
-    .category = "government", .portal = "https://www.psychoflux.com/",
+    .category = "government", .collector = "igo_other", .portal = "https://www.psychoflux.com/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9802,7 +9802,7 @@ static const hp_source HP3B48_IGO[] = {
       "(international-organization, XX) - Côte d'Ivoire–Ghana Cocoa "
       "Initiative",
     .name_ja = "Côte d'Ivoire – Ghana Cocoa Initiative (international-organization, XX) - Côte d'Ivoire–Ghana Cocoa Initiative",
-    .category = "government", .portal = "https://www.cighci.org/",
+    .category = "government", .collector = "igo_associations", .portal = "https://www.cighci.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
@@ -9844,7 +9844,7 @@ static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q4806270", .name = "Asia Pacific Greens Federation (international-organization, XX) "
       "- Asia Pacific Greens Federation (APGF)",
     .name_ja = "Asia Pacific Greens Federation (international-organization, XX) - Asia Pacific Greens Federation (APGF)",
-    .category = "government", .portal = "https://asiapacificgreens.org/",
+    .category = "government", .collector = "igo_associations", .portal = "https://asiapacificgreens.org/",
     .record_type = "government-notice",
     .tags = "\"igo\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,

@@ -23,7 +23,7 @@
 
 static const hp_source HP3B58_ARCGIS2[] = {
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_1_0DE5C3", .name = "gisweb.miamidade.gov — Brownfield (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -45,7 +45,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_2_688A72", .name = "gisweb.miamidade.gov — Census Tract 2010 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -68,7 +68,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_3_8E9668", .name = "gisweb.miamidade.gov — Community Development Block Group (ArcGIS "
       "layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -91,7 +91,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_4_DB196C", .name = "gisweb.miamidade.gov — Community Development District (ArcGIS "
       "layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -114,7 +114,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_5_9C4497", .name = "gisweb.miamidade.gov — Community Redevelopment Area (ArcGIS "
       "layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -137,7 +137,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_6_F9E0B5", .name = "gisweb.miamidade.gov — County Commission District (ArcGIS layer "
       "6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -160,7 +160,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_7_9ACDF8", .name = "gisweb.miamidade.gov — Empowerment Zone / Targeted Urban Area "
       "(ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -183,7 +183,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_8_B73538", .name = "gisweb.miamidade.gov — Enterprise Zone (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -205,7 +205,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_9_C8B558", .name = "gisweb.miamidade.gov — Land Use (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -228,7 +228,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_10_CE79AF", .name = "gisweb.miamidade.gov — Neighborhood Revitalization Strategy Area "
       "(NRSA) (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -252,7 +252,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_11_B5661C", .name = "gisweb.miamidade.gov — Targeted Urban Area (TUA) (ArcGIS layer "
       "11)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -275,7 +275,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_12_64468B", .name = "gisweb.miamidade.gov — Target Urban Area Corridor (ArcGIS layer "
       "12)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -297,7 +297,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_13_D9F4D1", .name = "gisweb.miamidade.gov — Municipal Zoning (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -319,7 +319,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_14_FAE6C2", .name = "gisweb.miamidade.gov — Zoning (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -342,7 +342,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_15_70B59D", .name = "gisweb.miamidade.gov — Urban Development Boundary (ArcGIS layer "
       "15)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -365,7 +365,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_BIECSERVICE_MD_BIECSERVI_16_C96244", .name = "gisweb.miamidade.gov — MunicipalityCoastal_poly (ArcGIS layer "
       "16)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -387,7 +387,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_BUSMETRO_REALTIME_BUSREA_0_626FE2", .name = "gisweb.miamidade.gov — Bus (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -409,7 +409,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_BUSMETRO_REALTIME_BUSSTO_0_B9EF3C", .name = "gisweb.miamidade.gov — Bus Stop (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -432,7 +432,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_BUSMETRO_REALTIME_EASYCA_0_1A1908", .name = "gisweb.miamidade.gov — Easy Card Sales Outlets (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -455,7 +455,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_BUSMETRO_REALTIME_MOVERR_0_48453E", .name = "gisweb.miamidade.gov — Mover (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -478,7 +478,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_BUSMETRO_REALTIME_TRAINR_0_52E17C", .name = "gisweb.miamidade.gov — Train (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -501,7 +501,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_CEN_0_3547F3", .name = "gisweb.miamidade.gov — Tract10Pop (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -523,7 +523,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_CEN_1_8334C3", .name = "gisweb.miamidade.gov — BlockGroup10Pop (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -545,7 +545,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_CEN_2_AEB2FF", .name = "gisweb.miamidade.gov — Block10Pop (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -567,7 +567,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_CEN_3_DDE668", .name = "gisweb.miamidade.gov — DesignatedPlace10Pop (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -589,7 +589,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_COM_0_C6B199", .name = "gisweb.miamidade.gov — TurkeyPointArea (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -612,7 +612,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_COM_1_A222A9", .name = "gisweb.miamidade.gov — TurkeyPointSector (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -635,7 +635,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_COM_2_EF32B4", .name = "gisweb.miamidade.gov — TurkeyPointRadii (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -658,7 +658,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_COM_3_03944E", .name = "gisweb.miamidade.gov — CountyParkBoundary (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -681,7 +681,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_COM_4_5A5A8E", .name = "gisweb.miamidade.gov — CommissionDistrict (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -704,7 +704,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_COM_5_BE0828", .name = "gisweb.miamidade.gov — GarbagePickupRoute (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -727,7 +727,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_COM_7_F4F011", .name = "gisweb.miamidade.gov — HurricaneEvacZone (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -750,7 +750,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_EDU_0_1B493A", .name = "gisweb.miamidade.gov — BookMobile (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -773,7 +773,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_EDU_1_815E84", .name = "gisweb.miamidade.gov — Daycare (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_health_social", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -796,7 +796,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_EDU_2_00052B", .name = "gisweb.miamidade.gov — SchoolSite (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -819,7 +819,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_EDU_3_7CA467", .name = "gisweb.miamidade.gov — CharterSchool (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -842,7 +842,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_EDU_4_F57745", .name = "gisweb.miamidade.gov — College (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -865,7 +865,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_EDU_5_501CEE", .name = "gisweb.miamidade.gov — HeadStart (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -888,7 +888,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_EDU_6_922BC5", .name = "gisweb.miamidade.gov — Library (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -911,7 +911,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_EDU_7_D932FF", .name = "gisweb.miamidade.gov — MunicipalLibrary (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -934,7 +934,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_EDU_8_16A074", .name = "gisweb.miamidade.gov — PrivateSchool (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -958,7 +958,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_EDU_9_1EF935", .name = "gisweb.miamidade.gov — ElementaryAttendanceBoundary (ArcGIS "
       "layer 9)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -981,7 +981,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_EDU_10_278281", .name = "gisweb.miamidade.gov — HighAttendanceBoundary (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1005,7 +1005,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_EDU_11_06F9A2", .name = "gisweb.miamidade.gov — MiddleAttendanceBoundary (ArcGIS layer "
       "11)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1028,7 +1028,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_GAR_0_20970B", .name = "gisweb.miamidade.gov — DumpSite (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1051,7 +1051,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_GAR_1_170655", .name = "gisweb.miamidade.gov — GarbagePickupRoute (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1074,7 +1074,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_GAR_2_7ADF17", .name = "gisweb.miamidade.gov — RecyclingRoute (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1098,7 +1098,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_GOV_0_E2F4BD", .name = "gisweb.miamidade.gov — CommissionerDistrictOffice (ArcGIS layer "
       "0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1121,7 +1121,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_GOV_1_383E50", .name = "gisweb.miamidade.gov — GISSection (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1144,7 +1144,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_GOV_2_97977E", .name = "gisweb.miamidade.gov — CommunityCouncil (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1167,7 +1167,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_GOV_3_FA2F16", .name = "gisweb.miamidade.gov — CommissionDistrict (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1190,7 +1190,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_GOV_4_2D8CF3", .name = "gisweb.miamidade.gov — MunicipalityCoastal_poly (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1213,7 +1213,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_GOV_5_9CFEEE", .name = "gisweb.miamidade.gov — ZipCode (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1236,7 +1236,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_PAR_0_E2A3D1", .name = "gisweb.miamidade.gov — GeoAddress (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1258,7 +1258,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_PAR_1_8DB03F", .name = "gisweb.miamidade.gov — PAParcel (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1280,7 +1280,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_PUB_0_B48B7D", .name = "gisweb.miamidade.gov — MunicipalFireStation (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1303,7 +1303,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_PUB_1_121343", .name = "gisweb.miamidade.gov — MunicipalPoliceStation (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1326,7 +1326,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_PUB_2_8DBA4C", .name = "gisweb.miamidade.gov — FireStation (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1349,7 +1349,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_PUB_3_B9EB1C", .name = "gisweb.miamidade.gov — PoliceStation (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1372,7 +1372,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_PUB_4_B919BA", .name = "gisweb.miamidade.gov — PoliceGrid_poly (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1395,7 +1395,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_PUB_5_10D408", .name = "gisweb.miamidade.gov — PoliceAgency (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1418,7 +1418,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_REC_0_753899", .name = "gisweb.miamidade.gov — MunicipalPark (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1441,7 +1441,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_REC_1_22B1BD", .name = "gisweb.miamidade.gov — CountyOperatedPark (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1464,7 +1464,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_REC_2_9684B1", .name = "gisweb.miamidade.gov — CultureVenue (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1487,7 +1487,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_REC_3_205964", .name = "gisweb.miamidade.gov — BikeTrail (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1510,7 +1510,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_REC_4_85511B", .name = "gisweb.miamidade.gov — MDBroadbandProvider (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1534,7 +1534,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_TAX_0_C08036", .name = "gisweb.miamidade.gov — Community Development District (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1557,7 +1557,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_TAX_1_1165A4", .name = "gisweb.miamidade.gov — Multipurpose (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1580,7 +1580,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_TAX_2_361C73", .name = "gisweb.miamidade.gov — Security Guard (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1603,7 +1603,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_TAX_3_78F208", .name = "gisweb.miamidade.gov — Street Lighting (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1626,7 +1626,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_WAT_0_79C5AA", .name = "gisweb.miamidade.gov — SewerServiceArea (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1649,7 +1649,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_COMMUNITYSERVICES_MD_WAT_1_875D12", .name = "gisweb.miamidade.gov — WaterServiceArea (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1672,7 +1672,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_EAMS_EAMS_MAP_0_9CF697", .name = "gisweb.miamidade.gov — StormwaterPointsEAMS (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1694,7 +1694,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_EAMS_EAMS_MAP_1_07385E", .name = "gisweb.miamidade.gov — DTPWBridge (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1716,7 +1716,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_EAMS_EAMS_MAP_2_5661B9", .name = "gisweb.miamidade.gov — Sidewalk Inventory (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1738,7 +1738,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_EAMS_EAMS_MAP_3_B53009", .name = "gisweb.miamidade.gov — Guardrail Inventory (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1760,7 +1760,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_EAMS_EAMS_MAP_4_ED25CA", .name = "gisweb.miamidade.gov — WaterbodyEAMS (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1782,7 +1782,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_EAMS_EAMS_MAP_5_ADE072", .name = "gisweb.miamidade.gov — StormwaterLinesEAMS (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1804,7 +1804,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_EAMS_EAMS_MAP_6_A84D0B", .name = "gisweb.miamidade.gov — GeoPavement (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1827,7 +1827,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTEDITIN_1_128E9F", .name = "gisweb.miamidade.gov — Spatial Collection Polygons (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1850,7 +1850,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTEDITIN_2_E83D88", .name = "gisweb.miamidade.gov — Spatial Collection Polylines (ArcGIS "
       "layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1873,7 +1873,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTEDITIN_3_3DEABF", .name = "gisweb.miamidade.gov — Spatial Collection Points (ArcGIS layer "
       "3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1895,7 +1895,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTEDITIN_7_C28867", .name = "gisweb.miamidade.gov — History Points (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1918,7 +1918,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTEDITIN_1_E00B86", .name = "gisweb.miamidade.gov — Spatial Collection Polygons (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1941,7 +1941,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTEDITIN_2_845B50", .name = "gisweb.miamidade.gov — Spatial Collection Polylines (ArcGIS "
       "layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1964,7 +1964,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTEDITIN_3_4BC236", .name = "gisweb.miamidade.gov — Spatial Collection Points (ArcGIS layer "
       "3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1986,7 +1986,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTEDITIN_7_4FAA18", .name = "gisweb.miamidade.gov — History Points (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2008,7 +2008,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_1_B3291F", .name = "gisweb.miamidade.gov — Community Council (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2031,7 +2031,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_2_5B5C89", .name = "gisweb.miamidade.gov — Community Council Subareas (ArcGIS layer "
       "2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2053,7 +2053,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_3_28FD6F", .name = "gisweb.miamidade.gov — Township Range Sections (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2075,7 +2075,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_4_C02E04", .name = "gisweb.miamidade.gov — Miami-Dade Boundary (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2097,7 +2097,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_5_D8F5E1", .name = "gisweb.miamidade.gov — Commission Districts (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2120,7 +2120,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_6_0ED531", .name = "gisweb.miamidade.gov — Public Schools(DCPS) Board Districts "
       "(ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2142,7 +2142,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_7_898CD5", .name = "gisweb.miamidade.gov — Municipalities (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2164,7 +2164,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_8_1AC43E", .name = "gisweb.miamidade.gov — Shoreline (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2186,7 +2186,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_10_0A1477", .name = "gisweb.miamidade.gov — Property Boundaries (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2209,7 +2209,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_11_F4D4B7", .name = "gisweb.miamidade.gov — Condo & Property Addresses (ArcGIS layer "
       "11)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2231,7 +2231,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_12_8DA77A", .name = "gisweb.miamidade.gov — PA Property Records (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2253,7 +2253,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_13_D64937", .name = "gisweb.miamidade.gov — Subdivisions (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2275,7 +2275,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_14_3C6755", .name = "gisweb.miamidade.gov — Lot (poly) (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2297,7 +2297,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_15_B7119D", .name = "gisweb.miamidade.gov — Tentative Plats (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2319,7 +2319,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_16_E6E971", .name = "gisweb.miamidade.gov — Waiver Plats (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2341,7 +2341,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_17_3A3A5C", .name = "gisweb.miamidade.gov — Waiver Lots (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2363,7 +2363,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_21_6DC10C", .name = "gisweb.miamidade.gov — Urban Center Density (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2386,7 +2386,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_22_459E0F", .name = "gisweb.miamidade.gov — Urban Center Building Height (ArcGIS "
       "layer 22)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2409,7 +2409,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_23_41B3E9", .name = "gisweb.miamidade.gov — Urban Center Sub-District (ArcGIS layer "
       "23)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2431,7 +2431,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_24_E32590", .name = "gisweb.miamidade.gov — Urban Center Land Use (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2453,7 +2453,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_25_7C58AE", .name = "gisweb.miamidade.gov — Urban Center Open Space (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2476,7 +2476,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_26_4DCB02", .name = "gisweb.miamidade.gov — Urban Center Downtown Kendall Street Type "
       "(ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2500,7 +2500,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_27_751D16", .name = "gisweb.miamidade.gov — Urban Center Open Space Area (ArcGIS "
       "layer 27)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2523,7 +2523,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_28_77975C", .name = "gisweb.miamidade.gov — 2020 Urban Development Boundary (ArcGIS "
       "layer 28)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2546,7 +2546,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_29_BD43F0", .name = "gisweb.miamidade.gov — Rock Mining Overlay Zoning Area (ArcGIS "
       "layer 29)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2568,7 +2568,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_30_3CC31F", .name = "gisweb.miamidade.gov — Management Areas (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2590,7 +2590,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_31_375477", .name = "gisweb.miamidade.gov — Urban Infill Area (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2612,7 +2612,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_33_357211", .name = "gisweb.miamidade.gov — Subject Properties (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2634,7 +2634,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_34_3C181F", .name = "gisweb.miamidade.gov — Subject Property Buffer (ArcGIS layer 34)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2657,7 +2657,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_35_51E4AE", .name = "gisweb.miamidade.gov — Subject Property Contiguous (ArcGIS layer "
       "35)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2679,7 +2679,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_37_42CF76", .name = "gisweb.miamidade.gov — Outer Safety Zone - OSZ (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2702,7 +2702,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_38_AF16CB", .name = "gisweb.miamidade.gov — Runway Protection Zone - RPZ (ArcGIS "
       "layer 38)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2725,7 +2725,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENERGOV_MD_LANDMGTVIEWER_39_FA0900", .name = "gisweb.miamidade.gov — Critical Approach Zone - CAZ (ArcGIS "
       "layer 39)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2748,7 +2748,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_AVIATI_0_1B5DF6", .name = "gisweb.miamidade.gov — Runway Protection Zone (RPZ) (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2771,7 +2771,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_AVIATI_1_0E883E", .name = "gisweb.miamidade.gov — Runway Outlines (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2794,7 +2794,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_AVIATI_2_FA8E2A", .name = "gisweb.miamidade.gov — Property Line (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2817,7 +2817,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_AVIATI_3_B7E98F", .name = "gisweb.miamidade.gov — 65 Decibel Noise (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2840,7 +2840,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_AVIATI_4_AF80F4", .name = "gisweb.miamidade.gov — 75 Decibel Noise (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2863,7 +2863,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_AVIATI_5_D4BBC9", .name = "gisweb.miamidade.gov — Airspace Review Area (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2886,7 +2886,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_AVIATI_6_E0CFDD", .name = "gisweb.miamidade.gov — Outer Safety Zone (OSZ) (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2910,7 +2910,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_AVIATI_7_C35FAE", .name = "gisweb.miamidade.gov — Critical Approach Zone (CAZ) (ArcGIS "
       "layer 7)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2934,7 +2934,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_CDMP_0_98B78D", .name = "gisweb.miamidade.gov — Planned and Adopted CDMP Urban Centers "
       "(ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2957,7 +2957,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_CDMP_1_647D6D", .name = "gisweb.miamidade.gov — Urban Expansion Area (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2979,7 +2979,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_CDMP_2_072D19", .name = "gisweb.miamidade.gov — SMART Plan Corridors (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3001,7 +3001,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_CDMP_3_274398", .name = "gisweb.miamidade.gov — Minor Statistical Area (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3024,7 +3024,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_CDMP_4_26D511", .name = "gisweb.miamidade.gov — CDMP SMART Plan Corridor Buffer Areas "
       "(ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3048,7 +3048,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_CDMP_5_31F8FC", .name = "gisweb.miamidade.gov — Comprehensive Development Master Plan "
       "(CDMP) History (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3071,7 +3071,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_CDMP_6_BE4697", .name = "gisweb.miamidade.gov — CDMP Subject Properties (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3094,7 +3094,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_CDMP_7_261D41", .name = "gisweb.miamidade.gov — Comprehensive Development Master Plan "
       "(CDMP) (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3118,7 +3118,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_CDMP_8_D1A5E9", .name = "gisweb.miamidade.gov — 2030 Urban Development Boundary (ArcGIS "
       "layer 8)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3140,7 +3140,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_COMMIS_0_802BC7", .name = "gisweb.miamidade.gov — CommissionDistrict (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3163,7 +3163,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_GROUPH_0_3B04EE", .name = "gisweb.miamidade.gov — Licensed Properties (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3185,7 +3185,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_LANDUS_0_FFC192", .name = "gisweb.miamidade.gov — Existing Land Use (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3207,7 +3207,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_MDCURB_0_AC7E2A", .name = "gisweb.miamidade.gov — Urban Centers (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3231,7 +3231,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_MDCURB_1_F9FF84", .name = "gisweb.miamidade.gov — Downtown Kendall Urban Center Street Type "
       "(ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3255,7 +3255,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_MDCURB_2_25003C", .name = "gisweb.miamidade.gov — Urban Center Open Space Anchor Points "
       "(ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3279,7 +3279,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_MDCURB_3_7D7312", .name = "gisweb.miamidade.gov — Urban Center Open Space Area (ArcGIS "
       "layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3302,7 +3302,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_PLATTI_0_E305EC", .name = "gisweb.miamidade.gov — Final Platting (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3326,7 +3326,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_TRANSP_0_7D321C", .name = "gisweb.miamidade.gov — MDC Traffic Count Stations (ArcGIS layer "
       "0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3350,7 +3350,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_TRANSP_1_E0DC1F", .name = "gisweb.miamidade.gov — FDOT Traffic Count Stations (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3373,7 +3373,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_TRANSP_2_23C526", .name = "gisweb.miamidade.gov — Year 2000 TAZs (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3396,7 +3396,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_TRANSP_3_608F76", .name = "gisweb.miamidade.gov — Year 2010 TAZs (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3419,7 +3419,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_0_6EB478", .name = "gisweb.miamidade.gov — Zoning Hearing (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3442,7 +3442,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_1_A3F802", .name = "gisweb.miamidade.gov — Zoning Resolution (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3465,7 +3465,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_2_613C28", .name = "gisweb.miamidade.gov — Property (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3488,7 +3488,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_3_121895", .name = "gisweb.miamidade.gov — Parcel (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3511,7 +3511,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_4_EBD27F", .name = "gisweb.miamidade.gov — Township Range Sections (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3534,7 +3534,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_5_A9F5D1", .name = "gisweb.miamidade.gov — Commission Districts (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3557,7 +3557,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_6_1594CF", .name = "gisweb.miamidade.gov — Community Councils (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3580,7 +3580,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_7_736F3E", .name = "gisweb.miamidade.gov — Municipalities (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3603,7 +3603,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_8_8ACB1B", .name = "gisweb.miamidade.gov — Urban Centers (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3626,7 +3626,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_9_4B97CB", .name = "gisweb.miamidade.gov — Zoning Hearings (Sketch) (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3649,7 +3649,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_10_6E8004", .name = "gisweb.miamidade.gov — Licensed Properties (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3672,7 +3672,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_11_DBF794", .name = "gisweb.miamidade.gov — CDMP (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3695,7 +3695,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_12_B320B1", .name = "gisweb.miamidade.gov — Existing Land Use (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3719,7 +3719,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_1_E63930", .name = "gisweb.miamidade.gov — All Structures Including Condos (ArcGIS "
       "layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3742,7 +3742,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_2_7B3DD8", .name = "gisweb.miamidade.gov — Property Boundaries (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3765,7 +3765,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_3_44D6DA", .name = "gisweb.miamidade.gov — SUBD (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3788,7 +3788,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_4_9DEA8F", .name = "gisweb.miamidade.gov — GRID (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3811,7 +3811,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_5_0FF700", .name = "gisweb.miamidade.gov — Lot (poly) (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3834,7 +3834,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_6_68686A", .name = "gisweb.miamidade.gov — Lot (Lines) (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3857,7 +3857,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_8_F3B770", .name = "gisweb.miamidade.gov — Street Centerlines (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3880,7 +3880,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_10_9C1B55", .name = "gisweb.miamidade.gov — Township Range Sections (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3903,7 +3903,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_11_F71385", .name = "gisweb.miamidade.gov — Miami-Dade Boundary (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3926,7 +3926,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_12_6B29DF", .name = "gisweb.miamidade.gov — Commission Districts (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3949,7 +3949,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_14_220165", .name = "gisweb.miamidade.gov — Precincts (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3973,7 +3973,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_16_AD13F1", .name = "gisweb.miamidade.gov — Community Council Subareas (ArcGIS layer "
       "16)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3996,7 +3996,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_17_5F7151", .name = "gisweb.miamidade.gov — Community Councils (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4019,7 +4019,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_18_FC951D", .name = "gisweb.miamidade.gov — Municipalities (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4042,7 +4042,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_20_7F0365", .name = "gisweb.miamidade.gov — County Operated Park (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4065,7 +4065,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_21_E36482", .name = "gisweb.miamidade.gov — Municipal Park (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4088,7 +4088,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_23_346D13", .name = "gisweb.miamidade.gov — EnterpriseZone (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4111,7 +4111,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_25_861B60", .name = "gisweb.miamidade.gov — Block Group 2000 (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4134,7 +4134,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_26_E850B9", .name = "gisweb.miamidade.gov — Block 2000 (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4157,7 +4157,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_27_8BC40A", .name = "gisweb.miamidade.gov — Tract 2000 (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4180,7 +4180,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_29_11AE0C", .name = "gisweb.miamidade.gov — Block Group 2010 (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4203,7 +4203,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_30_18F1E6", .name = "gisweb.miamidade.gov — Block 2010 (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4226,7 +4226,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_31_4515B9", .name = "gisweb.miamidade.gov — Tract 2010 (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4249,7 +4249,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_33_93B2D8", .name = "gisweb.miamidade.gov — EEL Site (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4273,7 +4273,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_35_388D92", .name = "gisweb.miamidade.gov — Bird Road Design and Industrial Zoning "
       "District (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4297,7 +4297,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_36_097BA1", .name = "gisweb.miamidade.gov — Rock Mining Overlay Zoning Area (ArcGIS "
       "layer 36)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4320,7 +4320,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_37_D1FB13", .name = "gisweb.miamidade.gov — Shoreline Development (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4343,7 +4343,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_39_AD8DE3", .name = "gisweb.miamidade.gov — Historic Districts (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4366,7 +4366,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_0_2A498F", .name = "gisweb.miamidade.gov — Subject Properties (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4388,7 +4388,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_1_84556A", .name = "gisweb.miamidade.gov — Unincorporated Zoning (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4410,7 +4410,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_2_4AD952", .name = "gisweb.miamidade.gov — Municipal Zoning (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4432,7 +4432,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LANDMANAGEMENT_MD_ZONING_3_7B4186", .name = "gisweb.miamidade.gov — Rapid Transit Zones (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4454,7 +4454,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_1_C2D089", .name = "gisweb.miamidade.gov — MetroRailStation (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4476,7 +4476,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_2_37EB49", .name = "gisweb.miamidade.gov — MetroMoverStation (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4498,7 +4498,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_3_BF3921", .name = "gisweb.miamidade.gov — MetroMover (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4520,7 +4520,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_4_FD6B38", .name = "gisweb.miamidade.gov — TriRail (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4542,7 +4542,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_5_7FAABE", .name = "gisweb.miamidade.gov — MetroRail (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4564,7 +4564,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_7_6EC979", .name = "gisweb.miamidade.gov — LargeBuilding2D (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4586,7 +4586,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_8_9C5F03", .name = "gisweb.miamidade.gov — LargeBuilding2D (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4608,7 +4608,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_10_D34965", .name = "gisweb.miamidade.gov — Airport24000to0 (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4630,7 +4630,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_11_6B021B", .name = "gisweb.miamidade.gov — Airport96000to24001 (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4652,7 +4652,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_12_2A13BA", .name = "gisweb.miamidade.gov — Airport500000to96001 (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4674,7 +4674,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_13_989637", .name = "gisweb.miamidade.gov — CartoPorts (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4696,7 +4696,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_16_6299D0", .name = "gisweb.miamidade.gov — InterstateShield (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4718,7 +4718,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_17_428897", .name = "gisweb.miamidade.gov — USRoadShield (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4740,7 +4740,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_18_8ED86C", .name = "gisweb.miamidade.gov — StateRoadShield (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4762,7 +4762,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_20_9510DD", .name = "gisweb.miamidade.gov — Roads5999to0 (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4784,7 +4784,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_21_E355D8", .name = "gisweb.miamidade.gov — Roads23999to6000 (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4806,7 +4806,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_22_EC1B31", .name = "gisweb.miamidade.gov — Roads95999to24000 (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4828,7 +4828,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_23_785B34", .name = "gisweb.miamidade.gov — Roads500000to96000 (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4850,7 +4850,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_25_12EEC3", .name = "gisweb.miamidade.gov — StreetsLabel (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4872,7 +4872,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_26_09692F", .name = "gisweb.miamidade.gov — Streets5999to0 (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4894,7 +4894,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_27_6B1AE5", .name = "gisweb.miamidade.gov — Streets12000to6000 (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4916,7 +4916,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_28_DB420C", .name = "gisweb.miamidade.gov — Streets24000to12001 (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4938,7 +4938,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_29_B80CC4", .name = "gisweb.miamidade.gov — Municipality (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4960,7 +4960,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_31_49C30F", .name = "gisweb.miamidade.gov — Water500000to96001 (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4982,7 +4982,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_32_D5AA4E", .name = "gisweb.miamidade.gov — Water96000to48001 (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5004,7 +5004,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_33_E54EC7", .name = "gisweb.miamidade.gov — Water48000to0 (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5026,7 +5026,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_35_383EF5", .name = "gisweb.miamidade.gov — National (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5048,7 +5048,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_36_F9F828", .name = "gisweb.miamidade.gov — Municipal (ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5070,7 +5070,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_37_AF56DF", .name = "gisweb.miamidade.gov — County (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5092,7 +5092,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_38_98095C", .name = "gisweb.miamidade.gov — South Florida (ArcGIS layer 38)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5114,7 +5114,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_BASEMAP_39_626E1B", .name = "gisweb.miamidade.gov — Background (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5136,7 +5136,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_1_C71B8D", .name = "gisweb.miamidade.gov — MetroRailStation (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5159,7 +5159,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_2_16A650", .name = "gisweb.miamidade.gov — MetroMoverStation (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5182,7 +5182,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_3_17F7C9", .name = "gisweb.miamidade.gov — MetroMover (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5205,7 +5205,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_4_21976E", .name = "gisweb.miamidade.gov — TriRail (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5228,7 +5228,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_5_AC9571", .name = "gisweb.miamidade.gov — MetroRail (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5251,7 +5251,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_7_C8D0C4", .name = "gisweb.miamidade.gov — LargeBuilding2D (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5274,7 +5274,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_8_4C8EB9", .name = "gisweb.miamidade.gov — LargeBuilding2D (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5297,7 +5297,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_10_A0117D", .name = "gisweb.miamidade.gov — Airport24000to0 (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5320,7 +5320,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_11_E2BB24", .name = "gisweb.miamidade.gov — Airport96000to24001 (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5343,7 +5343,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_12_7A01A0", .name = "gisweb.miamidade.gov — Airport500000to96001 (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5366,7 +5366,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_13_1662C7", .name = "gisweb.miamidade.gov — CartoPorts (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5389,7 +5389,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_16_9EFAFE", .name = "gisweb.miamidade.gov — InterstateShield (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5412,7 +5412,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_17_6E81E7", .name = "gisweb.miamidade.gov — USRoadShield (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5435,7 +5435,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_18_5DDA02", .name = "gisweb.miamidade.gov — StateRoadShield (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5458,7 +5458,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_20_69DE18", .name = "gisweb.miamidade.gov — Roads5999to0 (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5481,7 +5481,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_21_2A7A0B", .name = "gisweb.miamidade.gov — Roads23999to6000 (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5504,7 +5504,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_22_0E7739", .name = "gisweb.miamidade.gov — Roads95999to24000 (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5527,7 +5527,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_23_ED7748", .name = "gisweb.miamidade.gov — Roads500000to96000 (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5550,7 +5550,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_25_0A019B", .name = "gisweb.miamidade.gov — StreetsLabel (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5573,7 +5573,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_26_F6380F", .name = "gisweb.miamidade.gov — Streets5999to0 (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5596,7 +5596,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_27_F4A916", .name = "gisweb.miamidade.gov — Streets12000to6000 (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5619,7 +5619,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_28_148291", .name = "gisweb.miamidade.gov — Streets24000to12001 (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5642,7 +5642,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_29_C59DC0", .name = "gisweb.miamidade.gov — Municipality (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5665,7 +5665,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_31_171447", .name = "gisweb.miamidade.gov — Water500000to96001 (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5688,7 +5688,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_32_CAE41D", .name = "gisweb.miamidade.gov — Water96000to48001 (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5711,7 +5711,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_33_026669", .name = "gisweb.miamidade.gov — Water48000to0 (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5734,7 +5734,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_35_5C5BB8", .name = "gisweb.miamidade.gov — National (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5757,7 +5757,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_36_C6E276", .name = "gisweb.miamidade.gov — Municipal (ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5780,7 +5780,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_37_777010", .name = "gisweb.miamidade.gov — County (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5803,7 +5803,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCBASEMAP_WEBM_39_605AD9", .name = "gisweb.miamidade.gov — Address (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5826,7 +5826,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_WEBM_1_469AD5", .name = "gisweb.miamidade.gov — SouthFlorida (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5849,7 +5849,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_WEBM_2_9FFC9D", .name = "gisweb.miamidade.gov — Ortho (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5872,7 +5872,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_WEBM_4_B979DD", .name = "gisweb.miamidade.gov — Boundary (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5895,7 +5895,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_WEBM_5_BCD387", .name = "gisweb.miamidade.gov — Footprint (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5918,7 +5918,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_1_684199", .name = "gisweb.miamidade.gov — MetroRailStation (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5940,7 +5940,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_2_A89412", .name = "gisweb.miamidade.gov — MetroMoverStation (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5962,7 +5962,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_3_9774AA", .name = "gisweb.miamidade.gov — Port (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5984,7 +5984,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_6_5A3351", .name = "gisweb.miamidade.gov — InterstateShield (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6006,7 +6006,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_7_FBC488", .name = "gisweb.miamidade.gov — USRoadShield (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6028,7 +6028,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_8_BAD9EE", .name = "gisweb.miamidade.gov — StateRoadShield (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6050,7 +6050,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_10_088E06", .name = "gisweb.miamidade.gov — Road5999to0 (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6072,7 +6072,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_11_5324ED", .name = "gisweb.miamidade.gov — Road23999to6000 (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6094,7 +6094,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_12_5B5E2C", .name = "gisweb.miamidade.gov — Road95999to24000 (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6116,7 +6116,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_13_B7D267", .name = "gisweb.miamidade.gov — Road500000to96000 (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6138,7 +6138,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_15_F89F0A", .name = "gisweb.miamidade.gov — StreetsLabel (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6160,7 +6160,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_16_2EF6E1", .name = "gisweb.miamidade.gov — Street5999to0 (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6182,7 +6182,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_17_9F7FFA", .name = "gisweb.miamidade.gov — Street12000to6000 (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6204,7 +6204,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_18_AFC8AE", .name = "gisweb.miamidade.gov — Street24000to12001 (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6226,7 +6226,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_19_024A69", .name = "gisweb.miamidade.gov — Municipality (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6248,7 +6248,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_21_FF47D4", .name = "gisweb.miamidade.gov — National (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6270,7 +6270,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_22_4EF7EC", .name = "gisweb.miamidade.gov — Municipal (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6292,7 +6292,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_23_DA337C", .name = "gisweb.miamidade.gov — County (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6314,7 +6314,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_24_7AF638", .name = "gisweb.miamidade.gov — SouthFlorida (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6336,7 +6336,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_25_89BCB3", .name = "gisweb.miamidade.gov — Ortho (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6358,7 +6358,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_27_07E492", .name = "gisweb.miamidade.gov — Boundary (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6380,7 +6380,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_MAPCACHE_MDCIMAGERY_28_76FBF7", .name = "gisweb.miamidade.gov — Footprint (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6403,7 +6403,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PW_PWHORIZONTAL_0_6087EF", .name = "gisweb.miamidade.gov — MDC.HorizontalControlPoint (ArcGIS layer "
       "0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6426,7 +6426,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PW_PWSTREETMAINT_0_EEE1F7", .name = "gisweb.miamidade.gov — County Maintained Streets (ArcGIS layer "
       "0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6448,7 +6448,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_PW_PWSTREETMAINT_1_A25895", .name = "gisweb.miamidade.gov — Municipalities (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6470,7 +6470,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PW_PWVERTICAL_0_F68670", .name = "gisweb.miamidade.gov — Vertical Control Point (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6492,7 +6492,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_RER_MD_EELVOLREGISTRATIO_0_8F0266", .name = "gisweb.miamidade.gov — V_COLLEGE (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6514,7 +6514,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_RER_MD_EELVOLREGISTRATIO_1_BFC079", .name = "gisweb.miamidade.gov — V_SCHOOLSITE (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6536,7 +6536,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_RER_MD_EELVOLREGISTRATIO_2_99E071", .name = "gisweb.miamidade.gov — V_PRIVATESCHOOL (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6558,7 +6558,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_RER_MD_EELVOLREGISTRATIO_3_7C66E7", .name = "gisweb.miamidade.gov — V_CHARTERSCHOOL (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6580,7 +6580,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_BEACHCORR_1_906945", .name = "gisweb.miamidade.gov — Beach Corridor (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6602,7 +6602,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_BEACHCORR_2_878D70", .name = "gisweb.miamidade.gov — Beach Corridor Land Use (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6624,7 +6624,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_BEACHCORR_3_8CAC12", .name = "gisweb.miamidade.gov — Beach Corridor Zoning (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6647,7 +6647,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_BEACHCORR_4_CE1E60", .name = "gisweb.miamidade.gov — Beach Corridor Vacant Land (ArcGIS layer "
       "4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6670,7 +6670,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_BEACHCORR_5_20F316", .name = "gisweb.miamidade.gov — Beach Corridor Half Mile Buffer (ArcGIS "
       "layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6693,7 +6693,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_BEACHCORR_6_CDEBF1", .name = "gisweb.miamidade.gov — Beach Corridor Major Approved Projects "
       "(ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6716,7 +6716,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_EASTWESTC_1_9A0132", .name = "gisweb.miamidade.gov — East-West Corridor (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6740,7 +6740,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_EASTWESTC_2_1078B3", .name = "gisweb.miamidade.gov — East-West Corridor Land Use (ArcGIS layer "
       "2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6764,7 +6764,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_EASTWESTC_3_E8BCA3", .name = "gisweb.miamidade.gov — East-West Corridor Zoning (ArcGIS layer "
       "3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6788,7 +6788,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_EASTWESTC_4_9BC731", .name = "gisweb.miamidade.gov — East-West Corridor Vacant Land (ArcGIS "
       "layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6812,7 +6812,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_EASTWESTC_5_EB5E9F", .name = "gisweb.miamidade.gov — East-West Corridor Half Mile Buffer "
       "(ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6836,7 +6836,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_EASTWESTC_6_7F5DF9", .name = "gisweb.miamidade.gov — East-West Corridor Major Approved "
       "Projects (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6859,7 +6859,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_KENDALLCO_1_E57105", .name = "gisweb.miamidade.gov — Kendall Corridor (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6883,7 +6883,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_KENDALLCO_2_8E1084", .name = "gisweb.miamidade.gov — Kendall Corridor Land Use (ArcGIS layer "
       "2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6906,7 +6906,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_KENDALLCO_3_376AFC", .name = "gisweb.miamidade.gov — Kendall Corridor Zoning (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6929,7 +6929,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_KENDALLCO_4_DEF5FB", .name = "gisweb.miamidade.gov — Kendall Vacant Land (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6953,7 +6953,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_KENDALLCO_5_BE4932", .name = "gisweb.miamidade.gov — Kendall Corridor Half Mile Buffer (ArcGIS "
       "layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6976,7 +6976,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_NORTHCORR_1_48C574", .name = "gisweb.miamidade.gov — North Corridor (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6998,7 +6998,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_NORTHCORR_2_43803E", .name = "gisweb.miamidade.gov — North Corridor Land Use (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7020,7 +7020,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_NORTHCORR_3_6B29FE", .name = "gisweb.miamidade.gov — North Corridor Zoning (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7043,7 +7043,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_NORTHCORR_4_1EF33C", .name = "gisweb.miamidade.gov — North Corridor Vacant Land (ArcGIS layer "
       "4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7066,7 +7066,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_NORTHCORR_5_28DD27", .name = "gisweb.miamidade.gov — North Corridor Half Mile Buffer (ArcGIS "
       "layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7089,7 +7089,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_NORTHCORR_6_C85670", .name = "gisweb.miamidade.gov — North Corridor Major Approved Projects "
       "(ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7112,7 +7112,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_NORTHEAST_1_DED48F", .name = "gisweb.miamidade.gov — Northeast Corridor (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7136,7 +7136,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_NORTHEAST_2_F0DB67", .name = "gisweb.miamidade.gov — Northeast Corridor Land Use (ArcGIS layer "
       "2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7160,7 +7160,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_NORTHEAST_3_F70A79", .name = "gisweb.miamidade.gov — Northeast Corridor Zoning (ArcGIS layer "
       "3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7184,7 +7184,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_NORTHEAST_4_4ED659", .name = "gisweb.miamidade.gov — Northeast Corridor Vacant Land (ArcGIS "
       "layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7208,7 +7208,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_NORTHEAST_5_C27121", .name = "gisweb.miamidade.gov — Northeast Corridor Half Mile Buffer "
       "(ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7232,7 +7232,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_NORTHEAST_6_89656B", .name = "gisweb.miamidade.gov — Northeast Corridor Major Approved "
       "Projects (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7255,7 +7255,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_SOUTHDADE_1_7B793D", .name = "gisweb.miamidade.gov — South-Dade Transitway (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7279,7 +7279,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_SOUTHDADE_2_FBD2B5", .name = "gisweb.miamidade.gov — South-Dade Transitway Land Use (ArcGIS "
       "layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7303,7 +7303,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_SOUTHDADE_3_1B10C7", .name = "gisweb.miamidade.gov — South-Dade Transitway Zoning (ArcGIS "
       "layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7327,7 +7327,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_SOUTHDADE_4_BBD53C", .name = "gisweb.miamidade.gov — South-Dade Transitway Vacant Land (ArcGIS "
       "layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7351,7 +7351,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SMARTCORRIDORS_SOUTHDADE_5_1F3E8D", .name = "gisweb.miamidade.gov — South-Dade Transitway Half Mile Buffer "
       "(ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7374,7 +7374,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_O_0_1AEE75", .name = "gisweb.miamidade.gov — MDC.GISSection (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7398,7 +7398,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_S_0_FFDFA1", .name = "gisweb.miamidade.gov — Miami-Dade County Spray Areas (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7421,7 +7421,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_S_0_06D1DB", .name = "gisweb.miamidade.gov — Storm Drains (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7444,7 +7444,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_S_1_490AF5", .name = "gisweb.miamidade.gov — Storm Drain Area 2018 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7467,7 +7467,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_S_2_B92F1D", .name = "gisweb.miamidade.gov — Storm Drain Area (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7490,7 +7490,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_S_3_16D20C", .name = "gisweb.miamidade.gov — Storm Drain Area 2017 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7513,7 +7513,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_S_4_C656B5", .name = "gisweb.miamidade.gov — Storm Drain Area 2019 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7536,7 +7536,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_S_0_10FB0A", .name = "gisweb.miamidade.gov — Storm Drains (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7559,7 +7559,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_S_1_7F9E16", .name = "gisweb.miamidade.gov — Storm Drain Area 2018 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7582,7 +7582,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_S_2_B1B934", .name = "gisweb.miamidade.gov — Storm Drain Area (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7605,7 +7605,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_S_3_099819", .name = "gisweb.miamidade.gov — Storm Drain Area 2017 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7628,7 +7628,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_S_4_13F45D", .name = "gisweb.miamidade.gov — Storm Drain Area 2019 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7651,7 +7651,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_S_5_E1F3BE", .name = "gisweb.miamidade.gov — Altosid 150 days (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7674,7 +7674,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITO_S_11_A1D6A4", .name = "gisweb.miamidade.gov — Fourstar 150 days (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7697,7 +7697,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_0_B1EA1A", .name = "gisweb.miamidade.gov — Bee Keepers (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7720,7 +7720,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_0_263F72", .name = "gisweb.miamidade.gov — County Event (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7743,7 +7743,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_1_8F746D", .name = "gisweb.miamidade.gov — MSQSchools (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7766,7 +7766,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_2_47E889", .name = "gisweb.miamidade.gov — Landmark (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7789,7 +7789,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_0_13761C", .name = "gisweb.miamidade.gov — OV Locations (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7812,7 +7812,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_2_E1AA8C", .name = "gisweb.miamidade.gov — OV UFL Buffer (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7835,7 +7835,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_0_E08C00", .name = "gisweb.miamidade.gov — OV Locations (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7858,7 +7858,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_2_8CDC6A", .name = "gisweb.miamidade.gov — OV UFL Buffer (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7881,7 +7881,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_0_72D92F", .name = "gisweb.miamidade.gov — MSQ 325 Residentials (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7904,7 +7904,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_1_14C6D5", .name = "gisweb.miamidade.gov — MSQ Storm Drains (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7927,7 +7927,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_0_008154", .name = "gisweb.miamidade.gov — MSQ 325 Residentials (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7950,7 +7950,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_1_4E6D67", .name = "gisweb.miamidade.gov — MSQ Storm Drains (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7974,7 +7974,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_0_C64C3C", .name = "gisweb.miamidade.gov — MSQ Service Request Assignments (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7998,7 +7998,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_1_6858B7", .name = "gisweb.miamidade.gov — MSQ Spray Notification List (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8022,7 +8022,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_2_7A09D1", .name = "gisweb.miamidade.gov — MSQ Service Request Completed (ArcGIS "
       "layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8046,7 +8046,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_3_D48C53", .name = "gisweb.miamidade.gov — MSQ Service Request Outstanding (ArcGIS "
       "layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8070,7 +8070,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_4_595E28", .name = "gisweb.miamidade.gov — MSQ Service Request 48 Outstanding "
       "(ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8094,7 +8094,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_5_C85931", .name = "gisweb.miamidade.gov — MSQ Service Request 5 Days Outstanding "
       "(ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8118,7 +8118,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_6_2A9F5C", .name = "gisweb.miamidade.gov — MSQ Service Request Assignments All "
       "(ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8142,7 +8142,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_0_0BAB55", .name = "gisweb.miamidade.gov — MSQ Service Request Assignments (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8166,7 +8166,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_1_B06949", .name = "gisweb.miamidade.gov — MSQ Spray Notification List (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8190,7 +8190,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_2_C9E668", .name = "gisweb.miamidade.gov — MSQ Service Request Completed (ArcGIS "
       "layer 2)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8214,7 +8214,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_3_5F8F55", .name = "gisweb.miamidade.gov — MSQ Service Request Outstanding (ArcGIS "
       "layer 3)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8238,7 +8238,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_4_4ED163", .name = "gisweb.miamidade.gov — MSQ Service Request 48 Outstanding "
       "(ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8262,7 +8262,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_5_229E27", .name = "gisweb.miamidade.gov — MSQ Service Request 5 Days Outstanding "
       "(ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8286,7 +8286,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOCO_6_178327", .name = "gisweb.miamidade.gov — MSQ Service Request Assignments All "
       "(ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8309,7 +8309,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOTR_0_4210E7", .name = "gisweb.miamidade.gov — Mosquito Trap (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8332,7 +8332,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_SOLIDWASTE_MD_MOSQUITOTR_0_AEFE99", .name = "gisweb.miamidade.gov — Mosquito Trap (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gisweb.miamidade.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gisweb.miamidade.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8355,7 +8355,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_DCA_UEZ_0_66842F", .name = "maps.nj.gov — UEZ_Statewide (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8377,7 +8377,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_0_B5DCE5", .name = "maps.nj.gov — Place Names (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8399,7 +8399,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_1_3AB0E6", .name = "maps.nj.gov — Known Contaminated Sites (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8421,7 +8421,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_2_D69FBC", .name = "maps.nj.gov — Legislative Districts (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8443,7 +8443,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_3_F35697", .name = "maps.nj.gov — Congressional Districts (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8465,7 +8465,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_4_7E7F9F", .name = "maps.nj.gov — Tran_road_centerline_NJ (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8487,7 +8487,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_5_B031C3", .name = "maps.nj.gov — Waterbody (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8509,7 +8509,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_6_D2FA92", .name = "maps.nj.gov — Streams (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8532,7 +8532,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_7_444B88", .name = "maps.nj.gov — Open Space Preserved Lands- Regional, Local, "
       "Non-profit (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8556,7 +8556,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_8_58CB71", .name = "maps.nj.gov — Open Space Preserved Lands- State, Federal "
       "(non-NPS) (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8578,7 +8578,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_9_F09D3A", .name = "maps.nj.gov — State Plan Centers (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8600,7 +8600,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_10_C2A0BA", .name = "maps.nj.gov — State Planning Areas (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8622,7 +8622,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_11_B19387", .name = "maps.nj.gov — Open Space Preserved Lands- NPS (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8644,7 +8644,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_12_67D433", .name = "maps.nj.gov — NJ Meadowlands (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8666,7 +8666,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_13_28404D", .name = "maps.nj.gov — Highlands Area (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8688,7 +8688,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_14_9B186F", .name = "maps.nj.gov — Pinelands Area (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8710,7 +8710,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_15_702B29", .name = "maps.nj.gov — Soils SSURGO (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8733,7 +8733,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_16_0E229E", .name = "maps.nj.gov — Deed Notice Extents for Known Contaminated Sites "
       "(ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8756,7 +8756,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_17_92272A", .name = "maps.nj.gov — Groundwater Contamination - Classification "
       "Exception Areas (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8780,7 +8780,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_18_355D60", .name = "maps.nj.gov — Groundwater Contamination - Currently Known Extent "
       "(ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8802,7 +8802,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_19_3DAEFF", .name = "maps.nj.gov — Land Use/Land Cover (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8824,7 +8824,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_20_C396D8", .name = "maps.nj.gov — Sub-Watersheds (HUC14) (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8846,7 +8846,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_21_A7AE60", .name = "maps.nj.gov — Watershed Management Area (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8868,7 +8868,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_LBAM_22_82776C", .name = "maps.nj.gov — Parcels (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8890,7 +8890,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_TAXLISTS_0_8735ED", .name = "maps.nj.gov — County (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8912,7 +8912,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_TAXLISTS_1_2B37AF", .name = "maps.nj.gov — Municipal (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8934,7 +8934,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_APPLICATIONS_NJ_TAXLISTS_2_B544EF", .name = "maps.nj.gov — Parcel_MOD4 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8956,7 +8956,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_BASEMAP_PARCELS_NJ_0_146008", .name = "maps.nj.gov — Parcels (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8978,7 +8978,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FRAMEWORK_CADASTRAL_0_F00895", .name = "maps.nj.gov — Parcels (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9000,7 +9000,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FRAMEWORK_CADASTRAL_2_57DFB0", .name = "maps.nj.gov — Tax Blocks (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9023,7 +9023,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_FRAMEWORK_CADASTRAL_1_5317A7", .name = "maps.nj.gov — State, Local, and Nonprofit Open Space (ArcGIS "
       "layer 1)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9045,7 +9045,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FRAMEWORK_GOVERNMENT_BOU_0_740EF1", .name = "maps.nj.gov — NJ State Boundary (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9067,7 +9067,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FRAMEWORK_GOVERNMENT_BOU_1_0EE897", .name = "maps.nj.gov — Counties (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9089,7 +9089,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FRAMEWORK_GOVERNMENT_BOU_2_16A6A9", .name = "maps.nj.gov — Municipalities (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9112,7 +9112,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_FRAMEWORK_GOVERNMENT_BOU_6_144D7A", .name = "maps.nj.gov — Highlands Preservation and Planning Areas (ArcGIS "
       "layer 6)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9134,7 +9134,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FRAMEWORK_GOVERNMENT_BOU_7_5DD511", .name = "maps.nj.gov — Meadowlands (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9156,7 +9156,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FRAMEWORK_GOVERNMENT_BOU_8_75DAB5", .name = "maps.nj.gov — Municipalities Clipped Coast (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9178,7 +9178,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FRAMEWORK_GOVERNMENT_BOU_10_E40570", .name = "maps.nj.gov — County Seats (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9200,7 +9200,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FRAMEWORK_TRANSPORTATION_14_C601C4", .name = "maps.nj.gov — Roads (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://maps.nj.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://maps.nj.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9222,7 +9222,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_ADDRESS_KINGCO_ADDRESSPO_0_79FB3F", .name = "gismaps.kingcounty.gov — Address points (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9245,7 +9245,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_ADDRESS_KINGCO_ADDRESSPO_1_DEE991", .name = "gismaps.kingcounty.gov — Address labels (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9268,7 +9268,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_ADMINISTRATION_KINGCO_AD_0_92C6EF", .name = "gismaps.kingcounty.gov — Zip Codes (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9292,7 +9292,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ADMINISTRATION_KINGCO_AD_1_55FC35", .name = "gismaps.kingcounty.gov — Cities and unincorporated areas labels "
       "(ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9316,7 +9316,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ADMINISTRATION_KINGCO_AD_2_2425C0", .name = "gismaps.kingcounty.gov — Cities and unincorporated areas (ArcGIS "
       "layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9339,7 +9339,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ADMINISTRATION_KINGCO_AD_3_BAA310", .name = "gismaps.kingcounty.gov — Tribal lands (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9362,7 +9362,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_BASEMAPS_KINGCO_AERIAL_2_0_4C015B", .name = "gismaps.kingcounty.gov — aerial_2023_boundary (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9384,7 +9384,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_1_488F1D", .name = "gismaps.kingcounty.gov — Percent Male (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9406,7 +9406,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_2_0AEC1A", .name = "gismaps.kingcounty.gov — Percent Female (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9429,7 +9429,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_3_5E94F8", .name = "gismaps.kingcounty.gov — Percent 17 years and under (ArcGIS "
       "layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9451,7 +9451,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_4_979B34", .name = "gismaps.kingcounty.gov — Percent 18 to 64 years (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9474,7 +9474,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_5_D89E63", .name = "gismaps.kingcounty.gov — Percent 65 years and over (ArcGIS layer "
       "5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9496,7 +9496,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_7_204AD1", .name = "gismaps.kingcounty.gov — Percent Foreign Born (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9519,7 +9519,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_9_3D9C01", .name = "gismaps.kingcounty.gov — Median Household Income (ArcGIS layer "
       "9)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9542,7 +9542,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_10_F83535", .name = "gismaps.kingcounty.gov — Percent below 200% of Federal Poverty "
       "Level (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9566,7 +9566,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_12_F9BAD9", .name = "gismaps.kingcounty.gov — Percent People of Color (ArcGIS layer "
       "12)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9588,7 +9588,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_13_DEA8FB", .name = "gismaps.kingcounty.gov — Percent White (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9611,7 +9611,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_14_50BEB0", .name = "gismaps.kingcounty.gov — Percent Black or African American "
       "(ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9633,7 +9633,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_15_098BF4", .name = "gismaps.kingcounty.gov — Percent Asian (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9656,7 +9656,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_16_F40CB8", .name = "gismaps.kingcounty.gov — Percent American Indian or Alaskan "
       "Native (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9680,7 +9680,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_17_0447F4", .name = "gismaps.kingcounty.gov — Percent Native Hawaiian or Pacific "
       "Islander (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9704,7 +9704,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_18_DEFFF3", .name = "gismaps.kingcounty.gov — Percent Two or more Races (ArcGIS layer "
       "18)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9727,7 +9727,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_19_A3EA97", .name = "gismaps.kingcounty.gov — Percent Hispanic or Latino (ArcGIS "
       "layer 19)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9749,7 +9749,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_21_C4EBDB", .name = "gismaps.kingcounty.gov — Percent speak Spanish (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9771,7 +9771,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_22_960D9C", .name = "gismaps.kingcounty.gov — Percent speak Russian (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9793,7 +9793,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_23_10B12B", .name = "gismaps.kingcounty.gov — Percent speak Chinese (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9815,7 +9815,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_24_559936", .name = "gismaps.kingcounty.gov — Percent speak Korean (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9838,7 +9838,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_25_F3E0AD", .name = "gismaps.kingcounty.gov — Percent speak Vietnamese (ArcGIS layer "
       "25)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9861,7 +9861,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_26_15D56E", .name = "gismaps.kingcounty.gov — Percent speak African Languages (ArcGIS "
       "layer 26)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9884,7 +9884,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_CENSUS_KINGCO_DEMOGRAPHI_27_600326", .name = "gismaps.kingcounty.gov — Percent speak English less than very "
       "well (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9908,7 +9908,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_DCHS_EARLYINTERVENTIONPR_0_5C557E", .name = "gismaps.kingcounty.gov — Early Intervention Provider Boundaries "
       "(ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9931,7 +9931,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_0_3A84B2", .name = "gismaps.kingcounty.gov — parcel_area (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9953,7 +9953,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_1_1D5AF7", .name = "gismaps.kingcounty.gov — parcel_address_area (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9975,7 +9975,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_2_F37707", .name = "gismaps.kingcounty.gov — CITY (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9997,7 +9997,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_3_CE7F4B", .name = "gismaps.kingcounty.gov — zipcode (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10019,7 +10019,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_4_563D3E", .name = "gismaps.kingcounty.gov — votdst (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10041,7 +10041,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_5_020EC2", .name = "gismaps.kingcounty.gov — prkdst (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10063,7 +10063,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_6_D913DB", .name = "gismaps.kingcounty.gov — hspdst (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10085,7 +10085,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_7_817712", .name = "gismaps.kingcounty.gov — libdst (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10107,7 +10107,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_8_CC233E", .name = "gismaps.kingcounty.gov — juddst (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10129,7 +10129,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_9_01A5FB", .name = "gismaps.kingcounty.gov — KCCDST (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10151,7 +10151,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_10_59C091", .name = "gismaps.kingcounty.gov — dirdst (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10173,7 +10173,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_11_CBDF7C", .name = "gismaps.kingcounty.gov — congdst (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10195,7 +10195,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_12_EFCE52", .name = "gismaps.kingcounty.gov — legdst (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10217,7 +10217,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_13_469041", .name = "gismaps.kingcounty.gov — swrdst (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10239,7 +10239,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_14_8430DD", .name = "gismaps.kingcounty.gov — schdst (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10261,7 +10261,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_15_206EF7", .name = "gismaps.kingcounty.gov — firdst (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10283,7 +10283,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_16_173E17", .name = "gismaps.kingcounty.gov — wsdst (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10305,7 +10305,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_17_26D825", .name = "gismaps.kingcounty.gov — wtrdst (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10327,7 +10327,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_18_033B18", .name = "gismaps.kingcounty.gov — WTR_SERV (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10349,7 +10349,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_19_2EB7CB", .name = "gismaps.kingcounty.gov — AGRPDDST (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10371,7 +10371,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_20_7BF86D", .name = "gismaps.kingcounty.gov — FORPDDST (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10393,7 +10393,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_21_5CEB16", .name = "gismaps.kingcounty.gov — TRIBAL_LANDS (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10415,7 +10415,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_22_0728F4", .name = "gismaps.kingcounty.gov — ZONING (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10437,7 +10437,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_23_260FD2", .name = "gismaps.kingcounty.gov — complu (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10459,7 +10459,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_24_B028BD", .name = "gismaps.kingcounty.gov — URBAN_GROWTH (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10481,7 +10481,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_25_EBD8A0", .name = "gismaps.kingcounty.gov — community_plan (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10503,7 +10503,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_26_E8A95B", .name = "gismaps.kingcounty.gov — development_condition (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10525,7 +10525,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_27_FCF954", .name = "gismaps.kingcounty.gov — krollidx (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10547,7 +10547,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_28_95ECFF", .name = "gismaps.kingcounty.gov — thom_bros (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10569,7 +10569,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_29_EA641D", .name = "gismaps.kingcounty.gov — travelshed (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10591,7 +10591,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_30_37B203", .name = "gismaps.kingcounty.gov — fldplain (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10613,7 +10613,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_31_C364BE", .name = "gismaps.kingcounty.gov — topo_basin (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10635,7 +10635,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_32_60F5F3", .name = "gismaps.kingcounty.gov — erode (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10657,7 +10657,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_33_58A784", .name = "gismaps.kingcounty.gov — seism (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10679,7 +10679,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_34_8EE480", .name = "gismaps.kingcounty.gov — coalmine (ArcGIS layer 34)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10701,7 +10701,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_35_2DDB31", .name = "gismaps.kingcounty.gov — CARA (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10723,7 +10723,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_36_B2905C", .name = "gismaps.kingcounty.gov — slide_sao (ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10745,7 +10745,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_37_A863E0", .name = "gismaps.kingcounty.gov — slide_hazard (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10767,7 +10767,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_38_3954D1", .name = "gismaps.kingcounty.gov — thom_bros_rc (ArcGIS layer 38)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10789,7 +10789,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_DISTRICTSREPOR_39_3C1213", .name = "gismaps.kingcounty.gov — SAO_WETLAND (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10811,7 +10811,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_0_0423E2", .name = "gismaps.kingcounty.gov — Voting precincts (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10835,7 +10835,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_1_4F35CF", .name = "gismaps.kingcounty.gov — King County Council districts (ArcGIS "
       "layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10859,7 +10859,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_2_CFF020", .name = "gismaps.kingcounty.gov — Congressional districts (ArcGIS layer "
       "2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10882,7 +10882,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_3_35BAD9", .name = "gismaps.kingcounty.gov — Legislative districts (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10906,7 +10906,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_4_D446BA", .name = "gismaps.kingcounty.gov — Seattle City Council districts (ArcGIS "
       "layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10930,7 +10930,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_5_0E8BEA", .name = "gismaps.kingcounty.gov — Seattle School Board director districts "
       "(ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10953,7 +10953,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_6_455F42", .name = "gismaps.kingcounty.gov — School districts (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10976,7 +10976,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_7_BAA4E1", .name = "gismaps.kingcounty.gov — Sewer districts (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10999,7 +10999,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_8_E40ACF", .name = "gismaps.kingcounty.gov — Water districts (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11023,7 +11023,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_9_922FF5", .name = "gismaps.kingcounty.gov — Water and sewer districts (ArcGIS layer "
       "9)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11047,7 +11047,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_10_E2F37C", .name = "gismaps.kingcounty.gov — Fire protection districts (ArcGIS layer "
       "10)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11070,7 +11070,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_11_5112D8", .name = "gismaps.kingcounty.gov — Hospital districts (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_health_social", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11094,7 +11094,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_12_3FE11B", .name = "gismaps.kingcounty.gov — King County District Court divisions "
       "(ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11118,7 +11118,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_13_4C4FF8", .name = "gismaps.kingcounty.gov — Rural library district (ArcGIS layer "
       "13)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11142,7 +11142,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_14_D0B633", .name = "gismaps.kingcounty.gov — Park and recreation districts (ArcGIS "
       "layer 14)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11166,7 +11166,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_DISTRICTS_KINGCO_ELECTOR_15_6E5768", .name = "gismaps.kingcounty.gov — Regional fire authorities (ArcGIS layer "
       "15)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11189,7 +11189,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DLS_DLSPERMITDISTRICTS_0_C15E09", .name = "gismaps.kingcounty.gov — parcel_address (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11211,7 +11211,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DLS_DLSPERMITDISTRICTS_1_DD4378", .name = "gismaps.kingcounty.gov — city (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11233,7 +11233,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DLS_DLSPERMITDISTRICTS_2_B46C0D", .name = "gismaps.kingcounty.gov — firdst (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11255,7 +11255,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DLS_DLSPERMITDISTRICTS_3_3D1C5C", .name = "gismaps.kingcounty.gov — wtrdst (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11277,7 +11277,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DLS_DLSPERMITDISTRICTS_4_BA2DC7", .name = "gismaps.kingcounty.gov — swrdst (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11299,7 +11299,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DLS_DLSPERMITDISTRICTS_5_C8F8D2", .name = "gismaps.kingcounty.gov — schdst (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11321,7 +11321,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DLS_DLSPERMITDISTRICTS_6_F1DF6F", .name = "gismaps.kingcounty.gov — wsdst (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11343,7 +11343,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DLS_DLSPERMITDISTRICTS_7_2E987E", .name = "gismaps.kingcounty.gov — development_condition (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11365,7 +11365,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DLS_DLSPERMITDISTRICTS_8_989A2E", .name = "gismaps.kingcounty.gov — zoning (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11387,7 +11387,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DLS_FRANCHISE_0_147F64", .name = "gismaps.kingcounty.gov — Franchise boundaries (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11410,7 +11410,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_DLS_FRANCHISE_1_53BF7A", .name = "gismaps.kingcounty.gov — No facility provided centerlines 2020 "
       "(ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11432,7 +11432,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_DLS_FRANCHISE_2_586352", .name = "gismaps.kingcounty.gov — Facilities in ROW 2020 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11454,7 +11454,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_DLS_FRANCHISE_3_5E226C", .name = "gismaps.kingcounty.gov — ROW segments 2020 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11476,7 +11476,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DLS_FRANCHISE_4_66D0F6", .name = "gismaps.kingcounty.gov — Valuation Parcels 2020 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11498,7 +11498,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DPH_PH_ESR_0_927AC8", .name = "gismaps.kingcounty.gov — Address points (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11520,7 +11520,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DPH_PH_ESR_2_34A099", .name = "gismaps.kingcounty.gov — Street (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11542,7 +11542,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_DPH_PH_ESR_1_5C3E1A", .name = "gismaps.kingcounty.gov — Parcels (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11565,7 +11565,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_DPH_PH_ESR_3_E20220", .name = "gismaps.kingcounty.gov — Cities and unincorporated areas (ArcGIS "
       "layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11587,7 +11587,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_1_86581F", .name = "gismaps.kingcounty.gov — Study Limits (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11610,7 +11610,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_2_2DA5E1", .name = "gismaps.kingcounty.gov — Historical Landslides (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11633,7 +11633,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_4_C5EDB3", .name = "gismaps.kingcounty.gov — Lowland fans (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11657,7 +11657,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_5_B285BB", .name = "gismaps.kingcounty.gov — Alpine fans less likely subject to "
       "debris flows (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11681,7 +11681,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_6_C1D511", .name = "gismaps.kingcounty.gov — Alpine fans more likely subject to "
       "debris flows (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11704,7 +11704,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_8_32DADE", .name = "gismaps.kingcounty.gov — Rock fall potential (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11727,7 +11727,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_9_924FE8", .name = "gismaps.kingcounty.gov — Rock avalanche deposit (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11751,7 +11751,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_11_8758F0", .name = "gismaps.kingcounty.gov — Watercourses (paths that water can "
       "travel downslope) (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11776,7 +11776,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_12_5D92D5", .name = "gismaps.kingcounty.gov — Toe of landslide along river (where "
       "bottom of slide is likely subject to erosion by a river) (ArcGIS "
       "layer 12)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11800,7 +11800,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_13_C454BD", .name = "gismaps.kingcounty.gov — Ponded water (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11824,7 +11824,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_14_C72F9E", .name = "gismaps.kingcounty.gov — Closed depressions (where water may "
       "pond) (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11848,7 +11848,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_15_C95778", .name = "gismaps.kingcounty.gov — Landslide outline (polygon contains all "
       "features of deep-seated landslide) (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11873,7 +11873,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_16_0D4AA5", .name = "gismaps.kingcounty.gov — Top of main landslide (cliff like "
       "slopes on top of a slide) (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11898,7 +11898,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_17_6788CC", .name = "gismaps.kingcounty.gov — Top of internal landslides (cliff like "
       "slopes on top of a smaller slide within a larger slide) (ArcGIS "
       "layer 17)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11923,7 +11923,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_18_56CFCB", .name = "gismaps.kingcounty.gov — Headscarp and flanks (cliff like slopes "
       "on top and side of a slide) (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11947,7 +11947,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_19_7F91D4", .name = "gismaps.kingcounty.gov — Landslide body (where debris from a "
       "slide has gone) (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11971,7 +11971,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_22_8A0E48", .name = "gismaps.kingcounty.gov — Potential landslide hazard areas (2016, "
       "see explanation--->) (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11995,7 +11995,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_23_E03998", .name = "gismaps.kingcounty.gov — Potential landslide hazard areas "
       "50-foot buffer (2016) (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12019,7 +12019,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_24_941942", .name = "gismaps.kingcounty.gov — Landslide hazards, incorporated KC "
       "(1990) (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12043,7 +12043,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_LANDS_25_3AC065", .name = "gismaps.kingcounty.gov — Potential steep slope hazard areas "
       "(2016, see explanation--->) (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12067,7 +12067,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_21_985DD9", .name = "gismaps.kingcounty.gov — Stream type (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12091,7 +12091,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_0_A459A4", .name = "gismaps.kingcounty.gov — Tributary basins (2005 CAO) (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12115,7 +12115,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_1_EDC3D9", .name = "gismaps.kingcounty.gov — Potential landslide hazard areas (2016) "
       "(ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12139,7 +12139,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_2_C39313", .name = "gismaps.kingcounty.gov — Potential landslide hazard areas "
       "50-foot buffer (2016) (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12163,7 +12163,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_3_BD9824", .name = "gismaps.kingcounty.gov — Landslide hazards, incorporated KC "
       "(1990) (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12187,7 +12187,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_4_CD0A70", .name = "gismaps.kingcounty.gov — Potential steep slope hazard areas "
       "(2016) (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12211,7 +12211,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_5_421F9C", .name = "gismaps.kingcounty.gov — Basin condition (2005 CAO) (ArcGIS "
       "layer 5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12235,7 +12235,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_6_3F262D", .name = "gismaps.kingcounty.gov — Shoreline condition (2005 CAO) (ArcGIS "
       "layer 6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12259,7 +12259,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_7_5AC5F1", .name = "gismaps.kingcounty.gov — Erosion hazard (1990 SAO) (ArcGIS layer "
       "7)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12283,7 +12283,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_8_BD42A7", .name = "gismaps.kingcounty.gov — Seismic hazard (1990 SAO) (ArcGIS layer "
       "8)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12307,7 +12307,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_9_98ECCA", .name = "gismaps.kingcounty.gov — Coal mine hazard (1990 SAO) (ArcGIS "
       "layer 9)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12330,7 +12330,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_10_0BCA29", .name = "gismaps.kingcounty.gov — Stream (1990 SAO) (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12354,7 +12354,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_22_170CE3", .name = "gismaps.kingcounty.gov — Wetlands (National Wetland Inventory "
       "2024) (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12377,7 +12377,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_11_51F8C6", .name = "gismaps.kingcounty.gov — Wetland (1990 SAO) (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12401,7 +12401,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_12_EF667C", .name = "gismaps.kingcounty.gov — Sensitive area notice on title (ArcGIS "
       "layer 12)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12424,7 +12424,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_13_219E21", .name = "gismaps.kingcounty.gov — Chinook distribution (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12448,7 +12448,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_14_D24A9E", .name = "gismaps.kingcounty.gov — Wildlife habitat network (ArcGIS layer "
       "14)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12472,7 +12472,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_15_E1442A", .name = "gismaps.kingcounty.gov — Channel migration hazard areas (ArcGIS "
       "layer 15)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12496,7 +12496,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_16_F81399", .name = "gismaps.kingcounty.gov — Shoreline management designations "
       "(ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12519,7 +12519,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_18_96AC39", .name = "gismaps.kingcounty.gov — Lowland fans (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12543,7 +12543,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_19_604028", .name = "gismaps.kingcounty.gov — Alpine fans less likely subject to "
       "debris flows (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12567,7 +12567,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_ENVIRONMENT_KINGCO_SENSI_20_A19157", .name = "gismaps.kingcounty.gov — Alpine fans more likely subject to "
       "debris flows (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12591,7 +12591,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_FWSD_FEDERALWAY_SCHOOLDI_0_7D8F64", .name = "gismaps.kingcounty.gov — King County School Sites (ArcGIS layer "
       "0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12614,7 +12614,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_FWSD_FEDERALWAY_SCHOOLDI_1_685780", .name = "gismaps.kingcounty.gov — Points of Interest (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12638,7 +12638,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_FWSD_FEDERALWAY_SCHOOLDI_2_83EFBE", .name = "gismaps.kingcounty.gov — Parcels in school district (ArcGIS "
       "layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12662,7 +12662,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_FWSD_FEDERALWAY_SCHOOLDI_3_360778", .name = "gismaps.kingcounty.gov — Elementary school district boundaries "
       "(ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12686,7 +12686,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_FWSD_FEDERALWAY_SCHOOLDI_4_8CFA30", .name = "gismaps.kingcounty.gov — Middle school district boundaries "
       "(ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12710,7 +12710,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_FWSD_FEDERALWAY_SCHOOLDI_5_A9A0E6", .name = "gismaps.kingcounty.gov — High school district boundaries (ArcGIS "
       "layer 5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12734,7 +12734,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_FWSD_FEDERALWAY_SCHOOLDI_6_B962CE", .name = "gismaps.kingcounty.gov — Director district boundaries (ArcGIS "
       "layer 6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12757,7 +12757,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FWSD_FEDERALWAY_SCHOOLDI_7_096D00", .name = "gismaps.kingcounty.gov — parcel_address (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12781,7 +12781,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_FWSD_FEDWAY_DIRECTORDIST_0_5AD430", .name = "gismaps.kingcounty.gov — Federal Way School Board District "
       "labels (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12804,7 +12804,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_FWSD_FEDWAY_DIRECTORDIST_1_511578", .name = "gismaps.kingcounty.gov — School sites (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12827,7 +12827,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_FWSD_FEDWAY_DIRECTORDIST_2_69D241", .name = "gismaps.kingcounty.gov — Federal Way School Board District "
       "boundaries (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12851,7 +12851,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_DRAINAGE_BASINS_0_AB7030", .name = "gismaps.kingcounty.gov — Drainage Basin Boundaries (ArcGIS layer "
       "0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12873,7 +12873,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_HYDRO_HYDROGAUGE_0_969703", .name = "gismaps.kingcounty.gov — Hydrogauges (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12896,7 +12896,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_2_658302", .name = "gismaps.kingcounty.gov — Flood photos pre-1990 decade (ArcGIS "
       "layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12919,7 +12919,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_3_1CB8C8", .name = "gismaps.kingcounty.gov — Flood photos 1990 decade (ArcGIS layer "
       "3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12942,7 +12942,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_4_1E5CAD", .name = "gismaps.kingcounty.gov — Flood photos 2000 decade (ArcGIS layer "
       "4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12965,7 +12965,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_5_494B9B", .name = "gismaps.kingcounty.gov — Flood photos 2010 decade (ArcGIS layer "
       "5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12988,7 +12988,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_68_42D9B6", .name = "gismaps.kingcounty.gov — Flood photos 2020 decade (ArcGIS layer "
       "68)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13011,7 +13011,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_66_968676", .name = "gismaps.kingcounty.gov — River miles from flood patrol map book "
       "(ArcGIS layer 66)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13034,7 +13034,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_6_4EF9D1", .name = "gismaps.kingcounty.gov — River facilities (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13056,7 +13056,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_8_8922EB", .name = "gismaps.kingcounty.gov — Elevation certificates (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13079,7 +13079,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_9_7D77F8", .name = "gismaps.kingcounty.gov — Letter of Map Amendment and Revisions "
       "(ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13102,7 +13102,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_10_FEB5AE", .name = "gismaps.kingcounty.gov — FEMA cross-sections (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13124,7 +13124,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_11_952B14", .name = "gismaps.kingcounty.gov — FEMA FIRM panels (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13146,7 +13146,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_12_5A8F8F", .name = "gismaps.kingcounty.gov — FEMA floodway (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13169,7 +13169,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_13_3D58F1", .name = "gismaps.kingcounty.gov — FEMA 100 year floodplain (ArcGIS layer "
       "13)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13192,7 +13192,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_14_C4EC8C", .name = "gismaps.kingcounty.gov — FEMA 500 year floodplain (ArcGIS layer "
       "14)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13215,7 +13215,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_15_824803", .name = "gismaps.kingcounty.gov — FEMA area with reduced risk due to "
       "levee (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13238,7 +13238,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_59_C8C668", .name = "gismaps.kingcounty.gov — Regulatory floodplain (ArcGIS layer 59)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13261,7 +13261,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_69_B4C519", .name = "gismaps.kingcounty.gov — Channel migration hazard areas (ArcGIS "
       "layer 69)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13284,7 +13284,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_FLOOD_INFO_64_4DA14A", .name = "gismaps.kingcounty.gov — King County sea level rise risk area "
       "(ArcGIS layer 64)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13307,7 +13307,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_GROUNDWATER_0_EE255F", .name = "gismaps.kingcounty.gov — Groundwater sources (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13330,7 +13330,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_GROUNDWATER_1_549241", .name = "gismaps.kingcounty.gov — Groundwater quality sampling sites "
       "(ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13353,7 +13353,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_GROUNDWATER_2_F4DB18", .name = "gismaps.kingcounty.gov — Groundwater management areas (ArcGIS "
       "layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13376,7 +13376,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_GROUNDWATER_3_32051C", .name = "gismaps.kingcounty.gov — Areas susceptible to groundwater "
       "contamination (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13400,7 +13400,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_GROUNDWATER_4_73D857", .name = "gismaps.kingcounty.gov — Critical aquifer recharge areas (ArcGIS "
       "layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13422,7 +13422,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_GROUNDWATER_5_4C2363", .name = "gismaps.kingcounty.gov — Sole source aquifer (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13445,7 +13445,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_GROUNDWATER_6_14A6E3", .name = "gismaps.kingcounty.gov — Wellhead protection areas - one year "
       "time of travel (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13469,7 +13469,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_GROUNDWATER_7_059E73", .name = "gismaps.kingcounty.gov — Wellhead protection areas - five years "
       "time of travel (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13493,7 +13493,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_GROUNDWATER_8_D59EA7", .name = "gismaps.kingcounty.gov — Wellhead protection areas - ten years "
       "time of travel (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13516,7 +13516,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_GROUNDWATER_9_B2757D", .name = "gismaps.kingcounty.gov — Water service area (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13538,7 +13538,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_HYDROGRAPHI_0_9FD4E9", .name = "gismaps.kingcounty.gov — Hydrogauges (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13560,7 +13560,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_HYDROGRAPHI_1_CDC8D5", .name = "gismaps.kingcounty.gov — Lake buoy (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13582,7 +13582,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_HYDROGRAPHI_2_9192FA", .name = "gismaps.kingcounty.gov — Lakes and large rivers (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13604,7 +13604,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_HYDROGRAPHI_3_8E4A37", .name = "gismaps.kingcounty.gov — Streams (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13626,7 +13626,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_HYDROGRAPHI_5_55689A", .name = "gismaps.kingcounty.gov — Drainage basins (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13649,7 +13649,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_HYDRO_KINGCO_HYDROGRAPHI_6_A249F7", .name = "gismaps.kingcounty.gov — Water resource inventory areas (ArcGIS "
       "layer 6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13671,7 +13671,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_HYDRO_WATERSHED_BOUNDARY_0_9A7376", .name = "gismaps.kingcounty.gov — Watershed Boundary (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13693,7 +13693,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_HYDRO_WRIA_BOUNDARY_0_F2964A", .name = "gismaps.kingcounty.gov — WRIA Boundaries (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13715,7 +13715,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_0_94AE2B", .name = "gismaps.kingcounty.gov — parcel (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13737,7 +13737,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_1_F75987", .name = "gismaps.kingcounty.gov — parcel_address (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13759,7 +13759,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_2_CB452B", .name = "gismaps.kingcounty.gov — city (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13781,7 +13781,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_3_F54801", .name = "gismaps.kingcounty.gov — zipcode (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13803,7 +13803,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_4_DFBBB4", .name = "gismaps.kingcounty.gov — voting_district (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13825,7 +13825,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_5_C5C268", .name = "gismaps.kingcounty.gov — park_district (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13847,7 +13847,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_6_202A6A", .name = "gismaps.kingcounty.gov — hospital_district (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_health_social", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13869,7 +13869,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_7_F2ADB0", .name = "gismaps.kingcounty.gov — library_district (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13891,7 +13891,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_8_753E3F", .name = "gismaps.kingcounty.gov — judicial_district (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13913,7 +13913,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_9_181920", .name = "gismaps.kingcounty.gov — council_district (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13935,7 +13935,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_10_AAF04B", .name = "gismaps.kingcounty.gov — director_district (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13958,7 +13958,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_11_B4A64C", .name = "gismaps.kingcounty.gov — congressional_district (ArcGIS layer "
       "11)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13980,7 +13980,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_12_DEFF75", .name = "gismaps.kingcounty.gov — legislative_district (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_elections_admin", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14002,7 +14002,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_13_3FC015", .name = "gismaps.kingcounty.gov — sewer_district (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14024,7 +14024,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_14_9A267A", .name = "gismaps.kingcounty.gov — school_district (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14046,7 +14046,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_15_16D3D9", .name = "gismaps.kingcounty.gov — fire_district (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14068,7 +14068,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_16_8347C2", .name = "gismaps.kingcounty.gov — water_sewer_district (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14090,7 +14090,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_17_C0E9F6", .name = "gismaps.kingcounty.gov — water_district (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14112,7 +14112,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_18_9B216A", .name = "gismaps.kingcounty.gov — water_service (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14135,7 +14135,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_19_AC15FC", .name = "gismaps.kingcounty.gov — agricultural_production_district "
       "(ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14158,7 +14158,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_20_5D277A", .name = "gismaps.kingcounty.gov — forest_production_district (ArcGIS "
       "layer 20)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14180,7 +14180,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_21_A16513", .name = "gismaps.kingcounty.gov — tribal_land (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14202,7 +14202,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_22_F57744", .name = "gismaps.kingcounty.gov — zoning (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14225,7 +14225,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_23_D771B8", .name = "gismaps.kingcounty.gov — comprehensive_plan_land_use (ArcGIS "
       "layer 23)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14247,7 +14247,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_24_FF265E", .name = "gismaps.kingcounty.gov — urban_growth (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14269,7 +14269,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_25_935AA2", .name = "gismaps.kingcounty.gov — community_plan (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14291,7 +14291,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_26_E3FD8C", .name = "gismaps.kingcounty.gov — development_condition (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14313,7 +14313,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_27_E5C0AB", .name = "gismaps.kingcounty.gov — kroll_map_page_index (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14335,7 +14335,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_28_A1DC19", .name = "gismaps.kingcounty.gov — thomas_brothers_index (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14357,7 +14357,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_29_C0B091", .name = "gismaps.kingcounty.gov — travelshed (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14379,7 +14379,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_30_A327C4", .name = "gismaps.kingcounty.gov — floodplain (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14401,7 +14401,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_31_2277C4", .name = "gismaps.kingcounty.gov — topo_basin (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14423,7 +14423,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_32_F48C97", .name = "gismaps.kingcounty.gov — erosion_hazard (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14445,7 +14445,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_33_9700AB", .name = "gismaps.kingcounty.gov — seismic_hazard (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14467,7 +14467,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_34_105C68", .name = "gismaps.kingcounty.gov — coalmine (ArcGIS layer 34)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14490,7 +14490,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_35_12E8BB", .name = "gismaps.kingcounty.gov — critical_aquifer_recharge (ArcGIS layer "
       "35)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14512,7 +14512,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_36_03B31E", .name = "gismaps.kingcounty.gov — landslide_hazard_sao (ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14534,7 +14534,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_37_1EC381", .name = "gismaps.kingcounty.gov — landslide_hazard_2016 (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14556,7 +14556,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_39_06A595", .name = "gismaps.kingcounty.gov — wetland_sao (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14578,7 +14578,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_KCGIS_GISAPI_40_B84461", .name = "gismaps.kingcounty.gov — rural_town (ArcGIS layer 40)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14600,7 +14600,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_3_92DB0A", .name = "gismaps.kingcounty.gov — Facilities (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14622,7 +14622,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_4_C0CB69", .name = "gismaps.kingcounty.gov — Activities point (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14645,7 +14645,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_5_CC4F65", .name = "gismaps.kingcounty.gov — Activities and amenities (ArcGIS layer "
       "5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14667,7 +14667,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_6_8252F5", .name = "gismaps.kingcounty.gov — Regional trails (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14690,7 +14690,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_7_003A5C", .name = "gismaps.kingcounty.gov — Simplified regional trails (ArcGIS "
       "layer 7)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14712,7 +14712,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_8_23F5A3", .name = "gismaps.kingcounty.gov — Backcountry trails (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14734,7 +14734,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_9_CFA273", .name = "gismaps.kingcounty.gov — Local trails (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14757,7 +14757,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_10_00044A", .name = "gismaps.kingcounty.gov — Backcountry and local trails (ArcGIS "
       "layer 10)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14780,7 +14780,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_0_2AF2B0", .name = "gismaps.kingcounty.gov — King Co. parks and natural areas "
       "(ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14802,7 +14802,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_1_2A0FED", .name = "gismaps.kingcounty.gov — Parking lot (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14824,7 +14824,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_2_2A6462", .name = "gismaps.kingcounty.gov — Restroom (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_health_social", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14846,7 +14846,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_3_E3A5B5", .name = "gismaps.kingcounty.gov — Facilities (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14868,7 +14868,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_4_B75198", .name = "gismaps.kingcounty.gov — Activities point (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14891,7 +14891,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_5_5193F9", .name = "gismaps.kingcounty.gov — Activities and amenities (ArcGIS layer "
       "5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14913,7 +14913,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_6_5628E5", .name = "gismaps.kingcounty.gov — Regional trails (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14936,7 +14936,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_7_437CC9", .name = "gismaps.kingcounty.gov — Simplified regional trails (ArcGIS "
       "layer 7)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14958,7 +14958,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_8_034BFB", .name = "gismaps.kingcounty.gov — Backcountry trails (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14980,7 +14980,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_9_900C8A", .name = "gismaps.kingcounty.gov — Local trails (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15003,7 +15003,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_10_FB056D", .name = "gismaps.kingcounty.gov — Backcountry and local trails (ArcGIS "
       "layer 10)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15026,7 +15026,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSANDTRA_11_B32488", .name = "gismaps.kingcounty.gov — King Co. parks and natural areas "
       "boundaries (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15050,7 +15050,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSTRAILS_1_58E0B4", .name = "gismaps.kingcounty.gov — Regional trails by type (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15073,7 +15073,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSTRAILS_2_514012", .name = "gismaps.kingcounty.gov — Regional trails by name (ArcGIS layer "
       "2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15095,7 +15095,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_PARKSTRAILS_3_8B20B9", .name = "gismaps.kingcounty.gov — Parks (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15117,7 +15117,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_TRAILS_0_F917AC", .name = "gismaps.kingcounty.gov — Regional trails (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15140,7 +15140,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_TRAILS_1_F7E095", .name = "gismaps.kingcounty.gov — Simplified regional trails (ArcGIS "
       "layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15162,7 +15162,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_PARKS_KINGCO_TRAILS_2_93EAA6", .name = "gismaps.kingcounty.gov — Backcountry trails (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15184,7 +15184,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_0_CC765A", .name = "gismaps.kingcounty.gov — Urban growth area (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15207,7 +15207,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_1_8BCE23", .name = "gismaps.kingcounty.gov — Agricultural production district "
       "boundary (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15231,7 +15231,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_2_8983A0", .name = "gismaps.kingcounty.gov — Forest production district boundary "
       "(ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15254,7 +15254,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_20_4EB95C", .name = "gismaps.kingcounty.gov — Wildland urban interface area (ArcGIS "
       "layer 20)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15277,7 +15277,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_28_6AC3C5", .name = "gismaps.kingcounty.gov — Development conditions (ArcGIS layer "
       "28)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15300,7 +15300,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_3_19583B", .name = "gismaps.kingcounty.gov — Unincorporated KC zoning (ArcGIS layer "
       "3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15322,7 +15322,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_4_E565EC", .name = "gismaps.kingcounty.gov — Zoning labels (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15345,7 +15345,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_5_78D2C4", .name = "gismaps.kingcounty.gov — Countywide growth pattern (ArcGIS layer "
       "5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15368,7 +15368,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_6_8978A4", .name = "gismaps.kingcounty.gov — Comprehensive plan land use (ArcGIS "
       "layer 6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15391,7 +15391,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_7_FE221C", .name = "gismaps.kingcounty.gov — Community service areas (ArcGIS layer "
       "7)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15414,7 +15414,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_8_5D0E26", .name = "gismaps.kingcounty.gov — Urban potential annexation areas "
       "(ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15437,7 +15437,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_24_3397BF", .name = "gismaps.kingcounty.gov — North Highline urban design standards "
       "designated streets (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15461,7 +15461,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_25_492BBF", .name = "gismaps.kingcounty.gov — North Highline urban design standards "
       "area (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15484,7 +15484,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_10_E249D4", .name = "gismaps.kingcounty.gov — Centers (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15507,7 +15507,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_31_5818BE", .name = "gismaps.kingcounty.gov — High capacity frequent transit bus "
       "stops (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15531,7 +15531,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_30_82E03E", .name = "gismaps.kingcounty.gov — High capacity frequent transit walkshed "
       "(ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15555,7 +15555,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_32_B1BE01", .name = "gismaps.kingcounty.gov — Development standards areas (ArcGIS "
       "layer 32)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15577,7 +15577,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_11_BA704F", .name = "gismaps.kingcounty.gov — Rural towns (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15600,7 +15600,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_12_2FC123", .name = "gismaps.kingcounty.gov — Rural forest focus areas (ArcGIS layer "
       "12)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15623,7 +15623,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_13_2E97A7", .name = "gismaps.kingcounty.gov — Urban separators (designated in CPPs) "
       "(ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15647,7 +15647,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_14_9530D1", .name = "gismaps.kingcounty.gov — Shoreline management designations "
       "(ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15670,7 +15670,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_15_B56820", .name = "gismaps.kingcounty.gov — Snoqualmie Valley watershed improvement "
       "district (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15694,7 +15694,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_PLANNING_16_C2E7E7", .name = "gismaps.kingcounty.gov — 1994 Urban growth area (ArcGIS layer "
       "16)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15716,7 +15716,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_UGA_LINE_0_722DE9", .name = "gismaps.kingcounty.gov — Urban Growth Boundary (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15739,7 +15739,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_UGA_0_04C72B", .name = "gismaps.kingcounty.gov — King County Urban Growth Area (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15761,7 +15761,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_ZONING_0_B639BA", .name = "gismaps.kingcounty.gov — Incorporated areas (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15783,7 +15783,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PLANNING_KINGCO_ZONING_1_5EC1A3", .name = "gismaps.kingcounty.gov — King County zoning (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15806,7 +15806,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_FARMLAND_0_470933", .name = "gismaps.kingcounty.gov — Agricultural Production District "
       "(ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15830,7 +15830,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_FARMLAND_1_75D6CA", .name = "gismaps.kingcounty.gov — Farmland Preservation Program Parcels "
       "(ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15854,7 +15854,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_FARMLAND_2_43ACE8", .name = "gismaps.kingcounty.gov — Farmland Preservation Program Parcels "
       "(ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15878,7 +15878,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_FARMLAND_3_C5A37D", .name = "gismaps.kingcounty.gov — Public Benefit Rating System and Timber "
       "Land Current Use Parcels (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15903,7 +15903,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_FARMLAND_4_43BA71", .name = "gismaps.kingcounty.gov — Farm and Agricultural Current Use "
       "Parcels (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15927,7 +15927,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_FARMLAND_5_A3A85F", .name = "gismaps.kingcounty.gov — Forest Current Use Parcels (ArcGIS "
       "layer 5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15951,7 +15951,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PARCELLA_0_21D196", .name = "gismaps.kingcounty.gov — King County parcel labels - minor "
       "(ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15975,7 +15975,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PARCELLA_1_99495B", .name = "gismaps.kingcounty.gov — King County parcel labels - full "
       "(ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15998,7 +15998,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PARCELS_0_BC2FE7", .name = "gismaps.kingcounty.gov — King County parcels (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16020,7 +16020,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PROPERTY_0_A45B41", .name = "gismaps.kingcounty.gov — Parcel number labels (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16043,7 +16043,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PROPERTY_1_BEBEE3", .name = "gismaps.kingcounty.gov — Parcel address labels (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16066,7 +16066,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PROPERTY_2_E0363B", .name = "gismaps.kingcounty.gov — Parcels (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16089,7 +16089,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PROPERTY_3_E248D2", .name = "gismaps.kingcounty.gov — Property sales in the last 3 years "
       "(ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16113,7 +16113,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PROPERTY_4_234A66", .name = "gismaps.kingcounty.gov — King County property interests (ArcGIS "
       "layer 4)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16137,7 +16137,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PROPERTY_5_99D0DA", .name = "gismaps.kingcounty.gov — Farmland preservation properties "
       "(ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16161,7 +16161,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PROPERTY_6_E29744", .name = "gismaps.kingcounty.gov — TDR sending site parcels (ArcGIS layer "
       "6)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16184,7 +16184,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PROPERTY_7_6873E7", .name = "gismaps.kingcounty.gov — Publicly owned lands (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16208,7 +16208,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PROPERTY_9_F417F9", .name = "gismaps.kingcounty.gov — Public benefit rating system parcels "
       "(ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16232,7 +16232,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PROPERTY_10_0191B0", .name = "gismaps.kingcounty.gov — Farm and agricultural parcels (ArcGIS "
       "layer 10)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16255,7 +16255,7 @@ static const hp_source HP3B58_ARCGIS2[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_PROPERTY_KINGCO_PROPERTY_11_1154C4", .name = "gismaps.kingcounty.gov — Forestland parcels (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gismaps.kingcounty.gov",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gismaps.kingcounty.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,

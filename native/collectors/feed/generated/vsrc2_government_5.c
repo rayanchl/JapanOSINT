@@ -8,19 +8,19 @@
 #include "_verified_macros.inc"
 
 VCSV(jpx_tokyo_t132276_shisetsu, "jpx-tokyo-t132276-shisetsu", "羽村市 — public facilities", "羽村市 公共施設一覧",
-  "government", "local-gov",
+  "jp_gov_tokyo", "local-gov",
   "https://www.opendata.metro.tokyo.lg.jp/hamura/132276_public_facility.csv",
   "ja", "[\"japan\",\"tokyo\",\"opendata\",\"geodata\",\"local-gov\"]", 86400,
   "Point layer of public facilities published by 羽村市 with per-record coordinates.");
 
 VCSV(jpx_tokyo_t133621_shisetsu, "jpx-tokyo-t133621-shisetsu", "利島村 — public facilities", "利島村 公共施設一覧",
-  "government", "local-gov",
+  "jp_gov_tokyo", "local-gov",
   "https://www.opendata.metro.tokyo.lg.jp/toshimamura/133621_public_facility.csv",
   "ja", "[\"japan\",\"tokyo\",\"opendata\",\"geodata\",\"local-gov\"]", 86400,
   "Point layer of public facilities published by 利島村 with per-record coordinates.");
 
 VRSS(jpx_web_pref_hyogo_topics_xml, "jpx-web-pref-hyogo-topics-xml", "Hyogo Prefecture — Notices", "兵庫県 ホーム お知らせ",
-  "government", "local-gov",
+  "world_gov_agencies", "local-gov",
   "https://web.pref.hyogo.lg.jp/topics.xml",
   "ja", "[\"japan\",\"prefecture\",\"local-gov\"]", 3600,
   "General notices from the authority — Hyogo Prefecture.");

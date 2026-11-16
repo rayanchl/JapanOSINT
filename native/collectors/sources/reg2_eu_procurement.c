@@ -240,7 +240,7 @@ static int eu_run(const eu_src *s, const source_ctx *ctx, intel_sink *sink) {
 EU_SOURCE(nl_tn, "nl-tenderned-notices",
   "TenderNed Netherlands procurement notices",
   "https://www.tenderned.nl/papi/tenderned-rs-tns/v2/publicaties?page=0&size=100",
-  "government", "government",
+  "world_gov_agencies", "government",
   "Public procurement notices published by PIANOo/TenderNed; no stated "
   "restriction on the public API.",
   "Dutch national tender portal — every published Dutch public procurement "
@@ -254,7 +254,7 @@ EU_SOURCE(nl_tn, "nl-tenderned-notices",
 EU_SOURCE(fr_decp, "fr-decp-marches",
   "France DECP — declared public contracts",
   "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/decp-v3-marches-valides/records?limit=100&offset=0&order_by=datenotification%20desc,id",
-  "government", "government",
+  "world_gov_agencies", "government",
   "Licence Ouverte / Open Licence (data.economie.gouv.fr, Ministere de l'Economie).",
   "Validated French public contracts with buyer SIRET, supplier SIRET, amount, "
   "CPV code and place of execution — pivots into the SIRENE company registry. "
@@ -272,7 +272,7 @@ EU_SOURCE(fr_decp, "fr-decp-marches",
 EU_SOURCE(pl_bzp, "pl-bzp-notices",
   "Poland Biuletyn Zamowien Publicznych notices",
   "https://ezamowienia.gov.pl/mo-board/api/v1/Board/Search?SortingColumnName=PublicationDate&SortingDirection=DESC&PageNumber=1&PageSize=10",
-  "government", "government",
+  "world_gov_agencies", "government",
   "Official UZP e-Zamowienia platform; notices are statutorily public.",
   "Poland's official public-procurement bulletin — every below- and "
   "above-threshold notice with contracting authority, city, CPV code and notice "

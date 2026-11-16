@@ -283,7 +283,7 @@ RSSX(cn_b51_hkma_gov_hk_eng_other_information_rss_rss_tender_invitations, "cn-b5
 
 RSSX(cn_b51_consumer_gov_mo_news_rss_aspx_lang_zh, "cn-b51-consumer-gov-mo-news-rss-aspx-lang-zh",
      "澳門特別行政區政府消費者委員會-最新公佈", "澳門特別行政區政府消費者委員會-最新公佈",
-     "government", "government",
+     "cn_gov_macao", "government",
      "https://www.consumer.gov.mo/News/rss.aspx?lang=zh",
      "zh", "[\"gov\",\"country:mo\",\"publisher:澳門特別行政區政府消費者委員會-最新公佈\",\"government\",\"batch:51\"]",
      3600,
@@ -291,7 +291,7 @@ RSSX(cn_b51_consumer_gov_mo_news_rss_aspx_lang_zh, "cn-b51-consumer-gov-mo-news-
 
 RSSX(cn_b51_data_gov_hk_filestore_feeds_data_rss_tc, "cn-b51-data-gov-hk-filestore-feeds-data-rss-tc",
      "檔案的資料資訊", "檔案的資料資訊",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://data.gov.hk/filestore/feeds/data_rss_tc.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:檔案的資料資訊\",\"government\",\"batch:51\"]",
      3600,
@@ -299,7 +299,7 @@ RSSX(cn_b51_data_gov_hk_filestore_feeds_data_rss_tc, "cn-b51-data-gov-hk-filesto
 
 RSSX(cn_b51_dsal_gov_mo_rss_zh_tw_concurso_publico, "cn-b51-dsal-gov-mo-rss-zh-tw-concurso-publico",
      "dsal.gov.mo — 公開招標", "dsal.gov.mo — 公開招標",
-     "government", "government",
+     "cn_gov_macao", "government",
      "http://www.dsal.gov.mo/rss/zh_tw/concurso_publico.rss",
      "zh", "[\"gov\",\"country:mo\",\"publisher:dsal.gov.mo — 公開招標\",\"government\",\"batch:51\"]",
      3600,
@@ -307,7 +307,7 @@ RSSX(cn_b51_dsal_gov_mo_rss_zh_tw_concurso_publico, "cn-b51-dsal-gov-mo-rss-zh-t
 
 RSSX(cn_b51_dsal_gov_mo_rss_zh_tw_news, "cn-b51-dsal-gov-mo-rss-zh-tw-news",
      "dsal.gov.mo — 最新消息", "dsal.gov.mo — 最新消息",
-     "government", "government",
+     "cn_gov_macao", "government",
      "http://www.dsal.gov.mo/rss/zh_tw/news.rss",
      "zh", "[\"gov\",\"country:mo\",\"publisher:dsal.gov.mo — 最新消息\",\"government\",\"batch:51\"]",
      3600,
@@ -315,7 +315,7 @@ RSSX(cn_b51_dsal_gov_mo_rss_zh_tw_news, "cn-b51-dsal-gov-mo-rss-zh-tw-news",
 
 RSSX(cn_b51_dsal_gov_mo_rss_zh_tw_personnel_entry, "cn-b51-dsal-gov-mo-rss-zh-tw-personnel-entry",
      "dsal.gov.mo — 入職開考", "dsal.gov.mo — 入職開考",
-     "government", "government",
+     "cn_gov_macao", "government",
      "http://www.dsal.gov.mo/rss/zh_tw/personnel_entry.rss",
      "zh", "[\"gov\",\"country:mo\",\"publisher:dsal.gov.mo — 入職開考\",\"government\",\"batch:51\"]",
      3600,
@@ -323,7 +323,7 @@ RSSX(cn_b51_dsal_gov_mo_rss_zh_tw_personnel_entry, "cn-b51-dsal-gov-mo-rss-zh-tw
 
 RSSX(cn_b51_dsat_gov_mo_bus_tc_bus_croad_rss, "cn-b51-dsat-gov-mo-bus-tc-bus-croad-rss",
      "交通事務局 - 巴士改道訊息", "交通事務局 - 巴士改道訊息",
-     "government", "government",
+     "cn_gov_other", "government",
      "https://www.dsat.gov.mo/bus/tc/bus_croad_rss.aspx",
      "zh", "[\"gov\",\"country:mo\",\"publisher:交通事務局 - 巴士改道訊息\",\"government\",\"batch:51\"]",
      3600,
@@ -331,7 +331,7 @@ RSSX(cn_b51_dsat_gov_mo_bus_tc_bus_croad_rss, "cn-b51-dsat-gov-mo-bus-tc-bus-cro
 
 RSSX(cn_b51_dsat_gov_mo_bus_tc_bus_news_rss, "cn-b51-dsat-gov-mo-bus-tc-bus-news-rss",
      "交通事務局 - 巴士新聞", "交通事務局 - 巴士新聞",
-     "government", "government",
+     "cn_gov_other", "government",
      "https://www.dsat.gov.mo/bus/tc/bus_news_rss.aspx",
      "zh", "[\"gov\",\"country:mo\",\"publisher:交通事務局 - 巴士新聞\",\"government\",\"batch:51\"]",
      3600,
@@ -339,7 +339,7 @@ RSSX(cn_b51_dsat_gov_mo_bus_tc_bus_news_rss, "cn-b51-dsat-gov-mo-bus-tc-bus-news
 
 RSSX(cn_b51_dsat_gov_mo_tc_emergency_rss, "cn-b51-dsat-gov-mo-tc-emergency-rss",
      "交通事務局 - 特別消息", "交通事務局 - 特別消息",
-     "government", "government",
+     "cn_gov_other", "government",
      "https://www.dsat.gov.mo/tc/emergency_rss.aspx",
      "zh", "[\"gov\",\"country:mo\",\"publisher:交通事務局 - 特別消息\",\"government\",\"batch:51\"]",
      3600,
@@ -347,7 +347,7 @@ RSSX(cn_b51_dsat_gov_mo_tc_emergency_rss, "cn-b51-dsat-gov-mo-tc-emergency-rss",
 
 RSSX(cn_b51_dsat_gov_mo_tc_event_rss, "cn-b51-dsat-gov-mo-tc-event-rss",
      "交通事務局 - 活動消息", "交通事務局 - 活動消息",
-     "government", "government",
+     "cn_gov_other", "government",
      "https://www.dsat.gov.mo/tc/event_rss.aspx",
      "zh", "[\"gov\",\"country:mo\",\"publisher:交通事務局 - 活動消息\",\"government\",\"batch:51\"]",
      3600,
@@ -355,7 +355,7 @@ RSSX(cn_b51_dsat_gov_mo_tc_event_rss, "cn-b51-dsat-gov-mo-tc-event-rss",
 
 RSSX(cn_b51_dsat_gov_mo_tc_news_rss, "cn-b51-dsat-gov-mo-tc-news-rss",
      "交通事務局 - 新聞", "交通事務局 - 新聞",
-     "government", "government",
+     "cn_gov_other", "government",
      "https://www.dsat.gov.mo/tc/news_rss.aspx",
      "zh", "[\"gov\",\"country:mo\",\"publisher:交通事務局 - 新聞\",\"government\",\"batch:51\"]",
      3600,
@@ -363,7 +363,7 @@ RSSX(cn_b51_dsat_gov_mo_tc_news_rss, "cn-b51-dsat-gov-mo-tc-news-rss",
 
 RSSX(cn_b51_dsat_gov_mo_tc_notice_rss, "cn-b51-dsat-gov-mo-tc-notice-rss",
      "交通事務局 - 通告", "交通事務局 - 通告",
-     "government", "government",
+     "cn_gov_other", "government",
      "https://www.dsat.gov.mo/tc/notice_rss.aspx",
      "zh", "[\"gov\",\"country:mo\",\"publisher:交通事務局 - 通告\",\"government\",\"batch:51\"]",
      3600,
@@ -371,7 +371,7 @@ RSSX(cn_b51_dsat_gov_mo_tc_notice_rss, "cn-b51-dsat-gov-mo-tc-notice-rss",
 
 RSSX(cn_b51_dsop_gov_mo_system_rss_type_news, "cn-b51-dsop-gov-mo-system-rss-type-news",
      "公共建設局 - 最新消息", "公共建設局 - 最新消息",
-     "government", "government",
+     "cn_gov_other", "government",
      "http://www.dsop.gov.mo/system/rss/?type=news",
      "zh", "[\"gov\",\"country:mo\",\"publisher:公共建設局 - 最新消息\",\"government\",\"batch:51\"]",
      3600,
@@ -379,7 +379,7 @@ RSSX(cn_b51_dsop_gov_mo_system_rss_type_news, "cn-b51-dsop-gov-mo-system-rss-typ
 
 RSSX(cn_b51_dsop_gov_mo_system_rss_type_tender, "cn-b51-dsop-gov-mo-system-rss-type-tender",
      "公共建設局 - 招標項目", "公共建設局 - 招標項目",
-     "government", "government",
+     "cn_gov_other", "government",
      "http://www.dsop.gov.mo/system/rss/?type=tender",
      "zh", "[\"gov\",\"country:mo\",\"publisher:公共建設局 - 招標項目\",\"government\",\"batch:51\"]",
      3600,
@@ -387,7 +387,7 @@ RSSX(cn_b51_dsop_gov_mo_system_rss_type_tender, "cn-b51-dsop-gov-mo-system-rss-t
 
 RSSX(cn_b51_edb_gov_hk_en_whats_new_rss, "cn-b51-edb-gov-hk-en-whats-new-rss",
      "Latest News", "Latest News",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.edb.gov.hk/en/whats_new_rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:Latest News\",\"government\",\"batch:51\"]",
      3600,
@@ -395,7 +395,7 @@ RSSX(cn_b51_edb_gov_hk_en_whats_new_rss, "cn-b51-edb-gov-hk-en-whats-new-rss",
 
 RSSX(cn_b51_edb_gov_hk_tc_whats_new_rss, "cn-b51-edb-gov-hk-tc-whats-new-rss",
      "最新消息", "最新消息",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.edb.gov.hk/tc/whats_new_rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:最新消息\",\"government\",\"batch:51\"]",
      3600,
@@ -403,7 +403,7 @@ RSSX(cn_b51_edb_gov_hk_tc_whats_new_rss, "cn-b51-edb-gov-hk-tc-whats-new-rss",
 
 RSSX(cn_b51_fso_gov_hk_rss_fsblog_rss_e, "cn-b51-fso-gov-hk-rss-fsblog-rss-e",
      "Financial Secretary - My Blog", "Financial Secretary - My Blog",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.fso.gov.hk/rss/fsblog_rss_e.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:Financial Secretary - My Blog\",\"government\",\"batch:51\"]",
      3600,
@@ -411,7 +411,7 @@ RSSX(cn_b51_fso_gov_hk_rss_fsblog_rss_e, "cn-b51-fso-gov-hk-rss-fsblog-rss-e",
 
 RSSX(cn_b51_fso_gov_hk_rss_fsblog_rss_t, "cn-b51-fso-gov-hk-rss-fsblog-rss-t",
      "財政司司長 - 司長隨筆", "財政司司長 - 司長隨筆",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.fso.gov.hk/rss/fsblog_rss_t.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:財政司司長 - 司長隨筆\",\"government\",\"batch:51\"]",
      3600,
@@ -419,7 +419,7 @@ RSSX(cn_b51_fso_gov_hk_rss_fsblog_rss_t, "cn-b51-fso-gov-hk-rss-fsblog-rss-t",
 
 RSSX(cn_b51_hongkongpost_hk_en_about_us_whats_new_notices_notices, "cn-b51-hongkongpost-hk-en-about-us-whats-new-notices-notices",
      "Hongkong Post - Notices", "Hongkong Post - Notices",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.hongkongpost.hk/en/about_us/whats_new/notices/notices.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:Hongkong Post - Notices\",\"government\",\"batch:51\"]",
      3600,
@@ -427,7 +427,7 @@ RSSX(cn_b51_hongkongpost_hk_en_about_us_whats_new_notices_notices, "cn-b51-hongk
 
 RSSX(cn_b51_hongkongpost_hk_en_about_us_whats_new_press_release_press_release, "cn-b51-hongkongpost-hk-en-about-us-whats-new-press-release-press-release",
      "Hongkong Post - Press Releases", "Hongkong Post - Press Releases",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.hongkongpost.hk/en/about_us/whats_new/press_release/press_release.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:Hongkong Post - Press Releases\",\"government\",\"batch:51\"]",
      3600,
@@ -435,7 +435,7 @@ RSSX(cn_b51_hongkongpost_hk_en_about_us_whats_new_press_release_press_release, "
 
 RSSX(cn_b51_hongkongpost_hk_tc_about_us_whats_new_notices_notices, "cn-b51-hongkongpost-hk-tc-about-us-whats-new-notices-notices",
      "香港郵政 - 通告", "香港郵政 - 通告",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.hongkongpost.hk/tc/about_us/whats_new/notices/notices.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港郵政 - 通告\",\"government\",\"batch:51\"]",
      3600,
@@ -443,7 +443,7 @@ RSSX(cn_b51_hongkongpost_hk_tc_about_us_whats_new_notices_notices, "cn-b51-hongk
 
 RSSX(cn_b51_hongkongpost_hk_tc_about_us_whats_new_press_release_press_release, "cn-b51-hongkongpost-hk-tc-about-us-whats-new-press-release-press-release",
      "香港郵政 - 新聞公報", "香港郵政 - 新聞公報",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.hongkongpost.hk/tc/about_us/whats_new/press_release/press_release.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港郵政 - 新聞公報\",\"government\",\"batch:51\"]",
      3600,
@@ -451,7 +451,7 @@ RSSX(cn_b51_hongkongpost_hk_tc_about_us_whats_new_press_release_press_release, "
 
 RSSX(cn_b51_icm_gov_mo_rss_files_rssevents_c, "cn-b51-icm-gov-mo-rss-files-rssevents-c",
      "RSS - 文化局聚合活動", "RSS - 文化局聚合活動",
-     "government", "government",
+     "cn_gov_other", "government",
      "http://www.icm.gov.mo/rss/files/rssEvents_C.xml",
      "zh", "[\"gov\",\"country:mo\",\"publisher:RSS - 文化局聚合活動\",\"government\",\"batch:51\"]",
      3600,
@@ -459,7 +459,7 @@ RSSX(cn_b51_icm_gov_mo_rss_files_rssevents_c, "cn-b51-icm-gov-mo-rss-files-rssev
 
 RSSX(cn_b51_icm_gov_mo_rss_files_rssnews_c, "cn-b51-icm-gov-mo-rss-files-rssnews-c",
      "RSS - 文化局聚合新聞", "RSS - 文化局聚合新聞",
-     "government", "government",
+     "cn_gov_other", "government",
      "http://www.icm.gov.mo/rss/files/rssNews_C.xml",
      "zh", "[\"gov\",\"country:mo\",\"publisher:RSS - 文化局聚合新聞\",\"government\",\"batch:51\"]",
      3600,
@@ -467,7 +467,7 @@ RSSX(cn_b51_icm_gov_mo_rss_files_rssnews_c, "cn-b51-icm-gov-mo-rss-files-rssnews
 
 RSSX(cn_b51_lcsd_gov_hk_en_emagazine_emag_rss, "cn-b51-lcsd-gov-hk-en-emagazine-emag-rss",
      "LCSD eMagazine - Programme Highlights", "LCSD eMagazine - Programme Highlights",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.lcsd.gov.hk/en/emagazine/emag_rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:LCSD eMagazine - Programme Highlights\",\"government\",\"batch:51\"]",
      3600,
@@ -475,7 +475,7 @@ RSSX(cn_b51_lcsd_gov_hk_en_emagazine_emag_rss, "cn-b51-lcsd-gov-hk-en-emagazine-
 
 RSSX(cn_b51_lcsd_gov_hk_tc_emagazine_emag_rss, "cn-b51-lcsd-gov-hk-tc-emagazine-emag-rss",
      "康文署電子雜誌 - 精彩節目", "康文署電子雜誌 - 精彩節目",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.lcsd.gov.hk/tc/emagazine/emag_rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:康文署電子雜誌 - 精彩節目\",\"government\",\"batch:51\"]",
      3600,
@@ -483,7 +483,7 @@ RSSX(cn_b51_lcsd_gov_hk_tc_emagazine_emag_rss, "cn-b51-lcsd-gov-hk-tc-emagazine-
 
 RSSX(cn_b51_mardep_gov_hk_filemanager_en_share_news_rss1, "cn-b51-mardep-gov-hk-filemanager-en-share-news-rss1",
      "Release of MSN / MSIN", "Release of MSN / MSIN",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.mardep.gov.hk/filemanager/en/share/news/rss1.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:Release of MSN / MSIN\",\"government\",\"batch:51\"]",
      3600,
@@ -491,7 +491,7 @@ RSSX(cn_b51_mardep_gov_hk_filemanager_en_share_news_rss1, "cn-b51-mardep-gov-hk-
 
 RSSX(cn_b51_mardep_gov_hk_filemanager_tc_share_news_rss1c, "cn-b51-mardep-gov-hk-filemanager-tc-share-news-rss1c",
      "香港商船公告/香港商船資訊的發佈", "香港商船公告/香港商船資訊的發佈",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.mardep.gov.hk/filemanager/tc/share/news/rss1c.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港商船公告/香港商船資訊的發佈\",\"government\",\"batch:51\"]",
      3600,
@@ -499,7 +499,7 @@ RSSX(cn_b51_mardep_gov_hk_filemanager_tc_share_news_rss1c, "cn-b51-mardep-gov-hk
 
 RSSX(cn_b51_news_gov_hk_en_categories_admin_html_articlelist_rss, "cn-b51-news-gov-hk-en-categories-admin-html-articlelist-rss",
      "news.gov.hk - Admin & Civic Affairs", "news.gov.hk - Admin & Civic Affairs",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/en/categories/admin/html/articlelist.rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:news.gov.hk - Admin & Civic Affairs\",\"government\",\"batch:51\"]",
      3600,
@@ -507,7 +507,7 @@ RSSX(cn_b51_news_gov_hk_en_categories_admin_html_articlelist_rss, "cn-b51-news-g
 
 RSSX(cn_b51_news_gov_hk_en_categories_environment_html_articlelist_rss, "cn-b51-news-gov-hk-en-categories-environment-html-articlelist-rss",
      "news.gov.hk - Environment", "news.gov.hk - Environment",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/en/categories/environment/html/articlelist.rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:news.gov.hk - Environment\",\"government\",\"batch:51\"]",
      3600,
@@ -515,7 +515,7 @@ RSSX(cn_b51_news_gov_hk_en_categories_environment_html_articlelist_rss, "cn-b51-
 
 RSSX(cn_b51_news_gov_hk_en_categories_finance_html_articlelist_rss, "cn-b51-news-gov-hk-en-categories-finance-html-articlelist-rss",
      "news.gov.hk - Business & Finance", "news.gov.hk - Business & Finance",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/en/categories/finance/html/articlelist.rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:news.gov.hk - Business & Finance\",\"government\",\"batch:51\"]",
      3600,
@@ -523,7 +523,7 @@ RSSX(cn_b51_news_gov_hk_en_categories_finance_html_articlelist_rss, "cn-b51-news
 
 RSSX(cn_b51_news_gov_hk_en_categories_health_html_articlelist_rss, "cn-b51-news-gov-hk-en-categories-health-html-articlelist-rss",
      "news.gov.hk - Health", "news.gov.hk - Health",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/en/categories/health/html/articlelist.rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:news.gov.hk - Health\",\"government\",\"batch:51\"]",
      3600,
@@ -531,7 +531,7 @@ RSSX(cn_b51_news_gov_hk_en_categories_health_html_articlelist_rss, "cn-b51-news-
 
 RSSX(cn_b51_news_gov_hk_en_categories_infrastructure_html_articlelist_rss, "cn-b51-news-gov-hk-en-categories-infrastructure-html-articlelist-rss",
      "news.gov.hk - Infrastructure & Logistics", "news.gov.hk - Infrastructure & Logistics",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/en/categories/infrastructure/html/articlelist.rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:news.gov.hk - Infrastructure & Logistics\",\"government\",\"batch:51\"]",
      3600,
@@ -539,7 +539,7 @@ RSSX(cn_b51_news_gov_hk_en_categories_infrastructure_html_articlelist_rss, "cn-b
 
 RSSX(cn_b51_news_gov_hk_en_categories_law_order_html_articlelist_rss, "cn-b51-news-gov-hk-en-categories-law-order-html-articlelist-rss",
      "news.gov.hk - Law & Order", "news.gov.hk - Law & Order",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/en/categories/law_order/html/articlelist.rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:news.gov.hk - Law & Order\",\"government\",\"batch:51\"]",
      3600,
@@ -547,7 +547,7 @@ RSSX(cn_b51_news_gov_hk_en_categories_law_order_html_articlelist_rss, "cn-b51-ne
 
 RSSX(cn_b51_news_gov_hk_en_categories_school_work_html_articlelist_rss, "cn-b51-news-gov-hk-en-categories-school-work-html-articlelist-rss",
      "news.gov.hk - At School, At Work", "news.gov.hk - At School, At Work",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/en/categories/school_work/html/articlelist.rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:news.gov.hk - At School, At Work\",\"government\",\"batch:51\"]",
      3600,
@@ -555,7 +555,7 @@ RSSX(cn_b51_news_gov_hk_en_categories_school_work_html_articlelist_rss, "cn-b51-
 
 RSSX(cn_b51_news_gov_hk_en_city_life_html_articlelist_rss, "cn-b51-news-gov-hk-en-city-life-html-articlelist-rss",
      "news.gov.hk - City Life", "news.gov.hk - City Life",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/en/city_life/html/articlelist.rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:news.gov.hk - City Life\",\"government\",\"batch:51\"]",
      3600,
@@ -563,7 +563,7 @@ RSSX(cn_b51_news_gov_hk_en_city_life_html_articlelist_rss, "cn-b51-news-gov-hk-e
 
 RSSX(cn_b51_news_gov_hk_en_common_html_ticker_rss, "cn-b51-news-gov-hk-en-common-html-ticker-rss",
      "news.gov.hk - News Ticker", "news.gov.hk - News Ticker",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/en/common/html/ticker.rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:news.gov.hk - News Ticker\",\"government\",\"batch:51\"]",
      3600,
@@ -571,7 +571,7 @@ RSSX(cn_b51_news_gov_hk_en_common_html_ticker_rss, "cn-b51-news-gov-hk-en-common
 
 RSSX(cn_b51_news_gov_hk_en_common_html_topstories_rss, "cn-b51-news-gov-hk-en-common-html-topstories-rss",
      "news.gov.hk - Top Story", "news.gov.hk - Top Story",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/en/common/html/topstories.rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:news.gov.hk - Top Story\",\"government\",\"batch:51\"]",
      3600,
@@ -579,7 +579,7 @@ RSSX(cn_b51_news_gov_hk_en_common_html_topstories_rss, "cn-b51-news-gov-hk-en-co
 
 RSSX(cn_b51_news_gov_hk_en_feature_index_rss, "cn-b51-news-gov-hk-en-feature-index-rss",
      "news.gov.hk - Features", "news.gov.hk - Features",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/en/feature/index.rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:news.gov.hk - Features\",\"government\",\"batch:51\"]",
      3600,
@@ -587,7 +587,7 @@ RSSX(cn_b51_news_gov_hk_en_feature_index_rss, "cn-b51-news-gov-hk-en-feature-ind
 
 RSSX(cn_b51_news_gov_hk_en_record_html_articlelist_rss, "cn-b51-news-gov-hk-en-record-html-articlelist-rss",
      "news.gov.hk - On The Record", "news.gov.hk - On The Record",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/en/record/html/articlelist.rss.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:news.gov.hk - On The Record\",\"government\",\"batch:51\"]",
      3600,
@@ -595,7 +595,7 @@ RSSX(cn_b51_news_gov_hk_en_record_html_articlelist_rss, "cn-b51-news-gov-hk-en-r
 
 RSSX(cn_b51_news_gov_hk_tc_categories_admin_html_articlelist_rss, "cn-b51-news-gov-hk-tc-categories-admin-html-articlelist-rss",
      "香港政府新聞網 - 行政與公民事務", "香港政府新聞網 - 行政與公民事務",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/tc/categories/admin/html/articlelist.rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港政府新聞網 - 行政與公民事務\",\"government\",\"batch:51\"]",
      3600,
@@ -603,7 +603,7 @@ RSSX(cn_b51_news_gov_hk_tc_categories_admin_html_articlelist_rss, "cn-b51-news-g
 
 RSSX(cn_b51_news_gov_hk_tc_categories_environment_html_articlelist_rss, "cn-b51-news-gov-hk-tc-categories-environment-html-articlelist-rss",
      "香港政府新聞網 - 環境", "香港政府新聞網 - 環境",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/tc/categories/environment/html/articlelist.rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港政府新聞網 - 環境\",\"government\",\"batch:51\"]",
      3600,
@@ -611,7 +611,7 @@ RSSX(cn_b51_news_gov_hk_tc_categories_environment_html_articlelist_rss, "cn-b51-
 
 RSSX(cn_b51_news_gov_hk_tc_categories_finance_html_articlelist_rss, "cn-b51-news-gov-hk-tc-categories-finance-html-articlelist-rss",
      "香港政府新聞網 - 財經", "香港政府新聞網 - 財經",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/tc/categories/finance/html/articlelist.rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港政府新聞網 - 財經\",\"government\",\"batch:51\"]",
      3600,
@@ -619,7 +619,7 @@ RSSX(cn_b51_news_gov_hk_tc_categories_finance_html_articlelist_rss, "cn-b51-news
 
 RSSX(cn_b51_news_gov_hk_tc_categories_health_html_articlelist_rss, "cn-b51-news-gov-hk-tc-categories-health-html-articlelist-rss",
      "香港政府新聞網 - 社區與健康", "香港政府新聞網 - 社區與健康",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/tc/categories/health/html/articlelist.rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港政府新聞網 - 社區與健康\",\"government\",\"batch:51\"]",
      3600,
@@ -627,7 +627,7 @@ RSSX(cn_b51_news_gov_hk_tc_categories_health_html_articlelist_rss, "cn-b51-news-
 
 RSSX(cn_b51_news_gov_hk_tc_categories_infrastructure_html_articlelist_rss, "cn-b51-news-gov-hk-tc-categories-infrastructure-html-articlelist-rss",
      "香港政府新聞網 - 基建與物流", "香港政府新聞網 - 基建與物流",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/tc/categories/infrastructure/html/articlelist.rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港政府新聞網 - 基建與物流\",\"government\",\"batch:51\"]",
      3600,
@@ -635,7 +635,7 @@ RSSX(cn_b51_news_gov_hk_tc_categories_infrastructure_html_articlelist_rss, "cn-b
 
 RSSX(cn_b51_news_gov_hk_tc_categories_law_order_html_articlelist_rss, "cn-b51-news-gov-hk-tc-categories-law-order-html-articlelist-rss",
      "香港政府新聞網 - 治安", "香港政府新聞網 - 治安",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/tc/categories/law_order/html/articlelist.rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港政府新聞網 - 治安\",\"government\",\"batch:51\"]",
      3600,
@@ -643,7 +643,7 @@ RSSX(cn_b51_news_gov_hk_tc_categories_law_order_html_articlelist_rss, "cn-b51-ne
 
 RSSX(cn_b51_news_gov_hk_tc_categories_school_work_html_articlelist_rss, "cn-b51-news-gov-hk-tc-categories-school-work-html-articlelist-rss",
      "香港政府新聞網 - 教育與就業", "香港政府新聞網 - 教育與就業",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/tc/categories/school_work/html/articlelist.rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港政府新聞網 - 教育與就業\",\"government\",\"batch:51\"]",
      3600,
@@ -651,7 +651,7 @@ RSSX(cn_b51_news_gov_hk_tc_categories_school_work_html_articlelist_rss, "cn-b51-
 
 RSSX(cn_b51_news_gov_hk_tc_city_life_html_articlelist_rss, "cn-b51-news-gov-hk-tc-city-life-html-articlelist-rss",
      "香港政府新聞網 - 都會生活", "香港政府新聞網 - 都會生活",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/tc/city_life/html/articlelist.rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港政府新聞網 - 都會生活\",\"government\",\"batch:51\"]",
      3600,
@@ -659,7 +659,7 @@ RSSX(cn_b51_news_gov_hk_tc_city_life_html_articlelist_rss, "cn-b51-news-gov-hk-t
 
 RSSX(cn_b51_news_gov_hk_tc_common_html_ticker_rss, "cn-b51-news-gov-hk-tc-common-html-ticker-rss",
      "香港政府新聞網 - 新聞速遞", "香港政府新聞網 - 新聞速遞",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/tc/common/html/ticker.rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港政府新聞網 - 新聞速遞\",\"government\",\"batch:51\"]",
      3600,
@@ -667,7 +667,7 @@ RSSX(cn_b51_news_gov_hk_tc_common_html_ticker_rss, "cn-b51-news-gov-hk-tc-common
 
 RSSX(cn_b51_news_gov_hk_tc_common_html_topstories_rss, "cn-b51-news-gov-hk-tc-common-html-topstories-rss",
      "香港政府新聞網 - 重要新聞", "香港政府新聞網 - 重要新聞",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/tc/common/html/topstories.rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港政府新聞網 - 重要新聞\",\"government\",\"batch:51\"]",
      3600,
@@ -675,7 +675,7 @@ RSSX(cn_b51_news_gov_hk_tc_common_html_topstories_rss, "cn-b51-news-gov-hk-tc-co
 
 RSSX(cn_b51_news_gov_hk_tc_feature_index_rss, "cn-b51-news-gov-hk-tc-feature-index-rss",
      "香港政府新聞網 - 特寫", "香港政府新聞網 - 特寫",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/tc/feature/index.rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港政府新聞網 - 特寫\",\"government\",\"batch:51\"]",
      3600,
@@ -683,7 +683,7 @@ RSSX(cn_b51_news_gov_hk_tc_feature_index_rss, "cn-b51-news-gov-hk-tc-feature-ind
 
 RSSX(cn_b51_news_gov_hk_tc_record_html_articlelist_rss, "cn-b51-news-gov-hk-tc-record-html-articlelist-rss",
      "香港政府新聞網 - 政府評論", "香港政府新聞網 - 政府評論",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.news.gov.hk/tc/record/html/articlelist.rss.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:香港政府新聞網 - 政府評論\",\"government\",\"batch:51\"]",
      3600,
@@ -691,7 +691,7 @@ RSSX(cn_b51_news_gov_hk_tc_record_html_articlelist_rss, "cn-b51-news-gov-hk-tc-r
 
 RSSX(cn_b51_ofca_gov_hk_filemanager_ofca_en_rss_index, "cn-b51-ofca-gov-hk-filemanager-ofca-en-rss-index",
      "Office of the Communications Authority : What's New", "Office of the Communications Authority : What's New",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.ofca.gov.hk/filemanager/ofca/en/rss/index.xml",
      "en", "[\"gov\",\"country:hk\",\"publisher:Office of the Communications Authority : What's New\",\"government\",\"batch:51\"]",
      3600,
@@ -699,7 +699,7 @@ RSSX(cn_b51_ofca_gov_hk_filemanager_ofca_en_rss_index, "cn-b51-ofca-gov-hk-filem
 
 RSSX(cn_b51_ofca_gov_hk_filemanager_ofca_tc_rss_index, "cn-b51-ofca-gov-hk-filemanager-ofca-tc-rss-index",
      "通訊事務管理局辦公室 : 最新消息", "通訊事務管理局辦公室 : 最新消息",
-     "government", "government",
+     "cn_gov_hongkong", "government",
      "https://www.ofca.gov.hk/filemanager/ofca/tc/rss/index.xml",
      "zh", "[\"gov\",\"country:hk\",\"publisher:通訊事務管理局辦公室 : 最新消息\",\"government\",\"batch:51\"]",
      3600,

@@ -79,7 +79,16 @@ def strip_comments(text):
         if s.startswith("/*") or s.startswith("//"):
             return "\n" * s.count("\n")
         return s
-    return _COMMENT_SCAN.sub(sub, text)
+    text = _COMMENT_SCAN.sub(sub, text)
+    # `#ifdef JO_TEST_PODS ... #endif`: test fixtures that the production build
+    # does not compile (native/collectors/pod/geojson_file.c). The count must
+    # agree with the binary, so a block the build skips is skipped here too.
+    return _TEST_POD_BLOCK.sub(lambda m: "\n" * m.group(0).count("\n"), text)
+
+
+_TEST_POD_BLOCK = re.compile(
+    r"^[ \t]*#[ \t]*ifdef[ \t]+JO_TEST_PODS\b.*?^[ \t]*#[ \t]*endif\b[^\n]*",
+    re.M | re.S)
 
 
 def join_continuations(text):

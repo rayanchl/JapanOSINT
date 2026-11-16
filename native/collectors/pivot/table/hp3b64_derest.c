@@ -24,7 +24,7 @@
 static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_BD5E393BCB", .name = "www.gis.nrw.de — Grenzsteine (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — Grenzsteine (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -45,7 +45,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F2FF17DA59", .name = "www.gis.nrw.de — Grenzen (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — Grenzen (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -67,7 +67,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_4088AC1AE2", .name = "www.gis.nrw.de — Feldblöcke mit Wassererosionsgefährdung (ArcGIS "
       "layer 0)",
     .name_ja = "www.gis.nrw.de — Feldblöcke mit Wassererosionsgefährdung (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -90,7 +90,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_4D7A4AE507", .name = "www.gis.nrw.de — Feldblöcke mit Winderosionsgefährdung (ArcGIS "
       "layer 5)",
     .name_ja = "www.gis.nrw.de — Feldblöcke mit Winderosionsgefährdung (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -111,7 +111,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0B8B688DBD", .name = "www.gis.nrw.de — vegetationsdauer (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — vegetationsdauer (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -132,7 +132,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1E4E1A5CE2", .name = "www.gis.nrw.de — naehrstoffversorgung (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — naehrstoffversorgung (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -153,7 +153,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_83EE2141CF", .name = "www.gis.nrw.de — vereinfachtes_substrat (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — vereinfachtes_substrat (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -174,7 +174,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_627A1CF459", .name = "www.gis.nrw.de — gesamtwasserhaushalt (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — gesamtwasserhaushalt (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -195,7 +195,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FA6860C9F3", .name = "www.gis.nrw.de — wet (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — wet (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -216,7 +216,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EDDC52C412", .name = "www.gis.nrw.de — duerre (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — duerre (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -237,7 +237,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_582998D175", .name = "www.gis.nrw.de — stieleiche (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — stieleiche (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -258,7 +258,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_311D86D37D", .name = "www.gis.nrw.de — traubeneiche (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — traubeneiche (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -279,7 +279,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3FA74E7F6E", .name = "www.gis.nrw.de — roteiche (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — roteiche (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -300,7 +300,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BAE93CA849", .name = "www.gis.nrw.de — esskastanie (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — esskastanie (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -321,7 +321,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2BD92C55C2", .name = "www.gis.nrw.de — rotbuche (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — rotbuche (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -342,7 +342,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B74644B83E", .name = "www.gis.nrw.de — bergahorn (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — bergahorn (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -363,7 +363,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3F13FFC684", .name = "www.gis.nrw.de — vogelkirsche (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — vogelkirsche (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -384,7 +384,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_205F9A48AE", .name = "www.gis.nrw.de — winterlinde (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — winterlinde (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -405,7 +405,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_70D5DCF26E", .name = "www.gis.nrw.de — sandbirke (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — sandbirke (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -426,7 +426,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E3A23E90C5", .name = "www.gis.nrw.de — schwarzerle (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — schwarzerle (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -447,7 +447,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F858466B55", .name = "www.gis.nrw.de — fichte (ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — fichte (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -468,7 +468,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2D66ACCA05", .name = "www.gis.nrw.de — weisstanne (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — weisstanne (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -489,7 +489,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5C7A368553", .name = "www.gis.nrw.de — grosse_kuestentanne (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — grosse_kuestentanne (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -510,7 +510,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FB23A7CFDA", .name = "www.gis.nrw.de — kiefer (ArcGIS layer 22)",
     .name_ja = "www.gis.nrw.de — kiefer (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -531,7 +531,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_71DA6D2FE7", .name = "www.gis.nrw.de — europaeische_laerche (ArcGIS layer 23)",
     .name_ja = "www.gis.nrw.de — europaeische_laerche (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -552,7 +552,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BBEAD28203", .name = "www.gis.nrw.de — douglasie (ArcGIS layer 24)",
     .name_ja = "www.gis.nrw.de — douglasie (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -573,7 +573,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F02B5EF26D", .name = "www.gis.nrw.de — vegetationsdauer (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — vegetationsdauer (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -594,7 +594,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_268203B56D", .name = "www.gis.nrw.de — naehrstoffversorgung (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — naehrstoffversorgung (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -615,7 +615,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D98A500ECB", .name = "www.gis.nrw.de — vereinfachtes_substrat (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — vereinfachtes_substrat (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -636,7 +636,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C5013A138A", .name = "www.gis.nrw.de — gesamtwasserhaushalt (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — gesamtwasserhaushalt (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -657,7 +657,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_30CF3F670C", .name = "www.gis.nrw.de — wet (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — wet (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -678,7 +678,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8C9A06939B", .name = "www.gis.nrw.de — duerre (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — duerre (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -699,7 +699,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3E72CADAB7", .name = "www.gis.nrw.de — stieleiche (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — stieleiche (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -720,7 +720,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_669618221C", .name = "www.gis.nrw.de — traubeneiche (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — traubeneiche (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -741,7 +741,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_437963F1AD", .name = "www.gis.nrw.de — roteiche (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — roteiche (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -762,7 +762,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EDE96D4ABF", .name = "www.gis.nrw.de — esskastanie (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — esskastanie (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -783,7 +783,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_59EA6BE23E", .name = "www.gis.nrw.de — rotbuche (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — rotbuche (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -804,7 +804,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_88464C91E0", .name = "www.gis.nrw.de — bergahorn (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — bergahorn (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -825,7 +825,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_076F2C15BF", .name = "www.gis.nrw.de — vogelkirsche (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — vogelkirsche (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -846,7 +846,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E1E14D3036", .name = "www.gis.nrw.de — winterlinde (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — winterlinde (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -867,7 +867,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DD65B75C8E", .name = "www.gis.nrw.de — sandbirke (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — sandbirke (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -888,7 +888,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_30DD08DCC2", .name = "www.gis.nrw.de — schwarzerle (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — schwarzerle (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -909,7 +909,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0881B3E20E", .name = "www.gis.nrw.de — fichte (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — fichte (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -930,7 +930,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_07BD6AB963", .name = "www.gis.nrw.de — weisstanne (ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — weisstanne (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -951,7 +951,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C2070E9BDF", .name = "www.gis.nrw.de — grosse_kuestentanne (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — grosse_kuestentanne (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -972,7 +972,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_09F3AC5738", .name = "www.gis.nrw.de — kiefer (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — kiefer (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -993,7 +993,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_011DC3C389", .name = "www.gis.nrw.de — europaeische_laerche (ArcGIS layer 22)",
     .name_ja = "www.gis.nrw.de — europaeische_laerche (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1014,7 +1014,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E73141169A", .name = "www.gis.nrw.de — douglasie (ArcGIS layer 23)",
     .name_ja = "www.gis.nrw.de — douglasie (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1035,7 +1035,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_417C007920", .name = "www.gis.nrw.de — vegetationsdauer (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — vegetationsdauer (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1056,7 +1056,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5B240594FD", .name = "www.gis.nrw.de — naehrstoffversorgung (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — naehrstoffversorgung (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1077,7 +1077,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9D4E50DBAA", .name = "www.gis.nrw.de — vereinfachtes_Substrat (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — vereinfachtes_Substrat (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1098,7 +1098,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5017CCF08C", .name = "www.gis.nrw.de — gesamtwasserhaushalt (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — gesamtwasserhaushalt (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1119,7 +1119,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8D6F2A7871", .name = "www.gis.nrw.de — wet (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — wet (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1140,7 +1140,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_66C5FD3874", .name = "www.gis.nrw.de — duerre (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — duerre (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1161,7 +1161,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D05E6F161F", .name = "www.gis.nrw.de — stieleiche (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — stieleiche (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1182,7 +1182,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5BFA3B2912", .name = "www.gis.nrw.de — traubeneiche (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — traubeneiche (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1203,7 +1203,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D4B9C6D8C7", .name = "www.gis.nrw.de — roteiche (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — roteiche (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1224,7 +1224,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E4C6DBFBA2", .name = "www.gis.nrw.de — esskastanie (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — esskastanie (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1245,7 +1245,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8AE8282D0C", .name = "www.gis.nrw.de — rotbuche (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — rotbuche (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1266,7 +1266,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3594F8CA36", .name = "www.gis.nrw.de — bergahorn (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — bergahorn (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1287,7 +1287,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9FD5D26603", .name = "www.gis.nrw.de — vogelkirsche (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — vogelkirsche (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1308,7 +1308,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_00C6A30524", .name = "www.gis.nrw.de — winterlinde (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — winterlinde (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1329,7 +1329,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EF1A3EC491", .name = "www.gis.nrw.de — sandbirke (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — sandbirke (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1350,7 +1350,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_6CBBD497D9", .name = "www.gis.nrw.de — schwarzerle (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — schwarzerle (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1371,7 +1371,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B1AEBF23E6", .name = "www.gis.nrw.de — fichte (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — fichte (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1392,7 +1392,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_53BF03E91D", .name = "www.gis.nrw.de — weisstanne (ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — weisstanne (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1413,7 +1413,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FA3991B2FC", .name = "www.gis.nrw.de — grosse_kuestentanne (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — grosse_kuestentanne (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1434,7 +1434,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_54522A8AAB", .name = "www.gis.nrw.de — kiefer (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — kiefer (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1455,7 +1455,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_40B2CA2392", .name = "www.gis.nrw.de — europaeische_laerche (ArcGIS layer 22)",
     .name_ja = "www.gis.nrw.de — europaeische_laerche (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1476,7 +1476,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F00BCE4E65", .name = "www.gis.nrw.de — douglasie (ArcGIS layer 23)",
     .name_ja = "www.gis.nrw.de — douglasie (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1497,7 +1497,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_6DFB4C1512", .name = "www.gis.nrw.de — Vegetationsdauer (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — Vegetationsdauer (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1518,7 +1518,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8065B36657", .name = "www.gis.nrw.de — Naehrstoffversorgung (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — Naehrstoffversorgung (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1539,7 +1539,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B86157E693", .name = "www.gis.nrw.de — Gesamtwasserhaushalt_overview (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — Gesamtwasserhaushalt_overview (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1560,7 +1560,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DC0AD77469", .name = "www.gis.nrw.de — Gesamtwasserhaushalt (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — Gesamtwasserhaushalt (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1581,7 +1581,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7BF0906FF3", .name = "www.gis.nrw.de — WET (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — WET (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1602,7 +1602,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_91B5C5C48F", .name = "www.gis.nrw.de — Standorttypen_komplett (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — Standorttypen_komplett (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1623,7 +1623,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_56372BC195", .name = "www.gis.nrw.de — Duerre (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — Duerre (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1644,7 +1644,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BAA3571230", .name = "www.gis.nrw.de — Stieleiche (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — Stieleiche (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1665,7 +1665,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_42D92D4948", .name = "www.gis.nrw.de — Traubeneiche (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — Traubeneiche (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1686,7 +1686,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_23ECF6FA29", .name = "www.gis.nrw.de — Roteiche (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — Roteiche (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1707,7 +1707,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_470FAE1025", .name = "www.gis.nrw.de — Esskastanie (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — Esskastanie (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1728,7 +1728,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BB9EEA3B3B", .name = "www.gis.nrw.de — Rotbuche (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — Rotbuche (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1749,7 +1749,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_40913C702D", .name = "www.gis.nrw.de — Bergahorn (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — Bergahorn (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1770,7 +1770,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4C4A795070", .name = "www.gis.nrw.de — Vogelkirsche (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — Vogelkirsche (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1791,7 +1791,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_385054FAC5", .name = "www.gis.nrw.de — Winterlinde (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — Winterlinde (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1812,7 +1812,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1150FA7711", .name = "www.gis.nrw.de — Sandbirke (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — Sandbirke (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1833,7 +1833,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C7194FDB3A", .name = "www.gis.nrw.de — Schwarzerle (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — Schwarzerle (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1854,7 +1854,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E683935A0B", .name = "www.gis.nrw.de — Fichte (ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — Fichte (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1875,7 +1875,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0875A4FC11", .name = "www.gis.nrw.de — Weisstanne (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — Weisstanne (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1896,7 +1896,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D623434E03", .name = "www.gis.nrw.de — Grosse_Kuestentanne (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — Grosse_Kuestentanne (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1917,7 +1917,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_860BBD7C8A", .name = "www.gis.nrw.de — Kiefer (ArcGIS layer 22)",
     .name_ja = "www.gis.nrw.de — Kiefer (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1938,7 +1938,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7118FDF8FD", .name = "www.gis.nrw.de — Europaeische_Laerche (ArcGIS layer 23)",
     .name_ja = "www.gis.nrw.de — Europaeische_Laerche (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1959,7 +1959,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9C13042EE7", .name = "www.gis.nrw.de — Douglasie (ArcGIS layer 24)",
     .name_ja = "www.gis.nrw.de — Douglasie (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1980,7 +1980,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_84B9360006", .name = "www.gis.nrw.de — Vegetationsdauer (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — Vegetationsdauer (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2001,7 +2001,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DC8E2A955D", .name = "www.gis.nrw.de — Naehrstoffversorgung (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — Naehrstoffversorgung (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2022,7 +2022,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E6C3AF474E", .name = "www.gis.nrw.de — Gesamtwasserhaushalt_overview (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — Gesamtwasserhaushalt_overview (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2044,7 +2044,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_84FF4440A8", .name = "www.gis.nrw.de — Gesamtwasserhaushalt (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — Gesamtwasserhaushalt (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2065,7 +2065,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DCE4D73A40", .name = "www.gis.nrw.de — WET (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — WET (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2086,7 +2086,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7E5A586006", .name = "www.gis.nrw.de — Duerre (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — Duerre (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2107,7 +2107,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E6A02B5853", .name = "www.gis.nrw.de — Stieleiche (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — Stieleiche (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2128,7 +2128,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_AF9366D7B8", .name = "www.gis.nrw.de — Traubeneiche (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — Traubeneiche (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2149,7 +2149,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4C9193D0EB", .name = "www.gis.nrw.de — Roteiche (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — Roteiche (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2170,7 +2170,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DB0F4057BB", .name = "www.gis.nrw.de — Esskastanie (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — Esskastanie (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2191,7 +2191,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0ABED7385E", .name = "www.gis.nrw.de — Rotbuche (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — Rotbuche (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2212,7 +2212,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_01678C62BF", .name = "www.gis.nrw.de — Bergahorn (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — Bergahorn (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2233,7 +2233,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8090D7524B", .name = "www.gis.nrw.de — Vogelkirsche (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — Vogelkirsche (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2254,7 +2254,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7BCBDCD465", .name = "www.gis.nrw.de — Winterlinde (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — Winterlinde (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2275,7 +2275,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E68EDB5FF0", .name = "www.gis.nrw.de — Sandbirke (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — Sandbirke (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2296,7 +2296,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_657CE89630", .name = "www.gis.nrw.de — Schwarzerle (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — Schwarzerle (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2317,7 +2317,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7579ADF742", .name = "www.gis.nrw.de — Fichte (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — Fichte (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2338,7 +2338,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_529CB2EAF9", .name = "www.gis.nrw.de — Weisstanne (ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — Weisstanne (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2359,7 +2359,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8BACF6A78C", .name = "www.gis.nrw.de — Grosse_Kuestentanne (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — Grosse_Kuestentanne (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2380,7 +2380,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EBFE166211", .name = "www.gis.nrw.de — Kiefer (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — Kiefer (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2401,7 +2401,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_610EFD225A", .name = "www.gis.nrw.de — Europaeische_Laerche (ArcGIS layer 22)",
     .name_ja = "www.gis.nrw.de — Europaeische_Laerche (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2422,7 +2422,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_66E8543DF3", .name = "www.gis.nrw.de — Douglasie (ArcGIS layer 23)",
     .name_ja = "www.gis.nrw.de — Douglasie (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2443,7 +2443,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3B194F7644", .name = "www.gis.nrw.de — Vegetationsdauer (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — Vegetationsdauer (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2464,7 +2464,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A980BF46CF", .name = "www.gis.nrw.de — Naehrstoffversorgung (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — Naehrstoffversorgung (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2485,7 +2485,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3D53618E28", .name = "www.gis.nrw.de — Gesamtwasserhaushalt_overview (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — Gesamtwasserhaushalt_overview (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2507,7 +2507,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D5B0CA147B", .name = "www.gis.nrw.de — Gesamtwasserhaushalt (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — Gesamtwasserhaushalt (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2528,7 +2528,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E605E55927", .name = "www.gis.nrw.de — WET (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — WET (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2549,7 +2549,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_70293A82A0", .name = "www.gis.nrw.de — Duerre (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — Duerre (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2570,7 +2570,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0D0646C37B", .name = "www.gis.nrw.de — Stieleiche (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — Stieleiche (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2591,7 +2591,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3C309D5429", .name = "www.gis.nrw.de — Traubeneiche (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — Traubeneiche (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2612,7 +2612,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D0AC7CCFF3", .name = "www.gis.nrw.de — Roteiche (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — Roteiche (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2633,7 +2633,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7D8E16D11C", .name = "www.gis.nrw.de — Esskastanie (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — Esskastanie (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2654,7 +2654,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_762976A62B", .name = "www.gis.nrw.de — Rotbuche (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — Rotbuche (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2675,7 +2675,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5BA4DED1B8", .name = "www.gis.nrw.de — Bergahorn (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — Bergahorn (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2696,7 +2696,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0172EF1BD6", .name = "www.gis.nrw.de — Vogelkirsche (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — Vogelkirsche (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2717,7 +2717,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4395CDDB86", .name = "www.gis.nrw.de — Winterlinde (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — Winterlinde (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2738,7 +2738,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E423CC4331", .name = "www.gis.nrw.de — Sandbirke (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — Sandbirke (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2759,7 +2759,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_620E2D64B8", .name = "www.gis.nrw.de — Schwarzerle (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — Schwarzerle (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2780,7 +2780,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_843C749539", .name = "www.gis.nrw.de — Fichte (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — Fichte (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2801,7 +2801,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4C64F6263E", .name = "www.gis.nrw.de — Weisstanne (ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — Weisstanne (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2822,7 +2822,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8122E0B0FA", .name = "www.gis.nrw.de — Grosse_Kuestentanne (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — Grosse_Kuestentanne (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2843,7 +2843,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_143ACF6785", .name = "www.gis.nrw.de — Kiefer (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — Kiefer (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2864,7 +2864,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_6C447710F5", .name = "www.gis.nrw.de — Europaeische_Laerche (ArcGIS layer 22)",
     .name_ja = "www.gis.nrw.de — Europaeische_Laerche (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2885,7 +2885,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_613D74DDCF", .name = "www.gis.nrw.de — Douglasie (ArcGIS layer 23)",
     .name_ja = "www.gis.nrw.de — Douglasie (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2907,7 +2907,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_60FCD4171F", .name = "www.gis.nrw.de — 1800 (2400) Betriebsstunden/Jahr (ArcGIS layer "
       "2)",
     .name_ja = "www.gis.nrw.de — 1800 (2400) Betriebsstunden/Jahr (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2928,7 +2928,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_33ABBA5444", .name = "www.gis.nrw.de — Erhoehte Fliessgeschwindigkeit (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — Erhoehte Fliessgeschwindigkeit (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2949,7 +2949,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_03DABE362C", .name = "www.gis.nrw.de — 40 m Sondenlaenge (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — 40 m Sondenlaenge (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2970,7 +2970,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F51B4EA0AF", .name = "www.gis.nrw.de — 60 m Sondenlaenge (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — 60 m Sondenlaenge (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2991,7 +2991,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_21FD8FBB07", .name = "www.gis.nrw.de — 80 m Sondenlaenge (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — 80 m Sondenlaenge (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3012,7 +3012,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BAFE85216A", .name = "www.gis.nrw.de — 100 m Sondenlaenge (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — 100 m Sondenlaenge (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3033,7 +3033,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7BEF517C70", .name = "www.gis.nrw.de — offene Waermespeicher (ATES) (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — offene Waermespeicher (ATES) (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3054,7 +3054,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3590B181DF", .name = "www.gis.nrw.de — Dublette (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — Dublette (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3075,7 +3075,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D41D2C4BB2", .name = "www.gis.nrw.de — Tektonik (ArcGIS layer 133)",
     .name_ja = "www.gis.nrw.de — Tektonik (ArcGIS layer 133)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3096,7 +3096,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DC3E433914", .name = "www.gis.nrw.de — Isolinien (m) (ArcGIS layer 129)",
     .name_ja = "www.gis.nrw.de — Isolinien (m) (ArcGIS layer 129)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3117,7 +3117,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7A792AD606", .name = "www.gis.nrw.de — Faziesverteilung (Gestein) (ArcGIS layer 106)",
     .name_ja = "www.gis.nrw.de — Faziesverteilung (Gestein) (ArcGIS layer 106)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3138,7 +3138,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_00024D8B44", .name = "www.gis.nrw.de — Tektonik (ArcGIS layer 51)",
     .name_ja = "www.gis.nrw.de — Tektonik (ArcGIS layer 51)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3159,7 +3159,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7FC59BB75F", .name = "www.gis.nrw.de — Isolinien (m) (ArcGIS layer 52)",
     .name_ja = "www.gis.nrw.de — Isolinien (m) (ArcGIS layer 52)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3180,7 +3180,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0F319F330B", .name = "www.gis.nrw.de — Faziesverteilung (Gestein) (ArcGIS layer 53)",
     .name_ja = "www.gis.nrw.de — Faziesverteilung (Gestein) (ArcGIS layer 53)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3201,7 +3201,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_075F3EBEE0", .name = "www.gis.nrw.de — Tektonik (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — Tektonik (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3222,7 +3222,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EA80B927FB", .name = "www.gis.nrw.de — Isolinien (m) (ArcGIS layer 49)",
     .name_ja = "www.gis.nrw.de — Isolinien (m) (ArcGIS layer 49)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3244,7 +3244,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_1DA8C6EADC", .name = "www.gis.nrw.de — 1800 (2400) Betriebsstunden/Jahr (ArcGIS layer "
       "2)",
     .name_ja = "www.gis.nrw.de — 1800 (2400) Betriebsstunden/Jahr (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3266,7 +3266,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9B35198D84", .name = "www.gis.nrw.de — Erhoehte Fliessgeschwindigkeit (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — Erhoehte Fliessgeschwindigkeit (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3287,7 +3287,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D40679C6D3", .name = "www.gis.nrw.de — 40 m Sondenlaenge (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — 40 m Sondenlaenge (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3308,7 +3308,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2EEF1EEBC9", .name = "www.gis.nrw.de — 60 m Sondenlaenge (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — 60 m Sondenlaenge (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3329,7 +3329,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_90B4938D14", .name = "www.gis.nrw.de — 80 m Sondenlaenge (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — 80 m Sondenlaenge (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3350,7 +3350,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D9C15C8F21", .name = "www.gis.nrw.de — 100 m Sondenlaenge (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — 100 m Sondenlaenge (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3371,7 +3371,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_55F335BBDD", .name = "www.gis.nrw.de — offene Waermespeicher (ATES) (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — offene Waermespeicher (ATES) (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3392,7 +3392,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4D1C46B36C", .name = "www.gis.nrw.de — Dublette (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — Dublette (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3413,7 +3413,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D4BB74FFEF", .name = "www.gis.nrw.de — Tektonik (ArcGIS layer 133)",
     .name_ja = "www.gis.nrw.de — Tektonik (ArcGIS layer 133)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3434,7 +3434,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B7C172776E", .name = "www.gis.nrw.de — Isolinien (m) (ArcGIS layer 129)",
     .name_ja = "www.gis.nrw.de — Isolinien (m) (ArcGIS layer 129)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3455,7 +3455,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EA01D35E1E", .name = "www.gis.nrw.de — Faziesverteilung (Gestein) (ArcGIS layer 106)",
     .name_ja = "www.gis.nrw.de — Faziesverteilung (Gestein) (ArcGIS layer 106)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3476,7 +3476,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_33AC0D6A8E", .name = "www.gis.nrw.de — Tektonik (ArcGIS layer 51)",
     .name_ja = "www.gis.nrw.de — Tektonik (ArcGIS layer 51)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3497,7 +3497,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_06FFE7A5F2", .name = "www.gis.nrw.de — Isolinien (m) (ArcGIS layer 52)",
     .name_ja = "www.gis.nrw.de — Isolinien (m) (ArcGIS layer 52)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3518,7 +3518,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_82EE1313C2", .name = "www.gis.nrw.de — Faziesverteilung (Gestein) (ArcGIS layer 53)",
     .name_ja = "www.gis.nrw.de — Faziesverteilung (Gestein) (ArcGIS layer 53)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3539,7 +3539,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E55AEE433E", .name = "www.gis.nrw.de — Tektonik (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — Tektonik (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3560,7 +3560,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B31196D915", .name = "www.gis.nrw.de — Isolinien (m) (ArcGIS layer 49)",
     .name_ja = "www.gis.nrw.de — Isolinien (m) (ArcGIS layer 49)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3582,7 +3582,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_D44D9B2901", .name = "www.gis.nrw.de — Auskunft durch Bezirksregierung Arnsberg "
       "(ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — Auskunft durch Bezirksregierung Arnsberg (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3605,7 +3605,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_3017840B51", .name = "www.gis.nrw.de — Auskunft durch Geologischer Dienst NRW (ArcGIS "
       "layer 2)",
     .name_ja = "www.gis.nrw.de — Auskunft durch Geologischer Dienst NRW (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3626,7 +3626,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E29B4FB844", .name = "www.gis.nrw.de — bergbaubedingter Tagesbruch (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — bergbaubedingter Tagesbruch (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3647,7 +3647,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8EB9D35644", .name = "www.gis.nrw.de — verlassene Tagesöffnung (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — verlassene Tagesöffnung (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3669,7 +3669,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_E667E6B3CB", .name = "www.gis.nrw.de — oberflächennaher Bergbau, belegt (ArcGIS layer "
       "7)",
     .name_ja = "www.gis.nrw.de — oberflächennaher Bergbau, belegt (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3690,7 +3690,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3563C0D662", .name = "www.gis.nrw.de — tagesnaher Bergbau, möglich (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — tagesnaher Bergbau, möglich (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3711,7 +3711,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2004F2B769", .name = "www.gis.nrw.de — punktuell (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — punktuell (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3732,7 +3732,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E276A499E3", .name = "www.gis.nrw.de — flächenhaft (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — flächenhaft (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3753,7 +3753,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_6EC90C9BEA", .name = "www.gis.nrw.de — Erdfall (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — Erdfall (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3774,7 +3774,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1CC735B7AA", .name = "www.gis.nrw.de — Subrosionssenke (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — Subrosionssenke (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3795,7 +3795,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DC5F6E6240", .name = "www.gis.nrw.de — Karstgebiet (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — Karstgebiet (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3816,7 +3816,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C0A537CF30", .name = "www.gis.nrw.de — Gasaustritt in Bohrungen (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — Gasaustritt in Bohrungen (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3837,7 +3837,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_39129DF272", .name = "www.gis.nrw.de — seismisch aktive Störung (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — seismisch aktive Störung (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3858,7 +3858,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A1E4708EE3", .name = "www.gis.nrw.de — Erdbebengefährdung (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — Erdbebengefährdung (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3879,7 +3879,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4601B29382", .name = "www.gis.nrw.de — Planquadrat (ArcGIS layer 22)",
     .name_ja = "www.gis.nrw.de — Planquadrat (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3900,7 +3900,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3B894F8101", .name = "www.gis.nrw.de — segmente (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — segmente (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3921,7 +3921,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DA8A842CC5", .name = "www.gis.nrw.de — brw_ein_zweigeschossig_label (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — brw_ein_zweigeschossig_label (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3943,7 +3943,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D42D941A57", .name = "www.gis.nrw.de — brw_ein_zweigeschossig (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — brw_ein_zweigeschossig (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3966,7 +3966,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_EEA7DD399E", .name = "www.gis.nrw.de — brw_mehrgeschossige_bauweise_label (ArcGIS "
       "layer 4)",
     .name_ja = "www.gis.nrw.de — brw_mehrgeschossige_bauweise_label (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3988,7 +3988,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_AF16A0F328", .name = "www.gis.nrw.de — brw_mehrgeschossige_bauweise (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — brw_mehrgeschossige_bauweise (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4011,7 +4011,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_9ACDB1D0A5", .name = "www.gis.nrw.de — brw_gewerbe_industrie_sondergebiete_label "
       "(ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — brw_gewerbe_industrie_sondergebiete_label (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4034,7 +4034,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_273AA142AE", .name = "www.gis.nrw.de — brw_gewerbe_industrie_sondergebiete (ArcGIS "
       "layer 8)",
     .name_ja = "www.gis.nrw.de — brw_gewerbe_industrie_sondergebiete (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4056,7 +4056,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_61CF4C323A", .name = "www.gis.nrw.de — brw_forstwirtschaft_label (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — brw_forstwirtschaft_label (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4078,7 +4078,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C66BA83518", .name = "www.gis.nrw.de — brw_forstwirtschaft (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — brw_forstwirtschaft (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4100,7 +4100,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_865856B6D6", .name = "www.gis.nrw.de — brw_landwirtschaft_label (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — brw_landwirtschaft_label (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4122,7 +4122,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F3CE271D8A", .name = "www.gis.nrw.de — brw_landwirtschaft (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — brw_landwirtschaft (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4144,7 +4144,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_808D2F3D1D", .name = "www.gis.nrw.de — brw_aussenbereich_label (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — brw_aussenbereich_label (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4166,7 +4166,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7B6198634C", .name = "www.gis.nrw.de — brw_aussenbereich (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — brw_aussenbereich (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4188,7 +4188,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_231334C318", .name = "www.gis.nrw.de — brw_sonstige_flaechen_label (ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — brw_sonstige_flaechen_label (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4210,7 +4210,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7A1BD07BA1", .name = "www.gis.nrw.de — brw_sonstige_flaechen (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — brw_sonstige_flaechen (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4232,7 +4232,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4E2FFDD62F", .name = "www.gis.nrw.de — brw_verfuegbarkeit (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — brw_verfuegbarkeit (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4254,7 +4254,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_49F5C56849", .name = "www.gis.nrw.de — brw_ein_zweigeschossig_label (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — brw_ein_zweigeschossig_label (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4276,7 +4276,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3D90B52B78", .name = "www.gis.nrw.de — brw_ein_zweigeschossig (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — brw_ein_zweigeschossig (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4299,7 +4299,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_9816361342", .name = "www.gis.nrw.de — brw_mehrgeschossige_bauweise_label (ArcGIS "
       "layer 4)",
     .name_ja = "www.gis.nrw.de — brw_mehrgeschossige_bauweise_label (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4321,7 +4321,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_96D8F33BA3", .name = "www.gis.nrw.de — brw_mehrgeschossige_bauweise (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — brw_mehrgeschossige_bauweise (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4344,7 +4344,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_424530F593", .name = "www.gis.nrw.de — brw_gewerbe_industrie_sondergebiete_label "
       "(ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — brw_gewerbe_industrie_sondergebiete_label (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4367,7 +4367,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_187F36BB03", .name = "www.gis.nrw.de — brw_gewerbe_industrie_sondergebiete (ArcGIS "
       "layer 8)",
     .name_ja = "www.gis.nrw.de — brw_gewerbe_industrie_sondergebiete (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4389,7 +4389,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1E21FFA03F", .name = "www.gis.nrw.de — brw_forstwirtschaft_label (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — brw_forstwirtschaft_label (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4411,7 +4411,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_AFC2A72E2A", .name = "www.gis.nrw.de — brw_forstwirtschaft (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — brw_forstwirtschaft (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4433,7 +4433,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_036849EC4B", .name = "www.gis.nrw.de — brw_landwirtschaft_label (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — brw_landwirtschaft_label (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4455,7 +4455,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EC0DA8E7C1", .name = "www.gis.nrw.de — brw_landwirtschaft (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — brw_landwirtschaft (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4477,7 +4477,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_37ED1D0174", .name = "www.gis.nrw.de — brw_aussenbereich_label (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — brw_aussenbereich_label (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4499,7 +4499,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DCB0F48F6F", .name = "www.gis.nrw.de — brw_aussenbereich (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — brw_aussenbereich (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4521,7 +4521,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_81AED0F28F", .name = "www.gis.nrw.de — brw_sonstige_flaechen_label (ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — brw_sonstige_flaechen_label (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4543,7 +4543,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_20426BAE9A", .name = "www.gis.nrw.de — brw_sonstige_flaechen (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — brw_sonstige_flaechen (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4565,7 +4565,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9F68437926", .name = "www.gis.nrw.de — verfuegbarkeit (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — verfuegbarkeit (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4587,7 +4587,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5DDC148B52", .name = "www.gis.nrw.de — boris_nw_expert_committees (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — boris_nw_expert_committees (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4609,7 +4609,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_715D8B6AE2", .name = "www.gis.nrw.de — boris_nw_expert_committees_communes (ArcGIS "
       "layer 1)",
     .name_ja = "www.gis.nrw.de — boris_nw_expert_committees_communes (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4630,7 +4630,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_597BCC9FF7", .name = "www.gis.nrw.de — boris_nw_expert_committees (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — boris_nw_expert_committees (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4653,7 +4653,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_144666EB9C", .name = "www.gis.nrw.de — boris_nw_expert_committees_communes (ArcGIS "
       "layer 1)",
     .name_ja = "www.gis.nrw.de — boris_nw_expert_committees_communes (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4675,7 +4675,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_532D694EE4", .name = "www.gis.nrw.de — irw_eigentumswohnungen_label (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — irw_eigentumswohnungen_label (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4697,7 +4697,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_48A116A40F", .name = "www.gis.nrw.de — irw_eigentumswohnungen (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — irw_eigentumswohnungen (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4720,7 +4720,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_C751F78161", .name = "www.gis.nrw.de — irw_ein_zweifamilienhaeuser_label (ArcGIS layer "
       "4)",
     .name_ja = "www.gis.nrw.de — irw_ein_zweifamilienhaeuser_label (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4742,7 +4742,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8827AD6CCC", .name = "www.gis.nrw.de — irw_ein_zweifamilienhaeuser (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — irw_ein_zweifamilienhaeuser (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4764,7 +4764,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8C421F19F6", .name = "www.gis.nrw.de — irw_reihen_doppelhaeuser_label (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — irw_reihen_doppelhaeuser_label (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4786,7 +4786,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E305915C11", .name = "www.gis.nrw.de — irw_reihen_doppelhaeuser (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — irw_reihen_doppelhaeuser (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4808,7 +4808,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_03DAB82417", .name = "www.gis.nrw.de — irw_mehrfamilienhaeuser_label (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — irw_mehrfamilienhaeuser_label (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4830,7 +4830,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0B9E11DB58", .name = "www.gis.nrw.de — irw_mehrfamilienhaeuser (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — irw_mehrfamilienhaeuser (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4852,7 +4852,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A50A25F383", .name = "www.gis.nrw.de — irw_gemischt_genutzt_label (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — irw_gemischt_genutzt_label (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4874,7 +4874,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D61C236A98", .name = "www.gis.nrw.de — irw_gemischt_genutzt (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — irw_gemischt_genutzt (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4896,7 +4896,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DDA1ACD7AD", .name = "www.gis.nrw.de — verfuegbarkeit (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — verfuegbarkeit (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4918,7 +4918,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_393B68EAA9", .name = "www.gis.nrw.de — label_irw_eigentumswohnungen (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — label_irw_eigentumswohnungen (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4940,7 +4940,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E7C2BB6895", .name = "www.gis.nrw.de — irw_eigentumswohnungen (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — irw_eigentumswohnungen (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4963,7 +4963,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_8B1C3DFA52", .name = "www.gis.nrw.de — label_irw_ein_zweifamilienhaeuser (ArcGIS layer "
       "4)",
     .name_ja = "www.gis.nrw.de — label_irw_ein_zweifamilienhaeuser (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4985,7 +4985,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1138B4E5D3", .name = "www.gis.nrw.de — irw_ein_zweifamilienhaeuser (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — irw_ein_zweifamilienhaeuser (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5007,7 +5007,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DFABC74A4B", .name = "www.gis.nrw.de — label_irw_reihen_doppelhaeuser (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — label_irw_reihen_doppelhaeuser (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5029,7 +5029,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B125B859E2", .name = "www.gis.nrw.de — irw_reihen_doppelhaeuser (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — irw_reihen_doppelhaeuser (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5051,7 +5051,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B4CAC8F238", .name = "www.gis.nrw.de — label_irw_mehrfamilienhaeuser (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — label_irw_mehrfamilienhaeuser (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5073,7 +5073,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F57DEC3CB0", .name = "www.gis.nrw.de — irw_mehrfamilienhaeuser (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — irw_mehrfamilienhaeuser (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5095,7 +5095,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_901685CC52", .name = "www.gis.nrw.de — label_irw_gemischt_genutzt (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — label_irw_gemischt_genutzt (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5117,7 +5117,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BA134BD8F4", .name = "www.gis.nrw.de — irw_gemischt_genutzt (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — irw_gemischt_genutzt (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5139,7 +5139,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1E3044B659", .name = "www.gis.nrw.de — irw_verfuegbarkeit (ArcGIS layer 22)",
     .name_ja = "www.gis.nrw.de — irw_verfuegbarkeit (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5161,7 +5161,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8A8B3106A6", .name = "www.gis.nrw.de — brw_ein_zweigeschossig_label (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — brw_ein_zweigeschossig_label (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5183,7 +5183,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9F6588E974", .name = "www.gis.nrw.de — brw_ein_zweigeschossig (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — brw_ein_zweigeschossig (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5206,7 +5206,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_F4B24165C4", .name = "www.gis.nrw.de — brw_mehrgeschossige_bauweise_label (ArcGIS "
       "layer 4)",
     .name_ja = "www.gis.nrw.de — brw_mehrgeschossige_bauweise_label (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5228,7 +5228,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_958FD975DF", .name = "www.gis.nrw.de — brw_mehrgeschossige_bauweise (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — brw_mehrgeschossige_bauweise (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5251,7 +5251,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_CFAC5A7BA5", .name = "www.gis.nrw.de — brw_gewerbe_industrie_sondergebiete_label "
       "(ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — brw_gewerbe_industrie_sondergebiete_label (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5274,7 +5274,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_D39A42F2D9", .name = "www.gis.nrw.de — brw_gewerbe_industrie_sondergebiete (ArcGIS "
       "layer 8)",
     .name_ja = "www.gis.nrw.de — brw_gewerbe_industrie_sondergebiete (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5296,7 +5296,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DAC868DB09", .name = "www.gis.nrw.de — brw_forstwirtschaft_label (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — brw_forstwirtschaft_label (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5318,7 +5318,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E19DDFD2A9", .name = "www.gis.nrw.de — brw_forstwirtschaft (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — brw_forstwirtschaft (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5340,7 +5340,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_113D08E4C6", .name = "www.gis.nrw.de — brw_landwirtschaft_label (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — brw_landwirtschaft_label (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5362,7 +5362,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0472067172", .name = "www.gis.nrw.de — brw_landwirtschaft (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — brw_landwirtschaft (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5384,7 +5384,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_541677947B", .name = "www.gis.nrw.de — brw_aussenbereich_label (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — brw_aussenbereich_label (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5406,7 +5406,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B64E302F11", .name = "www.gis.nrw.de — brw_aussenbereich (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — brw_aussenbereich (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5428,7 +5428,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4C793D465F", .name = "www.gis.nrw.de — brw_sonstige_flaechen_label (ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — brw_sonstige_flaechen_label (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5450,7 +5450,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2A3FC08CEF", .name = "www.gis.nrw.de — brw_sonstige_flaechen (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — brw_sonstige_flaechen (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5472,7 +5472,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_710C8DCE5C", .name = "www.gis.nrw.de — label_irw_eigentumswohnungen (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — label_irw_eigentumswohnungen (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5494,7 +5494,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_40C38BCA5F", .name = "www.gis.nrw.de — irw_eigentumswohnungen (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — irw_eigentumswohnungen (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5517,7 +5517,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_431F8E46F5", .name = "www.gis.nrw.de — label_irw_ein_zweifamilienhaeuser (ArcGIS layer "
       "4)",
     .name_ja = "www.gis.nrw.de — label_irw_ein_zweifamilienhaeuser (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5539,7 +5539,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B76923FCF1", .name = "www.gis.nrw.de — irw_ein_zweifamilienhaeuser (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — irw_ein_zweifamilienhaeuser (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5561,7 +5561,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_87FE4F4B28", .name = "www.gis.nrw.de — denkmal_linien (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — denkmal_linien (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5582,7 +5582,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D0A42C46C9", .name = "www.gis.nrw.de — denkmal_punkte (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — denkmal_punkte (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5603,7 +5603,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_48A4398BF0", .name = "www.gis.nrw.de — denkmal_flaechen (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — denkmal_flaechen (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5624,7 +5624,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E8B6141859", .name = "www.gis.nrw.de — topplus_grau (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — topplus_grau (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5645,7 +5645,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2CF97F4D66", .name = "www.gis.nrw.de — Namen der Landeshauptstädte (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — Namen der Landeshauptstädte (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5666,7 +5666,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BE380DAC53", .name = "www.gis.nrw.de — Namen der Gemeinden (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — Namen der Gemeinden (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5689,7 +5689,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_892BEAFE04", .name = "www.gis.nrw.de — Namen der Verwaltungsgemeinschaften (ArcGIS "
       "layer 2)",
     .name_ja = "www.gis.nrw.de — Namen der Verwaltungsgemeinschaften (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5712,7 +5712,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_51B74B00CC", .name = "www.gis.nrw.de — Namen der Kreise und kreisfreien Städte (ArcGIS "
       "layer 3)",
     .name_ja = "www.gis.nrw.de — Namen der Kreise und kreisfreien Städte (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5733,7 +5733,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0B91BB3AC1", .name = "www.gis.nrw.de — Namen der Regierungsbezirke (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — Namen der Regierungsbezirke (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5754,7 +5754,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BAD8F0AAF5", .name = "www.gis.nrw.de — Namen der Bundesländer (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — Namen der Bundesländer (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5775,7 +5775,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C395434C37", .name = "www.gis.nrw.de — Namen der Staaten in Europa (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — Namen der Staaten in Europa (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5796,7 +5796,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_00CB74B92B", .name = "www.gis.nrw.de — Landeshauptstädte (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — Landeshauptstädte (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5818,7 +5818,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_40CFC75662", .name = "www.gis.nrw.de — Staatsgrenze der Bundesrepublik Deutschland "
       "(ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — Staatsgrenze der Bundesrepublik Deutschland (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5839,7 +5839,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_908D6DFF48", .name = "www.gis.nrw.de — Bundesländer (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — Bundesländer (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5860,7 +5860,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2CFDA62F30", .name = "www.gis.nrw.de — Bundesländer BasisDLM (ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — Bundesländer BasisDLM (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5881,7 +5881,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F991CC452B", .name = "www.gis.nrw.de — Regierungsbezirke (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — Regierungsbezirke (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5902,7 +5902,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BDB2EC5E33", .name = "www.gis.nrw.de — Regierungsbezirke BasisDLM (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — Regierungsbezirke BasisDLM (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5923,7 +5923,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4EC042F474", .name = "www.gis.nrw.de — Kreise und kreisfreie Städte (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — Kreise und kreisfreie Städte (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5945,7 +5945,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_01AB2CE586", .name = "www.gis.nrw.de — Kreise_und_kreisfreie_Städte BasisDLM (ArcGIS "
       "layer 21)",
     .name_ja = "www.gis.nrw.de — Kreise_und_kreisfreie_Städte BasisDLM (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5966,7 +5966,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4F5B0475D1", .name = "www.gis.nrw.de — Verwaltungsgemeinschaften (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — Verwaltungsgemeinschaften (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5988,7 +5988,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_33FEE6203C", .name = "www.gis.nrw.de — Gemeinden (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — Gemeinden (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6009,7 +6009,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B399FF95D0", .name = "www.gis.nrw.de — Gemeinden_BasisDLM (ArcGIS layer 23)",
     .name_ja = "www.gis.nrw.de — Gemeinden_BasisDLM (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6030,7 +6030,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9ED3BBF781", .name = "www.gis.nrw.de — Staatsgrenzen Europa (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — Staatsgrenzen Europa (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6051,7 +6051,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_106FA1F229", .name = "www.gis.nrw.de — Bebauungspläne (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — Bebauungspläne (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6073,7 +6073,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_8E054DCA6B", .name = "www.gis.nrw.de — Innen- und Außenbereichssatzungen (ArcGIS layer "
       "30)",
     .name_ja = "www.gis.nrw.de — Innen- und Außenbereichssatzungen (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6095,7 +6095,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_96BCBFB4C2", .name = "www.gis.nrw.de — Sonstige Satzungen und Pläne (ArcGIS layer 40)",
     .name_ja = "www.gis.nrw.de — Sonstige Satzungen und Pläne (ArcGIS layer 40)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6117,7 +6117,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FA3B729C8B", .name = "www.gis.nrw.de — Flächennutzungspläne (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — Flächennutzungspläne (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_planning_zoning", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6140,7 +6140,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_B1C31B0E06", .name = "www.gis.nrw.de — Gemeinden mit Links zu den Plänen (ArcGIS layer "
       "200)",
     .name_ja = "www.gis.nrw.de — Gemeinden mit Links zu den Plänen (ArcGIS layer 200)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6161,7 +6161,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FA6C1A3FB4", .name = "www.gis.nrw.de — einwohner_grid (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — einwohner_grid (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6183,7 +6183,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_631F802DAB", .name = "www.gis.nrw.de — einwohner (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — einwohner (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6204,7 +6204,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_644747FB17", .name = "www.gis.nrw.de — einwohner_deutschland (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — einwohner_deutschland (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6226,7 +6226,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E94142C173", .name = "www.gis.nrw.de — 2012 (ArcGIS layer 73)",
     .name_ja = "www.gis.nrw.de — 2012 (ArcGIS layer 73)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6247,7 +6247,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0AB1B5568C", .name = "www.gis.nrw.de — 2010 (ArcGIS layer 72)",
     .name_ja = "www.gis.nrw.de — 2010 (ArcGIS layer 72)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6268,7 +6268,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4FE2794A4E", .name = "www.gis.nrw.de — 2008 (ArcGIS layer 71)",
     .name_ja = "www.gis.nrw.de — 2008 (ArcGIS layer 71)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6289,7 +6289,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5B29479BFB", .name = "www.gis.nrw.de — Gemeinden (ArcGIS layer 60)",
     .name_ja = "www.gis.nrw.de — Gemeinden (ArcGIS layer 60)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6310,7 +6310,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A7F195DF8B", .name = "www.gis.nrw.de — Kreise/Kreisfreie Städte (ArcGIS layer 50)",
     .name_ja = "www.gis.nrw.de — Kreise/Kreisfreie Städte (ArcGIS layer 50)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6331,7 +6331,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D6963801F0", .name = "www.gis.nrw.de — Regionale Teilräume (ArcGIS layer 40)",
     .name_ja = "www.gis.nrw.de — Regionale Teilräume (ArcGIS layer 40)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6352,7 +6352,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2142965148", .name = "www.gis.nrw.de — Teilregionen (ArcGIS layer 30)",
     .name_ja = "www.gis.nrw.de — Teilregionen (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6373,7 +6373,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_390349393B", .name = "www.gis.nrw.de — Regierungsbezirke (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — Regierungsbezirke (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6394,7 +6394,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C596205CDE", .name = "www.gis.nrw.de — Westfalen-Lippe (ArcGIS layer 75)",
     .name_ja = "www.gis.nrw.de — Westfalen-Lippe (ArcGIS layer 75)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6415,7 +6415,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_ACA570E7CE", .name = "www.gis.nrw.de — d_gemeinden_emis (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — d_gemeinden_emis (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6436,7 +6436,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D92D383A9B", .name = "www.gis.nrw.de — d_kreise_emis (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — d_kreise_emis (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6457,7 +6457,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_76A1728178", .name = "www.gis.nrw.de — d_regierungsbezirke_emis (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — d_regierungsbezirke_emis (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6478,7 +6478,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_21146C127F", .name = "www.gis.nrw.de — d_land_emis (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — d_land_emis (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6499,7 +6499,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_6CFABE0591", .name = "www.gis.nrw.de — d_ind_arbeitsstaetten (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — d_ind_arbeitsstaetten (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6520,7 +6520,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D902C118A4", .name = "www.gis.nrw.de — anlagen_ekat_ast (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — anlagen_ekat_ast (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6541,7 +6541,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A3238F88E4", .name = "www.gis.nrw.de — emission_ast (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — emission_ast (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6562,7 +6562,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2B942E2086", .name = "www.gis.nrw.de — sd_103161_DryocopusMartius (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — sd_103161_DryocopusMartius (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6584,7 +6584,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A919566CA7", .name = "www.gis.nrw.de — sd_103160_DendrocoptesMedius (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — sd_103160_DendrocoptesMedius (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6606,7 +6606,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E10A4D36BC", .name = "www.gis.nrw.de — sd_102968_AnasPlatyrhynchos (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — sd_102968_AnasPlatyrhynchos (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6628,7 +6628,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_346A81D372", .name = "www.gis.nrw.de — sd_103003_AlopochenAegyptiaca (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — sd_103003_AlopochenAegyptiaca (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6650,7 +6650,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7BF2828374", .name = "www.gis.nrw.de — sd_102938_EmberizaCitrinella (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — sd_102938_EmberizaCitrinella (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6672,7 +6672,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A1B60AB285", .name = "www.gis.nrw.de — sd_102946_CerthiaBrachydactyla (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — sd_102946_CerthiaBrachydactyla (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6694,7 +6694,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8EA69208E2", .name = "www.gis.nrw.de — sd_102947_CerthiaFamiliaris (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — sd_102947_CerthiaFamiliaris (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6716,7 +6716,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8361A289BE", .name = "www.gis.nrw.de — sd_103087_SylviaCommunis (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — sd_103087_SylviaCommunis (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6738,7 +6738,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D93515D1BA", .name = "www.gis.nrw.de — sd_102950_PrunellaModularis (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — sd_102950_PrunellaModularis (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6760,7 +6760,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_269E8EBC40", .name = "www.gis.nrw.de — sd_102977_StrixAluco (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — sd_102977_StrixAluco (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6782,7 +6782,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F42FB790FE", .name = "www.gis.nrw.de — sd_102986_FringillaCoelebs (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — sd_102986_FringillaCoelebs (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6804,7 +6804,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2AB21E2032", .name = "www.gis.nrw.de — sd_102989_PyrrhulaPyrrhula (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — sd_102989_PyrrhulaPyrrhula (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6826,7 +6826,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_17628BB698", .name = "www.gis.nrw.de — sd_102991_CarduelisChloris (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — sd_102991_CarduelisChloris (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6849,7 +6849,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_63F6F0B1FD", .name = "www.gis.nrw.de — sd_102995_CoccothraustesCoccothraustes (ArcGIS "
       "layer 15)",
     .name_ja = "www.gis.nrw.de — sd_102995_CoccothraustesCoccothraustes (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6871,7 +6871,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_650B842678", .name = "www.gis.nrw.de — sd_102996_CarduelisCarduelis (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — sd_102996_CarduelisCarduelis (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6893,7 +6893,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F183238C7D", .name = "www.gis.nrw.de — sd_103182_PasserMontanus (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — sd_103182_PasserMontanus (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6915,7 +6915,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_65FF61BF01", .name = "www.gis.nrw.de — sd_103022_PhasianusColchicus (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — sd_103022_PhasianusColchicus (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6937,7 +6937,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9A7DE6B3C4", .name = "www.gis.nrw.de — sd_103035_AlaudaArvensis (ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — sd_103035_AlaudaArvensis (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6959,7 +6959,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DC2317EC0A", .name = "www.gis.nrw.de — sd_103039_ParusCaeruleus (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — sd_103039_ParusCaeruleus (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6981,7 +6981,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BF8DC1FE21", .name = "www.gis.nrw.de — sd_103040_ParusCristatus (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — sd_103040_ParusCristatus (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7003,7 +7003,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5B02BA03DE", .name = "www.gis.nrw.de — sd_103042_ParusPalustris (ArcGIS layer 23)",
     .name_ja = "www.gis.nrw.de — sd_103042_ParusPalustris (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7025,7 +7025,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0A07D05051", .name = "www.gis.nrw.de — sd_103043_ParusAter (ArcGIS layer 24)",
     .name_ja = "www.gis.nrw.de — sd_103043_ParusAter (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7047,7 +7047,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_72188635FC", .name = "www.gis.nrw.de — sd_103044_ParusMontanus (ArcGIS layer 25)",
     .name_ja = "www.gis.nrw.de — sd_103044_ParusMontanus (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7069,7 +7069,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_893B728B42", .name = "www.gis.nrw.de — sd_103056_GarrulusGlandarius (ArcGIS layer 26)",
     .name_ja = "www.gis.nrw.de — sd_103056_GarrulusGlandarius (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7091,7 +7091,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D6382C7407", .name = "www.gis.nrw.de — sd_103057_PicaPica (ArcGIS layer 27)",
     .name_ja = "www.gis.nrw.de — sd_103057_PicaPica (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7113,7 +7113,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_26933A00DB", .name = "www.gis.nrw.de — sd_103083_TurdusMerula (ArcGIS layer 28)",
     .name_ja = "www.gis.nrw.de — sd_103083_TurdusMerula (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7136,7 +7136,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_0FC9EC8D0F", .name = "www.gis.nrw.de — sd_103090_PhylloscopusTrochilus (ArcGIS layer "
       "29)",
     .name_ja = "www.gis.nrw.de — sd_103090_PhylloscopusTrochilus (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7158,7 +7158,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5DFF818231", .name = "www.gis.nrw.de — sd_103091_SylviaBorin (ArcGIS layer 30)",
     .name_ja = "www.gis.nrw.de — sd_103091_SylviaBorin (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7181,7 +7181,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_6D4AB59087", .name = "www.gis.nrw.de — sd_103092_PhoenicurusPhoenicurus (ArcGIS layer "
       "31)",
     .name_ja = "www.gis.nrw.de — sd_103092_PhoenicurusPhoenicurus (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7203,7 +7203,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5554A5E9FB", .name = "www.gis.nrw.de — sd_103055_ColoeusMonedula (ArcGIS layer 32)",
     .name_ja = "www.gis.nrw.de — sd_103055_ColoeusMonedula (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7225,7 +7225,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3C67F1E7F3", .name = "www.gis.nrw.de — sd_103094_MuscicapaStriata (ArcGIS layer 33)",
     .name_ja = "www.gis.nrw.de — sd_103094_MuscicapaStriata (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7247,7 +7247,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9DEFC8F195", .name = "www.gis.nrw.de — sd_103095_PhoenicurusOchruros (ArcGIS layer 34)",
     .name_ja = "www.gis.nrw.de — sd_103095_PhoenicurusOchruros (ArcGIS layer 34)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7269,7 +7269,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0F9EE3786F", .name = "www.gis.nrw.de — sd_103096_SylviaCurruca (ArcGIS layer 35)",
     .name_ja = "www.gis.nrw.de — sd_103096_SylviaCurruca (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7291,7 +7291,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4544BD59F7", .name = "www.gis.nrw.de — sd_103097_TurdusViscivorus (ArcGIS layer 36)",
     .name_ja = "www.gis.nrw.de — sd_103097_TurdusViscivorus (ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7313,7 +7313,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_349D88F951", .name = "www.gis.nrw.de — sd_103098_SylviaAtricapilla (ArcGIS layer 37)",
     .name_ja = "www.gis.nrw.de — sd_103098_SylviaAtricapilla (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7335,7 +7335,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7A1DE07087", .name = "www.gis.nrw.de — sd_103104_ErithacusRubecula (ArcGIS layer 38)",
     .name_ja = "www.gis.nrw.de — sd_103104_ErithacusRubecula (ArcGIS layer 38)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7357,7 +7357,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FA8B7C7FEF", .name = "www.gis.nrw.de — sd_103108_TurdusPhilomelos (ArcGIS layer 39)",
     .name_ja = "www.gis.nrw.de — sd_103108_TurdusPhilomelos (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7379,7 +7379,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A3494BC5E3", .name = "www.gis.nrw.de — sd_103109_RegulusIgnicapilla (ArcGIS layer 40)",
     .name_ja = "www.gis.nrw.de — sd_103109_RegulusIgnicapilla (ArcGIS layer 40)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7401,7 +7401,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2DC2F4D6F9", .name = "www.gis.nrw.de — p475 (ArcGIS layer 84)",
     .name_ja = "www.gis.nrw.de — p475 (ArcGIS layer 84)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7422,7 +7422,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_13088FA2B2", .name = "www.gis.nrw.de — p474 (ArcGIS layer 83)",
     .name_ja = "www.gis.nrw.de — p474 (ArcGIS layer 83)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7443,7 +7443,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_92054444AD", .name = "www.gis.nrw.de — p473 (ArcGIS layer 125)",
     .name_ja = "www.gis.nrw.de — p473 (ArcGIS layer 125)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7464,7 +7464,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3EB21BDB02", .name = "www.gis.nrw.de — p472 (ArcGIS layer 82)",
     .name_ja = "www.gis.nrw.de — p472 (ArcGIS layer 82)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7485,7 +7485,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7DE034D75E", .name = "www.gis.nrw.de — p471 (ArcGIS layer 80)",
     .name_ja = "www.gis.nrw.de — p471 (ArcGIS layer 80)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7506,7 +7506,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F4087442D3", .name = "www.gis.nrw.de — p470 (ArcGIS layer 79)",
     .name_ja = "www.gis.nrw.de — p470 (ArcGIS layer 79)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7527,7 +7527,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F1AFFA9271", .name = "www.gis.nrw.de — p469 (ArcGIS layer 77)",
     .name_ja = "www.gis.nrw.de — p469 (ArcGIS layer 77)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7548,7 +7548,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3876BF646A", .name = "www.gis.nrw.de — p468 (ArcGIS layer 76)",
     .name_ja = "www.gis.nrw.de — p468 (ArcGIS layer 76)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7569,7 +7569,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8D1ADFEAC3", .name = "www.gis.nrw.de — p467 (ArcGIS layer 75)",
     .name_ja = "www.gis.nrw.de — p467 (ArcGIS layer 75)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7590,7 +7590,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F7C4CC896E", .name = "www.gis.nrw.de — p466 (ArcGIS layer 74)",
     .name_ja = "www.gis.nrw.de — p466 (ArcGIS layer 74)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7611,7 +7611,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_67CE00E018", .name = "www.gis.nrw.de — p465 (ArcGIS layer 73)",
     .name_ja = "www.gis.nrw.de — p465 (ArcGIS layer 73)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7632,7 +7632,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5E5C55C8CD", .name = "www.gis.nrw.de — p464 (ArcGIS layer 72)",
     .name_ja = "www.gis.nrw.de — p464 (ArcGIS layer 72)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7653,7 +7653,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_30AE164905", .name = "www.gis.nrw.de — p463 (ArcGIS layer 58)",
     .name_ja = "www.gis.nrw.de — p463 (ArcGIS layer 58)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7674,7 +7674,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FC4E556E6E", .name = "www.gis.nrw.de — p462 (ArcGIS layer 56)",
     .name_ja = "www.gis.nrw.de — p462 (ArcGIS layer 56)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7695,7 +7695,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_76777F59EF", .name = "www.gis.nrw.de — p461 (ArcGIS layer 55)",
     .name_ja = "www.gis.nrw.de — p461 (ArcGIS layer 55)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7716,7 +7716,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D0E77321D2", .name = "www.gis.nrw.de — p460 (ArcGIS layer 54)",
     .name_ja = "www.gis.nrw.de — p460 (ArcGIS layer 54)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7737,7 +7737,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_26017158A9", .name = "www.gis.nrw.de — p459 (ArcGIS layer 53)",
     .name_ja = "www.gis.nrw.de — p459 (ArcGIS layer 53)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7758,7 +7758,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C7B8D8A609", .name = "www.gis.nrw.de — p458 (ArcGIS layer 51)",
     .name_ja = "www.gis.nrw.de — p458 (ArcGIS layer 51)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7779,7 +7779,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4BA7572E26", .name = "www.gis.nrw.de — p457 (ArcGIS layer 50)",
     .name_ja = "www.gis.nrw.de — p457 (ArcGIS layer 50)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7800,7 +7800,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_80809C14CC", .name = "www.gis.nrw.de — p456 (ArcGIS layer 48)",
     .name_ja = "www.gis.nrw.de — p456 (ArcGIS layer 48)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7821,7 +7821,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E9B86440BA", .name = "www.gis.nrw.de — p455 (ArcGIS layer 47)",
     .name_ja = "www.gis.nrw.de — p455 (ArcGIS layer 47)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7842,7 +7842,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_392D7F5185", .name = "www.gis.nrw.de — p454 (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — p454 (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7863,7 +7863,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A895D6D859", .name = "www.gis.nrw.de — p351 (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — p351 (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7884,7 +7884,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E78AECC535", .name = "www.gis.nrw.de — p350 (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — p350 (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7905,7 +7905,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3EA6044340", .name = "www.gis.nrw.de — standorte (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — standorte (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7926,7 +7926,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FADE6E7B60", .name = "www.gis.nrw.de — p452 (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — p452 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7947,7 +7947,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4742CCEB70", .name = "www.gis.nrw.de — p451 (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — p451 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7968,7 +7968,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BB3FBE6D94", .name = "www.gis.nrw.de — p157 (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — p157 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7989,7 +7989,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EDADFF1071", .name = "www.gis.nrw.de — p100 (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — p100 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8010,7 +8010,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7CBB01D844", .name = "www.gis.nrw.de — p127 (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — p127 (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8031,7 +8031,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7853DEC789", .name = "www.gis.nrw.de — p148 (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — p148 (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8052,7 +8052,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C42211F458", .name = "www.gis.nrw.de — p152 (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — p152 (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8073,7 +8073,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_6A72985E41", .name = "www.gis.nrw.de — p156 (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — p156 (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8094,7 +8094,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_36B328D09D", .name = "www.gis.nrw.de — p175 (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — p175 (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8115,7 +8115,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_AC609924F8", .name = "www.gis.nrw.de — p176 (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — p176 (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8136,7 +8136,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_57A16FBDFF", .name = "www.gis.nrw.de — p177 (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — p177 (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8157,7 +8157,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E24F7AD8CA", .name = "www.gis.nrw.de — p178 (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — p178 (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8178,7 +8178,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_457E46D72F", .name = "www.gis.nrw.de — p179 (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — p179 (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8199,7 +8199,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4D79D30CFE", .name = "www.gis.nrw.de — p180 (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — p180 (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8220,7 +8220,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3867B1D5B2", .name = "www.gis.nrw.de — p2 (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — p2 (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8241,7 +8241,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_257EAF1870", .name = "www.gis.nrw.de — p475 (ArcGIS layer 84)",
     .name_ja = "www.gis.nrw.de — p475 (ArcGIS layer 84)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8262,7 +8262,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F4CD2BF894", .name = "www.gis.nrw.de — p474 (ArcGIS layer 83)",
     .name_ja = "www.gis.nrw.de — p474 (ArcGIS layer 83)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8283,7 +8283,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A86667BB7F", .name = "www.gis.nrw.de — p473 (ArcGIS layer 125)",
     .name_ja = "www.gis.nrw.de — p473 (ArcGIS layer 125)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8304,7 +8304,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_857FE0E1A7", .name = "www.gis.nrw.de — p472 (ArcGIS layer 82)",
     .name_ja = "www.gis.nrw.de — p472 (ArcGIS layer 82)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8325,7 +8325,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9CD93B852D", .name = "www.gis.nrw.de — p471 (ArcGIS layer 80)",
     .name_ja = "www.gis.nrw.de — p471 (ArcGIS layer 80)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8346,7 +8346,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_08B553DD79", .name = "www.gis.nrw.de — p470 (ArcGIS layer 79)",
     .name_ja = "www.gis.nrw.de — p470 (ArcGIS layer 79)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8367,7 +8367,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_58511F35A4", .name = "www.gis.nrw.de — p469 (ArcGIS layer 77)",
     .name_ja = "www.gis.nrw.de — p469 (ArcGIS layer 77)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8388,7 +8388,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_34727A97EC", .name = "www.gis.nrw.de — p468 (ArcGIS layer 76)",
     .name_ja = "www.gis.nrw.de — p468 (ArcGIS layer 76)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8409,7 +8409,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BCB130323F", .name = "www.gis.nrw.de — p467 (ArcGIS layer 75)",
     .name_ja = "www.gis.nrw.de — p467 (ArcGIS layer 75)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8430,7 +8430,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_696496640A", .name = "www.gis.nrw.de — p466 (ArcGIS layer 74)",
     .name_ja = "www.gis.nrw.de — p466 (ArcGIS layer 74)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8451,7 +8451,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E44379D717", .name = "www.gis.nrw.de — p465 (ArcGIS layer 73)",
     .name_ja = "www.gis.nrw.de — p465 (ArcGIS layer 73)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8472,7 +8472,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B9F41CEEAF", .name = "www.gis.nrw.de — p464 (ArcGIS layer 72)",
     .name_ja = "www.gis.nrw.de — p464 (ArcGIS layer 72)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8493,7 +8493,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A4536CC5B3", .name = "www.gis.nrw.de — p463 (ArcGIS layer 58)",
     .name_ja = "www.gis.nrw.de — p463 (ArcGIS layer 58)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8514,7 +8514,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D61D9B803A", .name = "www.gis.nrw.de — p462 (ArcGIS layer 56)",
     .name_ja = "www.gis.nrw.de — p462 (ArcGIS layer 56)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8535,7 +8535,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7474B12A45", .name = "www.gis.nrw.de — p461 (ArcGIS layer 55)",
     .name_ja = "www.gis.nrw.de — p461 (ArcGIS layer 55)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8556,7 +8556,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A56CE244BA", .name = "www.gis.nrw.de — p460 (ArcGIS layer 54)",
     .name_ja = "www.gis.nrw.de — p460 (ArcGIS layer 54)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8577,7 +8577,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_072AE333D3", .name = "www.gis.nrw.de — p459 (ArcGIS layer 53)",
     .name_ja = "www.gis.nrw.de — p459 (ArcGIS layer 53)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8598,7 +8598,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A8CDD3B6EA", .name = "www.gis.nrw.de — p458 (ArcGIS layer 51)",
     .name_ja = "www.gis.nrw.de — p458 (ArcGIS layer 51)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8619,7 +8619,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_6B42DF4A02", .name = "www.gis.nrw.de — p457 (ArcGIS layer 50)",
     .name_ja = "www.gis.nrw.de — p457 (ArcGIS layer 50)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8640,7 +8640,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_44A4799B0D", .name = "www.gis.nrw.de — p456 (ArcGIS layer 48)",
     .name_ja = "www.gis.nrw.de — p456 (ArcGIS layer 48)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8661,7 +8661,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_32E1F2073C", .name = "www.gis.nrw.de — p455 (ArcGIS layer 47)",
     .name_ja = "www.gis.nrw.de — p455 (ArcGIS layer 47)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8682,7 +8682,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B6726973C3", .name = "www.gis.nrw.de — p454 (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — p454 (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8703,7 +8703,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_06B7D0D68F", .name = "www.gis.nrw.de — p351 (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — p351 (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8724,7 +8724,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_6AA89F1507", .name = "www.gis.nrw.de — p350 (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — p350 (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8745,7 +8745,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5E9E5FFFD9", .name = "www.gis.nrw.de — standorte (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — standorte (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8766,7 +8766,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9CD261309F", .name = "www.gis.nrw.de — p452 (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — p452 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8787,7 +8787,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D6C2B28917", .name = "www.gis.nrw.de — p451 (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — p451 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8808,7 +8808,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5B1A5FAC66", .name = "www.gis.nrw.de — p157 (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — p157 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8829,7 +8829,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5DC9FDF951", .name = "www.gis.nrw.de — p100 (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — p100 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8850,7 +8850,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0837084B5F", .name = "www.gis.nrw.de — p127 (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — p127 (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8871,7 +8871,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0F34580287", .name = "www.gis.nrw.de — p148 (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — p148 (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8892,7 +8892,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_ED86292080", .name = "www.gis.nrw.de — p152 (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — p152 (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8913,7 +8913,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DE13B8F965", .name = "www.gis.nrw.de — p156 (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — p156 (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8934,7 +8934,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4C6AB383DA", .name = "www.gis.nrw.de — p175 (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — p175 (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8955,7 +8955,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EFCFC0355C", .name = "www.gis.nrw.de — p176 (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — p176 (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8976,7 +8976,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8E14F02B36", .name = "www.gis.nrw.de — p177 (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — p177 (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8997,7 +8997,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EED59BC520", .name = "www.gis.nrw.de — p178 (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — p178 (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9018,7 +9018,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4EB1FC34D1", .name = "www.gis.nrw.de — p179 (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — p179 (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9039,7 +9039,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_40EE11F076", .name = "www.gis.nrw.de — p180 (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — p180 (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9060,7 +9060,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B1E76E18F1", .name = "www.gis.nrw.de — p2 (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — p2 (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9081,7 +9081,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C3848FA2A2", .name = "www.gis.nrw.de — MLV NRW (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — MLV NRW (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9102,7 +9102,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3AA40D63D4", .name = "www.gis.nrw.de — Bezirksregierung, Dezernate 33 (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — Bezirksregierung, Dezernate 33 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9123,7 +9123,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E09CB1411B", .name = "www.gis.nrw.de — Beschriftung (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — Beschriftung (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9145,7 +9145,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_D4A2D4B115", .name = "www.gis.nrw.de — Laufende Flurbereinigungsverfahren (ArcGIS "
       "layer 7)",
     .name_ja = "www.gis.nrw.de — Laufende Flurbereinigungsverfahren (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9166,7 +9166,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DB1215CA40", .name = "www.gis.nrw.de — Beschriftung (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — Beschriftung (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9188,7 +9188,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_0C0059CBA3", .name = "www.gis.nrw.de — Historische Flurbereinigungsverfahren (ArcGIS "
       "layer 10)",
     .name_ja = "www.gis.nrw.de — Historische Flurbereinigungsverfahren (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9210,7 +9210,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_DAC18E2A74", .name = "www.gis.nrw.de — Beschriftung LEADER-Regionen 2023-2027 (ArcGIS "
       "layer 12)",
     .name_ja = "www.gis.nrw.de — Beschriftung LEADER-Regionen 2023-2027 (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9231,7 +9231,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0BC771DD37", .name = "www.gis.nrw.de — LEADER-Regionen 2023-2027 (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — LEADER-Regionen 2023-2027 (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9252,7 +9252,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9196ABE3AA", .name = "www.gis.nrw.de — Beschriftung LEADER 2014-2020 (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — Beschriftung LEADER 2014-2020 (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9273,7 +9273,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_31096B97A2", .name = "www.gis.nrw.de — LEADER 2014-2020 (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — LEADER 2014-2020 (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9294,7 +9294,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C770289D13", .name = "www.gis.nrw.de — Beschriftung LEADER 2007-2013 (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — Beschriftung LEADER 2007-2013 (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9315,7 +9315,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C62494A8FF", .name = "www.gis.nrw.de — LEADER 2007-2013 (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — LEADER 2007-2013 (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9337,7 +9337,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_640F29CBB2", .name = "www.gis.nrw.de — Beschriftung VITAL.NRW Regionen 2014-2020 "
       "(ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — Beschriftung VITAL.NRW Regionen 2014-2020 (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9358,7 +9358,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F354575AEB", .name = "www.gis.nrw.de — VITAL.NRW Regionen 2014-2020 (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — VITAL.NRW Regionen 2014-2020 (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9380,7 +9380,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_82606697FF", .name = "www.gis.nrw.de — Dorfinnenentwicklungskonzepte (DIEK) ab 2014 "
       "(ArcGIS layer 22)",
     .name_ja = "www.gis.nrw.de — Dorfinnenentwicklungskonzepte (DIEK) ab 2014 (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9402,7 +9402,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_77ABA8183B", .name = "www.gis.nrw.de — Dorfentwicklungspläne bis 2013 (ArcGIS layer "
       "23)",
     .name_ja = "www.gis.nrw.de — Dorfentwicklungspläne bis 2013 (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9424,7 +9424,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_3D313784AA", .name = "www.gis.nrw.de — Dorfentwicklungskonzepte bis 2013 (ArcGIS layer "
       "24)",
     .name_ja = "www.gis.nrw.de — Dorfentwicklungskonzepte bis 2013 (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9445,7 +9445,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5DE246F779", .name = "www.gis.nrw.de — Dorfentwicklungsbedürftigkeit (ArcGIS layer 25)",
     .name_ja = "www.gis.nrw.de — Dorfentwicklungsbedürftigkeit (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9466,7 +9466,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7234993EA9", .name = "www.gis.nrw.de — Förderprojekte NGA-Breitband (ArcGIS layer 26)",
     .name_ja = "www.gis.nrw.de — Förderprojekte NGA-Breitband (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9487,7 +9487,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3B3DCCB66E", .name = "www.gis.nrw.de — Wegenetzkonzepte ab 2014 (ArcGIS layer 27)",
     .name_ja = "www.gis.nrw.de — Wegenetzkonzepte ab 2014 (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9509,7 +9509,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_74C0E6CC5B", .name = "www.gis.nrw.de — Integrierte ländliche Entwicklungskonzepte ab "
       "2014 (ArcGIS layer 28)",
     .name_ja = "www.gis.nrw.de — Integrierte ländliche Entwicklungskonzepte ab 2014 (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9531,7 +9531,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_4C4254E649", .name = "www.gis.nrw.de — Integrierte kommunale Entwicklungskonzepte ab "
       "2014 (ArcGIS layer 29)",
     .name_ja = "www.gis.nrw.de — Integrierte kommunale Entwicklungskonzepte ab 2014 (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9553,7 +9553,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_B398D452BB", .name = "www.gis.nrw.de — Förderkulisse Ländlicher Raum 2023-2027 (ArcGIS "
       "layer 31)",
     .name_ja = "www.gis.nrw.de — Förderkulisse Ländlicher Raum 2023-2027 (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9574,7 +9574,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8D3CD76061", .name = "www.gis.nrw.de — Förderkulisse NGA (ArcGIS layer 33)",
     .name_ja = "www.gis.nrw.de — Förderkulisse NGA (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9595,7 +9595,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_839FFA42A4", .name = "www.gis.nrw.de — Ländlicher Raum 2014-2020 (ArcGIS layer 34)",
     .name_ja = "www.gis.nrw.de — Ländlicher Raum 2014-2020 (ArcGIS layer 34)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9616,7 +9616,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_264AB69733", .name = "www.gis.nrw.de — Kreise_2017 (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — Kreise_2017 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9637,7 +9637,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2D408A76A6", .name = "www.gis.nrw.de — THG_NRW (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — THG_NRW (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9658,7 +9658,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1EEC023234", .name = "www.gis.nrw.de — grenzpunkte (ArcGIS layer 40)",
     .name_ja = "www.gis.nrw.de — grenzpunkte (ArcGIS layer 40)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9679,7 +9679,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_CD4BEE3B3D", .name = "www.gis.nrw.de — utm_gitter (ArcGIS layer 265)",
     .name_ja = "www.gis.nrw.de — utm_gitter (ArcGIS layer 265)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9700,7 +9700,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_075868D7F3", .name = "www.gis.nrw.de — forstliche_einrichtungen_nrw (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — forstliche_einrichtungen_nrw (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9721,7 +9721,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D67A11E539", .name = "www.gis.nrw.de — Wendestelle (ArcGIS layer 60)",
     .name_ja = "www.gis.nrw.de — Wendestelle (ArcGIS layer 60)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9742,7 +9742,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4BDBD0D1A6", .name = "www.gis.nrw.de — keine Wendestelle (ArcGIS layer 59)",
     .name_ja = "www.gis.nrw.de — keine Wendestelle (ArcGIS layer 59)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9764,7 +9764,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_774F53C83F", .name = "www.gis.nrw.de — Waldwege (für Lösch- und Rettungsfahrzeuge) "
       "(ArcGIS layer 61)",
     .name_ja = "www.gis.nrw.de — Waldwege (für Lösch- und Rettungsfahrzeuge) (ArcGIS layer 61)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_safety_emergency", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9786,7 +9786,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D13A0B61ED", .name = "www.gis.nrw.de — sonnenhang_im_wald (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — sonnenhang_im_wald (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9807,7 +9807,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_786A2EE608", .name = "www.gis.nrw.de — forstbetriebsbezirke_nrw (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — forstbetriebsbezirke_nrw (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9828,7 +9828,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_13A16BAC22", .name = "www.gis.nrw.de — forstamtsgrenzen_nrw (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — forstamtsgrenzen_nrw (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9850,7 +9850,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_702A2D3391", .name = "www.gis.nrw.de — waldbiotope_warburger_flaeche (ArcGIS layer "
       "300)",
     .name_ja = "www.gis.nrw.de — waldbiotope_warburger_flaeche (ArcGIS layer 300)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9871,7 +9871,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_948A82ED3B", .name = "www.gis.nrw.de — waldbedeckung (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — waldbedeckung (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9893,7 +9893,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_1884306D1E", .name = "www.gis.nrw.de — landeseigener_forstbetrieb_staatswald (ArcGIS "
       "layer 4)",
     .name_ja = "www.gis.nrw.de — landeseigener_forstbetrieb_staatswald (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9915,7 +9915,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_71B0349D58", .name = "www.gis.nrw.de — herkunftsempfehlungen (ArcGIS layer 302)",
     .name_ja = "www.gis.nrw.de — herkunftsempfehlungen (ArcGIS layer 302)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9936,7 +9936,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_771DAE36B2", .name = "www.gis.nrw.de — stand_verbissgutachten_nrw (ArcGIS layer 267)",
     .name_ja = "www.gis.nrw.de — stand_verbissgutachten_nrw (ArcGIS layer 267)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9958,7 +9958,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B44695A5DF", .name = "www.gis.nrw.de — forstliche_wuchsbezirke_nrw (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — forstliche_wuchsbezirke_nrw (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9979,7 +9979,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_AE65B555EB", .name = "www.gis.nrw.de — forstliche_wuchsgebiete_nrw (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — forstliche_wuchsgebiete_nrw (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10000,7 +10000,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_87FEADA5D9", .name = "www.gis.nrw.de — wasserhaushaltsstufen (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — wasserhaushaltsstufen (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10021,7 +10021,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A4A690EDD4", .name = "www.gis.nrw.de — naehrstoffangebot (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — naehrstoffangebot (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10042,7 +10042,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8324B4C64A", .name = "www.gis.nrw.de — naturwaldzellen (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — naturwaldzellen (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10063,7 +10063,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_702C41263A", .name = "www.gis.nrw.de — wildnisgebiete (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — wildnisgebiete (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10084,7 +10084,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1C1893D302", .name = "www.gis.nrw.de — waldtypen_real (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — waldtypen_real (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10105,7 +10105,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D710D8A98B", .name = "www.gis.nrw.de — waldtypen_voll (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — waldtypen_voll (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10127,7 +10127,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_5E5AC9E3CD", .name = "www.gis.nrw.de — windwurfschadflaechen_friederike (ArcGIS layer "
       "15)",
     .name_ja = "www.gis.nrw.de — windwurfschadflaechen_friederike (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10149,7 +10149,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0825543BAA", .name = "www.gis.nrw.de — windwurfschadflaechen_kyrill (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — windwurfschadflaechen_kyrill (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10171,7 +10171,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E959E5B305", .name = "www.gis.nrw.de — kalamitaetskarte_nadelwald (ArcGIS layer 51)",
     .name_ja = "www.gis.nrw.de — kalamitaetskarte_nadelwald (ArcGIS layer 51)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10193,7 +10193,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_ED72F104A1", .name = "www.gis.nrw.de — stieleiche_heute (ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — stieleiche_heute (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10214,7 +10214,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0A504F1528", .name = "www.gis.nrw.de — stieleiche_plus_zwei_grad (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — stieleiche_plus_zwei_grad (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10236,7 +10236,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0E12424D4B", .name = "www.gis.nrw.de — rotbuche_heute (ArcGIS layer 22)",
     .name_ja = "www.gis.nrw.de — rotbuche_heute (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10257,7 +10257,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E5D3FD2EDD", .name = "www.gis.nrw.de — Rotbuche_plus_zwei_grad (ArcGIS layer 23)",
     .name_ja = "www.gis.nrw.de — Rotbuche_plus_zwei_grad (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10279,7 +10279,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_186F80B360", .name = "www.gis.nrw.de — fichte_heute (ArcGIS layer 25)",
     .name_ja = "www.gis.nrw.de — fichte_heute (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10300,7 +10300,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B1C8B43B66", .name = "www.gis.nrw.de — fichte_plus_zwei_grad (ArcGIS layer 26)",
     .name_ja = "www.gis.nrw.de — fichte_plus_zwei_grad (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10321,7 +10321,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_ACB89FF5F6", .name = "www.gis.nrw.de — douglasie_heute (ArcGIS layer 28)",
     .name_ja = "www.gis.nrw.de — douglasie_heute (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10342,7 +10342,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F99BEBB47C", .name = "www.gis.nrw.de — douglasie_plus_zwei_grad (ArcGIS layer 29)",
     .name_ja = "www.gis.nrw.de — douglasie_plus_zwei_grad (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10364,7 +10364,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_CAA9475728", .name = "www.gis.nrw.de — versuchsflaeche (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — versuchsflaeche (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10385,7 +10385,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4D8B64A5EE", .name = "www.gis.nrw.de — bestattungswald (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — bestattungswald (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10406,7 +10406,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D6A1141CBE", .name = "www.gis.nrw.de — saatgutbestand (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — saatgutbestand (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10428,7 +10428,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_89A8874139", .name = "www.gis.nrw.de — immissionsschutzwald (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — immissionsschutzwald (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10450,7 +10450,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_CE57A29863", .name = "www.gis.nrw.de — klimaschutzwald (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — klimaschutzwald (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10472,7 +10472,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_53B86989A8", .name = "www.gis.nrw.de — laermschutzwald (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — laermschutzwald (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10494,7 +10494,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_ECA3070C97", .name = "www.gis.nrw.de — biotop_punkt (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — biotop_punkt (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10515,7 +10515,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1C63FA1E60", .name = "www.gis.nrw.de — biotop_linie (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — biotop_linie (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10536,7 +10536,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5958A21C48", .name = "www.gis.nrw.de — biotop_flaeche (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — biotop_flaeche (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10558,7 +10558,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7913DA2D26", .name = "www.gis.nrw.de — nationalpark (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — nationalpark (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10579,7 +10579,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_97D8828494", .name = "www.gis.nrw.de — naturschutzgebiet (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — naturschutzgebiet (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10601,7 +10601,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_555350E803", .name = "www.gis.nrw.de — landschaftsschutzgebiet (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — landschaftsschutzgebiet (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10623,7 +10623,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7A94AE4293", .name = "www.gis.nrw.de — ffh_gebiet (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — ffh_gebiet (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10644,7 +10644,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_05BE1FD06C", .name = "www.gis.nrw.de — wildnisentwicklungsgebiet (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — wildnisentwicklungsgebiet (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10665,7 +10665,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_01D0E677FC", .name = "www.gis.nrw.de — vogelschutzgebiet (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — vogelschutzgebiet (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10686,7 +10686,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EEB3A8F70E", .name = "www.gis.nrw.de — erosionsschutz_wasser (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — erosionsschutz_wasser (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10707,7 +10707,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FECCC0F684", .name = "www.gis.nrw.de — erosionsschutz_wind (ArcGIS layer 22)",
     .name_ja = "www.gis.nrw.de — erosionsschutz_wind (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10728,7 +10728,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2373C3E8F2", .name = "www.gis.nrw.de — erholungsfunktionsstufe_I (ArcGIS layer 24)",
     .name_ja = "www.gis.nrw.de — erholungsfunktionsstufe_I (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10749,7 +10749,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FF7C5477AC", .name = "www.gis.nrw.de — erholungsfunktionsstufe_II (ArcGIS layer 25)",
     .name_ja = "www.gis.nrw.de — erholungsfunktionsstufe_II (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10770,7 +10770,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A003F9D8BC", .name = "www.gis.nrw.de — naturpark (ArcGIS layer 26)",
     .name_ja = "www.gis.nrw.de — naturpark (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10792,7 +10792,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_3BF2C54837", .name = "www.gis.nrw.de — wasserschutzgebietszonen_I_II_IIA_IIB (ArcGIS "
       "layer 29)",
     .name_ja = "www.gis.nrw.de — wasserschutzgebietszonen_I_II_IIA_IIB (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10815,7 +10815,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_BA8B48C590", .name = "www.gis.nrw.de — wasserschutzgebietszonen_III_IIIA_IIIB (ArcGIS "
       "layer 30)",
     .name_ja = "www.gis.nrw.de — wasserschutzgebietszonen_III_IIIA_IIIB (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10837,7 +10837,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_ECF2A9384B", .name = "www.gis.nrw.de — geplante_wasserschutzgebietszonen_I_II_IIA_IIB "
       "(ArcGIS layer 32)",
     .name_ja = "www.gis.nrw.de — geplante_wasserschutzgebietszonen_I_II_IIA_IIB (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10859,7 +10859,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_901BE9A83C", .name = "www.gis.nrw.de — geplante_wasserschutzgebietszonen_III_IIIA_IIIB "
       "(ArcGIS layer 33)",
     .name_ja = "www.gis.nrw.de — geplante_wasserschutzgebietszonen_III_IIIA_IIIB (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10880,7 +10880,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D508B6E9EE", .name = "www.gis.nrw.de — heilquellenschutzgebiet_zonen (ArcGIS layer 35)",
     .name_ja = "www.gis.nrw.de — heilquellenschutzgebiet_zonen (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10902,7 +10902,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_E4181ACE92", .name = "www.gis.nrw.de — geplantes_heilquellenschutzgebiet_zonen (ArcGIS "
       "layer 37)",
     .name_ja = "www.gis.nrw.de — geplantes_heilquellenschutzgebiet_zonen (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10924,7 +10924,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_A1290FA94A", .name = "www.gis.nrw.de — festgesetztes_ueberschwemmungsgebiet (ArcGIS "
       "layer 38)",
     .name_ja = "www.gis.nrw.de — festgesetztes_ueberschwemmungsgebiet (ArcGIS layer 38)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10946,7 +10946,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_EFB7424795", .name = "www.gis.nrw.de — vorlaeufig_gesichertes_ueberschwemmungsgebiet "
       "(ArcGIS layer 39)",
     .name_ja = "www.gis.nrw.de — vorlaeufig_gesichertes_ueberschwemmungsgebiet (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10967,7 +10967,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B6D4B74D48", .name = "www.gis.nrw.de — Waldkulisse ALKIS (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — Waldkulisse ALKIS (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10988,7 +10988,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7AB9E46BA1", .name = "www.gis.nrw.de — Walderfassung_60_5_2026 (ArcGIS layer 93)",
     .name_ja = "www.gis.nrw.de — Walderfassung_60_5_2026 (ArcGIS layer 93)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11010,7 +11010,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DF4ACA8724", .name = "www.gis.nrw.de — Walderfassung 60 5 (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — Walderfassung 60 5 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11031,7 +11031,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1B0F96E101", .name = "www.gis.nrw.de — Waldkulisse ATKIS (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — Waldkulisse ATKIS (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11052,7 +11052,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7280336264", .name = "www.gis.nrw.de — Waldkulisse Cop4ALL (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — Waldkulisse Cop4ALL (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11073,7 +11073,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C4A716B875", .name = "www.gis.nrw.de — ALKIS - Waldanteile (ArcGIS layer 59)",
     .name_ja = "www.gis.nrw.de — ALKIS - Waldanteile (ArcGIS layer 59)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11094,7 +11094,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3C452F3A17", .name = "www.gis.nrw.de — ALKIS - Flächengröße (ArcGIS layer 58)",
     .name_ja = "www.gis.nrw.de — ALKIS - Flächengröße (ArcGIS layer 58)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11116,7 +11116,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_AE53E14378", .name = "www.gis.nrw.de — Walderfassung 60 5 - Waldanteile (ArcGIS layer "
       "64)",
     .name_ja = "www.gis.nrw.de — Walderfassung 60 5 - Waldanteile (ArcGIS layer 64)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11138,7 +11138,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_D5218819BA", .name = "www.gis.nrw.de — Walderfassung 60 5 - Flächengröße (ArcGIS layer "
       "63)",
     .name_ja = "www.gis.nrw.de — Walderfassung 60 5 - Flächengröße (ArcGIS layer 63)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11159,7 +11159,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_946A14F492", .name = "www.gis.nrw.de — ATKIS - Waldanteile (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — ATKIS - Waldanteile (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11180,7 +11180,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B9741864DD", .name = "www.gis.nrw.de — ATKIS - Flächengröße (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — ATKIS - Flächengröße (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11201,7 +11201,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C248547800", .name = "www.gis.nrw.de — Cop4ALL - Waldanteile (ArcGIS layer 62)",
     .name_ja = "www.gis.nrw.de — Cop4ALL - Waldanteile (ArcGIS layer 62)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11222,7 +11222,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_04458685BB", .name = "www.gis.nrw.de — Cop4ALL - Flächengröße (ArcGIS layer 61)",
     .name_ja = "www.gis.nrw.de — Cop4ALL - Flächengröße (ArcGIS layer 61)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11243,7 +11243,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B77D7F46BC", .name = "www.gis.nrw.de — Kalamitätsfläche (ha) (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — Kalamitätsfläche (ha) (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11265,7 +11265,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_C237B9ACEE", .name = "www.gis.nrw.de — Kalamitätsflächenanteil (%) von Nadelholzfläche "
       "(ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — Kalamitätsflächenanteil (%) von Nadelholzfläche (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11288,7 +11288,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_E03FC14A9E", .name = "www.gis.nrw.de — Anteil Kalamitätsflächen (%) nach Schadklassen "
       "(ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — Anteil Kalamitätsflächen (%) nach Schadklassen (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11310,7 +11310,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BB6238D50D", .name = "www.gis.nrw.de — Schutzgebiete in Nadelwald (ArcGIS layer 69)",
     .name_ja = "www.gis.nrw.de — Schutzgebiete in Nadelwald (ArcGIS layer 69)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11332,7 +11332,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_490AE90FE8", .name = "www.gis.nrw.de — Kalamitätsfläche innerhalb von Schutzgebieten "
       "gesamt (ha) (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — Kalamitätsfläche innerhalb von Schutzgebieten gesamt (ha) (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11355,7 +11355,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_7D959F80E5", .name = "www.gis.nrw.de — Anteil Kalamitätsfläche innerhalb von "
       "Schutzgebieten gesamt (%) (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — Anteil Kalamitätsfläche innerhalb von Schutzgebieten gesamt (%) (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11378,7 +11378,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_826F811088", .name = "www.gis.nrw.de — Anteil Kalamitätsfläche in Naturschutzgebieten "
       "(%) (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — Anteil Kalamitätsfläche in Naturschutzgebieten (%) (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11401,7 +11401,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_FB36145BA2", .name = "www.gis.nrw.de — Anteil Kalamitätsflächen in Nationalparks (%) "
       "(ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — Anteil Kalamitätsflächen in Nationalparks (%) (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11424,7 +11424,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_0AA3820326", .name = "www.gis.nrw.de — Anteil Kalamitätsflächen in FFH-Gebieten (%) "
       "(ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — Anteil Kalamitätsflächen in FFH-Gebieten (%) (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11447,7 +11447,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_0C76845A91", .name = "www.gis.nrw.de — vergleich_kalamitaet_2023_2024 (ArcGIS layer "
       "66)",
     .name_ja = "www.gis.nrw.de — vergleich_kalamitaet_2023_2024 (ArcGIS layer 66)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11469,7 +11469,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_D5D4803AB4", .name = "www.gis.nrw.de — vergleich_kalamitaet_2023_2025 (ArcGIS layer "
       "67)",
     .name_ja = "www.gis.nrw.de — vergleich_kalamitaet_2023_2025 (ArcGIS layer 67)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11491,7 +11491,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_1569407054", .name = "www.gis.nrw.de — vergleich_kalamitaet_2024_2025 (ArcGIS layer "
       "68)",
     .name_ja = "www.gis.nrw.de — vergleich_kalamitaet_2024_2025 (ArcGIS layer 68)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11513,7 +11513,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_B81E8C62DE", .name = "www.gis.nrw.de — Kalamitätsflächen mit Standorttypen (KNP) "
       "(ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — Kalamitätsflächen mit Standorttypen (KNP) (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11536,7 +11536,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_BFFC7F6D9A", .name = "www.gis.nrw.de — Kalamitätsflächen mit Standorttypen (rcp4.5) "
       "(ArcGIS layer 31)",
     .name_ja = "www.gis.nrw.de — Kalamitätsflächen mit Standorttypen (rcp4.5) (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11558,7 +11558,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4793351D03", .name = "www.gis.nrw.de — WET-Verteilung KNP (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — WET-Verteilung KNP (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11579,7 +11579,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_32402FA353", .name = "www.gis.nrw.de — Kommunalplanung (ArcGIS layer 48)",
     .name_ja = "www.gis.nrw.de — Kommunalplanung (ArcGIS layer 48)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11601,7 +11601,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_02D81383DF", .name = "www.gis.nrw.de — Regionalplanung (ArcGIS layer 49)",
     .name_ja = "www.gis.nrw.de — Regionalplanung (ArcGIS layer 49)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11623,7 +11623,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4ACF19F418", .name = "www.gis.nrw.de — Schwerpunktvorkommen Brutvögel (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — Schwerpunktvorkommen Brutvögel (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11644,7 +11644,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_755880C3A9", .name = "www.gis.nrw.de — Schwerpunktvorkommen Zugvögel (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — Schwerpunktvorkommen Zugvögel (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11666,7 +11666,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_ED57234913", .name = "www.gis.nrw.de — 50 m Puffer um stehende Gewässer > 5 ha und "
       "Fließgewässer 1. Ordnung (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — 50 m Puffer um stehende Gewässer > 5 ha und Fließgewässer 1. Ordnung (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11688,7 +11688,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2371071531", .name = "www.gis.nrw.de — Gewässerfläche (Fließgewässer) (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — Gewässerfläche (Fließgewässer) (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11710,7 +11710,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_10BF38B26C", .name = "www.gis.nrw.de — Gewässerfläche (Stehgewässer) (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — Gewässerfläche (Stehgewässer) (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11732,7 +11732,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_63DCA50EEF", .name = "www.gis.nrw.de — Abgrabungsbereiche (BSAB) (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — Abgrabungsbereiche (BSAB) (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11753,7 +11753,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F0A4BBA09C", .name = "www.gis.nrw.de — Aufschüttungen, Ablagerungen (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — Aufschüttungen, Ablagerungen (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11776,7 +11776,7 @@ static const hp_source HP3B64_DEREST[] = {
       "Revier, die mind. bis 2032 nicht zur Verfügung stehen "
       "(Kohleabbau, Tagebaurestseen, Rek",
     .name_ja = "www.gis.nrw.de — Flächen des Braunkohlebergbaus im Rheinischen Revier, die mind. bis 2032 nicht zur Verfügung stehen (Kohleabbau, Tagebaurestseen, Rek",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11799,7 +11799,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7752BF91F0", .name = "www.gis.nrw.de — Freileitungen (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — Freileitungen (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11822,7 +11822,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_19441E1CD0", .name = "www.gis.nrw.de — Freileitungen mit 100 m Abstand (ArcGIS layer "
       "13)",
     .name_ja = "www.gis.nrw.de — Freileitungen mit 100 m Abstand (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11844,7 +11844,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_9159821C68", .name = "www.gis.nrw.de — Seismologische Stationen mit Abstand (ArcGIS "
       "layer 14)",
     .name_ja = "www.gis.nrw.de — Seismologische Stationen mit Abstand (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11865,7 +11865,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E5C132DA6D", .name = "www.gis.nrw.de — Wetterradar (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — Wetterradar (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11887,7 +11887,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_E5FF467A62", .name = "www.gis.nrw.de — Wetterradar mit 5.000 m Abstand (ArcGIS layer "
       "16)",
     .name_ja = "www.gis.nrw.de — Wetterradar mit 5.000 m Abstand (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11909,7 +11909,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_98E33D885C", .name = "www.gis.nrw.de — Bereiche für den Schutz der Natur (BSN) (ArcGIS "
       "layer 18)",
     .name_ja = "www.gis.nrw.de — Bereiche für den Schutz der Natur (BSN) (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11931,7 +11931,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0CA47BA03D", .name = "www.gis.nrw.de — Nationale Naturmonumente (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — Nationale Naturmonumente (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11953,7 +11953,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_51AE302889", .name = "www.gis.nrw.de — Allgemeine Siedlungsbereiche (ASB) (ArcGIS "
       "layer 22)",
     .name_ja = "www.gis.nrw.de — Allgemeine Siedlungsbereiche (ASB) (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11976,7 +11976,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_85ACFD7EC5", .name = "www.gis.nrw.de — Allgemeine Siedlungsbereiche (ASB) mit 700 m "
       "Abstand (ArcGIS layer 23)",
     .name_ja = "www.gis.nrw.de — Allgemeine Siedlungsbereiche (ASB) mit 700 m Abstand (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11999,7 +11999,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_751C52A136", .name = "www.gis.nrw.de — Bereiche für gewerbliche und industrielle "
       "Nutzungen (GIB) (ArcGIS layer 24)",
     .name_ja = "www.gis.nrw.de — Bereiche für gewerbliche und industrielle Nutzungen (GIB) (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12021,7 +12021,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_639A1FD14D", .name = "www.gis.nrw.de — Gewerbe- und Industrieflächen (ArcGIS layer 25)",
     .name_ja = "www.gis.nrw.de — Gewerbe- und Industrieflächen (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12044,7 +12044,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_5DCCFD0CAD", .name = "www.gis.nrw.de — staatlich anerkannte Kur- und Erholungsgebiete "
       "(ArcGIS layer 26)",
     .name_ja = "www.gis.nrw.de — staatlich anerkannte Kur- und Erholungsgebiete (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12067,7 +12067,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_299EB88672", .name = "www.gis.nrw.de — staatlich anerkannte Kur- und Erholungsgebiete "
       "mit 500 m Abstand (ArcGIS layer 27)",
     .name_ja = "www.gis.nrw.de — staatlich anerkannte Kur- und Erholungsgebiete mit 500 m Abstand (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12089,7 +12089,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8280EFF9C0", .name = "www.gis.nrw.de — Kur- und Klinikflächen (ArcGIS layer 28)",
     .name_ja = "www.gis.nrw.de — Kur- und Klinikflächen (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12111,7 +12111,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_C27E424B1C", .name = "www.gis.nrw.de — Wochenendhausgebiete, Ferienhausgebiete, "
       "Campingplätze (ArcGIS layer 29)",
     .name_ja = "www.gis.nrw.de — Wochenendhausgebiete, Ferienhausgebiete, Campingplätze (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_culture_recreation", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12134,7 +12134,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_6BAAB2B713", .name = "www.gis.nrw.de — Wohngebäude (Außenbereich) mit 500 m Abstand "
       "(ArcGIS layer 31)",
     .name_ja = "www.gis.nrw.de — Wohngebäude (Außenbereich) mit 500 m Abstand (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12157,7 +12157,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_D2F5D262AB", .name = "www.gis.nrw.de — Wohngebäude (Innenbereich) & Kur- und "
       "Klinikgebäude mit 700 m Abstand (ArcGIS layer 50)",
     .name_ja = "www.gis.nrw.de — Wohngebäude (Innenbereich) & Kur- und Klinikgebäude mit 700 m Abstand (ArcGIS layer 50)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12180,7 +12180,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_8D2FDD1C9A", .name = "www.gis.nrw.de — Wohngebäude, Kur- und Klinikgebäude (ArcGIS "
       "layer 51)",
     .name_ja = "www.gis.nrw.de — Wohngebäude, Kur- und Klinikgebäude (ArcGIS layer 51)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12203,7 +12203,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_3404CECE2F", .name = "www.gis.nrw.de — Bahnstrecken mit 100 m Abstand (elektrifiziert) "
       "(ArcGIS layer 33)",
     .name_ja = "www.gis.nrw.de — Bahnstrecken mit 100 m Abstand (elektrifiziert) (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12225,7 +12225,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8C2EEEA38C", .name = "www.gis.nrw.de — Bahnstrecken mit 20 m Abstand (ArcGIS layer 34)",
     .name_ja = "www.gis.nrw.de — Bahnstrecken mit 20 m Abstand (ArcGIS layer 34)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12247,7 +12247,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_51CBD16193", .name = "www.gis.nrw.de — Bauschutzbereiche, Flughäfen und Flugplätze "
       "(ArcGIS layer 35)",
     .name_ja = "www.gis.nrw.de — Bauschutzbereiche, Flughäfen und Flugplätze (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12268,7 +12268,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_23A462D3DE", .name = "www.gis.nrw.de — Wärmenetze (Versorgungsgebiet) (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — Wärmenetze (Versorgungsgebiet) (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12291,7 +12291,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_0C2C02C6E2", .name = "www.gis.nrw.de — privilegierte Infrastrukturbereiche nach BauGB "
       "(ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — privilegierte Infrastrukturbereiche nach BauGB (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12313,7 +12313,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5AAB9F9820", .name = "www.gis.nrw.de — Düsseldorf (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — Düsseldorf (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12335,7 +12335,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D605B7242B", .name = "www.gis.nrw.de — Köln (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — Köln (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12357,7 +12357,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F2F8EABA2F", .name = "www.gis.nrw.de — Münster (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — Münster (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12379,7 +12379,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E80DA1C9BD", .name = "www.gis.nrw.de — Detmold (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — Detmold (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12401,7 +12401,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_23AACEFAA6", .name = "www.gis.nrw.de — Arnsberg (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — Arnsberg (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12424,7 +12424,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_6D18E52535", .name = "www.gis.nrw.de — Förderkulisse für besondere Solaranlagen nach "
       "EEG (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — Förderkulisse für besondere Solaranlagen nach EEG (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12446,7 +12446,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_44C844FA04", .name = "www.gis.nrw.de — Förderkulisse nach EEG (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — Förderkulisse nach EEG (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12468,7 +12468,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1424B51108", .name = "www.gis.nrw.de — Düsseldorf (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — Düsseldorf (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12490,7 +12490,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FF0E885846", .name = "www.gis.nrw.de — Köln (ArcGIS layer 16)",
     .name_ja = "www.gis.nrw.de — Köln (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12512,7 +12512,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3FEF342ECB", .name = "www.gis.nrw.de — Münster (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — Münster (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12534,7 +12534,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_53CA4A66D5", .name = "www.gis.nrw.de — Detmold (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — Detmold (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12556,7 +12556,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4E16C4411A", .name = "www.gis.nrw.de — Arnsberg (ArcGIS layer 19)",
     .name_ja = "www.gis.nrw.de — Arnsberg (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12578,7 +12578,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BFB0AEF439", .name = "www.gis.nrw.de — Düsseldorf (ArcGIS layer 21)",
     .name_ja = "www.gis.nrw.de — Düsseldorf (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12600,7 +12600,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_CE5E8F519E", .name = "www.gis.nrw.de — Köln (ArcGIS layer 22)",
     .name_ja = "www.gis.nrw.de — Köln (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12622,7 +12622,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EAC54312DF", .name = "www.gis.nrw.de — Münster (ArcGIS layer 23)",
     .name_ja = "www.gis.nrw.de — Münster (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12644,7 +12644,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EBF18CF935", .name = "www.gis.nrw.de — Detmold (ArcGIS layer 24)",
     .name_ja = "www.gis.nrw.de — Detmold (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12666,7 +12666,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4E2FF99FE6", .name = "www.gis.nrw.de — Arnsberg (ArcGIS layer 25)",
     .name_ja = "www.gis.nrw.de — Arnsberg (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_utilities_infrastructure", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12688,7 +12688,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3765D99BA3", .name = "www.gis.nrw.de — Wald (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — Wald (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12710,7 +12710,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_AD0B57BA50", .name = "www.gis.nrw.de — Vegetation (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — Vegetation (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12732,7 +12732,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C8664BF0BE", .name = "www.gis.nrw.de — Verkehr (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — Verkehr (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12754,7 +12754,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8619771E9A", .name = "www.gis.nrw.de — Siedlung (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — Siedlung (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12776,7 +12776,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_298C2B7FDF", .name = "www.gis.nrw.de — Landwirtschaft (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — Landwirtschaft (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12798,7 +12798,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BFD316C375", .name = "www.gis.nrw.de — Wasser (ArcGIS layer 6)",
     .name_ja = "www.gis.nrw.de — Wasser (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12820,7 +12820,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_08C3CC4FD9", .name = "www.gis.nrw.de — Wasser (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — Wasser (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12842,7 +12842,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7A80199AEA", .name = "www.gis.nrw.de — Landwirtschaft (ArcGIS layer 9)",
     .name_ja = "www.gis.nrw.de — Landwirtschaft (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_economy_business", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12864,7 +12864,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BF3152D608", .name = "www.gis.nrw.de — Siedlung (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — Siedlung (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12886,7 +12886,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_CE1E54D59E", .name = "www.gis.nrw.de — Verkehr (ArcGIS layer 11)",
     .name_ja = "www.gis.nrw.de — Verkehr (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12908,7 +12908,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D121CCBCD7", .name = "www.gis.nrw.de — Vegetation (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — Vegetation (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12930,7 +12930,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_30AD43F656", .name = "www.gis.nrw.de — Wald (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — Wald (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12952,7 +12952,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2D38CE0F15", .name = "www.gis.nrw.de — 2020 (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — 2020 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12973,7 +12973,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F6AE7D320E", .name = "www.gis.nrw.de — 2040 (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — 2040 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12994,7 +12994,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_142D7C3875", .name = "www.gis.nrw.de — 2040 bezogen auf 2020 (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — 2040 bezogen auf 2020 (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13015,7 +13015,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D1419337EC", .name = "www.gis.nrw.de — 2020 (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — 2020 (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13036,7 +13036,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_15483D3243", .name = "www.gis.nrw.de — 2040 (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — 2040 (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13057,7 +13057,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B23A503AB7", .name = "www.gis.nrw.de — 2040 bezogen auf 2020 (ArcGIS layer 10)",
     .name_ja = "www.gis.nrw.de — 2040 bezogen auf 2020 (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13078,7 +13078,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_ADDF340A99", .name = "www.gis.nrw.de — 2020 (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — 2020 (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13099,7 +13099,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_0C15C02F99", .name = "www.gis.nrw.de — 2040 (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — 2040 (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13120,7 +13120,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_71DE1E07C7", .name = "www.gis.nrw.de — 2040 bezogen auf 2020 (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — 2040 bezogen auf 2020 (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13141,7 +13141,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_86DC62F1F0", .name = "www.gis.nrw.de — 2020 (ArcGIS layer 17)",
     .name_ja = "www.gis.nrw.de — 2020 (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13162,7 +13162,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_39640C5E68", .name = "www.gis.nrw.de — 2040 (ArcGIS layer 18)",
     .name_ja = "www.gis.nrw.de — 2040 (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13183,7 +13183,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_63270103F8", .name = "www.gis.nrw.de — 2040 bezogen auf 2020 (ArcGIS layer 20)",
     .name_ja = "www.gis.nrw.de — 2040 bezogen auf 2020 (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13205,7 +13205,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_84F76C93D9", .name = "www.gis.nrw.de — Potenzielle Eignung für Gründachnachrüstung "
       "nach Dachneigung (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — Potenzielle Eignung für Gründachnachrüstung nach Dachneigung (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13229,7 +13229,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_CBC02DB4D9", .name = "www.gis.nrw.de — Einstündige Niederschlagsmenge "
       "Wiederkehrintervall 100 Jahre [mm] (ArcGIS layer 7)",
     .name_ja = "www.gis.nrw.de — Einstündige Niederschlagsmenge Wiederkehrintervall 100 Jahre [mm] (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13251,7 +13251,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3EBC286216", .name = "www.gis.nrw.de — Bebauungs- und Freiflächentyp (ArcGIS layer 0)",
     .name_ja = "www.gis.nrw.de — Bebauungs- und Freiflächentyp (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13273,7 +13273,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4AD28D283F", .name = "www.gis.nrw.de — Klimatope (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — Klimatope (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13295,7 +13295,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_89D0AB6F4D", .name = "www.gis.nrw.de — Verkehr (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — Verkehr (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13317,7 +13317,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_6E333E709A", .name = "www.gis.nrw.de — Wasser (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — Wasser (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13340,7 +13340,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_870357DF6E", .name = "www.gis.nrw.de — Kaltluftaustauschbereich flächenhaft (ArcGIS "
       "layer 11)",
     .name_ja = "www.gis.nrw.de — Kaltluftaustauschbereich flächenhaft (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13362,7 +13362,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_741664A77B", .name = "www.gis.nrw.de — Kaltluftleitbahn (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — Kaltluftleitbahn (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13384,7 +13384,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_6E501C70BA", .name = "www.gis.nrw.de — Kaltluftproduktionsfläche (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — Kaltluftproduktionsfläche (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13406,7 +13406,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C4FE0D90C9", .name = "www.gis.nrw.de — Verkehr (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — Verkehr (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13428,7 +13428,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E51AF5EC17", .name = "www.gis.nrw.de — Wasser (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — Wasser (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13451,7 +13451,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_75FC12F0A7", .name = "www.gis.nrw.de — Kaltluftaustauschbereich flächenhaft (ArcGIS "
       "layer 36)",
     .name_ja = "www.gis.nrw.de — Kaltluftaustauschbereich flächenhaft (ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13473,7 +13473,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1CBB20D183", .name = "www.gis.nrw.de — Kaltluftleitbahn (ArcGIS layer 37)",
     .name_ja = "www.gis.nrw.de — Kaltluftleitbahn (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13495,7 +13495,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7EF6A48196", .name = "www.gis.nrw.de — Kaltlufteinwirkbereich (ArcGIS layer 38)",
     .name_ja = "www.gis.nrw.de — Kaltlufteinwirkbereich (ArcGIS layer 38)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13517,7 +13517,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B7D7AE4FDF", .name = "www.gis.nrw.de — Kaltluftproduktionsfläche (ArcGIS layer 39)",
     .name_ja = "www.gis.nrw.de — Kaltluftproduktionsfläche (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13539,7 +13539,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D6EE34CC0A", .name = "www.gis.nrw.de — Klimatope (ArcGIS layer 1)",
     .name_ja = "www.gis.nrw.de — Klimatope (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13561,7 +13561,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A17BFAC9E4", .name = "www.gis.nrw.de — Verkehr (ArcGIS layer 4)",
     .name_ja = "www.gis.nrw.de — Verkehr (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13583,7 +13583,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_3CF05F904F", .name = "www.gis.nrw.de — Wasser (ArcGIS layer 5)",
     .name_ja = "www.gis.nrw.de — Wasser (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13606,7 +13606,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_BD113A6FD7", .name = "www.gis.nrw.de — Kaltluftaustauschbereich flächenhaft (ArcGIS "
       "layer 11)",
     .name_ja = "www.gis.nrw.de — Kaltluftaustauschbereich flächenhaft (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13628,7 +13628,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_5158F80925", .name = "www.gis.nrw.de — Kaltluftleitbahn (ArcGIS layer 12)",
     .name_ja = "www.gis.nrw.de — Kaltluftleitbahn (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13650,7 +13650,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4B7F9118FA", .name = "www.gis.nrw.de — Kaltluftproduktionsfläche (ArcGIS layer 13)",
     .name_ja = "www.gis.nrw.de — Kaltluftproduktionsfläche (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13672,7 +13672,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A77CC28014", .name = "www.gis.nrw.de — Verkehr (ArcGIS layer 14)",
     .name_ja = "www.gis.nrw.de — Verkehr (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13694,7 +13694,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D74A6494FA", .name = "www.gis.nrw.de — Wasser (ArcGIS layer 15)",
     .name_ja = "www.gis.nrw.de — Wasser (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13717,7 +13717,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_75E728059E", .name = "www.gis.nrw.de — Kaltluftaustauschbereich flächenhaft (ArcGIS "
       "layer 36)",
     .name_ja = "www.gis.nrw.de — Kaltluftaustauschbereich flächenhaft (ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13739,7 +13739,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_76DC70964A", .name = "www.gis.nrw.de — Kaltluftleitbahn (ArcGIS layer 37)",
     .name_ja = "www.gis.nrw.de — Kaltluftleitbahn (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13761,7 +13761,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_AE7746EA01", .name = "www.gis.nrw.de — Kaltlufteinwirkbereich (ArcGIS layer 38)",
     .name_ja = "www.gis.nrw.de — Kaltlufteinwirkbereich (ArcGIS layer 38)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13783,7 +13783,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1FF68E3234", .name = "www.gis.nrw.de — Kaltluftproduktionsfläche (ArcGIS layer 39)",
     .name_ja = "www.gis.nrw.de — Kaltluftproduktionsfläche (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13806,7 +13806,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_09384DFC47", .name = "www.gis.nrw.de — Gemeinden_mit_Klimaanpassungskonzepten (ArcGIS "
       "layer 0)",
     .name_ja = "www.gis.nrw.de — Gemeinden_mit_Klimaanpassungskonzepten (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13828,7 +13828,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_695A58D18F", .name = "www.gis.nrw.de — Gemeinden_mit_Stadtklimaanalysen (ArcGIS layer "
       "1)",
     .name_ja = "www.gis.nrw.de — Gemeinden_mit_Stadtklimaanalysen (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13850,7 +13850,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_8866C50F6E", .name = "www.gis.nrw.de — Gemeinden_mit_Hitzeaktionsplanungen (ArcGIS "
       "layer 9)",
     .name_ja = "www.gis.nrw.de — Gemeinden_mit_Hitzeaktionsplanungen (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13871,7 +13871,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A6FE943AE3", .name = "www.gis.nrw.de — Gemeinden_mit_Teilnahme_ECA (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — Gemeinden_mit_Teilnahme_ECA (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13893,7 +13893,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_58E128C35B", .name = "www.gis.nrw.de — Gemeinden_mit_Foerderprogrammen_Gruen (ArcGIS "
       "layer 4)",
     .name_ja = "www.gis.nrw.de — Gemeinden_mit_Foerderprogrammen_Gruen (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13915,7 +13915,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_546299F854", .name = "www.gis.nrw.de — Landkreise_mit_Klimaanpassungskonzepten (ArcGIS "
       "layer 5)",
     .name_ja = "www.gis.nrw.de — Landkreise_mit_Klimaanpassungskonzepten (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13938,7 +13938,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_4C26DB534A", .name = "www.gis.nrw.de — Landkreise_mit_Starkregenkarten (ArcGIS layer "
       "6)",
     .name_ja = "www.gis.nrw.de — Landkreise_mit_Starkregenkarten (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13960,7 +13960,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_C1E5596283", .name = "www.gis.nrw.de — Kreise_mit_Hitzeaktionsplanungen (ArcGIS layer "
       "10)",
     .name_ja = "www.gis.nrw.de — Kreise_mit_Hitzeaktionsplanungen (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13982,7 +13982,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_3B1586924A", .name = "www.gis.nrw.de — Landkreise_mit_Foerderprogramm_Gruen (ArcGIS "
       "layer 7)",
     .name_ja = "www.gis.nrw.de — Landkreise_mit_Foerderprogramm_Gruen (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14003,7 +14003,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_27E6A2CFDA", .name = "www.gis.nrw.de — Projektlandkarte (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — Projektlandkarte (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14025,7 +14025,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_8830C833B0", .name = "www.gis.nrw.de — Gemeinden_mit_Klimaanpassungskonzepten (ArcGIS "
       "layer 0)",
     .name_ja = "www.gis.nrw.de — Gemeinden_mit_Klimaanpassungskonzepten (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14047,7 +14047,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1A9F7F7BD9", .name = "www.gis.nrw.de — Gemeinden_mit_Starkregenkarten (ArcGIS layer 2)",
     .name_ja = "www.gis.nrw.de — Gemeinden_mit_Starkregenkarten (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14070,7 +14070,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_5694904113", .name = "www.gis.nrw.de — Gemeinden_mit_Stadtklimaanalysen (ArcGIS layer "
       "1)",
     .name_ja = "www.gis.nrw.de — Gemeinden_mit_Stadtklimaanalysen (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14093,7 +14093,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_1665DD040E", .name = "www.gis.nrw.de — Gemeinden_mit_Hitzeaktionsplanungen (ArcGIS "
       "layer 9)",
     .name_ja = "www.gis.nrw.de — Gemeinden_mit_Hitzeaktionsplanungen (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14115,7 +14115,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_CFAB2ACBF0", .name = "www.gis.nrw.de — Gemeinden_mit_Teilnahme_ECA (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — Gemeinden_mit_Teilnahme_ECA (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14138,7 +14138,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_3F9A5DFABE", .name = "www.gis.nrw.de — Gemeinden_mit_Foerderprogrammen_Gruen (ArcGIS "
       "layer 4)",
     .name_ja = "www.gis.nrw.de — Gemeinden_mit_Foerderprogrammen_Gruen (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14161,7 +14161,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_E945FB0BE4", .name = "www.gis.nrw.de — Landkreise_mit_Klimaanpassungskonzepten (ArcGIS "
       "layer 5)",
     .name_ja = "www.gis.nrw.de — Landkreise_mit_Klimaanpassungskonzepten (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14184,7 +14184,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_2A6C2A0B4E", .name = "www.gis.nrw.de — Landkreise_mit_Starkregenkarten (ArcGIS layer "
       "6)",
     .name_ja = "www.gis.nrw.de — Landkreise_mit_Starkregenkarten (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14207,7 +14207,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_968BF055C2", .name = "www.gis.nrw.de — Kreise_mit_Hitzeaktionsplanungen (ArcGIS layer "
       "10)",
     .name_ja = "www.gis.nrw.de — Kreise_mit_Hitzeaktionsplanungen (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14230,7 +14230,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_BBBDA14203", .name = "www.gis.nrw.de — Landkreise_mit_Foerderprogramm_Gruen (ArcGIS "
       "layer 7)",
     .name_ja = "www.gis.nrw.de — Landkreise_mit_Foerderprogramm_Gruen (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14252,7 +14252,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E84917A7DF", .name = "www.gis.nrw.de — Projektlandkarte (ArcGIS layer 8)",
     .name_ja = "www.gis.nrw.de — Projektlandkarte (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14274,7 +14274,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1E445C79D8", .name = "www.gis.nrw.de — Jahr (ArcGIS layer 3)",
     .name_ja = "www.gis.nrw.de — Jahr (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://www.gis.nrw.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://www.gis.nrw.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14295,7 +14295,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_65563E9280", .name = "geoportal.bafg.de — WFDACT.Küstengewässer (ArcGIS layer 2)",
     .name_ja = "geoportal.bafg.de — WFDACT.Küstengewässer (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14316,7 +14316,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E6C78FF6D0", .name = "geoportal.bafg.de — Danube_MASK (ArcGIS layer 0)",
     .name_ja = "geoportal.bafg.de — Danube_MASK (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14337,7 +14337,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_ACADB9D96C", .name = "geoportal.bafg.de — Deltarhein_MASK (ArcGIS layer 4)",
     .name_ja = "geoportal.bafg.de — Deltarhein_MASK (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14358,7 +14358,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4E531F6F30", .name = "geoportal.bafg.de — Niederrhein_MASK (ArcGIS layer 5)",
     .name_ja = "geoportal.bafg.de — Niederrhein_MASK (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14379,7 +14379,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_AB8D4B71B8", .name = "geoportal.bafg.de — Mittelrhein_MASK (ArcGIS layer 6)",
     .name_ja = "geoportal.bafg.de — Mittelrhein_MASK (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14400,7 +14400,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C6DCFFC571", .name = "geoportal.bafg.de — Mosel/Saar_MASK (ArcGIS layer 7)",
     .name_ja = "geoportal.bafg.de — Mosel/Saar_MASK (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14421,7 +14421,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FB3F269CB6", .name = "geoportal.bafg.de — Main_MASK (ArcGIS layer 8)",
     .name_ja = "geoportal.bafg.de — Main_MASK (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14442,7 +14442,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_87DD2928A7", .name = "geoportal.bafg.de — Neckar_MASK (ArcGIS layer 9)",
     .name_ja = "geoportal.bafg.de — Neckar_MASK (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14463,7 +14463,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C3D4D54504", .name = "geoportal.bafg.de — Oberrhein_MASK (ArcGIS layer 10)",
     .name_ja = "geoportal.bafg.de — Oberrhein_MASK (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14484,7 +14484,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_72B8A441DD", .name = "geoportal.bafg.de — Hochrhein_MASK (ArcGIS layer 11)",
     .name_ja = "geoportal.bafg.de — Hochrhein_MASK (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14505,7 +14505,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FE07F63CA9", .name = "geoportal.bafg.de — Alpenrhein/Bodensee_MASK (ArcGIS layer 12)",
     .name_ja = "geoportal.bafg.de — Alpenrhein/Bodensee_MASK (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14526,7 +14526,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_26FAEC5DC4", .name = "geoportal.bafg.de — Obere_Ems_MASK (ArcGIS layer 14)",
     .name_ja = "geoportal.bafg.de — Obere_Ems_MASK (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14547,7 +14547,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_636EF4689D", .name = "geoportal.bafg.de — Nordradde_MASK (ArcGIS layer 15)",
     .name_ja = "geoportal.bafg.de — Nordradde_MASK (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14568,7 +14568,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D2F9BCAC4E", .name = "geoportal.bafg.de — Nedereems_MASK (ArcGIS layer 16)",
     .name_ja = "geoportal.bafg.de — Nedereems_MASK (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14589,7 +14589,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_49762EA686", .name = "geoportal.bafg.de — Hase_MASK (ArcGIS layer 17)",
     .name_ja = "geoportal.bafg.de — Hase_MASK (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14610,7 +14610,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_18CD303D8A", .name = "geoportal.bafg.de — Leder_Jümme_MASK (ArcGIS layer 18)",
     .name_ja = "geoportal.bafg.de — Leder_Jümme_MASK (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14631,7 +14631,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BB3AA512BC", .name = "geoportal.bafg.de — Untere_Ems_MASK (ArcGIS layer 19)",
     .name_ja = "geoportal.bafg.de — Untere_Ems_MASK (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14652,7 +14652,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2AA62F617E", .name = "geoportal.bafg.de — Ems_Ästuar_MASK (ArcGIS layer 20)",
     .name_ja = "geoportal.bafg.de — Ems_Ästuar_MASK (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14673,7 +14673,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_70A18FCC74", .name = "geoportal.bafg.de — Werra_MASK (ArcGIS layer 22)",
     .name_ja = "geoportal.bafg.de — Werra_MASK (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14694,7 +14694,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_6FB1EF46DB", .name = "geoportal.bafg.de — Fulda_Diemel_MASK (ArcGIS layer 23)",
     .name_ja = "geoportal.bafg.de — Fulda_Diemel_MASK (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14715,7 +14715,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_44AA193C8D", .name = "geoportal.bafg.de — Aller_MASK (ArcGIS layer 24)",
     .name_ja = "geoportal.bafg.de — Aller_MASK (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14736,7 +14736,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_315D73A8AC", .name = "geoportal.bafg.de — Leine_MASK (ArcGIS layer 25)",
     .name_ja = "geoportal.bafg.de — Leine_MASK (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14757,7 +14757,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_457285E63C", .name = "geoportal.bafg.de — Tide_Weser_MASK (ArcGIS layer 26)",
     .name_ja = "geoportal.bafg.de — Tide_Weser_MASK (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14778,7 +14778,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8FEDB2F31C", .name = "geoportal.bafg.de — Tide_Elbe_MASK (ArcGIS layer 29)",
     .name_ja = "geoportal.bafg.de — Tide_Elbe_MASK (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14799,7 +14799,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D243CCAE3C", .name = "geoportal.bafg.de — Havel_MASK (ArcGIS layer 30)",
     .name_ja = "geoportal.bafg.de — Havel_MASK (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14820,7 +14820,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2868234A1A", .name = "geoportal.bafg.de — Saale_MASK (ArcGIS layer 31)",
     .name_ja = "geoportal.bafg.de — Saale_MASK (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14841,7 +14841,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_87FD0EF630", .name = "geoportal.bafg.de — Mittlere_Elbe_Elde_MASK (ArcGIS layer 32)",
     .name_ja = "geoportal.bafg.de — Mittlere_Elbe_Elde_MASK (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14863,7 +14863,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_C2CBE2F649", .name = "geoportal.bafg.de — Mulde_Elbe_Schwarze_Elster_MASK (ArcGIS "
       "layer 33)",
     .name_ja = "geoportal.bafg.de — Mulde_Elbe_Schwarze_Elster_MASK (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14884,7 +14884,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_2EF4CDA256", .name = "geoportal.bafg.de — Eger_MASK (ArcGIS layer 34)",
     .name_ja = "geoportal.bafg.de — Eger_MASK (ArcGIS layer 34)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14905,7 +14905,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F32AD3DC9C", .name = "geoportal.bafg.de — Untere_Moldau_MASK (ArcGIS layer 35)",
     .name_ja = "geoportal.bafg.de — Untere_Moldau_MASK (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14926,7 +14926,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9752740735", .name = "geoportal.bafg.de — Berounka_MASK (ArcGIS layer 36)",
     .name_ja = "geoportal.bafg.de — Berounka_MASK (ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14947,7 +14947,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1AE0F3E15E", .name = "geoportal.bafg.de — Obere_Moldau_MASK (ArcGIS layer 37)",
     .name_ja = "geoportal.bafg.de — Obere_Moldau_MASK (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14968,7 +14968,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_40EB1B971A", .name = "geoportal.bafg.de — Obere_Elbe_MASK (ArcGIS layer 38)",
     .name_ja = "geoportal.bafg.de — Obere_Elbe_MASK (ArcGIS layer 38)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14989,7 +14989,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D58BC4DB15", .name = "geoportal.bafg.de — Mittlere_Oder_MASK (ArcGIS layer 40)",
     .name_ja = "geoportal.bafg.de — Mittlere_Oder_MASK (ArcGIS layer 40)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15010,7 +15010,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_CF51186C9F", .name = "geoportal.bafg.de — Lausitzer_Neiße_MASK (ArcGIS layer 41)",
     .name_ja = "geoportal.bafg.de — Lausitzer_Neiße_MASK (ArcGIS layer 41)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15031,7 +15031,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_688D1A5AE6", .name = "geoportal.bafg.de — Deltarhein_MASK (ArcGIS layer 3)",
     .name_ja = "geoportal.bafg.de — Deltarhein_MASK (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15052,7 +15052,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B7C0D2A966", .name = "geoportal.bafg.de — Niederrhein_MASK (ArcGIS layer 4)",
     .name_ja = "geoportal.bafg.de — Niederrhein_MASK (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15073,7 +15073,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_94A142FEDD", .name = "geoportal.bafg.de — Mittelrhein_MASK (ArcGIS layer 5)",
     .name_ja = "geoportal.bafg.de — Mittelrhein_MASK (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15094,7 +15094,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7AB9418F7D", .name = "geoportal.bafg.de — Mosel/Saar_MASK (ArcGIS layer 6)",
     .name_ja = "geoportal.bafg.de — Mosel/Saar_MASK (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15115,7 +15115,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EAB7DF3B86", .name = "geoportal.bafg.de — Main_MASK (ArcGIS layer 7)",
     .name_ja = "geoportal.bafg.de — Main_MASK (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15136,7 +15136,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C11DD37A5B", .name = "geoportal.bafg.de — Neckar_MASK (ArcGIS layer 8)",
     .name_ja = "geoportal.bafg.de — Neckar_MASK (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15157,7 +15157,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_EC78561E5A", .name = "geoportal.bafg.de — Oberrhein_MASK (ArcGIS layer 9)",
     .name_ja = "geoportal.bafg.de — Oberrhein_MASK (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15178,7 +15178,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_09CB70D59E", .name = "geoportal.bafg.de — Hochrhein_MASK (ArcGIS layer 10)",
     .name_ja = "geoportal.bafg.de — Hochrhein_MASK (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15199,7 +15199,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_299D7DE5ED", .name = "geoportal.bafg.de — Alpenrhein/Bodensee_MASK (ArcGIS layer 11)",
     .name_ja = "geoportal.bafg.de — Alpenrhein/Bodensee_MASK (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15220,7 +15220,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_CDEEF3237B", .name = "geoportal.bafg.de — Tide_Elbe_MASK (ArcGIS layer 16)",
     .name_ja = "geoportal.bafg.de — Tide_Elbe_MASK (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15241,7 +15241,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_56AEF7BA1B", .name = "geoportal.bafg.de — Havel_MASK (ArcGIS layer 17)",
     .name_ja = "geoportal.bafg.de — Havel_MASK (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15262,7 +15262,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C234929005", .name = "geoportal.bafg.de — Saale_MASK (ArcGIS layer 18)",
     .name_ja = "geoportal.bafg.de — Saale_MASK (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15283,7 +15283,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_11F9EE518D", .name = "geoportal.bafg.de — Mittlere_Elbe_Elde_MASK (ArcGIS layer 19)",
     .name_ja = "geoportal.bafg.de — Mittlere_Elbe_Elde_MASK (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15305,7 +15305,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_5943B79E96", .name = "geoportal.bafg.de — Mulde_Elbe_Schwarze_Elster_MASK (ArcGIS "
       "layer 20)",
     .name_ja = "geoportal.bafg.de — Mulde_Elbe_Schwarze_Elster_MASK (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15326,7 +15326,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FC698232C0", .name = "geoportal.bafg.de — Eger_MASK (ArcGIS layer 21)",
     .name_ja = "geoportal.bafg.de — Eger_MASK (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15347,7 +15347,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D719A6DD32", .name = "geoportal.bafg.de — Untere_Moldau_MASK (ArcGIS layer 22)",
     .name_ja = "geoportal.bafg.de — Untere_Moldau_MASK (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15368,7 +15368,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FB8530604F", .name = "geoportal.bafg.de — Obere_Moldau_MASK (ArcGIS layer 23)",
     .name_ja = "geoportal.bafg.de — Obere_Moldau_MASK (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15389,7 +15389,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_77C2C30009", .name = "geoportal.bafg.de — Obere_Elbe_MASK (ArcGIS layer 24)",
     .name_ja = "geoportal.bafg.de — Obere_Elbe_MASK (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15410,7 +15410,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_8474B3428B", .name = "geoportal.bafg.de — Maas_MASK (ArcGIS layer 26)",
     .name_ja = "geoportal.bafg.de — Maas_MASK (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15431,7 +15431,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9487DE00D0", .name = "geoportal.bafg.de — Eider_MASK (ArcGIS layer 27)",
     .name_ja = "geoportal.bafg.de — Eider_MASK (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15452,7 +15452,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E10E6AC966", .name = "geoportal.bafg.de — Schlei_Trave_MASK (ArcGIS layer 28)",
     .name_ja = "geoportal.bafg.de — Schlei_Trave_MASK (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15473,7 +15473,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4FD9ADDE35", .name = "geoportal.bafg.de — Warnow_Peene_MASK (ArcGIS layer 29)",
     .name_ja = "geoportal.bafg.de — Warnow_Peene_MASK (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15494,7 +15494,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_65FD52A878", .name = "geoportal.bafg.de — Wasserschutzgebiete (ArcGIS layer 0)",
     .name_ja = "geoportal.bafg.de — Wasserschutzgebiete (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15517,7 +15517,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_B31DBC3CAE", .name = "geoportal.bafg.de — WFD16MILE.TEMP_LWBODY_SEGMENTE (ArcGIS layer "
       "2)",
     .name_ja = "geoportal.bafg.de — WFD16MILE.TEMP_LWBODY_SEGMENTE (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15540,7 +15540,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_E39A83C18D", .name = "geoportal.bafg.de — WFD16MILE.TEMP_LWBODY_SEGMENTE (ArcGIS layer "
       "3)",
     .name_ja = "geoportal.bafg.de — WFD16MILE.TEMP_LWBODY_SEGMENTE (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15562,7 +15562,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_416F6E4BFA", .name = "geoportal.bafg.de — Fließgewässer (ArcGIS layer 4)",
     .name_ja = "geoportal.bafg.de — Fließgewässer (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15584,7 +15584,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_AD90804D86", .name = "geoportal.bafg.de — Fließgewässer Detail (ArcGIS layer 5)",
     .name_ja = "geoportal.bafg.de — Fließgewässer Detail (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15606,7 +15606,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_DB2DFAFC3E", .name = "geoportal.bafg.de — Überlagerung wegen Fehlwert (ArcGIS layer 6)",
     .name_ja = "geoportal.bafg.de — Überlagerung wegen Fehlwert (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15628,7 +15628,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9A7BFA12D7", .name = "geoportal.bafg.de — 1245 'Y' (ArcGIS layer 8)",
     .name_ja = "geoportal.bafg.de — 1245 'Y' (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15650,7 +15650,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_76EBEB522A", .name = "geoportal.bafg.de — CAS_14797-55-8 'Y' (ArcGIS layer 9)",
     .name_ja = "geoportal.bafg.de — CAS_14797-55-8 'Y' (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15673,7 +15673,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_C9AE067BEF", .name = "geoportal.bafg.de — Grundwasserkörper Hintergrund (ArcGIS layer "
       "10)",
     .name_ja = "geoportal.bafg.de — Grundwasserkörper Hintergrund (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15695,7 +15695,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_00650D4414", .name = "geoportal.bafg.de — WFD16.PAREA_H (ArcGIS layer 1)",
     .name_ja = "geoportal.bafg.de — WFD16.PAREA_H (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15717,7 +15717,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_792048B0C9", .name = "geoportal.bafg.de — WFD16.PAREA_B (ArcGIS layer 2)",
     .name_ja = "geoportal.bafg.de — WFD16.PAREA_B (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15739,7 +15739,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_952047BC01", .name = "geoportal.bafg.de — Fließgewässer (ArcGIS layer 3)",
     .name_ja = "geoportal.bafg.de — Fließgewässer (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15761,7 +15761,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E9335D67AB", .name = "geoportal.bafg.de — Fließgewässer Detail (ArcGIS layer 4)",
     .name_ja = "geoportal.bafg.de — Fließgewässer Detail (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15783,7 +15783,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_B3948F2976", .name = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE (ArcGIS layer 5)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15805,7 +15805,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_316665E8C7", .name = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE (ArcGIS layer 6)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15827,7 +15827,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1182CD38BD", .name = "geoportal.bafg.de — Übergangsgewässer (ArcGIS layer 7)",
     .name_ja = "geoportal.bafg.de — Übergangsgewässer (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15849,7 +15849,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_FB5239D1B0", .name = "geoportal.bafg.de — WFD16.V_TEMP_TEWBODYGEOM (ArcGIS layer 8)",
     .name_ja = "geoportal.bafg.de — WFD16.V_TEMP_TEWBODYGEOM (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15871,7 +15871,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F7BEE32B3D", .name = "geoportal.bafg.de — Hoheitsgewässer (ArcGIS layer 2)",
     .name_ja = "geoportal.bafg.de — Hoheitsgewässer (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15894,7 +15894,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_FE257EAA5D", .name = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE det 4.1 AND 4.3 "
       "(ArcGIS layer 11)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE det 4.1 AND 4.3 (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15918,7 +15918,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_0E4DE48A49", .name = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE det 4.1 AND 4.2 "
       "(ArcGIS layer 12)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE det 4.1 AND 4.2 (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15942,7 +15942,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_E6E477318D", .name = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE det 4.3 (ArcGIS "
       "layer 15)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE det 4.3 (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15965,7 +15965,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_B05905D23C", .name = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE det 4.1 (ArcGIS "
       "layer 17)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE det 4.1 (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15988,7 +15988,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_D6218A1D0E", .name = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE det normal "
       "(ArcGIS layer 18)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE det normal (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16011,7 +16011,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_2F8519C2C3", .name = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE 4.3 (ArcGIS layer "
       "21)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE 4.3 (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16034,7 +16034,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_298E4D6C09", .name = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE 4.2 (ArcGIS layer "
       "22)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE 4.2 (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16057,7 +16057,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_9FE4A33EA5", .name = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE 4.1 (ArcGIS layer "
       "23)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE 4.1 (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16080,7 +16080,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_1B8D082152", .name = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE normal (ArcGIS "
       "layer 24)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE normal (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16103,7 +16103,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_FE8AB0B38D", .name = "geoportal.bafg.de — WFD16.TEMP_CWBODY_SEGMENTE normal (ArcGIS "
       "layer 26)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_CWBODY_SEGMENTE normal (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16125,7 +16125,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_15A787EB40", .name = "geoportal.bafg.de — WFD16.TEMP_TWBODY_SEGMENTE (ArcGIS layer 27)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_TWBODY_SEGMENTE (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16148,7 +16148,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_2660634F01", .name = "geoportal.bafg.de — WFD16.TEMP_TWBODY_SEGMENTE normal (ArcGIS "
       "layer 28)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_TWBODY_SEGMENTE normal (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16171,7 +16171,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_65A93F960D", .name = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE det 4.5 (ArcGIS "
       "layer 29)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE det 4.5 (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16194,7 +16194,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_54FA8C854C", .name = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE det 4.3 (ArcGIS "
       "layer 31)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE det 4.3 (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16217,7 +16217,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_96F1CE2745", .name = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE det 4.2 (ArcGIS "
       "layer 32)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE det 4.2 (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16240,7 +16240,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_638902851F", .name = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE det 4.1 (ArcGIS "
       "layer 33)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE det 4.1 (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16263,7 +16263,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_5FA9617D4E", .name = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE det normal "
       "(ArcGIS layer 34)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE det normal (ArcGIS layer 34)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16286,7 +16286,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_5DA341B15B", .name = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE 4.5 (ArcGIS layer "
       "35)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE 4.5 (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16309,7 +16309,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_1DFEA917CD", .name = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE 4.3 (ArcGIS layer "
       "37)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE 4.3 (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16332,7 +16332,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_737FDC9734", .name = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE 4.2 (ArcGIS layer "
       "38)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE 4.2 (ArcGIS layer 38)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16355,7 +16355,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_ADBD6A65D0", .name = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE 4.1 (ArcGIS layer "
       "39)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_RWBODY_SEGMENTE 4.1 (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16377,7 +16377,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_AAFFD3BF52", .name = "geoportal.bafg.de — Übergangsgewässer (ArcGIS layer 2)",
     .name_ja = "geoportal.bafg.de — Übergangsgewässer (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16400,7 +16400,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_15B2D92B8A", .name = "geoportal.bafg.de — WFD16MILE.TEMP_LWBODY_SEGMENTE (ArcGIS layer "
       "3)",
     .name_ja = "geoportal.bafg.de — WFD16MILE.TEMP_LWBODY_SEGMENTE (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16423,7 +16423,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_E204E2B597", .name = "geoportal.bafg.de — WFD16MILE.TEMP_LWBODY_SEGMENTE (ArcGIS layer "
       "4)",
     .name_ja = "geoportal.bafg.de — WFD16MILE.TEMP_LWBODY_SEGMENTE (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16445,7 +16445,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_C16A93F403", .name = "geoportal.bafg.de — Fließgewässer (ArcGIS layer 5)",
     .name_ja = "geoportal.bafg.de — Fließgewässer (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16467,7 +16467,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_31EE8F18BF", .name = "geoportal.bafg.de — Fließgewässer Detail (ArcGIS layer 6)",
     .name_ja = "geoportal.bafg.de — Fließgewässer Detail (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16490,7 +16490,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_4D648059A3", .name = "geoportal.bafg.de — Grundwasserkörper Horizon 3 (detail) (ArcGIS "
       "layer 8)",
     .name_ja = "geoportal.bafg.de — Grundwasserkörper Horizon 3 (detail) (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16512,7 +16512,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9897E2E38E", .name = "geoportal.bafg.de — WFD16.V_CHEMST_GW (ArcGIS layer 9)",
     .name_ja = "geoportal.bafg.de — WFD16.V_CHEMST_GW (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16535,7 +16535,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_D97FB2F02E", .name = "geoportal.bafg.de — Grundwasserkörper Hintergrund (ArcGIS layer "
       "10)",
     .name_ja = "geoportal.bafg.de — Grundwasserkörper Hintergrund (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16557,7 +16557,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_4655018BBB", .name = "geoportal.bafg.de — Übergangsgewässer (ArcGIS layer 4)",
     .name_ja = "geoportal.bafg.de — Übergangsgewässer (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16580,7 +16580,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_FB6AA0848B", .name = "geoportal.bafg.de — WFD16MILE.TEMP_LWBODY_SEGMENTE (ArcGIS layer "
       "5)",
     .name_ja = "geoportal.bafg.de — WFD16MILE.TEMP_LWBODY_SEGMENTE (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16603,7 +16603,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_D0A6D945DC", .name = "geoportal.bafg.de — WFD16MILE.TEMP_LWBODY_SEGMENTE (ArcGIS layer "
       "6)",
     .name_ja = "geoportal.bafg.de — WFD16MILE.TEMP_LWBODY_SEGMENTE (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16625,7 +16625,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_E8AAD3AFF4", .name = "geoportal.bafg.de — Fließgewässer (ArcGIS layer 7)",
     .name_ja = "geoportal.bafg.de — Fließgewässer (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16647,7 +16647,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BFCBC62525", .name = "geoportal.bafg.de — Fließgewässer Detail (ArcGIS layer 8)",
     .name_ja = "geoportal.bafg.de — Fließgewässer Detail (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16670,7 +16670,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_EB3D17F5C8", .name = "geoportal.bafg.de — Grundwasserkörper Horizon 3 (detail) (ArcGIS "
       "layer 10)",
     .name_ja = "geoportal.bafg.de — Grundwasserkörper Horizon 3 (detail) (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16692,7 +16692,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_97A8FEFA39", .name = "geoportal.bafg.de — WFD16.V_CHEMST_GW (ArcGIS layer 11)",
     .name_ja = "geoportal.bafg.de — WFD16.V_CHEMST_GW (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16715,7 +16715,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_DEGIS_D8B6A7AA26", .name = "geoportal.bafg.de — Grundwasserkörper Hintergrund (ArcGIS layer "
       "12)",
     .name_ja = "geoportal.bafg.de — Grundwasserkörper Hintergrund (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16737,7 +16737,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_F09D9D15D0", .name = "geoportal.bafg.de — Übergangsgewässer (ArcGIS layer 4)",
     .name_ja = "geoportal.bafg.de — Übergangsgewässer (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16759,7 +16759,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_90E69620DD", .name = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE (ArcGIS layer 5)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16781,7 +16781,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_9A0EC4B3E3", .name = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE (ArcGIS layer 6)",
     .name_ja = "geoportal.bafg.de — WFD16.TEMP_LWBODY_SEGMENTE (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16803,7 +16803,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_D2E3C94442", .name = "geoportal.bafg.de — Fließgewässer (ArcGIS layer 7)",
     .name_ja = "geoportal.bafg.de — Fließgewässer (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16825,7 +16825,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_7C27E8EE61", .name = "geoportal.bafg.de — Fließgewässer Detail (ArcGIS layer 8)",
     .name_ja = "geoportal.bafg.de — Fließgewässer Detail (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16847,7 +16847,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_55B59D651C", .name = "geoportal.bafg.de — Grundwasserkörper Horizon 3 (ArcGIS layer 9)",
     .name_ja = "geoportal.bafg.de — Grundwasserkörper Horizon 3 (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16869,7 +16869,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_BC13EED24E", .name = "geoportal.bafg.de — Grundwasserkörper (ArcGIS layer 10)",
     .name_ja = "geoportal.bafg.de — Grundwasserkörper (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16891,7 +16891,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_A947B24E2D", .name = "geoportal.bafg.de — Grundwasserkörper (ArcGIS layer 11)",
     .name_ja = "geoportal.bafg.de — Grundwasserkörper (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16913,7 +16913,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_DEGIS_1A167CA69B", .name = "geoportal.bafg.de — WFD16.GWBODYGEOM (ArcGIS layer 0)",
     .name_ja = "geoportal.bafg.de — WFD16.GWBODYGEOM (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://geoportal.bafg.de",
+    .category = "geospatial", .collector = "eu_gis_environment_hazards", .portal = "https://geoportal.bafg.de",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"de\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16935,7 +16935,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_F533461708", .name = "servizigis.regione.emilia-romagna.it — ortofoto_AGEA_2008 "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — ortofoto_AGEA_2008 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16958,7 +16958,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_442E775DD3", .name = "servizigis.regione.emilia-romagna.it — ortofoto_AGEA_2008 "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — ortofoto_AGEA_2008 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16981,7 +16981,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_5B079A2036", .name = "servizigis.regione.emilia-romagna.it — ortofoto_AGEA_2011 "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — ortofoto_AGEA_2011 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17004,7 +17004,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_01DA670BDD", .name = "servizigis.regione.emilia-romagna.it — ortofoto_AGEA_2011 "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — ortofoto_AGEA_2011 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17027,7 +17027,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_3219147DA5", .name = "servizigis.regione.emilia-romagna.it — "
       "Agea2019_Montecopiolo_Sassofeltrio (ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Agea2019_Montecopiolo_Sassofeltrio (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17050,7 +17050,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_A741D91F6A", .name = "servizigis.regione.emilia-romagna.it — "
       "Agea2019_Montecopiolo_Sassofeltrio (ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Agea2019_Montecopiolo_Sassofeltrio (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17073,7 +17073,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_B6F9F4AA41", .name = "servizigis.regione.emilia-romagna.it — Ortofoto_Agea2020_RGB "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Ortofoto_Agea2020_RGB (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17096,7 +17096,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_195011854A", .name = "servizigis.regione.emilia-romagna.it — Ortofoto_AGEA_2020_RGB "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Ortofoto_AGEA_2020_RGB (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17119,7 +17119,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_CB1EBE1840", .name = "servizigis.regione.emilia-romagna.it — Carta_Storica_1853 "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Carta_Storica_1853 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17142,7 +17142,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_6466E7E47E", .name = "servizigis.regione.emilia-romagna.it — Ortofoto_CGR_2018_NIR "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Ortofoto_CGR_2018_NIR (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17165,7 +17165,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_43BA289499", .name = "servizigis.regione.emilia-romagna.it — Ortofoto_CGR_2018_NIR "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Ortofoto_CGR_2018_NIR (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17188,7 +17188,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_FFF71265D0", .name = "servizigis.regione.emilia-romagna.it — Ortofoto_CGR_2018_RGB "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Ortofoto_CGR_2018_RGB (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17211,7 +17211,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_77D87F7062", .name = "servizigis.regione.emilia-romagna.it — Ortofoto_CGR_2018_RGB "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Ortofoto_CGR_2018_RGB (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17234,7 +17234,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_8791A8FF72", .name = "servizigis.regione.emilia-romagna.it — ctrmultiscala (ArcGIS "
       "layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — ctrmultiscala (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17257,7 +17257,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_943A57FC7D", .name = "servizigis.regione.emilia-romagna.it — dbtr_ctrmultiscala "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — dbtr_ctrmultiscala (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17280,7 +17280,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_0D31B1E203", .name = "servizigis.regione.emilia-romagna.it — dbtr_ctrmultiscala_lg "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — dbtr_ctrmultiscala_lg (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17303,7 +17303,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_BBE7DE9240", .name = "servizigis.regione.emilia-romagna.it — dbtr_ctrmultiscala "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — dbtr_ctrmultiscala (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17326,7 +17326,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_13E1299B54", .name = "servizigis.regione.emilia-romagna.it — dbtr_ctrmultiscala "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — dbtr_ctrmultiscala (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17348,7 +17348,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_ITGIS_FB9107C56F", .name = "servizigis.regione.emilia-romagna.it — dbtr (ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — dbtr (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17369,7 +17369,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_ITGIS_76ACFB0894", .name = "servizigis.regione.emilia-romagna.it — dbtr (ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — dbtr (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17391,7 +17391,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_9A93D26884", .name = "servizigis.regione.emilia-romagna.it — sfumo_altimetrico5x5 "
       "(ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — sfumo_altimetrico5x5 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17414,7 +17414,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_4911F62FD5", .name = "servizigis.regione.emilia-romagna.it — Sfumo_di_sfondo (ArcGIS "
       "layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Sfumo_di_sfondo (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17437,7 +17437,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_81B8B79F40", .name = "servizigis.regione.emilia-romagna.it — Sfumo_di_sfondo (ArcGIS "
       "layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Sfumo_di_sfondo (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17460,7 +17460,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_71F917BE12", .name = "servizigis.regione.emilia-romagna.it — sfumo_uso_suolo (ArcGIS "
       "layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — sfumo_uso_suolo (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17483,7 +17483,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_F29DFC7C3A", .name = "servizigis.regione.emilia-romagna.it — VoloRER_1976_78 (ArcGIS "
       "layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — VoloRER_1976_78 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17506,7 +17506,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_861C29356C", .name = "servizigis.regione.emilia-romagna.it — VoloRER_1976_78 (ArcGIS "
       "layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — VoloRER_1976_78 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17529,7 +17529,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_50AC69B104", .name = "servizigis.regione.emilia-romagna.it — Comune_Ed_2021_250k "
       "(ArcGIS layer 2)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Comune_Ed_2021_250k (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17552,7 +17552,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_902B04BCDC", .name = "servizigis.regione.emilia-romagna.it — Comune_Ed_2021_100k "
       "(ArcGIS layer 3)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Comune_Ed_2021_100k (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17575,7 +17575,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_1A1F81F210", .name = "servizigis.regione.emilia-romagna.it — Comune_Ed_2021_25k "
       "(ArcGIS layer 4)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Comune_Ed_2021_25k (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17598,7 +17598,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_3F9C5D3A34", .name = "servizigis.regione.emilia-romagna.it — Comune_Ed_2021_5k (ArcGIS "
       "layer 5)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Comune_Ed_2021_5k (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17621,7 +17621,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_E8CEB63BD7", .name = "servizigis.regione.emilia-romagna.it — Provincia_Ed_2021_250k "
       "(ArcGIS layer 7)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Provincia_Ed_2021_250k (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17644,7 +17644,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_B4FA31BD97", .name = "servizigis.regione.emilia-romagna.it — Provincia_Ed_2021_100k "
       "(ArcGIS layer 8)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Provincia_Ed_2021_100k (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17667,7 +17667,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_0F8EBE3112", .name = "servizigis.regione.emilia-romagna.it — Provincia_Ed_2021_25k "
       "(ArcGIS layer 9)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Provincia_Ed_2021_25k (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17690,7 +17690,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_8C8359BC44", .name = "servizigis.regione.emilia-romagna.it — Provincia_Ed_2021_5k "
       "(ArcGIS layer 10)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Provincia_Ed_2021_5k (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17713,7 +17713,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_A5371F5097", .name = "servizigis.regione.emilia-romagna.it — Regione_Ed_2021_250k "
       "(ArcGIS layer 12)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Regione_Ed_2021_250k (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17736,7 +17736,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_8B2801DFFF", .name = "servizigis.regione.emilia-romagna.it — Regione_Ed_2021_100k "
       "(ArcGIS layer 13)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Regione_Ed_2021_100k (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17759,7 +17759,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_6F8EDAE1D9", .name = "servizigis.regione.emilia-romagna.it — Regione_Ed_2021_25k "
       "(ArcGIS layer 14)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Regione_Ed_2021_25k (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17782,7 +17782,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_9CEBC4B154", .name = "servizigis.regione.emilia-romagna.it — Regione_Ed_2021_5k "
       "(ArcGIS layer 15)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Regione_Ed_2021_5k (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17805,7 +17805,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_33A73978A8", .name = "servizigis.regione.emilia-romagna.it — "
       "Unione_di_Comuni_Ed_2021_250k (ArcGIS layer 17)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Unione_di_Comuni_Ed_2021_250k (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17828,7 +17828,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_81211E2595", .name = "servizigis.regione.emilia-romagna.it — "
       "Unione_di_Comuni_Ed_2021_100k (ArcGIS layer 18)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Unione_di_Comuni_Ed_2021_100k (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17851,7 +17851,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_BECA5302D1", .name = "servizigis.regione.emilia-romagna.it — "
       "Unione_di_Comuni_Ed_2021_25k (ArcGIS layer 19)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Unione_di_Comuni_Ed_2021_25k (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17874,7 +17874,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_B5C01E2438", .name = "servizigis.regione.emilia-romagna.it — "
       "Unione_di_Comuni_Ed_2021_5k (ArcGIS layer 20)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Unione_di_Comuni_Ed_2021_5k (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17897,7 +17897,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_FC61E5FAD5", .name = "servizigis.regione.emilia-romagna.it — Etichette comuni (ArcGIS "
       "layer 22)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Etichette comuni (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17919,7 +17919,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_ITGIS_90742BF12C", .name = "servizigis.regione.emilia-romagna.it — Civici (ArcGIS layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Civici (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17941,7 +17941,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_ITGIS_64DDCBD7F7", .name = "servizigis.regione.emilia-romagna.it — Toponimi (ArcGIS layer 1)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Toponimi (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17963,7 +17963,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_ITGIS_62BE685ECB", .name = "servizigis.regione.emilia-romagna.it — Province (ArcGIS layer 2)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Province (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17985,7 +17985,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_ITGIS_9C4B8C5C77", .name = "servizigis.regione.emilia-romagna.it — Comuni (ArcGIS layer 3)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Comuni (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18008,7 +18008,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_CAA8EB6ECA", .name = "servizigis.regione.emilia-romagna.it — Particelle catastali "
       "(ArcGIS layer 4)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Particelle catastali (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18031,7 +18031,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_F9B47933DC", .name = "servizigis.regione.emilia-romagna.it — Fogli catastali (ArcGIS "
       "layer 5)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Fogli catastali (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_parcels_landuse", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18053,7 +18053,7 @@ static const hp_source HP3B64_DEREST[] = {
 
   { .id = "JO64_ITGIS_083A17DA4D", .name = "servizigis.regione.emilia-romagna.it — Localita (ArcGIS layer 6)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Localita (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18076,7 +18076,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_47283B7755", .name = "servizigis.regione.emilia-romagna.it — Sezioni censimento "
       "(ArcGIS layer 7)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Sezioni censimento (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18099,7 +18099,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_5F79AB7ED4", .name = "servizigis.regione.emilia-romagna.it — Stradario (ArcGIS layer "
       "8)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Stradario (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_transport", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18122,7 +18122,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_B86D9F99DB", .name = "servizigis.regione.emilia-romagna.it — moka_regione (ArcGIS "
       "layer 9)",
     .name_ja = "servizigis.regione.emilia-romagna.it — moka_regione (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18145,7 +18145,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_F3F7715926", .name = "servizigis.regione.emilia-romagna.it — moka_province (ArcGIS "
       "layer 10)",
     .name_ja = "servizigis.regione.emilia-romagna.it — moka_province (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18168,7 +18168,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_DBCD4CDEDB", .name = "servizigis.regione.emilia-romagna.it — moka_comuni (ArcGIS layer "
       "11)",
     .name_ja = "servizigis.regione.emilia-romagna.it — moka_comuni (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18191,7 +18191,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_78800FAB43", .name = "servizigis.regione.emilia-romagna.it — Unioni di Comuni (ArcGIS "
       "layer 12)",
     .name_ja = "servizigis.regione.emilia-romagna.it — Unioni di Comuni (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_boundaries", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18214,7 +18214,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_F65BF7E8FE", .name = "servizigis.regione.emilia-romagna.it — QU_DTM5x5m_10km (ArcGIS "
       "layer 0)",
     .name_ja = "servizigis.regione.emilia-romagna.it — QU_DTM5x5m_10km (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18237,7 +18237,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_28A5C1468F", .name = "servizigis.regione.emilia-romagna.it — QU_LiDAR_RER2023_2024 "
       "(ArcGIS layer 1)",
     .name_ja = "servizigis.regione.emilia-romagna.it — QU_LiDAR_RER2023_2024 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18260,7 +18260,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_F54EAE35FC", .name = "servizigis.regione.emilia-romagna.it — QU_Ortofoto_RER2023_2024 "
       "(ArcGIS layer 2)",
     .name_ja = "servizigis.regione.emilia-romagna.it — QU_Ortofoto_RER2023_2024 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18283,7 +18283,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_5810D6FF66", .name = "servizigis.regione.emilia-romagna.it — QU_LiDAR_RER2022 (ArcGIS "
       "layer 3)",
     .name_ja = "servizigis.regione.emilia-romagna.it — QU_LiDAR_RER2022 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18306,7 +18306,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_E0426F1517", .name = "servizigis.regione.emilia-romagna.it — QU_Ortofoto_RER2022 "
       "(ArcGIS layer 4)",
     .name_ja = "servizigis.regione.emilia-romagna.it — QU_Ortofoto_RER2022 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_imagery_basemap", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18329,7 +18329,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_B3A930F77A", .name = "servizigis.regione.emilia-romagna.it — QU_DBTR_CTR5k (ArcGIS "
       "layer 5)",
     .name_ja = "servizigis.regione.emilia-romagna.it — QU_DBTR_CTR5k (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18352,7 +18352,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_750973D79D", .name = "servizigis.regione.emilia-romagna.it — QU_DBTR_CTR5k_storico "
       "(ArcGIS layer 6)",
     .name_ja = "servizigis.regione.emilia-romagna.it — QU_DBTR_CTR5k_storico (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18375,7 +18375,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_59499FBFC6", .name = "servizigis.regione.emilia-romagna.it — QU_DBTR_CTR10k (ArcGIS "
       "layer 7)",
     .name_ja = "servizigis.regione.emilia-romagna.it — QU_DBTR_CTR10k (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18398,7 +18398,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_81D3A93146", .name = "servizigis.regione.emilia-romagna.it — QU_DBTR_CTR10k_storico "
       "(ArcGIS layer 8)",
     .name_ja = "servizigis.regione.emilia-romagna.it — QU_DBTR_CTR10k_storico (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18421,7 +18421,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_980E7807E3", .name = "servizigis.regione.emilia-romagna.it — QU_DBTR_CTR25k (ArcGIS "
       "layer 9)",
     .name_ja = "servizigis.regione.emilia-romagna.it — QU_DBTR_CTR25k (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -18444,7 +18444,7 @@ static const hp_source HP3B64_DEREST[] = {
   { .id = "JO64_ITGIS_4EDF37AF81", .name = "servizigis.regione.emilia-romagna.it — QU_DBTR_CTR50k (ArcGIS "
       "layer 10)",
     .name_ja = "servizigis.regione.emilia-romagna.it — QU_DBTR_CTR50k (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://servizigis.regione.emilia-romagna.it",
+    .category = "geospatial", .collector = "eu_gis_other", .portal = "https://servizigis.regione.emilia-romagna.it",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"it\",\"government\",\"gis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,

@@ -24,7 +24,7 @@
 static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_ALL_ENV_0_D7C576", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_All_Env_2018_to_2024/FeatureServer/0 "
       "— ANeMoNe_all_sites (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_All_Env_2018_to_2024/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_All_Env_2018_to_2024/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -48,7 +48,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_ALL_ENV_0_2ED4DA", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_All_Env_2018_to_2024/MapServer/0 "
       "— ANeMoNe_all_sites (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_All_Env_2018_to_2024/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_All_Env_2018_to_2024/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -72,7 +72,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_ANDERSO_0_65EF02", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_AndersonCove_site/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_AndersonCove_site/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_AndersonCove_site/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -96,7 +96,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_ANDERSO_0_11008F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_AndersonCove_site/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_AndersonCove_site/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_AndersonCove_site/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -120,7 +120,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_CASEINL_0_F20245", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_CaseInlet/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_CaseInlet/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_CaseInlet/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -144,7 +144,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_CASEINL_0_B644AE", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_CaseInlet/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_CaseInlet/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_CaseInlet/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -168,7 +168,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_CHERRYP_0_F0C39C", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_CherryPoint/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_CherryPoint/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_CherryPoint/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -192,7 +192,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_CHERRYP_0_7BB07A", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_CherryPoint/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_CherryPoint/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_CherryPoint/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -216,7 +216,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_DUNGENE_0_862A91", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_DungenessBay/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_DungenessBay/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_DungenessBay/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -240,7 +240,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_DUNGENE_0_627631", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_DungenessBay/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_DungenessBay/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_DungenessBay/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -264,7 +264,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_ELLIOTT_0_ADE36C", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_ElliottBay_env/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_ElliottBay_env/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_ElliottBay_env/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -288,7 +288,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_ELLIOTT_0_BA3B95", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_ElliottBay_env/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_ElliottBay_env/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_ElliottBay_env/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -312,7 +312,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_ELLIOTT_0_CB1463", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_ElliottBay/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_ElliottBay/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_ElliottBay/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -336,7 +336,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_ELLIOTT_0_A64E9C", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_ElliottBay/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_ElliottBay/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_ElliottBay/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -360,7 +360,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_FILDAGO_0_B15069", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_FildagoBay/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_FildagoBay/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_FildagoBay/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -384,7 +384,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_FILDAGO_0_3BB64E", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_FildagoBay/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_FildagoBay/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_FildagoBay/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -408,7 +408,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_GRAYSHA_0_74A347", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_GraysHarbor/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_GraysHarbor/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_GraysHarbor/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -432,7 +432,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_GRAYSHA_0_3F8CEE", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_GraysHarbor/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_GraysHarbor/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_GraysHarbor/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -456,7 +456,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_HERMOSA_0_E074DF", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_HermosaPoint/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_HermosaPoint/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_HermosaPoint/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -480,7 +480,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_HERMOSA_0_43DBA9", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_HermosaPoint/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_HermosaPoint/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_HermosaPoint/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -504,7 +504,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_MAURYIS_0_A5FA9A", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_MauryIsland/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_MauryIsland/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_MauryIsland/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -528,7 +528,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_MAURYIS_0_EDFD44", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_MauryIsland/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_MauryIsland/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_MauryIsland/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -552,7 +552,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_NISQUAL_0_6982E5", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_NisquallyReach_env/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_NisquallyReach_env/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_NisquallyReach_env/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -576,7 +576,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_NISQUAL_0_D662B3", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_NisquallyReach_env/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_NisquallyReach_env/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_NisquallyReach_env/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -600,7 +600,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_PORTGAM_0_FE7E4B", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_PortGamble/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_PortGamble/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_PortGamble/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -624,7 +624,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_PORTGAM_0_64C555", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_PortGamble/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_PortGamble/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_PortGamble/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -648,7 +648,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_SEQUIMB_0_0CC338", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_SequimBay/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_SequimBay/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_SequimBay/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -672,7 +672,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_SEQUIMB_0_7F00A8", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_SequimBay/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_SequimBay/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_SequimBay/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -696,7 +696,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_SKOKOMI_0_77764A", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_SkokomishDelta/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_SkokomishDelta/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_SkokomishDelta/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -720,7 +720,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_SKOKOMI_0_5B2D05", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_SkokomishDelta/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_SkokomishDelta/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_SkokomishDelta/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -744,7 +744,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_WHIDBEY_0_84B92A", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_WhidbeyIsland/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_WhidbeyIsland/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_WhidbeyIsland/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -768,7 +768,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_WHIDBEY_0_DAC073", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_WhidbeyIsland/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_WhidbeyIsland/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_WhidbeyIsland/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -792,7 +792,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_WILLAPA_0_0E0556", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_WillapaBay/FeatureServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_WillapaBay/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_WillapaBay/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -816,7 +816,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_ANEMONE_WILLAPA_0_4D7647", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_WillapaBay/MapServer/0 "
       "— Location (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_WillapaBay/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ANeMoNe_WillapaBay/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -840,7 +840,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_BATHYMETRY_8_DA0D18", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/8 "
       "— River Miles (ACoE) (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/8",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/8",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -864,7 +864,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_BATHYMETRY_0_C60BBC", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/0 "
       "— Freshwater Bathymetry- Lakes (ECY) (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -888,7 +888,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_BATHYMETRY_1_34F270", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/1 "
       "— 1000 ft Contours (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -912,7 +912,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_BATHYMETRY_2_D2D152", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/2 "
       "— 500 ft Contours (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -936,7 +936,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_BATHYMETRY_3_B3C6E4", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/3 "
       "— 100 ft Contours (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -960,7 +960,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_BATHYMETRY_4_638055", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/4 "
       "— 20 ft Countours (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -984,7 +984,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_BATHYMETRY_7_F85C71", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/7 "
       "— Puget Sound Nearshore Bathymetry Inventory (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/7",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/7",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1008,7 +1008,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_BATHYMETRY_6_A40970", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/6 "
       "— Pacific Coast Historical Data Inventory (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/6",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/6",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1032,7 +1032,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_BATHYMETRY_5_2ED39A", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/5 "
       "— Federal Bathymetry Data (NOAA, NCEI) (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Bathymetry/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1056,7 +1056,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_1_875670", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/1 "
       "— Active Uses Points (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1080,7 +1080,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_2_EBA708", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/2 "
       "— Application Phase (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/2",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1104,7 +1104,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_3_725211", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/3 "
       "— Extended/ Holdover (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1128,7 +1128,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_4_795F77", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/4 "
       "— Historic/ Not Active Use Authorizations (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/4",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1152,7 +1152,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_25_90C0CC", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/25 "
       "— Port Management Agreement (PMA) Areas (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/25",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/25",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1176,7 +1176,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_58_47EC9A", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/58 "
       "— Dredge Material Disposal Site Points (ArcGIS layer 58)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/58",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/58",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1200,7 +1200,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_59_94905B", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/59 "
       "— Dredge Material Disposal Target Areas (ArcGIS layer 59)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/59",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/59",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1224,7 +1224,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_60_BDD426", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/60 "
       "— Dredge Material Disposal Zones (ArcGIS layer 60)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/60",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/60",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1248,7 +1248,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_61_2DBCF7", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/61 "
       "— Dredge Material Disposal Site Boundaries (ArcGIS layer 61)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/61",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/61",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1272,7 +1272,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_100_5E5576", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/100 "
       "— Engineered Log Jams (ArcGIS layer 100)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/100",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/100",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1296,7 +1296,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_104_D4A933", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/104 "
       "— Port Management Agreement (PMA) Boundaries (ArcGIS layer 104)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/104",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/FeatureServer/104",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1320,7 +1320,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_2_915E84", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/2 "
       "— Application Phase (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1344,7 +1344,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_1_97905C", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/1 "
       "— Active Uses Points (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1368,7 +1368,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_3_31F32A", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/3 "
       "— Extended/ Holdover (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1392,7 +1392,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_4_4E18DF", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/4 "
       "— Historic/ Not Active Use Authorizations (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1416,7 +1416,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_100_1A51CC", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/100 "
       "— Engineered Log Jams (ArcGIS layer 100)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/100",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/100",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1440,7 +1440,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_104_23FC82", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/104 "
       "— Port Management Agreement (PMA) Boundaries (ArcGIS layer 104)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/104",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/104",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1464,7 +1464,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_25_118AF2", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/25 "
       "— Port Management Agreement (PMA) Areas (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/25",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/25",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1488,7 +1488,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_58_6EB7A0", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/58 "
       "— Dredge Material Disposal Site Points (ArcGIS layer 58)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/58",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/58",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1512,7 +1512,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_59_AB9BFC", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/59 "
       "— Dredge Material Disposal Target Areas (ArcGIS layer 59)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/59",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/59",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1536,7 +1536,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_60_BF37C7", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/60 "
       "— Dredge Material Disposal Zones (ArcGIS layer 60)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/60",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/60",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1560,7 +1560,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_61_9F174C", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/61 "
       "— Dredge Material Disposal Site Boundaries (ArcGIS layer 61)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/61",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_ENC_Public_Prod/MapServer/61",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1584,7 +1584,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_0_F38D18", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/0 "
       "— Seagrass Monitoring Sites (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1608,7 +1608,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_1_5B1D0F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/1 "
       "— Floating Kelp (DNR Nearshore Program) (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1632,7 +1632,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_2_C3C4B8", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/2 "
       "— European Green Crab Early Detection (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1656,7 +1656,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_3_8522EA", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/3 "
       "— Pacific tree frog (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1680,7 +1680,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_4_2414D8", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/4 "
       "— Rough skinned newt (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1704,7 +1704,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_5_BE1B02", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/5 "
       "— Northwest salamander (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1728,7 +1728,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_6_4D97B2", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/6 "
       "— Northern red legged frog (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/6",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/6",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1752,7 +1752,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_7_45A4D8", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/7 "
       "— American bullfrog (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/7",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/7",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1776,7 +1776,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_8_46FB03", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/8 "
       "— Cherry Point volunteers (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/8",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/8",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1800,7 +1800,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_9_6A9994", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/9 "
       "— Port Townsend Marine Science Center (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/9",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/9",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1824,7 +1824,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_10_B0B439", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/10 "
       "— ReSources (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/10",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/10",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1848,7 +1848,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_11_0A836F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/11 "
       "— Port Townsend Marine Science Center (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/11",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/11",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1872,7 +1872,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_12_E72B0B", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/12 "
       "— Pacific sand lance (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/12",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/12",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1896,7 +1896,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_13_75C06B", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/13 "
       "— Surf smelt (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/13",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/13",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1920,7 +1920,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_14_7C2C5F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/14 "
       "— Inconclusive or Undetected (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/14",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/14",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1944,7 +1944,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_15_ADB14E", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/15 "
       "— Lake Kapowsin Water Quality (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/15",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/15",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1968,7 +1968,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_16_F3CA93", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/16 "
       "— Ephemeral Sediment Sampling (2022) (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/16",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/16",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1993,7 +1993,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_17_D9CEF3", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/17 "
       "— ANeMoNe Sites (Acidification Nearshore Monitoring Network) "
       "(ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/17",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/17",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2017,7 +2017,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_18_E6CB32", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/18 "
       "— wb_spartina_1963 (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/18",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/18",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2041,7 +2041,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_19_FAD404", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/19 "
       "— wb_spartina_1970 (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/19",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/19",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2065,7 +2065,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_20_6D5C80", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/20 "
       "— wb_spartina_1988 (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/20",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/20",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2089,7 +2089,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_21_6CC8E9", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/21 "
       "— wb_spartina_1992 (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/21",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/21",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2113,7 +2113,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_22_05C258", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/22 "
       "— wb_spartina_1994 (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/22",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/22",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2137,7 +2137,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_204_5EAABC", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/204 "
       "— BALD_EAGLE_SPRING_92 (ArcGIS layer 204)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/204",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/204",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2161,7 +2161,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_203_811E00", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/203 "
       "— BALD_EAGLE_SPRING_93 (ArcGIS layer 203)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/203",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/203",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2185,7 +2185,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_202_FA2119", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/202 "
       "— BALD_EAGLE_SPRING_94 (ArcGIS layer 202)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/202",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/202",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2209,7 +2209,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_201_82727E", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/201 "
       "— BALD_EAGLE_SPRING_95 (ArcGIS layer 201)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/201",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/201",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2233,7 +2233,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_184_D85A4C", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/184 "
       "— BALD_EAGLE_SPRING_96 (ArcGIS layer 184)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/184",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/184",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2257,7 +2257,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_185_99CAEB", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/185 "
       "— BALD_EAGLE_SPRING_97 (ArcGIS layer 185)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/185",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/185",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2281,7 +2281,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_186_240DA5", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/186 "
       "— BALD_EAGLE_SPRING_98 (ArcGIS layer 186)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/186",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/186",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2305,7 +2305,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_187_20EEE5", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/187 "
       "— BALD_EAGLE_SPRING_99 (ArcGIS layer 187)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/187",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/187",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2329,7 +2329,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_256_1714B6", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/256 "
       "— BALD_EAGLE_WINTER_00 (ArcGIS layer 256)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/256",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/256",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2353,7 +2353,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_257_F6E769", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/257 "
       "— BALD_EAGLE_WINTER_01 (ArcGIS layer 257)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/257",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/257",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2377,7 +2377,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_258_AD41FC", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/258 "
       "— BALD_EAGLE_WINTER_02 (ArcGIS layer 258)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/258",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/258",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2401,7 +2401,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_259_022080", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/259 "
       "— BALD_EAGLE_WINTER_04 (ArcGIS layer 259)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/259",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/259",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2425,7 +2425,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_260_177A6D", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/260 "
       "— BALD_EAGLE_WINTER_05 (ArcGIS layer 260)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/260",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/260",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2449,7 +2449,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_ENVIRONMENT_261_9C0164", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/261 "
       "— BALD_EAGLE_WINTER_06 (ArcGIS layer 261)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/261",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Environment/MapServer/261",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2473,7 +2473,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_LANDUSE_0_BEEFD8", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/0 "
       "— Existing Aquatic Reserves (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2497,7 +2497,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_LANDUSE_1_828CB7", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/1 "
       "— Biological Reserve (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2521,7 +2521,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_LANDUSE_2_1E437D", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/2 "
       "— Natural Area Preserves (NAP) (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2545,7 +2545,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_LANDUSE_3_42A8BF", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/3 "
       "— Natural Resources Conservation area (NRCA) (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2570,7 +2570,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_AQ_LANDUSE_4_71C159", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/4 "
       "— Other Public Aquatic Parcels (not DNR managed) (ArcGIS layer "
       "4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2594,7 +2594,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_LANDUSE_5_C91EF3", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/5 "
       "— Park (local, State, and National) (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2618,7 +2618,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_LANDUSE_6_C22BBA", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/6 "
       "— Seashore Conservation Area (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/6",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/6",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2642,7 +2642,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_LANDUSE_7_3E12DA", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/7 "
       "— Wildlife Refuge (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/7",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/7",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2667,7 +2667,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_AQ_LANDUSE_8_86E7FE", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/8 "
       "— Olympic Coast National Marine Sanctuary (NOAA) (ArcGIS layer "
       "8)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/8",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_LandUse/MapServer/8",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2691,7 +2691,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_PROGRAMATIC_0_EE251D", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Programatic/MapServer/0 "
       "— Aquatic Resources Districts (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Programatic/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Programatic/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2715,7 +2715,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_PROGRAMATIC_1_0E8AE6", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Programatic/MapServer/1 "
       "— Land Manager Management Regions (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Programatic/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Programatic/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2739,7 +2739,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_PROGRAMATIC_2_BFEFB8", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Programatic/MapServer/2 "
       "— Puget Sound Action Areas (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Programatic/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Programatic/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2763,7 +2763,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_PROGRAMATIC_62_114272", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Programatic/MapServer/62 "
       "— Municipal Outfalls (NPDES Permitted) (ArcGIS layer 62)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Programatic/MapServer/62",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Programatic/MapServer/62",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2787,7 +2787,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_1_48381C", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/1 "
       "— Floating Kelp (DNR Nearshore Program) (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2811,7 +2811,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_0_0B491E", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/0 "
       "— Seagrass Monitoring Sites (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2835,7 +2835,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_2_4B3872", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/2 "
       "— European Green Crab Early Detection (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2859,7 +2859,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_3_796976", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/3 "
       "— Pacific tree frog (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2883,7 +2883,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_4_776A0F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/4 "
       "— Rough skinned newt (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2907,7 +2907,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_5_7B2A3C", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/5 "
       "— Northwest salamander (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2931,7 +2931,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_6_09F143", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/6 "
       "— Northern red legged frog (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/6",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/6",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2955,7 +2955,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_7_434C1F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/7 "
       "— American bullfrog (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/7",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/7",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2979,7 +2979,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_8_5973E2", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/8 "
       "— Cherry Point volunteers (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/8",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/8",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3003,7 +3003,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_9_FFC6B0", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/9 "
       "— Port Townsend Marine Science Center (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/9",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/9",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3027,7 +3027,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_10_DE575E", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/10 "
       "— ReSources (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/10",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/10",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3051,7 +3051,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_11_730E4D", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/11 "
       "— Port Townsend Marine Science Center (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/11",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/11",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3075,7 +3075,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_12_E544F4", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/12 "
       "— Pacific sand lance (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/12",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/12",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3099,7 +3099,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_13_85DFD3", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/13 "
       "— Surf smelt (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/13",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/13",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3123,7 +3123,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_14_EF68C0", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/14 "
       "— Inconclusive or Undetected (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/14",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/14",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3147,7 +3147,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_15_A7D9A6", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/15 "
       "— Lake Kapowsin Water Quality (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/15",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/15",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3171,7 +3171,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_16_1AB727", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/16 "
       "— Ephemeral Sediment Sampling (2022) (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/16",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/16",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3196,7 +3196,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_AQ_RESERVES_17_8EC04B", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/17 "
       "— ANeMoNe Sites (Acidification Nearshore Monitoring Network) "
       "(ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/17",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/AQ_Reserves/MapServer/17",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3220,7 +3220,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_CONSERVATIONARE_0_64764E", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/0 "
       "— Existing Aquatic Reserves (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3244,7 +3244,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_CONSERVATIONARE_1_6CF81A", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/1 "
       "— Biological Reserve (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3268,7 +3268,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_CONSERVATIONARE_2_FAB7FF", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/2 "
       "— Natural Area Preserves (NAP) (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3292,7 +3292,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_CONSERVATIONARE_3_B8BB97", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/3 "
       "— Natural Resources Conservation area (NRCA) (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3317,7 +3317,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_CONSERVATIONARE_4_2D0162", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/4 "
       "— Other Public Aquatic Parcels (not DNR managed) (ArcGIS layer "
       "4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3341,7 +3341,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_CONSERVATIONARE_5_A2B149", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/5 "
       "— Park (local, State, and National) (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3365,7 +3365,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_CONSERVATIONARE_6_E09009", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/6 "
       "— Seashore Conservation Area (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/6",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/6",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3389,7 +3389,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_CONSERVATIONARE_7_522836", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/7 "
       "— Wildlife Refuge (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/7",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/7",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3414,7 +3414,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_CONSERVATIONARE_8_C587EB", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/8 "
       "— Olympic Coast National Marine Sanctuary (NOAA) (ArcGIS layer "
       "8)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/8",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ConservationAreas/MapServer/8",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3439,7 +3439,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_DEPTHCONTOURSOL_0_757E82", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/DepthContoursOlder/MapServer/0 "
       "— Finlayson Contours - More Dense Shallow (Feet MLLW) (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/DepthContoursOlder/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/DepthContoursOlder/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3463,7 +3463,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_FORAGEFISHWDFW_0_7CD697", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/0 "
       "— Forage_Fish_Surveys (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3487,7 +3487,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_FORAGEFISHWDFW_1_68B01F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/1 "
       "— Smelt_Spawning (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3511,7 +3511,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_FORAGEFISHWDFW_2_E8BA2C", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/2 "
       "— Sand_Lance_Spawning (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3535,7 +3535,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_FORAGEFISHWDFW_3_1881E3", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/3 "
       "— Pre_Spawner_Herring_Holding_Areas (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3559,7 +3559,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_FORAGEFISHWDFW_4_6837E1", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/4 "
       "— Herring_Spawning (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ForageFishWDFW/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3583,7 +3583,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_27_24E0E1", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/27 "
       "— SeaTurtleLeatherback_20120126 (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/27",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/27",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3607,7 +3607,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_0_F913E4", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/0 "
       "— AbaloneBlack_20111027 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3631,7 +3631,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_1_54EF9A", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/1 "
       "— Bocaccio_PugetSoundGeorgiaBasinDPS_20141113 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3655,7 +3655,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_2_E7779F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/2 "
       "— Eulachon_SouthernDPS_20111020 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3680,7 +3680,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_3_9CB993", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/3 "
       "— RockfishYelloweye_PugetSoundGeorgiaBasinDPS_20141113 (ArcGIS "
       "layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3704,7 +3704,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_4_3806D7", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/4 "
       "— SalmonChinook_LowerColumbiaRiverESU_20050902 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3728,7 +3728,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_5_C6C515", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/5 "
       "— SalmonChinook_PugetSoundESU_20050902_line (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3752,7 +3752,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_6_D1E99E", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/6 "
       "— SalmonChinook_PugetSoundESU_20050902_poly (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/6",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/6",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3776,7 +3776,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_7_EE331F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/7 "
       "— SalmonChinook_SnakeRiverfallrunESU_19931228 (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/7",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/7",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3801,7 +3801,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_8_D5C348", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/8 "
       "— SalmonChinook_UpperColumbiaRiverspringrunESU_20050902 (ArcGIS "
       "layer 8)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/8",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/8",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3826,7 +3826,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_9_75C990", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/9 "
       "— SalmonChinook_UpperWillametteRiverESU_20050902 (ArcGIS layer "
       "9)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/9",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/9",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3850,7 +3850,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_10_E7C9EC", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/10 "
       "— SalmonChum_ColumbiaRiverESU_20050902 (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/10",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/10",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3875,7 +3875,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_11_236CB1", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/11 "
       "— SalmonChum_HoodCanalsummerrunESU_20050902_line (ArcGIS layer "
       "11)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/11",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/11",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3900,7 +3900,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_12_4FED5C", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/12 "
       "— SalmonChum_HoodCanalsummerrunESU_20050902_poly (ArcGIS layer "
       "12)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/12",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/12",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3924,7 +3924,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_13_EDEFB9", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/13 "
       "— SalmonCoho_LowerColumbiaRiverESU_20160224 (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/13",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/13",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3948,7 +3948,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_14_3D844A", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/14 "
       "— SalmonSockeye_OzetteLakeESU_20050902 (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/14",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/14",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3972,7 +3972,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_15_983E1D", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/15 "
       "— SalmonSockeye_SnakeRiverESU_19931228_line (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/15",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/15",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3996,7 +3996,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_16_00EF87", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/16 "
       "— SalmonSockeye_SnakeRiverESU_19931228_poly (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/16",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/16",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4020,7 +4020,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_17_56AC2F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/17 "
       "— Steelhead_LowerColumbiaRiverDPS_20050902 (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/17",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/17",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4044,7 +4044,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_18_5B7DC9", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/18 "
       "— Steelhead_MiddleColumbiaRiverDPS_20050902 (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/18",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/18",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4068,7 +4068,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_19_DCD9BF", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/19 "
       "— Steelhead_PugetSoundDPS_20160224 (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/19",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/19",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4092,7 +4092,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_20_C43C85", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/20 "
       "— Steelhead_SnakeRiverBasinDPS_20050902 (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/20",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/20",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4116,7 +4116,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_21_384E4B", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/21 "
       "— Steelhead_UpperColumbiaRiverDPS_20050902 (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/21",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/21",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4140,7 +4140,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_22_5DFD8D", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/22 "
       "— Steelhead_UpperWillametteRiverDPS_20050902 (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/22",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/22",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4164,7 +4164,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_23_56CB7E", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/23 "
       "— SturgeonGreen_SouthernDPS_20091009_line (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/23",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/23",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4188,7 +4188,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_24_077237", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/24 "
       "— SturgeonGreen_SouthernDPS_20091009_poly (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/24",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/24",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4212,7 +4212,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_25_EDFA6D", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/25 "
       "— WhaleHumpback_CentralAmericaDPS_20210421 (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/25",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/25",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4236,7 +4236,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_NOAA_CRITHAB_26_1120E5", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/26 "
       "— WhaleKiller_SouthernResidentDPS_20210802 (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/26",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/NOAA_CritHab/MapServer/26",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4260,7 +4260,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_PUGET_SOUND_SEA_2_3D7274", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/2 "
       "— Seagrass Species (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4284,7 +4284,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_PUGET_SOUND_SEA_3_606FF2", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/3 "
       "— Long-Term Change in Native Seagrass (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4308,7 +4308,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_PUGET_SOUND_SEA_4_11F3AE", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/4 "
       "— Recent Change in Native Seagrass (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4332,7 +4332,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_PUGET_SOUND_SEA_5_D69B83", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/5 "
       "— Survey Data (in beyond 1:100,000) (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4356,7 +4356,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_PUGET_SOUND_SEA_6_E773C0", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/6 "
       "— Generalized Eelgrass Polygons (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/6",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/6",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4380,7 +4380,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_PUGET_SOUND_SEA_7_B1ECE4", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/7 "
       "— SVMP Regions (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/7",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/7",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4404,7 +4404,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_PUGET_SOUND_SEA_8_7E3A0D", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/8 "
       "— Site Polygons (in beyond 1:500,000) (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/8",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Puget_Sound_Seagrass_Monitoring/MapServer/8",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4428,7 +4428,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_PUGETSOUNDCONED_0_A68D38", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/PugetSoundCoNedContoursFeet/MapServer/0 "
       "— PugetSoundCoNedContoursFeet (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/PugetSoundCoNedContoursFeet/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/PugetSoundCoNedContoursFeet/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4453,7 +4453,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_PUGETSOUNDDEMCO_0_451194", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/PugetSoundDemContoursCoNED_FtMllw5mFinal_simplified/MapServer/0 "
       "— PugetSoundDemContoursCoNED_FtMllw5mFinal_simplified (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/PugetSoundDemContoursCoNED_FtMllw5mFinal_simplified/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/PugetSoundDemContoursCoNED_FtMllw5mFinal_simplified/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4479,7 +4479,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_REMOVEDDERELICT_0_E9A321", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/RemovedDerelictVessels/MapServer/0 "
       "— Removed Vessels (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/RemovedDerelictVessels/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/RemovedDerelictVessels/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4503,7 +4503,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_2_7BDB70", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/2 "
       "— Shoreline Type (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4527,7 +4527,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_3_2600BC", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/3 "
       "— Substrate Type (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4551,7 +4551,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_4_ECF8A3", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/4 "
       "— Shoreline Modification (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4575,7 +4575,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_5_616E42", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/5 "
       "— Exposure Class (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4599,7 +4599,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_8_7365A8", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/8 "
       "— Seagrass (all types) (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/8",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/8",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4623,7 +4623,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_9_617CFE", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/9 "
       "— Surfgrass (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/9",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/9",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4647,7 +4647,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_10_5C2FC7", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/10 "
       "— Eelgrass (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/10",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/10",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4671,7 +4671,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_12_3760A1", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/12 "
       "— Kelp (all types) (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/12",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/12",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4695,7 +4695,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_13_955F34", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/13 "
       "— Floating Kelp (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/13",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/13",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4719,7 +4719,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_14_708212", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/14 "
       "— Non-Floating Kelp (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/14",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/14",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4743,7 +4743,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_15_5FB7DA", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/15 "
       "— Sargassum (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/15",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/15",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4767,7 +4767,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_16_BC8232", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/16 "
       "— Dunegrass (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/16",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/16",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4791,7 +4791,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_17_7B8D35", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/17 "
       "— Salt Marsh (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/17",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/17",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4815,7 +4815,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_19_D1DCBC", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/19 "
       "— SZLine (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/19",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/19",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4839,7 +4839,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_20_A5468F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/20 "
       "— SZLNEnd (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/20",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/20",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4863,7 +4863,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_21_2CB5B8", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/21 "
       "— SZPoly (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/21",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/21",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4887,7 +4887,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SHOREZONE_INVEN_22_04D903", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/22 "
       "— SZPt (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/22",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/ShoreZone_Inventory/MapServer/22",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4911,7 +4911,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SKAGIT_INTERTID_0_473593", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/0 "
       "— Skagit_IntertidalVegetation_1996 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4935,7 +4935,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SKAGIT_INTERTID_1_DE7C20", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/1 "
       "— Skagit_SubstrateType_1996 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4959,7 +4959,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SKAGIT_INTERTID_2_F5D425", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/2 "
       "— Skagit_WaterRegime_1996 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4983,7 +4983,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SKAGIT_INTERTID_3_32E8FF", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/3 "
       "— Skagit_WaveCurrentEnergy_1996 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5007,7 +5007,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SKAGIT_INTERTID_4_4EFC9D", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/4 "
       "— Skagit_TidalDatumLines_1996 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5031,7 +5031,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SKAGIT_INTERTID_5_D32807", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/5 "
       "— Skagit Inventory Boundary (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Skagit_Intertidal_Inventory/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5055,7 +5055,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_0_766A5A", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/0 "
       "— Seagrass Monitoring Sites (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5079,7 +5079,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_1_AEA80D", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/1 "
       "— Floating Kelp (DNR Nearshore Program) (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5103,7 +5103,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_2_E1EABC", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/2 "
       "— European Green Crab Early Detection (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5127,7 +5127,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_3_2F42F5", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/3 "
       "— Pacific tree frog (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5151,7 +5151,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_4_236DC8", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/4 "
       "— Rough skinned newt (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5175,7 +5175,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_5_17A56A", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/5 "
       "— Northwest salamander (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5199,7 +5199,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_6_BE15F9", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/6 "
       "— Northern red legged frog (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/6",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/6",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5223,7 +5223,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_7_2580C0", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/7 "
       "— American bullfrog (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/7",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/7",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5247,7 +5247,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_8_7269FF", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/8 "
       "— Cherry Point volunteers (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/8",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/8",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5271,7 +5271,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_9_20D545", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/9 "
       "— Port Townsend Marine Science Center (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/9",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/9",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5295,7 +5295,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_10_03F0AD", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/10 "
       "— ReSources (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/10",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/10",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5319,7 +5319,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_11_E7E6C3", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/11 "
       "— Port Townsend Marine Science Center (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/11",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/11",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5343,7 +5343,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_12_AEDFBB", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/12 "
       "— Pacific sand lance (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/12",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/12",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5367,7 +5367,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_13_3912C5", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/13 "
       "— Surf smelt (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/13",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/13",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5391,7 +5391,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_14_CD0D3C", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/14 "
       "— Inconclusive or Undetected (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/14",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/14",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5415,7 +5415,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_15_642C65", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/15 "
       "— Lake Kapowsin Water Quality (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/15",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/15",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5439,7 +5439,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_16_C6B7C6", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/16 "
       "— Ephemeral Sediment Sampling (2022) (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/16",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/16",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5464,7 +5464,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_17_5BDBC5", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/17 "
       "— ANeMoNe Sites (Acidification Nearshore Monitoring Network) "
       "(ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/17",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/17",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5488,7 +5488,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_18_1E5491", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/18 "
       "— wb_spartina_1963 (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/18",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/18",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5512,7 +5512,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_19_F23219", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/19 "
       "— wb_spartina_1970 (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/19",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/19",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5536,7 +5536,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_20_413629", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/20 "
       "— wb_spartina_1988 (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/20",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/20",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5560,7 +5560,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_21_1499C4", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/21 "
       "— wb_spartina_1992 (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/21",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/21",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5584,7 +5584,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_22_593CD3", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/22 "
       "— wb_spartina_1994 (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/22",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/22",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5608,7 +5608,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_204_136D1F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/204 "
       "— BALD_EAGLE_SPRING_92 (ArcGIS layer 204)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/204",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/204",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5632,7 +5632,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_203_7E3DE5", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/203 "
       "— BALD_EAGLE_SPRING_93 (ArcGIS layer 203)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/203",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/203",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5656,7 +5656,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_202_A35AFE", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/202 "
       "— BALD_EAGLE_SPRING_94 (ArcGIS layer 202)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/202",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/202",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5680,7 +5680,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_201_9E0BE8", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/201 "
       "— BALD_EAGLE_SPRING_95 (ArcGIS layer 201)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/201",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/201",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5704,7 +5704,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_184_4A7268", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/184 "
       "— BALD_EAGLE_SPRING_96 (ArcGIS layer 184)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/184",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/184",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5728,7 +5728,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_185_F3C2D1", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/185 "
       "— BALD_EAGLE_SPRING_97 (ArcGIS layer 185)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/185",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/185",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5752,7 +5752,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_186_11D759", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/186 "
       "— BALD_EAGLE_SPRING_98 (ArcGIS layer 186)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/186",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/186",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5776,7 +5776,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_187_23CBDC", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/187 "
       "— BALD_EAGLE_SPRING_99 (ArcGIS layer 187)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/187",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/187",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5800,7 +5800,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_256_A4B666", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/256 "
       "— BALD_EAGLE_WINTER_00 (ArcGIS layer 256)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/256",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/256",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5824,7 +5824,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_257_82BE9B", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/257 "
       "— BALD_EAGLE_WINTER_01 (ArcGIS layer 257)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/257",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/257",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5848,7 +5848,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_258_515BBE", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/258 "
       "— BALD_EAGLE_WINTER_02 (ArcGIS layer 258)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/258",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/258",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5872,7 +5872,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_259_F24361", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/259 "
       "— BALD_EAGLE_WINTER_04 (ArcGIS layer 259)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/259",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/259",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5896,7 +5896,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_260_95A8DA", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/260 "
       "— BALD_EAGLE_WINTER_05 (ArcGIS layer 260)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/260",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/260",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5920,7 +5920,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_SPECIESANDHABIT_261_1BAD3F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/261 "
       "— BALD_EAGLE_WINTER_06 (ArcGIS layer 261)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/261",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/SpeciesAndHabitat/MapServer/261",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5944,7 +5944,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_VESSELSOFCONCER_1_5A5829", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/VesselsOfConcern/MapServer/1 "
       "— VesselsOfConcern (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/VesselsOfConcern/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/VesselsOfConcern/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5968,7 +5968,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WASHINGTON_STAT_0_9843F3", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Washington_State_Aquatic_Lands_and_Boundaries/FeatureServer/0 "
       "— Aquatic Parcel Boundary Types (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Washington_State_Aquatic_Lands_and_Boundaries/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Washington_State_Aquatic_Lands_and_Boundaries/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5993,7 +5993,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WASHINGTON_STAT_1_4B05EE", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Washington_State_Aquatic_Lands_and_Boundaries/FeatureServer/1 "
       "— Aquatic Parcel Ownership (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Washington_State_Aquatic_Lands_and_Boundaries/FeatureServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Washington_State_Aquatic_Lands_and_Boundaries/FeatureServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6018,7 +6018,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WASHINGTON_STAT_0_A298DE", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Washington_State_Aquatic_Lands_and_Boundaries/MapServer/0 "
       "— Aquatic Parcel Boundary Types (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Washington_State_Aquatic_Lands_and_Boundaries/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Washington_State_Aquatic_Lands_and_Boundaries/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6043,7 +6043,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WASHINGTON_STAT_1_6E2A0B", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Washington_State_Aquatic_Lands_and_Boundaries/MapServer/1 "
       "— Aquatic Parcel Ownership (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Washington_State_Aquatic_Lands_and_Boundaries/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Washington_State_Aquatic_Lands_and_Boundaries/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6068,7 +6068,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WHATCOM_INTERTI_0_A9C65E", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/0 "
       "— IntertidalVegetation_1995 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6092,7 +6092,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WHATCOM_INTERTI_1_FBB795", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/1 "
       "— SubstrateType_1995 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6116,7 +6116,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WHATCOM_INTERTI_2_694A2F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/2 "
       "— WaterRegime_1995 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6140,7 +6140,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WHATCOM_INTERTI_3_AF8751", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/3 "
       "— WaveCurrentEnergy_1995 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6164,7 +6164,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WHATCOM_INTERTI_4_4228AD", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/4 "
       "— TidalDatumLines_1995 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6188,7 +6188,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WHATCOM_INTERTI_5_EC5083", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/5 "
       "— Whatcom Study Area (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/Whatcom_Intertidal_Inventory/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6212,7 +6212,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_ENVIRONMEN_21_5C4F24", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/21 "
       "— Ecological Integrity NVC scores (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/21",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/21",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6236,7 +6236,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_ENVIRONMEN_20_12A34C", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/20 "
       "— Ecological Integrity NWI scores (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/20",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/20",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6260,7 +6260,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_ENVIRONMEN_18_DBE803", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/18 "
       "— 303(d) Impaired Water Listings (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/18",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/18",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6284,7 +6284,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_ENVIRONMEN_17_4B7B8B", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/17 "
       "— 305(b) Water Listings (ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/17",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/17",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6308,7 +6308,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_ENVIRONMEN_16_B544B7", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/16 "
       "— Urban Forest High Priority Areas (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/16",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/16",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6332,7 +6332,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_ENVIRONMEN_15_261963", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/15 "
       "— WRIAs (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/15",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/15",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6356,7 +6356,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_ENVIRONMEN_7_4EC137", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/7 "
       "— Culverts: fish passage barriers (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/7",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/7",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6380,7 +6380,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_ENVIRONMEN_3_E90E62", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/3 "
       "— Fish Stream Type (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6404,7 +6404,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_ENVIRONMEN_1_6479CE", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/1 "
       "— Mean August Stream Temperatures (1993_2011) (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6428,7 +6428,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_ENVIRONMEN_2_1E4110", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/2 "
       "— Forest To Faucets - Population Served (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Environment/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6452,7 +6452,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_11_310C52", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/11 "
       "— Active aquatic leases expiring 2020-2029 (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/11",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/11",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6476,7 +6476,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_6_11787F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/6 "
       "— City and UGA Boundaries (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/6",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/6",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6500,7 +6500,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_27_62D343", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/27 "
       "— County Land Ownership (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/27",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/27",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6524,7 +6524,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_0_F602E9", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/0 "
       "— Creosote Pilings Ownership (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6548,7 +6548,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_22_01F870", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/22 "
       "— DNR managed uplands (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/22",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/22",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6572,7 +6572,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_8_75FEC7", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/8 "
       "— Forestry riparian easment program (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/8",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/8",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6596,7 +6596,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_30_E1631B", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/30 "
       "— Marine Overwater Structures (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/30",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/30",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6620,7 +6620,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_25_4C31D9", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/25 "
       "— Non Designated Forest Lands (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/25",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/25",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6644,7 +6644,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_18_E0F3EA", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/18 "
       "— Non DNR Parks (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/18",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/18",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6668,7 +6668,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_19_0D05C9", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/19 "
       "— Non DNR Public Lands (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/19",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/19",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6692,7 +6692,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_4_840773", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/4 "
       "— Priority Planting Areas (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6716,7 +6716,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_2_02CFED", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/2 "
       "— Shoreline Modification (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6740,7 +6740,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_3_F21CBF", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/3 "
       "— Small Forest Land Owners (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6764,7 +6764,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_31_E1D1D5", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/31 "
       "— Snohomish Estuary Piling Inventory (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/31",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/31",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6788,7 +6788,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_21_66A850", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/21 "
       "— Aquatic Land Ownership Type (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/21",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/21",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6813,7 +6813,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_5_81A7C9", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/5 "
       "— Snohomish River Forum Sub-Basin Strategy Groups (ArcGIS layer "
       "5)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6837,7 +6837,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_23_348670", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/23 "
       "— Tribal Lands (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/23",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/23",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6861,7 +6861,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_26_1E7742", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/26 "
       "— Wilderness Areas (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/26",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/26",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6885,7 +6885,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_24_17ABA1", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/24 "
       "— Wildlife Areas (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/24",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/24",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6909,7 +6909,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_LANDUSE_12_6D38E4", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/12 "
       "— NapAndNrca_salmon (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/12",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_LandUse/MapServer/12",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6933,7 +6933,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_SCORING_0_1A86DB", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/0 "
       "— Environmental Health Disparities(DOH) (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6957,7 +6957,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_SCORING_1_6DCC35", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/1 "
       "— All WRIA 7 Salmon Recovery Projects (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6981,7 +6981,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_SCORING_2_9D1273", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/2 "
       "— DNR Projects (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/2",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/2",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7006,7 +7006,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_WRAP_SCORING_3_E337CC", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/3 "
       "— Puget Sound Partnership Near Term Actions (NTA) (ArcGIS layer "
       "3)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/3",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/3",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7030,7 +7030,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_SCORING_4_63C82F", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/4 "
       "— Snohomish Basin 4 Year Work Plan (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/4",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/4",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7054,7 +7054,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_SCORING_5_83E923", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/5 "
       "— Snoqualmie Basin 10 Year Work Plan (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/5",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/5",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7078,7 +7078,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_SCORING_6_796035", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/6 "
       "— U.S. Forest Service Projects (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/6",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/6",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7102,7 +7102,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_SCORING_7_C38351", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/7 "
       "— SalmonLinkSS102221SPCL (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/7",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/7",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7126,7 +7126,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_SCORING_8_44977E", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/8 "
       "— Salmon Benefit Assesment (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/8",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/8",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7150,7 +7150,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_AQUATICS_WRAP_SCORING_9_4D6120", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/9 "
       "— Job Creation (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/9",
+    .category = "geospatial", .collector = "us_gis_economy_business", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/9",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7175,7 +7175,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_AQUATICS_WRAP_SCORING_10_3C9B21", .name = "gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/10 "
       "— Environmental Justice Multiple Benefit Rankings (ArcGIS layer "
       "10)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/10",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Aquatics/WRAP_Scoring/MapServer/10",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7199,7 +7199,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_GEOLOGY_24K_SURFACE_GEOL_0_DC42A6", .name = "gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/0 "
       "— 24k Fossil--Download Only (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/0",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/0",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7223,7 +7223,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_GEOLOGY_24K_SURFACE_GEOL_1_FA6F02", .name = "gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/1 "
       "— 24k Generic Points (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/1",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/1",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7247,7 +7247,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_GEOLOGY_24K_SURFACE_GEOL_41_9D8C49", .name = "gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/41 "
       "— 24k Contacts (ArcGIS layer 41)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/41",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/41",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7271,7 +7271,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_GEOLOGY_24K_SURFACE_GEOL_42_0C3F61", .name = "gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/42 "
       "— 24k Data Sources (ArcGIS layer 42)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/42",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/42",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7295,7 +7295,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_GEOLOGY_24K_SURFACE_GEOL_43_C9043D", .name = "gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/43 "
       "— 24k Dikes (ArcGIS layer 43)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/43",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/43",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7319,7 +7319,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_GEOLOGY_24K_SURFACE_GEOL_45_210185", .name = "gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/45 "
       "— 24k Faults (ArcGIS layer 45)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/45",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/45",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7343,7 +7343,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_GEOLOGY_24K_SURFACE_GEOL_46_7A2134", .name = "gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/46 "
       "— 24k Folds (ArcGIS layer 46)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/46",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/46",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7367,7 +7367,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_GEOLOGY_24K_SURFACE_GEOL_48_80B1BB", .name = "gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/48 "
       "— 24k Lines (ArcGIS layer 48)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/48",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/48",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7391,7 +7391,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_GEOLOGY_24K_SURFACE_GEOL_49_E28E20", .name = "gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/49 "
       "— 24k Map Unit (ArcGIS layer 49)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/49",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/49",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7415,7 +7415,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_GEOLOGY_24K_SURFACE_GEOL_50_AB35B1", .name = "gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/50 "
       "— 24k Orientation (ArcGIS layer 50)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/50",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/50",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7439,7 +7439,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_GEOLOGY_24K_SURFACE_GEOL_51_C1F258", .name = "gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/51 "
       "— 24k Overlays (ArcGIS layer 51)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/51",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/51",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7463,7 +7463,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_GEOLOGY_24K_SURFACE_GEOL_52_6FE0A9", .name = "gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/52 "
       "— 24k Stations--Download Only (ArcGIS layer 52)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/52",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/52",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7487,7 +7487,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_GEOLOGY_24K_SURFACE_GEOL_53_36D0CC", .name = "gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/53 "
       "— 24k Vents--Download Only (ArcGIS layer 53)",
-    .category = "geospatial", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/53",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://gis.dnr.wa.gov/site3/rest/services/Geology/24K_Surface_Geology_WA_GeMS/FeatureServer/53",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7511,7 +7511,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_ADMINISTRAT_6_A833AE", .name = "arcgis.deq.state.or.us — OWRD Administrative Basins (ArcGIS "
       "layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7534,7 +7534,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DEQ_ESTUARY_0_35C343", .name = "arcgis.deq.state.or.us — ODEQ_Estuary_WebMer (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7558,7 +7558,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_1_E80198", .name = "arcgis.deq.state.or.us — Element 2012 through May 2014 (ArcGIS "
       "layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7580,7 +7580,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_3_180604", .name = "arcgis.deq.state.or.us — Lakes 2012 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7602,7 +7602,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_4_820DBA", .name = "arcgis.deq.state.or.us — Streams 2012 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7625,7 +7625,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_6_76F6B1", .name = "arcgis.deq.state.or.us — Individual NPDES Outfalls (ArcGIS layer "
       "6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7648,7 +7648,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_8_34EE60", .name = "arcgis.deq.state.or.us — NorWeST_Middle_Columbia (ArcGIS layer "
       "8)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7670,7 +7670,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_9_8A778F", .name = "arcgis.deq.state.or.us — NorWeST_Middle_Snake (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7692,7 +7692,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_10_C409E5", .name = "arcgis.deq.state.or.us — NorWeST_South_Central (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7714,7 +7714,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_11_3FCA65", .name = "arcgis.deq.state.or.us — NorWeST_Coast (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7737,7 +7737,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_12_7F2C1E", .name = "arcgis.deq.state.or.us — Fish Temperature Criteria without "
       "Spawning (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7760,7 +7760,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_15_AE510D", .name = "arcgis.deq.state.or.us — Cities (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7782,7 +7782,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_16_B8AE81", .name = "arcgis.deq.state.or.us — DEQ_SubBasins (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7804,7 +7804,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_18_C552FA", .name = "arcgis.deq.state.or.us — OWRD Stream Gages (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7826,7 +7826,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_19_F883E9", .name = "arcgis.deq.state.or.us — 5th Field HUC (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7848,7 +7848,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_20_352C6E", .name = "arcgis.deq.state.or.us — 6th Field HUC (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7871,7 +7871,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_22_196A7F", .name = "arcgis.deq.state.or.us — Water Right Point of Diversion (ArcGIS "
       "layer 22)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7893,7 +7893,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_23_37811D", .name = "arcgis.deq.state.or.us — Instream Water Rights (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7916,7 +7916,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_24_E5CA37", .name = "arcgis.deq.state.or.us — Water Right Place of Use (ArcGIS layer "
       "24)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7939,7 +7939,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_26_209201", .name = "arcgis.deq.state.or.us — GWMA_Southern_Willamette (ArcGIS layer "
       "26)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7961,7 +7961,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_27_7001F2", .name = "arcgis.deq.state.or.us — GWMA_Lower_Umatilla (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7983,7 +7983,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DIV33TOOLTE_28_93BF03", .name = "arcgis.deq.state.or.us — GWMA_Malheur (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8006,7 +8006,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_2_9E3662", .name = "arcgis.deq.state.or.us — Groundwater 2-yr TOT (Zone 1 for "
       "Springs) (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8030,7 +8030,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_4_912F74", .name = "arcgis.deq.state.or.us — Groundwater DWSAs Max TOTs; Public "
       "Water Systems (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8054,7 +8054,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_6_E825A1", .name = "arcgis.deq.state.or.us — Groundwater Drinking Water Source "
       "Areas; Public Water Systems (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8079,7 +8079,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_7_DC343D", .name = "arcgis.deq.state.or.us — Surface water Drinking Water Source "
       "Areas; Public Water Systems (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8104,7 +8104,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_2_7A732F", .name = "arcgis.deq.state.or.us — Groundwater 2-yr TOT (Zone 1 for "
       "Springs) (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8128,7 +8128,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_3_064D5B", .name = "arcgis.deq.state.or.us — Groundwater DWSA outline; Public Water "
       "Systems (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8152,7 +8152,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_4_56CCF4", .name = "arcgis.deq.state.or.us — Groundwater DWSAs Max TOTs; Public "
       "Water Systems (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8176,7 +8176,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_6_A28FE8", .name = "arcgis.deq.state.or.us — Groundwater Drinking Water Source "
       "Areas; Public Water Systems (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8201,7 +8201,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_7_CD08C5", .name = "arcgis.deq.state.or.us — Surface water Drinking Water Source "
       "Areas; Public Water Systems (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8225,7 +8225,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_9_E06283", .name = "arcgis.deq.state.or.us — Interstates (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8248,7 +8248,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_10_63CA99", .name = "arcgis.deq.state.or.us — Roads (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8271,7 +8271,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_11_51B75A", .name = "arcgis.deq.state.or.us — Railways (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8295,7 +8295,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_14_7727DA", .name = "arcgis.deq.state.or.us — TRS (Public Land Survey System) (ArcGIS "
       "layer 14)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8319,7 +8319,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_19_6FFC9D", .name = "arcgis.deq.state.or.us — Land_ownership_DEQ_22JUN2017 (ArcGIS "
       "layer 19)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8343,7 +8343,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DRINKINGWAT_20_D28440", .name = "arcgis.deq.state.or.us — Land ownership/use (DEQ - DWP as of "
       "01/27/2016) (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_parcels_landuse", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8367,7 +8367,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_DW_EDITS_SQ_0_314BD0", .name = "arcgis.deq.state.or.us — GEOCORTEX.SDE.DW_POINTS (ArcGIS layer "
       "0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8390,7 +8390,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_0_54385B", .name = "arcgis.deq.state.or.us — ECSI (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8412,7 +8412,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_1_52C9F3", .name = "arcgis.deq.state.or.us — HAZWASTE (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8434,7 +8434,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_2_EBB934", .name = "arcgis.deq.state.or.us — LUST (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8456,7 +8456,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_3_99DE9A", .name = "arcgis.deq.state.or.us — SWIFT (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8478,7 +8478,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_4_EC46E6", .name = "arcgis.deq.state.or.us — TRAACS (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8500,7 +8500,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_5_9A10C0", .name = "arcgis.deq.state.or.us — UST (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8522,7 +8522,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_6_46B31A", .name = "arcgis.deq.state.or.us — WQSIS (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8544,7 +8544,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_0_3F40D7", .name = "arcgis.deq.state.or.us — ECSI (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8566,7 +8566,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_1_62C27D", .name = "arcgis.deq.state.or.us — HAZWASTE (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8588,7 +8588,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_2_0E688F", .name = "arcgis.deq.state.or.us — LUST (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8610,7 +8610,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_3_294414", .name = "arcgis.deq.state.or.us — SWIFT (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8632,7 +8632,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_4_873BCF", .name = "arcgis.deq.state.or.us — TRAACS (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8654,7 +8654,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_5_0184A2", .name = "arcgis.deq.state.or.us — UST (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8676,7 +8676,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITIES_6_341A5A", .name = "arcgis.deq.state.or.us — WQSIS (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8698,7 +8698,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITY_PR_0_48A157", .name = "arcgis.deq.state.or.us — ECSI (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8721,7 +8721,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITY_PR_1_2322CE", .name = "arcgis.deq.state.or.us — HAZWASTE (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8744,7 +8744,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITY_PR_2_B5E60F", .name = "arcgis.deq.state.or.us — LUST (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8767,7 +8767,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITY_PR_3_371CEA", .name = "arcgis.deq.state.or.us — SWIFT (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8790,7 +8790,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITY_PR_4_248EB9", .name = "arcgis.deq.state.or.us — TRAACS (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8813,7 +8813,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITY_PR_5_33D21D", .name = "arcgis.deq.state.or.us — UST (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8836,7 +8836,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_FACILITY_PR_6_CAF42B", .name = "arcgis.deq.state.or.us — WQSIS (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8859,7 +8859,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_LIT_MILEPOS_0_4F7D4C", .name = "arcgis.deq.state.or.us — LITMileposts_2015 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8881,7 +8881,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_0_B8DFDD", .name = "arcgis.deq.state.or.us — Dry cleaner (DEQ - DC) (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8905,7 +8905,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_1_4FD4B9", .name = "arcgis.deq.state.or.us — Confined Animal Feeding Operations (ODA "
       "- CAFO) (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8929,7 +8929,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_2_52A09D", .name = "arcgis.deq.state.or.us — Environmental Cleanup sites with known "
       "contamination (DEQ- ECSI) (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8955,7 +8955,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_3_883B4E", .name = "arcgis.deq.state.or.us — Environmental Cleanup sites - No "
       "Further Action or otherwise lower risk (DEQ- ECSI) (ArcGIS layer "
       "3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8980,7 +8980,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_4_BFB751", .name = "arcgis.deq.state.or.us — Hazardous Material Generator sites (DEQ "
       "- HW) (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9004,7 +9004,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_5_2993A1", .name = "arcgis.deq.state.or.us — Hazardous Substance Information System "
       "(OSFM as of 2019) (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9028,7 +9028,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_6_43430A", .name = "arcgis.deq.state.or.us — Hazardous Substance Information System "
       "- AST (OSFM as of 2019) (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9053,7 +9053,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_7_23EE27", .name = "arcgis.deq.state.or.us — Hazardous Substance Information System "
       "(OSFM as of 2009) (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9077,7 +9077,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_8_F47DA0", .name = "arcgis.deq.state.or.us — Hazardous Substance Information System "
       "- AST (OSFM as of 2009) (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9102,7 +9102,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_9_506B3A", .name = "arcgis.deq.state.or.us — Leaking Underground Storage Tanks (DEQ "
       "- LUST) (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9126,7 +9126,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_10_ACD39F", .name = "arcgis.deq.state.or.us — Leaking Underground Storage Tanks - NFA "
       "(DEQ - LUST) (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9150,7 +9150,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_11_F2E990", .name = "arcgis.deq.state.or.us — Mining permits (DOGAMI) (ArcGIS layer "
       "11)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9174,7 +9174,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_12_1D2611", .name = "arcgis.deq.state.or.us — Oil and Gas wells (permitted only) "
       "(DOGAMI) (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9198,7 +9198,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_13_AF946E", .name = "arcgis.deq.state.or.us — Updated Source Water Assessments "
       "Potential Contaminant Sources (DEQ as of 2018) (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9223,7 +9223,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_14_594896", .name = "arcgis.deq.state.or.us — Original Source Water Assessments "
       "Potential Contaminant Sources (DEQ as of 2005) (ArcGIS layer 14)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9248,7 +9248,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_15_B6393F", .name = "arcgis.deq.state.or.us — School Locations OR (DHS as of 2015) "
       "(ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_education", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9272,7 +9272,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_16_DC7FD6", .name = "arcgis.deq.state.or.us — Solid Waste sites (DEQ - SW) (ArcGIS "
       "layer 16)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9296,7 +9296,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_17_47D0E1", .name = "arcgis.deq.state.or.us — Underground Injection Control (DEQ) "
       "(ArcGIS layer 17)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9320,7 +9320,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_18_6EFC48", .name = "arcgis.deq.state.or.us — Underground Storage Tanks (DEQ) (ArcGIS "
       "layer 18)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9344,7 +9344,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_19_B02C9D", .name = "arcgis.deq.state.or.us — Water Quality domestic wastewater "
       "treatment sites (DEQ - SIS) (ArcGIS layer 19)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9369,7 +9369,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_20_D4A109", .name = "arcgis.deq.state.or.us — Water Quality permits - active (DEQ - "
       "SIS) (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9393,7 +9393,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_21_9E66FF", .name = "arcgis.deq.state.or.us — Surface Water within 500' of "
       "Well/Spring or 2 Yr TOT (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9417,7 +9417,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_23_854B3B", .name = "arcgis.deq.state.or.us — Harmful Algal Bloom (HAB) Advisories "
       "(through 2018) (ArcGIS layer 23)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9441,7 +9441,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_24_463AC2", .name = "arcgis.deq.state.or.us — Boating access sites (OSMB as of "
       "1/2016) (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9465,7 +9465,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_25_B5D5F2", .name = "arcgis.deq.state.or.us — Major route stream crossings and "
       "bridges (ODOT - 2013) (ArcGIS layer 25)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9489,7 +9489,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_26_F706C9", .name = "arcgis.deq.state.or.us — Water Quality effluent outfalls (DEQ "
       "-WQ as of 2009) (ArcGIS layer 26)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9513,7 +9513,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_27_CA0473", .name = "arcgis.deq.state.or.us — Water Quality Concern; Streams - Cat3 "
       "(DEQ - 2012) (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9537,7 +9537,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_28_CEAD61", .name = "arcgis.deq.state.or.us — Water Quality Limited streams - Cat4A & "
       "Cat5 (DEQ - 2012) (ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9562,7 +9562,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_29_21A35A", .name = "arcgis.deq.state.or.us — Water Quality Concern; lakes - Cat3 "
       "(DEQ - 2012) (ArcGIS layer 29)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9586,7 +9586,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_30_05C148", .name = "arcgis.deq.state.or.us — Water Quality Limited lakes - Cat4A & "
       "Cat5 (DEQ - 2012) (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9611,7 +9611,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_31_EFF138", .name = "arcgis.deq.state.or.us — Historic Fire Perimeters (ODF and "
       "GeoMAC) (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9635,7 +9635,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_POTENTIALCO_32_08AF1C", .name = "arcgis.deq.state.or.us — Historic_Fire_Perimeters (ODF and "
       "GeoMAC) 2021 (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9658,7 +9658,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_TRANSPORTAT_0_C7FAA7", .name = "arcgis.deq.state.or.us — Interstates/Highways (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9680,7 +9680,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_TRANSPORTAT_1_52E332", .name = "arcgis.deq.state.or.us — Roads (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9702,7 +9702,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_DEQ_SERVICES_TRANSPORTAT_2_131614", .name = "arcgis.deq.state.or.us — Railways (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9724,7 +9724,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_0_E94232", .name = "arcgis.deq.state.or.us — UpdatedFacilities (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9746,7 +9746,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_1_55F7D5", .name = "arcgis.deq.state.or.us — quad_rivermiles (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_imagery_basemap", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9768,7 +9768,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_2_4EF58E", .name = "arcgis.deq.state.or.us — Alsea (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9790,7 +9790,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_3_F4EED4", .name = "arcgis.deq.state.or.us — Coos_Bay (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9812,7 +9812,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_4_F45670", .name = "arcgis.deq.state.or.us — Nehalem (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9834,7 +9834,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_5_9B2357", .name = "arcgis.deq.state.or.us — Netarts (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9856,7 +9856,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_6_EC4253", .name = "arcgis.deq.state.or.us — SouthSlough-USGS (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9878,7 +9878,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_7_AE6FA7", .name = "arcgis.deq.state.or.us — Tillamook (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9900,7 +9900,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_8_EEB0C3", .name = "arcgis.deq.state.or.us — Umpqua (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9922,7 +9922,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_9_AA7F31", .name = "arcgis.deq.state.or.us — Yaquina (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9944,7 +9944,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_10_24D9DD", .name = "arcgis.deq.state.or.us — DEQ_estuary_polygons (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9967,7 +9967,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_11_467618", .name = "arcgis.deq.state.or.us — AU_Status_River_CoastLine (ArcGIS layer "
       "11)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9989,7 +9989,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_12_88A1AB", .name = "arcgis.deq.state.or.us — AU_Status_Watershed (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10011,7 +10011,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_13_8B3FC5", .name = "arcgis.deq.state.or.us — AU_Status_Waterbodies (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10034,7 +10034,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_14_300D04", .name = "arcgis.deq.state.or.us — irrigation_districts_boundary (ArcGIS "
       "layer 14)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10056,7 +10056,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_15_95557B", .name = "arcgis.deq.state.or.us — coastal_watersheds (ArcGIS layer 15)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10078,7 +10078,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_16_4066E6", .name = "arcgis.deq.state.or.us — Wetland_OR (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10101,7 +10101,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_17_CEABB5", .name = "arcgis.deq.state.or.us — subbasins_clipped_WebMerc (ArcGIS layer "
       "17)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10123,7 +10123,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_18_649D9B", .name = "arcgis.deq.state.or.us — OR_Precip_poly (ArcGIS layer 18)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10146,7 +10146,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_19_1E2755", .name = "arcgis.deq.state.or.us — ColumbiaRiverGeoregion_WebMerc (ArcGIS "
       "layer 19)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10169,7 +10169,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_20_9D5579", .name = "arcgis.deq.state.or.us — ColumbiaSloughGeoregion_WebMerc (ArcGIS "
       "layer 20)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10192,7 +10192,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_21_3218C8", .name = "arcgis.deq.state.or.us — PortlandHarborGeoregion_WebMerc (ArcGIS "
       "layer 21)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10215,7 +10215,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_22_E61BAD", .name = "arcgis.deq.state.or.us — CascadesGeoregion_WebMerc (ArcGIS layer "
       "22)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10238,7 +10238,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_23_CB68D5", .name = "arcgis.deq.state.or.us — CoastRangeGeoregion_WebMerc (ArcGIS "
       "layer 23)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10261,7 +10261,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_24_D7D4E8", .name = "arcgis.deq.state.or.us — EasternGeoregion_WebMerc (ArcGIS layer "
       "24)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10284,7 +10284,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_1200_Z_MAP_25_E30FA3", .name = "arcgis.deq.state.or.us — WillametteGeoregion_WebMerc (ArcGIS "
       "layer 25)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10306,7 +10306,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_BULLSEYE_SOIL_GTX_0_09D378", .name = "arcgis.deq.state.or.us — Arsenic (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10328,7 +10328,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_BULLSEYE_SOIL_GTX_1_AD6F30", .name = "arcgis.deq.state.or.us — Cadmium (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10350,7 +10350,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_BULLSEYE_SOIL_GTX_2_5B8422", .name = "arcgis.deq.state.or.us — Chromium (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10372,7 +10372,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_BULLSEYE_SOIL_GTX_3_298D53", .name = "arcgis.deq.state.or.us — Cobalt (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10394,7 +10394,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_BULLSEYE_SOIL_GTX_4_D8BA66", .name = "arcgis.deq.state.or.us — Lead (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10416,7 +10416,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_BULLSEYE_SOIL_GTX_5_6E9E7A", .name = "arcgis.deq.state.or.us — Selenium (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10438,7 +10438,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_BULLSEYE_SOIL_GTX_6_70BB7A", .name = "arcgis.deq.state.or.us — Arsenic - 2016 (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10460,7 +10460,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_BULLSEYE_SOIL_GTX_7_25DFBE", .name = "arcgis.deq.state.or.us — Cadmium - 2016 (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10482,7 +10482,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_BULLSEYE_SOIL_GTX_8_B323F2", .name = "arcgis.deq.state.or.us — Chromium - 2016 (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10504,7 +10504,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_BULLSEYE_SOIL_GTX_9_DEBC3B", .name = "arcgis.deq.state.or.us — Lead - 2016 (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10526,7 +10526,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_ESTUARY_CMECS_0_37AFAA", .name = "arcgis.deq.state.or.us — ODEQ_Estuary_WebMer (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10548,7 +10548,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_0_4BB0FB", .name = "arcgis.deq.state.or.us — PrimarySites_As (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10570,7 +10570,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_1_061A86", .name = "arcgis.deq.state.or.us — PrimarySites_Cd (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10592,7 +10592,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_2_FC4625", .name = "arcgis.deq.state.or.us — PrimarySites_Co (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10614,7 +10614,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_3_91FA46", .name = "arcgis.deq.state.or.us — PrimarySites_Cr (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10636,7 +10636,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_4_6A3AA1", .name = "arcgis.deq.state.or.us — PrimarySites_Mn (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10658,7 +10658,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_5_53989F", .name = "arcgis.deq.state.or.us — PrimarySites_Ni (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10680,7 +10680,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_6_740308", .name = "arcgis.deq.state.or.us — PrimarySites_Pb (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10702,7 +10702,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_7_979D11", .name = "arcgis.deq.state.or.us — Supplementals-As (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10724,7 +10724,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_8_8D624A", .name = "arcgis.deq.state.or.us — Supplementals-Cd (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10746,7 +10746,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_9_1974C0", .name = "arcgis.deq.state.or.us — Supplementals-Co (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10768,7 +10768,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_10_FA28EF", .name = "arcgis.deq.state.or.us — Supplementals-Cr (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10790,7 +10790,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_11_0A73E7", .name = "arcgis.deq.state.or.us — Supplementals-Mn (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10812,7 +10812,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_12_15CC56", .name = "arcgis.deq.state.or.us — Supplementals-Ni (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10834,7 +10834,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_DEQ_PDXMOSS2016_13_0C6C40", .name = "arcgis.deq.state.or.us — Supplementals-Pb (ArcGIS layer 13)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10856,7 +10856,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_MANUFACTURERS_FACIL_0_6AE27B", .name = "arcgis.deq.state.or.us — Permitted_Glass_Mfgs (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10879,7 +10879,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_MANUFACTURERS_FACIL_1_640820", .name = "arcgis.deq.state.or.us — GlassMfg_ProUpdate (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10902,7 +10902,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_MANUFACTURERS_FACIL_2_2AED25", .name = "arcgis.deq.state.or.us — NESHAP_Pro (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10925,7 +10925,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2016_0_5CEC76", .name = "arcgis.deq.state.or.us — WY2018_Current_Trend (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10947,7 +10947,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2016_1_E4E641", .name = "arcgis.deq.state.or.us — WY2018_Current_Status (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10969,7 +10969,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2016_2_50EF93", .name = "arcgis.deq.state.or.us — Trend_WY2017 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10991,7 +10991,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2016_3_00CE14", .name = "arcgis.deq.state.or.us — Status_WY2017 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11013,7 +11013,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2016_4_4BDC72", .name = "arcgis.deq.state.or.us — Trend_WY2016 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11035,7 +11035,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2016_5_415BD1", .name = "arcgis.deq.state.or.us — Status_WY2016 (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11057,7 +11057,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2016_6_84FCF9", .name = "arcgis.deq.state.or.us — Trend_WY2015 (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11079,7 +11079,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2016_7_055CBA", .name = "arcgis.deq.state.or.us — Condition_WY2015 (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11101,7 +11101,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2016_8_CC90FE", .name = "arcgis.deq.state.or.us — Trend_WY2014 (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11123,7 +11123,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2016_9_6D55C5", .name = "arcgis.deq.state.or.us — Condition_WY2014 (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11145,7 +11145,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2019_0_E9B682", .name = "arcgis.deq.state.or.us — OWQI2019_Current_WY (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11167,7 +11167,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2019_1_593D05", .name = "arcgis.deq.state.or.us — OWQI2019_Current_WY (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11189,7 +11189,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2019_2_21762B", .name = "arcgis.deq.state.or.us — Trend_WY2018 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11211,7 +11211,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2019_3_8FBFD8", .name = "arcgis.deq.state.or.us — Status_WY2018 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11233,7 +11233,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2019_4_20E27F", .name = "arcgis.deq.state.or.us — Trend_WY2017 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11255,7 +11255,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2019_5_811751", .name = "arcgis.deq.state.or.us — Status_WY2017 (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11277,7 +11277,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2019_6_762031", .name = "arcgis.deq.state.or.us — Trend_WY2016 (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11299,7 +11299,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2019_7_F30AAE", .name = "arcgis.deq.state.or.us — Status_WY2016 (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11321,7 +11321,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2019_8_30647F", .name = "arcgis.deq.state.or.us — Trend_WY2015 (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11343,7 +11343,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_2019_9_4B8085", .name = "arcgis.deq.state.or.us — Status_WY2015 (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11365,7 +11365,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_CURRENTYEAR_OV_0_907E80", .name = "arcgis.deq.state.or.us — Trend_WY2020 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11388,7 +11388,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_CURRENTYEAR_OV_1_385907", .name = "arcgis.deq.state.or.us — Status_WY2020 (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11411,7 +11411,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_CURRENTYEAR_OV_2_570B5A", .name = "arcgis.deq.state.or.us — Trend_WY2019 (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11434,7 +11434,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_CURRENTYEAR_OV_3_68B978", .name = "arcgis.deq.state.or.us — Status_WY2019 (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11457,7 +11457,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_CURRENTYEAR_OV_4_236E34", .name = "arcgis.deq.state.or.us — Trend_WY2018 (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11480,7 +11480,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_CURRENTYEAR_OV_5_A58F5B", .name = "arcgis.deq.state.or.us — Status_WY2018 (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11503,7 +11503,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_CURRENTYEAR_OV_6_3440AA", .name = "arcgis.deq.state.or.us — Trend_WY2017 (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11526,7 +11526,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_CURRENTYEAR_OV_7_B0936C", .name = "arcgis.deq.state.or.us — Status_WY2017 (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11549,7 +11549,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_CURRENTYEAR_OV_8_9A6B59", .name = "arcgis.deq.state.or.us — Trend_WY2016 (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11572,7 +11572,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_CURRENTYEAR_OV_9_347E02", .name = "arcgis.deq.state.or.us — Status_WY2016 (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11595,7 +11595,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_CURRENTYEAR_OV_10_18CCBD", .name = "arcgis.deq.state.or.us — Trend_WY2015 (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11618,7 +11618,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWQI_CURRENTYEAR_OV_11_031365", .name = "arcgis.deq.state.or.us — Status_WY2015 (ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11641,7 +11641,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_OWRD_BASINS_0_2754A9", .name = "arcgis.deq.state.or.us — OWRD_Basins (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11663,7 +11663,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LEAD_PDXMETRO_MOSS_0_930087", .name = "arcgis.deq.state.or.us — Moss_As (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11685,7 +11685,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_PDXMETRO_MOSS_1_C505E2", .name = "arcgis.deq.state.or.us — Moss_Cd (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11707,7 +11707,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_PDXMETRO_MOSS_2_04E3CD", .name = "arcgis.deq.state.or.us — Moss_Co (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11729,7 +11729,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_PDXMETRO_MOSS_3_D2E3DE", .name = "arcgis.deq.state.or.us — Moss_Cr (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11751,7 +11751,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_PDXMETRO_MOSS_4_76B24D", .name = "arcgis.deq.state.or.us — Moss_Mn (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11773,7 +11773,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_PDXMETRO_MOSS_5_F308F0", .name = "arcgis.deq.state.or.us — Moss_Ni (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11795,7 +11795,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_PDXMETRO_MOSS_6_8F632D", .name = "arcgis.deq.state.or.us — Moss_Pb (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11818,7 +11818,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_SCT_STATIONS_STAGIN_0_467438", .name = "arcgis.deq.state.or.us — Stations.DBO.STATIONS_STAGING (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11841,7 +11841,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_SCT_STATIONS_STAGIN_0_62D5B6", .name = "arcgis.deq.state.or.us — Stations.DBO.STATIONS_STAGING (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11863,7 +11863,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_SCT_STATIONS_0_5F1C22", .name = "arcgis.deq.state.or.us — Stations.DBO.STATIONS (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11885,7 +11885,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_SCT_STATIONS_0_90E8EA", .name = "arcgis.deq.state.or.us — Stations.DBO.STATIONS (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11907,7 +11907,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_STATEWIDEAIRTOX_0_4E7E5E", .name = "arcgis.deq.state.or.us — Ongoing Air Monitoring (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11930,7 +11930,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_STATEWIDEAIRTOX_1_4FE915", .name = "arcgis.deq.state.or.us — Completed Air Monitoring (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11953,7 +11953,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_STATEWIDEAIRTOX_2_7309F0", .name = "arcgis.deq.state.or.us — Meteorological Stations (ArcGIS layer "
       "2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11975,7 +11975,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_STATEWIDEAIRTOX_3_58E07D", .name = "arcgis.deq.state.or.us — Planned Air Monitoring (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11997,7 +11997,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_STATEWIDEAIRTOX_4_3145A0", .name = "arcgis.deq.state.or.us — Focused Soil Sampling (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12020,7 +12020,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_STATIONS_STAGING_0_D340DD", .name = "arcgis.deq.state.or.us — Stations.DBO.STATIONS_STAGING (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12043,7 +12043,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LEAD_STATIONS_STAGING_0_CCB86F", .name = "arcgis.deq.state.or.us — Stations.DBO.STATIONS_STAGING (ArcGIS "
       "layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12065,7 +12065,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_USFS_MOSS_0_3063D8", .name = "arcgis.deq.state.or.us — Moss_As (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12087,7 +12087,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_USFS_MOSS_1_22EC85", .name = "arcgis.deq.state.or.us — Moss_Cd (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12109,7 +12109,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_USFS_MOSS_2_15483A", .name = "arcgis.deq.state.or.us — Moss_Co (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12131,7 +12131,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_USFS_MOSS_3_380F80", .name = "arcgis.deq.state.or.us — Moss_Cr (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12153,7 +12153,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_USFS_MOSS_4_FD36EA", .name = "arcgis.deq.state.or.us — Moss_Mn (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12175,7 +12175,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_USFS_MOSS_5_24A923", .name = "arcgis.deq.state.or.us — Moss_Ni (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12197,7 +12197,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LEAD_USFS_MOSS_6_3F2CD1", .name = "arcgis.deq.state.or.us — Moss_Pb (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12219,7 +12219,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_ADUS_0_0E99B3", .name = "arcgis.deq.state.or.us — PDX ADUs (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12241,7 +12241,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_ADUS_1_1CB00B", .name = "arcgis.deq.state.or.us — AirBnB (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12263,7 +12263,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_BUILDINGPERMITS_1_BB8DCD", .name = "arcgis.deq.state.or.us — Major Permits (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12285,7 +12285,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_BUILDINGPERMITS_2_B51DC2", .name = "arcgis.deq.state.or.us — AQ_Minor (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12307,7 +12307,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_BUILDINGPERMITS_4_4C3ADE", .name = "arcgis.deq.state.or.us — Concrete Sand & Gravel (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12330,7 +12330,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_BUILDINGPERMITS_5_1F1BB7", .name = "arcgis.deq.state.or.us — Construction Stormwater (ArcGIS layer "
       "5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12352,7 +12352,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_BUILDINGPERMITS_6_E8585E", .name = "arcgis.deq.state.or.us — Industrial Stormwater (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12374,7 +12374,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_BUILDINGPERMITS_7_181A41", .name = "arcgis.deq.state.or.us — Industrial Wastewater (ArcGIS layer 7)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12397,7 +12397,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_3_3FA8D0", .name = "arcgis.deq.state.or.us — highway_tenths_2011_50k-- (ArcGIS layer "
       "3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12420,7 +12420,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_4_477EE4", .name = "arcgis.deq.state.or.us — highway_tenths_2011_24k-- (ArcGIS layer "
       "4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12442,7 +12442,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_GRP_6_DDC5B3", .name = "arcgis.deq.state.or.us — mileposts_2011_50k-- (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12465,7 +12465,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_8_90E947", .name = "arcgis.deq.state.or.us — Interstate_Exits_Numbers_50k-- (ArcGIS "
       "layer 8)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12488,7 +12488,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_10_0CFD54", .name = "arcgis.deq.state.or.us — TRANS_RestAreaExits_2014_50k-- (ArcGIS "
       "layer 10)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12510,7 +12510,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_GRP_12_6DC8FE", .name = "arcgis.deq.state.or.us — Park_and_Ride_50k-- (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12533,7 +12533,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_14_710BE9", .name = "arcgis.deq.state.or.us — TRANS_roadBridge_ODOT_5-24k (ArcGIS "
       "layer 14)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12556,7 +12556,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_15_8AC9D9", .name = "arcgis.deq.state.or.us — TRANS_roadBridge_ODOT_5k-- (ArcGIS "
       "layer 15)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12579,7 +12579,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_17_C1DDBC", .name = "arcgis.deq.state.or.us — TRANS_roadBridge_ODOT_5-24k (ArcGIS "
       "layer 17)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12602,7 +12602,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_18_B74B4E", .name = "arcgis.deq.state.or.us — TRANS_roadBridge_ODOT_5k-- (ArcGIS "
       "layer 18)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12624,7 +12624,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_GRP_20_0C0E36", .name = "arcgis.deq.state.or.us — Culverts_ODOT_5-24k (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12646,7 +12646,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_GRP_21_93E78D", .name = "arcgis.deq.state.or.us — Culverts_ODOT_5k-- (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12669,7 +12669,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_22_7923A5", .name = "arcgis.deq.state.or.us — TRANS_roadBridge_ODOT_5-24k (ArcGIS "
       "layer 22)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12692,7 +12692,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_23_4A5181", .name = "arcgis.deq.state.or.us — TRANS_roadBridge_ODOT_5k-- (ArcGIS "
       "layer 23)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12714,7 +12714,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_GRP_24_744A48", .name = "arcgis.deq.state.or.us — Seismic_Lifeline (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12737,7 +12737,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_27_1DF9E3", .name = "arcgis.deq.state.or.us — TRANS_railMilePostInsideOR_ODOT_50k-- "
       "(ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12760,7 +12760,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_28_467DC4", .name = "arcgis.deq.state.or.us — TRANS_railMilePostOutsideOR_FRA_50k-- "
       "(ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12783,7 +12783,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_30_BD759E", .name = "arcgis.deq.state.or.us — TRANS_railStructPnt_USGS_5-24k (ArcGIS "
       "layer 30)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12806,7 +12806,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_31_7EFC3F", .name = "arcgis.deq.state.or.us — TRANS_railStructPnt_USGS_5k-- (ArcGIS "
       "layer 31)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12829,7 +12829,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_32_F61147", .name = "arcgis.deq.state.or.us — TRANS_railStructLin_USGS_5-50k (ArcGIS "
       "layer 32)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12852,7 +12852,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_33_E10A66", .name = "arcgis.deq.state.or.us — TRANS_railStructLin_USGS_5k-- (ArcGIS "
       "layer 33)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12874,7 +12874,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_GRP_35_C20047", .name = "arcgis.deq.state.or.us — Rail_Crossings_5-24k (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12896,7 +12896,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_GRP_36_9EA016", .name = "arcgis.deq.state.or.us — Rail_Crossings_5k-- (ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12919,7 +12919,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_GRP_39_685383", .name = "arcgis.deq.state.or.us — TRANS_railStructPnt_USGS_5k-- (ArcGIS "
       "layer 39)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12942,7 +12942,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_3_859291", .name = "arcgis.deq.state.or.us — highway_tenths_2011_50k-- (ArcGIS layer "
       "3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12965,7 +12965,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_4_501A04", .name = "arcgis.deq.state.or.us — highway_tenths_2011_24k-- (ArcGIS layer "
       "4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12987,7 +12987,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_6_24393D", .name = "arcgis.deq.state.or.us — mileposts_2011_50k-- (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13010,7 +13010,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_8_F93E30", .name = "arcgis.deq.state.or.us — Interstate_Exits_Numbers_50k-- (ArcGIS "
       "layer 8)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13033,7 +13033,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_10_716E57", .name = "arcgis.deq.state.or.us — TRANS_RestAreaExits_2014_50k-- (ArcGIS "
       "layer 10)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13055,7 +13055,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_12_85CDBE", .name = "arcgis.deq.state.or.us — Park_and_Ride_50k-- (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13078,7 +13078,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_14_2DF4FB", .name = "arcgis.deq.state.or.us — TRANS_roadBridge_ODOT_5-24k (ArcGIS "
       "layer 14)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13101,7 +13101,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_15_07A1D1", .name = "arcgis.deq.state.or.us — TRANS_roadBridge_ODOT_5k-- (ArcGIS "
       "layer 15)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13124,7 +13124,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_17_AECC68", .name = "arcgis.deq.state.or.us — TRANS_roadBridge_ODOT_5-24k (ArcGIS "
       "layer 17)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13147,7 +13147,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_18_F52CE6", .name = "arcgis.deq.state.or.us — TRANS_roadBridge_ODOT_5k-- (ArcGIS "
       "layer 18)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13169,7 +13169,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_20_4ED908", .name = "arcgis.deq.state.or.us — Culverts_ODOT_5-24k (ArcGIS layer 20)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13191,7 +13191,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_21_019403", .name = "arcgis.deq.state.or.us — Culverts_ODOT_5k-- (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13214,7 +13214,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_22_1B9518", .name = "arcgis.deq.state.or.us — TRANS_roadBridge_ODOT_5-24k (ArcGIS "
       "layer 22)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13237,7 +13237,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_23_E728D8", .name = "arcgis.deq.state.or.us — TRANS_roadBridge_ODOT_5k-- (ArcGIS "
       "layer 23)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13259,7 +13259,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_24_AA75CC", .name = "arcgis.deq.state.or.us — Seismic_Lifeline (ArcGIS layer 24)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13282,7 +13282,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_27_9B21EF", .name = "arcgis.deq.state.or.us — TRANS_railMilePostInsideOR_ODOT_50k-- "
       "(ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13305,7 +13305,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_28_922301", .name = "arcgis.deq.state.or.us — TRANS_railMilePostOutsideOR_FRA_50k-- "
       "(ArcGIS layer 28)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13328,7 +13328,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_30_FF3FA3", .name = "arcgis.deq.state.or.us — TRANS_railStructPnt_USGS_5-24k (ArcGIS "
       "layer 30)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13351,7 +13351,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_31_242EA5", .name = "arcgis.deq.state.or.us — TRANS_railStructPnt_USGS_5k-- (ArcGIS "
       "layer 31)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13374,7 +13374,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_32_78CC4C", .name = "arcgis.deq.state.or.us — TRANS_railStructLin_USGS_5-50k (ArcGIS "
       "layer 32)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13397,7 +13397,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_33_13BE36", .name = "arcgis.deq.state.or.us — TRANS_railStructLin_USGS_5k-- (ArcGIS "
       "layer 33)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13419,7 +13419,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_35_D26B0B", .name = "arcgis.deq.state.or.us — Rail_Crossings_5-24k (ArcGIS layer 35)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13441,7 +13441,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_IRIS_V3_NS_36_662112", .name = "arcgis.deq.state.or.us — Rail_Crossings_5k-- (ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_transport", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13463,7 +13463,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_0_C5AF44", .name = "arcgis.deq.state.or.us — Converted_Graphics_3 (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13485,7 +13485,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_311_4C92CA", .name = "arcgis.deq.state.or.us — Pinniped Haulouts (ArcGIS layer 311)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13507,7 +13507,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_312_815E9C", .name = "arcgis.deq.state.or.us — Seabird Colonies (ArcGIS layer 312)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13529,7 +13529,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_313_88FE84", .name = "arcgis.deq.state.or.us — ESI Fish Lines (ArcGIS layer 313)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13551,7 +13551,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_314_4D61C2", .name = "arcgis.deq.state.or.us — Fall Chinook FHD (ArcGIS layer 314)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13573,7 +13573,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_315_555F8F", .name = "arcgis.deq.state.or.us — Spring Chinook FHD (ArcGIS layer 315)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13595,7 +13595,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_316_4E230E", .name = "arcgis.deq.state.or.us — Chum FHD (ArcGIS layer 316)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13617,7 +13617,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_317_B64E77", .name = "arcgis.deq.state.or.us — Coho FHD (ArcGIS layer 317)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13639,7 +13639,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_318_E1CAD6", .name = "arcgis.deq.state.or.us — Pacific Lamprey FHD (ArcGIS layer 318)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13661,7 +13661,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_319_27F2CC", .name = "arcgis.deq.state.or.us — Sockeye FHD (ArcGIS layer 319)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13683,7 +13683,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_320_8CF811", .name = "arcgis.deq.state.or.us — Summer Steelhead FHD (ArcGIS layer 320)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13705,7 +13705,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_321_C08F38", .name = "arcgis.deq.state.or.us — Winter Steelhead FHD (ArcGIS layer 321)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13727,7 +13727,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_322_B6F393", .name = "arcgis.deq.state.or.us — Green Sturgeon FHD (ArcGIS layer 322)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13749,7 +13749,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_323_37C862", .name = "arcgis.deq.state.or.us — White Sturgeon FHD (ArcGIS layer 323)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13772,7 +13772,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_324_E52173", .name = "arcgis.deq.state.or.us — Rocky Shores (NOAA ESI 2014) (ArcGIS "
       "layer 324)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13795,7 +13795,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_325_08B368", .name = "arcgis.deq.state.or.us — OR Coastal Mgmt Program Estuary "
       "Management Units (ArcGIS layer 325)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13818,7 +13818,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_326_92AFE9", .name = "arcgis.deq.state.or.us — Aquatic Beds (CMECS) (ArcGIS layer 326)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13840,7 +13840,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_327_E360D2", .name = "arcgis.deq.state.or.us — Eelgrass (ArcGIS layer 327)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13863,7 +13863,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_328_FB2967", .name = "arcgis.deq.state.or.us — Ecological Hotspots (ODFW) (ArcGIS "
       "layer 328)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13886,7 +13886,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_329_378CDC", .name = "arcgis.deq.state.or.us — Gray Whale Forage (OR Coastal Mgmt "
       "Program) (ArcGIS layer 329)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13909,7 +13909,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_330_096F73", .name = "arcgis.deq.state.or.us — Kelp (ODFW) (ArcGIS layer 330)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13931,7 +13931,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_331_13436F", .name = "arcgis.deq.state.or.us — Northern Spotted Owl (ArcGIS layer 331)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13953,7 +13953,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_332_DF8BEC", .name = "arcgis.deq.state.or.us — Marbled Murrelet (ArcGIS layer 332)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13976,7 +13976,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_333_295871", .name = "arcgis.deq.state.or.us — Oregon's Greatest Wetlands (ArcGIS "
       "layer 333)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13999,7 +13999,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_334_76EFBE", .name = "arcgis.deq.state.or.us — Seabird Protected Areas (ArcGIS layer "
       "334)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14022,7 +14022,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_335_DDBBCC", .name = "arcgis.deq.state.or.us — Seabird Colony Polygons (ArcGIS layer "
       "335)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14044,7 +14044,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_337_D7A352", .name = "arcgis.deq.state.or.us — Shellfish Preserves (ArcGIS layer 337)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14067,7 +14067,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_342_6C1AC4", .name = "arcgis.deq.state.or.us — Areas of Critical Environmental Concern "
       "(BLM) (ArcGIS layer 342)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14091,7 +14091,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_344_A7CE4E", .name = "arcgis.deq.state.or.us — Stellar Sea Lion CH (OR Coastal Mgmt "
       "Program) (ArcGIS layer 344)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14115,7 +14115,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_345_9DE02C", .name = "arcgis.deq.state.or.us — National Wildlife Refuges (ArcGIS layer "
       "345)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14137,7 +14137,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_346_8D33C9", .name = "arcgis.deq.state.or.us — Rocky Substrate (ArcGIS layer 346)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14160,7 +14160,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_NATURALRESOURCESATRIS_347_431882", .name = "arcgis.deq.state.or.us — Sensitive Rocks (Territorial Sea Plan) "
       "(ArcGIS layer 347)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14184,7 +14184,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_OPSCENTER_INCIDENTLOC_0_34B4BD", .name = "arcgis.deq.state.or.us — OPSCenter2.dbo.IncidentLocationView "
       "(ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14208,7 +14208,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_OPSCENTER_INCIDENTLOC_0_BC9409", .name = "arcgis.deq.state.or.us — OPSCenter2.dbo.IncidentLocationView "
       "(ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_safety_emergency", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14231,7 +14231,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_TANKS_0_A86B5D", .name = "arcgis.deq.state.or.us — TANKS (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14253,7 +14253,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_1_36B007", .name = "arcgis.deq.state.or.us — ECSI site (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14275,7 +14275,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryMultipoint." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_2_CDCFC4", .name = "arcgis.deq.state.or.us — LUST site (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14297,7 +14297,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryMultipoint." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_3_A3DD0E", .name = "arcgis.deq.state.or.us — UST site (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14319,7 +14319,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_4_AB1A26", .name = "arcgis.deq.state.or.us — SWIFT site (ArcGIS layer 4)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14342,7 +14342,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_6_711BDE", .name = "arcgis.deq.state.or.us — DEQ/DHS Potential DW Contaminant "
       "(ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14365,7 +14365,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_9_FAB603", .name = "arcgis.deq.state.or.us — DEQ/DHS Ground Water Source Areas "
       "(ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14388,7 +14388,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_11_6BC19C", .name = "arcgis.deq.state.or.us — DEQ/DHS Surface Water Source Areas "
       "(ArcGIS layer 11)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14411,7 +14411,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_12_943CC9", .name = "arcgis.deq.state.or.us — High-Density Well Sections (Current as "
       "of May 2009) (ArcGIS layer 12)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_planning_zoning", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14435,7 +14435,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_13_C07EE4", .name = "arcgis.deq.state.or.us — Columbia South Shore Wellfield (ArcGIS "
       "layer 13)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14458,7 +14458,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_15_A2073D", .name = "arcgis.deq.state.or.us — Lower Columbia River NEP (ArcGIS layer "
       "15)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14480,7 +14480,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_16_6794E9", .name = "arcgis.deq.state.or.us — Tillamook Bay NEP (ArcGIS layer 16)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14503,7 +14503,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_18_609A64", .name = "arcgis.deq.state.or.us — OR Natural Heritage Wetlands (ArcGIS "
       "layer 18)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14525,7 +14525,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_21_FF8401", .name = "arcgis.deq.state.or.us — Bull Trout (ArcGIS layer 21)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14547,7 +14547,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_22_C681B1", .name = "arcgis.deq.state.or.us — Coho (ArcGIS layer 22)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14569,7 +14569,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_27_8F9CCC", .name = "arcgis.deq.state.or.us — Winter Steelhead (ArcGIS layer 27)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14591,7 +14591,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_30_C0F48A", .name = "arcgis.deq.state.or.us — Western Snowy Plover (ArcGIS layer 30)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14613,7 +14613,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_31_CA7DD1", .name = "arcgis.deq.state.or.us — NSpottedOwl_Habitat (ArcGIS layer 31)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14635,7 +14635,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_32_39E2B6", .name = "arcgis.deq.state.or.us — Borax Lake Chub (ArcGIS layer 32)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14657,7 +14657,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_33_AF203A", .name = "arcgis.deq.state.or.us — Warner Sucker (ArcGIS layer 33)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14680,7 +14680,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_34_026224", .name = "arcgis.deq.state.or.us — Fender's Blue Butterfly (ArcGIS layer "
       "34)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14703,7 +14703,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_35_304BCB", .name = "arcgis.deq.state.or.us — Vernal Pool Fairy Shrimp (ArcGIS layer "
       "35)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_culture_recreation", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14725,7 +14725,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "guessing a layer path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_36_CF8931", .name = "arcgis.deq.state.or.us — Silverspot Butterfly (ArcGIS layer 36)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14747,7 +14747,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_37_32906D", .name = "arcgis.deq.state.or.us — Kincaid's Lupine (ArcGIS layer 37)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14769,7 +14769,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_38_3FF1FD", .name = "arcgis.deq.state.or.us — Malheur Wire Lettuce (ArcGIS layer 38)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_utilities_infrastructure", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14791,7 +14791,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_VAV_TANKS_39_03D25C", .name = "arcgis.deq.state.or.us — Willamette Daisy (ArcGIS layer 39)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14813,7 +14813,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_LQ_ZIPCODES_0_B3A29A", .name = "arcgis.deq.state.or.us — Zipcodes (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14835,7 +14835,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_OR_COQUILLE_AUXILIARY_LA_1_1F6FE4", .name = "arcgis.deq.state.or.us — Streams (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14857,7 +14857,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_OR_COQUILLE_AUXILIARY_LA_2_C32170", .name = "arcgis.deq.state.or.us — Coquille_Basin (ArcGIS layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14881,7 +14881,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_OR_COQUILLE_AUXILIARY_LA_3_EF4859", .name = "arcgis.deq.state.or.us — Intrinsic Potential - Coho Salmon "
       "(ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14904,7 +14904,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_OR_COQUILLE_AUXILIARY_LA_5_9F11EE", .name = "arcgis.deq.state.or.us — Lakes (ArcGIS layer 5)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14926,7 +14926,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_OR_COQUILLE_AUXILIARY_LA_6_96064A", .name = "arcgis.deq.state.or.us — Streams (ArcGIS layer 6)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14948,7 +14948,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_OR_COQUILLE_AUXILIARY_LA_8_EE9FC7", .name = "arcgis.deq.state.or.us — Restoration Points (ArcGIS layer 8)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14971,7 +14971,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_OR_COQUILLE_AUXILIARY_LA_9_41562A", .name = "arcgis.deq.state.or.us — Restoration Lines (ArcGIS layer 9)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14994,7 +14994,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_OR_COQUILLE_AUXILIARY_LA_10_E991C7", .name = "arcgis.deq.state.or.us — Restoration Polygons (ArcGIS layer 10)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15018,7 +15018,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_OR_COQUILLE_BACTERIAL_MO_0_4C201E", .name = "arcgis.deq.state.or.us — Ecoli Loading Rate (# of "
       "million/acre/year) (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15042,7 +15042,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_OR_COQUILLE_BACTERIAL_MO_1_620CD5", .name = "arcgis.deq.state.or.us — Fecal Coliform Loading Rate (# of "
       "million/acre/year) (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15065,7 +15065,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPolygon." },
 
   { .id = "JO58_AGS_US_OR_COQUILLE_COQUILLE_INT_0_02EC65", .name = "arcgis.deq.state.or.us — DEQAmbient (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15088,7 +15088,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_OR_COQUILLE_COQUILLE_INT_1_6E929B", .name = "arcgis.deq.state.or.us — WQSIS_NPDES_IND (ArcGIS layer 1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_other", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15111,7 +15111,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "Geometry: esriGeometryPoint." },
 
   { .id = "JO58_AGS_US_OR_COQUILLE_SHADE_MODEL_0_6686EA", .name = "arcgis.deq.state.or.us — Model Extent (ArcGIS layer 0)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15134,7 +15134,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_OR_COQUILLE_SHADE_MODEL_1_D5B0F1", .name = "arcgis.deq.state.or.us — Modelled Percent Change (ArcGIS layer "
       "1)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_boundaries", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15157,7 +15157,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
 
   { .id = "JO58_AGS_US_OR_COQUILLE_SHADE_MODEL_2_B46764", .name = "arcgis.deq.state.or.us — Modelled Potential Loading BTU (ArcGIS "
       "layer 2)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15179,7 +15179,7 @@ static const hp_source HP3B58_ARCGIS3[] = {
       "than by guessing a layer path. Geometry: esriGeometryPolyline." },
 
   { .id = "JO58_AGS_US_OR_COQUILLE_SHADE_MODEL_3_0E10EA", .name = "arcgis.deq.state.or.us — Current Loading BTU (ArcGIS layer 3)",
-    .category = "geospatial", .portal = "https://arcgis.deq.state.or.us",
+    .category = "geospatial", .collector = "us_gis_environment_hazards", .portal = "https://arcgis.deq.state.or.us",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,

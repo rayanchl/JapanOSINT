@@ -24,7 +24,7 @@
 static const hp_source HP3B61_JP[] = {
   { .id = "JO61_JPGIS_182AA76EED", .name = "伊達市みんなの地図サイト — T50cm以上3ｍ未満",
     .name_ja = "伊達市みんなの地図サイト — T50cm以上3ｍ未満",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -46,7 +46,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9369AE1844", .name = "伊達市みんなの地図サイト — 避難経路ライン",
     .name_ja = "伊達市みんなの地図サイト — 避難経路ライン",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -68,7 +68,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7EFA3569C3", .name = "伊達市みんなの地図サイト — T50cm未満",
     .name_ja = "伊達市みんなの地図サイト — T50cm未満",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -90,7 +90,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4EEAC7E548", .name = "伊達市みんなの地図サイト — T5m以上10m未満",
     .name_ja = "伊達市みんなの地図サイト — T5m以上10m未満",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -112,7 +112,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2C2FD8781C", .name = "伊達市みんなの地図サイト — 避難経路ポリゴン",
     .name_ja = "伊達市みんなの地図サイト — 避難経路ポリゴン",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -134,7 +134,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2BA916F53E", .name = "伊達市みんなの地図サイト — 指定避難所_避難箇所注記_黒_",
     .name_ja = "伊達市みんなの地図サイト — 指定避難所_避難箇所注記_黒_",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -156,7 +156,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BA2FCA494C", .name = "伊達市みんなの地図サイト — 土石流_特別警戒区域",
     .name_ja = "伊達市みんなの地図サイト — 土石流_特別警戒区域",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -178,7 +178,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5E9BE96BD2", .name = "伊達市みんなの地図サイト — 指定避難所_避難箇所注記_赤_",
     .name_ja = "伊達市みんなの地図サイト — 指定避難所_避難箇所注記_赤_",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -200,7 +200,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_57482C9ACA", .name = "伊達市みんなの地図サイト — 土石流",
     .name_ja = "伊達市みんなの地図サイト — 土石流",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -222,7 +222,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D6217B2A9B", .name = "伊達市みんなの地図サイト — 地すべり",
     .name_ja = "伊達市みんなの地図サイト — 地すべり",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -244,7 +244,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_84458805C5", .name = "伊達市みんなの地図サイト — 避難箇所ポイント",
     .name_ja = "伊達市みんなの地図サイト — 避難箇所ポイント",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -266,7 +266,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_47AACF6BDF", .name = "伊達市みんなの地図サイト — 急傾斜地_特別警戒区域",
     .name_ja = "伊達市みんなの地図サイト — 急傾斜地_特別警戒区域",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -288,7 +288,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E3BAAC3657", .name = "伊達市みんなの地図サイト — 避難指定場所_洪水",
     .name_ja = "伊達市みんなの地図サイト — 避難指定場所_洪水",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -310,7 +310,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_28E09840E5", .name = "流山市ＧＩＳ — survey",
     .name_ja = "流山市ＧＩＳ — survey",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "jp_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -332,7 +332,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_ACC466E0F1", .name = "流山市ＧＩＳ — survey",
     .name_ja = "流山市ＧＩＳ — survey",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "jp_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -355,7 +355,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3553099A99", .name = "流山市ＧＩＳ — survey",
     .name_ja = "流山市ＧＩＳ — survey",
-    .category = "transport", .portal = "https://services.arcgis.com",
+    .category = "transport", .collector = "jp_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -378,7 +378,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9756545AAC", .name = "流山市ＧＩＳ — survey",
     .name_ja = "流山市ＧＩＳ — survey",
-    .category = "education", .portal = "https://services.arcgis.com",
+    .category = "education", .collector = "jp_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -401,7 +401,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DF1EC01691", .name = "伊達市みんなの地図サイト — 急傾斜地の崩壊",
     .name_ja = "伊達市みんなの地図サイト — 急傾斜地の崩壊",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -423,7 +423,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5D7A2F0C65", .name = "流山市ＧＩＳ — survey",
     .name_ja = "流山市ＧＩＳ — survey",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -446,7 +446,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_387DFB47C0", .name = "伊達市みんなの地図サイト — 避難箇所引き出し線_黒",
     .name_ja = "伊達市みんなの地図サイト — 避難箇所引き出し線_黒",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -468,7 +468,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DFD2A2F586", .name = "流山市ＧＩＳ — survey",
     .name_ja = "流山市ＧＩＳ — survey",
-    .category = "education", .portal = "https://services.arcgis.com",
+    .category = "education", .collector = "jp_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -491,7 +491,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E141793E35", .name = "伊達市みんなの地図サイト — 急傾斜地",
     .name_ja = "伊達市みんなの地図サイト — 急傾斜地",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -513,7 +513,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0D8750BA51", .name = "流山市ＧＩＳ — survey",
     .name_ja = "流山市ＧＩＳ — survey",
-    .category = "education", .portal = "https://services.arcgis.com",
+    .category = "education", .collector = "jp_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -536,7 +536,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_50BEE4C4AB", .name = "伊達市みんなの地図サイト — 避難箇所引き出し線_赤",
     .name_ja = "伊達市みんなの地図サイト — 避難箇所引き出し線_赤",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -558,7 +558,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C6C9A82B30", .name = "伊達市みんなの地図サイト — 想定浸水深5m以上10m未満",
     .name_ja = "伊達市みんなの地図サイト — 想定浸水深5m以上10m未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -580,7 +580,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D9283F4D8B", .name = "伊達市みんなの地図サイト — 山麓噴火の起こる可能性のある区域",
     .name_ja = "伊達市みんなの地図サイト — 山麓噴火の起こる可能性のある区域",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -602,7 +602,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EF7204ADBF", .name = "伊達市みんなの地図サイト — 想定浸水深3m以上5m未満",
     .name_ja = "伊達市みんなの地図サイト — 想定浸水深3m以上5m未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -624,7 +624,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1FEC272C0C", .name = "流山市ＧＩＳ — survey",
     .name_ja = "流山市ＧＩＳ — survey",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -646,7 +646,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_35403FBF34", .name = "流山市ＧＩＳ — survey",
     .name_ja = "流山市ＧＩＳ — survey",
-    .category = "education", .portal = "https://services.arcgis.com",
+    .category = "education", .collector = "jp_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -669,7 +669,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B6B030D58C", .name = "流山市ＧＩＳ — survey",
     .name_ja = "流山市ＧＩＳ — survey",
-    .category = "education", .portal = "https://services.arcgis.com",
+    .category = "education", .collector = "jp_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -692,7 +692,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9C36CA9BF5", .name = "伊達市みんなの地図サイト — 山麓噴火によって火砕サージに襲われる可能性のある区域",
     .name_ja = "伊達市みんなの地図サイト — 山麓噴火によって火砕サージに襲われる可能性のある区域",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -714,7 +714,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5A69D18177", .name = "流山市ＧＩＳ — survey",
     .name_ja = "流山市ＧＩＳ — survey",
-    .category = "infrastructure", .portal = "https://services.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -736,7 +736,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FEB9A18522", .name = "伊達市みんなの地図サイト — 山頂噴火の起こる範囲",
     .name_ja = "伊達市みんなの地図サイト — 山頂噴火の起こる範囲",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -758,7 +758,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7C676C7D32", .name = "伊達市みんなの地図サイト — 想定浸水深50cm以上3m未満",
     .name_ja = "伊達市みんなの地図サイト — 想定浸水深50cm以上3m未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -780,7 +780,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_81C5FDBCA4", .name = "伊達市みんなの地図サイト — 降灰の可能性が高い区域",
     .name_ja = "伊達市みんなの地図サイト — 降灰の可能性が高い区域",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -802,7 +802,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_12F1F11792", .name = "伊達市みんなの地図サイト — 想定浸水深50cm未満",
     .name_ja = "伊達市みんなの地図サイト — 想定浸水深50cm未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -824,7 +824,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9A235C328F", .name = "伊達市みんなの地図サイト — 緊急一時避難場所_避難箇所注記_赤_",
     .name_ja = "伊達市みんなの地図サイト — 緊急一時避難場所_避難箇所注記_赤_",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -846,7 +846,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8DEE852D02", .name = "伊達市みんなの地図サイト — 1000年に1度程度の想定し得る最大規模の降雨に伴う洪水浸水範囲",
     .name_ja = "伊達市みんなの地図サイト — 1000年に1度程度の想定し得る最大規模の降雨に伴う洪水浸水範囲",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -869,7 +869,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9A44230F6C", .name = "伊達市みんなの地図サイト — 避難場所ポリゴン",
     .name_ja = "伊達市みんなの地図サイト — 避難場所ポリゴン",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -891,7 +891,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_26E3F58B0D", .name = "伊達市みんなの地図サイト — 指定避難所_避難箇所注記_黒_",
     .name_ja = "伊達市みんなの地図サイト — 指定避難所_避難箇所注記_黒_",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -913,7 +913,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4C4AE2142C", .name = "伊達市みんなの地図サイト — 急傾斜地の崩壊",
     .name_ja = "伊達市みんなの地図サイト — 急傾斜地の崩壊",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -935,7 +935,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_17F6F9132C", .name = "伊達市みんなの地図サイト — 指定避難所_避難箇所注記_赤_",
     .name_ja = "伊達市みんなの地図サイト — 指定避難所_避難箇所注記_赤_",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -957,7 +957,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2E5C11C04F", .name = "伊達市みんなの地図サイト — 特別警戒区域",
     .name_ja = "伊達市みんなの地図サイト — 特別警戒区域",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -979,7 +979,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DF160CC4A5", .name = "伊達市みんなの地図サイト — 避難箇所ポイント",
     .name_ja = "伊達市みんなの地図サイト — 避難箇所ポイント",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1001,7 +1001,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1141ED9AAA", .name = "伊達市みんなの地図サイト — 急傾斜地",
     .name_ja = "伊達市みんなの地図サイト — 急傾斜地",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1023,7 +1023,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FB4F603724", .name = "伊達市みんなの地図サイト — 避難指定場所_洪水",
     .name_ja = "伊達市みんなの地図サイト — 避難指定場所_洪水",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1045,7 +1045,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D3C1008B9B", .name = "伊達市みんなの地図サイト — 津波_5m以上7m70cm未満",
     .name_ja = "伊達市みんなの地図サイト — 津波_5m以上7m70cm未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1067,7 +1067,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1DDF4DBA08", .name = "伊達市みんなの地図サイト — 避難箇所引き出し線_黒",
     .name_ja = "伊達市みんなの地図サイト — 避難箇所引き出し線_黒",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1089,7 +1089,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_15C3CD4882", .name = "伊達市みんなの地図サイト — 津波_50cm以上1m未満",
     .name_ja = "伊達市みんなの地図サイト — 津波_50cm以上1m未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1111,7 +1111,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F145604676", .name = "伊達市みんなの地図サイト — 避難箇所引き出し線_赤",
     .name_ja = "伊達市みんなの地図サイト — 避難箇所引き出し線_赤",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1133,7 +1133,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_945629629A", .name = "伊達市みんなの地図サイト — 津波_3m以上5m未満",
     .name_ja = "伊達市みんなの地図サイト — 津波_3m以上5m未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1155,7 +1155,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_186EF8F0AE", .name = "伊達市みんなの地図サイト — 緊急一時避難場所_避難箇所注記_赤_",
     .name_ja = "伊達市みんなの地図サイト — 緊急一時避難場所_避難箇所注記_赤_",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1177,7 +1177,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_25CF7A7294", .name = "伊達市みんなの地図サイト — 津波_30cm未満",
     .name_ja = "伊達市みんなの地図サイト — 津波_30cm未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1199,7 +1199,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FC139A1F60", .name = "伊達市みんなの地図サイト — 避難場所ポリゴン",
     .name_ja = "伊達市みんなの地図サイト — 避難場所ポリゴン",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1221,7 +1221,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EEF5F910ED", .name = "伊達市みんなの地図サイト — ゲート",
     .name_ja = "伊達市みんなの地図サイト — ゲート",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1243,7 +1243,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F0908BC9B1", .name = "伊達市みんなの地図サイト — 津波_30cm以上50cm未満",
     .name_ja = "伊達市みんなの地図サイト — 津波_30cm以上50cm未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1265,7 +1265,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DD8FF1BCE0", .name = "伊達市みんなの地図サイト — 津波_1m以上3m未満",
     .name_ja = "伊達市みんなの地図サイト — 津波_1m以上3m未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1287,7 +1287,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FFFB1073E4", .name = "伊達市みんなの地図サイト — 津波_5m以上7m70cm未満",
     .name_ja = "伊達市みんなの地図サイト — 津波_5m以上7m70cm未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1309,7 +1309,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9CF2474982", .name = "伊達市みんなの地図サイト — 火砕流",
     .name_ja = "伊達市みんなの地図サイト — 火砕流",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1331,7 +1331,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B4D7058E56", .name = "伊達市みんなの地図サイト — 津波_3m以上5m未満",
     .name_ja = "伊達市みんなの地図サイト — 津波_3m以上5m未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1353,7 +1353,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1B5FFFF965", .name = "伊達市みんなの地図サイト — 火砕サージ",
     .name_ja = "伊達市みんなの地図サイト — 火砕サージ",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1375,7 +1375,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C3EF19DAF5", .name = "伊達市みんなの地図サイト — 津波_1m以上3m未満",
     .name_ja = "伊達市みんなの地図サイト — 津波_1m以上3m未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1397,7 +1397,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A4EB0C0190", .name = "千葉県いすみ市 くらしのガイドマップ — 浸水する可能性のある区域",
     .name_ja = "千葉県いすみ市 くらしのガイドマップ — 浸水する可能性のある区域",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1419,7 +1419,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FBE03AC3BD", .name = "千葉県いすみ市 くらしのガイドマップ — 旧浸水区域(塩田川流域のみ)",
     .name_ja = "千葉県いすみ市 くらしのガイドマップ — 旧浸水区域(塩田川流域のみ)",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1442,7 +1442,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_93EABBA382", .name = "千葉県いすみ市 くらしのガイドマップ — 浸水する可能性のある区域",
     .name_ja = "千葉県いすみ市 くらしのガイドマップ — 浸水する可能性のある区域",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1464,7 +1464,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5CA39B6EC0", .name = "伊達市みんなの地図サイト — ゲート",
     .name_ja = "伊達市みんなの地図サイト — ゲート",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1486,7 +1486,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8052FEA4BE", .name = "千葉県いすみ市 くらしのガイドマップ — 旧浸水区域(塩田川流域のみ)",
     .name_ja = "千葉県いすみ市 くらしのガイドマップ — 旧浸水区域(塩田川流域のみ)",
-    .category = "safety", .portal = "https://services1.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1509,7 +1509,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F0D7096170", .name = "伊達市みんなの地図サイト — 津波_50cm以上1m未満",
     .name_ja = "伊達市みんなの地図サイト — 津波_50cm以上1m未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1531,7 +1531,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D5E98712BE", .name = "伊達市みんなの地図サイト — T1000年に1回",
     .name_ja = "伊達市みんなの地図サイト — T1000年に1回",
-    .category = "geospatial", .portal = "https://services.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1553,7 +1553,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C502EC4A11", .name = "伊達市みんなの地図サイト — 津波_30cm以上50cm未満",
     .name_ja = "伊達市みんなの地図サイト — 津波_30cm以上50cm未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1575,7 +1575,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A5B69C886C", .name = "千葉県いすみ市 くらしのガイドマップ — 近隣商業",
     .name_ja = "千葉県いすみ市 くらしのガイドマップ — 近隣商業",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_economy_business", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1597,7 +1597,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CF178F4022", .name = "伊達市みんなの地図サイト — 津波_30cm未満",
     .name_ja = "伊達市みんなの地図サイト — 津波_30cm未満",
-    .category = "safety", .portal = "https://services.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1619,7 +1619,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_550AAC6BDB", .name = "千葉県いすみ市 くらしのガイドマップ — 商業",
     .name_ja = "千葉県いすみ市 くらしのガイドマップ — 商業",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_economy_business", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1641,7 +1641,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_259D54BA95", .name = "千葉県いすみ市 くらしのガイドマップ — 準工業",
     .name_ja = "千葉県いすみ市 くらしのガイドマップ — 準工業",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_economy_business", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1663,7 +1663,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_418D255747", .name = "千葉県いすみ市 くらしのガイドマップ — 工業",
     .name_ja = "千葉県いすみ市 くらしのガイドマップ — 工業",
-    .category = "geospatial", .portal = "https://services1.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_economy_business", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1685,7 +1685,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_27D6BFE231", .name = "千葉県いすみ市 くらしのガイドマップ — 都市計画公園",
     .name_ja = "千葉県いすみ市 くらしのガイドマップ — 都市計画公園",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1707,7 +1707,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2DAB744836", .name = "千葉県いすみ市 くらしのガイドマップ — 国定公園特別保護",
     .name_ja = "千葉県いすみ市 くらしのガイドマップ — 国定公園特別保護",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1729,7 +1729,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CAD8E67E1B", .name = "千葉県いすみ市 くらしのガイドマップ — 国定公園第一種",
     .name_ja = "千葉県いすみ市 くらしのガイドマップ — 国定公園第一種",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1751,7 +1751,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_28DE1DBB14", .name = "千葉県いすみ市 くらしのガイドマップ — 国定公園第二種",
     .name_ja = "千葉県いすみ市 くらしのガイドマップ — 国定公園第二種",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_planning_zoning", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1773,7 +1773,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_51B82D5DEB", .name = "千葉県いすみ市 くらしのガイドマップ — 国定公園普通",
     .name_ja = "千葉県いすみ市 くらしのガイドマップ — 国定公園普通",
-    .category = "infrastructure", .portal = "https://services1.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1795,7 +1795,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3EFC3DB242", .name = "浜松市 — M_ActivityBase",
     .name_ja = "浜松市 — M_ActivityBase",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1817,7 +1817,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DA266B7E7E", .name = "浜松市 — 危険箇所_地すべり危険箇所_農村振興局（静的）/平成28年3月28日",
     .name_ja = "浜松市 — 危険箇所_地すべり危険箇所_農村振興局（静的）/平成28年3月28日",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1839,7 +1839,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A3904AABB4", .name = "浜松市 — 砂防三法_砂防指定地（静的） / 平成28年8月23日",
     .name_ja = "浜松市 — 砂防三法_砂防指定地（静的） / 平成28年8月23日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1861,7 +1861,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0FDA62F7BB", .name = "浜松市 — SeaWall_wm",
     .name_ja = "浜松市 — SeaWall_wm",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1883,7 +1883,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FF89B83F5C", .name = "浜松市 — 市水道施設",
     .name_ja = "浜松市 — 市水道施設",
-    .category = "infrastructure", .portal = "https://services3.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1904,7 +1904,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_92AF6E254C", .name = "浜松市 — 水位観測所_県所管",
     .name_ja = "浜松市 — 水位観測所_県所管",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1926,7 +1926,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B80E422435", .name = "浜松市 — 水位観測所_市所管",
     .name_ja = "浜松市 — 水位観測所_市所管",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1948,7 +1948,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FACAF25CC6", .name = "浜松市 — 避難所マスタ",
     .name_ja = "浜松市 — 避難所マスタ",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1971,7 +1971,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_545BDB4217", .name = "浜松市 — 水位観測所_国所管_一級河川",
     .name_ja = "浜松市 — 水位観測所_国所管_一級河川",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -1993,7 +1993,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B0288DF4B1", .name = "浜松市 — 水位観測所_国所管_二級河川",
     .name_ja = "浜松市 — 水位観測所_国所管_二級河川",
-    .category = "environment", .portal = "https://services3.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2015,7 +2015,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_69638B29E0", .name = "浜松市 — 危険箇所_急傾斜地崩壊危険箇所（静的）/平成28年3月28日",
     .name_ja = "浜松市 — 危険箇所_急傾斜地崩壊危険箇所（静的）/平成28年3月28日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2037,7 +2037,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0E0D031506", .name = "浜松市 — 特別警戒区域・土石流（静的）/平成28年10月4日",
     .name_ja = "浜松市 — 特別警戒区域・土石流（静的）/平成28年10月4日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2059,7 +2059,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_98F0FF0FEE", .name = "浜松市 — 特別警戒区域・急傾斜地の崩壊（静的）/平成28年10月4日",
     .name_ja = "浜松市 — 特別警戒区域・急傾斜地の崩壊（静的）/平成28年10月4日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2082,7 +2082,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FD104BF2E1", .name = "浜松市 — 区",
     .name_ja = "浜松市 — 区",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2103,7 +2103,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_463D6059EB", .name = "浜松市 — 砂防三法_急傾斜地崩壊危険区域｜令和5年3月31日",
     .name_ja = "浜松市 — 砂防三法_急傾斜地崩壊危険区域｜令和5年3月31日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2125,7 +2125,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FA9E05EC25", .name = "浜松市 — ☆緊急避難場所（津波）｜平成29年1月1日",
     .name_ja = "浜松市 — ☆緊急避難場所（津波）｜平成29年1月1日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2147,7 +2147,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A30083F29C", .name = "浜松市 — 砂防三法_急傾斜地崩壊危険区域｜令和2年3月31日",
     .name_ja = "浜松市 — 砂防三法_急傾斜地崩壊危険区域｜令和2年3月31日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2169,7 +2169,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D5D85A3F4A", .name = "浜松市 — 砂防三法 急傾斜地崩壊危険区域｜令和4年3月31日",
     .name_ja = "浜松市 — 砂防三法 急傾斜地崩壊危険区域｜令和4年3月31日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2193,7 +2193,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C659E04F76", .name = "浜松市 — 砂防三法_急傾斜地崩壊危険区域",
     .name_ja = "浜松市 — 砂防三法_急傾斜地崩壊危険区域",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2215,7 +2215,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7A057E2E2E", .name = "浜松市 — 砂防三法_急傾斜地崩壊危険区域｜平成31年4月2日",
     .name_ja = "浜松市 — 砂防三法_急傾斜地崩壊危険区域｜平成31年4月2日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2237,7 +2237,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B1ADAD48EF", .name = "浜松市 — 砂防三法_急傾斜地崩壊危険区域",
     .name_ja = "浜松市 — 砂防三法_急傾斜地崩壊危険区域",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2262,7 +2262,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AB30175E96", .name = "浜松市 — 砂防三法_地すべり防止区域｜令和2年3月31日",
     .name_ja = "浜松市 — 砂防三法_地すべり防止区域｜令和2年3月31日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2284,7 +2284,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_86EFCEB0D3", .name = "浜松市 — 砂防三法 地すべり防止区域｜令和4年3月31日",
     .name_ja = "浜松市 — 砂防三法 地すべり防止区域｜令和4年3月31日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2308,7 +2308,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3EDEF48571", .name = "浜松市 — 砂防三法_地すべり防止区域｜令和5年3月31日",
     .name_ja = "浜松市 — 砂防三法_地すべり防止区域｜令和5年3月31日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2330,7 +2330,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C0804D4D2E", .name = "浜松市 — SeaWall_2020",
     .name_ja = "浜松市 — SeaWall_2020",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2352,7 +2352,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_259BBD60E1", .name = "浜松市 — 砂防三法_地すべり防止区域",
     .name_ja = "浜松市 — 砂防三法_地すべり防止区域",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2374,7 +2374,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_24FA0F28A3", .name = "浜松市 — 砂防三法_地すべり防止区域｜平成31年4月2日",
     .name_ja = "浜松市 — 砂防三法_地すべり防止区域｜平成31年4月2日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2396,7 +2396,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_39C3696E36", .name = "浜松市 — 砂防三法_地すべり防止区域",
     .name_ja = "浜松市 — 砂防三法_地すべり防止区域",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2418,7 +2418,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B7D86402D0", .name = "浜松市 — ポイント",
     .name_ja = "浜松市 — ポイント",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2440,7 +2440,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AB3C27898D", .name = "浜松市 — 砂防三法_砂防指定地｜令和2年3月31日",
     .name_ja = "浜松市 — 砂防三法_砂防指定地｜令和2年3月31日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2462,7 +2462,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_888F755DCA", .name = "浜松市 — 砂防三法 砂防指定地｜令和4年3月31日",
     .name_ja = "浜松市 — 砂防三法 砂防指定地｜令和4年3月31日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2486,7 +2486,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A57608E7D5", .name = "浜松市 — 地下道（道路企画課）",
     .name_ja = "浜松市 — 地下道（道路企画課）",
-    .category = "transport", .portal = "https://services3.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2508,7 +2508,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E6D60A9716", .name = "浜松市 — 砂防三法_砂防指定地",
     .name_ja = "浜松市 — 砂防三法_砂防指定地",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2530,7 +2530,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2A59841CF8", .name = "浜松市 — 砂防三法_砂防指定地｜令和5年3月31日",
     .name_ja = "浜松市 — 砂防三法_砂防指定地｜令和5年3月31日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2552,7 +2552,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_392E6D02D9", .name = "浜松市 — 砂防三法_砂防指定地｜平成31年4月2日",
     .name_ja = "浜松市 — 砂防三法_砂防指定地｜平成31年4月2日",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2574,7 +2574,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1FC7287A12", .name = "浜松市 — 砂防三法_砂防指定地",
     .name_ja = "浜松市 — 砂防三法_砂防指定地",
-    .category = "geospatial", .portal = "https://services3.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2596,7 +2596,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_180E1A77B1", .name = "浜松市 — 土砂災害_警戒区域_地すべり｜令和2年3月31日",
     .name_ja = "浜松市 — 土砂災害_警戒区域_地すべり｜令和2年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2618,7 +2618,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_01881D98A2", .name = "浜松市 — 土砂災害_警戒区域_地すべり",
     .name_ja = "浜松市 — 土砂災害_警戒区域_地すべり",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2640,7 +2640,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_785EE2D8F3", .name = "浜松市 — 土砂災害 警戒区域 地すべり｜令和4年3月31日",
     .name_ja = "浜松市 — 土砂災害 警戒区域 地すべり｜令和4年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2664,7 +2664,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E21DB5655A", .name = "浜松市 — 地下道（地理院）",
     .name_ja = "浜松市 — 地下道（地理院）",
-    .category = "transport", .portal = "https://services3.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2685,7 +2685,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4E16CFFC9F", .name = "浜松市 — 土砂災害_警戒区域_地すべり｜令和5年3月31日",
     .name_ja = "浜松市 — 土砂災害_警戒区域_地すべり｜令和5年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2707,7 +2707,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F2F69649F5", .name = "浜松市 — 土砂災害_警戒区域_地すべり｜平成31年4月2日",
     .name_ja = "浜松市 — 土砂災害_警戒区域_地すべり｜平成31年4月2日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2729,7 +2729,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6D1428502C", .name = "浜松市 — 土砂災害_警戒区域_地すべり",
     .name_ja = "浜松市 — 土砂災害_警戒区域_地すべり",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2754,7 +2754,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_948FBE1D11", .name = "浜松市 — 土砂災害（特別）警戒区域_土石流｜令和2年3月31日",
     .name_ja = "浜松市 — 土砂災害（特別）警戒区域_土石流｜令和2年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2776,7 +2776,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_618BACC6F0", .name = "浜松市 — 土砂災害_警戒区域_土石流",
     .name_ja = "浜松市 — 土砂災害_警戒区域_土石流",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2798,7 +2798,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D5A8E8A304", .name = "浜松市 — 土砂災害 警戒区域 土石流｜令和4年3月31日",
     .name_ja = "浜松市 — 土砂災害 警戒区域 土石流｜令和4年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2822,7 +2822,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DC92999B53", .name = "浜松市 — 土砂災害（特別）警戒区域_土石流｜平成31年4月2日",
     .name_ja = "浜松市 — 土砂災害（特別）警戒区域_土石流｜平成31年4月2日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2844,7 +2844,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CD4681C15C", .name = "浜松市 — 土砂災害_警戒区域_土石流",
     .name_ja = "浜松市 — 土砂災害_警戒区域_土石流",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2869,7 +2869,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C3718D8BC8", .name = "浜松市 — 土砂災害_警戒区域_土石流｜令和5年3月31日",
     .name_ja = "浜松市 — 土砂災害_警戒区域_土石流｜令和5年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2891,7 +2891,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_499FBB8559", .name = "浜松市 — 土砂災害 警戒区域 急傾斜地の崩壊｜令和4年3月31日",
     .name_ja = "浜松市 — 土砂災害 警戒区域 急傾斜地の崩壊｜令和4年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2915,7 +2915,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CDEDF62ABC", .name = "浜松市 — 土砂災害_警戒区域_急傾斜地の崩壊",
     .name_ja = "浜松市 — 土砂災害_警戒区域_急傾斜地の崩壊",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2937,7 +2937,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EB474595F5", .name = "浜松市 — 土砂災害（特別）警戒区域_急傾斜地の崩壊｜令和2年3月31日",
     .name_ja = "浜松市 — 土砂災害（特別）警戒区域_急傾斜地の崩壊｜令和2年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2959,7 +2959,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8B99E8DF7F", .name = "浜松市 — 土砂災害（特別）警戒区域_急傾斜地の崩壊｜平成31年4月2日",
     .name_ja = "浜松市 — 土砂災害（特別）警戒区域_急傾斜地の崩壊｜平成31年4月2日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -2981,7 +2981,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_20525382BE", .name = "浜松市 — 土砂災害_警戒区域_急傾斜地の崩壊",
     .name_ja = "浜松市 — 土砂災害_警戒区域_急傾斜地の崩壊",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3006,7 +3006,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_81030DA267", .name = "浜松市 — 土砂災害_警戒区域_急傾斜地の崩壊｜令和5年3月31日",
     .name_ja = "浜松市 — 土砂災害_警戒区域_急傾斜地の崩壊｜令和5年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3028,7 +3028,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_44BBCD4228", .name = "浜松市 — 土砂災害（特別）警戒区域 土石流｜令和4年3月31日",
     .name_ja = "浜松市 — 土砂災害（特別）警戒区域 土石流｜令和4年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3052,7 +3052,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_12D19758E9", .name = "浜松市 — 土砂災害（特別）_警戒区域_土石流",
     .name_ja = "浜松市 — 土砂災害（特別）_警戒区域_土石流",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3074,7 +3074,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_837DB93776", .name = "浜松市 — 土砂災害_警戒区域_土石流｜令和2年3月31日",
     .name_ja = "浜松市 — 土砂災害_警戒区域_土石流｜令和2年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3096,7 +3096,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_59C658CAF6", .name = "浜松市 — 土砂災害_警戒区域_土石流｜平成31年4月2日",
     .name_ja = "浜松市 — 土砂災害_警戒区域_土石流｜平成31年4月2日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3118,7 +3118,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B49B837932", .name = "浜松市 — 土砂災害（特別）警戒区域_土石流｜令和5年3月31日",
     .name_ja = "浜松市 — 土砂災害（特別）警戒区域_土石流｜令和5年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3140,7 +3140,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9BC985EA66", .name = "浜松市 — 土砂災害（特別）警戒区域 急傾斜地の崩壊｜令和4年3月31日",
     .name_ja = "浜松市 — 土砂災害（特別）警戒区域 急傾斜地の崩壊｜令和4年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3164,7 +3164,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E132D21DA1", .name = "浜松市 — 土砂災害（特別）警戒区域_土石流",
     .name_ja = "浜松市 — 土砂災害（特別）警戒区域_土石流",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3189,7 +3189,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DD2F346F4F", .name = "浜松市 — 土砂災害（特別）_急傾斜地の崩壊",
     .name_ja = "浜松市 — 土砂災害（特別）_急傾斜地の崩壊",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3211,7 +3211,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6151E05F63", .name = "浜松市 — 土砂災害_警戒区域_急傾斜地の崩壊｜令和2年3月31日",
     .name_ja = "浜松市 — 土砂災害_警戒区域_急傾斜地の崩壊｜令和2年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3233,7 +3233,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_049752D66D", .name = "浜松市 — 土砂災害_警戒区域_急傾斜地の崩壊｜平成31年4月2日",
     .name_ja = "浜松市 — 土砂災害_警戒区域_急傾斜地の崩壊｜平成31年4月2日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3255,7 +3255,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5A8E93547D", .name = "浜松市 — 土砂災害（特別）警戒区域_急傾斜地の崩壊｜令和5年3月31日",
     .name_ja = "浜松市 — 土砂災害（特別）警戒区域_急傾斜地の崩壊｜令和5年3月31日",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3277,7 +3277,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1C045DF0C8", .name = "浜松市 — 土砂災害（特別）警戒区域_急傾斜地の崩壊",
     .name_ja = "浜松市 — 土砂災害（特別）警戒区域_急傾斜地の崩壊",
-    .category = "safety", .portal = "https://services3.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services3.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3302,7 +3302,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_35ACA4EED3", .name = "志摩市役所 — 建物面",
     .name_ja = "志摩市役所 — 建物面",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3324,7 +3324,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AB87B2A517", .name = "志摩市役所 — 水域面",
     .name_ja = "志摩市役所 — 水域面",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3346,7 +3346,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_79DBE1E34E", .name = "志摩市役所 — 大字界面",
     .name_ja = "志摩市役所 — 大字界面",
-    .category = "geospatial", .portal = "https://services5.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3368,7 +3368,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_07D3E36298", .name = "近江八幡市公開マップ — 地区整備計画（斜線）",
     .name_ja = "近江八幡市公開マップ — 地区整備計画（斜線）",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_boundaries", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3390,7 +3390,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DB8529522F", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_曲率半径数値",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_曲率半径数値",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3412,7 +3412,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8BE3646553", .name = "近江八幡市公開マップ — 道路台帳図_曲率半径線",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_曲率半径線",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3434,7 +3434,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4A1E4E3A12", .name = "近江八幡市公開マップ — 土砂災害警戒区域",
     .name_ja = "近江八幡市公開マップ — 土砂災害警戒区域",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3456,7 +3456,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7AAEF59465", .name = "近江八幡市公開マップ — 施設",
     .name_ja = "近江八幡市公開マップ — 施設",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_other", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3478,7 +3478,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CBBBEB4725", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_曲率半径線",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_曲率半径線",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3500,7 +3500,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A2C9CF7E15", .name = "近江八幡市公開マップ — 道路台帳図_横断線数値",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_横断線数値",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3522,7 +3522,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C2E411CC9C", .name = "近江八幡市公開マップ — 河川",
     .name_ja = "近江八幡市公開マップ — 河川",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3544,7 +3544,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2584A68AD0", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_縦断勾配数値",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_縦断勾配数値",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3566,7 +3566,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6D3F58BE89", .name = "近江八幡市公開マップ — 道路台帳図_横断線",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_横断線",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3588,7 +3588,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_73E5D3B5DF", .name = "近江八幡市公開マップ — 都市計画_用途区域注記",
     .name_ja = "近江八幡市公開マップ — 都市計画_用途区域注記",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_planning_zoning", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3610,7 +3610,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C3B929D54F", .name = "近江八幡市公開マップ — 浸水深_L2_5m以上_ランク7",
     .name_ja = "近江八幡市公開マップ — 浸水深_L2_5m以上_ランク7",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3632,7 +3632,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B8F75044A2", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_縦断勾配線",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_縦断勾配線",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3654,7 +3654,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9899773E61", .name = "近江八幡市公開マップ — 都市計画_用途区域幅員線",
     .name_ja = "近江八幡市公開マップ — 都市計画_用途区域幅員線",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_planning_zoning", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3676,7 +3676,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_30EDCEBAB4", .name = "近江八幡市公開マップ — 道路台帳図_舗装種別",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_舗装種別",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3698,7 +3698,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9A2D3D1ABC", .name = "近江八幡市公開マップ — 浸水深_L2_4m_5m_ランク6",
     .name_ja = "近江八幡市公開マップ — 浸水深_L2_4m_5m_ランク6",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3720,7 +3720,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A2F18C60C4", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_横断溝注記",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_横断溝注記",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3742,7 +3742,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C94F676731", .name = "近江八幡市公開マップ — 用途地域",
     .name_ja = "近江八幡市公開マップ — 用途地域",
-    .category = "infrastructure", .portal = "https://services5.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_planning_zoning", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3764,7 +3764,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DAF37CF402", .name = "近江八幡市公開マップ — 浸水深_L2_3m_4m_ランク5",
     .name_ja = "近江八幡市公開マップ — 浸水深_L2_3m_4m_ランク5",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3786,7 +3786,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0176E19698", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_横断溝旗上線",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_横断溝旗上線",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3808,7 +3808,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_08EDCC2381", .name = "近江八幡市公開マップ — 浸水深_L2_2m_3m_ランク4",
     .name_ja = "近江八幡市公開マップ — 浸水深_L2_2m_3m_ランク4",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3830,7 +3830,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9556C9F5E0", .name = "近江八幡市公開マップ — 道路台帳図_舗装界",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_舗装界",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3852,7 +3852,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0CE318736A", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_横断溝",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_横断溝",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3874,7 +3874,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E302FBB357", .name = "近江八幡市公開マップ — 浸水深_L2_1m_2m_ランク3",
     .name_ja = "近江八幡市公開マップ — 浸水深_L2_1m_2m_ランク3",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3896,7 +3896,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6312ECC274", .name = "近江八幡市公開マップ — 道路台帳図_橋梁注記",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_橋梁注記",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3918,7 +3918,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7ED973F528", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_舗装種別",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_舗装種別",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3940,7 +3940,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_821BEE3EBE", .name = "近江八幡市公開マップ — 浸水深_L2_0.5m_1m_ランク2",
     .name_ja = "近江八幡市公開マップ — 浸水深_L2_0.5m_1m_ランク2",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3962,7 +3962,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F4B288822B", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_舗装界",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_舗装界",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3984,7 +3984,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FD9AF84F69", .name = "近江八幡市公開マップ — 浸水深_L2_0.5m未満_ランク1",
     .name_ja = "近江八幡市公開マップ — 浸水深_L2_0.5m未満_ランク1",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4006,7 +4006,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A7D15B2A2A", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_橋梁注記",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_橋梁注記",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4028,7 +4028,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8C19478F41", .name = "近江八幡市公開マップ — 道路台帳図_橋梁旗上線",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_橋梁旗上線",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4050,7 +4050,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DED27F4C23", .name = "近江八幡市公開マップ — 浸水深_L1_5m以上_ランク7",
     .name_ja = "近江八幡市公開マップ — 浸水深_L1_5m以上_ランク7",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4072,7 +4072,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B025701D22", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_橋梁旗上線",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_橋梁旗上線",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4094,7 +4094,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D799B14724", .name = "近江八幡市公開マップ — 道路台帳図_踏切注記",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_踏切注記",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4116,7 +4116,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4F118D8DD3", .name = "近江八幡市公開マップ — 浸水深_L1_4m_5m_ランク6",
     .name_ja = "近江八幡市公開マップ — 浸水深_L1_4m_5m_ランク6",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4138,7 +4138,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A45B3EE9B9", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_踏切注記",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_踏切注記",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4160,7 +4160,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D9DFCE2D80", .name = "近江八幡市公開マップ — 道路台帳図_踏切旗上線",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_踏切旗上線",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4182,7 +4182,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7621471053", .name = "近江八幡市公開マップ — 浸水深_L1_3m_4m_ランク5",
     .name_ja = "近江八幡市公開マップ — 浸水深_L1_3m_4m_ランク5",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4204,7 +4204,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_674F97691D", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_踏切旗上線",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_踏切旗上線",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4226,7 +4226,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9912FFE710", .name = "近江八幡市公開マップ — 道路台帳図_トンネル注記",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_トンネル注記",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4248,7 +4248,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_12E36558AD", .name = "近江八幡市公開マップ — 浸水深_L1_2m_3m_ランク4",
     .name_ja = "近江八幡市公開マップ — 浸水深_L1_2m_3m_ランク4",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4270,7 +4270,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8507D600C5", .name = "近江八幡市公開マップ — 道路台帳図（安土町）_道路中心線",
     .name_ja = "近江八幡市公開マップ — 道路台帳図（安土町）_道路中心線",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4292,7 +4292,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C0B537C619", .name = "近江八幡市公開マップ — 道路台帳図_トンネル旗上線",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_トンネル旗上線",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4314,7 +4314,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_01D1BBB356", .name = "近江八幡市公開マップ — 浸水深_L1_1m_2m_ランク3",
     .name_ja = "近江八幡市公開マップ — 浸水深_L1_1m_2m_ランク3",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4336,7 +4336,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DA04F3BF3B", .name = "近江八幡市公開マップ — 道路台帳図_距離標数値",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_距離標数値",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4358,7 +4358,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_618259B47B", .name = "近江八幡市公開マップ — 浸水深_L1_0.5m_1m_ランク2",
     .name_ja = "近江八幡市公開マップ — 浸水深_L1_0.5m_1m_ランク2",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4380,7 +4380,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EBF6ACD218", .name = "近江八幡市公開マップ — 道路台帳図_距離標線",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_距離標線",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4402,7 +4402,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_455CCA108A", .name = "近江八幡市公開マップ — 浸水深_L1_0.5m未満_ランク1",
     .name_ja = "近江八幡市公開マップ — 浸水深_L1_0.5m未満_ランク1",
-    .category = "safety", .portal = "https://services5.arcgis.com",
+    .category = "safety", .collector = "jp_gis_environment_hazards", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4424,7 +4424,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F61E300FAC", .name = "近江八幡市公開マップ — 道路台帳図_道路施設注記",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_道路施設注記",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4446,7 +4446,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D014A2770D", .name = "近江八幡市公開マップ — 道路台帳図_路線名称",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_路線名称",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4468,7 +4468,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7C9518FC95", .name = "近江八幡市公開マップ — 道路台帳図_路線番号",
     .name_ja = "近江八幡市公開マップ — 道路台帳図_路線番号",
-    .category = "transport", .portal = "https://services5.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4490,7 +4490,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_597F8D46CA", .name = "つくば市公開型GIS — sakura_l2_duration",
     .name_ja = "つくば市公開型GIS — sakura_l2_duration",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4512,7 +4512,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9C1FF7FFF1", .name = "つくば市公開型GIS — 公設公営・指定管理",
     .name_ja = "つくば市公開型GIS — 公設公営・指定管理",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4534,7 +4534,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5CCCC925E1", .name = "つくば市公開型GIS — shikichi",
     .name_ja = "つくば市公開型GIS — shikichi",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4556,7 +4556,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C411CE6E96", .name = "つくば市公開型GIS — sokushin",
     .name_ja = "つくば市公開型GIS — sokushin",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4578,7 +4578,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0CDD00A635", .name = "つくば市公開型GIS — survey",
     .name_ja = "つくば市公開型GIS — survey",
-    .category = "health", .portal = "https://services6.arcgis.com",
+    .category = "health", .collector = "jp_gis_parcels_landuse", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4600,7 +4600,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EE06D0D801", .name = "つくば市公開型GIS — survey",
     .name_ja = "つくば市公開型GIS — survey",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4622,7 +4622,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EE91D9E195", .name = "つくば市公開型GIS — survey",
     .name_ja = "つくば市公開型GIS — survey",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4644,7 +4644,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AF89EEB8C6", .name = "つくば市公開型GIS — survey",
     .name_ja = "つくば市公開型GIS — survey",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4666,7 +4666,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F79E92A539", .name = "つくば市公開型GIS — takasa",
     .name_ja = "つくば市公開型GIS — takasa",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4688,7 +4688,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A8BF0E3339", .name = "つくば市公開型GIS — tetsudo",
     .name_ja = "つくば市公開型GIS — tetsudo",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4710,7 +4710,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D83DCE5C6C", .name = "つくば市公開型GIS — tokubetsu_ryokuchi",
     .name_ja = "つくば市公開型GIS — tokubetsu_ryokuchi",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4732,7 +4732,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_45B0B53A5D", .name = "つくば市公開型GIS — toshi_kendou",
     .name_ja = "つくば市公開型GIS — toshi_kendou",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4754,7 +4754,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FDE9D540EC", .name = "つくば市公開型GIS — tokubetsuyouto",
     .name_ja = "つくば市公開型GIS — tokubetsuyouto",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4776,7 +4776,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_93C927C82A", .name = "つくば市公開型GIS — toshi_kousokudouro",
     .name_ja = "つくば市公開型GIS — toshi_kousokudouro",
-    .category = "transport", .portal = "https://services6.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4798,7 +4798,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9AB1708887", .name = "つくば市公開型GIS — usui_jinkou",
     .name_ja = "つくば市公開型GIS — usui_jinkou",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4820,7 +4820,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6A2E491560", .name = "つくば市公開型GIS — toshi_kinou_yuudou",
     .name_ja = "つくば市公開型GIS — toshi_kinou_yuudou",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_culture_recreation", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4843,7 +4843,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_92DB87B2A2", .name = "つくば市公開型GIS — usui_kankyo",
     .name_ja = "つくば市公開型GIS — usui_kankyo",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4865,7 +4865,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0B6D0331BA", .name = "つくば市公開型GIS — events",
     .name_ja = "つくば市公開型GIS — events",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4888,7 +4888,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B6FEABCD5C", .name = "つくば市公開型GIS — toshi_tetsudou",
     .name_ja = "つくば市公開型GIS — toshi_tetsudou",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4910,7 +4910,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E46853E542", .name = "つくば市公開型GIS — yata_l2_duration",
     .name_ja = "つくば市公開型GIS — yata_l2_duration",
-    .category = "safety", .portal = "https://services6.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4932,7 +4932,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E0050098E6", .name = "つくば市公開型GIS — yata_l2",
     .name_ja = "つくば市公開型GIS — yata_l2",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4954,7 +4954,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EE10A51673", .name = "つくば市公開型GIS — yata_ushiku_l2",
     .name_ja = "つくば市公開型GIS — yata_ushiku_l2",
-    .category = "geospatial", .portal = "https://services6.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4976,7 +4976,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7250ED54FC", .name = "つくば市公開型GIS — youto",
     .name_ja = "つくば市公開型GIS — youto",
-    .category = "infrastructure", .portal = "https://services6.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_planning_zoning", .portal = "https://services6.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4998,7 +4998,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A9A9B98001", .name = "網走市公開型GIS — コンビニエンスストア",
     .name_ja = "網走市公開型GIS — コンビニエンスストア",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_economy_business", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5021,7 +5021,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E9FCFE7E11", .name = "網走市公開型GIS — コンビニエンスストア",
     .name_ja = "網走市公開型GIS — コンビニエンスストア",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_economy_business", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5044,7 +5044,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F5648A16BC", .name = "網走市公開型GIS — 指定緊急避難場所兼指定避難所",
     .name_ja = "網走市公開型GIS — 指定緊急避難場所兼指定避難所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5067,7 +5067,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_10A44E22F3", .name = "網走市公開型GIS — その他避難所",
     .name_ja = "網走市公開型GIS — その他避難所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5089,7 +5089,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E8FD65249C", .name = "網走市公開型GIS — その他避難所",
     .name_ja = "網走市公開型GIS — その他避難所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5111,7 +5111,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6DA273446A", .name = "網走市公開型GIS — 指定緊急避難場所兼指定避難所",
     .name_ja = "網走市公開型GIS — 指定緊急避難場所兼指定避難所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5134,7 +5134,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B0052C6977", .name = "網走市公開型GIS — その他避難所",
     .name_ja = "網走市公開型GIS — その他避難所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5156,7 +5156,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D74106B0C0", .name = "網走市公開型GIS — 字界_多言語",
     .name_ja = "網走市公開型GIS — 字界_多言語",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5178,7 +5178,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CAD1EA4E32", .name = "網走市公開型GIS — 公衆電話",
     .name_ja = "網走市公開型GIS — 公衆電話",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5200,7 +5200,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C3D7B78838", .name = "網走市公開型GIS — 字界_多言語",
     .name_ja = "網走市公開型GIS — 字界_多言語",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5222,7 +5222,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6A67AD9834", .name = "網走市公開型GIS — 指定緊急避難場所",
     .name_ja = "網走市公開型GIS — 指定緊急避難場所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5244,7 +5244,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3F9EC02A47", .name = "網走市公開型GIS — 公衆用トイレ",
     .name_ja = "網走市公開型GIS — 公衆用トイレ",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_health_social", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5266,7 +5266,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4F971DCEF6", .name = "網走市公開型GIS — 指定緊急避難場所",
     .name_ja = "網走市公開型GIS — 指定緊急避難場所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5289,7 +5289,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0BF8CEDE10", .name = "網走市公開型GIS — 指定緊急避難場所兼指定避難所",
     .name_ja = "網走市公開型GIS — 指定緊急避難場所兼指定避難所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5312,7 +5312,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_15379E156D", .name = "網走市公開型GIS — 指定緊急避難場所兼指定避難所",
     .name_ja = "網走市公開型GIS — 指定緊急避難場所兼指定避難所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5335,7 +5335,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A606771327", .name = "網走市公開型GIS — 公衆電話",
     .name_ja = "網走市公開型GIS — 公衆電話",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5357,7 +5357,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C1D8565AB0", .name = "網走市公開型GIS — 災害対策施設",
     .name_ja = "網走市公開型GIS — 災害対策施設",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5379,7 +5379,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_ABC8F48DD6", .name = "網走市公開型GIS — その他一時避難場所",
     .name_ja = "網走市公開型GIS — その他一時避難場所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5401,7 +5401,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C3ED5254E4", .name = "網走市公開型GIS — 災害対策施設",
     .name_ja = "網走市公開型GIS — 災害対策施設",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5423,7 +5423,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7745D1E62B", .name = "網走市公開型GIS — ガソリンスタンド",
     .name_ja = "網走市公開型GIS — ガソリンスタンド",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5446,7 +5446,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8A221AF782", .name = "網走市公開型GIS — 土砂災害区域",
     .name_ja = "網走市公開型GIS — 土砂災害区域",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5468,7 +5468,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3454CC11E4", .name = "網走市公開型GIS — コンビニエンスストア",
     .name_ja = "網走市公開型GIS — コンビニエンスストア",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_economy_business", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5491,7 +5491,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5E9A1F252B", .name = "網走市公開型GIS — コンビニエンスストア",
     .name_ja = "網走市公開型GIS — コンビニエンスストア",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_economy_business", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5514,7 +5514,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EBFF287E22", .name = "網走市公開型GIS — 公衆用トイレ",
     .name_ja = "網走市公開型GIS — 公衆用トイレ",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_health_social", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5536,7 +5536,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_02C61B1706", .name = "網走市公開型GIS — 字界_多言語",
     .name_ja = "網走市公開型GIS — 字界_多言語",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5558,7 +5558,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1266415DAB", .name = "網走市公開型GIS — 災害対策施設",
     .name_ja = "網走市公開型GIS — 災害対策施設",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5580,7 +5580,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FDF2256F9A", .name = "網走市公開型GIS — 字界_多言語",
     .name_ja = "網走市公開型GIS — 字界_多言語",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5602,7 +5602,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DF55CA965F", .name = "網走市公開型GIS — 公衆用トイレ",
     .name_ja = "網走市公開型GIS — 公衆用トイレ",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_health_social", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5624,7 +5624,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E840728895", .name = "網走市公開型GIS — その他一時避難場所",
     .name_ja = "網走市公開型GIS — その他一時避難場所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5647,7 +5647,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_208CB1BACC", .name = "網走市公開型GIS — 字界_多言語",
     .name_ja = "網走市公開型GIS — 字界_多言語",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5669,7 +5669,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9129015310", .name = "網走市公開型GIS — ガソリンスタンド",
     .name_ja = "網走市公開型GIS — ガソリンスタンド",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5691,7 +5691,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7120BAFEB9", .name = "網走市公開型GIS — 災害対策施設",
     .name_ja = "網走市公開型GIS — 災害対策施設",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5713,7 +5713,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DE37C316DE", .name = "網走市公開型GIS — ガソリンスタンド",
     .name_ja = "網走市公開型GIS — ガソリンスタンド",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5736,7 +5736,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B2EED76857", .name = "網走市公開型GIS — 土砂災害区域",
     .name_ja = "網走市公開型GIS — 土砂災害区域",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5758,7 +5758,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FB5C631877", .name = "網走市公開型GIS — 災害対策施設",
     .name_ja = "網走市公開型GIS — 災害対策施設",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5780,7 +5780,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3B8C18326C", .name = "網走市公開型GIS — その他避難所",
     .name_ja = "網走市公開型GIS — その他避難所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5802,7 +5802,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A0B888BCDF", .name = "網走市公開型GIS — その他避難所",
     .name_ja = "網走市公開型GIS — その他避難所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5825,7 +5825,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BD584F99AB", .name = "網走市公開型GIS — 土砂災害区域",
     .name_ja = "網走市公開型GIS — 土砂災害区域",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5848,7 +5848,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_30BAD356E8", .name = "網走市公開型GIS — 公衆用トイレ",
     .name_ja = "網走市公開型GIS — 公衆用トイレ",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_health_social", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5870,7 +5870,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_27CDFB5C40", .name = "網走市公開型GIS — ガソリンスタンド",
     .name_ja = "網走市公開型GIS — ガソリンスタンド",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5892,7 +5892,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_25ADDB476F", .name = "網走市公開型GIS — 災害対策施設",
     .name_ja = "網走市公開型GIS — 災害対策施設",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5914,7 +5914,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_74CCC59451", .name = "網走市公開型GIS — ガソリンスタンド",
     .name_ja = "網走市公開型GIS — ガソリンスタンド",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5937,7 +5937,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CC26087594", .name = "網走市公開型GIS — 公衆電話",
     .name_ja = "網走市公開型GIS — 公衆電話",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5959,7 +5959,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7CE9769083", .name = "網走市公開型GIS — ガソリンスタンド",
     .name_ja = "網走市公開型GIS — ガソリンスタンド",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5982,7 +5982,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_156CBAA1D0", .name = "網走市公開型GIS — 災害対策施設",
     .name_ja = "網走市公開型GIS — 災害対策施設",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6005,7 +6005,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3E6476FA5E", .name = "網走市公開型GIS — 公衆用トイレ",
     .name_ja = "網走市公開型GIS — 公衆用トイレ",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_health_social", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6027,7 +6027,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_561BD1A627", .name = "網走市公開型GIS — 公衆電話",
     .name_ja = "網走市公開型GIS — 公衆電話",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6049,7 +6049,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_866D034C8D", .name = "網走市公開型GIS — 公衆用トイレ",
     .name_ja = "網走市公開型GIS — 公衆用トイレ",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_health_social", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6071,7 +6071,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D1BDAD1C48", .name = "網走市公開型GIS — 公衆電話",
     .name_ja = "網走市公開型GIS — 公衆電話",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6093,7 +6093,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D8E6D2EB4B", .name = "網走市公開型GIS — 土砂災害区域",
     .name_ja = "網走市公開型GIS — 土砂災害区域",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6115,7 +6115,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8D3A685115", .name = "網走市公開型GIS — コンビニエンスストア",
     .name_ja = "網走市公開型GIS — コンビニエンスストア",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_economy_business", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6138,7 +6138,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_426D20C875", .name = "網走市公開型GIS — 公衆用トイレ",
     .name_ja = "網走市公開型GIS — 公衆用トイレ",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_health_social", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6160,7 +6160,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CED5810213", .name = "網走市公開型GIS — 災害対策施設",
     .name_ja = "網走市公開型GIS — 災害対策施設",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6182,7 +6182,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EE03D3F0EE", .name = "網走市公開型GIS — 災害対策施設",
     .name_ja = "網走市公開型GIS — 災害対策施設",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6204,7 +6204,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9110E7E13A", .name = "網走市公開型GIS — 土砂災害区域",
     .name_ja = "網走市公開型GIS — 土砂災害区域",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6226,7 +6226,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0C6893168F", .name = "網走市公開型GIS — その他一時避難場所",
     .name_ja = "網走市公開型GIS — その他一時避難場所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6248,7 +6248,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A777866A01", .name = "網走市公開型GIS — その他一時避難場所",
     .name_ja = "網走市公開型GIS — その他一時避難場所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6271,7 +6271,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_71DAEC1663", .name = "網走市公開型GIS — その他一時避難場所",
     .name_ja = "網走市公開型GIS — その他一時避難場所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6293,7 +6293,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0D2B15674E", .name = "網走市公開型GIS — コンビニエンスストア",
     .name_ja = "網走市公開型GIS — コンビニエンスストア",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_economy_business", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6316,7 +6316,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5E7B065F64", .name = "網走市公開型GIS — 土砂災害区域",
     .name_ja = "網走市公開型GIS — 土砂災害区域",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6338,7 +6338,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_65A087004D", .name = "網走市公開型GIS — 字界_多言語",
     .name_ja = "網走市公開型GIS — 字界_多言語",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6360,7 +6360,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BC85738827", .name = "網走市公開型GIS — 土砂災害区域",
     .name_ja = "網走市公開型GIS — 土砂災害区域",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6382,7 +6382,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1B768C9735", .name = "網走市公開型GIS — 字界_多言語",
     .name_ja = "網走市公開型GIS — 字界_多言語",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6404,7 +6404,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B1AE42A93D", .name = "網走市公開型GIS — ガソリンスタンド",
     .name_ja = "網走市公開型GIS — ガソリンスタンド",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6426,7 +6426,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0412291E09", .name = "網走市公開型GIS — コンビニエンスストア",
     .name_ja = "網走市公開型GIS — コンビニエンスストア",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_economy_business", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6448,7 +6448,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_399B2C49BD", .name = "網走市公開型GIS — 字界_多言語",
     .name_ja = "網走市公開型GIS — 字界_多言語",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6470,7 +6470,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_147134D4DA", .name = "網走市公開型GIS — 指定緊急避難場所兼指定避難所",
     .name_ja = "網走市公開型GIS — 指定緊急避難場所兼指定避難所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6493,7 +6493,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_88F754B950", .name = "網走市公開型GIS — 公衆用トイレ",
     .name_ja = "網走市公開型GIS — 公衆用トイレ",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_health_social", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6515,7 +6515,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2A1EF98E0F", .name = "網走市公開型GIS — 公衆用トイレ",
     .name_ja = "網走市公開型GIS — 公衆用トイレ",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_health_social", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6537,7 +6537,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F4D1F6220A", .name = "網走市公開型GIS — 公衆用トイレ",
     .name_ja = "網走市公開型GIS — 公衆用トイレ",
-    .category = "infrastructure", .portal = "https://services8.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_health_social", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6559,7 +6559,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E50F987883", .name = "網走市公開型GIS — 指定緊急避難場所兼指定避難所",
     .name_ja = "網走市公開型GIS — 指定緊急避難場所兼指定避難所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6582,7 +6582,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BAC3C35C3D", .name = "網走市公開型GIS — 災害対策施設",
     .name_ja = "網走市公開型GIS — 災害対策施設",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6604,7 +6604,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1BA42F7BE5", .name = "網走市公開型GIS — 公衆電話",
     .name_ja = "網走市公開型GIS — 公衆電話",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6626,7 +6626,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_ECCAE94A25", .name = "網走市公開型GIS — コンビニエンスストア",
     .name_ja = "網走市公開型GIS — コンビニエンスストア",
-    .category = "geospatial", .portal = "https://services8.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_economy_business", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6649,7 +6649,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2D536FBA4C", .name = "網走市公開型GIS — その他避難所",
     .name_ja = "網走市公開型GIS — その他避難所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6671,7 +6671,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_68712EE914", .name = "網走市公開型GIS — 災害対策施設",
     .name_ja = "網走市公開型GIS — 災害対策施設",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6693,7 +6693,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7E6CCCBA9F", .name = "網走市公開型GIS — 土砂災害区域",
     .name_ja = "網走市公開型GIS — 土砂災害区域",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6715,7 +6715,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A6273D3948", .name = "網走市公開型GIS — その他避難所",
     .name_ja = "網走市公開型GIS — その他避難所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6737,7 +6737,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A4FD3614F6", .name = "網走市公開型GIS — その他一時避難場所",
     .name_ja = "網走市公開型GIS — その他一時避難場所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6760,7 +6760,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6D3B89A1F5", .name = "網走市公開型GIS — 土砂災害区域",
     .name_ja = "網走市公開型GIS — 土砂災害区域",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6782,7 +6782,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_ACAFAA7D9C", .name = "網走市公開型GIS — 土砂災害区域",
     .name_ja = "網走市公開型GIS — 土砂災害区域",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6804,7 +6804,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C9ADB77B4A", .name = "網走市公開型GIS — その他一時避難場所",
     .name_ja = "網走市公開型GIS — その他一時避難場所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6827,7 +6827,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E7D9A893A0", .name = "網走市公開型GIS — 指定緊急避難場所",
     .name_ja = "網走市公開型GIS — 指定緊急避難場所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6849,7 +6849,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F9DC5CABDC", .name = "網走市公開型GIS — 土砂災害区域",
     .name_ja = "網走市公開型GIS — 土砂災害区域",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6872,7 +6872,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DDFA87E4C9", .name = "網走市公開型GIS — その他一時避難場所",
     .name_ja = "網走市公開型GIS — その他一時避難場所",
-    .category = "safety", .portal = "https://services8.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services8.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6894,7 +6894,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_703DC47F7C", .name = "埼玉県GIS（地理情報システム） — Apr_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — Apr_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6916,7 +6916,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_110E6774C0", .name = "埼玉県GIS（地理情報システム） — April_fusyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — April_fusyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6938,7 +6938,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_84BC66746E", .name = "埼玉県GIS（地理情報システム） — Apr_fusyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — Apr_fusyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6960,7 +6960,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F37AB40954", .name = "埼玉県GIS（地理情報システム） — August_fusyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — August_fusyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6982,7 +6982,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2345C8569A", .name = "埼玉県GIS（地理情報システム） — April_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — April_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7004,7 +7004,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3B762A8AA0", .name = "埼玉県GIS（地理情報システム） — Jan_fusyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — Jan_fusyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7026,7 +7026,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D4A1EE8A78", .name = "埼玉県GIS（地理情報システム） — August_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — August_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7048,7 +7048,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8B1B1535D4", .name = "埼玉県GIS（地理情報システム） — February_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — February_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7070,7 +7070,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7488814F66", .name = "埼玉県GIS（地理情報システム） — December_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — December_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7092,7 +7092,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9329646A58", .name = "埼玉県GIS（地理情報システム） — Feb_fusyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — Feb_fusyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7114,7 +7114,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_03C9B89FB7", .name = "埼玉県GIS（地理情報システム） — December_fusyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — December_fusyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7136,7 +7136,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DBBB8B80C1", .name = "埼玉県GIS（地理情報システム） — Feb_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — Feb_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7158,7 +7158,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D81EC5AF4F", .name = "埼玉県GIS（地理情報システム） — July_fushojiko",
     .name_ja = "埼玉県GIS（地理情報システム） — July_fushojiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7180,7 +7180,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C75875AF60", .name = "埼玉県GIS（地理情報システム） — July_shibojiko",
     .name_ja = "埼玉県GIS（地理情報システム） — July_shibojiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7202,7 +7202,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_058ADA477C", .name = "埼玉県GIS（地理情報システム） — Jan_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — Jan_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7224,7 +7224,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D7C427AF01", .name = "埼玉県GIS（地理情報システム） — June_fushoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — June_fushoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7246,7 +7246,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C5574CE2A4", .name = "埼玉県GIS（地理情報システム） — Landscape_DB",
     .name_ja = "埼玉県GIS（地理情報システム） — Landscape_DB",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7268,7 +7268,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D7F83EF02E", .name = "埼玉県GIS（地理情報システム） — June_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — June_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7290,7 +7290,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C664030E8A", .name = "埼玉県GIS（地理情報システム） — Mar_fusyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — Mar_fusyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7312,7 +7312,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D128C58DC8", .name = "埼玉県GIS（地理情報システム） — Mar_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — Mar_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7334,7 +7334,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A253E2CCE8", .name = "埼玉県GIS（地理情報システム） — March_fushyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — March_fushyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7356,7 +7356,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A2759D48C5", .name = "埼玉県GIS（地理情報システム） — May_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — May_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7378,7 +7378,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F0E7FAB168", .name = "埼玉県GIS（地理情報システム） — May_fusyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — May_fusyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7400,7 +7400,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1E927FAEF9", .name = "埼玉県GIS（地理情報システム） — February_fusyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — February_fusyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7422,7 +7422,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0CD39BA375", .name = "埼玉県GIS（地理情報システム） — October_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — October_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7444,7 +7444,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DE57B17436", .name = "埼玉県GIS（地理情報システム） — バスルート",
     .name_ja = "埼玉県GIS（地理情報システム） — バスルート",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7466,7 +7466,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_607569393E", .name = "埼玉県GIS（地理情報システム） — March_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — March_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7488,7 +7488,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7F116BE375", .name = "埼玉県GIS（地理情報システム） — October_fusyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — October_fusyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7510,7 +7510,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2A67352407", .name = "埼玉県GIS（地理情報システム） — November_fusyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — November_fusyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7532,7 +7532,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D0D9DD73E0", .name = "埼玉県GIS（地理情報システム） — November_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — November_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7554,7 +7554,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CEF48200AC", .name = "埼玉県GIS（地理情報システム） — R7_December_fusyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — R7_December_fusyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7576,7 +7576,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_424F85FEF9", .name = "埼玉県GIS（地理情報システム） — P03-13-g_NuclearPowerPlant",
     .name_ja = "埼玉県GIS（地理情報システム） — P03-13-g_NuclearPowerPlant",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7599,7 +7599,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BE31895A8D", .name = "埼玉県GIS（地理情報システム） — R7_December_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — R7_December_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7621,7 +7621,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4D6D95DCCB", .name = "埼玉県GIS（地理情報システム） — September_fusyoujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — September_fusyoujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7643,7 +7643,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B6C6BAF39A", .name = "埼玉県GIS（地理情報システム） — September_shiboujiko",
     .name_ja = "埼玉県GIS（地理情報システム） — September_shiboujiko",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7665,7 +7665,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BE6C122135", .name = "埼玉県GIS（地理情報システム） — P03-13-g_BiomassPowerStation",
     .name_ja = "埼玉県GIS（地理情報システム） — P03-13-g_BiomassPowerStation",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7688,7 +7688,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6B8D2E6F53", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7711,7 +7711,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_293FF5C7D6", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7734,7 +7734,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E8A9F5E4B3", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7757,7 +7757,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0FF35CD0D4", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7780,7 +7780,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A5B83B71F0", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7803,7 +7803,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_589A0F510B", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7826,7 +7826,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_22A19925E1", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7848,7 +7848,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F86094D87B", .name = "埼玉県GIS（地理情報システム） — P03-13-g_GeneralHydroelectricPowerPlant",
     .name_ja = "埼玉県GIS（地理情報システム） — P03-13-g_GeneralHydroelectricPowerPlant",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7871,7 +7871,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C948541455", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7894,7 +7894,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D493C0EB82", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7916,7 +7916,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_719CA87159", .name = "埼玉県GIS（地理情報システム） — c11207_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11207_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7939,7 +7939,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4751F409AC", .name = "埼玉県GIS（地理情報システム） — c11211_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11211_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7962,7 +7962,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1AAA9E87D4", .name = "埼玉県GIS（地理情報システム） — c11209_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11209_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7985,7 +7985,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8CE44135F3", .name = "埼玉県GIS（地理情報システム） — c11206_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11206_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8008,7 +8008,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C73295DB6F", .name = "埼玉県GIS（地理情報システム） — c11212_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11212_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8031,7 +8031,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6ED8BFF0CD", .name = "埼玉県GIS（地理情報システム） — P03-13-g_PondInformation",
     .name_ja = "埼玉県GIS（地理情報システム） — P03-13-g_PondInformation",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8053,7 +8053,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_40BD6C7522", .name = "埼玉県GIS（地理情報システム） — c11215_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11215_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8076,7 +8076,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_49789FB0E9", .name = "埼玉県GIS（地理情報システム） — c11214_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11214_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8099,7 +8099,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F7DA21B90F", .name = "埼玉県GIS（地理情報システム） — c11216_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11216_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8122,7 +8122,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AEE0AC0FEA", .name = "埼玉県GIS（地理情報システム） — c11218_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11218_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8145,7 +8145,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0FC78E23AC", .name = "埼玉県GIS（地理情報システム） — c11210_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11210_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8168,7 +8168,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1882ECCF08", .name = "埼玉県GIS（地理情報システム） — c11217_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11217_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8191,7 +8191,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5854886B87", .name = "埼玉県GIS（地理情報システム） — c11222_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11222_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8214,7 +8214,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_99D264272B", .name = "埼玉県GIS（地理情報システム） — c11219_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11219_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8237,7 +8237,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3B817355C0", .name = "埼玉県GIS（地理情報システム） — P03-13-g_PumpedStorageHydroelectricPlant",
     .name_ja = "埼玉県GIS（地理情報システム） — P03-13-g_PumpedStorageHydroelectricPlant",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8260,7 +8260,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_620B0EBB46", .name = "埼玉県GIS（地理情報システム） — c11223_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11223_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8283,7 +8283,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D45CA775F8", .name = "埼玉県GIS（地理情報システム） — c11224_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11224_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8306,7 +8306,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5B18866783", .name = "埼玉県GIS（地理情報システム） — c11227_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11227_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8329,7 +8329,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E9F2DD0835", .name = "埼玉県GIS（地理情報システム） — c11221_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11221_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8352,7 +8352,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_62AE5D4E9D", .name = "埼玉県GIS（地理情報システム） — c11225_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11225_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8375,7 +8375,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_27A5274302", .name = "埼玉県GIS（地理情報システム） — c11226_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11226_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8398,7 +8398,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5376C2B45D", .name = "埼玉県GIS（地理情報システム） — c11228_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11228_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8421,7 +8421,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6C9BC624DE", .name = "埼玉県GIS（地理情報システム） — c11229_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11229_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8444,7 +8444,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E87D337775", .name = "埼玉県GIS（地理情報システム） — c11230_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11230_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8467,7 +8467,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8370724BA0", .name = "埼玉県GIS（地理情報システム） — P03-13-g_PhotovoltaicPowerPlant",
     .name_ja = "埼玉県GIS（地理情報システム） — P03-13-g_PhotovoltaicPowerPlant",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8490,7 +8490,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0D1D75AB01", .name = "埼玉県GIS（地理情報システム） — c11231_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11231_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8513,7 +8513,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1AFAECC7F2", .name = "埼玉県GIS（地理情報システム） — c11233_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11233_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8536,7 +8536,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_45A9A12BEC", .name = "埼玉県GIS（地理情報システム） — c11234_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11234_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8559,7 +8559,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B72CED4597", .name = "埼玉県GIS（地理情報システム） — c11237_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11237_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8582,7 +8582,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F9EAB7BC7C", .name = "埼玉県GIS（地理情報システム） — c11238_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11238_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8605,7 +8605,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_889AF48F3A", .name = "埼玉県GIS（地理情報システム） — P03-13-g_GeothermalPowerPlant",
     .name_ja = "埼玉県GIS（地理情報システム） — P03-13-g_GeothermalPowerPlant",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8628,7 +8628,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_097F86B8DF", .name = "埼玉県GIS（地理情報システム） — c11235_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11235_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8651,7 +8651,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4456A1515A", .name = "埼玉県GIS（地理情報システム） — c11240_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11240_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8674,7 +8674,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_449C5EAB24", .name = "埼玉県GIS（地理情報システム） — c11239_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11239_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8697,7 +8697,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2A7B26C24A", .name = "埼玉県GIS（地理情報システム） — c11242_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11242_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8720,7 +8720,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C8A18C3C8C", .name = "埼玉県GIS（地理情報システム） — c11241_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11241_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8743,7 +8743,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FD4142B36E", .name = "埼玉県GIS（地理情報システム） — c11232_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11232_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8766,7 +8766,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_ADE7F4188F", .name = "埼玉県GIS（地理情報システム） — c11245_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11245_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8789,7 +8789,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4FB5C6264B", .name = "埼玉県GIS（地理情報システム） — c11246_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11246_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8812,7 +8812,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_253E0AB682", .name = "埼玉県GIS（地理情報システム） — c11301_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11301_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8835,7 +8835,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_82A3309582", .name = "埼玉県GIS（地理情報システム） — c11243_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11243_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8858,7 +8858,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_612D56D4C7", .name = "埼玉県GIS（地理情報システム） — P03-13-g_PowerPlantComplex",
     .name_ja = "埼玉県GIS（地理情報システム） — P03-13-g_PowerPlantComplex",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8881,7 +8881,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_128B3135CE", .name = "埼玉県GIS（地理情報システム） — c11326_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11326_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8904,7 +8904,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DF6C6DA83F", .name = "埼玉県GIS（地理情報システム） — c11327_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11327_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8927,7 +8927,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D16CC7D295", .name = "埼玉県GIS（地理情報システム） — c11341_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11341_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8950,7 +8950,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CFA32F0949", .name = "埼玉県GIS（地理情報システム） — c11324_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11324_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8973,7 +8973,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_830F56B64A", .name = "埼玉県GIS（地理情報システム） — c11342_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11342_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8996,7 +8996,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_13057C9C55", .name = "埼玉県GIS（地理情報システム） — c11347_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11347_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9019,7 +9019,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C50BFD4047", .name = "埼玉県GIS（地理情報システム） — c11343_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11343_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9042,7 +9042,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9994817279", .name = "埼玉県GIS（地理情報システム） — c11346_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11346_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9065,7 +9065,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F93C3F4EAE", .name = "埼玉県GIS（地理情報システム） — c11349_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11349_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9088,7 +9088,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E18EFBAE5E", .name = "埼玉県GIS（地理情報システム） — c11348_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11348_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9111,7 +9111,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_14A5C267C7", .name = "埼玉県GIS（地理情報システム） — c11361_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11361_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9134,7 +9134,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_311D7ABE6D", .name = "埼玉県GIS（地理情報システム） — P03-13-g_WindPowerPlant",
     .name_ja = "埼玉県GIS（地理情報システム） — P03-13-g_WindPowerPlant",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9157,7 +9157,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2252A540F5", .name = "埼玉県GIS（地理情報システム） — c11365_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11365_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9180,7 +9180,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_545872CE1C", .name = "埼玉県GIS（地理情報システム） — c11369_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11369_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9203,7 +9203,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_305C9D1774", .name = "埼玉県GIS（地理情報システム） — c11381_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11381_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9226,7 +9226,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_937E6A3909", .name = "埼玉県GIS（地理情報システム） — c11385_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11385_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9249,7 +9249,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0B6DB2CD40", .name = "埼玉県GIS（地理情報システム） — P03-13-g_ThermalPowerPlant",
     .name_ja = "埼玉県GIS（地理情報システム） — P03-13-g_ThermalPowerPlant",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9272,7 +9272,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DEA9F92CBC", .name = "埼玉県GIS（地理情報システム） — c11442_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11442_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9295,7 +9295,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_36C8F19093", .name = "埼玉県GIS（地理情報システム） — c11408_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11408_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9318,7 +9318,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_074702AA14", .name = "埼玉県GIS（地理情報システム） — c11465_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11465_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9341,7 +9341,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_790906EE7E", .name = "埼玉県GIS（地理情報システム） — c11464_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — c11464_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9364,7 +9364,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8E47332BD0", .name = "埼玉県GIS（地理情報システム） — chouseikuikimark",
     .name_ja = "埼玉県GIS（地理情報システム） — chouseikuikimark",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9386,7 +9386,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_08F19262CE", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9409,7 +9409,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EB9C38D60B", .name = "埼玉県GIS（地理情報システム） — chuusyajou_jitensya",
     .name_ja = "埼玉県GIS（地理情報システム） — chuusyajou_jitensya",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9431,7 +9431,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D8D64DB966", .name = "埼玉県GIS（地理情報システム） — chiikireidanboushisetsu",
     .name_ja = "埼玉県GIS（地理情報システム） — chiikireidanboushisetsu",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9453,7 +9453,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DDE58A8EDB", .name = "埼玉県GIS（地理情報システム） — chuusyajou_jidousya",
     .name_ja = "埼玉県GIS（地理情報システム） — chuusyajou_jidousya",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_health_social", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9475,7 +9475,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FE7E960639", .name = "埼玉県GIS（地理情報システム） — chikukeikaku",
     .name_ja = "埼玉県GIS（地理情報システム） — chikukeikaku",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9497,7 +9497,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0E5312E75A", .name = "埼玉県GIS（地理情報システム） — chuusyajouseibichiku",
     .name_ja = "埼玉県GIS（地理情報システム） — chuusyajouseibichiku",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9519,7 +9519,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_17143303E6", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9542,7 +9542,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_97C21E1961", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9564,7 +9564,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_437829F91A", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9587,7 +9587,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_71C19F47BC", .name = "埼玉県GIS（地理情報システム） — dentoutekikenzoubutsugunhozonchiku",
     .name_ja = "埼玉県GIS（地理情報システム） — dentoutekikenzoubutsugunhozonchiku",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9610,7 +9610,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2E3A294E3D", .name = "埼玉県GIS（地理情報システム） — ekijyouka_02",
     .name_ja = "埼玉県GIS（地理情報システム） — ekijyouka_02",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9632,7 +9632,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F36DE8D848", .name = "埼玉県GIS（地理情報システム） — ekimaehiroba",
     .name_ja = "埼玉県GIS（地理情報システム） — ekimaehiroba",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9654,7 +9654,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BB71668921", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9677,7 +9677,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D2157E219F", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9700,7 +9700,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4411070146", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9723,7 +9723,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7099625F36", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9746,7 +9746,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BEC7D5FBF1", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9768,7 +9768,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F4C0781131", .name = "埼玉県GIS（地理情報システム） — gakkou",
     .name_ja = "埼玉県GIS（地理情報システム） — gakkou",
-    .category = "education", .portal = "https://services9.arcgis.com",
+    .category = "education", .collector = "jp_gis_education", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9790,7 +9790,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9BD814810E", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9813,7 +9813,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EDB6D3A89F", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9836,7 +9836,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AB09B09C75", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9859,7 +9859,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C45CB76F08", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9881,7 +9881,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2D838AA852", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9904,7 +9904,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5CD73ED091", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9927,7 +9927,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F5C86CD5E1", .name = "埼玉県GIS（地理情報システム） — gesuisyorijou",
     .name_ja = "埼玉県GIS（地理情報システム） — gesuisyorijou",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9949,7 +9949,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6BA754EB9E", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9972,7 +9972,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CEA20157D3", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9994,7 +9994,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_200F12CC70", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10017,7 +10017,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F186888FE4", .name = "埼玉県GIS（地理情報システム） — gomisyoukyakujoutoumark",
     .name_ja = "埼玉県GIS（地理情報システム） — gomisyoukyakujoutoumark",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10039,7 +10039,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_68BADEC03B", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10062,7 +10062,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AA210B0EA0", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10085,7 +10085,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_520579508E", .name = "埼玉県GIS（地理情報システム） — hasudashi_emergency_route_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — hasudashi_emergency_route_lines",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10107,7 +10107,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0940D43509", .name = "埼玉県GIS（地理情報システム） — hasudashi_landmark_points",
     .name_ja = "埼玉県GIS（地理情報システム） — hasudashi_landmark_points",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10129,7 +10129,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2EE282F4AA", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10152,7 +10152,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F1FC02F3CF", .name = "埼玉県GIS（地理情報システム） — hasudashi_railway_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — hasudashi_railway_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10174,7 +10174,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9EA42B71B8", .name = "埼玉県GIS（地理情報システム） — hasudashi_shelter_points",
     .name_ja = "埼玉県GIS（地理情報システム） — hasudashi_shelter_points",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10196,7 +10196,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8045EE22F3", .name = "埼玉県GIS（地理情報システム） — hasudashi_border_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — hasudashi_border_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10219,7 +10219,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C0B988165B", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10241,7 +10241,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_47ED19E646", .name = "埼玉県GIS（地理情報システム） — hasudashi_park_points",
     .name_ja = "埼玉県GIS（地理情報システム） — hasudashi_park_points",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10263,7 +10263,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A6DFF2397E", .name = "埼玉県GIS（地理情報システム） — hasudashi_station_points",
     .name_ja = "埼玉県GIS（地理情報システム） — hasudashi_station_points",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10285,7 +10285,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_20A543C8D6", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10308,7 +10308,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_56012351B2", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10331,7 +10331,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AB64742E06", .name = "埼玉県GIS（地理情報システム） — hoikujo",
     .name_ja = "埼玉県GIS（地理情報システム） — hoikujo",
-    .category = "health", .portal = "https://services9.arcgis.com",
+    .category = "health", .collector = "jp_gis_health_social", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10353,7 +10353,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1CE51170CA", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10376,7 +10376,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FFE489CAE9", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10399,7 +10399,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7AE5161DC9", .name = "埼玉県GIS（地理情報システム） — ichiba",
     .name_ja = "埼玉県GIS（地理情報システム） — ichiba",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10421,7 +10421,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8FA0BA7CDC", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10443,7 +10443,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_935BFBF557", .name = "埼玉県GIS（地理情報システム） — 一級河川",
     .name_ja = "埼玉県GIS（地理情報システム） — 一級河川",
-    .category = "environment", .portal = "https://services9.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10465,7 +10465,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B607D819E5", .name = "埼玉県GIS（地理情報システム） — ichidanchinojuutakushisetsu",
     .name_ja = "埼玉県GIS（地理情報システム） — ichidanchinojuutakushisetsu",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10487,7 +10487,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_07FF9B59A3", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10510,7 +10510,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EBB797030F", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10533,7 +10533,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3799618D04", .name = "埼玉県GIS（地理情報システム） — huuchichiku",
     .name_ja = "埼玉県GIS（地理情報システム） — huuchichiku",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10555,7 +10555,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_568E4F374C", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10578,7 +10578,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6AB4708292", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10601,7 +10601,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CDD440C35F", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10623,7 +10623,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_18ECC80EFD", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10646,7 +10646,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_808E840089", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10669,7 +10669,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_49ABD54DC0", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10692,7 +10692,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_498C40EAB8", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10715,7 +10715,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0A7662E553", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10738,7 +10738,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_53E4F7DB4D", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10760,7 +10760,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F2A45C1D3A", .name = "埼玉県GIS（地理情報システム） — juutakugaikuseibisokushinkuiki",
     .name_ja = "埼玉県GIS（地理情報システム） — juutakugaikuseibisokushinkuiki",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10782,7 +10782,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F87B47F82F", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10804,7 +10804,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_952D68D79B", .name = "埼玉県GIS（地理情報システム） — shochiiki",
     .name_ja = "埼玉県GIS（地理情報システム） — shochiiki",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10826,7 +10826,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5FFC2D1AE2", .name = "埼玉県GIS（地理情報システム） — juutakugaikuseibizigyou",
     .name_ja = "埼玉県GIS（地理情報システム） — juutakugaikuseibizigyou",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10848,7 +10848,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5CBB364812", .name = "埼玉県GIS（地理情報システム） — iryousochikyoutei",
     .name_ja = "埼玉県GIS（地理情報システム） — iryousochikyoutei",
-    .category = "health", .portal = "https://services9.arcgis.com",
+    .category = "health", .collector = "jp_gis_health_social", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10871,7 +10871,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E6F0582C8A", .name = "埼玉県GIS（地理情報システム） — mesh",
     .name_ja = "埼玉県GIS（地理情報システム） — mesh",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10894,7 +10894,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CB9682AE61", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10917,7 +10917,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_03B0EE1B13", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10940,7 +10940,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_861CF2ACEC", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10963,7 +10963,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2260ACD307", .name = "埼玉県GIS（地理情報システム） — kankyo_ketugo",
     .name_ja = "埼玉県GIS（地理情報システム） — kankyo_ketugo",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10986,7 +10986,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EF0C16E9D9", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11009,7 +11009,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_510E3A8ACB", .name = "埼玉県GIS（地理情報システム） — kankyo",
     .name_ja = "埼玉県GIS（地理情報システム） — kankyo",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11031,7 +11031,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4300D8C4B1", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11053,7 +11053,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_77C5D9CC17", .name = "埼玉県GIS（地理情報システム） — kasouba",
     .name_ja = "埼玉県GIS（地理情報システム） — kasouba",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11075,7 +11075,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BAB0BAFE39", .name = "埼玉県GIS（地理情報システム） — kasen",
     .name_ja = "埼玉県GIS（地理情報システム） — kasen",
-    .category = "environment", .portal = "https://services9.arcgis.com",
+    .category = "environment", .collector = "jp_gis_environment_hazards", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11097,7 +11097,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_731DB7BCB6", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11120,7 +11120,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D1C68D1536", .name = "埼玉県GIS（地理情報システム） — kasukabeshi_park_points",
     .name_ja = "埼玉県GIS（地理情報システム） — kasukabeshi_park_points",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11142,7 +11142,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E8B6301B2A", .name = "埼玉県GIS（地理情報システム） — kasukabeshi_railway_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — kasukabeshi_railway_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11164,7 +11164,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5961835AD0", .name = "埼玉県GIS（地理情報システム） — kasukabeshi_shelter_points",
     .name_ja = "埼玉県GIS（地理情報システム） — kasukabeshi_shelter_points",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11186,7 +11186,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FBD3AF1CB5", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11209,7 +11209,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D952B8040D", .name = "埼玉県GIS（地理情報システム） — kasukabeshi_emergency_route_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — kasukabeshi_emergency_route_lines",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11231,7 +11231,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0B80FBBB0B", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11253,7 +11253,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3CB01C1550", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11276,7 +11276,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_02D8C1771E", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11299,7 +11299,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_234ECD1CEC", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11322,7 +11322,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_83C2EABE4F", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11345,7 +11345,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AD9D1768FF", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11368,7 +11368,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_36045D3525", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11390,7 +11390,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_524343F590", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11413,7 +11413,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_920986B2EC", .name = "埼玉県GIS（地理情報システム） — kazoshi_emergency_route_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — kazoshi_emergency_route_lines",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11435,7 +11435,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E4A94EC249", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11457,7 +11457,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3C9EDD82FB", .name = "埼玉県GIS（地理情報システム） — kazoshi_park_points",
     .name_ja = "埼玉県GIS（地理情報システム） — kazoshi_park_points",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11479,7 +11479,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F172CD05E0", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11502,7 +11502,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8009A3C321", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11525,7 +11525,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F2A68B9AD1", .name = "埼玉県GIS（地理情報システム） — kazoshi_railway_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — kazoshi_railway_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11547,7 +11547,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_69EF83AD8F", .name = "埼玉県GIS（地理情報システム） — kazoshi_shelter_points",
     .name_ja = "埼玉県GIS（地理情報システム） — kazoshi_shelter_points",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11569,7 +11569,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7DC1DA26A2", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11592,7 +11592,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8882264425", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11615,7 +11615,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_27EAAD61F4", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11637,7 +11637,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_99DA5E3F26", .name = "埼玉県GIS（地理情報システム） — kinkouryokuchihozenchiku",
     .name_ja = "埼玉県GIS（地理情報システム） — kinkouryokuchihozenchiku",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11659,7 +11659,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_28D10B1DC1", .name = "埼玉県GIS（地理情報システム） — kinkouryokuchitokubetsuhozenchiku",
     .name_ja = "埼玉県GIS（地理情報システム） — kinkouryokuchitokubetsuhozenchiku",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11682,7 +11682,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A7D8F445A1", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11705,7 +11705,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CB50E6D1C7", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11728,7 +11728,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_834EA387E3", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11751,7 +11751,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_36E90529C7", .name = "埼玉県GIS（地理情報システム） — koshigayashi_emergency_route_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — koshigayashi_emergency_route_lines",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11773,7 +11773,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9BE29EF535", .name = "埼玉県GIS（地理情報システム） — kodomoibasho",
     .name_ja = "埼玉県GIS（地理情報システム） — kodomoibasho",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_health_social", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11795,7 +11795,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A9E7D129A4", .name = "埼玉県GIS（地理情報システム） — koshigayashi_railway_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — koshigayashi_railway_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11817,7 +11817,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8F6FDF10EA", .name = "埼玉県GIS（地理情報システム） — koshigayashi_park_points",
     .name_ja = "埼玉県GIS（地理情報システム） — koshigayashi_park_points",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11839,7 +11839,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1167BBC229", .name = "埼玉県GIS（地理情報システム） — koshigayashi_shelter_points",
     .name_ja = "埼玉県GIS（地理情報システム） — koshigayashi_shelter_points",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11861,7 +11861,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E5932C2736", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11884,7 +11884,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A280F26CF7", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11907,7 +11907,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_84235162A3", .name = "埼玉県GIS（地理情報システム） — koudoriyouchiku",
     .name_ja = "埼玉県GIS（地理情報システム） — koudoriyouchiku",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11929,7 +11929,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7429765972", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11952,7 +11952,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0212431472", .name = "埼玉県GIS（地理情報システム） — koudochiku",
     .name_ja = "埼玉県GIS（地理情報システム） — koudochiku",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11974,7 +11974,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_ED497B468A", .name = "埼玉県GIS（地理情報システム） — kouen",
     .name_ja = "埼玉県GIS（地理情報システム） — kouen",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -11996,7 +11996,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4C774FB2D1", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12018,7 +12018,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_17996BE71B", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12040,7 +12040,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_409E15849A", .name = "埼玉県GIS（地理情報システム） — kougyoudanchizouseizigyou",
     .name_ja = "埼玉県GIS（地理情報システム） — kougyoudanchizouseizigyou",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12062,7 +12062,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_91795E4D6E", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12085,7 +12085,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BE09F1061B", .name = "埼玉県GIS（地理情報システム） — kukishi_railway_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — kukishi_railway_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12107,7 +12107,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C506259DDA", .name = "埼玉県GIS（地理情報システム） — kukishi_emergency_route_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — kukishi_emergency_route_lines",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12129,7 +12129,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_98DB81E283", .name = "埼玉県GIS（地理情報システム） — kukishi_park_points",
     .name_ja = "埼玉県GIS（地理情報システム） — kukishi_park_points",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12151,7 +12151,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C33D36B484", .name = "埼玉県GIS（地理情報システム） — kukishi_shelter_points",
     .name_ja = "埼玉県GIS（地理情報システム） — kukishi_shelter_points",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12173,7 +12173,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9A4E1BDA28", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12196,7 +12196,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C522DD9D94", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12218,7 +12218,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5C055384D4", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12241,7 +12241,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D6030A4BCA", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12264,7 +12264,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_42842F652E", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12287,7 +12287,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D7B9C8176D", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12310,7 +12310,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4D58F27469", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12332,7 +12332,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6A9BE65590", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12355,7 +12355,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2F2C1425FA", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12378,7 +12378,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9AE2A5838F", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12401,7 +12401,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6A42A6EF17", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12424,7 +12424,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_38E1183B5C", .name = "埼玉県GIS（地理情報システム） — matsubushimachi_border_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — matsubushimachi_border_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12447,7 +12447,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4BF0E56199", .name = "埼玉県GIS（地理情報システム） — manhole",
     .name_ja = "埼玉県GIS（地理情報システム） — manhole",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12469,7 +12469,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1973576AD8", .name = "埼玉県GIS（地理情報システム） — matsubushimachi_emergency_route_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — matsubushimachi_emergency_route_lines",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12491,7 +12491,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3FA4495796", .name = "埼玉県GIS（地理情報システム） — matsubushimachi_landmark_points",
     .name_ja = "埼玉県GIS（地理情報システム） — matsubushimachi_landmark_points",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12513,7 +12513,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D73A2363DA", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12535,7 +12535,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_62BD5202A7", .name = "埼玉県GIS（地理情報システム） — matsubushimachi_park_points",
     .name_ja = "埼玉県GIS（地理情報システム） — matsubushimachi_park_points",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12557,7 +12557,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9A1CB0E5E2", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12580,7 +12580,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_24FE4EC91D", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12602,7 +12602,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4F31E93381", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12625,7 +12625,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BC1F57B99B", .name = "埼玉県GIS（地理情報システム） — matsubushimachi_shelter_points",
     .name_ja = "埼玉県GIS（地理情報システム） — matsubushimachi_shelter_points",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12647,7 +12647,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8274C56D03", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12669,7 +12669,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FAB86B14DC", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12692,7 +12692,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F9FAD8EB67", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12715,7 +12715,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_29D42138D6", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12737,7 +12737,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AEB9761209", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12760,7 +12760,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_502C53A4C6", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12782,7 +12782,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4A1694273E", .name = "埼玉県GIS（地理情報システム） — miyashiromachi_border_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — miyashiromachi_border_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12805,7 +12805,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FFA0B6D4F5", .name = "埼玉県GIS（地理情報システム） — miyashiromachi_park_points",
     .name_ja = "埼玉県GIS（地理情報システム） — miyashiromachi_park_points",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12827,7 +12827,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B07CD825FA", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12850,7 +12850,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B514097EF2", .name = "埼玉県GIS（地理情報システム） — miyashiromachi_emergency_route_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — miyashiromachi_emergency_route_lines",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12872,7 +12872,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_64DA39C7E6", .name = "埼玉県GIS（地理情報システム） — miyashiromachi_landmark_points",
     .name_ja = "埼玉県GIS（地理情報システム） — miyashiromachi_landmark_points",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12894,7 +12894,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E0FEBD2033", .name = "埼玉県GIS（地理情報システム） — miyashiromachi_railway_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — miyashiromachi_railway_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12916,7 +12916,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E278F59F4E", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12938,7 +12938,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_04CA2AC802", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12961,7 +12961,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9704306B9F", .name = "埼玉県GIS（地理情報システム） — miyashiromachi_station_points",
     .name_ja = "埼玉県GIS（地理情報システム） — miyashiromachi_station_points",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -12983,7 +12983,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BBECDA25DB", .name = "埼玉県GIS（地理情報システム） — miyashiromachi_shelter_points",
     .name_ja = "埼玉県GIS（地理情報システム） — miyashiromachi_shelter_points",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13005,7 +13005,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1349617F47", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13028,7 +13028,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8BE58267EE", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13051,7 +13051,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CD3C44182D", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13073,7 +13073,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_60F2F55F04", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13095,7 +13095,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FB5AB9EEB6", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13118,7 +13118,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B722419AF0", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13141,7 +13141,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B9851757DC", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13164,7 +13164,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_23390FFF03", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13187,7 +13187,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EBEAD98803", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13210,7 +13210,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EE0B12BD3D", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13232,7 +13232,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F4B200DF6B", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13255,7 +13255,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_112C8CE4DE", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13278,7 +13278,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3A60576FBB", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13301,7 +13301,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0F087F0DD2", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13324,7 +13324,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1BBB1F7D89", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13347,7 +13347,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2EEB6B8072", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13370,7 +13370,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4F99BC833A", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13392,7 +13392,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E144135A90", .name = "埼玉県GIS（地理情報システム） — obutsusyorijoumark",
     .name_ja = "埼玉県GIS（地理情報システム） — obutsusyorijoumark",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13414,7 +13414,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B9F838BEAA", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13437,7 +13437,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F0D9F61827", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13460,7 +13460,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B026FDE9C3", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13483,7 +13483,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_833F84D450", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13505,7 +13505,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6C6C7AA4DF", .name = "埼玉県GIS（地理情報システム） — pump",
     .name_ja = "埼玉県GIS（地理情報システム） — pump",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13526,7 +13526,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AAADCE5ED0", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13548,7 +13548,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B8F13F6AA3", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13571,7 +13571,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C70E074D59", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13594,7 +13594,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8D15FFDACE", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13617,7 +13617,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_52E642E7A7", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13640,7 +13640,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_137ABE9580", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13663,7 +13663,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CFA96D0230", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13686,7 +13686,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_42FB6AAA7C", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13709,7 +13709,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AD71CB1CCA", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13732,7 +13732,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D374F7E6D2", .name = "埼玉県GIS（地理情報システム） — ryokuchi",
     .name_ja = "埼玉県GIS（地理情報システム） — ryokuchi",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13754,7 +13754,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_09CE7EADCC", .name = "埼玉県GIS（地理情報システム） — ryuutsuugyoumuchiku",
     .name_ja = "埼玉県GIS（地理情報システム） — ryuutsuugyoumuchiku",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13776,7 +13776,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_786759AA91", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13798,7 +13798,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_56DD4B5171", .name = "埼玉県GIS（地理情報システム） — ryuutsuugyoumudanchi",
     .name_ja = "埼玉県GIS（地理情報システム） — ryuutsuugyoumudanchi",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13820,7 +13820,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F98A6F978E", .name = "埼玉県GIS（地理情報システム） — ryuutsuugyoumudanchimark",
     .name_ja = "埼玉県GIS（地理情報システム） — ryuutsuugyoumudanchimark",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13842,7 +13842,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2C58EAC77B", .name = "埼玉県GIS（地理情報システム） — saitama_boundary",
     .name_ja = "埼玉県GIS（地理情報システム） — saitama_boundary",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13865,7 +13865,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F3217F866F", .name = "埼玉県GIS（地理情報システム） — 埼玉県県境",
     .name_ja = "埼玉県GIS（地理情報システム） — 埼玉県県境",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13887,7 +13887,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7C7702E01D", .name = "埼玉県GIS（地理情報システム） — saitama_city_polygons",
     .name_ja = "埼玉県GIS（地理情報システム） — saitama_city_polygons",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13909,7 +13909,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_570230AD2E", .name = "埼玉県GIS（地理情報システム） — 埼玉県市町村界",
     .name_ja = "埼玉県GIS（地理情報システム） — 埼玉県市町村界",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13931,7 +13931,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D56C3A380E", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13954,7 +13954,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AB277A0B43", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -13977,7 +13977,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1B9933B3A8", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14000,7 +14000,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2E912B7FA2", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14023,7 +14023,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2EEE060370", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14045,7 +14045,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_96B24023F5", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14068,7 +14068,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5215B56BAF", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14091,7 +14091,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_76F9762F78", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14114,7 +14114,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0DBE144B00", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14136,7 +14136,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9CA791AC25", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14159,7 +14159,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_2C0D133571", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14182,7 +14182,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_14424D0B3C", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14204,7 +14204,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5C0956CD2D", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14227,7 +14227,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_02DA81B826", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14250,7 +14250,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4E2BB2BBE0", .name = "埼玉県GIS（地理情報システム） — shigaichikaizouzigyou",
     .name_ja = "埼玉県GIS（地理情報システム） — shigaichikaizouzigyou",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14272,7 +14272,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_77E3B14BDD", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14295,7 +14295,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E8FBD0E6AA", .name = "埼玉県GIS（地理情報システム） — shigaichisaikaihatsusokushinkuiki",
     .name_ja = "埼玉県GIS（地理情報システム） — shigaichisaikaihatsusokushinkuiki",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14318,7 +14318,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3EC65A9F54", .name = "埼玉県GIS（地理情報システム） — shigaikakuiki",
     .name_ja = "埼玉県GIS（地理情報システム） — shigaikakuiki",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14340,7 +14340,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C62F2B8F7A", .name = "埼玉県GIS（地理情報システム） — shigaichisaikaihatsuzigyou",
     .name_ja = "埼玉県GIS（地理情報システム） — shigaichisaikaihatsuzigyou",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14362,7 +14362,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4EE068D45A", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14385,7 +14385,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_960633F4FB", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14407,7 +14407,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_90CC0F61BD", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14430,7 +14430,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BF1074CA64", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14453,7 +14453,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_681574278D", .name = "埼玉県GIS（地理情報システム） — shiraokashi_border_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — shiraokashi_border_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14476,7 +14476,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_69B4724738", .name = "埼玉県GIS（地理情報システム） — shiraokashi_emergency_route_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — shiraokashi_emergency_route_lines",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14498,7 +14498,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3FCC94CC77", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14521,7 +14521,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A98F5BD253", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14543,7 +14543,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3D8E3F1E35", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14565,7 +14565,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E19E8A1AB7", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14588,7 +14588,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9D47661BBD", .name = "埼玉県GIS（地理情報システム） — shiraokashi_railway_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — shiraokashi_railway_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14610,7 +14610,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_884D637A26", .name = "埼玉県GIS（地理情報システム） — shiraokashi_park_points",
     .name_ja = "埼玉県GIS（地理情報システム） — shiraokashi_park_points",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14632,7 +14632,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FD55E6FBD8", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14654,7 +14654,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_364FE62A6E", .name = "埼玉県GIS（地理情報システム） — shiraokashi_shelter_points",
     .name_ja = "埼玉県GIS（地理情報システム） — shiraokashi_shelter_points",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14676,7 +14676,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A047EE137E", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14699,7 +14699,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FA1FE3C161", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14722,7 +14722,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6C29127069", .name = "埼玉県GIS（地理情報システム） — shogakkouku",
     .name_ja = "埼玉県GIS（地理情報システム） — shogakkouku",
-    .category = "education", .portal = "https://services9.arcgis.com",
+    .category = "education", .collector = "jp_gis_education", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14745,7 +14745,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_37B26E01B9", .name = "埼玉県GIS（地理情報システム） — shiraokashi_station_points",
     .name_ja = "埼玉県GIS（地理情報システム） — shiraokashi_station_points",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14767,7 +14767,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0AA400CD58", .name = "埼玉県GIS（地理情報システム） — 小学校（2010年）",
     .name_ja = "埼玉県GIS（地理情報システム） — 小学校（2010年）",
-    .category = "education", .portal = "https://services9.arcgis.com",
+    .category = "education", .collector = "jp_gis_education", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14789,7 +14789,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AA30FAA403", .name = "埼玉県GIS（地理情報システム） — shori",
     .name_ja = "埼玉県GIS（地理情報システム） — shori",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14810,7 +14810,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C76164AA2E", .name = "埼玉県GIS（地理情報システム） — sichousonkai_1955",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_1955",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14832,7 +14832,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3C1282F4B4", .name = "埼玉県GIS（地理情報システム） — sichousonkai_1960",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_1960",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14854,7 +14854,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_98352F1B59", .name = "埼玉県GIS（地理情報システム） — shougakkouku_R3",
     .name_ja = "埼玉県GIS（地理情報システム） — shougakkouku_R3",
-    .category = "education", .portal = "https://services9.arcgis.com",
+    .category = "education", .collector = "jp_gis_education", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14877,7 +14877,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_805AB619BC", .name = "埼玉県GIS（地理情報システム） — sichousonkai_1920",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_1920",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14899,7 +14899,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C4AADE4B43", .name = "埼玉県GIS（地理情報システム） — sichousonkai_1975",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_1975",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14921,7 +14921,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C14F1D6BA1", .name = "埼玉県GIS（地理情報システム） — 小学校区（2010年）",
     .name_ja = "埼玉県GIS（地理情報システム） — 小学校区（2010年）",
-    .category = "education", .portal = "https://services9.arcgis.com",
+    .category = "education", .collector = "jp_gis_education", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14943,7 +14943,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4EE21C51A6", .name = "埼玉県GIS（地理情報システム） — sichousonkai_1995",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_1995",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14965,7 +14965,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6ADB8A98EA", .name = "埼玉県GIS（地理情報システム） — sichousonkai_1980",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_1980",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -14987,7 +14987,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6880270E3F", .name = "埼玉県GIS（地理情報システム） — sichousonkai_1950",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_1950",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15009,7 +15009,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AEF8347D49", .name = "埼玉県GIS（地理情報システム） — sichousonkai_1965",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_1965",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15031,7 +15031,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DF786F565A", .name = "埼玉県GIS（地理情報システム） — sichousonkai_1985",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_1985",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15053,7 +15053,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EA59E1CF7E", .name = "埼玉県GIS（地理情報システム） — sichousonkai_1970",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_1970",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15075,7 +15075,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CFDE6BD011", .name = "埼玉県GIS（地理情報システム） — sichousonkai_2000",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_2000",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15097,7 +15097,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B1B86B1E62", .name = "埼玉県GIS（地理情報システム） — sichousonkai_2005",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_2005",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15119,7 +15119,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A52B4A356B", .name = "埼玉県GIS（地理情報システム） — sichousonkai_2015",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_2015",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15142,7 +15142,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6FBC867E82", .name = "埼玉県GIS（地理情報システム） — sichousonkai_2010",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_2010",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15164,7 +15164,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_00FA8A2117", .name = "埼玉県GIS（地理情報システム） — sichousonkai_2025",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_2025",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15186,7 +15186,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_211643DD40", .name = "埼玉県GIS（地理情報システム） — sichousonkai_2020",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_2020",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15209,7 +15209,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D1C60FC03D", .name = "埼玉県GIS（地理情報システム） — sichousonkai_2026",
     .name_ja = "埼玉県GIS（地理情報システム） — sichousonkai_2026",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15231,7 +15231,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_758260514C", .name = "埼玉県GIS（地理情報システム） — sugitomachi_border_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — sugitomachi_border_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15254,7 +15254,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EDA74420F8", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15277,7 +15277,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_854DD0DB39", .name = "埼玉県GIS（地理情報システム） — sugitomachi_emergency_route_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — sugitomachi_emergency_route_lines",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15299,7 +15299,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F69E27DE69", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15321,7 +15321,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6D5D7FB5B3", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15344,7 +15344,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D09AB4E905", .name = "埼玉県GIS（地理情報システム） — sugitomachi_landmark_points",
     .name_ja = "埼玉県GIS（地理情報システム） — sugitomachi_landmark_points",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15366,7 +15366,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F0C07AC63D", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15389,7 +15389,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_01CBBD740A", .name = "埼玉県GIS（地理情報システム） — sugitomachi_park_points",
     .name_ja = "埼玉県GIS（地理情報システム） — sugitomachi_park_points",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15411,7 +15411,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7C99B8CB0F", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15434,7 +15434,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D108E763DB", .name = "埼玉県GIS（地理情報システム） — sugitomachi_railway_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — sugitomachi_railway_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15456,7 +15456,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7103ACC0AC", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15479,7 +15479,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_866184CEB0", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15501,7 +15501,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BC6E9B7BEC", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15523,7 +15523,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_33C705758C", .name = "埼玉県GIS（地理情報システム） — sugitomachi_shelter_points",
     .name_ja = "埼玉県GIS（地理情報システム） — sugitomachi_shelter_points",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15545,7 +15545,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_37D597CEFC", .name = "埼玉県GIS（地理情報システム） — sugitomachi_station_points",
     .name_ja = "埼玉県GIS（地理情報システム） — sugitomachi_station_points",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15567,7 +15567,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D54C2E9BE7", .name = "埼玉県GIS（地理情報システム） — suidou",
     .name_ja = "埼玉県GIS（地理情報システム） — suidou",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_utilities_infrastructure", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15589,7 +15589,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_46899C8FA5", .name = "埼玉県GIS（地理情報システム） — survey",
     .name_ja = "埼玉県GIS（地理情報システム） — survey",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15612,7 +15612,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_6D3C2A6DC2", .name = "埼玉県GIS（地理情報システム） — survey",
     .name_ja = "埼玉県GIS（地理情報システム） — survey",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15634,7 +15634,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F90D0F2245", .name = "埼玉県GIS（地理情報システム） — survey",
     .name_ja = "埼玉県GIS（地理情報システム） — survey",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15656,7 +15656,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D02A24F64C", .name = "埼玉県GIS（地理情報システム） — syakaifukushishisetsu",
     .name_ja = "埼玉県GIS（地理情報システム） — syakaifukushishisetsu",
-    .category = "health", .portal = "https://services9.arcgis.com",
+    .category = "health", .collector = "jp_gis_health_social", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15678,7 +15678,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_567963303F", .name = "埼玉県GIS（地理情報システム） — syorishisetsu",
     .name_ja = "埼玉県GIS（地理情報システム） — syorishisetsu",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_other", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15700,7 +15700,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1D163A0226", .name = "埼玉県GIS（地理情報システム） — tochikukakuseirisokushinkuiki",
     .name_ja = "埼玉県GIS（地理情報システム） — tochikukakuseirisokushinkuiki",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15722,7 +15722,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_652526A7FA", .name = "埼玉県GIS（地理情報システム） — tochikukakuseirizigyou",
     .name_ja = "埼玉県GIS（地理情報システム） — tochikukakuseirizigyou",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15744,7 +15744,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_894CC8AB48", .name = "埼玉県GIS（地理情報システム） — survey",
     .name_ja = "埼玉県GIS（地理情報システム） — survey",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15767,7 +15767,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_352627369C", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15790,7 +15790,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_AF4A2E8B99", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15813,7 +15813,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DA3416399C", .name = "埼玉県GIS（地理情報システム） — tokubetsuryokuchihozenchiku",
     .name_ja = "埼玉県GIS（地理情報システム） — tokubetsuryokuchihozenchiku",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15835,7 +15835,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_612712AA03", .name = "埼玉県GIS（地理情報システム） — tokubetsuyoutochiku",
     .name_ja = "埼玉県GIS（地理情報システム） — tokubetsuyoutochiku",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15857,7 +15857,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_0CCD5E0AD6", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15880,7 +15880,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4E796906CB", .name = "埼玉県GIS（地理情報システム） — tokuteigaiku",
     .name_ja = "埼玉県GIS（地理情報システム） — tokuteigaiku",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15902,7 +15902,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D3085965A1", .name = "埼玉県GIS（地理情報システム） — toshikousokutetsudou",
     .name_ja = "埼玉県GIS（地理情報システム） — toshikousokutetsudou",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15924,7 +15924,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1AB8D7F8FF", .name = "埼玉県GIS（地理情報システム） — toshikeikakudouro",
     .name_ja = "埼玉県GIS（地理情報システム） — toshikeikakudouro",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15946,7 +15946,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E25812E76C", .name = "埼玉県GIS（地理情報システム） — toshikeikakukuiki",
     .name_ja = "埼玉県GIS（地理情報システム） — toshikeikakukuiki",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15968,7 +15968,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_E59F66D264", .name = "埼玉県GIS（地理情報システム） — toshisaikaihatsuhoushin",
     .name_ja = "埼玉県GIS（地理情報システム） — toshisaikaihatsuhoushin",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -15990,7 +15990,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C525C02308", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16013,7 +16013,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_24451CA6D9", .name = "埼玉県GIS（地理情報システム） — tokuteiyoutoyuudouchiku",
     .name_ja = "埼玉県GIS（地理情報システム） — tokuteiyoutoyuudouchiku",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16035,7 +16035,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8562C085B5", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16057,7 +16057,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_18D959C2B5", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16080,7 +16080,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5B40B95F17", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16103,7 +16103,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_A1126476A5", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16126,7 +16126,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B4315F5082", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16148,7 +16148,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_B1433216DF", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16171,7 +16171,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BD9CDF70AF", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16194,7 +16194,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F99ADF43EE", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16217,7 +16217,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_CD08BFCD0E", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16240,7 +16240,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F9EA4E6701", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16262,7 +16262,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_5BE2293F4B", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16285,7 +16285,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_F14A46FFC9", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16307,7 +16307,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FFEDED3947", .name = "埼玉県GIS（地理情報システム） — yashioshi_border_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — yashioshi_border_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16330,7 +16330,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C98A86A032", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16353,7 +16353,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7C374BDB41", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16375,7 +16375,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_259CF0A27B", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16398,7 +16398,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D08B504711", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16420,7 +16420,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1DB22827BC", .name = "埼玉県GIS（地理情報システム） — yashioshi_emergency_route_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — yashioshi_emergency_route_lines",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16442,7 +16442,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FA409C85EF", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16465,7 +16465,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3122423912", .name = "埼玉県GIS（地理情報システム） — yashioshi_landmark_points",
     .name_ja = "埼玉県GIS（地理情報システム） — yashioshi_landmark_points",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16487,7 +16487,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FD10B719E3", .name = "埼玉県GIS（地理情報システム） — yashioshi_park_points",
     .name_ja = "埼玉県GIS（地理情報システム） — yashioshi_park_points",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16509,7 +16509,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7EFB1B4EED", .name = "埼玉県GIS（地理情報システム） — yashioshi_railway_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — yashioshi_railway_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16531,7 +16531,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8337903AB4", .name = "埼玉県GIS（地理情報システム） — yashioshi_station_points",
     .name_ja = "埼玉県GIS（地理情報システム） — yashioshi_station_points",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16553,7 +16553,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3733999827", .name = "埼玉県GIS（地理情報システム） — yashioshi_shelter_points",
     .name_ja = "埼玉県GIS（地理情報システム） — yashioshi_shelter_points",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16575,7 +16575,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_DF357E4C0D", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16598,7 +16598,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_BCBF467CAD", .name = "埼玉県GIS（地理情報システム） — yoshikawashi_emergency_route_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — yoshikawashi_emergency_route_lines",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16620,7 +16620,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4D9E790DC1", .name = "埼玉県GIS（地理情報システム） — yoshikawashi_border_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — yoshikawashi_border_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16643,7 +16643,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_495F31F9E8", .name = "埼玉県GIS（地理情報システム） — yoshikawashi_landmark_points",
     .name_ja = "埼玉県GIS（地理情報システム） — yoshikawashi_landmark_points",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16665,7 +16665,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EA51EC3A45", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16687,7 +16687,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_D467D8E00A", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16710,7 +16710,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_4AF4B87BCB", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16732,7 +16732,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FBBF27FFE4", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16754,7 +16754,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9838856E90", .name = "埼玉県GIS（地理情報システム） — yoshikawashi_railway_lines",
     .name_ja = "埼玉県GIS（地理情報システム） — yoshikawashi_railway_lines",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16776,7 +16776,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_3A5F1A8F1F", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16799,7 +16799,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7E927B7555", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16822,7 +16822,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_FD51A9F8C8", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16845,7 +16845,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_C4A721D44E", .name = "埼玉県GIS（地理情報システム） — yoshikawashi_shelter_points",
     .name_ja = "埼玉県GIS（地理情報システム） — yoshikawashi_shelter_points",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16867,7 +16867,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_8DA036CBCA", .name = "埼玉県GIS（地理情報システム） — yoshikawashi_park_points",
     .name_ja = "埼玉県GIS（地理情報システム） — yoshikawashi_park_points",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_culture_recreation", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16889,7 +16889,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EF8946FF6E", .name = "埼玉県GIS（地理情報システム） — yoshikawashi_station_points",
     .name_ja = "埼玉県GIS（地理情報システム） — yoshikawashi_station_points",
-    .category = "transport", .portal = "https://services9.arcgis.com",
+    .category = "transport", .collector = "jp_gis_transport", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16911,7 +16911,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_7557C39603", .name = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_AreaClassification",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16934,7 +16934,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_667E9B7B49", .name = "埼玉県GIS（地理情報システム） — zanteichouseikuiki",
     .name_ja = "埼玉県GIS（地理情報システム） — zanteichouseikuiki",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_boundaries", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16956,7 +16956,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_EDF14E73FF", .name = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_SedimentDisasterProneArea",
-    .category = "safety", .portal = "https://services9.arcgis.com",
+    .category = "safety", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -16979,7 +16979,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_1AE2BAB8A1", .name = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_LandUse",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17002,7 +17002,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_9F5F122C43", .name = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_FirePreventionDistrict",
-    .category = "geospatial", .portal = "https://services9.arcgis.com",
+    .category = "geospatial", .collector = "jp_gis_safety_emergency", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17025,7 +17025,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_85003804BD", .name = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
     .name_ja = "埼玉県GIS（地理情報システム） — LOD1_UseDistrict",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_parcels_landuse", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -17047,7 +17047,7 @@ static const hp_source HP3B61_JP[] = {
 
   { .id = "JO61_JPGIS_21D1B19F0B", .name = "埼玉県GIS（地理情報システム） — youtochiiki",
     .name_ja = "埼玉県GIS（地理情報システム） — youtochiiki",
-    .category = "infrastructure", .portal = "https://services9.arcgis.com",
+    .category = "infrastructure", .collector = "jp_gis_planning_zoning", .portal = "https://services9.arcgis.com",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"japan\",\"municipal\",\"open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,

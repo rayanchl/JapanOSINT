@@ -740,6 +740,98 @@ LABELS_AUDIT = {
 }
 LABELS.update({k: (v, None, None) for k, v in LABELS_AUDIT.items() if k not in LABELS})
 
+# ---------------------------------------------------------------------------
+# 2026-11-16 row-level classification (tools/split_beats_by_theme.py).
+#
+# The GIS-layer beats (hp3b46/53/58/59/60/61/62/63/64: ~21,000 ArcGIS and WFS
+# layers) used to be ONE collector per file, so a parcel layer, a hydrant layer
+# and a flood-zone layer all read "Geospatial". Every row now names
+# `<region>_gis_<theme>`; the THEME decides the group, so Transport, Safety,
+# Environment, Education, Health and Infrastructure show the layers they hold.
+# The keys are derived here from the same closed theme set the split tool uses,
+# so a new batch that emits one needs no hand-written line.
+GIS_THEMES = {
+    # theme: (label, label_ja, group)
+    "boundaries": ("boundaries & administrative areas", "境界・行政区域", "grp_geo"),
+    "parcels_landuse": ("parcels, buildings, addresses & land use", "地籍・建物・住所・土地利用", "grp_geo"),
+    "transport": ("roads, transit, parking & bridges", "道路・交通・駐車・橋梁", "grp_transport"),
+    "utilities_infrastructure": ("utilities: water, sewer, hydrants, power & telecom", "水道・下水・消火栓・電力・通信", "grp_infrastructure"),
+    "environment_hazards": ("environment, water bodies, habitats & hazards", "環境・水域・生物・ハザード", "grp_environment"),
+    "safety_emergency": ("emergency, evacuation, fire, police & crashes", "避難・消防・警察・事故", "grp_safety"),
+    "health_social": ("health, care & social services", "保健・福祉・医療", "grp_health"),
+    "education": ("schools & education", "学校・教育", "grp_education"),
+    "planning_zoning": ("planning, zoning & development", "都市計画・用途地域・開発", "grp_geo"),
+    "elections_admin": ("elections, precincts & wards", "選挙・投票区", "grp_government"),
+    "imagery_basemap": ("imagery, elevation & basemap references", "画像・標高・背景地図", "grp_geo"),
+    "culture_recreation": ("parks, recreation, culture & heritage", "公園・文化・遺産", "grp_culture"),
+    "economy_business": ("business, economy & agriculture", "事業所・経済・農業", "grp_corporate"),
+    "other": ("other / unclassified by layer name", "その他・名称から分類不能", "grp_geo"),
+}
+GIS_REGIONS = {
+    "us": ("United States", "米国"),
+    "eu": ("Europe", "欧州"),
+    "jp": ("Japan", "日本"),
+    "world": ("World / publisher not attributable", "世界・提供者不明"),
+}
+for _r, (_rl, _rj) in GIS_REGIONS.items():
+    for _t, (_tl, _tj, _g) in GIS_THEMES.items():
+        _k = f"{_r}_gis_{_t}"
+        OVERRIDES[_k] = _g
+        LABELS[_k] = (f"{_rl} GIS — {_tl}", f"{_rj} GIS — {_tj}",
+                      "ArcGIS/WFS layers whose own name says this (tools/split_beats_by_theme.py)."
+                      if _t != "other" else
+                      "Layers whose name, service name and category type nothing: the honest residue.")
+
+# Body-type splits of the mixed government beats (hp3b44_usgov, hp3b47_wdgov,
+# hp3b48_igo and the scheduled `government` feed collector).
+BODY_COLLECTORS = {
+    # key: (label, label_ja, description, group)
+    "usgov_cities": ("United States — cities & towns (.gov)", "米国 — 市・町", "City and town sites from the .gov registry.", "grp_government"),
+    "usgov_counties": ("United States — counties & parishes (.gov)", "米国 — 郡", None, "grp_government"),
+    "usgov_special_districts": ("United States — special & school districts (.gov)", "米国 — 特別区・学区", None, "grp_government"),
+    "usgov_states": ("United States — states, territories & interstate bodies (.gov)", "米国 — 州・準州・州際機関", None, "grp_government"),
+    "usgov_federal": ("United States — federal bodies (.gov)", "米国 — 連邦機関", None, "grp_government"),
+    "usgov_tribes": ("United States — tribal governments (.gov)", "米国 — 部族政府", None, "grp_government"),
+    "usgov_elections": ("United States — election offices (.gov)", "米国 — 選挙管理", None, "grp_government"),
+    "usgov_other": ("United States — other .gov (untyped)", "米国 — その他 .gov", None, "grp_government"),
+    "wdgov_ministries": ("World — ministries & departments", "世界 — 省庁", None, "grp_government"),
+    "wdgov_agencies": ("World — agencies & public bodies (residue)", "世界 — 機関・公的団体（その他）", "Government agencies the name alone does not type further.", "grp_government"),
+    "wdgov_local_regional": ("World — local & regional governments", "世界 — 地方政府", None, "grp_government"),
+    "wdgov_legislatures_courts": ("World — legislatures & courts", "世界 — 議会・裁判所", None, "grp_legal"),
+    "wdgov_regulators_central_banks": ("World — regulators & central banks", "世界 — 規制当局・中央銀行", None, "grp_corporate"),
+    "wdgov_universities_research": ("World — public research bodies, universities & statistics offices", "世界 — 研究機関・大学・統計局", None, "grp_science"),
+    "wdgov_police_security": ("World — police, defence & security services", "世界 — 警察・防衛・治安", None, "grp_safety"),
+    "wdgov_health_education": ("World — health, education, culture & social bodies", "世界 — 保健・教育・文化・社会", None, "grp_health"),
+    "wdgov_economy_infrastructure": ("World — economy, agriculture, energy & transport bodies", "世界 — 経済・農業・エネルギー・交通", None, "grp_infrastructure"),
+    "igo_intergovernmental": ("Intergovernmental organisations", "政府間国際機関", None, "grp_government"),
+    "igo_associations": ("International associations, federations & networks", "国際団体・連盟・ネットワーク", None, "grp_social"),
+    "igo_companies_blogs": ("Companies & studios (filed with IGOs by Wikidata class)", "企業・スタジオ", "Game studios, publishers and company blogs Wikidata classed as think tanks.", "grp_corporate"),
+    "igo_other": ("Other / unclassified (Wikidata think-tank class)", "その他・未分類", "Bodies the name alone does not type.", "grp_government"),
+    "uk_gov_local": ("UK — councils & local authorities", "英国 — 地方自治体", None, "grp_government"),
+    "uk_gov_departments": ("UK — government departments", "英国 — 省庁", None, "grp_government"),
+    "uk_gov_regulators": ("UK — regulators & commissions", "英国 — 規制当局", None, "grp_government"),
+    "uk_gov_agencies_bodies": ("UK — agencies & public bodies", "英国 — 機関・公的団体", None, "grp_government"),
+    "uk_gov_inquiries_reviews": ("UK — inquiries, reviews & commissioners (mostly closed)", "英国 — 調査委員会・レビュー", None, "grp_government"),
+    "uk_gov_justice_police": ("UK — police, courts & justice bodies", "英国 — 警察・司法", None, "grp_safety"),
+    "uk_gov_health_social": ("UK — health & social-care bodies", "英国 — 保健・福祉", None, "grp_health"),
+    "uk_gov_other": ("UK — other gov.uk bodies (residue)", "英国 — その他", "gov.uk organisations the name alone does not type.", "grp_government"),
+    "jp_gov_cities": ("Japan — city news feeds", "日本 — 市区ニュース", None, "grp_government"),
+    "jp_gov_prefectures": ("Japan — prefecture news feeds", "日本 — 都道府県ニュース", None, "grp_government"),
+    "jp_gov_tokyo": ("Japan — Tokyo open data (metropolis, wards & cities)", "日本 — 東京都オープンデータ", None, "grp_government"),
+    "cn_gov_hongkong": ("Hong Kong — government feeds", "香港 — 政府フィード", None, "grp_government"),
+    "cn_gov_macao": ("Macao — government feeds", "マカオ — 政府フィード", None, "grp_government"),
+    "cn_gov_other": ("China — other government feeds", "中国 — その他政府フィード", None, "grp_government"),
+    "world_gov_eu_bodies": ("EU institutions", "EU機関", None, "grp_government"),
+    "world_gov_intergovernmental": ("World — banks, UN & multilateral bodies", "世界 — 国際機関・開発銀行", None, "grp_government"),
+    "world_gov_data_portals": ("World — government data portals & catalogues", "世界 — 政府データポータル", None, "grp_opendata"),
+    "world_gov_statistics": ("World — statistics offices", "世界 — 統計局", None, "grp_opendata"),
+    "world_gov_agencies": ("World — government agencies & portals (residue)", "世界 — 政府機関（その他）", None, "grp_government"),
+    "us_gov_agencies": ("United States — federal agency feeds", "米国 — 連邦機関フィード", None, "grp_government"),
+}
+for _k, (_l, _j, _d, _g) in BODY_COLLECTORS.items():
+    OVERRIDES[_k] = _g
+    LABELS[_k] = (_l, _j, _d)
+
 COUNTRY = {
     "ae": "UAE", "ar": "Argentina", "au": "Australia", "be": "Belgium", "bf": "Burkina Faso", "bh": "Bahrain",
     "bj": "Benin", "bn": "Brunei", "bo": "Bolivia", "br": "Brazil", "bt": "Bhutan", "bw": "Botswana",

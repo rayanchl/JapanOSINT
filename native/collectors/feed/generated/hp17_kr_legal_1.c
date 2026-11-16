@@ -18,20 +18,22 @@ static const hp_source T[] = {
     .collector = "kr_legal", .category = "legal",
     .description = "Rulings on administrative appeals against government decisions: id, 재결청 (adjudicating body, e.g. 국민권익위원회), 처분청 (the agency whose decision was challenged), 사건번호, 사건명 describing the contested disposition, 의결일자, 처분일자 and 행정심판재결례일련번호. The detail service returns 청구취지 and full reasoning. Citizen-vs-agency disputes that never reach a court.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"kr\",\"legal\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "ko",
-    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=decc&type=JSON&query=%ED%9A%8C%EC%82%AC",
+    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC={key}&target=decc&type=JSON&query=%ED%9A%8C%EC%82%AC",
+    .key_env = "KR_LAW_GO_KR_OC",
     .array_path = "decc.decc",
-    .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC=test&target=decc&ID={v}&type=JSON", .detail_key = "행정심판재결례일련번호",
+    .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC={key}&target=decc&ID={v}&type=JSON", .detail_key = "행정심판재결례일련번호",
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "kr-law-english-statutes",
     .name = "Korea MOLEG — English-titled statute search",
     .collector = "kr_legal", .category = "legal",
-    .description = "Korean statutes with both Korean and ENGLISH names: id, 법령ID, 법령일련번호 (MST), 법령명한글, 법령명영문 (e.g. FAIR TRANSACTIONS IN FRANCHISE BUSINESS ACT), 법령구분명, 소관부처명 (competent ministry), 공포번호, 공포일자, 시행일자 and a detail link. Keyless — OC=test is the documented public demo id and it works.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
+    .description = "Korean statutes with both Korean and ENGLISH names: id, 법령ID, 법령일련번호 (MST), 법령명한글, 법령명영문 (e.g. FAIR TRANSACTIONS IN FRANCHISE BUSINESS ACT), 법령구분명, 소관부처명 (competent ministry), 공포번호, 공포일자, 시행일자 and a detail link. Keyless — OC={key} is the documented public demo id and it works.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"kr\",\"legal\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "ko",
-    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=elaw&type=JSON&query=fair",
+    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC={key}&target=elaw&type=JSON&query=fair",
+    .key_env = "KR_LAW_GO_KR_OC",
     .array_path = "lawsearch.law",
-    .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC=test&target=elaw&MST={v}&type=JSON", .detail_key = "법령일련번호",
+    .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC={key}&target=elaw&MST={v}&type=JSON", .detail_key = "법령일련번호",
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
@@ -40,9 +42,10 @@ static const hp_source T[] = {
     .collector = "kr_legal", .category = "legal",
     .description = "Binding legal interpretations issued by the Ministry of Government Legislation: id, 안건명 (the question asked), 안건번호, 회신기관명 and code (who answered), 질의기관명 and code (which agency asked), 회신일자 and 법령해석례일련번호. The detail service returns the full 이유 reasoning. Shows which agency was uncertain about which rule.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"kr\",\"legal\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "ko",
-    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=expc&type=JSON&query=%ED%9A%8C%EC%82%AC",
+    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC={key}&target=expc&type=JSON&query=%ED%9A%8C%EC%82%AC",
+    .key_env = "KR_LAW_GO_KR_OC",
     .array_path = "expc.expc",
-    .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC=test&target=expc&ID={v}&type=JSON", .detail_key = "법령해석례일련번호",
+    .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC={key}&target=expc&ID={v}&type=JSON", .detail_key = "법령해석례일련번호",
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
@@ -75,6 +78,22 @@ static const hp_source T[] = {
     .page_walk = 1,
     .key_env = "KR_LAW_GO_KR_OC",
     .interval = 43200, .free_tier = 1 },
+
+  /* gov-kr-law-search moved here from vsrc_legal_2.c (2026-11-16, SRC-02 other copies):
+   * a VJSON row has no credential gate, and law.go.kr answers OC=test with a 215-byte
+   * HTTP-200 "사용자 정보 검증에 실패" body. Key-gated now ($KR_LAW_GO_KR_OC) and reports
+   * GATED without it. Identity, array and url are the VJSON row's (default keys). */
+  { .id = "gov-kr-law-search",
+    .name = "Korea Law Information — Statute Search",
+    .name_ja = "韓国法令情報 法令検索",
+    .collector = "legal", .category = "parliament",
+    .description = "Korean national statute search API returning law names, ministries and effective dates.",
+    .record_type = "legal-record", .tags = "\"korea\",\"legislation\",\"statute\",\"asia\"", .lang = "ko",
+    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC={key}&target=law&type=JSON&display=20",
+    .array_path = "lawsearch.law",
+    .page_walk = 1,
+    .key_env = "KR_LAW_GO_KR_OC",
+    .interval = 86400, .free_tier = 1 },
 
 };
 HP_REGISTER_TABLE(T)

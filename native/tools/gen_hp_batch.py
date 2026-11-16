@@ -33,6 +33,18 @@ Opts worth knowing, because each one closes a gap a batch hit for real
 (lib/hpengine.h documents every field; these are the ones that were added
 after a verified source could not be expressed):
 
+  collector=<key>         the row's collector. WITHOUT it an hpengine row takes
+                          its TABLE's file name, so a beat that mixes kinds of
+                          thing (ArcGIS layers: parcels, hydrants, flood zones,
+                          schools; a register of every public body) is ONE
+                          collector on every Collectors page. 2026-11-16: the
+                          ~25,800 rows of hp3b44/46/47/48/53/58-64 had to be
+                          split afterwards (tools/split_beats_by_theme.py).
+                          Declare it per row, or let --auto-collector derive it
+                          from the layer's name (below). The key needs a line in
+                          tools/gen_collectors_def.py; `<region>_gis_<theme>`
+                          keys are derived there and need none.
+
   id_keys=a,b,c           FIRST-MATCH per record: the engine takes the first
                           listed key that resolves to a non-empty value and
                           ignores the rest, so the order IS the identity. An
@@ -102,6 +114,9 @@ WANT = {"any": "HP_ANY", "domain": "HP_DOMAIN", "ip": "HP_IP",
         "email": "HP_EMAIL", "numeric": "HP_NUMERIC", "hash": "HP_HASH",
         "icao24": "HP_ICAO24", "eth": "HP_ETH", "btc": "HP_BTC",
         "asn": "HP_ASN"}
+
+# --auto-collector state (set in main): derive a row's collector from its layer name.
+AUTO = {"mode": None, "region": "world"}
 
 STR_OPTS = {"array_path", "title_keys", "id_keys", "link_keys", "link_tmpl",
             "charset", "next_tmpl",
@@ -350,6 +365,14 @@ def emit_row(r):
                 raise SystemExit("%s: %s: opt %s=%r is not an integer"
                                  % (r["_src"], r["id"], k, v))
         o[k] = v
+    if AUTO["mode"] == "gis" and "collector" not in o:
+        # An ArcGIS/WFS layer row: `<region>_gis_<theme>` from the LAYER's own
+        # name by the ordered rules of tools/split_beats_by_theme.py (the same
+        # rules that split the shipped beats); `_other` when none matches.
+        import split_beats_by_theme as _S
+        _layer = r["name"].split(" \u2014 ", 1)[-1]
+        _theme, _how = _S.theme_of(_layer, _S.service_of(r["url"]), r["category"])
+        o["collector"] = "%s_gis_%s" % (AUTO["region"], _theme)
     hdrs = [o.pop(h) for h in HDR_OPTS if h in o]
     L = ['  { .id = "%s", .name = %s,' % (r["id"], cstr(r["name"]))]
     if r["name_ja"]:
@@ -429,7 +452,17 @@ def main():
                          "table is hand-maintained after its first generation, "
                          "and regenerating reverts repairs the manifest never "
                          "learned about")
+    ap.add_argument("--auto-collector", choices=["none", "gis"], default="none",
+                    help="gis: a row with no collector= opt gets "
+                         "<region>_gis_<theme>, the theme read from the layer "
+                         "name by tools/split_beats_by_theme.py. Default none: "
+                         "the collector is the table's file name, which is "
+                         "wrong for any beat that mixes kinds of thing")
+    ap.add_argument("--region", default="world", choices=["us", "eu", "jp", "world"],
+                    help="region part of an --auto-collector key")
     a = ap.parse_args()
+    AUTO["mode"] = None if a.auto_collector == "none" else a.auto_collector
+    AUTO["region"] = a.region
 
     rows = load(a.manifests)
     sys.stderr.write("%d manifest rows\n" % len(rows))
