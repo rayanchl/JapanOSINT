@@ -86,11 +86,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *hdrs[] = { "Accept: application/rdap+json, application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "rdap");   /* follows the bootstrap 302 */
-  if (!body) return 0;                            /* NXDOMAIN / no RDAP → empty */
+  if (!body) return jo_fail_rc(jo_last_status(), 1);                            /* NXDOMAIN / no RDAP → empty */
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   const char *ldh = jo_sv(root, "ldhName");       /* canonical domain */
   const char *domain = ldh ? ldh : q;
@@ -157,7 +157,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddItemToObject(props, "statuses", statuses);      /* transferred */
   cJSON_AddItemToObject(props, "nameservers", nslist);     /* transferred */
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char summary[256];
@@ -172,7 +172,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.remote_key      = domain;
   it.title           = domain;
   it.summary         = summary;
-  it.body            = bj;
+  it.body = bj;
   it.link            = link;
   it.lang            = "en";
   it.published_at    = registered;

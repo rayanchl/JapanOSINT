@@ -48,11 +48,11 @@ static int cl_fetch_day(const source_ctx *ctx, intel_sink *sink,
            "?fecha=%s&ticket=%s", ddmmyyyy, ticket);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "cl-mercadopublico-tenders");
-  if (!body) return 0;                    /* 429 / transport → nothing today */
+  if (!body) return jo_fail_rc(jo_last_status(), 0);                    /* 2026-11-07: 429 / transport is -1, not "nothing today" */
 
   cJSON *doc = cJSON_Parse(body);
   free(body);
-  if (!doc) return 0;
+  if (!doc) return -1;
 
   /* Error envelope: {"Codigo":10500,"Mensaje":...} */
   const cJSON *err = cJSON_GetObjectItem(doc, "Codigo");
@@ -137,14 +137,14 @@ static int cl_run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   time_t now = time(NULL);
-  int n = 0, parsed = 0;
+  int n = 0, parsed = 0, failed = 0;
   for (int back = 0; back <= 1; back++) {
     time_t t = now - (time_t)back * 24 * 3600;
     char fecha[16];
     /* `fecha` IS the query; a date we cannot render is a day we cannot ask
      * for, so skip it rather than query some other day. */
     if (!jo_time_fmt(t, "%d%m%Y", fecha, sizeof fecha)) continue;
-    n += cl_fetch_day(ctx, sink, fecha, ticket, from_env, &parsed);
+    jo_acc(cl_fetch_day(ctx, sink, fecha, ticket, from_env, &parsed), &n, &failed);
     /* NOT a record loop: `back` walks DATES, and cl_fetch_day above has
      * already emitted every tender in the day it fetched. This only decides
      * whether to spend a SECOND request on yesterday, and it does so only when
@@ -156,7 +156,9 @@ static int cl_run(const source_ctx *ctx, intel_sink *sink) {
 
   fprintf(stderr, "[cl-mercadopublico-tenders] emitted %d%s\n",
           n, parsed ? "" : " (api did not answer with a listing)");
-  return 0;                              /* a quiet day is not a failure (R3) */
+  /* a quiet day is not a failure (R3); a refused fetch on EVERY day tried is
+   * (2026-11-07 — the API answers 429 to a quick second call) */
+  return (failed && n == 0 && !parsed) ? -1 : 0;
 }
 
 static const source_def reg2_cl_mercadopublico_def = {

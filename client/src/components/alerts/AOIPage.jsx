@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LuRefreshCw, LuMapPin, LuPencil, LuTrash2, LuBellRing, LuPenTool } from 'react-icons/lu';
+import { usePaged } from '../../hooks/useCases.js';
 import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
@@ -34,26 +35,17 @@ export default function AOIPage() {
   const myId = auth.me?.user?.id;
   const canWrite = canWriteWorkspace(auth.role);
   const roNote = readOnlyNote(auth.role, 'area');
-  const [rows, setRows] = useState([]);
-  const [page, setPage] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // The one keyset hook (usePaged, 2026-11-07). The hand-rolled loader it
+  // replaces had no request-sequence guard, so a slow first page could land
+  // after a reload and overwrite it, and a failed "load more" replaced the
+  // list's own error.
+  const list = usePaged('/api/aoi', { limit: 100 });
+  const { rows, setRows, error, moreError, loading, loadingMore, hasMore, total, reload, loadMore } = list;
   const [creating, setCreating] = useState(false);
   const [renaming, setRenaming] = useState(null);
   const [confirmDel, setConfirmDel] = useState(null);
   const [busy, setBusy] = useState(null);
 
-  const load = async (cursor) => {
-    setLoading(true); setError(null);
-    try {
-      const j = await api.get('/api/aoi', { query: { limit: 100, cursor } });
-      const d = Array.isArray(j?.data) ? j.data : [];
-      setRows((xs) => (cursor ? [...xs, ...d] : d));
-      setPage(j?.page || null);
-    } catch (e) { setError(e); }
-    finally { setLoading(false); }
-  };
-  useEffect(() => { load(); }, []);
 
   const del = async () => {
     const a = confirmDel; setConfirmDel(null); setBusy(a.id);
@@ -72,14 +64,14 @@ export default function AOIPage() {
       subtitle="Saved geofences. One shape can back several alert rules; rules resolve it at match time."
       actions={(
         <>
-          <Button onClick={() => load()} title="Refresh areas"><LuRefreshCw size={13} /></Button>
+          <Button onClick={() => reload()} title="Refresh areas"><LuRefreshCw size={13} /></Button>
           {canWrite && <Button onClick={() => navigate('/?aoi=new')} title="Draw a new area on the map"><LuPenTool size={13} /> Draw on map</Button>}
           {canWrite && <Button variant="primary" onClick={() => setCreating(true)}><LuMapPin size={13} /> New area</Button>}
         </>
       )}
     >
       {roNote && <div className="text-[11px] text-osint-muted">{roNote}</div>}
-      {error && <ErrorNotice error={error} title="Could not load areas" onRetry={() => load()} />}
+      {error && <ErrorNotice error={error} title="Could not load areas" onRetry={() => reload()} />}
       {loading && rows.length === 0 && !error && <LoadingState label="Loading areas…" />}
       {!loading && !error && rows.length === 0 && (
         <EmptyState title="No saved areas" action={canWrite ? <div className="flex gap-2 justify-center"><Button onClick={() => navigate('/?aoi=new')}>Draw an area</Button><Button variant="primary" onClick={() => setCreating(true)}>Enter coordinates</Button></div> : null}>
@@ -111,8 +103,9 @@ export default function AOIPage() {
             </Card>
           ))}
           <div className="flex items-center justify-between">
-            <BoundNote shown={rows.length} total={page?.next_cursor ? null : rows.length} more={Boolean(page?.next_cursor)} noun="areas" />
-            {page?.next_cursor && <Button size="sm" busy={loading} onClick={() => load(page.next_cursor)}>Load more</Button>}
+            <BoundNote shown={rows.length} total={total ?? (hasMore ? null : rows.length)} more={hasMore} noun="areas" />
+            {hasMore && <Button size="sm" busy={loadingMore} onClick={loadMore}>Load more</Button>}
+            {moreError && <span className="text-[11px] text-neon-red font-mono">next page failed — {errorMessage(moreError)}</span>}
           </div>
         </div>
       )}

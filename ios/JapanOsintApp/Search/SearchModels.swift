@@ -5,6 +5,11 @@ import Foundation
 
 struct SearchStartResponse: Codable, Sendable {
     let request_id: String
+    /// The capability for GET /api/search/stream/:id?key=<stream_key>
+    /// (core/searchapi.c ~211-215). The stream route is pre-auth, and this —
+    /// not the request_id, which share links carry — is what proves the
+    /// reader owns the run. Optional: an older server sends none.
+    let stream_key: String?
     let status: String?
     let query: String?
 }
@@ -277,23 +282,12 @@ struct EntityProfile: Codable, Hashable, Sendable {
     let last_seen_at: String?
 }
 
-struct EntityNode: Codable, Hashable, Sendable, Identifiable {
-    let id: String
-    let type: String
-    let value: String
-    let label: String?
-    let mention_count: Int?
-}
-struct EntityEdge: Codable, Hashable, Sendable {
-    let source: String
-    let target: String
-    let relationship: String
-    let weight: Double?
-}
-struct EntityGraph: Codable, Hashable, Sendable {
-    let nodes: [EntityNode]
-    let edges: [EntityEdge]
-}
+// The old `EntityGraph` / `EntityNode` / `EntityEdge` shape lived here, fed
+// by `API.entityGraph(_:_:depth:)`, which no view called. The live graph is
+// `API.entityEgoGraph` → `EntityEgoGraph` (Models+Roadmap.swift), which also
+// carries the `meta` that says whether the picture was truncated. Two
+// decoders for one route is how a call site quietly gets the poorer one, so
+// the dead copy is gone.
 
 struct EntityMention: Codable, Hashable, Sendable, Identifiable {
     let item_uid: String

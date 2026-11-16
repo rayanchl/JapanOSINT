@@ -390,16 +390,51 @@ static inline void jo_abs_url(const char *href, const char *base,
 
 /* -------------------------------------------------------------------- time */
 
-/* "now" as ISO-8601 UTC with milliseconds — the shape core/intel.c stores. */
-static inline void jo_iso_now(char *o, size_t n) {
+/* ISO-8601 UTC timestamps: ONE implementation for the two shapes the tree
+ * stores (2026-11-07: core/ held 24 private iso_now/now_iso copies).
+ *
+ *   ms  >= 0   "YYYY-MM-DDTHH:MM:SS.mmmZ"   (Node's toISOString; 24 chars)
+ *   ms  <  0   "YYYY-MM-DDTHH:MM:SSZ"       (20 chars)
+ *
+ * The two shapes are NOT interchangeable: a stored timestamp's spelling is
+ * part of the data, and the two sort differently as strings ('.' < 'Z'), so
+ * each caller keeps the shape it always wrote. The %0Nd widths are minimums,
+ * not caps: to -Wformat-truncation `tm_year + 1900` is a plain int worth up
+ * to 11 characters, so the fixed stamp "may be truncated"; the modulos are
+ * identity for every value gmtime_r can return and make the length provable.
+ * On a gmtime_r failure (impossible in practice) it writes "" rather than a
+ * plausible time. */
+static inline void jo_iso_fmt(time_t sec, int ms, char *o, size_t n) {
+  struct tm tm;
+  if (!o || !n) return;
+  if (!gmtime_r(&sec, &tm)) { o[0] = 0; return; }
+  if (ms >= 0)
+    snprintf(o, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+             (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+             (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+             (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+             (unsigned)ms % 1000u);
+  else
+    snprintf(o, n, "%04u-%02u-%02uT%02u:%02u:%02uZ",
+             (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+             (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+             (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u);
+}
+
+/* "now", milliseconds — the shape core/intel.c stores in fetched_at. */
+static inline void jo_iso_now_ms(char *o, size_t n) {
   struct timeval tv;
   gettimeofday(&tv, NULL);
-  struct tm tm;
-  gmtime_r(&tv.tv_sec, &tm);
-  char base[32];
-  strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &tm);
-  snprintf(o, n, "%s.%03dZ", base, (int)(tv.tv_usec / 1000));
+  jo_iso_fmt(tv.tv_sec, (int)(tv.tv_usec / 1000), o, n);
 }
+
+/* "now", whole seconds. */
+static inline void jo_iso_now_sec(char *o, size_t n) {
+  jo_iso_fmt(time(NULL), -1, o, n);
+}
+
+/* The original name, kept for the collectors that call it: same shape. */
+static inline void jo_iso_now(char *o, size_t n) { jo_iso_now_ms(o, n); }
 
 /* `days` before now as a bare ISO date (UTC) — the `from=` half of every
  * windowed API query. On the (impossible in practice) gmtime failure it writes
@@ -477,7 +512,7 @@ static inline void jo_uri_encode_buf(const char *in, char *out, size_t cap) {
 /* Non-empty env var value, or NULL. Key-gated sources use this to return an
  * honest empty instead of firing a credential-less request. */
 static inline const char *jo_env(const char *name) {
-  const char *v = getenv(name);
+  const char *v = jo_getenv(name);   /* a workspace's key first (source.h) */
   return (v && *v) ? v : NULL;
 }
 
@@ -514,12 +549,57 @@ static inline int jo_is_utf8(const char *s, size_t n) {
  * clean screen. A sanctions source that reports CLEAR because the download did
  * not finish is worse than one that fails loudly, so a caller fetching a whole
  * register asks for the time it needs. */
+/* The HTTP status of the last jo_get / jo_get_t / jo_get_st on this thread
+ * (2026-11-07). jo_get() returns NULL for EVERY non-200 and used to keep no
+ * status, so a collector could not tell "the upstream said no such record"
+ * (404 / 204) from "the upstream refused or broke" (429, 5xx, a transport
+ * error) — and 169 comments in collectors/sources call the NULL an "honest
+ * empty" whatever caused it, which is rule 1's invisible nothing: a refused
+ * fetch reading exactly like a source that ran and found nothing.
+ *
+ * 0 means no response at all (a transport failure: DNS, TLS, reset, timeout).
+ * The slot is per thread (collectors run on worker threads) and, because this
+ * header is static inline, per translation unit — which is all a caller
+ * needs, since it reads the status of a fetch it made itself a line earlier. */
+static inline long *jo__last_status_slot(void) {
+  static __thread long st;
+  return &st;
+}
+static inline long jo_last_status(void) { return *jo__last_status_slot(); }
+
+/* The return code a collector should give for a NULL jo_get body, from the
+ * status that produced it: 0 (an honest empty) ONLY for 204, or for 404 when
+ * the caller says this API uses 404 to mean "no such entity" — an entity in
+ * the URL PATH (`/package/<name>`, `/rdap/domain/<d>`). Everything else —
+ * 429, 5xx, 401/403, a 404 on a QUERY endpoint (which means the endpoint
+ * moved), or no response at all — is -1, so the scheduler and the dispatcher
+ * record a failure and file the fetch-failure disclosure instead of "no_data".
+ * A remedy must not name a knob that cannot move: this deliberately does not
+ * guess at 400/422, which some APIs use for "bad query" and others for
+ * "nothing found"; those stay failures until an API is measured. */
+static inline int jo_fail_rc(long status, int not_found_is_empty) {
+  if (status == 204) return 0;
+  if (status == 404 && not_found_is_empty) return 0;
+  return -1;
+}
+
+/* Fold one helper's return into a run total: a count adds, a -1 is COUNTED as
+ * a failure rather than subtracted (a helper that now returns -1 on a refused
+ * fetch must not make `n += helper()` under-report the records the others
+ * emitted). A run ends `return (failed && n == 0) ? -1 : 0;` — failed only
+ * when something failed AND nothing was emitted. */
+static inline void jo_acc(int r, int *n, int *failed) {
+  if (r > 0) *n += r;
+  else if (r < 0) (*failed)++;
+}
+
 static inline char *jo_get_t(const source_ctx *ctx, const char *url,
                              const char *const *headers, const char *tag,
                              int timeout_ms) {
   http_response hr = {0};
   int rc = http_request(ctx->http, "GET", url, headers, NULL, 0,
                         timeout_ms > 0 ? timeout_ms : 20000, 1, &hr);
+  *jo__last_status_slot() = (rc != 0) ? 0 : hr.status;
   if (rc != 0 || hr.status != 200 || !hr.body) {
     fprintf(stderr, "[%s] http status=%ld\n", tag, hr.status);
     http_response_free(&hr);
@@ -541,6 +621,35 @@ static inline char *jo_get(const source_ctx *ctx, const char *url,
   return jo_get_t(ctx, url, headers, tag, 20000);
 }
 
+/* jo_get with the status handed back explicitly (0 = no response). Same body
+ * contract as jo_get; jo_get's own signature is unchanged on purpose — 130
+ * callers. */
+static inline char *jo_get_st(const source_ctx *ctx, const char *url,
+                              const char *const *headers, const char *tag,
+                              long *status) {
+  char *b = jo_get_t(ctx, url, headers, tag, 20000);
+  if (status) *status = jo_last_status();
+  return b;
+}
+
+
+/* ------------------------------------------------ record-shape helpers ---- */
+
+/* Copy every top-level member of the JSON object `json` into `p` where `p`
+ * does not already carry that key (2026-11-07). Many hand-written pivots built
+ * the record's fields into a JSON BODY and left `properties` as
+ * {"service":…,"success":true}, so nothing that reads properties — filters,
+ * the map, the analysis prompt — could see a single field. Additive: an
+ * existing property is never overwritten. */
+static inline void jo_props_absorb(cJSON *p, const char *json) {
+  if (!p || !json) return;
+  cJSON *d = cJSON_Parse(json);
+  if (!cJSON_IsObject(d)) { cJSON_Delete(d); return; }
+  for (cJSON *c = d->child; c; c = c->next)
+    if (c->string && !cJSON_GetObjectItem(p, c->string))
+      cJSON_AddItemToObject(p, c->string, cJSON_Duplicate(c, 1));
+  cJSON_Delete(d);
+}
 
 /* ------------------------------------------- exhaustive-use disclosure (R7) */
 

@@ -168,7 +168,7 @@ static int emit_account(intel_sink *sink, const char *svc, const char *platform,
   cJSON_AddNumberToObject(props, "confidence", confidence);
   cJSON_AddStringToObject(props, "detection_method", "direct");
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[320];
   snprintf(rk, sizeof rk, "account:%s:%s", platform, email);

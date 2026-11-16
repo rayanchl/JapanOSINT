@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <arpa/inet.h>
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 /* An eight-entry EDITORIAL list, typed into this file. It is not a feed, it is
  * not AbuseIPDB's opinion, and it is not derived from anything about the IP
@@ -54,7 +55,7 @@ static int is_private_ip(const char *ip) {
 /* query_abuseipdb: key-gated; returns NULL without ABUSEIPDB_API_KEY or on any
  * transport/parse failure (no real data → caller emits nothing). */
 static cJSON *query_abuseipdb(http_client *http, const char *ip) {
-  const char *api_key = getenv("ABUSEIPDB_API_KEY");
+  const char *api_key = jo_getenv("ABUSEIPDB_API_KEY");
   if (!api_key || !*api_key) return NULL;
 
   char url[512];
@@ -140,7 +141,7 @@ static cJSON *query_abuseipdb(http_client *http, const char *ip) {
 
 /* query_ipqs: key-gated on IPQS_API_KEY; NULL without key or on failure. */
 static cJSON *query_ipqs(http_client *http, const char *ip) {
-  const char *api_key = getenv("IPQS_API_KEY");
+  const char *api_key = jo_getenv("IPQS_API_KEY");
   if (!api_key || !*api_key) return NULL;
 
   char url[512];
@@ -199,7 +200,7 @@ static int emit_source(intel_sink *sink, const char *ip, const char *source,
   cJSON_AddStringToObject(props, "ip", ip);
   cJSON_AddStringToObject(props, "rep_source", source);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[300], title[320];
   snprintf(rk, sizeof rk, "iprep:%s:%s", source, ip);
@@ -219,7 +220,7 @@ static int emit_source(intel_sink *sink, const char *ip, const char *source,
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = summary;
   it.record_type     = "osint_service_result";
   it.properties_json = pj;

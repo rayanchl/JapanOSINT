@@ -48,7 +48,7 @@ static cJSON *pick3(cJSON *r, const char *a, const char *b, const char *c) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("SOFTBANK_CROWD_API_KEY");
+  const char *key = jo_getenv("SOFTBANK_CROWD_API_KEY");
   if (!key || !*key) {
     static const char *const envs[] = { "SOFTBANK_CROWD_API_KEY", NULL };
     return jo_needs_credential(sink, "softbank-crowd",

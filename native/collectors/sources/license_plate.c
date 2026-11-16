@@ -19,7 +19,7 @@
 static int plate_run(const source_ctx *ctx, intel_sink *sink) {
   const char *plate = ctx->entity;
   if (!plate || !*plate) return 0;
-  const char *tmpl = getenv("PLATE_LOOKUP_URL");   /* "%s" = url-encoded plate */
+  const char *tmpl = jo_getenv("PLATE_LOOKUP_URL");   /* "%s" = url-encoded plate */
   if (!tmpl || !strstr(tmpl, "%s")) {              /* honest empty — no lawful public source */
     fprintf(stderr, "[LICENSE_PLATE_LOOKUP] gated (no PLATE_LOOKUP_URL "
                     "template configured; plate→owner has no lawful public API)\n");
@@ -28,7 +28,7 @@ static int plate_run(const source_ctx *ctx, intel_sink *sink) {
 
   char enc[128]; jo_urlencode_buf(plate, enc, sizeof enc);
   char url[600]; snprintf(url, sizeof url, tmpl, enc);
-  const char *key = getenv("PLATE_LOOKUP_API_KEY");
+  const char *key = jo_getenv("PLATE_LOOKUP_API_KEY");
   char auth[256] = {0}; const char *headers[2] = { NULL, NULL };
   if (key && *key) { snprintf(auth, sizeof auth, "Authorization: Bearer %s", key); headers[0] = auth; }
 

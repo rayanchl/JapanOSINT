@@ -72,8 +72,7 @@ static const char *tsp_cell(char **f, int nf, int idx) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *hdrs[] = { "User-Agent: JapanOSINT/1.0 (satcat)",
-                         "Accept: text/csv", NULL };
+  const char *hdrs[] = { "Accept: text/csv", NULL };
   http_response hr = {0};
   int rc = http_request(ctx->http, "GET", SATCAT_URL, hdrs, NULL, 0, 60000, 1, &hr);
   if (rc != 0 || hr.status != 200 || !hr.body) {

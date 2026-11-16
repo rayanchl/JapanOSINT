@@ -207,6 +207,12 @@ typedef struct hp_source {
    * because truncation would manufacture collisions in the very field meant
    * to prevent them. */
   const char *id_keys;
+  /* `a+b` — fields EVERY real record carries. A record missing any of them
+   * (absent, or empty, which the flattener drops) is the upstream's
+   * placeholder, not a record: counted with the empty slots and not stored.
+   * For a dataset that publishes one all-blank row while a period is not out
+   * yet (TWSE's t187ap07_X_ci: only the table date filled). Off when NULL. */
+  const char *require_keys;
   const char *link_keys;
   const char *link_tmpl;      /* {v} = link_keys value; else the raw value  */
   const char *date_keys;
@@ -696,6 +702,14 @@ char *hp_describe_json(const char *id);
 /* The declared row itself (read-only, lives for the process), or NULL when
  * `id` is not an hpengine source. For callers that want one field, not JSON. */
 const hp_source *hp_source_get(const char *id);
+/* The credential THIS THREAD's next hp_run() uses for key_env `name` instead of
+ * getenv(name) (2026-11-12). core/osint_dispatch.c sets it, around one entity
+ * pivot dispatched for a workspace, to that workspace's saved key
+ * (core/keysapi.c); a scheduled run never sets it, so the shared corpus keeps
+ * the environment's key. NULL/NULL clears it. Neither string is copied: the
+ * caller keeps both alive across the run and clears before freeing. lib/ holds
+ * no database code, so the value is handed down rather than looked up. */
+void hp_run_key_set(const char *name, const char *value);
 /* 1 when `id` is an hpengine row whose URL or POST body carries an entity
  * token, or that declares filter_query (a bulk fetch filtered by the entity
  * locally), i.e. it is dispatchable as an entity pivot. 0 for a fixed-endpoint

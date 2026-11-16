@@ -274,11 +274,33 @@ static void test_row_interval_composition(db_handle *db) {
   assert(sched_row_interval(&st, &d) == 900);               /* a global outranks both */
   source_def pivot = { .id = "UNIT_PIVOT", .update_interval_sec = 0, .adaptive_interval = 1 };
   assert(sched_row_interval(&st, &pivot) == 0);             /* an entity pivot passes through */
-  /* a maintenance pod asks no upstream: the collection policy does not
-   * stretch the WAL checkpoint or the embedding backfill to the fleet's 6 h */
+  /* A maintenance pod asks no upstream, so the collection cadence policy must
+   * not reach it: under the default global 6 h, embedding-backfill ran every
+   * 6 h instead of every 120 s (audit 2026-11-07). */
   source_def pod = { .id = "UNIT_POD", .collector = "_maint", .update_interval_sec = 120 };
+  sched_state pst = {0};
+  assert(sched_row_interval(&pst, &pod) == 120);            /* a pod keeps its own cadence */
+  source_def coll = { .id = "UNIT_COLL", .collector = "feeds", .update_interval_sec = 7200 };
+  assert(sched_row_interval(&pst, &coll) == 900);           /* its control: a collector does not */
+  /* REALTIME rows run at their own cadence too (2026-11-14, the owner's
+   * decision: transport and live data run live). A row declaring under an
+   * hour, and any transport row whatever it declares; the boundary is
+   * strict, and the other half of the rule is the category. */
+  source_def live = { .id = "UNIT_LIVE", .collector = "feeds", .update_interval_sec = 120 };
+  assert(sched_row_interval(&pst, &live) == 120);           /* minute-scale data runs live */
+  assert(!strcmp(cadence_exempt_reason(&live), "realtime"));
+  live.update_interval_sec = 3599;
+  assert(sched_row_interval(&pst, &live) == 3599);          /* just under an hour: still live */
+  live.update_interval_sec = 3600;
+  assert(sched_row_interval(&pst, &live) == 900);           /* an hour is the policy's */
+  assert(cadence_exempt_reason(&live) == NULL);
+  source_def tt = { .id = "UNIT_TIMETABLE", .collector = "transport",
+                    .category = "transport", .update_interval_sec = 604800 };
+  assert(sched_row_interval(&pst, &tt) == 604800);          /* transport runs as declared, even weekly */
+  assert(cadence_apply_for(&tt, 604800) == 604800);
+  assert(cadence_apply_for(&coll, 7200) == 900);            /* the same rule the pages read */
+  assert(!strcmp(cadence_exempt_reason(&pod), "pod"));
   assert(sched_is_pod(&pod) && !sched_is_pod(&d));
-  assert(sched_row_interval(&st, &pod) == 120);
   assert(cadence_set(db, &none, "test", &err) == 0);        /* leave no policy behind */
 }
 

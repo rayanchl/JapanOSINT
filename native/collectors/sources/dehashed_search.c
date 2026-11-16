@@ -96,8 +96,8 @@ static char *b64(const char *in) {
  * Returns the parsed JSON `entries` array (caller owns the duplicated array)
  * or NULL on any failure/no-data. */
 static cJSON *query_dehashed(http_client *http, const char *q, dtype_t t) {
-  const char *email = getenv("DEHASHED_EMAIL");
-  const char *key = getenv("DEHASHED_API_KEY");
+  const char *email = jo_getenv("DEHASHED_EMAIL");
+  const char *key = jo_getenv("DEHASHED_API_KEY");
   if (!email || !key || !*email || !*key) return NULL;   /* skip silently */
 
   char enc[512];
@@ -183,7 +183,7 @@ static int emit_breach(intel_sink *sink, const char *q, const char *prov,
   cJSON_AddStringToObject(props, "breach_source", src_name);
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char rk[640]; snprintf(rk, sizeof rk, "breach:%s:%s", src_name, q);
@@ -192,7 +192,7 @@ static int emit_breach(intel_sink *sink, const char *q, const char *prov,
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "breach exposure";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;

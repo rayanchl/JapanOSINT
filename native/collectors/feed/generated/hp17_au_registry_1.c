@@ -18,7 +18,17 @@ static const hp_source T[] = {
     .collector = "au_registry", .category = "registry",
     .description = "Every registered Australian trading name with BN_NAME, BN_STATUS, BN_REG_DT, BN_CANCEL_DT, BN_STATE_NUM, BN_STATE_OF_REG and — the pivot that matters — BN_ABN linking the trading name to the legal entity behind it.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "registry-record", .tags = "\"au\",\"registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=55ad4b1c-5eeb-44ea-8b29-d410da431be3&limit=100",
+    /* 2026-11-07: `sort=_id asc` and `id_keys = "_id"`. The walk follows the
+     * datastore's own `_links.next`, which is an OFFSET link with no sort
+     * unless the request carries one — measured: with it, the next link
+     * reads `…&sort=_id+asc&offset=50`, so the order is kept on every page.
+     * On four data.gov.au resources (5515dfcc, 91d80440, 55ad4b1c, 90b13a5b):
+     * sort=frobnicate 409, asc and desc differ, totals unchanged, offset
+     * pages disjoint. No id_keys was declared and `_id` is not in the
+     * engine's fallback list, so records keyed on a title and could
+     * collapse across pages. */
+    .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=55ad4b1c-5eeb-44ea-8b29-d410da431be3&limit=100&sort=_id%20asc",
+    .id_keys = "_id",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=55ad4b1c-5eeb-44ea-8b29-d410da431be3&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
     .page_walk = 1,
@@ -29,7 +39,17 @@ static const hp_source T[] = {
     .collector = "au_registry", .category = "registry",
     .description = "Every registered and official liquidator in Australia: LIQ_NAME, LIQ_NUM, OFF_LIQ_NUM, registration start dates, LIQ_STATUS, suspension date, locality/state/postcode and LIQ_FIRM — the insolvency practitioner behind a collapse, tied to their firm.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "registry-record", .tags = "\"au\",\"registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=02388d87-3f0b-48fd-bffa-c4a661962fc3&limit=100",
+    /* 2026-11-07: `sort=_id asc` and `id_keys = "_id"`. The walk follows the
+     * datastore's own `_links.next`, which is an OFFSET link with no sort
+     * unless the request carries one — measured: with it, the next link
+     * reads `…&sort=_id+asc&offset=50`, so the order is kept on every page.
+     * On four data.gov.au resources (5515dfcc, 91d80440, 55ad4b1c, 90b13a5b):
+     * sort=frobnicate 409, asc and desc differ, totals unchanged, offset
+     * pages disjoint. No id_keys was declared and `_id` is not in the
+     * engine's fallback list, so records keyed on a title and could
+     * collapse across pages. */
+    .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=02388d87-3f0b-48fd-bffa-c4a661962fc3&limit=100&sort=_id%20asc",
+    .id_keys = "_id",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=02388d87-3f0b-48fd-bffa-c4a661962fc3&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
     .page_walk = 1,
@@ -40,7 +60,17 @@ static const hp_source T[] = {
     .collector = "au_registry", .category = "registry",
     .description = "Registered auditors and audit firms: REG_AUD_NAME, REG_AUD_NUM, REG_AUD_ACN, registration date, status, suspension date and address. The ACN links an audit firm to its own company record.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "registry-record", .tags = "\"au\",\"registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=0f2e41ec-6f49-4d35-8e6d-ebcd4a0e3e27&limit=100",
+    /* 2026-11-07: `sort=_id asc` and `id_keys = "_id"`. The walk follows the
+     * datastore's own `_links.next`, which is an OFFSET link with no sort
+     * unless the request carries one — measured: with it, the next link
+     * reads `…&sort=_id+asc&offset=50`, so the order is kept on every page.
+     * On four data.gov.au resources (5515dfcc, 91d80440, 55ad4b1c, 90b13a5b):
+     * sort=frobnicate 409, asc and desc differ, totals unchanged, offset
+     * pages disjoint. No id_keys was declared and `_id` is not in the
+     * engine's fallback list, so records keyed on a title and could
+     * collapse across pages. */
+    .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=0f2e41ec-6f49-4d35-8e6d-ebcd4a0e3e27&limit=100&sort=_id%20asc",
+    .id_keys = "_id",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=0f2e41ec-6f49-4d35-8e6d-ebcd4a0e3e27&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
     .page_walk = 1,

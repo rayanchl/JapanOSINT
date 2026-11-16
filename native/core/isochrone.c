@@ -37,6 +37,7 @@
  *    owned elsewhere; this note belongs beside them.)
  */
 #include "isochrone.h"
+#include "jo_codec.h"
 #include "collcache.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
@@ -67,48 +68,6 @@
 
 #define ISO_FIELD_INF      1.0e9f
 
-/* ── small helpers ─────────────────────────────────────────────────────── */
-static int hexv(int c) {
-  if (c >= '0' && c <= '9') return c - '0';
-  if (c >= 'a' && c <= 'f') return c - 'a' + 10;
-  if (c >= 'A' && c <= 'F') return c - 'A' + 10;
-  return -1;
-}
-static void url_decode(const char *s, size_t n, char *out, size_t cap) {
-  size_t o = 0;
-  for (size_t i = 0; i < n && o + 1 < cap; i++) {
-    int c = (unsigned char) s[i];
-    if (c == '+') { out[o++] = ' '; continue; }
-    if (c == '%' && i + 2 < n) {
-      int h = hexv((unsigned char) s[i + 1]), l = hexv((unsigned char) s[i + 2]);
-      if (h >= 0 && l >= 0) { out[o++] = (char) ((h << 4) | l); i += 2; continue; }
-    }
-    out[o++] = (char) c;
-  }
-  out[o] = 0;
-}
-/* Same shape as aoiapi.c's qget: last-wins is not implemented, first match
- * wins, which is what every other module here does. */
-static int qget(const char *query, const char *key, char *out, size_t cap) {
-  out[0] = 0;
-  if (!query || !*query) return 0;
-  size_t klen = strlen(key);
-  const char *p = query;
-  while (*p) {
-    const char *amp = strchr(p, '&');
-    const char *seg_end = amp ? amp : p + strlen(p);
-    const char *eq = memchr(p, '=', (size_t) (seg_end - p));
-    size_t kn = eq ? (size_t) (eq - p) : (size_t) (seg_end - p);
-    if (kn == klen && memcmp(p, key, klen) == 0) {
-      const char *vstart = eq ? eq + 1 : seg_end;
-      url_decode(vstart, (size_t) (seg_end - vstart), out, cap);
-      return 1;
-    }
-    if (!amp) break;
-    p = amp + 1;
-  }
-  return 0;
-}
 static char *errj(int *st, int code, const char *msg) {
   *st = code;
   cJSON *o = cJSON_CreateObject();
@@ -504,36 +463,36 @@ char *isochrone_run(db_handle *db, const char *qs, int *status) {
   *status = 200;
 
   char v[128];
-  if (!qget(qs, "lat", v, sizeof v) || !*v) return errj(status, 400, "lat_required");
+  if (!jo_qs_get(qs, "lat", v, sizeof v, JO_QS_DECODE | JO_QS_BARE_KEY) || !*v) return errj(status, 400, "lat_required");
   char *e1 = NULL; double olat = strtod(v, &e1);
   if (e1 == v || !(olat >= -90 && olat <= 90)) return errj(status, 400, "lat_invalid");
-  if (!qget(qs, "lon", v, sizeof v) || !*v) return errj(status, 400, "lon_required");
+  if (!jo_qs_get(qs, "lon", v, sizeof v, JO_QS_DECODE | JO_QS_BARE_KEY) || !*v) return errj(status, 400, "lon_required");
   char *e2 = NULL; double olon = strtod(v, &e2);
   if (e2 == v || !(olon >= -180 && olon <= 180)) return errj(status, 400, "lon_invalid");
 
   int max_min = ISO_MAX_MIN_DEF;
-  if (qget(qs, "max_min", v, sizeof v) && *v) max_min = atoi(v);
+  if (jo_qs_get(qs, "max_min", v, sizeof v, JO_QS_DECODE | JO_QS_BARE_KEY) && *v) max_min = atoi(v);
   if (max_min < 5) max_min = 5;
   if (max_min > ISO_MAX_MIN_CEIL) max_min = ISO_MAX_MIN_CEIL;
 
   double max_walk = ISO_MAX_WALK_DEF;
-  if (qget(qs, "max_walk_m", v, sizeof v) && *v) max_walk = strtod(v, NULL);
+  if (jo_qs_get(qs, "max_walk_m", v, sizeof v, JO_QS_DECODE | JO_QS_BARE_KEY) && *v) max_walk = strtod(v, NULL);
   if (max_walk < 100) max_walk = 100;
   if (max_walk > 2000) max_walk = 2000;
 
   double walk_kmh = ISO_WALK_KMH_DEF;
-  if (qget(qs, "walk_kmh", v, sizeof v) && *v) walk_kmh = strtod(v, NULL);
+  if (jo_qs_get(qs, "walk_kmh", v, sizeof v, JO_QS_DECODE | JO_QS_BARE_KEY) && *v) walk_kmh = strtod(v, NULL);
   if (!(walk_kmh >= 2.0)) walk_kmh = 2.0;
   if (walk_kmh > 7.0) walk_kmh = 7.0;
   const double walk_mps = walk_kmh * 1000.0 / 3600.0;
 
   int max_xfer = ISO_MAX_TRANSFERS;
-  if (qget(qs, "max_transfers", v, sizeof v) && *v) max_xfer = atoi(v);
+  if (jo_qs_get(qs, "max_transfers", v, sizeof v, JO_QS_DECODE | JO_QS_BARE_KEY) && *v) max_xfer = atoi(v);
   if (max_xfer < 0) max_xfer = 0;
   if (max_xfer > 4) max_xfer = 4;
 
   int bands[ISO_MAX_BANDS], nband = 0;
-  if (qget(qs, "bands", v, sizeof v) && *v) {
+  if (jo_qs_get(qs, "bands", v, sizeof v, JO_QS_DECODE | JO_QS_BARE_KEY) && *v) {
     char *save = NULL;
     for (char *tk = strtok_r(v, ",", &save); tk && nband < ISO_MAX_BANDS;
          tk = strtok_r(NULL, ",", &save)) {
@@ -551,7 +510,7 @@ char *isochrone_run(db_handle *db, const char *qs, int *status) {
       if (bands[j] < bands[i]) { int t = bands[i]; bands[i] = bands[j]; bands[j] = t; }
 
   char depv[64] = {0};
-  qget(qs, "depart_at", depv, sizeof depv);
+  jo_qs_get(qs, "depart_at", depv, sizeof depv, JO_QS_DECODE | JO_QS_BARE_KEY);
   char sdate[32]; const char *wd; int dep_sec; char dep_iso[64];
   if (parse_depart(depv[0] ? depv : NULL, sdate, &wd, &dep_sec, dep_iso) != 0)
     return errj(status, 400, "depart_at_invalid");

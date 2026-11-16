@@ -410,51 +410,64 @@ VJSON(eur_varsom_avalanche, "eur-varsom-avalanche", "NVE Norway — avalanche re
   "no", "[\"nor\",\"hazard\"]", 1800,
   "Simplified avalanche danger level per Norwegian forecast region.");
 
+/* WFS rows in this file: `startIndex=0` (2026-11-07). geojson_emit_paged()
+ * advances a WFS cursor only when the URL already names one AND the body's own
+ * numberMatched/totalFeatures exceeds what was read (mechanism 3), so a row
+ * without `startIndex` read ONE page of a declared total and stopped. Measured
+ * per row (count=5 at startIndex 0 and 5): where the server accepted paging
+ * without a sort — GeoServer does that only when it can order by the
+ * feature type's primary key — the two pages were disjoint and the row gets
+ * `startIndex=0` alone. Where it refused ("Cannot do natural order without a
+ * primary key"), the row also gets `sortBy=<a property distinct on the
+ * row's first 200 features>`, checked the same way (pages disjoint, total
+ * unchanged; a bogus sortBy is HTTP 400 "Illegal property name", so the
+ * server reads it). Probe-sized pages (count 2/3/20/50) are 1000 now. The
+ * 20-page geojson ceiling still bounds a run; the remainder is disclosed. */
 VGEO(eur_wfs_bkg_vg250_vg250_gem, "eur-wfs-bkg-vg250-vg250-gem", "BKG Verwaltungsgebiete — Gemeinden", "BKG Verwaltungsgebiete — Gemeinden",
   "europe_env", "geo",
-  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_gem&outputFormat=application%2Fjson&count=200",
+  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_gem&outputFormat=application%2Fjson&count=200&startIndex=0",
   "de", "[\"deu\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Gemeinden' layer served over WFS by BKG Verwaltungsgebiete, with real geometry.");
 
 VGEO(eur_wfs_bkg_vg250_vg250_krs, "eur-wfs-bkg-vg250-vg250-krs", "BKG Verwaltungsgebiete — Kreis", "BKG Verwaltungsgebiete — Kreis",
   "europe_env", "geo",
-  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_krs&outputFormat=application%2Fjson&count=200",
+  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_krs&outputFormat=application%2Fjson&count=200&startIndex=0",
   "de", "[\"deu\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Kreis' layer served over WFS by BKG Verwaltungsgebiete, with real geometry.");
 
 VGEO(eur_wfs_bkg_vg250_vg250_lan, "eur-wfs-bkg-vg250-vg250-lan", "BKG Verwaltungsgebiete — Bundesland", "BKG Verwaltungsgebiete — Bundesland",
   "europe_env", "geo",
-  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_lan&outputFormat=application%2Fjson&count=200",
+  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_lan&outputFormat=application%2Fjson&count=200&startIndex=0",
   "de", "[\"deu\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Bundesland' layer served over WFS by BKG Verwaltungsgebiete, with real geometry.");
 
 VGEO(eur_wfs_bkg_vg250_vg250_li, "eur-wfs-bkg-vg250-vg250-li", "BKG Verwaltungsgebiete — Grenzlinien", "BKG Verwaltungsgebiete — Grenzlinien",
   "europe_env", "geo",
-  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_li&outputFormat=application%2Fjson&count=200",
+  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_li&outputFormat=application%2Fjson&count=200&startIndex=0",
   "de", "[\"deu\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Grenzlinien' layer served over WFS by BKG Verwaltungsgebiete, with real geometry.");
 
 VGEO(eur_wfs_bkg_vg250_vg250_pk, "eur-wfs-bkg-vg250-vg250-pk", "BKG Verwaltungsgebiete — Gemeindepunkte", "BKG Verwaltungsgebiete — Gemeindepunkte",
   "europe_env", "geo",
-  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_pk&outputFormat=application%2Fjson&count=200",
+  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_pk&outputFormat=application%2Fjson&count=200&startIndex=0",
   "de", "[\"deu\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Gemeindepunkte' layer served over WFS by BKG Verwaltungsgebiete, with real geometry.");
 
 VGEO(eur_wfs_bkg_vg250_vg250_rbz, "eur-wfs-bkg-vg250-vg250-rbz", "BKG Verwaltungsgebiete — Regierungsbezirk", "BKG Verwaltungsgebiete — Regierungsbezirk",
   "europe_env", "geo",
-  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_rbz&outputFormat=application%2Fjson&count=200",
+  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_rbz&outputFormat=application%2Fjson&count=200&startIndex=0",
   "de", "[\"deu\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Regierungsbezirk' layer served over WFS by BKG Verwaltungsgebiete, with real geometry.");
 
 VGEO(eur_wfs_bkg_vg250_vg250_sta, "eur-wfs-bkg-vg250-vg250-sta", "BKG Verwaltungsgebiete — Staat", "BKG Verwaltungsgebiete — Staat",
   "europe_env", "geo",
-  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_sta&outputFormat=application%2Fjson&count=200",
+  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_sta&outputFormat=application%2Fjson&count=200&startIndex=0",
   "de", "[\"deu\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Staat' layer served over WFS by BKG Verwaltungsgebiete, with real geometry.");
 
 VGEO(eur_wfs_bkg_vg250_vg250_vwg, "eur-wfs-bkg-vg250-vg250-vwg", "BKG Verwaltungsgebiete — Verwaltungsgebiete", "BKG Verwaltungsgebiete — Verwaltungsgebiete",
   "europe_env", "geo",
-  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_vwg&outputFormat=application%2Fjson&count=200",
+  "https://sgx.geodatenzentrum.de/wfs_vg250?service=WFS&version=2.0.0&request=GetFeature&typeNames=vg250%3Avg250_vwg&outputFormat=application%2Fjson&count=200&startIndex=0",
   "de", "[\"deu\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Verwaltungsgebiete' layer served over WFS by BKG Verwaltungsgebiete, with real geometry.");
 
@@ -466,36 +479,36 @@ VGEO(eur_wfs_cuzk_cz_administrativeboundary, "eur-wfs-cuzk-cz-administrativeboun
 
 VGEO(eur_wfs_dk_dataforsyning_ans18, "eur-wfs-dk-dataforsyning-ans18", "Danish Agriculture Agency — ANS18", "Danish Agriculture Agency — ANS18",
   "europe_env", "geo",
-  "https://geodata.fvm.dk/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=Jordbrugsanalyser%3AANS18&outputFormat=application%2Fjson&count=50",
+  "https://geodata.fvm.dk/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=Jordbrugsanalyser%3AANS18&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "da", "[\"dnk\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ANS18' layer served over WFS by Danish Agriculture Agency, with real geometry.");
 
 VGEO(eur_wfs_dk_dataforsyning_ansoegere17, "eur-wfs-dk-dataforsyning-ansoegere17", "Danish Agriculture Agency — Ans�gere17", "Danish Agriculture Agency — Ans�gere17",
   "europe_env", "geo",
-  "https://geodata.fvm.dk/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=Jordbrugsanalyser%3AAnsoegere17&outputFormat=application%2Fjson&count=50",
+  "https://geodata.fvm.dk/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=Jordbrugsanalyser%3AAnsoegere17&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "da", "[\"dnk\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Ans�gere17' layer served over WFS by Danish Agriculture Agency, with real geometry.");
 
 VGEO(eur_wfs_geopf_a_1_limite_administrative, "eur-wfs-geopf-a-1-limite-administrative", "IGN Geoplateforme — BD CARTO Etat-major", "IGN Geoplateforme — BD CARTO Etat-major",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=BDCARTO_ETAT-MAJOR.NIVEAU4%3Aa_1_limite_administrative&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=BDCARTO_ETAT-MAJOR.NIVEAU4%3Aa_1_limite_administrative&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'BD CARTO Etat-major' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_a_2_surface_administrative, "eur-wfs-geopf-a-2-surface-administrative", "IGN Geoplateforme — BD CARTO Etat-major", "IGN Geoplateforme — BD CARTO Etat-major",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=BDCARTO_ETAT-MAJOR.NIVEAU4%3Aa_2_surface_administrative&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=BDCARTO_ETAT-MAJOR.NIVEAU4%3Aa_2_surface_administrative&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'BD CARTO Etat-major' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_acces_porteur, "eur-wfs-geopf-acces-porteur", "IGN Geoplateforme — Accessibilité physique des forêts PORTEUR", "IGN Geoplateforme — Accessibilité physique des forêts PORTEUR",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=IGNF_ACCESSIBILITE-PHYSIQUE-FORETS-%3Aacces_porteur&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=IGNF_ACCESSIBILITE-PHYSIQUE-FORETS-%3Aacces_porteur&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Accessibilité physique des forêts PORTEUR' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_acces_skidder, "eur-wfs-geopf-acces-skidder", "IGN Geoplateforme — Accessibilité physique des forêts SKIDDER", "IGN Geoplateforme — Accessibilité physique des forêts SKIDDER",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=IGNF_ACCESSIBILITE-PHYSIQUE-FORETS-%3Aacces_skidder&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=IGNF_ACCESSIBILITE-PHYSIQUE-FORETS-%3Aacces_skidder&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Accessibilité physique des forêts SKIDDER' layer served over WFS by IGN Geoplateforme, with real geometry.");

@@ -41,6 +41,9 @@ REGISTER_SOURCE(t_zebra)
 static const char *MEANT = "GENOME_ZEBRAFISH_ATLAS_FINDER";
 
 int main(void) {
+  /* The outbound floor refuses loopback by default (2026-11-12); this test's
+   * stub servers are on 127.0.0.1, so it opts out before any request. */
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
   unsetenv("JO_EMBED_URL"); unsetenv("JO_EMBED_QUERY_URL"); unsetenv("JO_EMBED_MODEL");
   unsetenv("JO_EMBED_QUERY_PREFIX"); unsetenv("JO_EMBED_DOC_PREFIX");
   unsetenv("JO_ROUTE_SEMANTIC");

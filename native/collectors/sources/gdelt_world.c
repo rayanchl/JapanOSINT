@@ -52,14 +52,14 @@ static int emit_article(intel_sink *sink, const cJSON *a) {
   if (dom)  cJSON_AddStringToObject(props, "domain", dom);
   if (ctry) cJSON_AddStringToObject(props, "source_country", ctry);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   intel_item it = {0};
   it.remote_key      = url ? url : title;
   it.title           = title ? title : url;
   it.summary         = dom;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = lang ? lang : "en";
   it.published_at    = seen;
   it.link            = url;
@@ -108,7 +108,7 @@ static int emit_geo(intel_sink *sink, const cJSON *f) {
   if (cntj && cJSON_IsNumber(cntj))
     cJSON_AddNumberToObject(props, "article_count", cntj->valuedouble);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char geoj[128];
@@ -118,7 +118,7 @@ static int emit_geo(intel_sink *sink, const cJSON *f) {
   intel_item it = {0};
   it.remote_key      = name;
   it.title           = name;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.has_geo         = 1;
   it.lat             = lat;
@@ -142,7 +142,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!enc) return 0;
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char url[1024];
   int emitted = 0;
 

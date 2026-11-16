@@ -266,9 +266,18 @@ VJSON(lat_sc_ckan_recent, "lat-sc-ckan-recent", "Santa Catarina Dados Abertos - 
   "pt", "[\"bra\",\"opendata\",\"data\"]", 21600,
   "CKAN current_package_list_with_resources: most recently modified datasets with their full resource list and download URLs.");
 
+/* Scoped Socrata catalogue rows below carry `order=createdAt` (2026-11-07),
+ * as their scoped siblings already do. Without it the catalogue answers in
+ * relevance order, which promises nothing stable across an offset walk.
+ * Measured on api.us.socrata.com: `order=createdAt` is NEWEST FIRST (NYC,
+ * 3,032 datasets, first 2026-09-29; `createdAt ASC` answers 2011), the total
+ * does not move, offset=3 continues the same order, and `order=frobnicate` is
+ * HTTP 400 "not a supported sort". Newest-first means a dataset created during
+ * the walk can repeat one record at a page seam, never skip one; the
+ * 20-page ceiling is then the newest 2,000 (limit=100) or 1,000 (limit=50). */
 VJSON(lat_socrata_co_cat, "lat-socrata-co-cat", "Datos Abiertos Colombia - Socrata catalogue (page 1)", "コロンビア：オープンデータ - Datos Abiertos Colombia - Socrata catalogue (page 1)",
   "latam_data", "opendata",
-  "https://api.us.socrata.com/api/catalog/v1?domains=www.datos.gov.co&limit=100",
+  "https://api.us.socrata.com/api/catalog/v1?domains=www.datos.gov.co&limit=100&order=createdAt",
   "results",
   "es", "[\"col\",\"opendata\",\"data\"]", 43200,
   "Socrata discovery API listing datasets published on datos.gov.co with dataset id, owner and update time.");

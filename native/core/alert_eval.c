@@ -1,4 +1,5 @@
 #include "alert_eval.h"
+#include "jo_page.h"
 #include "alert_sem.h"
 #include "embed_pod.h"
 #include "story.h"
@@ -1113,7 +1114,17 @@ static void cursor_write(db_handle *db, const char *ts, long long rid) {
   sqlite3_finalize(s);
 }
 
-int alert_eval_sweep_entities(db_handle *db) {
+/* Run ONE sweep pass and return the number of items re-evaluated. Walks
+ * entity_mentions written since the persisted watermark (alert_eval_cursor)
+ * and re-evaluates each newly-mentioned item against the enabled rules that
+ * carry an entity term, via the same eval path the live ingest uses.
+ *
+ * Idempotent, restart-safe, and bounded: at most ~10k mentions per call, and
+ * the watermark only advances over ranges it actually drained. Swallows every
+ * SQLite error. Safe to call from any thread; safe to call when no watchlist
+ * exists (it just advances the watermark). Exposed separately from the worker
+ * so a CLI/test can drive one deterministic pass. */
+static int alert_eval_sweep_entities(db_handle *db) {
   if (!db || !db->h) return 0;
 
   /* Upper bound of this pass, lagged into the past — see SWEEP_LAG_SEC. */
@@ -1290,10 +1301,13 @@ static char *preview_envelope(int *status, long matches, long scanned,
                               cJSON *semantic) {
   cJSON *w = cJSON_CreateObject();
   cJSON_AddItemToObject(w, "data", samples ? samples : cJSON_CreateArray());
-  cJSON *pg = cJSON_CreateObject();
-  cJSON_AddNumberToObject(pg, "limit", PREVIEW_SAMPLES);
-  cJSON_AddBoolToObject(pg, "has_more", matches > PREVIEW_SAMPLES);
-  cJSON_AddItemToObject(w, "page", pg);
+  /* The full page block like every other list (it was {limit, has_more}).
+   * total is the match count, or null when the scan was cut short and the
+   * count is only a floor (meta.truncated says the same). */
+  cJSON *data = cJSON_GetObjectItem(w, "data");
+  cJSON_AddItemToObject(w, "page",
+    jo_page_new(PREVIEW_SAMPLES, 0, cJSON_GetArraySize(data),
+                truncated ? -1 : matches, matches > PREVIEW_SAMPLES));
   cJSON *m = cJSON_CreateObject();
   cJSON_AddNumberToObject(m, "match_count", (double)matches);
   cJSON_AddNumberToObject(m, "scanned", (double)scanned);
@@ -1507,6 +1521,11 @@ char *alert_eval_preview(db_handle *db, const char *tenant_id,
     return out;
   }
 
+  /* The tenant's own rows AND the shared corpus (tenant legacy): a live rule
+   * receives both (alert_eval_item over legacy rows), so a preview scoped to
+   * the tenant alone answered "2 matches" over 2 rows while 50,033 shared
+   * rows the rule would really fire on were never looked at (probed
+   * 2026-11-07). What you preview is now what will fire. */
   /* Same eight columns, same order, both drivers: with q, FTS drives and the
    * MATCH string is the very one the live path probes with; without q, the
    * tenant+window index drives. Everything after this point is identical. */
@@ -1516,12 +1535,12 @@ char *alert_eval_preview(db_handle *db, const char *tenant_id,
     " intel_items.lon, intel_items.tags"
     " FROM intel_items"
     " JOIN intel_items_fts ON intel_items_fts.uid = intel_items.uid"
-    " WHERE intel_items_fts MATCH ?1 AND intel_items.tenant_id=?2"
+    " WHERE intel_items_fts MATCH ?1 AND intel_items.tenant_id IN (?2,'legacy')"
     "   AND intel_items.fetched_at >= ?3"
     " ORDER BY intel_items.fetched_at DESC LIMIT ?4";
   static const char *SQL_PLAIN =
     "SELECT uid, source_id, title, link, published_at, lat, lon, tags"
-    " FROM intel_items WHERE tenant_id=?1 AND fetched_at >= ?2"
+    " FROM intel_items WHERE tenant_id IN (?1,'legacy') AND fetched_at >= ?2"
     " ORDER BY fetched_at DESC LIMIT ?3";
 
   s = NULL;

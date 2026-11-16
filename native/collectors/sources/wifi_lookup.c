@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 typedef struct { const char *oui, *vendor; } oui_t;
 static const oui_t VENDORS[] = {
@@ -133,8 +134,8 @@ static cJSON *query_mylnikov(http_client *http, const char *bssid) {
 }
 
 static cJSON *query_wigle(http_client *http, const char *bssid) {
-  const char *nm = getenv("WIGLE_API_NAME");
-  const char *tk = getenv("WIGLE_API_TOKEN");
+  const char *nm = jo_getenv("WIGLE_API_NAME");
+  const char *tk = jo_getenv("WIGLE_API_TOKEN");
   if (!nm || !tk || !*nm || !*tk) return NULL;   /* graceful: caller adds note */
   cJSON *r = cJSON_CreateObject();
   cJSON_AddStringToObject(r, "source", "WiGLE");
@@ -291,7 +292,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "entity", bssid);
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   /* remote_key = wifi:<normalized-bssid>. */
@@ -301,7 +302,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "located access point";
   it.has_geo         = 1;
   it.lat             = lat;

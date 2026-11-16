@@ -18,10 +18,17 @@ static const hp_source T[] = {
     .collector = "et_statistics", .category = "statistics",
     .description = "Ethiopia DHS estimates with Indicator label, Value, SurveyId, IndicatorId and characteristic breakdown; detail by IndicatorId returns indicator metadata.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "statistics-record", .tags = "\"et\",\"statistics\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.dhsprogram.com/rest/dhs/data?countryIds=ET&f=json&perpage=100",
+    /* 2026-11-09: 100 of RecordCount a run (perpage=100, and `page_walk`
+     * found no pager it knows for `perpage`), keyed on the title fallback —
+     * which, after the detail hop, resolved to detail.Label, so two indicators
+     * sharing a label collapsed unguarded. perpage=5000 is honoured and page=2
+     * answers the next 5,000 (Uganda RecordCount 20,391 = 5 pages); DataId is
+     * distinct on every record. Records sharing an indicator now share one
+     * detail hop (lib/hpengine.c's per-run detail cache). */
+    .url = "https://api.dhsprogram.com/rest/dhs/data?countryIds=ET&f=json&perpage=5000&page=1",
     .array_path = "data",
     .detail_url = "https://api.dhsprogram.com/rest/dhs/indicators/{v}?f=json", .detail_key = "IndicatorId",
-    .page_walk = 1,
+    .page_param = "page", .id_keys = "DataId",
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-ihsn-et",

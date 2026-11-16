@@ -47,12 +47,12 @@ static int run_mempool(const source_ctx *ctx, intel_sink *sink) {
   snprintf(url, sizeof url, "https://mempool.space/api/address/%s", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "btc_mempool");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   const cJSON *chain = cJSON_GetObjectItem(root, "chain_stats");
   const cJSON *mem   = cJSON_GetObjectItem(root, "mempool_stats");
@@ -91,7 +91,7 @@ static int run_mempool(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "address", addr);
   if (have_bal) cJSON_AddNumberToObject(props, "balance_sat", (double)bal);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[600];
@@ -103,7 +103,7 @@ static int run_mempool(const source_ctx *ctx, intel_sink *sink) {
   it.remote_key      = addr;
   it.title           = title;
   it.summary         = have_bal ? "on-chain address stats" : "address stats";
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link;
   it.record_type     = "crypto-address";
@@ -142,12 +142,12 @@ static int run_blockchair(const source_ctx *ctx, intel_sink *sink) {
     "https://api.blockchair.com/%s/dashboards/address/%s", chain, enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "blockchair");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   /* data -> <address> -> address{...} */
   const cJSON *data = cJSON_GetObjectItem(root, "data");
@@ -180,7 +180,7 @@ static int run_blockchair(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "address", addr);
   if (bal) cJSON_AddStringToObject(props, "balance", bal);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[600];
@@ -192,7 +192,7 @@ static int run_blockchair(const source_ctx *ctx, intel_sink *sink) {
   it.remote_key      = addr;
   it.title           = title;
   it.summary         = txc ? "address dashboard" : "address";
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = ltx;
   it.link            = link;
@@ -249,7 +249,7 @@ static int run_ofac(const source_ctx *ctx, intel_sink *sink) {
   const char *addr = ctx->entity;
   if (!addr || !*addr) return 0;
   char *csv = jo_get(ctx, OFAC_SDN_CSV, NULL, "ofac_crypto");
-  if (!csv) return 0;
+  if (!csv) return jo_fail_rc(jo_last_status(), 0);
 
   int emitted = 0;
   size_t alen = strlen(addr);
@@ -307,7 +307,7 @@ static int run_ofac(const source_ctx *ctx, intel_sink *sink) {
     if (programs[0] && strcmp(programs, "-0-")) cJSON_AddStringToObject(props, "programs", programs);
     cJSON_AddBoolToObject(props, "sanctioned", 1);
     cJSON_AddBoolToObject(props, "success", 1);
-    char *pj = cJSON_PrintUnformatted(props);
+    jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
     char title[420];
@@ -318,7 +318,7 @@ static int run_ofac(const source_ctx *ctx, intel_sink *sink) {
     it.remote_key      = addr;
     it.title           = title;
     it.summary         = "Address on OFAC SDN sanctions list";
-    it.body            = bj;
+    it.body = bj;
     it.lang            = "en";
     it.link            = "https://sanctionssearch.ofac.treas.gov/";
     it.record_type     = "crypto-sanction";
@@ -416,12 +416,12 @@ static int c2_blockscout(const source_ctx *ctx, intel_sink *sink, const char *ad
            "https://eth.blockscout.com/api/v2/addresses/%s", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (crypto)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "ETH_BLOCKSCOUT");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   const char *hash = jo_sv(root, "hash");
   if (!hash) hash = addr;
@@ -446,7 +446,7 @@ static int c2_blockscout(const source_ctx *ctx, intel_sink *sink, const char *ad
   cJSON_AddStringToObject(props, "address", hash);
   cJSON_AddBoolToObject(props, "is_contract", is_contract);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[256];
@@ -456,7 +456,7 @@ static int c2_blockscout(const source_ctx *ctx, intel_sink *sink, const char *ad
   it.remote_key      = hash;
   it.title           = name ? name : hash;
   it.summary         = is_contract ? "Ethereum contract" : "Ethereum account";
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link;
   it.record_type     = "eth-address";
@@ -483,12 +483,12 @@ static int c2_tronscan(const source_ctx *ctx, intel_sink *sink, const char *addr
   snprintf(url, sizeof url, "https://api.trongrid.io/v1/accounts/%s", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (crypto)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "TRON_SCAN");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *arr = cJSON_GetObjectItem(root, "data");
   /* /v1/accounts/<addr> is a single-account lookup: TronGrid answers with a
@@ -540,7 +540,7 @@ static int c2_tronscan(const source_ctx *ctx, intel_sink *sink, const char *addr
   if (type) cJSON_AddStringToObject(props, "account_type", type);
   cJSON_AddNumberToObject(props, "trc20_token_count", ntok);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[256], title[192];
@@ -555,7 +555,7 @@ static int c2_tronscan(const source_ctx *ctx, intel_sink *sink, const char *addr
   it.remote_key      = addr;
   it.title           = title;
   it.summary         = "Tron account";
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link;
   it.record_type     = "tron-address";
@@ -593,7 +593,7 @@ static int c2_solana(const source_ctx *ctx, intel_sink *sink, const char *addr) 
 
   const char *hdrs[] = { "Content-Type: application/json",
                          "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (crypto)", NULL };
+                         NULL };
   http_response hr = {0};
   int hc = http_request(ctx->http, "POST",
                         "https://api.mainnet-beta.solana.com",
@@ -641,7 +641,7 @@ static int c2_solana(const source_ctx *ctx, intel_sink *sink, const char *addr) 
   if (owner) cJSON_AddStringToObject(props, "owner", owner);
   cJSON_AddBoolToObject(props, "executable", executable);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[256];
@@ -651,7 +651,7 @@ static int c2_solana(const source_ctx *ctx, intel_sink *sink, const char *addr) 
   it.remote_key      = addr;
   it.title           = addr;
   it.summary         = executable ? "Solana program" : "Solana account";
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link;
   it.record_type     = "solana-address";
@@ -677,12 +677,12 @@ static int c2_ens(const source_ctx *ctx, intel_sink *sink, const char *nameq) {
            "https://api.ensideas.com/ens/resolve/%s", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (crypto)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "ENS_RESOLVE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   const char *address = jo_sv(root, "address");
   const char *name    = jo_sv(root, "name");
@@ -711,7 +711,7 @@ static int c2_ens(const source_ctx *ctx, intel_sink *sink, const char *nameq) {
   if (name) cJSON_AddStringToObject(props, "ens_name", name);
   cJSON_AddStringToObject(props, "query", nameq);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[256];
@@ -721,7 +721,7 @@ static int c2_ens(const source_ctx *ctx, intel_sink *sink, const char *nameq) {
   it.remote_key      = address;
   it.title           = disp ? disp : (name ? name : address);
   it.summary         = address;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link;
   it.record_type     = "ens-resolution";

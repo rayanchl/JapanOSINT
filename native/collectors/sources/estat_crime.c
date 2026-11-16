@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 #define SOURCE_ID  "estat-crime"
 #define PORTAL_URL "https://www.e-stat.go.jp/stat-search/database?toukei=00130001"
@@ -153,7 +154,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char now[32];
   const char *nowp = jo_now_iso_ms(now, sizeof now);  /* NULL if unrenderable */
 
-  const char *id = getenv("ESTAT_APP_ID");
+  const char *id = jo_getenv("ESTAT_APP_ID");
   int configured = id && *id;
 
   /* ---- baseIntel directory row (always) ---- */
@@ -187,10 +188,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   if (!configured) {                           /* JS: no app ID → done */
     fprintf(stderr, "[estat-crime] no ESTAT_APP_ID; directory only\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "estat-crime", "estat-crime", (const char *const[]){"ESTAT_APP_ID", NULL}, NULL, NULL);
   }
 
-  const char *sdid = getenv("ESTAT_CRIME_STATS_DATA_ID");
+  const char *sdid = jo_getenv("ESTAT_CRIME_STATS_DATA_ID");
   if (!sdid || !*sdid) sdid = DEFAULT_STATS_DATA_ID;
 
   char url[512];

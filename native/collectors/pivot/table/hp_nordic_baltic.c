@@ -57,11 +57,27 @@ static const hp_source HP_NORDIC[] = {
       "one query goes from a company name to the people on its board" },
 
   /* ── Denmark ───────────────────────────────────────────────────────────── */
+  /* The three cvrapi.dk rows are GATED ON $CVRAPI_TOKEN (2026-11-12, the
+   * repository owner's decision). Measured that day: every keyless lookup
+   * answers HTTP 403 {"error":"QUOTA_EXCEEDED", …, "ip": …}; cvrapi.dk's own
+   * documentation puts the keyless allowance at 50 lookups a day per IP
+   * address or IP RANGE, so a shared egress has none, and its documented
+   * `token` parameter is the route past it. Changing the User-Agent is not a
+   * remedy: the quota belongs to the IP and must not be evaded. Denmark's
+   * official source has no keyless route that answers a lookup (ERST's
+   * distribution.virk.dk/cvr-permanent index 401s without the credentials
+   * ERST issues on application; datacvr.virk.dk's JSON gateway is behind a
+   * Cloudflare challenge), and re-pointing onto an unmeasured response shape
+   * would ship an unvalidated row — see collectors/sources/reg_dk_cvr.c.
+   * Without the variable the engine files the needs-credential notice and
+   * makes no request. The rule-4d control (real vs impossible CVR number)
+   * could not be taken through the quota; take it once a token is set. */
   { .id = "DK_CVRAPI_ENTITY", .name = "CVR — Danish company record",
     .name_ja = "デンマーク 企業登記(CVR)", .category = "government",
     .portal = "https://datacvr.virk.dk", .record_type = "dk-company",
     .tags = "\"dk\",\"registry\"", .free_tier = 1,
-    .url = "https://cvrapi.dk/api?search={q}&country=dk",
+    .key_env = "CVRAPI_TOKEN",
+    .url = "https://cvrapi.dk/api?search={q}&country=dk&token={key}",
     .title_keys = "name", .id_keys = "vat", .date_keys = "startdate",
     .description = "Danish CVR record for a company name or CVR number — address, "
       "industry code, employee band, phone/email as registered, protected-address "
@@ -71,7 +87,8 @@ static const hp_source HP_NORDIC[] = {
     .name_ja = "デンマーク 企業登記 — 所有者・経営陣", .category = "government",
     .portal = "https://datacvr.virk.dk", .record_type = "dk-officer",
     .tags = "\"dk\",\"officers\"", .free_tier = 1,
-    .url = "https://cvrapi.dk/api?search={q}&country=dk",
+    .key_env = "CVRAPI_TOKEN",   /* gated 2026-11-12: see DK_CVRAPI_ENTITY */
+    .url = "https://cvrapi.dk/api?search={q}&country=dk&token={key}",
     .array_path = "owners", .title_keys = "name",
     .description = "The owner and management rows of a Danish company as published "
       "in CVR — real personal names attached to a registered company, which is what "
@@ -185,7 +202,8 @@ static const hp_source HP_NORDIC[] = {
     .name_ja = "デンマーク 事業所(P-enhed)", .category = "government",
     .portal = "https://datacvr.virk.dk", .record_type = "dk-establishment",
     .tags = "\"dk\",\"branches\"", .free_tier = 1,
-    .url = "https://cvrapi.dk/api?search={q}&country=dk",
+    .key_env = "CVRAPI_TOKEN",   /* gated 2026-11-12: see DK_CVRAPI_ENTITY */
+    .url = "https://cvrapi.dk/api?search={q}&country=dk&token={key}",
     .array_path = "productionunits", .title_keys = "name", .id_keys = "pno",
     .description = "The production units (P-numbers) under a Danish CVR number — "
       "each physical site with its own identifier, address, industry code and "

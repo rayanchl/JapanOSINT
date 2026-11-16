@@ -295,9 +295,17 @@ struct LayerRow: View {
                 }
                 if let count = stats.count(for: layer.id) {
                     Text("·").font(.caption2).foregroundStyle(theme.textMuted)
-                    Text("\(count.formatted())")
-                        .font(.caption2.monospacedDigit())
-                        .foregroundStyle(theme.textMuted)
+                    // "N of M" when the map holds a bounded part of the layer
+                    // (the server's own records_available) — never N alone.
+                    if let total = stats.availableCount(for: layer.id) {
+                        Text("\(count.formatted()) of \(total.formatted())")
+                            .font(.caption2.monospacedDigit())
+                            .foregroundStyle(theme.warning)
+                    } else {
+                        Text("\(count.formatted())")
+                            .font(.caption2.monospacedDigit())
+                            .foregroundStyle(theme.textMuted)
+                    }
                 } else if let n = layer.recordsGeocoded {
                     // Not fetched yet: show the server's own measured count
                     // of geocoded rows (nil from the server = not measured,

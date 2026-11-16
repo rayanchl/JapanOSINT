@@ -167,11 +167,6 @@ typedef struct {
   int  present;              /* 1 → a template row was found          */
 } report_template;
 
-/* Never fails: on any error (no table, no row, SQL failure) `out` is zeroed
- * and present=0. Returns 1 if a template row was applied, 0 otherwise. */
-int report_template_load(db_handle *db, const char *tenant_id,
-                         report_template *out);
-
 /* Pre-flight — everything the caller must know BEFORE committing to a 200 and
  * emitting headers, because after the first chunk there is no error status
  * left. Validates format + section names and resolves the case inside the

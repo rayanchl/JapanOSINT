@@ -21,6 +21,7 @@
 
 #include "station_clusterer.h"
 #include "intel.h"            /* intel_fts_remirror: properties is indexed */
+#include "station_merges.h"   /* pass 3's table: its writer, judge and review */
 #include "../lib/utf8.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
@@ -29,6 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 /* ── Constants (verbatim from the two JS files) ──────────────────────── */
 #define SPATIAL_RADIUS_M       150.0
@@ -504,9 +506,44 @@ static void cellmap_free(cellmap_t *cm) {
     }
 }
 
+/* Pairs pass 2 could not decide, for the LLM judge (core/station_merges.h).
+ * Growable, uncapped: a pair is two ints, and every one is a question the
+ * judge may be asked on some run — the per-run budget bounds the asking. */
+typedef struct { int *i, *j; int n, cap; } cand_t;
+
+static int cand_push(cand_t *c, int i, int j) {
+    if (c->n == c->cap) {
+        int nc = c->cap ? c->cap * 2 : 64;
+        int *ni = realloc(c->i, (size_t)nc * sizeof(int));
+        if (!ni) return -1;
+        c->i = ni;
+        int *nj = realloc(c->j, (size_t)nc * sizeof(int));
+        if (!nj) return -1;
+        c->j = nj; c->cap = nc;
+    }
+    c->i[c->n] = i; c->j[c->n] = j; c->n++;
+    return 0;
+}
+
+/* A NEAR MISS of pass 2's name rule (2026-11-12): two stations inside the
+ * 150 m radius whose fingerprints did not merge, but where one contains the
+ * other (西武新宿 / 新宿) or they are within LEVENSHTEIN_THRESHOLD + 2 edits
+ * that are no more than half the longer name. Those are the pairs a fixed
+ * edit distance cannot decide and a judge can; a pair outside this is two
+ * plainly different names and asking about it would spend the budget on
+ * nothing. `lev` < 0 means not yet computed. */
+static int near_miss(const char *a, const char *b, size_t la, size_t lb, int lev) {
+    if (la >= 2 && lb >= 2 && (strstr(a, b) || strstr(b, a))) return 1;
+    if (lev < 0) lev = levenshtein_cp(a, b);
+    size_t mx = la > lb ? la : lb;
+    return lev <= LEVENSHTEIN_THRESHOLD + 2 && (size_t)lev * 2 <= mx;
+}
+
 /* cluster(stations) → DSU populated; group collection done by caller.
+ * `jq` (may be NULL) collects pass 2's near misses for the judge.
  * Returns 0, or -1 on alloc/DB failure. */
-static int cluster_pass(db_handle *db, station_t *S, int n, dsu_t *dsu) {
+static int cluster_pass(db_handle *db, station_t *S, int n, dsu_t *dsu,
+                        cand_t *jq) {
     /* Pass 1: wikidata identity merge. */
     {
         smap_t byq;
@@ -564,9 +601,16 @@ static int cluster_pass(db_handle *db, station_t *S, int n, dsu_t *dsu) {
                     if (strcmp(a->fp, b->fp) == 0) { dsu_union(dsu, i, j); continue; }
                     size_t la = cp_len(a->fp), lb = cp_len(b->fp);
                     size_t mn = la < lb ? la : lb;
-                    if (mn >= 3 &&
-                        levenshtein_cp(a->fp, b->fp) <= LEVENSHTEIN_THRESHOLD)
-                        dsu_union(dsu, i, j);
+                    int lev = -1;
+                    if (mn >= 3) {
+                        lev = levenshtein_cp(a->fp, b->fp);
+                        if (lev <= LEVENSHTEIN_THRESHOLD) { dsu_union(dsu, i, j); continue; }
+                    }
+                    /* Not merged by name: a question for the judge, if near. */
+                    if (jq && near_miss(a->fp, b->fp, la, lb, lev) &&
+                        cand_push(jq, i, j) != 0) {
+                        free(cand); cellmap_free(&cm); return -1;
+                    }
                 }
             }
             free(cand);
@@ -574,7 +618,16 @@ static int cluster_pass(db_handle *db, station_t *S, int n, dsu_t *dsu) {
     }
     cellmap_free(&cm);
 
-    /* Pass 3: trusted LLM merges (same=1 AND confidence>=0.7). */
+    /* Pass 3: REVIEWED LLM merges (same=1 AND status='approved').
+     *
+     * This read `same = 1 AND confidence >= 0.7` — the model's own word,
+     * unreviewed — from a table nothing in the C tree wrote. The writer is
+     * core/station_merges.c now, and every verdict it records is 'pending'
+     * until an operator decides it (/api/admin/station-merges), so only an
+     * approved same=1 row merges; the confidence is the reviewer's advice,
+     * not a gate (2026-11-12, the owner's decision). The migration ran at
+     * the top of station_clusterer_run(); if it could not, this prepare
+     * fails and nothing merges, which is the safe direction. */
     {
         smap_t byuid;
         if (smap_init(&byuid, n * 2 + 16) != 0) return -1;
@@ -584,7 +637,7 @@ static int cluster_pass(db_handle *db, station_t *S, int n, dsu_t *dsu) {
         sqlite3_stmt *m;
         static const char *MQ =
           "SELECT uid_a, uid_b FROM llm_station_merges "
-          "WHERE same = 1 AND confidence >= 0.7";
+          "WHERE same = 1 AND status = 'approved'";
         if (sqlite3_prepare_v2(db->h, MQ, -1, &m, NULL) == SQLITE_OK) {
             while (sqlite3_step(m) == SQLITE_ROW) {
                 const char *ua = (const char *)sqlite3_column_text(m, 0);
@@ -1332,7 +1385,41 @@ static int compute_line_dots(db_handle *db, cluster_row_t *rows, int nrows,
 
 /* ════════════════ §7 runStationClusterer + read API ═══════════════════ */
 
+/* Put this run's undecided near misses to the judge (core/station_merges.h).
+ * Its verdicts are recorded 'pending' and change nothing until reviewed, so
+ * this runs AFTER the clusters are written and cannot delay or alter them.
+ * The walk starts at an hour-dependent offset: the judge stops at its
+ * per-run budget and skips recorded pairs, but a pair whose answer never
+ * parses is not recorded, and from a fixed start it would be asked first on
+ * every run, ahead of everything behind it. */
+static void judge_near_misses(db_handle *db, station_t *S, const cand_t *jq) {
+    if (jq->n <= 0) return;
+    station_merge_pair *P = calloc((size_t)jq->n, sizeof *P);
+    if (!P) return;
+    int start = (int)((time(NULL) / 3600) % jq->n);
+    for (int k = 0; k < jq->n; k++) {
+        int c = (start + k) % jq->n;
+        station_t *a = &S[jq->i[c]], *b = &S[jq->j[c]];
+        station_merge_pair *p = &P[k];
+        p->uid_a = a->uid;              p->uid_b = b->uid;
+        p->name_a = a->name;            p->name_b = b->name;
+        p->name_ja_a = a->name_ja;      p->name_ja_b = b->name_ja;
+        p->mode_a = a->mode;            p->mode_b = b->mode;
+        p->operator_a = a->operator_;   p->operator_b = b->operator_;
+        p->line_a = a->line_name;       p->line_b = b->line_name;
+        p->dist_m = sqrt(dist_sq_m(a->lon, a->lat, b->lon, b->lat));
+    }
+    int asked = 0, unparsed = 0;
+    int rec = station_merges_judge(db, P, jq->n, &asked, &unparsed);
+    fprintf(stderr, "[stationClusterer] near misses=%d judged: asked=%d "
+            "recorded=%d unparsed=%d\n", jq->n, asked, rec < 0 ? 0 : rec,
+            unparsed);
+    free(P);
+}
+
 int station_clusterer_run(db_handle *db) {
+    /* Pass 3's table gains its review columns before pass 3 reads them. */
+    station_merges_migrate(db);
     int n = 0;
     station_t *S = load_stations(db, &n);
     if (n < 0) return -1;                 /* DB error */
@@ -1340,8 +1427,23 @@ int station_clusterer_run(db_handle *db) {
 
     dsu_t dsu;
     if (dsu_init(&dsu, n) != 0) { stations_free(S, n); return -1; }
-    if (cluster_pass(db, S, n, &dsu) != 0) {
+    /* Near misses are gathered only when a judge can be asked (LLM_BASE_URL
+     * set, budget > 0): otherwise nothing would be done with them. */
+    cand_t jq = {0};
+    int judging = station_merges_judge_enabled();
+    if (cluster_pass(db, S, n, &dsu, judging ? &jq : NULL) != 0) {
+        free(jq.i); free(jq.j);
         dsu_free(&dsu); stations_free(S, n); return -1;
+    }
+    /* A near miss that passes 1 or 3 (wikidata, an approved merge) or a
+     * chain of pass-2 merges already joined is not a question any more. */
+    {
+        int w = 0;
+        for (int k = 0; k < jq.n; k++)
+            if (dsu_find(&dsu, jq.i[k]) != dsu_find(&dsu, jq.j[k])) {
+                jq.i[w] = jq.i[k]; jq.j[w] = jq.j[k]; w++;
+            }
+        jq.n = w;
     }
 
     /* collect groups: root → member-index list, in ascending member order
@@ -1349,12 +1451,14 @@ int station_clusterer_run(db_handle *db) {
      * are re-sorted in materialise anyway). */
     smap_t root2grp;            /* "rootidx" → group slot */
     if (smap_init(&root2grp, n * 2 + 16) != 0) {
+        free(jq.i); free(jq.j);
         dsu_free(&dsu); stations_free(S, n); return -1;
     }
     int **groups = NULL; int *gsz = NULL, *gcap = NULL;
     int ng = 0, gscap = 0;
     char (*rootkeys)[16] = malloc((size_t)n * sizeof *rootkeys);
     if (!rootkeys) {
+        free(jq.i); free(jq.j);
         smap_free(&root2grp); dsu_free(&dsu); stations_free(S, n); return -1;
     }
     int fail = 0;
@@ -1436,6 +1540,9 @@ int station_clusterer_run(db_handle *db) {
     free(rows);
     for (int g = 0; g < ng; g++) free(groups[g]);
     free(groups); free(gsz); free(gcap); free(rootkeys);
+    /* After the write, so the judge's latency never holds the rebuild. */
+    if (judging && result >= 0) judge_near_misses(db, S, &jq);
+    free(jq.i); free(jq.j);
     stations_free(S, n);
     return result;
 }

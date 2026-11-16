@@ -23,10 +23,14 @@
  * 4. Buckets deliberately ignore cursor/limit — a histogram that reshapes as
  *    the user pages is a bug, not a feature.
  *
- * b64url()/b64url_decode() are duplicated from intelapi.c (they are static
- * there). The encoding must stay byte-identical: clients hold one cursor
- * parser for /api/intel/items and /api/timeline. */
+ * The cursor codec is jo_b64url_encode_str()/jo_b64url_decode_str()
+ * (core/jo_codec.h), the same one intelapi.c uses: clients hold one cursor
+ * parser for /api/intel/items and /api/timeline. Query parameters are read
+ * here (jo_qs_get) rather than in httpd.c so the whole /api/timeline
+ * parameter contract lives in one file. */
 #include "timelineapi.h"
+#include "jo_codec.h"
+#include "../lib/jocore.h"
 #include "embed_pod.h"
 #include "semsearchapi.h"
 #include "../third_party/cJSON.h"
@@ -59,103 +63,7 @@ static char *err(int *st, int code, const char *msg) {
 static void add_str_or_null(cJSON *o, const char *k, const char *v) {
   cJSON_AddItemToObject(o, k, v ? cJSON_CreateString(v) : cJSON_CreateNull());
 }
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
 
-/* ── cursor codec (byte-identical to intelapi.c) ───────────────────────────── */
-static char *b64url(const char *in) {
-  static const char T[] =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-  size_t len = strlen(in);
-  char *out = malloc(((len + 2) / 3) * 4 + 1);
-  if (!out) return NULL;
-  size_t o = 0;
-  for (size_t i = 0; i < len; i += 3) {
-    unsigned a = (unsigned char)in[i];
-    unsigned b = i + 1 < len ? (unsigned char)in[i + 1] : 0;
-    unsigned c = i + 2 < len ? (unsigned char)in[i + 2] : 0;
-    unsigned v = (a << 16) | (b << 8) | c;
-    out[o++] = T[(v >> 18) & 63];
-    out[o++] = T[(v >> 12) & 63];
-    if (i + 1 < len) out[o++] = T[(v >> 6) & 63];
-    if (i + 2 < len) out[o++] = T[v & 63];
-  }
-  out[o] = 0;
-  return out;
-}
-static char *b64url_decode(const char *in) {
-  static signed char R[256];
-  static int init = 0;
-  if (!init) {
-    for (int i = 0; i < 256; i++) R[i] = -1;
-    const char *T =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-    for (int i = 0; i < 64; i++) R[(unsigned char)T[i]] = (signed char)i;
-    init = 1;
-  }
-  size_t len = strlen(in);
-  char *out = malloc(len / 4 * 3 + 4);
-  if (!out) return NULL;
-  size_t o = 0; unsigned v = 0; int bits = 0;
-  for (size_t i = 0; i < len; i++) {
-    signed char d = R[(unsigned char)in[i]];
-    if (d < 0) { free(out); return NULL; }
-    v = (v << 6) | (unsigned)d; bits += 6;
-    if (bits >= 8) { bits -= 8; out[o++] = (char)((v >> bits) & 0xFF); }
-  }
-  out[o] = 0;
-  return out;
-}
-
-/* ── query-string parsing ──────────────────────────────────────────────────── */
-static int hexv(int c) {
-  if (c >= '0' && c <= '9') return c - '0';
-  if (c >= 'a' && c <= 'f') return c - 'a' + 10;
-  if (c >= 'A' && c <= 'F') return c - 'A' + 10;
-  return -1;
-}
-/* Percent/plus-decoding lookup over the raw query string. Returns 1 if `key`
- * was present (value may still be empty). We parse here rather than in
- * httpd.c so the whole /api/timeline parameter contract lives in one file. */
-static int qs_get(const char *qs, const char *key, char *out, size_t n) {
-  if (!out || n == 0) return 0;
-  out[0] = 0;
-  if (!qs || !*qs) return 0;
-  size_t kl = strlen(key);
-  const char *p = qs;
-  for (;;) {
-    const char *amp = strchr(p, '&');
-    const char *end = amp ? amp : p + strlen(p);
-    const char *eqp = memchr(p, '=', (size_t)(end - p));
-    if (eqp && (size_t)(eqp - p) == kl && strncmp(p, key, kl) == 0) {
-      size_t o = 0;
-      for (const char *v = eqp + 1; v < end && o + 1 < n; v++) {
-        if (*v == '+') { out[o++] = ' '; continue; }
-        if (*v == '%' && v + 2 < end) {
-          int h = hexv((unsigned char)v[1]), l = hexv((unsigned char)v[2]);
-          if (h >= 0 && l >= 0) { out[o++] = (char)(h * 16 + l); v += 2; continue; }
-        }
-        out[o++] = *v;
-      }
-      out[o] = 0;
-      return 1;
-    }
-    if (!amp) return 0;
-    p = amp + 1;
-  }
-}
 
 static int table_exists(sqlite3 *h, const char *name) {
   sqlite3_stmt *s; int found = 0;
@@ -369,16 +277,16 @@ char *timelineapi_query(db_handle *db, const tenant_ctx *t,
 
   char v_since[96], v_until[96], v_bucket[24], v_source[192],
        v_bbox[192], v_case[96], v_limit[24], v_cursor[768], v_q[1024], v_k[16];
-  int has_since  = qs_get(query_string, "since",   v_since,  sizeof v_since)  && v_since[0];
-  int has_until  = qs_get(query_string, "until",   v_until,  sizeof v_until)  && v_until[0];
-  qs_get(query_string, "bucket",  v_bucket, sizeof v_bucket);
-  qs_get(query_string, "source",  v_source, sizeof v_source);
-  qs_get(query_string, "bbox",    v_bbox,   sizeof v_bbox);
-  qs_get(query_string, "case_id", v_case,   sizeof v_case);
-  qs_get(query_string, "limit",   v_limit,  sizeof v_limit);
-  qs_get(query_string, "cursor",  v_cursor, sizeof v_cursor);
-  qs_get(query_string, "q",       v_q,      sizeof v_q);
-  qs_get(query_string, "k",       v_k,      sizeof v_k);
+  int has_since  = jo_qs_get(query_string, "since", v_since, sizeof v_since, JO_QS_DECODE)  && v_since[0];
+  int has_until  = jo_qs_get(query_string, "until", v_until, sizeof v_until, JO_QS_DECODE)  && v_until[0];
+  jo_qs_get(query_string, "bucket", v_bucket, sizeof v_bucket, JO_QS_DECODE);
+  jo_qs_get(query_string, "source", v_source, sizeof v_source, JO_QS_DECODE);
+  jo_qs_get(query_string, "bbox", v_bbox, sizeof v_bbox, JO_QS_DECODE);
+  jo_qs_get(query_string, "case_id", v_case, sizeof v_case, JO_QS_DECODE);
+  jo_qs_get(query_string, "limit", v_limit, sizeof v_limit, JO_QS_DECODE);
+  jo_qs_get(query_string, "cursor", v_cursor, sizeof v_cursor, JO_QS_DECODE);
+  jo_qs_get(query_string, "q", v_q, sizeof v_q, JO_QS_DECODE);
+  jo_qs_get(query_string, "k", v_k, sizeof v_k, JO_QS_DECODE);
 
   tq q;
   memset(&q, 0, sizeof q);
@@ -461,7 +369,7 @@ char *timelineapi_query(db_handle *db, const tenant_ctx *t,
    * same forgiving behaviour as intelapi.c. */
   cJSON *curj = NULL;
   if (v_cursor[0]) {
-    char *dec = b64url_decode(v_cursor);
+    char *dec = jo_b64url_decode_str(v_cursor);
     if (dec) {
       curj = cJSON_Parse(dec); free(dec);
       if (curj) {
@@ -620,7 +528,7 @@ char *timelineapi_query(db_handle *db, const tenant_ctx *t,
     cJSON_AddStringToObject(cur, "u", last_key);
     char *cj = cJSON_PrintUnformatted(cur);
     cJSON_Delete(cur);
-    char *enc = cj ? b64url(cj) : NULL;
+    char *enc = cj ? jo_b64url_encode_str(cj) : NULL;
     if (enc) cJSON_AddStringToObject(page, "next_cursor", enc);
     else     cJSON_AddNullToObject(page, "next_cursor");
     free(cj); free(enc);
@@ -640,7 +548,7 @@ char *timelineapi_query(db_handle *db, const tenant_ctx *t,
   add_str_or_null(filters, "bbox",    v_bbox[0] ? v_bbox : NULL);
   add_str_or_null(filters, "case_id", v_case[0] ? v_case : NULL);
 
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddStringToObject(meta, "bucket", by_hour ? "hour" : "day");

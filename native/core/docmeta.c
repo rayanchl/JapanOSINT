@@ -11,6 +11,7 @@
  * on a NEEDLE is fine and is used freely; strlen() on the HAYSTACK never
  * appears. */
 #include "docmeta.h"
+#include "jo_codec.h"
 #include "../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -230,12 +231,6 @@ static int pdf_delim(unsigned char c) {
          c == '{' || c == '}' || c == '/' || c == '%';
 }
 
-static int hexval(unsigned char c) {
-  if (c >= '0' && c <= '9') return c - '0';
-  if (c >= 'a' && c <= 'f') return c - 'a' + 10;
-  if (c >= 'A' && c <= 'F') return c - 'A' + 10;
-  return -1;
-}
 
 /* Read the object that follows a key at `p` (which points just past the key)
  * into `raw`, returning its length. Handles the three forms an Info value
@@ -292,7 +287,7 @@ static size_t pdf_object(const unsigned char *p, const unsigned char *end,
     p++;
     int hi = -1;
     while (p < end && *p != '>' && o < cap) {
-      int v = hexval(*p++);
+      int v = jo_hexv(*p++);
       if (v < 0) continue;                              /* whitespace is legal here */
       if (hi < 0) hi = v;
       else { raw[o++] = (unsigned char)((hi << 4) | v); hi = -1; }
@@ -305,7 +300,7 @@ static size_t pdf_object(const unsigned char *p, const unsigned char *end,
     p++;
     while (p < end && !pdf_ws(*p) && !pdf_delim(*p) && o < cap) {
       if (*p == '#' && end - p >= 3) {                  /* #XX name escape */
-        int a = hexval(p[1]), c2 = hexval(p[2]);
+        int a = jo_hexv(p[1]), c2 = jo_hexv(p[2]);
         if (a >= 0 && c2 >= 0) { raw[o++] = (unsigned char)((a << 4) | c2); p += 3; continue; }
       }
       raw[o++] = *p++;
@@ -711,7 +706,7 @@ static size_t xml_unescape(const unsigned char *s, size_t n,
       unsigned long v = 0;
       int digits = 0;
       for (; k < elen; k++) {
-        int d = hexval(e[k]);
+        int d = jo_hexv(e[k]);
         if (d < 0 || d >= base) { digits = 0; break; }
         v = v * (unsigned long)base + (unsigned long)d;
         if (v > 0x10FFFFul) { digits = 0; break; }
@@ -1032,7 +1027,22 @@ static int looks_texty(const unsigned char *b, size_t len) {
   return ctrl * 20 <= n;
 }
 
-const char *docmeta_sniff(const void *buf, size_t len) {
+/* Best-effort type label from the MAGIC BYTES of a buffer, one of:
+ *   "pdf" "docx" "xlsx" "pptx" "zip" "png" "jpeg" "gif"
+ *   "text" "html" "json" "csv" "unknown"
+ * Returns a static string and NEVER NULL — a NULL buffer, a zero length or an
+ * unrecognisable one all yield "unknown".
+ *
+ * Exists so a caller can gate on what a buffer IS rather than on what a client
+ * SAID it is. A Content-Type header is a claim from the other end of a socket;
+ * these are the file's own bytes. Where the two disagree, this is right.
+ *
+ * "docx"/"xlsx"/"pptx" require walking the ZIP central directory (bounded by
+ * DOCMETA_ZIP_MAX_ENTRIES), so this is cheap but not free on ZIP input; every
+ * other answer is decided from at most DOCMETA_SNIFF_WINDOW head bytes.
+ * "text"/"html"/"json"/"csv" are heuristics over that window and are labelled
+ * as heuristics in docmeta_extract()'s output. */
+static const char *docmeta_sniff(const void *buf, size_t len) {
   const unsigned char *b = (const unsigned char *)buf;
   if (!b || len == 0) return "unknown";
 

@@ -68,6 +68,9 @@ static const source_def *pick_hp_pivot(void) {
 }
 
 int main(void) {
+  /* The outbound floor refuses loopback by default (2026-11-12); this test's
+   * stub servers are on 127.0.0.1, so it opts out before any request. */
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
   db_handle db;
   assert(db_open(&db, NULL, NULL) == 0);
   const source_def *d = pick_hp_pivot();

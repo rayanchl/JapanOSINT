@@ -157,6 +157,28 @@ function isApiRequest(input) {
   } catch { return false; }
 }
 
+/** Listeners told when the server refused the stored workspace id
+ *  (403 `not_a_member`: the X-Tenant-Id names a workspace this account is not
+ *  a member of — a stale id, or one left by another account). */
+const tenantRejectedListeners = new Set();
+export function onTenantRejected(fn) { tenantRejectedListeners.add(fn); return () => tenantRejectedListeners.delete(fn); }
+
+/* Since 2026-11-07 the server answers a non-member X-Tenant-Id with 403
+ * `not_a_member` instead of silently using the caller's first workspace. The
+ * stored id is cleared (only if it is still the one this request sent, so a
+ * switch made meanwhile is not undone) and the listeners re-read /api/me,
+ * which resolves leniently and names the workspace actually in use. The
+ * request itself is NOT retried: it was aimed at a workspace, and replaying it
+ * against another one is exactly the defect the server-side change closes. */
+async function noteTenantRejection(res, sentTid) {
+  if (res.status !== 403 || !sentTid) return;
+  let err = null;
+  try { err = (await res.clone().json())?.error; } catch { /* not JSON: not this refusal */ }
+  if (err !== 'not_a_member') return;
+  if (sessionStore.tenantId === sentTid) sessionStore.setTenantId(null);
+  tenantRejectedListeners.forEach((fn) => { try { fn(); } catch { /* listener error */ } });
+}
+
 let installed = false;
 /** Idempotent. Wraps `window.fetch` so `/api` calls carry the session. */
 export function installFetchInterceptor() {
@@ -168,16 +190,19 @@ export function installFetchInterceptor() {
   window.fetch = async function joFetch(input, init) {
     if (!isApiRequest(input)) return raw(input, init);
 
+    let sentTid = null;   // the STORED tenant id this attempt carried, if any
     const build = () => {
       const headers = new Headers(init?.headers || (input instanceof Request ? input.headers : undefined));
       const tok = sessionStore.accessToken;
       if (tok && !headers.has('Authorization')) headers.set('Authorization', `Bearer ${tok}`);
       const tid = sessionStore.tenantId;
-      if (tid && !headers.has('X-Tenant-Id')) headers.set('X-Tenant-Id', tid);
+      sentTid = null;
+      if (tid && !headers.has('X-Tenant-Id')) { headers.set('X-Tenant-Id', tid); sentTid = tid; }
       return { ...init, headers };
     };
 
     let res = await raw(input, build());
+    if (res.status === 403) { await noteTenantRejection(res, sentTid); return res; }
     if (res.status !== 401 || !sessionStore.refreshToken) return res;
     // Retry exactly once after a coalesced refresh. Only bodies that can be
     // re-sent are retried; a consumed stream is returned as the 401 it got.
@@ -194,6 +219,7 @@ export function installFetchInterceptor() {
     if (outcome !== REFRESH.ok) return res;
     if (!bodyReplayable) return res;
     res = await raw(input, build());
+    await noteTenantRejection(res, sentTid);
     return res;
   };
 }

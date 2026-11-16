@@ -272,9 +272,11 @@ VRSS(gov_nao_reports, "gov-nao-reports", "National Audit Office — Reports", "�
   "en", "[\"uk\",\"audit\",\"oversight\",\"spending\"]", 86400,
   "UK National Audit Office value-for-money reports and investigations.");
 
+/* 2026-11-07: modelYear was frozen at 2025. {date:%Y} reads the current calendar year as the model year:
+ * measured 2026-11-07, 2025 answers 207 makes, 2026 160 and 2027 already 55. */
 VJSON(gov_nhtsa_recall_makes, "gov-nhtsa-recall-makes", "NHTSA — Vehicle Makes with Open Recalls", "NHTSA リコール対象自動車メーカー",
   "government", "regulator",
-  "https://api.nhtsa.gov/products/vehicle/makes?issueType=r&modelYear=2025",
+  "https://api.nhtsa.gov/products/vehicle/makes?issueType=r&modelYear={date:%Y}",
   "results",
   "en", "[\"usa\",\"nhtsa\",\"recalls\",\"vehicles\"]", 86400,
   "Vehicle makes with active US safety recalls for a given model year — entry point to NHTSA recall detail.");

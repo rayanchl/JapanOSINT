@@ -21,11 +21,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B45_JPWPCYBER[] = {
   { .id = "JO45_WP_WATCHGUARD_POSTS", .name = "UTM/NGFWでマルウェア・標的型攻撃対策 / ウォッチガード・テクノロジー — posts (WordPress REST)",
     .name_ja = "UTM/NGFWでマルウェア・標的型攻撃対策 / ウォッチガード・テクノロジー 投稿（WordPress REST）",
     .category = "security", .portal = "https://www.watchguard.co.jp/",
     .record_type = "site-post",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.watchguard.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -51,6 +57,7 @@ static const hp_source HP3B45_JPWPCYBER[] = {
     .name_ja = "UTM/NGFWでマルウェア・標的型攻撃対策 / ウォッチガード・テクノロジー 固定ページ（WordPress REST）",
     .category = "security", .portal = "https://www.watchguard.co.jp/",
     .record_type = "site-page",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.watchguard.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
@@ -77,6 +84,7 @@ static const hp_source HP3B45_JPWPCYBER[] = {
     .name_ja = "UTM/NGFWでマルウェア・標的型攻撃対策 / ウォッチガード・テクノロジー 利用者一覧（WordPress REST）",
     .category = "security", .portal = "https://www.watchguard.co.jp/",
     .record_type = "site-user",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.watchguard.co.jp/wp-json/wp/v2/users?per_page=100",
@@ -101,6 +109,7 @@ static const hp_source HP3B45_JPWPCYBER[] = {
     .name_ja = "LANSCOPE 投稿（WordPress REST）",
     .category = "security", .portal = "https://www.lanscope.jp/",
     .record_type = "site-post",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.lanscope.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -126,6 +135,7 @@ static const hp_source HP3B45_JPWPCYBER[] = {
     .name_ja = "LANSCOPE EMのトピックス（WordPress REST）",
     .category = "security", .portal = "https://www.lanscope.jp/",
     .record_type = "cpt-em-topics",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.lanscope.jp/wp-json/wp/v2/em_topics?per_page=100&orderby=date&order=desc",
@@ -151,6 +161,7 @@ static const hp_source HP3B45_JPWPCYBER[] = {
     .name_ja = "かっこ株式会社 Cacco Inc. 投稿（WordPress REST）",
     .category = "security", .portal = "https://cacco.co.jp/",
     .record_type = "site-post",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://cacco.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -175,6 +186,7 @@ static const hp_source HP3B45_JPWPCYBER[] = {
     .name_ja = "かっこ株式会社 Cacco Inc. 固定ページ（WordPress REST）",
     .category = "security", .portal = "https://cacco.co.jp/",
     .record_type = "site-page",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://cacco.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
@@ -200,6 +212,7 @@ static const hp_source HP3B45_JPWPCYBER[] = {
     .name_ja = "かっこ株式会社 Cacco Inc. News（WordPress REST）",
     .category = "security", .portal = "https://cacco.co.jp/",
     .record_type = "cpt-news",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://cacco.co.jp/wp-json/wp/v2/news?per_page=100&orderby=date&order=desc",
@@ -225,6 +238,7 @@ static const hp_source HP3B45_JPWPCYBER[] = {
     .name_ja = "かっこ株式会社 Cacco Inc. 利用者一覧（WordPress REST）",
     .category = "security", .portal = "https://cacco.co.jp/",
     .record_type = "site-user",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://cacco.co.jp/wp-json/wp/v2/users?per_page=100",

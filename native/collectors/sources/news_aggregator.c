@@ -82,7 +82,7 @@ static cJSON *query_gdelt(http_client *http, const char *query) {
 
 /* query_newsapi: key-gated on NEWSAPI_KEY → NULL without it. */
 static cJSON *query_newsapi(http_client *http, const char *query) {
-  const char *api_key = getenv("NEWSAPI_KEY");
+  const char *api_key = jo_getenv("NEWSAPI_KEY");
   if (!api_key || !*api_key) return NULL;
 
   cJSON *result = cJSON_CreateObject();

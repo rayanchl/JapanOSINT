@@ -1,5 +1,6 @@
 /* core/source_interval.c — see source_interval.h. */
 #include "source_interval.h"
+#include "../lib/jocore.h"
 #include "cadence.h"
 #include "scheduler.h"
 #include "../source.h"
@@ -30,10 +31,7 @@ static int cmp_key(const void *k, const void *e) {
   return strcmp((const char *)k, ((const si_entry *)e)->id);
 }
 
-static void iso_now(char *out, size_t n) {
-  time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
-}
+/* ISO-8601 UTC, whole seconds: jo_iso_now_sec() (lib/jocore.h). */
 
 static int ensure_table(db_handle *db) {
   return db_exec(db,
@@ -138,7 +136,7 @@ int source_interval_set(db_handle *db, const char *id, long interval_sec,
   else if (interval_sec > SI_MAX_SEC)   e = "an interval longer than a year is a typo";
   if (e) { if (err) *err = e; return -1; }
   if (ensure_table(db) != 0) { if (err) *err = "could not create source_interval_override"; return -1; }
-  char at[32]; iso_now(at, sizeof at);
+  char at[32]; jo_iso_now_sec(at, sizeof at);
   sqlite3_stmt *s = NULL;
   if (sqlite3_prepare_v2(db->h,
         "INSERT INTO source_interval_override(source_id,interval_sec,enabled,updated_at,updated_by) "
@@ -186,11 +184,15 @@ long source_interval_default(const sched_state *st, const source_def *d) {
    * triage (60 s) and log retention each ran once at boot and then every six
    * hours. A pod keeps the interval it declares. */
   if (sched_is_pod(d)) return d->update_interval_sec;
-  return cadence_apply(sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
+  /* And since 2026-11-14 a REALTIME row the same way (transport, or declared
+   * under an hour — cadence_exempt_reason in core/cadence.c): the owner's
+   * decision that live data runs live. It runs at its own base, declared or
+   * measured; cadence_apply_for is the one place that rule is applied. */
+  return cadence_apply_for(d, sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
 }
 
 const char *source_interval_policy_mode(const sched_state *st, const source_def *d) {
-  if (!d || sched_is_pod(d)) return "declared";
+  if (!d || cadence_exempt_reason(d)) return "declared";   /* a pod or realtime row: the policy did nothing */
   return cadence_mode_for(sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
 }
 
@@ -209,6 +211,7 @@ char *source_interval_json(db_handle *db, const char *id, int can_write) {
    * a row the cache refused (out of range) is not what runs */
   const char *basis = declared <= 0 ? "on demand"
                     : source_interval_for(id) > 0 ? "override"
+                    : cadence_exempt_reason(d) ? cadence_exempt_reason(d)   /* "realtime" | "pod" */
                     : strcmp(mode, "declared") ? "policy"
                     : measured > 0 ? "measured" : "declared";
   cJSON *o = cJSON_CreateObject();
@@ -218,7 +221,7 @@ char *source_interval_json(db_handle *db, const char *id, int can_write) {
   if (measured > 0) cJSON_AddNumberToObject(o, "measured_interval_sec", (double)measured);
   else cJSON_AddNullToObject(o, "measured_interval_sec");
   cJSON_AddNumberToObject(o, "policy_interval_sec", (double)policy);
-  cJSON_AddStringToObject(o, "policy", mode);
+  cJSON_AddStringToObject(o, "policy", cadence_exempt_reason(d) ? cadence_exempt_reason(d) : mode);
   if (ov.present) {
     cJSON *j = cJSON_CreateObject();
     cJSON_AddNumberToObject(j, "interval_sec", (double)ov.interval_sec);

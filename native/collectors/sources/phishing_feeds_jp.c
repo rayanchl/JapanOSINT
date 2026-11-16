@@ -236,7 +236,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(op);
   }
 
-  const char *ptkey = getenv("PHISHTANK_APP_KEY");
+  const char *ptkey = jo_getenv("PHISHTANK_APP_KEY");
   char pturl[256];
   if (ptkey && *ptkey)
     snprintf(pturl, sizeof pturl, "%s?app_key=%s", URL_PHISHTANK, ptkey);

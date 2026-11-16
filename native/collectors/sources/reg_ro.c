@@ -80,14 +80,14 @@ static int ro_emit_company(intel_sink *sink, const cJSON *c) {
   if (cui)  cJSON_AddStringToObject(props, "cui", cui);
   if (jud)  cJSON_AddStringToObject(props, "county", jud);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   intel_item it = {0};
   it.remote_key      = cui ? cui : name;
   it.title           = name ? name : cui;
   it.summary         = addr ? addr : city;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "ro";
   it.record_type     = "ro-company";
   it.properties_json = pj;
@@ -163,11 +163,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { keyhdr, "Accept: application/json", NULL };
 
   char *body = jo_get(ctx, url, hdrs, "reg_ro");
-  if (!body) return 0;   /* jo_get already logged status; honest empty */
+  if (!body) return jo_fail_rc(jo_last_status(), 0);   /* 404/204 empty; any other refusal -1 (2026-11-07) */
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) { fprintf(stderr, "[reg_ro] unparseable body\n"); return 0; }
+  if (!root) { fprintf(stderr, "[reg_ro] unparseable body\n"); return -1; }
 
   int emitted = ro_walk(sink, root);
   cJSON_Delete(root);

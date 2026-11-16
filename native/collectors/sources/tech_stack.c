@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <regex.h>
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 typedef struct {
   const char *name, *category, *pattern, *header, *header_pattern;
@@ -76,7 +77,7 @@ static int emit_tech(intel_sink *sink, const char *url, const char *name,
   cJSON_AddStringToObject(props, "technology", name);
   cJSON_AddStringToObject(props, "category", category);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[640];
   snprintf(rk, sizeof rk, "tech:%s:%s", url, name);
@@ -84,7 +85,7 @@ static int emit_tech(intel_sink *sink, const char *url, const char *name,
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = name;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = category;
   it.record_type     = "osint_service_result";
   it.properties_json = pj;

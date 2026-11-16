@@ -21,6 +21,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
+/* Feed cadence (2026-11-07): RSS/Atom rows that still carried the authoring
+ * default `interval = 3600` with no `adaptive_interval` were re-bucketed by
+ * tools/tune_intervals.py's rule from the `newest <date>` each description
+ * records, measured against its own "Fetched" date (<=3 d hourly, <=30 d
+ * 6-hourly, <=1 y daily, else weekly), and given `adaptive_interval = 1` so
+ * core/scheduler.c keeps re-measuring it, as this beat's other rows are. */
 static const hp_source HP3B47_WDGOV[] = {
   { .id = "JO47_WD_Q11926724", .name = "Andorran Financial Authority (central-bank, AD) - AFA",
     .name_ja = "Andorran Financial Authority (central-bank, AD) - AFA",
@@ -12485,6 +12496,7 @@ static const hp_source HP3B47_WDGOV[] = {
     .name_ja = "Fuchu City Hospital Organization (government-agency, JP) - 地方独立行政法人 府中市病院機構",
     .category = "government", .portal = "https://fuchuhp.jp/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://fuchuhp.jp/feed/atom",
@@ -12505,6 +12517,7 @@ static const hp_source HP3B47_WDGOV[] = {
     .name_ja = "Fuchu City Hospital Organization (government-agency, JP) - 地方独立行政法人 府中市病院機構",
     .category = "government", .portal = "https://fuchuhp.jp/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://fuchuhp.jp/feed",
@@ -12524,6 +12537,7 @@ static const hp_source HP3B47_WDGOV[] = {
     .name_ja = "Japan Sport Association (government-agency, JP) - 日本スポーツ協会",
     .category = "government", .portal = "https://www.japan-sports.or.jp/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.japan-sports.or.jp/rss.aspx?moduleid=457&portalid=0",
@@ -12544,6 +12558,7 @@ static const hp_source HP3B47_WDGOV[] = {
     .name_ja = "Okayama Prefectural Lifelong Learning Center (government-agency, JP) - 岡山県生涯学習センターホームページ お知らせ",
     .category = "government", .portal = "https://www.pal.pref.okayama.jp/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.pal.pref.okayama.jp/feed/rss.ashx?sitekb=01&servcls=NEWS",
@@ -12564,6 +12579,7 @@ static const hp_source HP3B47_WDGOV[] = {
     .name_ja = "Okayama Prefectural Lifelong Learning Center (government-agency, JP) - ぱるネット新着学習情報",
     .category = "government", .portal = "https://www.pal.pref.okayama.jp/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.pal.pref.okayama.jp/feed/rssstudy.ashx",
@@ -12584,6 +12600,7 @@ static const hp_source HP3B47_WDGOV[] = {
     .name_ja = "Japan Community Healthcare Organization (government-agency, JP) - 独立行政法人 地域医療機能推進機構独立行政法人 地域医療",
     .category = "government", .portal = "http://www.jcho.go.jp/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "http://www.jcho.go.jp/feed/",
@@ -12604,6 +12621,7 @@ static const hp_source HP3B47_WDGOV[] = {
     .name_ja = "Toyama Prefectural Education Center (government-agency, JP) - 富山県総合教育センター",
     .category = "government", .portal = "https://www.center.tym.ed.jp/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.center.tym.ed.jp/feed",
@@ -12624,6 +12642,7 @@ static const hp_source HP3B47_WDGOV[] = {
     .name_ja = "Shimane Prefectural Institute of Public Health and Environmental Sciences (government-agency, JP) - 島根県 RSS (新着情報（すべて表示）)",
     .category = "government", .portal = "https://www1.pref.shimane.lg.jp/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www1.pref.shimane.lg.jp/top_news.rdf",
@@ -12644,6 +12663,7 @@ static const hp_source HP3B47_WDGOV[] = {
     .name_ja = "Council of Local Authorities for International Relations (government-agency, JP) - CLAIR 一般財団法人自治体国際化協会",
     .category = "government", .portal = "https://www.clair.or.jp/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.clair.or.jp/index.xml",
@@ -12664,6 +12684,7 @@ static const hp_source HP3B47_WDGOV[] = {
     .name_ja = "Japan Expressway Holding and Debt Repayment Agency (government-organization, JP) - 新着情報RSS",
     .category = "government", .portal = "https://www.jehdra.go.jp/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jehdra.go.jp/rss/news.rss",
@@ -31031,6 +31052,7 @@ static const hp_source HP3B47_WDGOV[] = {
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
     .interval = 3600,
+    .adaptive_interval = 1,
     .link_keys = "link",
     .timeout_ms = 30000,
     .title_keys = "title",
@@ -31050,7 +31072,8 @@ static const hp_source HP3B47_WDGOV[] = {
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
-    .interval = 3600,
+    .interval = 86400,
+    .adaptive_interval = 1,
     .link_keys = "link",
     .timeout_ms = 30000,
     .title_keys = "title",
@@ -31068,7 +31091,8 @@ static const hp_source HP3B47_WDGOV[] = {
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
-    .interval = 3600,
+    .interval = 21600,
+    .adaptive_interval = 1,
     .link_keys = "link",
     .timeout_ms = 30000,
     .title_keys = "title",
@@ -31088,6 +31112,7 @@ static const hp_source HP3B47_WDGOV[] = {
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
     .interval = 3600,
+    .adaptive_interval = 1,
     .link_keys = "link",
     .timeout_ms = 30000,
     .title_keys = "title",
@@ -31106,7 +31131,8 @@ static const hp_source HP3B47_WDGOV[] = {
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
-    .interval = 3600,
+    .interval = 86400,
+    .adaptive_interval = 1,
     .link_keys = "link",
     .timeout_ms = 30000,
     .title_keys = "title",
@@ -31125,7 +31151,8 @@ static const hp_source HP3B47_WDGOV[] = {
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
-    .interval = 3600,
+    .interval = 86400,
+    .adaptive_interval = 1,
     .link_keys = "link",
     .timeout_ms = 30000,
     .title_keys = "title",
@@ -31144,7 +31171,8 @@ static const hp_source HP3B47_WDGOV[] = {
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
-    .interval = 3600,
+    .interval = 604800,
+    .adaptive_interval = 1,
     .link_keys = "link",
     .timeout_ms = 30000,
     .title_keys = "title",

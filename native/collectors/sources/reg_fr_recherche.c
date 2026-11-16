@@ -93,7 +93,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   if (activite) cJSON_AddStringToObject(props, "activite_principale", activite);
   cJSON_AddItemToObject(props, "dirigeants", dirs_out);   /* transfers ownership */
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[128];
@@ -105,7 +105,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   it.remote_key      = siren ? siren : nom;
   it.title           = nom ? nom : siren;
   it.summary         = addr;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "fr";
   it.published_at    = created;
   it.link            = siren ? link : NULL;
@@ -130,11 +130,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "fr_entreprises");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;

@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "_timefmt.inc"
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 typedef enum { C_UNKNOWN, C_BTC, C_ETH, C_LTC, C_DOGE, C_DASH,
                C_BCH, C_MONERO } ctype_t;
@@ -91,7 +92,7 @@ static int emit_chain(intel_sink *sink, const char *chain, const char *addr,
   cJSON_AddStringToObject(props, "record", "balance");
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[320], title[360];
   snprintf(rk, sizeof rk, "crypto:%s:%s", chain, addr);
@@ -100,7 +101,7 @@ static int emit_chain(intel_sink *sink, const char *chain, const char *addr,
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "crypto balance";
   it.link            = url;
   it.record_type     = "osint_service_result";
@@ -147,7 +148,7 @@ static int emit_tx(intel_sink *sink, const char *chain, const char *addr,
   cJSON_AddStringToObject(props, "record", "transaction");
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[200];
   snprintf(rk, sizeof rk, "tx:%s", hash->valuestring);
@@ -156,7 +157,7 @@ static int emit_tx(intel_sink *sink, const char *chain, const char *addr,
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "crypto transaction";
   it.published_at    = iso[0] ? iso : NULL;
   it.record_type     = "osint_service_result";

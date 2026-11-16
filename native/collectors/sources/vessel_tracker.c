@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 typedef struct { int s, e; const char *c; } mid_range_t;
 static const mid_range_t MID_CODES[] = {
@@ -177,7 +178,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "entity", q);
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   /* remote_key = vessel:<imo-or-mmsi> (the canonical identifier itself). */
@@ -187,7 +188,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "vessel identity";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;

@@ -42,7 +42,7 @@ export default function CasesPage() {
   const [exporting, setExporting] = useState(false);
 
   const path = status ? `/api/cases?status=${encodeURIComponent(status)}` : '/api/cases';
-  const { rows, setRows, hasMore, error, loading, loadingMore, reload, loadMore } = usePaged(path, { limit: 50 });
+  const { rows, setRows, hasMore, error, moreError, loading, loadingMore, reload, loadMore } = usePaged(path, { limit: 50 });
 
   const visible = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -162,6 +162,7 @@ export default function CasesPage() {
             ? <span className="text-[11px] text-accent font-mono">showing {visible.length} of {rows.length} loaded · more on the server (keyset paging, no total)</span>
             : <BoundNote shown={visible.length} total={rows.length} noun="cases" />}
           {hasMore && <Button busy={loadingMore} onClick={loadMore}>Load more</Button>}
+          {moreError && <span className="text-[11px] text-neon-red font-mono">next page failed — {errorMessage(moreError)}</span>}
         </div>
       )}
 

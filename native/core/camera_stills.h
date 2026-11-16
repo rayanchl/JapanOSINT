@@ -433,12 +433,6 @@
 #define CAM_FEED_HLS      4   /* .m3u8                — ffmpeg only          */
 #define CAM_FEED_UNSUPPORTED 5
 
-/* Classify a feed URL. Pure, no I/O. SNAPSHOT vs MJPEG is a HEURISTIC over the
- * URL shape (see the routing note above); the true distinction is only known
- * once bytes arrive, and the capture path handles being wrong in either
- * direction. Returns one of CAM_FEED_*. */
-int camera_stills_classify(const char *url);
-
 /* ── the decoder-free JPEG frame extractor ───────────────────────────────── */
 
 /* Locate the first COMPLETE JPEG in `buf` and return 1 with *off and *flen set
@@ -467,19 +461,6 @@ int camera_stills_jpeg_frame(const void *buf, size_t len,
 #define CAM_SCENE_UNKNOWN (-1)   /* → SQL NULL: nobody could look           */
 #define CAM_SCENE_SAME      0
 #define CAM_SCENE_CHANGED   1
-
-/* Compare a new frame with the camera's previous one. `prev_sha`/`sha` are
- * 64-hex strings (prev_sha may be NULL for the first frame ever). A pHash of 0
- * means "absent" — 0 is media.h's documented no-usable-hash sentinel, so it can
- * never be a real hash and needs no separate flag.
- *
- * Returns CAM_SCENE_CHANGED / CAM_SCENE_SAME when it can prove one, and
- * CAM_SCENE_UNKNOWN when it cannot — which on a host with no image decoder is
- * every pair whose bytes differ. Reporting SAME there would be a lie; see the
- * long note above. The first frame of a camera is CHANGED (there was nothing,
- * now there is something). */
-int camera_stills_scene(const char *prev_sha, uint64_t prev_phash,
-                        const char *sha, uint64_t phash);
 
 /* ── pipeline ────────────────────────────────────────────────────────────── */
 
@@ -542,12 +523,6 @@ int camera_stills_capture_batch(db_handle *db, http_client *http, int limit,
  * write, so the ceiling holds even with no sweep. Returns rows deleted. Blobs
  * are NOT unlinked — see the retention note above. */
 int camera_stills_prune_camera(db_handle *db, const char *camera_id);
-
-/* Retention sweep over EVERY camera that has rows, including ones no longer
- * opted in or no longer present in intel_items — those are exactly the ones
- * the on-write prune can never reach again. `limit` (<=0 → all) caps cameras
- * examined per call; `cancel` stops it cleanly. Returns rows deleted. */
-int camera_stills_sweep(db_handle *db, int limit, volatile int *cancel);
 
 /* ── read paths ──────────────────────────────────────────────────────────── */
 

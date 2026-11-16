@@ -103,10 +103,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
            "&time_zone=gmt&units=metric&format=json", station);
 
   char *body = jo_get(ctx, url, NULL, "NOAA_COOPS_WATER_LEVEL");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *doc = cJSON_Parse(body);
   free(body);
-  if (!doc) return 0;
+  if (!doc) return -1;
   if (cJSON_GetObjectItem(doc, "error")) {   /* HTTP 200 + error = no data */
     cJSON_Delete(doc);
     return 0;

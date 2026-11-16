@@ -154,6 +154,14 @@ VJSON(it_opendata_comune_bari_it_tags, "it-opendata-comune-bari-it-tags", "Bari 
   "it", "[\"it\",\"ckan\",\"opendata\",\"tags\"]", 86400,
   "The portal's full controlled vocabulary of dataset tags. Served by the CKAN platform at opendata.comune.bari.it.");
 
+/* Socrata catalogue rows in this file (`/api/catalog/v1?...&order=createdAt`), 2026-11-07:
+ * bare `order=createdAt` is DESCENDING, newest first, on the portals' own hosts as on
+ * api.us.socrata.com (data.honolulu.gov: 2026-11-02 first, `createdAt ASC` 2012-06-01, total
+ * 455 unchanged; www.dati.lombardia.it: 2026-11-05 first, ASC 2012-01-10, total 5,132). So
+ * each row reads the NEWEST limit x 20 pages (2,000 at limit=100), not the whole catalogue: a
+ * catalogue that fits is read complete, and a larger one (Lombardia's 5,132) stops at the page
+ * ceiling and files the ceiling's truncation notice. The notice cannot yet name the
+ * catalogue's size: `resultSetSize` is not a declared-total spelling (lib/pagewalk.c). */
 VJSON(it_www_dati_lombardia_it_catalog, "it-www-dati-lombardia-it-catalog", "Data Regione Lombardia — catalog (Italy)", "Data Regione Lombardia — catalog (Italy)",
   "it_opendata", "opendata",
   "https://www.dati.lombardia.it/api/catalog/v1?limit=100&domains=www.dati.lombardia.it&search_context=www.dati.lombardia.it&order=createdAt",

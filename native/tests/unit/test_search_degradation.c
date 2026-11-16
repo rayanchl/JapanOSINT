@@ -374,6 +374,9 @@ static void test_followup_round_menu(void) {
 }
 
 int main(void) {
+  /* The outbound floor refuses loopback by default (2026-11-12); this test's
+   * stub servers are on 127.0.0.1, so it opts out before any request. */
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
   printf("test_search_degradation\n");
   test_followup_round_menu();
   test_severity_separates_failure_from_disclosure();

@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 static int emit_hit(intel_sink *sink, const char *entity, cJSON *item) {
   cJSON *path = cJSON_GetObjectItem(item, "path");
@@ -53,14 +54,14 @@ static int emit_hit(intel_sink *sink, const char *entity, cJSON *item) {
 static int cred_run(const source_ctx *ctx, intel_sink *sink) {
   const char *entity = ctx->entity;
   if (!entity || !*entity) return 0;
-  const char *token = getenv("GITHUB_TOKEN");
-  if (!token || !*token) token = getenv("GITHUB_API_TOKEN");
+  const char *token = jo_getenv("GITHUB_TOKEN");
+  if (!token || !*token) token = jo_getenv("GITHUB_API_TOKEN");
   if (!token || !*token) {
     /* AUDIT NOTE (slice a3): this returned a silent 0 with no log, so the
      * source was indistinguishable from "ran and found nothing". Say it is
      * gated so it classifies as gated rather than as a mystery empty. */
     fprintf(stderr, "[CREDENTIAL_LEAK_SEARCH] gated (no GITHUB_TOKEN)\n");
-    return 0;                                  /* code search needs auth */
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "CREDENTIAL_LEAK_SEARCH", "CREDENTIAL_LEAK_SEARCH", (const char *const[]){"GITHUB_TOKEN", NULL}, NULL, NULL);                                  /* code search needs auth */
   }
 
   /* The entity is analyst-supplied and is wrapped in a GitHub code-search

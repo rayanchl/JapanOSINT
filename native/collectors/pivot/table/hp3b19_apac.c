@@ -876,7 +876,8 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "administrative-rule",
     .tags = "\"korea\",\"law\",\"regulation\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=admrul&type=JSON&display=100&query={q}",
+    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC={key}&target=admrul&type=JSON&display=100&query={q}",
+    .key_env = "LAW_GO_KR_OC",   /* 2026-11-11, owner's decision: OC=test is refused ("register your server IP"); OC is the account id open.law.go.kr issues for a registered IP */
     .array_path = "AdmRulSearch.admrul",
     .page_param = "page",
     .title_keys = "행정규칙명",
@@ -891,7 +892,8 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "form-schedule",
     .tags = "\"korea\",\"law\",\"forms\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=licbyl&type=JSON&display=100&query={q}",
+    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC={key}&target=licbyl&type=JSON&display=100&query={q}",
+    .key_env = "LAW_GO_KR_OC",   /* 2026-11-11, owner's decision: OC=test is refused ("register your server IP"); OC is the account id open.law.go.kr issues for a registered IP */
     .array_path = "licBylSearch.licbyl",
     .page_param = "page",
     .description = "Statutory schedules and prescribed forms attached to Korean "
@@ -905,7 +907,8 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "legal-term",
     .tags = "\"korea\",\"law\",\"terminology\",\"reference\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=lstrm&type=JSON&display=100&query={q}",
+    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC={key}&target=lstrm&type=JSON&display=100&query={q}",
+    .key_env = "LAW_GO_KR_OC",   /* 2026-11-11, owner's decision: OC=test is refused ("register your server IP"); OC is the account id open.law.go.kr issues for a registered IP */
     .array_path = "LsTrmSearch.lstrm",
     .page_param = "page",
     .description = "Defined legal terms in Korean law with the term, its statutory "
@@ -919,7 +922,8 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "law-amendment",
     .tags = "\"korea\",\"law\",\"amendment\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=oldAndNew&type=JSON&display=100&query={q}",
+    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC={key}&target=oldAndNew&type=JSON&display=100&query={q}",
+    .key_env = "LAW_GO_KR_OC",   /* 2026-11-11, owner's decision: OC=test is refused ("register your server IP"); OC is the account id open.law.go.kr issues for a registered IP */
     .array_path = "OldAndNewLawSearch.oldAndNew",
     .page_param = "page",
     .description = "Korean statutes with a published before-and-after amendment "
@@ -933,7 +937,8 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "form-schedule",
     .tags = "\"korea\",\"law\",\"forms\",\"regulation\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=admbyl&type=JSON&display=100&query={q}",
+    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC={key}&target=admbyl&type=JSON&display=100&query={q}",
+    .key_env = "LAW_GO_KR_OC",   /* 2026-11-11, owner's decision: OC=test is refused ("register your server IP"); OC is the account id open.law.go.kr issues for a registered IP */
     .array_path = "admRulBylSearch.admbyl",
     .page_param = "page",
     .description = "Schedules and forms attached to Korean administrative rules with "
@@ -1048,7 +1053,13 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "development-application",
     .tags = "\"australia\",\"melbourne\",\"planning\",\"construction\",\"city\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/development-activity-monitor/records?limit=100",
+    /* `order_by=development_key` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: development_key distinct over all 1,451 records read through
+     * /exports/json. Checked on this dataset: order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/development-activity-monitor/records?limit=100&offset=0&order_by=development_key%20asc",
     .array_path = "results",
     .id_keys = "development_key",
     .interval = 86400,

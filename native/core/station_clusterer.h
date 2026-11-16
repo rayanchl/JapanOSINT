@@ -12,8 +12,10 @@
  * Constants ported verbatim from the JS:
  *   SPATIAL_RADIUS_M=150, LEVENSHTEIN_THRESHOLD=2, CELL_SIZE_DEG=0.005
  *   (clusterer) / 0.01 (snap), METERS_PER_DEG_LAT=111320,
- *   DEFAULT_RADIUS_M=300, MIN_RAIL_SEPARATION_M=3. LLM merges trusted at
- *   same=1 AND confidence>=0.7. cluster_uid = sha1(sorted member_uids
+ *   DEFAULT_RADIUS_M=300, MIN_RAIL_SEPARATION_M=3. LLM merges applied at
+ *   same=1 AND status='approved' — an operator's review, not the model's
+ *   confidence (2026-11-12; core/station_merges.h, whose judge this run
+ *   feeds with pass 2's near misses). cluster_uid = sha1(sorted member_uids
  *   joined '|') full 40-hex digest. Equirectangular distSqM /
  *   point-to-segment math kept bit-for-bit faithful to the formulas.
  *

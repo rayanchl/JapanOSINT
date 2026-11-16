@@ -42,6 +42,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "av_common.inc"
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 #define ADSBDB_LICENSE \
   "Keyless open API (adsbdb, open-source). Route data is community-sourced — " \
@@ -65,7 +66,7 @@ static cJSON *adsbdb_get(const source_ctx *ctx, const char *path,
   char url[256];
   snprintf(url, sizeof url, "https://api.adsbdb.com/v0/%s/%s", path, enc);
   free(enc);
-  const char *hdrs[] = { "Accept: application/json", AV_UA_HDR, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, tag);   /* 404 → NULL → honest empty */
   if (!body) return NULL;
   cJSON *doc = cJSON_Parse(body);
@@ -112,7 +113,7 @@ static int run_aircraft(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "service", "ADSBDB_AIRCRAFT");
   cJSON_AddStringToObject(props, "query", q);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
   cJSON_Delete(data);
 
@@ -128,7 +129,7 @@ static int run_aircraft(const source_ctx *ctx, intel_sink *sink) {
   it.remote_key      = mode_s ? mode_s : reg;
   it.title           = title;
   it.summary         = summary[0] ? summary : NULL;
-  it.body            = bj;
+  it.body = bj;
   it.link            = photo;                 /* real photo URL when returned */
   it.lang            = "en";
   it.record_type     = "aircraft-registry";
@@ -180,7 +181,7 @@ static int adsbdb_airport_row(intel_sink *sink, const cJSON *ap,
   /* The coordinate is the AIRPORT's, never the aircraft's position. */
   if (geo) cJSON_AddStringToObject(props, "geo_precision", "airport");
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
   cJSON_Delete(data);
 
@@ -194,7 +195,7 @@ static int adsbdb_airport_row(intel_sink *sink, const cJSON *ap,
   it.remote_key      = uid;
   it.title           = title;
   it.summary         = jo_sv(ap, "municipality");
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.has_geo         = geo;
   it.lat             = geo ? lat : 0;
@@ -259,7 +260,7 @@ static int run_airline(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(props, "service", "ADSBDB_AIRLINE");
     cJSON_AddStringToObject(props, "query", q);
     cJSON_AddBoolToObject(props, "success", 1);
-    char *pj = cJSON_PrintUnformatted(props);
+    jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
     cJSON_Delete(data);
 
@@ -275,7 +276,7 @@ static int run_airline(const source_ctx *ctx, intel_sink *sink) {
     it.remote_key      = uid;
     it.title           = name;
     it.summary         = summary[0] ? summary : NULL;
-    it.body            = bj;
+    it.body = bj;
     it.lang            = "en";
     it.record_type     = "airline-operator";
     /* NO GEO — `country` is deliberately not geocoded (R2). */

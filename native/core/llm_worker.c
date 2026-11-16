@@ -87,7 +87,7 @@ static int run_job(llm_job *j, http_client *http) {
     }
     http_response r = {0};
     long long t0 = mono_ms();
-    rc = http_request(http, q->method, q->url, q->headers, q->body,
+    rc = http_request_service(http, q->method, q->url, q->headers, q->body,
                       q->body_len, tmo, 0, &r);
     j->http_ms += (long)(mono_ms() - t0);
     j->attempts++;

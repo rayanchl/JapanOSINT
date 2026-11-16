@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 #define SHODAN_API_BASE  "https://api.shodan.io"
 #define INTERNETDB_URL   "https://internetdb.shodan.io/%s"
@@ -110,7 +111,7 @@ static int emit_port(intel_sink *sink, const char *ip, int port,
   cJSON_AddStringToObject(props, "record", "open_port");
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[160];
   snprintf(rk, sizeof rk, "shodan:%s:port:%d", ip, port);
@@ -119,7 +120,7 @@ static int emit_port(intel_sink *sink, const char *ip, int port,
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "open port";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
@@ -149,7 +150,7 @@ static int emit_vuln(intel_sink *sink, const char *ip, const char *cve,
   cJSON_AddStringToObject(props, "record", "vulnerability");
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[200], title[200];
   snprintf(rk, sizeof rk, "shodan:%s:vuln:%s", ip, cve);
@@ -158,7 +159,7 @@ static int emit_vuln(intel_sink *sink, const char *ip, const char *cve,
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "vulnerability";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
@@ -208,7 +209,7 @@ static int emit_host(intel_sink *sink, const char *ip,
   cJSON_AddStringToObject(props, "record", "host");
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[160];
   snprintf(rk, sizeof rk, "shodan:%s", ip);
@@ -217,7 +218,7 @@ static int emit_host(intel_sink *sink, const char *ip,
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "host metadata";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
@@ -302,7 +303,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   /* upstream skips emails */
   if (strchr(entity, '@')) return 0;
 
-  const char *api_key = getenv("SHODAN_API_KEY");
+  const char *api_key = jo_getenv("SHODAN_API_KEY");
 
   if (is_valid_ip(entity)) {
     emit_ip(sink, ctx->http, entity, api_key);

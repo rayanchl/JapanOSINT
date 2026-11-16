@@ -1,5 +1,6 @@
 /* core/sweepapi.c — see header. */
 #include "sweepapi.h"
+#include "../lib/jocore.h"
 #include "collcache.h"
 #include "camera_store.h"
 #include "station_footprints.h"
@@ -13,20 +14,7 @@
 #include <time.h>
 #include <sys/time.h>
 
-static void iso_now(char *o, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm g; gmtime_r(&tv.tv_sec, &g);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(o, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(g.tm_year+1900) % 10000u, (unsigned)(g.tm_mon+1) % 100u,
-           (unsigned)g.tm_mday % 100u, (unsigned)g.tm_hour % 100u,
-           (unsigned)g.tm_min % 100u, (unsigned)g.tm_sec % 100u,
-           (unsigned)(tv.tv_usec/1000) % 1000u);
-}
+/* ISO-8601 UTC with milliseconds: jo_iso_now_ms() (lib/jocore.h). */
 
 static int is_unified_mode(const char *id) {
   static const char *M[] = {
@@ -114,7 +102,7 @@ static char *unified_fc(db_handle *db, const char *id) {
   char src[64]; snprintf(src, sizeof src, "transport_store:%s",
                          id + strlen("unified-"));
   cJSON_AddStringToObject(meta, "source", src);
-  char now[32]; iso_now(now, sizeof now);
+  char now[32]; jo_iso_now_ms(now, sizeof now);
   cJSON_AddStringToObject(meta, "fetchedAt", now);
   cJSON_AddNumberToObject(meta, "recordCount", nline + nst);
   cJSON_AddBoolToObject(meta, "live", (nline + nst) > 0);
@@ -125,7 +113,8 @@ static char *unified_fc(db_handle *db, const char *id) {
   return out;
 }
 
-int sweepapi_is_sweep(const char *id) {
+/* 1 if `id` is one of the sweep layers handled here. */
+static int sweepapi_is_sweep(const char *id) {
   if (!id || !*id) return 0;
   return !strcmp(id, "cameras")
       || !strcmp(id, "unified-station-footprints")
@@ -190,14 +179,35 @@ static char *cold_points_fc(db_handle *db, const char *id) {
   sqlite3_finalize(st);
   cJSON *meta = cJSON_AddObjectToObject(fc, "_meta");
   cJSON_AddStringToObject(meta, "source", id);
-  char now[32]; iso_now(now, sizeof now);
+  char now[32]; jo_iso_now_ms(now, sizeof now);
   cJSON_AddStringToObject(meta, "fetchedAt", now);
   cJSON_AddNumberToObject(meta, "recordCount", n);
   cJSON_AddBoolToObject(meta, "live", 0);
   cJSON_AddStringToObject(meta, "cache_status", "cold");
   cJSON_AddBoolToObject(meta, "capped", n >= LIM);
+  /* Rule 2: a bounded view states how much exists, in band. And the old note
+   * promised "until the scheduled prebuild runs" — no prebuild is scheduled
+   * (sweepapi_build has no caller, deliberately: the stitched nationwide FC is
+   * ~300 MB for unified-trains), so the promise was false (audit 2026-11-07). */
+  long long avail = -1;
+  if (n >= LIM) {
+    sqlite3_stmt *cs = NULL;
+    if (sqlite3_prepare_v2(db->h, "SELECT COUNT(*) FROM intel_items "
+                           "WHERE source_id=?1 AND lat IS NOT NULL", -1, &cs,
+                           NULL) == SQLITE_OK) {
+      sqlite3_bind_text(cs, 1, id, -1, SQLITE_TRANSIENT);
+      if (sqlite3_step(cs) == SQLITE_ROW) avail = sqlite3_column_int64(cs, 0);
+    }
+    sqlite3_finalize(cs);
+  } else {
+    avail = n;
+  }
+  if (avail >= 0) cJSON_AddNumberToObject(meta, "records_available", (double)avail);
+  else            cJSON_AddNullToObject(meta, "records_available");
   cJSON_AddStringToObject(meta, "description",
-    "Cold map cache — bounded points until the scheduled prebuild runs.");
+    "Raw stored points, bounded by JO_SWEEP_LIMIT (records_available says how "
+    "many exist). The stitched, smoothed line build is not served for these "
+    "layers: nationwide it is ~300 MB, too large for one map response.");
   char *out = cJSON_PrintUnformatted(fc);
   cJSON_Delete(fc);
   return out;

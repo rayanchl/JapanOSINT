@@ -26,7 +26,7 @@
 
 /* GitHub requires a User-Agent. Upstream uses bare http_get (libcurl default
  * UA); we set a UA so the API doesn't 403 the request outright. */
-static const char *GH_HDR[2] = { "User-Agent: OSINT-SaaS-Platform/1.0", NULL };
+static const char *GH_HDR[2] = { NULL };
 
 static int http_get(http_client *h, const char *url, long *code, cJSON **out) {
   http_response hr = {0};
@@ -291,8 +291,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!q || !*q) return -1;
 
-  const char *tok = getenv("GITHUB_TOKEN");
-  if (!tok) tok = getenv("GITHUB_API_TOKEN");
+  const char *tok = jo_getenv("GITHUB_TOKEN");
+  if (!tok) tok = jo_getenv("GITHUB_API_TOKEN");
   int have_tok = tok && *tok;
 
   cJSON *gc = github_code(ctx->http, q, have_tok);

@@ -47,16 +47,10 @@ VJSON(gov_pl_sejm_committees, "gov-pl-sejm-committees", "Sejm — Committees", "
   "pl", "[\"poland\",\"parliament\",\"committees\"]", 604800,
   "Standing and special committees of the Polish Sejm.");
 
-/* Sejm interpellations carry no "id"; within a term the record identity is
- * "num" (live 2026-09-06). The hash fallback collapsed same-titled
- * interpellations (sweep: 1000 emitted, 988 stored). */
-VJSON_KEYED(gov_pl_sejm_interpellations, "gov-pl-sejm-interpellations", "Sejm — Interpellations", "ポーランド下院 質問書",
-  "legal", "parliament",
-  "https://api.sejm.gov.pl/sejm/term10/interpellations?limit=50",
-  "",
-  "pl", "[\"poland\",\"parliament\",\"questions\",\"oversight\"]", 3600,
-  "Written interpellations to Polish ministers with subject, author and reply status.",
-  "num");
+/* gov-pl-sejm-interpellations removed 2026-11-14 (the owner's decision): 50
+ * interpellations a run, a subset of cyb-sejm-pl-interpellations
+ * (collectors/pivot/table/hp3b31_eunat.c), which reads the whole term.
+ * docs/removed-sources-2026-11-14-overlaps.tsv. */
 
 VJSON(gov_pl_sejm_mps, "gov-pl-sejm-mps", "Sejm — Polish MPs", "ポーランド下院 議員",
   "legal", "parliament",
@@ -126,61 +120,63 @@ VRSS(gov_uklegislation_uksi, "gov-uklegislation-uksi", "legislation.gov.uk — U
   "en", "[\"uk\",\"legislation\",\"statutoryinstrument\"]", 3600,
   "UK Statutory Instruments as made, the main vehicle for UK secondary legislation.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(gov_ukparl_bills, "gov-ukparl-bills", "UK Parliament — Bills API", "英国議会 法案API",
   "legal", "parliament",
-  "https://bills-api.parliament.uk/api/v1/Bills?take=50",
+  "https://bills-api.parliament.uk/api/v1/Bills?take=50&skip=0",
   "items",
   "en", "[\"uk\",\"parliament\",\"bills\",\"legislation\"]", 3600,
   "Structured status of every bill before the UK Parliament with stage, sponsor and house.");
 
-VJSON(gov_ukparl_committees, "gov-ukparl-committees", "UK Parliament — Committees", "英国議会 委員会一覧",
-  "legal", "parliament",
-  "https://committees-api.parliament.uk/api/Committees?take=30",
-  "items",
-  "en", "[\"uk\",\"parliament\",\"committees\"]", 86400,
-  "Registry of UK parliamentary select and joint committees with membership and remit.");
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
+/* gov-ukparl-committees: removed 2026-11-11 (owner's decision) — a twin of cyb-ukparl-committees: same endpoint, take=30 vs 50.
+   docs/removed-sources-2026-11-11-twins.tsv */
 
-VJSON(gov_ukparl_commons_divisions, "gov-ukparl-commons-divisions", "UK Commons — Division Votes", "英国下院 採決記録",
-  "legal", "parliament",
-  "https://commonsvotes-api.parliament.uk/data/divisions.json/search?take=50",
-  "",
-  "en", "[\"uk\",\"parliament\",\"votes\",\"commons\"]", 3600,
-  "Recorded division votes in the UK House of Commons with aye/no counts.");
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip.
+ * take 50 -> 25: the API caps a page at 25; bare take/skip is honoured here as well as queryParameters.* (take=7&skip=7 = divisions 2467..2461 either way). */
+/* gov-ukparl-commons-divisions: removed 2026-11-11 (owner's decision) — a twin of cyb-ukparl-commons-divisions: same endpoint; take/skip and queryParameters.take/skip answer the same divisions (measured 2026-11-07).
+   docs/removed-sources-2026-11-11-twins.tsv */
 
-VJSON(gov_ukparl_cttee_publications, "gov-ukparl-cttee-publications", "UK Parliament — Committee Publications", "英国議会 委員会刊行物",
-  "legal", "parliament",
-  "https://committees-api.parliament.uk/api/Publications?take=30",
-  "items",
-  "en", "[\"uk\",\"parliament\",\"committees\",\"reports\"]", 3600,
-  "Committee reports, evidence sessions and written submissions published by UK Parliament.");
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
+/* gov-ukparl-cttee-publications: removed 2026-11-11 (owner's decision) — a twin of cyb-ukparl-committee-publications: same endpoint, take=30 vs 50.
+   docs/removed-sources-2026-11-11-twins.tsv */
 
-VJSON(gov_ukparl_interests, "gov-ukparl-interests", "UK Parliament — Register of Members' Interests", "英国議会 議員利益登録",
-  "legal", "transparency",
-  "https://interests-api.parliament.uk/api/v1/Interests/?take=25",
-  "items",
-  "en", "[\"uk\",\"parliament\",\"lobbying\",\"conflicts\"]", 86400,
-  "Declared financial interests, gifts and outside employment of UK parliamentarians.");
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip.
+ * take 25 -> 20: the API caps a page at 20 (take=25 answered 20), which read as a short page and ended the walk. */
+/* gov-ukparl-interests: removed 2026-11-11 (owner's decision) — a twin of cyb-ukparl-interests: identical URL (take=20&skip=0); UK_LORDS_REGISTER_INTERESTS also reads the whole register.
+   docs/removed-sources-2026-11-11-twins.tsv */
 
-VJSON(gov_ukparl_lords_divisions, "gov-ukparl-lords-divisions", "UK Lords — Division Votes", "英国上院 採決記録",
-  "legal", "parliament",
-  "https://lordsvotes-api.parliament.uk/data/Divisions/search?take=25",
-  "",
-  "en", "[\"uk\",\"parliament\",\"votes\",\"lords\"]", 3600,
-  "Recorded division votes in the UK House of Lords.");
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
+/* gov-ukparl-lords-divisions: removed 2026-11-11 (owner's decision) — a twin of cyb-ukparl-lords-divisions: same endpoint, take=25 vs 50.
+   docs/removed-sources-2026-11-11-twins.tsv */
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(gov_ukparl_members, "gov-ukparl-members", "UK Parliament — Members API", "英国議会 議員API",
   "legal", "parliament",
-  "https://members-api.parliament.uk/api/Members/Search?take=20&IsCurrentMember=true",
+  "https://members-api.parliament.uk/api/Members/Search?take=20&IsCurrentMember=true&skip=0",
   "items",
   "en", "[\"uk\",\"parliament\",\"members\",\"pep\"]", 86400,
   "Sitting MPs and Lords with party, constituency and membership history.");
 
-VJSON(gov_ukparl_treaties, "gov-ukparl-treaties", "UK Parliament — Treaty Scrutiny", "英国議会 条約審査",
-  "legal", "parliament",
-  "https://treaties-api.parliament.uk/api/Treaty?take=25",
-  "items",
-  "en", "[\"uk\",\"treaties\",\"parliament\",\"international\"]", 86400,
-  "Treaties laid before the UK Parliament under CRaG with scrutiny status.");
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
+/* gov-ukparl-treaties: removed 2026-11-11 (owner's decision) — a twin of cyb-ukparl-treaties: same endpoint, take=25 vs 50.
+   docs/removed-sources-2026-11-11-twins.tsv */
 
 VJSON(gov_za_pmg_bills, "gov-za-pmg-bills", "PMG — South African Bills Tracker", "PMG 南アフリカ法案追跡",
   "legal", "parliament",

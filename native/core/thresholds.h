@@ -37,7 +37,6 @@ typedef enum { THR_SRC_DEFAULT = 0, THR_SRC_ENV = 1, THR_SRC_DB = 2 } threshold_
 
 /* The table and its length (for listing). */
 const threshold_def *threshold_defs(int *n);
-const threshold_def *threshold_find(const char *key);
 
 /* The value in force for `key`. An unknown key is a programming error: it
  * prints once to stderr and returns NAN, so a comparison against it is false. */

@@ -57,7 +57,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   if (code) cJSON_AddStringToObject(props, "registry_code", code);
   if (stat) cJSON_AddStringToObject(props, "status", stat);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   /* real public profile URL, resolvable from the registry code */
@@ -68,7 +68,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   it.remote_key      = code ? code : name;
   it.title           = name ? name : code;
   it.summary         = stat;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "et";
   it.link            = code ? link : NULL;
   it.record_type     = "ee-ariregister-company";
@@ -122,13 +122,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "ee-ariregister");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int count = 0;
   int emitted = walk(sink, root, 0, &count);

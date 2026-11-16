@@ -31,12 +31,14 @@ struct SupabaseAuth: Sendable {
 
     enum AuthError: LocalizedError {
         case badConfig
+        case insecureURL
         case server(Int, String)
         case decoding
 
         var errorDescription: String? {
             switch self {
             case .badConfig: return "Supabase URL or anon key is missing/invalid."
+            case .insecureURL: return "The Supabase URL must be https (plain http is accepted only for a local or LAN address)."
             case .server(let code, let msg):
                 return "Supabase \(code): \(msg.isEmpty ? "request failed" : msg)"
             case .decoding: return "Could not read the Supabase response."
@@ -143,6 +145,12 @@ struct SupabaseAuth: Sendable {
     /// can tolerate the tokenless User response.
     private func send(path: String, body: [String: String]) async throws -> Data {
         let finalURL = try endpoint(path)
+        // These POSTs carry a password or a refresh token, and the project URL
+        // is user-editable. Apply the SAME guard API.send() applies to the
+        // bearer (API.mayCarryCredentials): https, or plain http only to
+        // loopback / RFC1918 / CGNAT / link-local / .local. Refuse rather than
+        // send the secret in cleartext to a public host.
+        guard API.mayCarryCredentials(finalURL) else { throw AuthError.insecureURL }
         var req = URLRequest(url: finalURL)
         req.httpMethod = "POST"
         req.timeoutInterval = 20

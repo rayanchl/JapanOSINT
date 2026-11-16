@@ -283,7 +283,8 @@ CREATE TABLE IF NOT EXISTS gtfs_rt_alerts_fts_uid_map (
          uid   TEXT    NOT NULL PRIMARY KEY,
          rowid INTEGER NOT NULL
        ) WITHOUT ROWID;
--- NOT IMPLEMENTED by the C server: nothing reads or writes this table.
+-- Written by collectors/sources/gtfs_rt_jp.c (2026-11-12): one row per
+-- realtime URL from the gtfs-data.jp catalogue, with its poll status.
 CREATE TABLE IF NOT EXISTS gtfs_rt_feeds (
     feed_id           TEXT PRIMARY KEY,
     ag_id             TEXT NOT NULL,
@@ -295,7 +296,8 @@ CREATE TABLE IF NOT EXISTS gtfs_rt_feeds (
     last_status       TEXT,
     consecutive_fails INTEGER NOT NULL DEFAULT 0
   );
--- NOT IMPLEMENTED by the C server: nothing reads or writes this table.
+-- Written by collectors/sources/gtfs_rt_jp.c (2026-11-12) from each
+-- operator's VehiclePositions feed, replaced per operator every run.
 CREATE TABLE IF NOT EXISTS gtfs_rt_positions (
     org_id       TEXT NOT NULL,
     trip_id      TEXT NOT NULL,
@@ -660,8 +662,7 @@ CREATE INDEX IF NOT EXISTS idx_gtfs_calendar_dates_date
 CREATE INDEX IF NOT EXISTS idx_gtfs_feeds_agency ON gtfs_feeds(ag_id);
 CREATE INDEX IF NOT EXISTS idx_gtfs_rt_alerts_reported
     ON gtfs_rt_alerts(reported_at);
--- NOT IMPLEMENTED by the C server: nothing reads or writes this table.
--- (index over the unused gtfs_rt_positions table)
+-- (index over gtfs_rt_positions, written by collectors/sources/gtfs_rt_jp.c)
 CREATE INDEX IF NOT EXISTS idx_gtfs_rt_positions_reported
     ON gtfs_rt_positions(reported_at);
 CREATE INDEX IF NOT EXISTS idx_gtfs_rt_trip_updates_reported

@@ -150,13 +150,13 @@ static int emit_finding(intel_sink *sink, const char *remote_key,
   cJSON_AddStringToObject(props, "service", "PASTE_SITE_SEARCH");
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   intel_item it = {0};
   it.remote_key      = remote_key;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = summary;
   it.link            = link;
   it.record_type     = "osint_service_result";

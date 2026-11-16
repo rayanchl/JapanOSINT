@@ -82,15 +82,18 @@ void hostgate_penalize(const char *url, long ms);
  * the two answers drift apart. Two strengths, deliberately:
  *
  *   hostgate_url_check()        the floor every outbound fetch must clear:
- *                               http(s) only, and never the cloud metadata
- *                               range (169.254.0.0/16, fe80::/10, and the
- *                               metadata hostnames). Loopback and RFC1918 are
- *                               ALLOWED here — llama-server is reached over
- *                               127.0.0.1 through this same http_client.
- *                               (Camera fetches are stricter — see the
- *                               camera policy below.) Set
- *                               JO_HTTP_BLOCK_PRIVATE=1 to raise this to the
- *                               strict check for every collector fetch.
+ *                               http(s) only, and — since 2026-11-12, by
+ *                               default — the STRICT ruleset below: no
+ *                               loopback, RFC1918, CGNAT, unique-local,
+ *                               link-local or metadata. JO_HTTP_BLOCK_PRIVATE=0
+ *                               lowers it to the old floor (metadata and
+ *                               link-local only). A call inside
+ *                               hostgate_service_scope() — an operator-
+ *                               configured service endpoint such as the
+ *                               llama-server on 127.0.0.1, reached through
+ *                               http_request_service() — gets that lower
+ *                               floor whatever the variable says. (Camera
+ *                               fetches have their own policy, below.)
  *
  *   hostgate_url_check_strict() for URLs an API CALLER supplied (alert webhook
  *                               targets, LLM-proposed collector URL
@@ -118,17 +121,17 @@ int         hostgate_url_check_strict(const char *url);
 int         hostgate_url_check_strict_nodns(const char *url);
 const char *hostgate_url_reason(int rc);
 
-/* Classifies one already-resolved address in its textual form ("93.184.216.34",
- * "::1"). `strict` selects the same two strengths as above. This is what the
- * per-connection callback in httpclient.c calls, so a redirect or a rebound DNS
- * answer is judged on the address we actually connected to rather than on the
- * name we started from. Unparseable text is allowed (fail open: the floor check
- * has already run on the URL, and a curl-reported peer we cannot parse is not
- * evidence of an attack). */
-int hostgate_addr_check(const char *ip_text, int strict);
+/* Mark the fetch in flight on THIS THREAD as one to an operator-configured
+ * service endpoint (LLM, embedding, vision, the IdP's JWKS): the floor is the
+ * lenient one (metadata and link-local still refused) for its URL check, its
+ * redirects and its resolved-address checks. Returns the previous value so a
+ * caller restores it. Use http_request_service() rather than this directly; it
+ * restores on every exit path. NEVER for a URL a collector, a tenant or an LLM
+ * chose — the flag marks a call whose URL came from operator configuration. */
+int hostgate_service_scope(int on);
 
 /* hostgate_addr_check() at the CURRENT floor, i.e. honouring
- * JO_HTTP_BLOCK_PRIVATE. Use this — not hostgate_addr_check(ip, 0) — anywhere
+ * JO_HTTP_BLOCK_PRIVATE and hostgate_service_scope(). Use this — not hostgate_addr_check(ip, 0) — anywhere
  * on the outbound fetch path: url_check() can only judge a literal address, so
  * this is the only place a hostname that resolves into a private range is
  * seen, and hardcoding the strength there silently disabled the env switch. */

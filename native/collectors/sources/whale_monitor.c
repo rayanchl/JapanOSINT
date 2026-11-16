@@ -104,7 +104,7 @@ static int emit_eth_tx(intel_sink *sink, const char *addr, cJSON *tx) {
   cJSON_AddStringToObject(props, "record", "transaction");
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[200];
   snprintf(rk, sizeof rk, "tx:%s", h->valuestring);
@@ -113,7 +113,7 @@ static int emit_eth_tx(intel_sink *sink, const char *addr, cJSON *tx) {
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "whale transaction";
   it.published_at    = iso[0] ? iso : NULL;
   it.record_type     = "osint_service_result";
@@ -170,7 +170,7 @@ static int emit_wa_tx(intel_sink *sink, cJSON *tx) {
   cJSON_AddStringToObject(props, "feed", "whale_alert");
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[200];
   snprintf(rk, sizeof rk, "tx:%s", hs->valuestring);
@@ -182,7 +182,7 @@ static int emit_wa_tx(intel_sink *sink, cJSON *tx) {
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "whale transaction";
   it.published_at    = iso[0] ? iso : NULL;
   it.record_type     = "osint_service_result";
@@ -230,7 +230,7 @@ static int emit_defi(intel_sink *sink, cJSON *pr) {
   cJSON_AddStringToObject(props, "record", "defi_protocol");
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char slug[96], rk[128], title[200];
   slugify(nm->valuestring, slug, sizeof slug);
@@ -240,7 +240,7 @@ static int emit_defi(intel_sink *sink, cJSON *pr) {
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "DeFi protocol";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
@@ -254,7 +254,7 @@ static int emit_defi(intel_sink *sink, cJSON *pr) {
 
 /* Emit the address-balance item (Etherscan). Returns 1 if emitted. */
 static int emit_addr_balance(intel_sink *sink, http_client *http, const char *addr) {
-  const char *ek = getenv("ETHERSCAN_API_KEY");
+  const char *ek = jo_getenv("ETHERSCAN_API_KEY");
   char url[512];
   if (ek && *ek)
     snprintf(url, sizeof url,
@@ -290,7 +290,7 @@ static int emit_addr_balance(intel_sink *sink, http_client *http, const char *ad
   cJSON_AddStringToObject(props, "entity", addr);
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[256];
   snprintf(rk, sizeof rk, "addr:%s", addr);
@@ -300,7 +300,7 @@ static int emit_addr_balance(intel_sink *sink, http_client *http, const char *ad
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "wallet balance";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
@@ -327,7 +327,7 @@ static int emit_addr_balance(intel_sink *sink, http_client *http, const char *ad
 #define WHALE_ETH_MAX_PAGES 20   /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
 
 static int emit_eth_txs(intel_sink *sink, http_client *http, const char *addr) {
-  const char *ek = getenv("ETHERSCAN_API_KEY");
+  const char *ek = jo_getenv("ETHERSCAN_API_KEY");
   int emitted = 0, capped = 0;
   int page;
   for (page = 1; page <= WHALE_ETH_MAX_PAGES; page++) {
@@ -389,12 +389,12 @@ static int emit_btc_stats(intel_sink *sink, http_client *http) {
   cJSON_AddStringToObject(props, "record", "btc_network");
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   intel_item it = {0};
   it.remote_key      = "btcnet:stats";
   it.title           = "Bitcoin network stats";
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "exchange flows / network";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
@@ -419,7 +419,7 @@ static int emit_btc_stats(intel_sink *sink, http_client *http) {
 
 static int emit_whale_alert_feed(intel_sink *sink, http_client *http,
                                  long minv, time_t since) {
-  const char *key = getenv("WHALE_ALERT_API_KEY");
+  const char *key = jo_getenv("WHALE_ALERT_API_KEY");
   if (!key || !*key) return 0;     /* gated: no key → skip, no fabricated row */
   int emitted = 0, pages = 0, failed = 0, capped = 0;
   char cursor[256] = "";

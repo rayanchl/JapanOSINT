@@ -35,9 +35,14 @@ VJSON(iaticloud_transaction, "iaticloud-transaction", "IATI Datastore (iati.clou
   "en", "[\"int\",\"aid\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Individual aid transactions under each activity: transaction_ref, type (commitment/disbursement/expenditure), date, value in original currency and USD, provider and receiver organisation refs and narratives, recipient country and sector. Money-level granularity beneath the activity. Same fl=id requirement as the activity endpoint.");
 
-VJSON(ocha_fts_flow_2026, "ocha-fts-flow-2026", "UN OCHA FTS — humanitarian funding flows 2026", "UN OCHA FTS — humanitarian funding flows 2026",
+/* 2026-11-07: year was frozen at 2026 and freezes on 2027-01-01. {date:%Y} is the current calendar year;
+ * measured 2026-11-07, year=2026 answers meta.count 24,509 and year=2027 already 3,460 (pledges),
+ * so from January this row reads the new year. The id keeps its authoring year (an id is a
+ * registry decision); late-reported flows for a closed year are not re-read. 24,509 at 1000 a
+ * page is 25 pages, over the 20-page ceiling: the walk discloses the rest. */
+VJSON(ocha_fts_flow_2026, "ocha-fts-flow-2026", "UN OCHA FTS — humanitarian funding flows, current year", "UN OCHA FTS — humanitarian funding flows, current year",
   "int_aid", "aid",
-  "https://api.hpc.tools/v1/public/fts/flow?year=2026&limit=1000", /* limit=1000 is the server's page cap (5000 is answered with 1000); 20,161 flows on 2026-09-15 = 21 pages, followed through meta.nextLink */
+  "https://api.hpc.tools/v1/public/fts/flow?year={date:%Y}&limit=1000", /* limit=1000 is the server's page cap (5000 is answered with 1000); 20,161 flows on 2026-09-15 = 21 pages, followed through meta.nextLink */
   "data.flows",
   "en", "[\"int\",\"aid\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Donor-to-recipient money movements: amountUSD, original amount and currency, exchange rate, contribution type, flow type, earmarking, decision/first-reported dates, sourceObjects and destinationObjects (naming the donor organisation, the receiving agency, the plan, the cluster and the location), parent/child flow ids and reportDetails. Note the array is data.flows — the auto-detector would pick a metadata array instead.");
@@ -49,18 +54,9 @@ VJSON(ocha_fts_location, "ocha-fts-location", "UN OCHA FTS — location registry
   "en", "[\"int\",\"aid\",\"batch17\",\"high-penetrancy\"]", 86400,
   "258 countries/territories with FTS internal id, ISO3, pcode, admin level and isRegion flag — the join key that turns an FTS flow's destination id into a country.");
 
-/* `project_id` is not in the uid precedence list, so every project fell back
- * to a hash of (title, link, date) and UNDP reuses a project title across
- * countries and phases — 4,000 emitted, 3,968 stored. Verified live
- * 2026-09-07 on one page: 200 records, 200 distinct project_id, 199 distinct
- * titles, which is the collision itself. `offset=0` is added because the
- * keyed path walks with lib/pagewalk.c, which advances only a cursor the URL
- * already names; without it the walk would stop at page 1. Verified live:
- * offset=200 returns a different first project. */
-VJSON_KEYED(undp_transparency_projects, "undp-transparency-projects", "UNDP — transparency portal projects", "UNDP — transparency portal projects",
-  "int_aid", "aid",
-  "https://api.open.undp.org/api/project_list/?year=2024&limit=200&offset=0",
-  "data.data",
-  "en", "[\"int\",\"aid\",\"batch17\",\"high-penetrancy\"]", 86400,
-  "UNDP project register: project_id, title, description, budget and expense in USD, country, sector list with codes, SDG mappings, signature solution, donor list and gender/policy markers. The year parameter is mandatory — without it the API returns 400.",
-  "project_id");
+/* undp-transparency-projects MOVED 2026-11-12 to collectors/pivot/table/
+ * hp3_gov.c, same id: its frozen `year=2024` became `{date:%Y}` with a
+ * one-year step back, and because a record's budget and expense are that
+ * year's with no year field, the row needs hpengine's `date_field` to key on
+ * project_id+year. The old row's keying note (project_id, 2026-09-07) is
+ * carried there. */

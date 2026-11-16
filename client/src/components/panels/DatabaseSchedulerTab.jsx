@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import apiUrl from '../../utils/apiUrl.js';
+import { api, errorMessage, rejectBodyError } from '../../api/client.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 
 const STATUS_FILTERS = [
@@ -40,13 +40,10 @@ export default function DatabaseSchedulerTab() {
   useEffect(() => {
     let alive = true;
     setLoading(true);
-    fetch(apiUrl('/api/db/scheduler'))
-      .then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      })
-      .then((j) => { if (alive) { setState(j); setError(null); } })
-      .catch((err) => { if (alive) setError(err.message || 'request failed'); })
+    // Shared client: a refusal shows the server's own reason, not "HTTP 403".
+    api.get('/api/db/scheduler')
+      .then((j) => { rejectBodyError(j); if (alive) { setState(j); setError(null); } })
+      .catch((err) => { if (alive) setError(errorMessage(err)); })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
   }, []);

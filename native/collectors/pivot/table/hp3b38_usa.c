@@ -57,11 +57,20 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/debt_subject_to_limit?page%5Bsize%5D=500",
+    /* `sort=record_date,src_line_nbr` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 40,348 rows on 2026-11-07, more than the 20-page x 500 ceiling,
+     * so it reads over a cycle (`page_resume`) — before, every run re-read
+     * the same first 10,000. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/debt_subject_to_limit?page%5Bsize%5D=500&sort=record_date,src_line_nbr",
     .array_path = "data",
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
+    .page_resume = 1,
     .title_keys = "sub_table_name",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 251892 bytes. id_keys is a (date, line) tuple, not "
@@ -83,11 +92,20 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/deposits_withdrawals_operating_cash?page%5Bsize%5D=500",
+    /* `sort=record_date,src_line_nbr` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 489,309 rows on 2026-11-07, more than the 20-page x 500 ceiling,
+     * so it reads over a cycle (`page_resume`) — before, every run re-read
+     * the same first 10,000. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/deposits_withdrawals_operating_cash?page%5Bsize%5D=500&sort=record_date,src_line_nbr",
     .array_path = "data",
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
+    .page_resume = 1,
     .title_keys = "transaction_catg_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 271555 bytes. id_keys is a (date, line) tuple, not "
@@ -109,11 +127,20 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/federal_tax_deposits?page%5Bsize%5D=500",
+    /* `sort=record_date,src_line_nbr` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 47,148 rows on 2026-11-07, more than the 20-page x 500 ceiling,
+     * so it reads over a cycle (`page_resume`) — before, every run re-read
+     * the same first 10,000. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/federal_tax_deposits?page%5Bsize%5D=500&sort=record_date,src_line_nbr",
     .array_path = "data",
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
+    .page_resume = 1,
     .title_keys = "sub_table_name",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 240292 bytes. id_keys is a (date, line) tuple, not "
@@ -135,11 +162,20 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/income_tax_refunds_issued?page%5Bsize%5D=500",
+    /* `sort=record_date,src_line_nbr` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 19,184 rows on 2026-11-07, more than the 20-page x 500 ceiling,
+     * so it reads over a cycle (`page_resume`) — before, every run re-read
+     * the same first 10,000. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/income_tax_refunds_issued?page%5Bsize%5D=500&sort=record_date,src_line_nbr",
     .array_path = "data",
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
+    .page_resume = 1,
     .title_keys = "sub_table_name",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 229908 bytes. id_keys is a (date, line) tuple, not "
@@ -161,11 +197,20 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/debt/mspd/mspd_table_3?page%5Bsize%5D=500",
+    /* `sort=record_date,src_line_nbr` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 221,514 rows on 2026-11-07, more than the 20-page x 500 ceiling,
+     * so it reads over a cycle (`page_resume`) — before, every run re-read
+     * the same first 10,000. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/debt/mspd/mspd_table_3?page%5Bsize%5D=500&sort=record_date,src_line_nbr",
     .array_path = "data",
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
+    .page_resume = 1,
     .title_keys = "security_class2_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 440020 bytes. id_keys is a (date, line) tuple, not "
@@ -187,7 +232,13 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/debt/mspd/mspd_table_4?page%5Bsize%5D=500",
+    /* `sort=record_date,src_line_nbr` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 930 rows on 2026-11-07, inside one run. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/debt/mspd/mspd_table_4?page%5Bsize%5D=500&sort=record_date,src_line_nbr",
     .array_path = "data",
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
@@ -213,11 +264,20 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/debt/mspd/mspd_table_5?page%5Bsize%5D=500",
+    /* `sort=record_date,src_line_nbr` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 87,781 rows on 2026-11-07, more than the 20-page x 500 ceiling,
+     * so it reads over a cycle (`page_resume`) — before, every run re-read
+     * the same first 10,000. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/debt/mspd/mspd_table_5?page%5Bsize%5D=500&sort=record_date,src_line_nbr",
     .array_path = "data",
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
+    .page_resume = 1,
     .title_keys = "security_class2_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 249843 bytes. id_keys is a (date, line) tuple, not "
@@ -239,7 +299,13 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_2?page%5Bsize%5D=500",
+    /* `sort=record_date,classification_id` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 2,085 rows on 2026-11-07, inside one run. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_2?page%5Bsize%5D=500&sort=record_date,classification_id",
     .array_path = "data",
     .id_keys = "record_date+classification_id",
     .interval = 86400,
@@ -265,7 +331,13 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_3?page%5Bsize%5D=500",
+    /* `sort=record_date,classification_id` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 7,951 rows on 2026-11-07, inside one run. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_3?page%5Bsize%5D=500&sort=record_date,classification_id",
     .array_path = "data",
     .id_keys = "record_date+classification_id",
     .interval = 86400,
@@ -291,7 +363,13 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_4?page%5Bsize%5D=500",
+    /* `sort=record_date,classification_id` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 7,661 rows on 2026-11-07, inside one run. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_4?page%5Bsize%5D=500&sort=record_date,classification_id",
     .array_path = "data",
     .id_keys = "record_date+classification_id",
     .interval = 86400,
@@ -317,11 +395,20 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_5?page%5Bsize%5D=500",
+    /* `sort=record_date,classification_id` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 110,969 rows on 2026-11-07, more than the 20-page x 500 ceiling,
+     * so it reads over a cycle (`page_resume`) — before, every run re-read
+     * the same first 10,000. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_5?page%5Bsize%5D=500&sort=record_date,classification_id",
     .array_path = "data",
     .id_keys = "record_date+classification_id",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
+    .page_resume = 1,
     .title_keys = "classification_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 432436 bytes. id_keys is a (date, line) tuple, not "
@@ -343,7 +430,13 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_6?page%5Bsize%5D=500",
+    /* `sort=record_date,classification_id` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 6,808 rows on 2026-11-07, inside one run. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_6?page%5Bsize%5D=500&sort=record_date,classification_id",
     .array_path = "data",
     .id_keys = "record_date+classification_id",
     .interval = 86400,
@@ -369,7 +462,13 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_9?page%5Bsize%5D=500",
+    /* `sort=record_date,classification_id` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 4,587 rows on 2026-11-07, inside one run. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_9?page%5Bsize%5D=500&sort=record_date,classification_id",
     .array_path = "data",
     .id_keys = "record_date+classification_id",
     .interval = 86400,
@@ -395,11 +494,20 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/public_debt_transactions?page%5Bsize%5D=500",
+    /* `sort=record_date,src_line_nbr` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 128,929 rows on 2026-11-07, more than the 20-page x 500 ceiling,
+     * so it reads over a cycle (`page_resume`) — before, every run re-read
+     * the same first 10,000. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/public_debt_transactions?page%5Bsize%5D=500&sort=record_date,src_line_nbr",
     .array_path = "data",
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
+    .page_resume = 1,
     .title_keys = "table_nm",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 248298 bytes. id_keys is a (date, line) tuple, not "
@@ -421,11 +529,20 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/od/securities_redemptions?page%5Bsize%5D=500",
+    /* `sort=record_date,src_line_nbr` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 18,116 rows on 2026-11-07, more than the 20-page x 500 ceiling,
+     * so it reads over a cycle (`page_resume`) — before, every run re-read
+     * the same first 10,000. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/od/securities_redemptions?page%5Bsize%5D=500&sort=record_date,src_line_nbr",
     .array_path = "data",
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
+    .page_resume = 1,
     .title_keys = "security_class_desc",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 188344 bytes. id_keys is a (date, line) tuple, not "
@@ -447,7 +564,13 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/od/securities_sales?page%5Bsize%5D=500",
+    /* `sort=record_date,src_line_nbr` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 1,368 rows on 2026-11-07, inside one run. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/od/securities_sales?page%5Bsize%5D=500&sort=record_date,src_line_nbr",
     .array_path = "data",
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
@@ -473,11 +596,20 @@ static const hp_source HP3B38_USA[] = {
     .record_type = "fiscal-record",
     .tags = "\"usa\",\"treasury\",\"fiscal\",\"public-finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/short_term_cash_investments?page%5Bsize%5D=500",
+    /* `sort=record_date,src_line_nbr` (2026-11-07), the row's own id_keys as a TOTAL
+     * order — record_date alone ties across every line of a day. Measured on
+     * debt_subject_to_limit and mts_table_2: sort=frobnicate is HTTP 400
+     * (validated), ascending and descending differ, total-count unchanged,
+     * pages 1 and 2 disjoint; unsorted, this API's default already served
+     * the OLDEST rows first. This table holds 49,516 rows on 2026-11-07, more than the 20-page x 500 ceiling,
+     * so it reads over a cycle (`page_resume`) — before, every run re-read
+     * the same first 10,000. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/short_term_cash_investments?page%5Bsize%5D=500&sort=record_date,src_line_nbr",
     .array_path = "data",
     .id_keys = "record_date+src_line_nbr",
     .interval = 86400,
     .page_param = "page%5Bnumber%5D",
+    .page_resume = 1,
     .title_keys = "sub_table_name",
     .description = "US Treasury Fiscal Data series. Fetched live 2026-10-06: 500 "
       "records in 262872 bytes. id_keys is a (date, line) tuple, not "

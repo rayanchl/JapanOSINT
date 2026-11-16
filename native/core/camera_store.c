@@ -15,6 +15,8 @@
  * (the read endpoints + enricher are separate plan items, §C/§D.3-12).
  */
 #include "camera_store.h"
+#include "jo_codec.h"
+#include "../lib/jocore.h"
 #include "../third_party/sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,21 +43,7 @@
  * if anything else ever adopts that record_type. */
 #define CAMERA_UID_LIKE CAMERA_SOURCE_ID "|%"
 
-/* Node `new Date().toISOString()` — YYYY-MM-DDTHH:MM:SS.mmmZ. */
-static void iso_now(char *b, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(b, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
+/* ISO-8601 UTC with milliseconds: jo_iso_now_ms() (lib/jocore.h). */
 
 /* prevProps.<k> as a non-empty STRING, else NULL (=== JS `||` truthiness for
  * the merged string fields: '' and null and absent all fall through). */
@@ -190,7 +178,7 @@ int camera_upsert(db_handle *db, intel_sink *sink, cJSON *feature,
   if (!m_ctry) m_ctry = str_or_null(p, "country");
   if (!m_ctry) m_ctry = "JP";
 
-  char now_iso[40]; iso_now(now_iso, sizeof now_iso);
+  char now_iso[40]; jo_iso_now_ms(now_iso, sizeof now_iso);
   const char *m_first = str_or_null(pp, "first_seen_at");
   char first_buf[40];
   if (!m_first) { snprintf(first_buf, sizeof first_buf, "%s", now_iso);
@@ -388,7 +376,7 @@ char *camera_fc_json(db_handle *db) {
   cJSON *fc = cJSON_CreateObject();
   cJSON_AddStringToObject(fc, "type", "FeatureCollection");
   cJSON_AddItemToObject(fc, "features", features);
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();        /* getAllCameras _meta block */
   cJSON_AddStringToObject(meta, "source", "camera_store");
   cJSON_AddNumberToObject(meta, "recordCount", count);
@@ -402,51 +390,12 @@ char *camera_fc_json(db_handle *db) {
 }
 
 /* ── getDiscoveryFeed ─────────────────────────────────────────────────────
- * Standard base64 (RFC4648 +/ , '=' pad) — round-trips Node's
- * Buffer.from(s).toString('base64') / Buffer.from(c,'base64'). */
-static char *b64_enc(const char *in, size_t len) {
-  static const char T[] =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-  char *o = malloc(((len + 2) / 3) * 4 + 1);
-  if (!o) return NULL;
-  size_t j = 0;
-  for (size_t i = 0; i < len; i += 3) {
-    unsigned a = (unsigned char)in[i];
-    unsigned b = i + 1 < len ? (unsigned char)in[i + 1] : 0;
-    unsigned cc = i + 2 < len ? (unsigned char)in[i + 2] : 0;
-    unsigned v = (a << 16) | (b << 8) | cc;
-    o[j++] = T[(v >> 18) & 63];
-    o[j++] = T[(v >> 12) & 63];
-    o[j++] = i + 1 < len ? T[(v >> 6) & 63] : '=';
-    o[j++] = i + 2 < len ? T[v & 63] : '=';
-  }
-  o[j] = 0;
-  return o;
-}
-static int b64_val(int ch) {
-  if (ch >= 'A' && ch <= 'Z') return ch - 'A';
-  if (ch >= 'a' && ch <= 'z') return ch - 'a' + 26;
-  if (ch >= '0' && ch <= '9') return ch - '0' + 52;
-  if (ch == '+') return 62;
-  if (ch == '/') return 63;
-  return -1;
-}
-static char *b64_dec(const char *in) {            /* NUL-terminated → str */
-  size_t len = strlen(in);
-  char *o = malloc(len / 4 * 3 + 4);
-  if (!o) return NULL;
-  size_t j = 0; unsigned v = 0; int bits = 0;
-  for (size_t i = 0; i < len; i++) {
-    if (in[i] == '=') break;
-    int d = b64_val((unsigned char)in[i]);
-    if (d < 0) continue;
-    v = (v << 6) | (unsigned)d; bits += 6;
-    if (bits >= 8) { bits -= 8; o[j++] = (char)((v >> bits) & 0xFF); }
-  }
-  o[j] = 0;
-  return o;
-}
-
+ * The cursor is STANDARD base64 (RFC4648 +/ , '=' pad) — round-trips Node's
+ * Buffer.from(s).toString('base64') / Buffer.from(c,'base64'). It used a
+ * private encoder/decoder until 2026-11-12; jo_b64_encode / jo_b64_decode
+ * (core/jo_codec.h) reproduce both byte for byte — same alphabet, always
+ * padded, decode stops at the first '=' and skips other foreign bytes — and
+ * tests/unit/test_jo_codec.c pins them against this file's old copies. */
 char *camera_discovery_feed(db_handle *db, int limit,
                             const char *cursor, const char *channel) {
   int cap = limit > 0 ? limit : 500;
@@ -456,7 +405,7 @@ char *camera_discovery_feed(db_handle *db, int limit,
   /* cursor: base64 "ts|uid" → strictly-older keyset (malformed ⇒ ignored) */
   char *cur_dec = NULL, *cur_ts = NULL, *cur_uid = NULL;
   if (cursor && *cursor) {
-    cur_dec = b64_dec(cursor);
+    cur_dec = (char *)jo_b64_decode(cursor, strlen(cursor), NULL);
     if (cur_dec) {
       char *bar = strchr(cur_dec, '|');
       if (bar && bar > cur_dec) { *bar = 0; cur_ts = cur_dec; cur_uid = bar + 1; }
@@ -580,7 +529,7 @@ char *camera_discovery_feed(db_handle *db, int limit,
   if (has_more && last_uid[0]) {
     char raw[700];
     snprintf(raw, sizeof raw, "%s|%s", last_ts, last_uid);
-    char *enc = b64_enc(raw, strlen(raw));
+    char *enc = jo_b64_encode(raw, strlen(raw));
     if (enc) { cJSON_AddStringToObject(root, "cursor", enc); free(enc); }
     else       cJSON_AddItemToObject(root, "cursor", cJSON_CreateNull());
   } else {

@@ -393,16 +393,29 @@ VJSON_PREP(eur_nosdeputes_synthese, "eur-nosdeputes-synthese", "NosDeputes.fr �
   "Per-MP activity counts: attendance, amendments, questions and reports.",
   NULL, nosdeputes_unwrap);
 
+/* Tweede Kamer / Folketing OData rows: `$orderby=<modified> desc,<key>`
+ * (2026-11-07), copied from the sorted siblings (GewijzigdOp desc on TK
+ * Besluit, opdateringsdato desc on ft.dk Sag/Sagstrin/Dokument) and made a
+ * TOTAL order with the entity key, because many records share one timestamp
+ * (TK Stemming/Document, ft.dk Stemme: identical GewijzigdOp/opdateringsdato
+ * on consecutive rows). Without an order these $top/$skip walks read an
+ * arbitrary slice — TK's default first rows are dated 2008, 2019, 2024 mixed —
+ * of collections up to 1,035,132 (TK Stemming) and 1,840,932 (ft.dk Stemme);
+ * neither server publishes a nextLink for these requests. With it, the
+ * 20-page ceiling is the most recently modified $top x 20, a window. Both
+ * servers read the clause: a bogus $orderby is HTTP 400 ("Could not find a
+ * property named 'Frobnicate'" on TK). Small entity sets (TK Zaal 64,
+ * Fractie 160, Commissie 234; ft.dk Aktørtype 13 …) read whole either way. */
 VJSON(eur_oda_ft_aktortype, "eur-oda-ft-aktortype", "Folketinget Denmark — actor types", "Folketinget Denmark — actor types",
   "europe_gov", "politics",
-  "https://oda.ft.dk/api/Akt%C3%B8rtype?$top=100",
+  "https://oda.ft.dk/api/Akt%C3%B8rtype?$top=100&$orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"politics\"]", 86400,
   "Actor type vocabulary of the Danish parliament open data model.");
 
 VJSON(eur_oda_ft_aktstykke, "eur-oda-ft-aktstykke", "Folketinget Denmark — case statuses", "Folketinget Denmark — case statuses",
   "europe_gov", "politics",
-  "https://oda.ft.dk/api/Sagsstatus?$top=100",
+  "https://oda.ft.dk/api/Sagsstatus?$top=100&$orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"politics\"]", 86400,
   "Case status vocabulary of the Danish parliament.");
@@ -416,28 +429,28 @@ VJSON(eur_oda_ft_dokument, "eur-oda-ft-dokument", "Folketinget Denmark — docum
 
 VJSON(eur_oda_ft_dokumenttype, "eur-oda-ft-dokumenttype", "Folketinget Denmark — document types", "Folketinget Denmark — document types",
   "europe_gov", "politics",
-  "https://oda.ft.dk/api/Dokumenttype?$top=100",
+  "https://oda.ft.dk/api/Dokumenttype?$top=100&$orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"politics\"]", 86400,
   "Document type vocabulary used by the Danish parliament.");
 
 VJSON(eur_oda_ft_emneord, "eur-oda-ft-emneord", "Folketinget Denmark — subject keywords", "Folketinget Denmark — subject keywords",
   "europe_gov", "politics",
-  "https://oda.ft.dk/api/Emneord?$top=100",
+  "https://oda.ft.dk/api/Emneord?$top=100&$orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"politics\"]", 86400,
   "Subject keyword vocabulary attached to Danish parliamentary cases.");
 
 VJSON(eur_oda_ft_periode, "eur-oda-ft-periode", "Folketinget Denmark — parliamentary periods", "Folketinget Denmark — parliamentary periods",
   "europe_gov", "politics",
-  "https://oda.ft.dk/api/Periode?$top=100",
+  "https://oda.ft.dk/api/Periode?$top=100&$orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"politics\"]", 86400,
   "Danish parliamentary sessions and periods with start and end dates.");
 
 VJSON(eur_oda_ft_sagskategori, "eur-oda-ft-sagskategori", "Folketinget Denmark — case categories", "Folketinget Denmark — case categories",
   "europe_gov", "politics",
-  "https://oda.ft.dk/api/Sagskategori?$top=100",
+  "https://oda.ft.dk/api/Sagskategori?$top=100&$orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"politics\"]", 86400,
   "Case category vocabulary of the Danish parliament.");

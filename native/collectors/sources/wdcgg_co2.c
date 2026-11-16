@@ -48,7 +48,7 @@ static const char *col(char **f, int fn, int i) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *url = getenv("WDCGG_REGISTRY_URL");
+  const char *url = jo_getenv("WDCGG_REGISTRY_URL");
   if (!url || !*url) {
     fprintf(stderr, "[wdcgg-co2] gated (no WDCGG_REGISTRY_URL)\n");
     return 0;

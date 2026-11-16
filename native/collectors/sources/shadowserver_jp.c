@@ -38,7 +38,7 @@ static cJSON *coalesce2(cJSON *last, const char *ka, const char *kb) {
 
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
   (void)key; (void)ud;
-  const char *de = getenv("SHADOWSERVER_DAYS");
+  const char *de = jo_getenv("SHADOWSERVER_DAYS");
   long days = (de && *de) ? strtol(de, NULL, 10) : 14;
   if (days <= 0) days = 14;
 

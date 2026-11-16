@@ -21,11 +21,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B37_JP[] = {
   { .id = "JP_CKAN_BODIK", .name = "BODIK ODCS regional CKAN",
     .name_ja = "BODIK オープンデータ",
     .category = "opendata", .portal = "https://data.bodik.jp",
     .record_type = "dataset-catalogue-record",
+    .lang = "ja",
     .tags = "\"japan\",\"opendata\",\"ckan\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.bodik.jp/api/3/action/package_search?rows=100&start=0&sort=id%20asc",
@@ -49,6 +55,7 @@ static const hp_source HP3B37_JP[] = {
     .name_ja = "e-Gov データポータル - 静岡市の全データセット",
     .category = "government", .portal = "https://data.e-gov.go.jp",
     .record_type = "opendata-dataset",
+    .lang = "ja",
     .tags = "\"japan\",\"opendata\",\"ckan\",\"e-gov\",\"catalogue\",\"ministry\",\"national\",\"org_221007\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.e-gov.go.jp/data/api/3/action/package_search?fq=organization:org_221007&rows=100&sort=id%20asc",
@@ -69,6 +76,7 @@ static const hp_source HP3B37_JP[] = {
     .name_ja = "e-Gov データポータル - 福岡市の全データセット",
     .category = "government", .portal = "https://data.e-gov.go.jp",
     .record_type = "opendata-dataset",
+    .lang = "ja",
     .tags = "\"japan\",\"opendata\",\"ckan\",\"e-gov\",\"catalogue\",\"ministry\",\"national\",\"org_401307\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.e-gov.go.jp/data/api/3/action/package_search?fq=organization:org_401307&rows=100&sort=id%20asc",

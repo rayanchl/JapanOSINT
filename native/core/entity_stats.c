@@ -115,7 +115,12 @@ static int has_col(sqlite3 *h, const char *table, const char *col) {
   return found;
 }
 
-int entity_stats_ensure_columns(db_handle *db) {
+/* Idempotent guarded migration for the four columns above (PRAGMA table_info
+ * then ALTER only what is missing). Safe to call on every boot and on every
+ * run; entity_stats_recompute() calls it itself, so wiring it into db.c is
+ * optional and only buys read paths the columns before the first pod tick.
+ * Returns 0 on success, -1 if a column is missing AND could not be added. */
+static int entity_stats_ensure_columns(db_handle *db) {
   static const char *const col[] = { "pmi", "lift", "co_count", "stats_at" };
   static const char *const ddl[] = {
     "ALTER TABLE entity_relationships ADD COLUMN pmi REAL",

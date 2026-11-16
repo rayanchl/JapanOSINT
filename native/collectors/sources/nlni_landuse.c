@@ -2,14 +2,16 @@
  * Port of server/src/collectors/nlniLanduse.js — MLIT KSJ L03-b national
  * land-use segmented mesh. No official GeoJSON endpoint and MIRRORS=[] in
  * Node, so the ONLY source is the optional env var MLIT_L03B_GEOJSON_URL
- * (Node: envFor → native: getenv). Without it (or on failure / no usable
- * geometry) → honest empty (rule 8 — no fabricated land-use polygons).
+ * (Node: envFor → native: getenv). Without it → the standard needs-credential
+ * notice and no request; on failure / no usable geometry → -1 (rule 8 — no
+ * fabricated land-use polygons).
  * Property key order (mesh_id, landuse_code, landuse, source) mirrors JS. */
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
 #include "third_party/cJSON.h"
+#include "_credential_notice.inc"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,12 +31,21 @@ static const char *landuse_label(const char *code) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *url = getenv("MLIT_L03B_GEOJSON_URL");
+  const char *url = jo_getenv("MLIT_L03B_GEOJSON_URL");
   if (!url || !*url) {
     /* Gated, not failed: -1 logs fetch_log status='error' and opens a
-     * collector_anomaly every tick for a source that was never configured. */
-    fprintf(stderr, "[nlni-landuse] gated (no MLIT_L03B_GEOJSON_URL)\n");
-    return 0;
+     * collector_anomaly every tick for a source that was never configured.
+     * And not a bare `return 0` either (2026-11-12): the registry sweep read
+     * this row `records=0 stored=0 requests=0`, identical to a source that
+     * ran and found nothing. The standard needs-credential notice says which
+     * variable is missing, upsert-keyed so it stays ONE row; no request is
+     * made (bear_encounters.c gates a URL variable the same way). */
+    static const char *const envs[] = { "MLIT_L03B_GEOJSON_URL", NULL };
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "nlni-landuse",
+        "\xe5\x9b\xbd\xe5\x9c\x9f\xe6\x95\xb0\xe5\x80\xa4\xe6\x83\x85\xe5\xa0\xb1 L03-b (land-use mesh)",
+        envs, NULL,
+        "MLIT publishes L03-b only as downloadable files (nlftp.mlit.go.jp/ksj), "
+        "with no GeoJSON endpoint; point this at a GeoJSON conversion you host");
   }
 
   cJSON *data = feed_get_json(ctx->http, url, 30000);

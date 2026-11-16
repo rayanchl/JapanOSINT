@@ -15,7 +15,7 @@
  * NO EVENT EMITTER. The JS RequestProgress is an EventEmitter that emits
  * 'update'/'done'. In C there is no push: the mongoose SSE handler polls
  * progress_to_json() on MG_EV_POLL and diffs/streams the fresh snapshot
- * itself (and treats progress_is_done()!=0 as the JS 'done'/close event).
+ * itself (and treats the snapshot's `done` flag as the JS 'done'/close event).
  *
  * progress_to_json() output matches progressTracker.js toJSON() field-for-
  * field (request_id, query, phase, progress_percent, gpt_thinking,
@@ -185,9 +185,6 @@ osint_request *progress_create_owned(const char *request_id, const char *query,
 char *progress_snapshot_for(const char *request_id, const char *tenant_id,
                             const char *stream_key, int *out_done,
                             char *key_out, size_t key_out_n);
-
-/* the `done` flag (1 finished, 0 in-flight; 0 if r==NULL). */
-int progress_is_done(osint_request *r);
 
 /* One line of a run, for a LIST of runs (searchapi_runs): phase, percent,
  * done and degraded, copied under the lock — without serialising the whole

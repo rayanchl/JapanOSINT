@@ -9,14 +9,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 #define API_BASE "https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData"
 #define DEFAULT_STATS_DATA_ID "0003448237"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *appId = getenv("ESTAT_APP_ID");
-  if (!appId || !*appId) { fprintf(stderr, "[estat-census] gated (ESTAT_APP_ID)\n"); return 0; }
-  const char *sdi = getenv("ESTAT_CENSUS_STATS_DATA_ID");
+  const char *appId = jo_getenv("ESTAT_APP_ID");
+  if (!appId || !*appId) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "estat-census", "estat-census", (const char *const[]){"ESTAT_APP_ID", NULL}, NULL, NULL);
+  const char *sdi = jo_getenv("ESTAT_CENSUS_STATS_DATA_ID");
   if (!sdi || !*sdi) sdi = DEFAULT_STATS_DATA_ID;
 
   /* e-Stat serves a table in slices: while rows remain, RESULT_INF.NEXT_KEY

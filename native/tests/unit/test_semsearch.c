@@ -537,6 +537,9 @@ static void test_s7_timeline(void) {
 }
 
 int main(void) {
+  /* The outbound floor refuses loopback by default (2026-11-12); this test's
+   * stub servers are on 127.0.0.1, so it opts out before any request. */
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
   const char *dbp = getenv("JO_DB");
   assert(dbp && "run.sh sets JO_DB to a scratch database");
   if (db_open(&g_db, dbp, NULL) != 0) {

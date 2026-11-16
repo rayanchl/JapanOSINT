@@ -7,201 +7,214 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* WFS rows in this file: `startIndex=0` (2026-11-07). geojson_emit_paged()
+ * advances a WFS cursor only when the URL already names one AND the body's own
+ * numberMatched/totalFeatures exceeds what was read (mechanism 3), so a row
+ * without `startIndex` read ONE page of a declared total and stopped. Measured
+ * per row (count=5 at startIndex 0 and 5): where the server accepted paging
+ * without a sort — GeoServer does that only when it can order by the
+ * feature type's primary key — the two pages were disjoint and the row gets
+ * `startIndex=0` alone. Where it refused ("Cannot do natural order without a
+ * primary key"), the row also gets `sortBy=<a property distinct on the
+ * row's first 200 features>`, checked the same way (pages disjoint, total
+ * unchanged; a bogus sortBy is HTTP 400 "Illegal property name", so the
+ * server reads it). Probe-sized pages (count 2/3/20/50) are 1000 now. The
+ * 20-page geojson ceiling still bounds a run; the remainder is disclosed. */
 VGEO(eur_wfs_geopf_acte_sup, "eur-wfs-geopf-acte-sup", "IGN Geoplateforme — Acte de servitude d'utilité publique", "IGN Geoplateforme — Acte de servitude d'utilité publique",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=wfs_sup%3Aacte_sup&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=wfs_sup%3Aacte_sup&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Acte de servitude d'utilité publique' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_arrondissement_municipal, "eur-wfs-geopf-arrondissement-municipal", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - arrondissement municipal", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - arrondissement municipal",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Aarrondissement_municipal&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Aarrondissement_municipal&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - arrondissement municipal' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_assiette_sup_l, "eur-wfs-geopf-assiette-sup-l", "IGN Geoplateforme — Assiette de servitude d'utilité publique", "IGN Geoplateforme — Assiette de servitude d'utilité publique",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=wfs_sup%3Aassiette_sup_l&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=wfs_sup%3Aassiette_sup_l&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Assiette de servitude d'utilité publique' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_assiette_sup_s, "eur-wfs-geopf-assiette-sup-s", "IGN Geoplateforme — Assiette de servitude d'utilité publique", "IGN Geoplateforme — Assiette de servitude d'utilité publique",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=wfs_sup%3Aassiette_sup_s&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=wfs_sup%3Aassiette_sup_s&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Assiette de servitude d'utilité publique' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_b_1_troncon_de_route, "eur-wfs-geopf-b-1-troncon-de-route", "IGN Geoplateforme — BD CARTO Etat-major", "IGN Geoplateforme — BD CARTO Etat-major",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=BDCARTO_ETAT-MAJOR.NIVEAU4%3Ab_1_troncon_de_route&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=BDCARTO_ETAT-MAJOR.NIVEAU4%3Ab_1_troncon_de_route&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'BD CARTO Etat-major' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_b_2_troncon_de_voie_ferree, "eur-wfs-geopf-b-2-troncon-de-voie-ferree", "IGN Geoplateforme — BD CARTO Etat-major", "IGN Geoplateforme — BD CARTO Etat-major",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=BDCARTO_ETAT-MAJOR.NIVEAU4%3Ab_2_troncon_de_voie_ferree&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=BDCARTO_ETAT-MAJOR.NIVEAU4%3Ab_2_troncon_de_voie_ferree&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'BD CARTO Etat-major' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_canton, "eur-wfs-geopf-canton", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - canton", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - canton",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Acanton&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Acanton&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - canton' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_chef_lieu_d_arrondissement, "eur-wfs-geopf-chef-lieu-d-arrondissement", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu d'arrondissement", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu d'arrondissement",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_d_arrondissement&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_d_arrondissement&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu d'arrondissement' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_chef_lieu_d_arrondissement_municipal, "eur-wfs-geopf-chef-lieu-d-arrondissement-municipal", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu d'arrondissement municipal", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu d'arrondissement municipal",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_d_arrondissement_municipal&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_d_arrondissement_municipal&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu d'arrondissement municipal' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_chef_lieu_d_epci, "eur-wfs-geopf-chef-lieu-d-epci", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu d'epci", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu d'epci",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_d_epci&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_d_epci&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu d'epci' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_chef_lieu_de_canton, "eur-wfs-geopf-chef-lieu-de-canton", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de canton", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de canton",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_canton&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_canton&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu de canton' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_chef_lieu_de_collectivite_territoria, "eur-wfs-geopf-chef-lieu-de-collectivite-territoria", "IGN Geoplateforme — ADMINEXPRESS COG CARTO PE Dernière édition Chef-lieu de Collectivité territoriale", "IGN Geoplateforme — ADMINEXPRESS COG CARTO PE Dernière édition Chef-lieu de Collectivité territoriale",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=ADMINEXPRESS-COG-CARTO-PE.LATEST%3Achef_lieu_de_collectivite_territoriale&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=ADMINEXPRESS-COG-CARTO-PE.LATEST%3Achef_lieu_de_collectivite_territoriale&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMINEXPRESS COG CARTO PE Dernière édition Chef-lieu de Collectivité territoriale' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_chef_lieu_de_commune, "eur-wfs-geopf-chef-lieu-de-commune", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de commune", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de commune",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_commune&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_commune&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu de commune' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_chef_lieu_de_commune_associee_ou_del, "eur-wfs-geopf-chef-lieu-de-commune-associee-ou-del", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de commune associée ou déléguée", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de commune associée ou déléguée",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_commune_associee_ou_deleguee&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_commune_associee_ou_deleguee&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu de commune associée ou déléguée' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_chef_lieu_de_departement, "eur-wfs-geopf-chef-lieu-de-departement", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de département", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de département",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_departement&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_departement&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu de département' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_chef_lieu_de_region, "eur-wfs-geopf-chef-lieu-de-region", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de région", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de région",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_region&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_region&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu de région' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_commune, "eur-wfs-geopf-commune", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - commune", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - commune",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Acommune&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Acommune&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - commune' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_commune_associee_ou_deleguee, "eur-wfs-geopf-commune-associee-ou-deleguee", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - commune associée ou déléguée", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - commune associée ou déléguée",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Acommune_associee_ou_deleguee&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Acommune_associee_ou_deleguee&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - commune associée ou déléguée' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_data_aubiet_25_05, "eur-wfs-geopf-data-aubiet-25-05", "IGN Geoplateforme — Aubiet (32)", "IGN Geoplateforme — Aubiet (32)",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=cosia_032_aubiet%3Adata_aubiet_25_05&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=cosia_032_aubiet%3Adata_aubiet_25_05&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Aubiet (32)' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_epci, "eur-wfs-geopf-epci", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - epci", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - epci",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Aepci&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Aepci&outputFormat=application%2Fjson&count=1000&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - epci' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_ignf_geodesie_site_rdf, "eur-wfs-geopf-ignf-geodesie-site-rdf", "IGN Geoplateforme — (obsolete) Site RDF", "IGN Geoplateforme — (obsolete) Site RDF",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=IGNF_GEODESIE%3Asite-rdf&outputFormat=application%2Fjson&count=200",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=IGNF_GEODESIE%3Asite-rdf&outputFormat=application%2Fjson&count=200&sortBy=id&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the '(obsolete) Site RDF' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_limites_administratives_express_latest, "eur-wfs-geopf-limites-administratives-express-latest", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - arrondissement municipal", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - arrondissement municipal",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Aarrondissement_municipal&outputFormat=application%2Fjson&count=200",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Aarrondissement_municipal&outputFormat=application%2Fjson&count=200&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - arrondissement municipal' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_limites_administratives_express_latest_10, "eur-wfs-geopf-limites-administratives-express-latest-10", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - commune", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - commune",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Acommune&outputFormat=application%2Fjson&count=200",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Acommune&outputFormat=application%2Fjson&count=200&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - commune' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_limites_administratives_express_latest_11, "eur-wfs-geopf-limites-administratives-express-latest-11", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - commune associée ou déléguée", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - commune associée ou déléguée",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Acommune_associee_ou_deleguee&outputFormat=application%2Fjson&count=200",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Acommune_associee_ou_deleguee&outputFormat=application%2Fjson&count=200&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - commune associée ou déléguée' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_limites_administratives_express_latest_2, "eur-wfs-geopf-limites-administratives-express-latest-2", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu d'arrondissement", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu d'arrondissement",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_d_arrondissement&outputFormat=application%2Fjson&count=200",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_d_arrondissement&outputFormat=application%2Fjson&count=200&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu d'arrondissement' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_limites_administratives_express_latest_3, "eur-wfs-geopf-limites-administratives-express-latest-3", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu d'arrondissement municipal", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu d'arrondissement municipal",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_d_arrondissement_municipal&outputFormat=application%2Fjson&count=200",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_d_arrondissement_municipal&outputFormat=application%2Fjson&count=200&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu d'arrondissement municipal' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_limites_administratives_express_latest_4, "eur-wfs-geopf-limites-administratives-express-latest-4", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu d'epci", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu d'epci",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_d_epci&outputFormat=application%2Fjson&count=200",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_d_epci&outputFormat=application%2Fjson&count=200&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu d'epci' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_limites_administratives_express_latest_5, "eur-wfs-geopf-limites-administratives-express-latest-5", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de canton", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de canton",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_canton&outputFormat=application%2Fjson&count=200",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_canton&outputFormat=application%2Fjson&count=200&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu de canton' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_limites_administratives_express_latest_6, "eur-wfs-geopf-limites-administratives-express-latest-6", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de commune", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de commune",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_commune&outputFormat=application%2Fjson&count=200",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_commune&outputFormat=application%2Fjson&count=200&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu de commune' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_limites_administratives_express_latest_7, "eur-wfs-geopf-limites-administratives-express-latest-7", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de commune associée ou déléguée", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de commune associée ou déléguée",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_commune_associee_ou_deleguee&outputFormat=application%2Fjson&count=200",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_commune_associee_ou_deleguee&outputFormat=application%2Fjson&count=200&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu de commune associée ou déléguée' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_limites_administratives_express_latest_8, "eur-wfs-geopf-limites-administratives-express-latest-8", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de département", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de département",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_departement&outputFormat=application%2Fjson&count=200",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_departement&outputFormat=application%2Fjson&count=200&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu de département' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_limites_administratives_express_latest_9, "eur-wfs-geopf-limites-administratives-express-latest-9", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de région", "IGN Geoplateforme — ADMIN EXPRESS mises a jour en continu - chef lieu de région",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_region&outputFormat=application%2Fjson&count=200",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST%3Achef_lieu_de_region&outputFormat=application%2Fjson&count=200&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'ADMIN EXPRESS mises a jour en continu - chef lieu de région' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
 VGEO(eur_wfs_geopf_site_rdf, "eur-wfs-geopf-site-rdf", "IGN Geoplateforme — (obsolete) Site RDF", "IGN Geoplateforme — (obsolete) Site RDF",
   "europe_env", "geo",
-  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=IGNF_GEODESIE%3Asite-rdf&outputFormat=application%2Fjson&count=20",
+  "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=IGNF_GEODESIE%3Asite-rdf&outputFormat=application%2Fjson&count=1000&sortBy=id&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the '(obsolete) Site RDF' layer served over WFS by IGN Geoplateforme, with real geometry.");
 
@@ -279,31 +292,31 @@ VGEO(eur_wfs_pdok_nwb_nwbwegen_wegvakken, "eur-wfs-pdok-nwb-nwbwegen-wegvakken",
 
 VGEO(eur_wfs_sandre_bassindce_glp, "eur-wfs-sandre-bassindce-glp", "Sandre — Bassin DCE - Guadeloupe", "Sandre — Bassin DCE - Guadeloupe",
   "europe_env", "geo",
-  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ABassinDCE_GLP&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50",
+  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ABassinDCE_GLP&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Bassin DCE - Guadeloupe' layer served over WFS by Sandre, with real geometry.");
 
 VGEO(eur_wfs_sandre_bassindce_guf, "eur-wfs-sandre-bassindce-guf", "Sandre — Bassin DCE - Guyane", "Sandre — Bassin DCE - Guyane",
   "europe_env", "geo",
-  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ABassinDCE_GUF&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50",
+  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ABassinDCE_GUF&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Bassin DCE - Guyane' layer served over WFS by Sandre, with real geometry.");
 
 VGEO(eur_wfs_sandre_bassindce_mtq, "eur-wfs-sandre-bassindce-mtq", "Sandre — Bassin DCE - Martinique", "Sandre — Bassin DCE - Martinique",
   "europe_env", "geo",
-  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ABassinDCE_MTQ&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50",
+  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ABassinDCE_MTQ&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Bassin DCE - Martinique' layer served over WFS by Sandre, with real geometry.");
 
 VGEO(eur_wfs_sandre_bassindce_myt, "eur-wfs-sandre-bassindce-myt", "Sandre — Bassin DCE - Mayotte", "Sandre — Bassin DCE - Mayotte",
   "europe_env", "geo",
-  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ABassinDCE_MYT&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50",
+  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ABassinDCE_MYT&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Bassin DCE - Mayotte' layer served over WFS by Sandre, with real geometry.");
 
 VGEO(eur_wfs_sandre_bassindce_reu, "eur-wfs-sandre-bassindce-reu", "Sandre — Bassin DCE - Réunion", "Sandre — Bassin DCE - Réunion",
   "europe_env", "geo",
-  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ABassinDCE_REU&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50",
+  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ABassinDCE_REU&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Bassin DCE - Réunion' layer served over WFS by Sandre, with real geometry.");
 
@@ -345,24 +358,24 @@ VGEO(eur_wfs_sandre_sousbassindce_communes, "eur-wfs-sandre-sousbassindce-commun
 
 VGEO(eur_wfs_sandre_ssbassindceadmin_glp, "eur-wfs-sandre-ssbassindceadmin-glp", "Sandre — Sous Bassin DCE - Guadeloupe", "Sandre — Sous Bassin DCE - Guadeloupe",
   "europe_env", "geo",
-  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ASsBassinDCEAdmin_GLP&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50",
+  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ASsBassinDCEAdmin_GLP&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Sous Bassin DCE - Guadeloupe' layer served over WFS by Sandre, with real geometry.");
 
 VGEO(eur_wfs_sandre_ssbassindceadmin_guf, "eur-wfs-sandre-ssbassindceadmin-guf", "Sandre — Sous Bassin DCE - Guyane", "Sandre — Sous Bassin DCE - Guyane",
   "europe_env", "geo",
-  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ASsBassinDCEAdmin_GUF&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50",
+  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ASsBassinDCEAdmin_GUF&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Sous Bassin DCE - Guyane' layer served over WFS by Sandre, with real geometry.");
 
 VGEO(eur_wfs_sandre_ssbassindceadmin_mtq, "eur-wfs-sandre-ssbassindceadmin-mtq", "Sandre — Sous Bassin DCE - Martinique", "Sandre — Sous Bassin DCE - Martinique",
   "europe_env", "geo",
-  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ASsBassinDCEAdmin_MTQ&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50",
+  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ASsBassinDCEAdmin_MTQ&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Sous Bassin DCE - Martinique' layer served over WFS by Sandre, with real geometry.");
 
 VGEO(eur_wfs_sandre_ssbassindceadmin_reu, "eur-wfs-sandre-ssbassindceadmin-reu", "Sandre — Sous Bassin DCE - Réunion", "Sandre — Sous Bassin DCE - Réunion",
   "europe_env", "geo",
-  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ASsBassinDCEAdmin_REU&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50",
+  "https://services.sandre.eaufrance.fr/geo/sandre?service=WFS&version=2.0.0&request=GetFeature&typeNames=sa%3ASsBassinDCEAdmin_REU&outputFormat=application%2Fjson%3B%20subtype%3Dgeojson&count=50&startIndex=0",
   "fr", "[\"fra\",\"geo\",\"wfs\"]", 86400,
   "Vector features of the 'Sous Bassin DCE - Réunion' layer served over WFS by Sandre, with real geometry.");

@@ -32,6 +32,11 @@ static const hp_source T[] = {
     .record_type = "aid-record", .tags = "\"ng\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://d-portal.org/q?from=act,trans&trans_country_code=NG&limit=5000&form=json",
     .array_path = "rows",
+    /* 2026-11-09: the composite its bw/et/na/tz/zm siblings carry (measured
+     * there: 90,785-96,154 rows each, distinct under the 8-part key, where
+     * `aid` alone keeps a few thousand activities). Keyed on the title
+     * fallback, every transaction of one activity collapsed. */
+    .id_keys = "aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country",
     .detail_url = "https://d-portal.org/q?from=trans&aid={v}&form=json", .detail_key = "aid",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },

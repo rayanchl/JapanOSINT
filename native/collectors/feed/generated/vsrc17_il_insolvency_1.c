@@ -7,30 +7,38 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* datastore_search rows below carry `sort=_id asc` (2026-11-07). An offset
+ * walk with no declared order relies on the backend's default; CKAN's
+ * datastore `_id` is its own sequential row id. Measured one or two rows per
+ * host (izmir, data.gov.il, data.gov.au, QLD, VIC, Mauritius, Panama,
+ * data.gov.sg): `_id desc` answers the opposite end, a bogus sort is refused
+ * (409, or a 404 page on data.gov.il), and the total does not move. The
+ * unsorted first page was already _id 1,2,3 on every one, so this is
+ * STABILISING, not a recovery: 0 records were measured lost without it. */
 VJSON(il_official_receiver_bankruptcies, "il-official-receiver-bankruptcies", "Israel Official Receiver — individual bankruptcy debtors", "Israel Official Receiver — individual bankruptcy debtors",
   "il_insolvency", "insolvency",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=2156937e-524a-4511-907d-5470a6a5264f&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=2156937e-524a-4511-907d-5470a6a5264f&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"il\",\"insolvency\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Personal bankruptcy files: running file number, debtor's city of residence, name of the district court, file status, file opening date, receivership order date and subsequent order dates.");
 
 VJSON(il_official_receiver_debt_claims, "il-official-receiver-debt-claims", "Israel Official Receiver — proofs of debt in bankruptcy and liquidation", "Israel Official Receiver — proofs of debt in bankruptcy and liquidation",
   "il_insolvency", "insolvency",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=3cb25b2e-a501-4870-86a6-30be8d8e80a5&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=3cb25b2e-a501-4870-86a6-30be8d8e80a5&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"il\",\"insolvency\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Creditor claims filed against insolvent estates: claimant class (private/institutional), claim status, system (bankruptcy vs liquidation), debt creation date and the case id the claim attaches to.");
 
 VJSON(il_official_receiver_liquidations, "il-official-receiver-liquidations", "Israel Official Receiver — companies in liquidation", "Israel Official Receiver — companies in liquidation",
   "il_insolvency", "insolvency",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=d8715392-287f-49b7-9ae3-f21ec5bf55f3&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=d8715392-287f-49b7-9ae3-f21ec5bf55f3&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"il\",\"insolvency\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Court liquidation files: file id, company city of operation, file status, petition filing date, date the winding-up order was granted, and date the order was cancelled or frozen.");
 
 VJSON(il_voluntary_liquidation_fast_track, "il-voluntary-liquidation-fast-track", "Israel — companies in expedited voluntary liquidation", "Israel — companies in expedited voluntary liquidation",
   "il_insolvency", "insolvency",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=6f3f0df3-5968-4135-81c5-8dd76bf89410&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=6f3f0df3-5968-4135-81c5-8dd76bf89410&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"il\",\"insolvency\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Fast-track voluntary winding-up: company number, Hebrew and English name, corporation type, current status, date the liquidation request was approved, expected dissolution date and sub-status.");

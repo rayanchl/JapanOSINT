@@ -81,9 +81,22 @@ VGEO(geo_cwfis_fdr, "geo-cwfis-fdr", "CWFIS Canada — fire weather stations", "
   "en", "[\"canada\",\"firewx\",\"stations\"]", 21600,
   "Canadian fire weather station network with current indices.");
 
+/* WFS rows in this file: `startIndex=0` (2026-11-07). geojson_emit_paged()
+ * advances a WFS cursor only when the URL already names one AND the body's own
+ * numberMatched/totalFeatures exceeds what was read (mechanism 3), so a row
+ * without `startIndex` read ONE page of a declared total and stopped. Measured
+ * per row (count=5 at startIndex 0 and 5): where the server accepted paging
+ * without a sort — GeoServer does that only when it can order by the
+ * feature type's primary key — the two pages were disjoint and the row gets
+ * `startIndex=0` alone. Where it refused ("Cannot do natural order without a
+ * primary key"), the row also gets `sortBy=<a property distinct on the
+ * row's first 200 features>`, checked the same way (pages disjoint, total
+ * unchanged; a bogus sortBy is HTTP 400 "Illegal property name", so the
+ * server reads it). Probe-sized pages (count 2/3/20/50) are 1000 now. The
+ * 20-page geojson ceiling still bounds a run; the remainder is disclosed. */
 VGEO(geo_cwfis_fdr_current, "geo-cwfis-fdr-current", "CWFIS Canada — fire danger rating areas", "カナダCWFIS — 火災危険度区域",
   "disaster", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:fdr_current_shp&outputFormat=application/json&srsName=EPSG:4326&count=300&geometryPrecision=3",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:fdr_current_shp&outputFormat=application/json&srsName=EPSG:4326&count=300&geometryPrecision=3&startIndex=0",
   "en", "[\"canada\",\"firedanger\"]", 21600,
   "Current Canadian fire danger rating polygons.");
 
@@ -101,55 +114,55 @@ VGEO(geo_cwfis_firewx_scribe, "geo-cwfis-firewx-scribe", "CWFIS Canada — SCRIB
 
 VGEO(geo_cwfis_hotspots, "geo-cwfis-hotspots", "CWFIS Canada — satellite fire hotspots", "カナダCWFIS — 衛星熱源",
   "disaster", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:hotspots&outputFormat=application/json&srsName=EPSG:4326&count=2000",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:hotspots&outputFormat=application/json&srsName=EPSG:4326&count=2000&sortBy=uid&startIndex=0",
   "en", "[\"canada\",\"wildfire\",\"hotspot\"]", 3600,
   "Canadian Wildland Fire Information System satellite hotspot detections.");
 
 VGEO(geo_cwfis_hotspots_24h, "geo-cwfis-hotspots-24h", "CWFIS Canada — hotspots, last 24 hours", "カナダCWFIS — 熱源(直近24時間)",
   "disaster", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:hotspots_last24hrs&outputFormat=application/json&srsName=EPSG:4326&count=2000",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:hotspots_last24hrs&outputFormat=application/json&srsName=EPSG:4326&count=2000&startIndex=0",
   "en", "[\"canada\",\"wildfire\",\"hotspot\"]", 3600,
   "Canadian hotspot detections restricted to the last day.");
 
 VGEO(geo_cwfis_m3_polygons, "geo-cwfis-m3-polygons", "CWFIS Canada — M3 fire perimeters", "カナダCWFIS — M3 延焼域",
   "disaster", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:m3_polygons_current&outputFormat=application/json&srsName=EPSG:4326&count=300",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:m3_polygons_current&outputFormat=application/json&srsName=EPSG:4326&count=300&startIndex=0",
   "en", "[\"canada\",\"wildfire\",\"perimeter\"]", 7200,
   "Satellite-derived Canadian fire perimeter polygons.");
 
 VGEO(geo_dwd_autowarn_vorhersage, "geo-dwd-autowarn-vorhersage", "DWD Germany — Autowarn forecast polygons", "ドイツ気象局 — Autowarn 予測域",
   "disaster", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Autowarn_Vorhersage&outputFormat=application/json&count=500",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Autowarn_Vorhersage&outputFormat=application/json&count=500&sortBy=ID&startIndex=0",
   "en", "[\"germany\",\"dwd\",\"nowcast\"]", 900,
   "Automatically generated forecast warning areas from DWD's Autowarn system.");
 
 VGEO(geo_dwd_lightning_flash, "geo-dwd-lightning-flash", "DWD — accumulated lightning flash geometry", "ドイツ気象局 — 落雷積算ジオメトリ",
   "disaster", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Accumulated_Flash_Geometry&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Accumulated_Flash_Geometry&outputFormat=application/json&count=1000&sortBy=ID&startIndex=0",
   "en", "[\"lightning\",\"germany\",\"dwd\"]", 900,
   "Lightning stroke geometry accumulated over the latest window.");
 
 VGEO(geo_dwd_stationen, "geo-dwd-stationen", "DWD Germany — Autowarn analysis polygons", "ドイツ気象局 — Autowarn 解析域",
   "disaster", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Autowarn_Analyse&outputFormat=application/json&count=500",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Autowarn_Analyse&outputFormat=application/json&count=500&startIndex=0",
   "en", "[\"germany\",\"dwd\",\"analysis\"]", 900,
   "Current analysed severe weather areas from Autowarn.");
 
 VGEO(geo_dwd_warn_gemeinden, "geo-dwd-warn-gemeinden", "DWD Germany — municipality warnings", "ドイツ気象局 — 市町村警報",
   "disaster", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Warnungen_Gemeinden&outputFormat=application/json&count=500",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Warnungen_Gemeinden&outputFormat=application/json&count=500&startIndex=0",
   "en", "[\"germany\",\"dwd\",\"warning\",\"polygon\"]", 900,
   "Live German severe weather warnings as municipality polygons.");
 
 VGEO(geo_dwd_warn_gemeinden_vereinigt, "geo-dwd-warn-gemeinden-vereinigt", "DWD Germany — merged municipality warnings", "ドイツ気象局 — 統合市町村警報",
   "disaster", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Warnungen_Gemeinden_vereinigt&outputFormat=application/json&count=300",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Warnungen_Gemeinden_vereinigt&outputFormat=application/json&count=300&startIndex=0",
   "en", "[\"germany\",\"dwd\",\"warning\"]", 900,
   "Dissolved warning polygons, one per warning event.");
 
 VGEO(geo_dwd_warn_landkreise, "geo-dwd-warn-landkreise", "DWD Germany — district warnings", "ドイツ気象局 — 郡単位警報",
   "disaster", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Warnungen_Landkreise&outputFormat=application/json&count=500",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Warnungen_Landkreise&outputFormat=application/json&count=500&startIndex=0",
   "en", "[\"germany\",\"dwd\",\"warning\",\"polygon\"]", 900,
   "German warnings aggregated to district polygons.");
 
@@ -183,9 +196,15 @@ VGEO(geo_eccc_hurricane_windradii, "geo-eccc-hurricane-windradii", "Environment 
   "en", "[\"canada\",\"hurricane\",\"windradii\"]", 1800,
   "Wind radii polygons by threshold for active cyclones.");
 
+/* 2026-11-07: Unsorted, this collection answers OLDEST first (2026-10-09T07:00 at the head of an 18,134,117-record
+ * 30-day store, measured 2026-11-07), so 20 pages of 500 were the oldest month-old readings. Newest
+ * first now, IDENTIFIER as the tiebreak, inside a 7-hour window ({ago:25200}: the 6 h system cadence
+ * plus slack) so numberMatched names the slice between runs: 132,038 then, of which a run reads the
+ * newest 10,000 and discloses the rest. Bogus sortby is HTTP 400, the total is unchanged by the
+ * sort, and page 1 vs the next link overlap 0 of 500. */
 VGEO(geo_eccc_hydrometric, "geo-eccc-hydrometric", "Environment Canada — real-time hydrometric data", "カナダ環境省 — リアルタイム水文データ",
   "disaster", "flood",
-  "https://api.weather.gc.ca/collections/hydrometric-realtime/items?f=json&limit=500",
+  "https://api.weather.gc.ca/collections/hydrometric-realtime/items?f=json&limit=500&sortby=-DATETIME,IDENTIFIER&datetime={ago:25200}/..",
   "en", "[\"canada\",\"hydrology\",\"realtime\"]", 1800,
   "Real-time Canadian river level and discharge with station coordinates.");
 

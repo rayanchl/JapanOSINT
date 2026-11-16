@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* Strip a JSONP callback wrapper `ident({...})` down to the inner `{...}`.
  * Returns a pointer into `body` at the first '{' and NUL-terminates at the
@@ -32,7 +33,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!q || !*q) return -1;
   const char *guid = jo_env("ABR_GUID");
-  if (!guid) { fprintf(stderr, "[au_abr] gated (no ABR_GUID)\n"); return 0; }
+  if (!guid) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "au_abr", "au_abr", (const char *const[]){"ABR_GUID", NULL}, NULL, NULL);
 
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
@@ -44,11 +45,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "au_abr");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
 
   cJSON *root = cJSON_Parse(jo_strip_jsonp(body));
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int emitted = 0;
   cJSON *names = cJSON_GetObjectItem(root, "Names");

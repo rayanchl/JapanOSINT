@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 #define ISED_BASE \
   "https://services.arcgis.com/wjcPoefzjpzCgffS/ArcGIS/rest/services/" \
@@ -43,7 +44,7 @@
  * returns 1000 with exceededTransferLimit set, so requesting 2000 only made the
  * request and the reply disagree about how far the walk had got. */
 #define PAGE_SIZE 1000
-#define PAGES 3
+#define PAGES 3  /* exhaustive-ok: page ceiling; a stop on a full page or a failed later page files a collector-truncation-notice */
 
 /* epoch milliseconds -> ISO-8601 UTC */
 /* The gmtime failure was handled; strftime's 0 was not — and on that path the
@@ -198,12 +199,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
    * A full walk is 844 requests and, at the sink's throughput, hours — so this
    * stays a BOUNDED walk on a daily cadence, and the bound is DISCLOSED as a
    * record carrying the real total rather than left in a log line. Raise
-   * $JO_ISED_MAX_PAGES to take more per run. */
-  const char *e = getenv("JO_ISED_MAX_PAGES");
-  int max_pages = (e && *e) ? atoi(e) : PAGES;
+   * $JO_PAGE_MAX to take more per run. */
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_ISED_MAX_PAGES) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  int max_pages = jo_page_max_for(PAGES);
   if (max_pages < 1) max_pages = 1;
 
-  int total = 0, pages = 0, more = 0;
+  int total = 0, pages = 0, cut = 0, more = 0;
   long offset = 0;
   for (int i = 0; i < max_pages; i++) {
     char url[512];
@@ -212,9 +216,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              "&resultRecordCount=%d&resultOffset=%ld&f=json",
              ISED_BASE, PAGE_SIZE, offset);
     cJSON *doc = feed_get_json(ctx->http, url, 60000);
-    if (!doc) break;
+    if (!doc) { cut = pages > 0; break; }   /* a refused LATER page is disclosed below */
     cJSON *feats = cJSON_GetObjectItem(doc, "features");
-    if (!cJSON_IsArray(feats)) { cJSON_Delete(doc); break; }
+    if (!cJSON_IsArray(feats)) { cJSON_Delete(doc); cut = pages > 0; break; }
     pages++;
     int got = cJSON_GetArraySize(feats);
     total += emit_features(feats, sink);
@@ -228,13 +232,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[ised-spectrum-sites] fetch failed\n");
     return -1;
   }
+  /* Every stop is disclosed (2026-11-07): a later page that failed used to
+   * `break` as if it were the end of the data, and a walk that used up its
+   * page budget on full pages said nothing. */
+  if (cut)
+    jo_trunc_notice_scoped(sink, "ised-spectrum-sites", "walk-cut", ISED_BASE, total, -1,
+                           "a later page failed (transport, refusal or an "
+                           "unreadable body) and the walk stopped there",
+                           "re-run; one failed page is one reading");
   if (more) {
     long avail = ised_total_count(ctx);
     jo_trunc_notice(sink, "ised-spectrum-sites", ISED_BASE, total, avail,
                     "the layer is larger than one run's page budget; a full "
                     "walk of it is ~844 requests at the server's 1000-feature "
                     "maxRecordCount",
-                    "raise $JO_ISED_MAX_PAGES, or narrow the query with a "
+                    "raise $JO_PAGE_MAX, or narrow the query with a "
                     "`where` clause on province or licence class");
   }
   fprintf(stderr, "[ised-spectrum-sites] emitted %d over %d page(s)%s\n",

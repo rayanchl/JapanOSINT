@@ -210,86 +210,94 @@ VJSON(afr_ibb_org_zabita_daire_baskanligi, "afr-ibb-org-zabita-daire-baskanligi"
   "tr", "[\"tur\",\"opendata\",\"ckan\",\"istanbul\"]", 86400,
   "CKAN dataset listing for the Municipal Police Department on Istanbul's municipal open-data portal.");
 
+/* datastore_search rows below carry `sort=_id asc` (2026-11-07). An offset
+ * walk with no declared order relies on the backend's default; CKAN's
+ * datastore `_id` is its own sequential row id. Measured one or two rows per
+ * host (izmir, data.gov.il, data.gov.au, QLD, VIC, Mauritius, Panama,
+ * data.gov.sg): `_id desc` answers the opposite end, a bogus sort is refused
+ * (409, or a 404 page on data.gov.il), and the total does not move. The
+ * unsorted first page was already _id 1,2,3 on every one, so this is
+ * STABILISING, not a recovery: 0 records were measured lost without it. */
 VJSON(afr_ilgov_ds_batei_esek_42e73a, "afr-ilgov-ds-batei-esek-42e73a", "data.gov.il — Ministry of Transport — licensed vehicle businesses", "data.gov.il — Ministry of Transport — licensed vehicle businesses",
   "mena_gov", "economy",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=42e73a60-7acc-4c5d-b4ec-b0e468a73c51&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=42e73a60-7acc-4c5d-b4ec-b0e468a73c51&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"isr\",\"opendata\",\"datastore\"]", 21600,
   "Register of licensed garages and vehicle-service businesses with location and licence class.");
 
 VJSON(afr_ilgov_ds_database_of_doctors_licenses_9c64c5, "afr-ilgov-ds-database-of-doctors-licenses-9c64c5", "data.gov.il — Ministry of Health — licensed physicians register", "data.gov.il — Ministry of Health — licensed physicians register",
   "mena_gov", "health",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=9c64c522-bbc2-48fe-96fb-3b2a8626f59e&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=9c64c522-bbc2-48fe-96fb-3b2a8626f59e&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"isr\",\"opendata\",\"datastore\"]", 28800,
   "Register of licensed physicians in Israel with licence number, speciality and issue date.");
 
 VJSON(afr_ilgov_ds_driving_shcool_3f06e2, "afr-ilgov-ds-driving-shcool-3f06e2", "data.gov.il — Ministry of Transport — licensed driving schools", "data.gov.il — Ministry of Transport — licensed driving schools",
   "mena_gov", "transport",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=3f06e2f2-e2ad-41ac-9665-37d0625537f2&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=3f06e2f2-e2ad-41ac-9665-37d0625537f2&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"isr\",\"opendata\",\"datastore\"]", 43200,
   "Register of licensed driving schools with address and licence status.");
 
 VJSON(afr_ilgov_ds_flydata_e83f76, "afr-ilgov-ds-flydata-e83f76", "data.gov.il — Israel Airports Authority — flight schedule and status", "data.gov.il — Israel Airports Authority — flight schedule and status",
   "mena_gov", "transport",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=e83f763b-b7d7-479e-b172-ae981ddc6de5&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=e83f763b-b7d7-479e-b172-ae981ddc6de5&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"isr\",\"opendata\",\"datastore\"]", 64800,
   "Live arrivals and departures for Israeli airports: flight number, airline, origin, scheduled and actual times.");
 
 VJSON(afr_ilgov_ds_gemelnet_91c849, "afr-ilgov-ds-gemelnet-91c849", "data.gov.il — Capital Market Authority — provident fund returns (Gemelnet)", "data.gov.il — Capital Market Authority — provident fund returns (Gemelnet)",
   "mena_gov", "economy",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=91c849ed-ddc4-472b-bd09-0f5486cea35c&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=91c849ed-ddc4-472b-bd09-0f5486cea35c&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"isr\",\"opendata\",\"datastore\"]", 86400,
   "Monthly provident-fund performance, assets and fee data for Israeli funds.");
 
 VJSON(afr_ilgov_ds_goverment_domesticdebt_c92fdd, "afr-ilgov-ds-goverment-domesticdebt-c92fdd", "data.gov.il — Ministry of Finance — government domestic debt series", "data.gov.il — Ministry of Finance — government domestic debt series",
   "mena_gov", "economy",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=c92fdda2-0939-4110-8ebc-edfcf35e8723&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=c92fdda2-0939-4110-8ebc-edfcf35e8723&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"isr\",\"opendata\",\"datastore\"]", 21600,
   "Israeli government domestic debt issuance and outstanding balances by instrument.");
 
 VJSON(afr_ilgov_ds_insurance_584e6b, "afr-ilgov-ds-insurance-584e6b", "data.gov.il — Capital Market Authority — insurance market statistics", "data.gov.il — Capital Market Authority — insurance market statistics",
   "mena_gov", "economy",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=584e6b69-174f-46c9-b8db-03925b4c68c6&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=584e6b69-174f-46c9-b8db-03925b4c68c6&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"isr\",\"opendata\",\"datastore\"]", 28800,
   "Insurer-level premium, claims and portfolio statistics from Israel's capital market regulator.");
 
 VJSON(afr_ilgov_ds_kli_rechev_ciburiim_cf2986, "afr-ilgov-ds-kli-rechev-ciburiim-cf2986", "data.gov.il — Ministry of Transport — public-service vehicles register", "data.gov.il — Ministry of Transport — public-service vehicles register",
   "mena_gov", "transport",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=cf29862d-ca25-4691-84f6-1be60dcb4a1e&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=cf29862d-ca25-4691-84f6-1be60dcb4a1e&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"isr\",\"opendata\",\"datastore\"]", 43200,
   "Registry of buses and public-service vehicles licensed in Israel with operator and model detail.");
 
 VJSON(afr_ilgov_ds_list_measles_vaccination_sta_545337, "afr-ilgov-ds-list-measles-vaccination-sta-545337", "data.gov.il — Ministry of Health — measles vaccination stations", "data.gov.il — Ministry of Health — measles vaccination stations",
   "mena_gov", "health",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=54533763-9edb-4fff-bc9b-1952f1ae66d0&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=54533763-9edb-4fff-bc9b-1952f1ae66d0&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"isr\",\"opendata\",\"datastore\"]", 64800,
   "Locations and opening hours of measles vaccination stations operated by the Israeli health ministry.");
 
 VJSON(afr_ilgov_ds_pensia_net_a66926, "afr-ilgov-ds-pensia-net-a66926", "data.gov.il — Capital Market Authority — pension fund returns (Pensianet)", "data.gov.il — Capital Market Authority — pension fund returns (Pensianet)",
   "mena_gov", "economy",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=a66926f3-e396-4984-a4db-75486751c2f7&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=a66926f3-e396-4984-a4db-75486751c2f7&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"isr\",\"opendata\",\"datastore\"]", 86400,
   "Pension-fund yields, assets under management and fee schedules.");
 
 VJSON(afr_ilgov_ds_private_and_commercial_vehic_053cea, "afr-ilgov-ds-private-and-commercial-vehic-053cea", "data.gov.il — Ministry of Transport — private and commercial vehicle register", "data.gov.il — Ministry of Transport — private and commercial vehicle register",
   "mena_gov", "transport",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=053cea08-09bc-40ec-8f7a-156f0677aff3&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=053cea08-09bc-40ec-8f7a-156f0677aff3&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"isr\",\"opendata\",\"datastore\"]", 21600,
   "Vehicle registration records with make, model, year, fuel type and ownership category.");
 
 VJSON(afr_ilgov_ds_recall_2c3352, "afr-ilgov-ds-recall-2c3352", "data.gov.il — Ministry of Transport — vehicle safety recalls", "data.gov.il — Ministry of Transport — vehicle safety recalls",
   "mena_gov", "transport",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=2c33523f-87aa-44ec-a736-edbb0a82975e&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=2c33523f-87aa-44ec-a736-edbb0a82975e&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"isr\",\"opendata\",\"datastore\"]", 28800,
   "Vehicle recall notices with manufacturer, model, defect description and remedy.");

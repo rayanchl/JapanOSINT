@@ -61,7 +61,7 @@ static void cell_or_null(const cJSON *row, int i, char *buf, size_t bn) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("FOFA_API_KEY");
+  const char *key = jo_getenv("FOFA_API_KEY");
   if (!key || !*key) {
     /* FOFA_EMAIL is listed too: the query string carries both, and an
      * operator who sets only the key gets a 401 that looks like a fetch
@@ -72,7 +72,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         envs, "https://fofa.info/api/v1/search/all",
         "free account at fofa.info; the API key and the account email are both sent");
   }
-  const char *email = getenv("FOFA_EMAIL");
+  const char *email = jo_getenv("FOFA_EMAIL");
   if (!email) email = "";
 
   /* params order: email, key, qbase64, size, fields */

@@ -21,6 +21,11 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B46_ARCGISLAYERS[] = {
   { .id = "JO46_AGS_SERVICES1_TRAVELAREAS", .name = "State of Idaho — travelareas (ArcGIS "
       "20__30_min_911_Response_Times_by_EMS_Station_2022_06 layer 0)",
@@ -2031,6 +2036,7 @@ static const hp_source HP3B46_ARCGISLAYERS[] = {
   { .id = "JO46_AGS_SERVICES1_2D", .name = "Saku City — 建築物（2D） (ArcGIS building_2d layer 0)",
     .category = "government", .portal = "https://services1.arcgis.com",
     .record_type = "gis-feature",
+    .lang = "ja",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services1.arcgis.com/c83a7mGFcWBslmdw/arcgis/rest/services/building_2d/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&returnCentroid=true&outSR=4326&orderByFields=OBJECTID%20ASC&resultRecordCount=2000&f=json",
@@ -3201,6 +3207,7 @@ static const hp_source HP3B46_ARCGISLAYERS[] = {
       "layer 0)",
     .category = "government", .portal = "https://services5.arcgis.com",
     .record_type = "address-point",
+    .lang = "ja",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services5.arcgis.com/akSheMdmUZiKa4BM/arcgis/rest/services/address_info/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&orderByFields=OBJECTID%20ASC&resultRecordCount=2000&f=json",
@@ -4086,6 +4093,7 @@ static const hp_source HP3B46_ARCGISLAYERS[] = {
       "131130_bicycle_parking_lot (ArcGIS layer 0)",
     .category = "transport", .portal = "https://services3.arcgis.com",
     .record_type = "transport-asset",
+    .lang = "ja",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services3.arcgis.com/UtdeFTavkHfI94t2/arcgis/rest/services/131130_bicycle_parking_lot/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&orderByFields=ObjectId%20ASC&resultRecordCount=1000&f=json",
@@ -4504,6 +4512,7 @@ static const hp_source HP3B46_ARCGISLAYERS[] = {
   { .id = "JO46_AGS_SERVICES5_CHIBANZU", .name = "Ryugasaki City — chibanzu (ArcGIS layer 0)",
     .category = "geospatial", .portal = "https://services5.arcgis.com",
     .record_type = "gis-feature",
+    .lang = "ja",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services5.arcgis.com/ZMdUEcr9jaR9qJyU/arcgis/rest/services/chibanzu/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&orderByFields=FID%20ASC&resultRecordCount=2000&f=json",

@@ -90,7 +90,7 @@ static int emit_result(intel_sink *sink, const char *svc, const char *entity,
   cJSON_AddStringToObject(props, "service", svc);
   cJSON_AddStringToObject(props, "entity", entity);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   /* Stable per-result key: Nominatim place_id, else osm_type:osm_id, else
    * lat:lon. place_id may be a number or string depending on response. */

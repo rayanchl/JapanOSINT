@@ -150,7 +150,7 @@ static int pw_emit_github(intel_sink *sink, const char *q, const cJSON *u) {
  * dedups by uid. Standalone GITHUB_USER behaviour is unchanged. */
 int pw_run_github(const source_ctx *ctx, intel_sink *sink, const char *q) {
   const char *hdrs[] = { "Accept: application/vnd.github+json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
   char url[512];
@@ -194,16 +194,16 @@ int pw_run_github(const source_ctx *ctx, intel_sink *sink, const char *q) {
 /* ---- GitLab ------------------------------------------------------------- */
 static int run_gitlab(const source_ctx *ctx, intel_sink *sink, const char *q) {
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
   char url[512];
   snprintf(url, sizeof url, "https://gitlab.com/api/v4/users?username=%s", enc);
   free(enc);
   char *body = jo_get(ctx, url, hdrs, "GITLAB_USER");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   if (cJSON_IsArray(root)) {
     cJSON *u;
@@ -235,7 +235,7 @@ static int run_gitlab(const source_ctx *ctx, intel_sink *sink, const char *q) {
 /* ---- Keybase ------------------------------------------------------------ */
 static int run_keybase(const source_ctx *ctx, intel_sink *sink, const char *q) {
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
   char url[512];
@@ -243,9 +243,9 @@ static int run_keybase(const source_ctx *ctx, intel_sink *sink, const char *q) {
     "https://keybase.io/_/api/1.0/user/lookup.json?usernames=%s", enc);
   free(enc);
   char *body = jo_get(ctx, url, hdrs, "KEYBASE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   cJSON *them = cJSON_GetObjectItem(root, "them");
   /* /lookup returns "them" as an array (multi) or object (single). */
@@ -301,7 +301,7 @@ static int run_keybase(const source_ctx *ctx, intel_sink *sink, const char *q) {
 /* ---- Mastodon (mastodon.social account search) -------------------------- */
 static int run_mastodon(const source_ctx *ctx, intel_sink *sink, const char *q) {
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
   char url[512];
@@ -309,9 +309,9 @@ static int run_mastodon(const source_ctx *ctx, intel_sink *sink, const char *q) 
     "https://mastodon.social/api/v2/search?q=%s&type=accounts&limit=20", enc);
   free(enc);
   char *body = jo_get(ctx, url, hdrs, "MASTODON_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   cJSON *accs = cJSON_GetObjectItem(root, "accounts");
   if (cJSON_IsArray(accs)) {
@@ -382,13 +382,13 @@ int pw_run_gravatar(const source_ctx *ctx, intel_sink *sink, const char *q) {
   char hash[33]; pw_md5_hex(em, hash);
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char url[256];
   snprintf(url, sizeof url, "https://en.gravatar.com/%s.json", hash);
   char *body = jo_get(ctx, url, hdrs, "GRAVATAR_GLOBAL");
-  if (!body) return 0;   /* 404 (no profile) → honest empty */
+  if (!body) return jo_fail_rc(jo_last_status(), 1);   /* 404 (no profile) → honest empty; other refusals -1 */
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   cJSON *entry = cJSON_GetObjectItem(root, "entry");
   cJSON *e0 = NULL;
@@ -441,16 +441,17 @@ int pw_run_gravatar(const source_ctx *ctx, intel_sink *sink, const char *q) {
 
 /* ---- dispatch ----------------------------------------------------------- */
 static int run(const source_ctx *ctx, intel_sink *sink) {
+  int rc = 0;   /* a helper's -1 = refused/unparsable fetch (2026-11-07) */
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
   if (!q) return -1;
   const char *id = ctx->source_id;
-  if      (strcmp(id, "GRAVATAR_GLOBAL") == 0) pw_run_gravatar(ctx, sink, q);
-  else if (strcmp(id, "GITHUB_USER")     == 0) pw_run_github(ctx, sink, q);
-  else if (strcmp(id, "GITLAB_USER")     == 0) run_gitlab(ctx, sink, q);
-  else if (strcmp(id, "KEYBASE")         == 0) run_keybase(ctx, sink, q);
-  else if (strcmp(id, "MASTODON_SEARCH") == 0) run_mastodon(ctx, sink, q);
+  if      (strcmp(id, "GRAVATAR_GLOBAL") == 0) rc = pw_run_gravatar(ctx, sink, q);
+  else if (strcmp(id, "GITHUB_USER")     == 0) rc = pw_run_github(ctx, sink, q);
+  else if (strcmp(id, "GITLAB_USER")     == 0) rc = run_gitlab(ctx, sink, q);
+  else if (strcmp(id, "KEYBASE")         == 0) rc = run_keybase(ctx, sink, q);
+  else if (strcmp(id, "MASTODON_SEARCH") == 0) rc = run_mastodon(ctx, sink, q);
   else return -1;
-  return 0;   /* honest empty is not an error */
+  return rc < 0 ? -1 : 0;   /* honest empty 0, refused fetch -1 */
 }
 
 #define PEOPLE_DEF(SYM, ID, NAME, NAMEJA, URL, DESC) \

@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* ---- small helpers ------------------------------------------------------- */
 
@@ -85,7 +86,7 @@ static int eu_emit_org(intel_sink *sink, const cJSON *o) {
   if (ident)    cJSON_AddStringToObject(props, "registration_number", ident);
   if (country)  cJSON_AddStringToObject(props, "country", country);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[512]; link[0] = 0;
@@ -96,7 +97,7 @@ static int eu_emit_org(intel_sink *sink, const cJSON *o) {
   it.remote_key      = ident ? ident : name;
   it.title           = name ? name : ident;
   it.summary         = category;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link[0] ? link : web;
   it.record_type     = "eu-transparency-org";
@@ -120,12 +121,12 @@ static int run_eu_transparency(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "eu_transparency");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   /* Response shapes vary: {results:[...]} or {searchResults:[...]} or a bare
    * array. Tolerate all; emit one item per organisation. */
@@ -180,7 +181,7 @@ static int uk_emit_donation(intel_sink *sink, const cJSON *d) {
   if (recip)    cJSON_AddStringToObject(props, "recipient", recip);
   if (ecref)    cJSON_AddStringToObject(props, "ec_ref", ecref);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char title[512];
@@ -197,7 +198,7 @@ static int uk_emit_donation(intel_sink *sink, const cJSON *d) {
   it.remote_key      = ecref ? ecref : title;
   it.title           = title;
   it.summary         = value;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = accepted;
   it.link            = link[0] ? link : NULL;
@@ -229,7 +230,7 @@ static int run_uk_donations(const source_ctx *ctx, intel_sink *sink) {
       enc, start);
 
     const char *hdrs[] = { "Accept: application/json",
-                           "User-Agent: JapanOSINT/1.0", NULL };
+                           NULL };
     char *body = jo_get(ctx, url, hdrs, "uk_donations");
     if (!body) break;
     cJSON *root = cJSON_Parse(body);
@@ -290,7 +291,7 @@ static int os_emit_org(intel_sink *sink, const cJSON *attr, const char *orgid) {
   if (cid)   cJSON_AddStringToObject(props, "orgid", cid);
   if (total) cJSON_AddStringToObject(props, "total_contributions", total);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[256]; link[0] = 0;
@@ -301,7 +302,7 @@ static int os_emit_org(intel_sink *sink, const cJSON *attr, const char *orgid) {
   it.remote_key      = cid ? cid : name;
   it.title           = name;
   it.summary         = total;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link[0] ? link : NULL;
   it.record_type     = "opensecrets-org";
@@ -318,7 +319,7 @@ static int run_opensecrets(const source_ctx *ctx, intel_sink *sink) {
   const char *key = jo_env("OPENSECRETS_KEY");
   if (!key) {
     fprintf(stderr, "[opensecrets] gated (no OPENSECRETS_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "opensecrets", "opensecrets", (const char *const[]){"OPENSECRETS_KEY", NULL}, NULL, NULL);
   }
   char *enc = jo_urlencode(q);
   char *kenc = jo_urlencode(key);
@@ -332,12 +333,12 @@ static int run_opensecrets(const source_ctx *ctx, intel_sink *sink) {
   free(enc); free(kenc);
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "opensecrets");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   /* Shape: {"response":{"organization":[{"@attributes":{...}}, ...]}} or a
    * single object when only one match. */

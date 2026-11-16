@@ -21,11 +21,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B45_JPWPENV[] = {
   { .id = "JO45_WP_FRONTGEOSPATIAL_POSTS", .name = "G空間情報センター — posts (WordPress REST)",
     .name_ja = "G空間情報センター 投稿（WordPress REST）",
     .category = "geospatial", .portal = "https://front.geospatial.jp/",
     .record_type = "site-post",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://front.geospatial.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -50,6 +56,7 @@ static const hp_source HP3B45_JPWPENV[] = {
     .name_ja = "G空間情報センター 固定ページ（WordPress REST）",
     .category = "geospatial", .portal = "https://front.geospatial.jp/",
     .record_type = "site-page",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://front.geospatial.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
@@ -74,6 +81,7 @@ static const hp_source HP3B45_JPWPENV[] = {
     .name_ja = "G空間情報センター FAQ（WordPress REST）",
     .category = "geospatial", .portal = "https://front.geospatial.jp/",
     .record_type = "cpt-faq",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://front.geospatial.jp/wp-json/wp/v2/faq?per_page=100&orderby=date&order=desc",
@@ -99,6 +107,7 @@ static const hp_source HP3B45_JPWPENV[] = {
     .name_ja = "G空間情報センター 活用事例（WordPress REST）",
     .category = "geospatial", .portal = "https://front.geospatial.jp/",
     .record_type = "cpt-showcase",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://front.geospatial.jp/wp-json/wp/v2/showcase?per_page=100&orderby=date&order=desc",
@@ -124,6 +133,7 @@ static const hp_source HP3B45_JPWPENV[] = {
     .name_ja = "東京大学地震研究所 投稿（WordPress REST）",
     .category = "hazard", .portal = "https://www.eri.u-tokyo.ac.jp/",
     .record_type = "site-post",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.eri.u-tokyo.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -148,6 +158,7 @@ static const hp_source HP3B45_JPWPENV[] = {
     .name_ja = "東京大学地震研究所 固定ページ（WordPress REST）",
     .category = "hazard", .portal = "https://www.eri.u-tokyo.ac.jp/",
     .record_type = "site-page",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.eri.u-tokyo.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
@@ -172,6 +183,7 @@ static const hp_source HP3B45_JPWPENV[] = {
     .name_ja = "東京大学地震研究所 技術研究報告（WordPress REST）",
     .category = "hazard", .portal = "https://www.eri.u-tokyo.ac.jp/",
     .record_type = "cpt-gihou",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.eri.u-tokyo.ac.jp/wp-json/wp/v2/gihou?per_page=100&orderby=date&order=desc",
@@ -197,6 +209,7 @@ static const hp_source HP3B45_JPWPENV[] = {
     .name_ja = "東京大学地震研究所 利用者一覧（WordPress REST）",
     .category = "hazard", .portal = "https://www.eri.u-tokyo.ac.jp/",
     .record_type = "site-user",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.eri.u-tokyo.ac.jp/wp-json/wp/v2/users?per_page=100",

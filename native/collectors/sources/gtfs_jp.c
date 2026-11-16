@@ -896,9 +896,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   long feed_limit = 0;                /* 0 = every feed in the catalogue */
   long stop_cap = 50000;              /* map-layer feature budget */
-  const char *e1 = getenv("GTFS_JP_FEED_LIMIT");
+  const char *e1 = jo_getenv("GTFS_JP_FEED_LIMIT");
   if (e1 && e1[0]) feed_limit = strtol(e1, NULL, 10);
-  const char *e2 = getenv("GTFS_JP_STOP_CAP");
+  const char *e2 = jo_getenv("GTFS_JP_STOP_CAP");
   if (e2 && e2[0]) stop_cap = strtol(e2, NULL, 10);
 
   cJSON *wrap = feed_get_json(ctx->http, CATALOG_URL, 30000);

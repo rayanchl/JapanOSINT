@@ -60,7 +60,7 @@ static int emit_one(intel_sink *sink, const char *addr, const char *service,
 static int defi_run(const source_ctx *ctx, intel_sink *sink) {
   const char *addr = ctx->entity;
   if (!is_eth_addr(addr)) return 0;
-  const char *key = getenv("ETHERSCAN_API_KEY");
+  const char *key = jo_getenv("ETHERSCAN_API_KEY");
   if (!key || !*key) return 0;
 
   cJSON *bal = etherscan(ctx->http, "balance", addr, "&tag=latest", key);
@@ -92,7 +92,7 @@ static int defi_run(const source_ctx *ctx, intel_sink *sink) {
 static int flow_run(const source_ctx *ctx, intel_sink *sink) {
   const char *addr = ctx->entity;
   if (!is_eth_addr(addr)) return 0;
-  const char *key = getenv("ETHERSCAN_API_KEY");
+  const char *key = jo_getenv("ETHERSCAN_API_KEY");
   if (!key || !*key) return 0;
 
   /* Walk pages until Etherscan stops returning transactions, instead of

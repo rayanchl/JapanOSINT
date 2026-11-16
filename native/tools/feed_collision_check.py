@@ -18,7 +18,20 @@ server will not serve right now (non-200, or HTML where the feed was) is
 UNVERIFIABLE_NOW, never a verdict."""
 import sys, re, subprocess, collections, hashlib, argparse, concurrent.futures as cf
 
-UA = "Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)"
+# Shelling out to curl still goes through THE trust set (jo_tls, rule 4c):
+# system roots + session CA + the intermediates the engine loads.
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import jo_tls as _jo_tls
+JO_CURL_TLS = _jo_tls.curl_args()
+
+
+# The request is the ENGINE's (tools/jo_http.py): JO_USER_AGENT, or the
+# core/host_agents.def agent for a listed host, and the engine's Accept.
+# This tool used to send an agent of its own (one of eight spellings in
+# this directory, 2026-11-07), so a host walled against one agent read
+# differently here than in the engine.
+import jo_http as _jo_http
 
 
 def tag_text(item, tag):
@@ -31,7 +44,7 @@ def key_of(item):
 
 
 def measure(url):
-    p = subprocess.run(["curl", "-sS", "-L", "--compressed", "--max-time", "30", "-A", UA,
+    p = subprocess.run(["curl", *JO_CURL_TLS, "-sS", "-L", "--compressed", "--max-time", "30", *_jo_http.curl_header_args(url),
                         "-o", "-", "-w", "\n%{http_code}", url], capture_output=True)
     b = p.stdout; i = b.rfind(b"\n")
     code = b[i + 1:].decode(errors="ignore"); t = b[:i].decode("utf-8", "replace")

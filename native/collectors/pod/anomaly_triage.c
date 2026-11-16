@@ -470,8 +470,51 @@ static int triage_one(db_handle *db, llm_client *llm, http_client *http,
   return wrote;
 }
 
+/* log-retention deletes resolved anomalies after 90 days and never touched
+ * their vectors, so `memory_examples` spent its K+1 neighbour budget on ids
+ * that no longer exist and the "seen before" examples thinned out while the
+ * index grew without bound (audit 2026-11-07). Remove the orphans, a bounded
+ * number per tick, the way core/entity_vec.c prunes its own. */
+#define TRIAGE_PRUNE_PER_TICK 500
+static void memory_prune(db_handle *db) {
+  if (!vecindex_exists(db, &anomaly_vec_spec)) return;
+  sqlite3_stmt *q = NULL;
+  /* keys are stored as TEXT (see memory_sync's CAST), so they are read and
+   * bound as text: an integer bound against a vec0 TEXT key matches nothing */
+  char ids[TRIAGE_PRUNE_PER_TICK][24];
+  int n = 0;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT d.anomaly_id FROM anomaly_vec_done d WHERE NOT EXISTS"
+        " (SELECT 1 FROM collector_anomaly a WHERE a.id=d.anomaly_id) LIMIT ?1",
+        -1, &q, NULL) != SQLITE_OK) return;
+  sqlite3_bind_int(q, 1, TRIAGE_PRUNE_PER_TICK);
+  while (n < TRIAGE_PRUNE_PER_TICK && sqlite3_step(q) == SQLITE_ROW)
+  {
+    const char *k = (const char *)sqlite3_column_text(q, 0);
+    if (k) snprintf(ids[n++], sizeof ids[0], "%s", k);
+  }
+  sqlite3_finalize(q);
+  if (n == 0 || vecindex_begin(db) != 0) return;
+  sqlite3_stmt *dv = NULL, *dd = NULL;
+  int ok = sqlite3_prepare_v2(db->h, "DELETE FROM anomaly_vec WHERE anomaly_id=?1",
+                              -1, &dv, NULL) == SQLITE_OK &&
+           sqlite3_prepare_v2(db->h, "DELETE FROM anomaly_vec_done WHERE anomaly_id=?1",
+                              -1, &dd, NULL) == SQLITE_OK;
+  for (int i = 0; ok && i < n; i++) {
+    sqlite3_reset(dv); sqlite3_reset(dd);
+    sqlite3_bind_text(dv, 1, ids[i], -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(dd, 1, ids[i], -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(dv) != SQLITE_DONE || sqlite3_step(dd) != SQLITE_DONE) ok = 0;
+  }
+  sqlite3_finalize(dv); sqlite3_finalize(dd);
+  vecindex_end(db, ok);
+  if (ok) fprintf(stderr, "[triage] pruned %d vector(s) of anomalies no longer "
+                          "in collector_anomaly\n", n);
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
   (void)sink;
+  memory_prune(ctx->db);     /* runs whatever LLM_ENABLED says: it is pure DB */
   const char *le = getenv("LLM_ENABLED");
   if (!le || strcmp(le, "true") != 0) {
     fprintf(stderr, "[triage] skipped (LLM_ENABLED != true)\n");

@@ -86,8 +86,24 @@ static const hp_source HP3_RESEARCH[] = {
     .record_type = "biomedical-literature",
     .tags = "\"research\",\"biomedical\",\"pubmed\",\"literature\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={q}&format=json&pageSize=100",
+    .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={q}&format=json&pageSize=100&resultType=core",
     .array_path = "resultList.result",
+    .title_keys = "title", .date_keys = "firstPublicationDate",
+    /* resultType=core since 2026-11-14, when this row absorbed its twin
+     * EUROPEPMC_SEARCH (same endpoint, removed): the default "lite" record has
+     * no abstract, affiliation, author list or grantsList, though this row's
+     * own description promised affiliations and grant acknowledgements.
+     * Measured on one query: lite and core both answer 100 records a page,
+     * hitCount 5,980 and a nextPageUrl; core is 700 KB a page against 85 KB. */
+    /* 2026-11-12: this pivot read ONE page of 100 and stopped, though every
+     * response carries `nextPageUrl` (a cursorMark URL; malaria declares
+     * hitCount 292,969). Following it answers the next page (measured: ids
+     * 42780481 ... after 42685739 ...), whereas `page=` is ignored by this
+     * endpoint (page=2 answers page 1's ids). A Europe PMC record is
+     * identified by (source, id) — MED, PMC, PPR, PAT ... each number their
+     * own — so the walk keys on both rather than the first scalar. */
+    .next_path = "nextPageUrl",
+    .id_keys = "source+id",
     .description = "Biomedical and life-science literature including preprints, "
       "patents, clinical guidelines and NHS evidence, with author "
       "affiliations, grant acknowledgements and full text where open. "

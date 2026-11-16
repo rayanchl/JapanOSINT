@@ -30,7 +30,6 @@ static const char *URL =
 static int run(const source_ctx *ctx, intel_sink *sink) {
   /* Identifying UA with a contact URL — mandated by the MET Norway ToS. */
   const char *hdrs[] = {
-    "User-Agent: JapanOSINT/1.0 (+https://github.com/ contact via repository issues)",
     "Accept: application/json", NULL
   };
   cJSON *doc = feed_get_json_h(ctx->http, URL, hdrs, 30000);

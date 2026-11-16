@@ -13,7 +13,7 @@
 #include <string.h>
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *tok = getenv("FACEBOOK_ACCESS_TOKEN");
+  const char *tok = jo_getenv("FACEBOOK_ACCESS_TOKEN");
   if (!tok || !*tok) {
     static const char *const envs[] = { "FACEBOOK_ACCESS_TOKEN", NULL };
     return jo_needs_credential(sink, "facebook-geo", "Facebook Graph place search",

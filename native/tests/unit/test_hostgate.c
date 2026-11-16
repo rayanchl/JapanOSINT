@@ -15,7 +15,12 @@
  *   5. hostgate_penalize() delays the next start, capped at 60 s.
  *   6. The camera policy: always strict (the JO_CAMERA_ALLOW_LAN opt-in is
  *      gone and setting it changes nothing); the test seam admits LAN; metadata and
- *      link-local refused regardless; JO_HTTP_BLOCK_PRIVATE=1 wins.
+ *      link-local refused regardless; the strict floor (the default) wins
+ *      over the seam, so a fixture test sets JO_HTTP_BLOCK_PRIVATE=0.
+ *   7. The general floor (2026-11-12): STRICT BY DEFAULT — unset, empty or
+ *      any value but "0" refuses loopback/RFC1918 — and "0" restores the old
+ *      floor; hostgate_service_scope() gives an operator-configured service
+ *      call the lenient floor without the variable, and never metadata.
  *
  * Includes hostgate.c to reach the table and the test clock. */
 
@@ -176,10 +181,20 @@ static void test_penalize(void) {
 /* 7. A penalty that lands while a thread is ALREADY parked is honoured: the
  * waiter's deadline was computed before the 429 arrived and used to fail open
  * inside the back-off. */
+/* The race this test must not lose to its own runner: the penalty has to land
+ * BEFORE the waiter's budget runs out, or the waiter fails open on the budget
+ * and the assertion reads a timing accident as a defect. A bare 30 ms nap was
+ * the whole margin (100 ms budget), and a macOS runner coalescing timers
+ * overslept it (CI run 656, 2026-11-14; the same test passed on main's own
+ * run). So the main thread waits until the waiter is PARKED (its `waiters`
+ * count, read under the lock), and the budget and penalty are wide enough that
+ * only a half-second stall could still lose the race. */
+#define LATE_BUDGET_MS  500
+#define LATE_PENALTY_MS 1500
 static void *late_waiter(void *arg) {
   struct timespec a, b;
   clock_gettime(CLOCK_MONOTONIC, &a);
-  int got = hostgate_acquire((const char *)arg, 100);
+  int got = hostgate_acquire((const char *)arg, LATE_BUDGET_MS);
   clock_gettime(CLOCK_MONOTONIC, &b);
   long el = (long)((b.tv_sec - a.tv_sec) * 1000 + (b.tv_nsec - a.tv_nsec) / 1000000);
   if (got) hostgate_release((const char *)arg);
@@ -193,12 +208,21 @@ static void test_penalty_reaches_a_parked_waiter(void) {
   assert(hostgate_acquire(u, 1000) == 1);   /* host now at its concurrency cap */
   pthread_t th;
   pthread_create(&th, NULL, late_waiter, (void *)u);
-  struct timespec nap = { 0, 30 * 1000000L };
-  nanosleep(&nap, NULL);                    /* the waiter is parked, budget 100 ms */
-  hostgate_penalize(u, 400);
+  /* wait until the waiter is parked on this host (bounded: 5 s) */
+  for (int i = 0; i < 5000; i++) {
+    pthread_mutex_lock(&g_mu);
+    hg_slot *ps = slot_lookup("late.example");   /* lookup() would re-take g_mu */
+    int parked = ps && ps->waiters > 0;
+    pthread_mutex_unlock(&g_mu);
+    if (parked) break;
+    struct timespec nap = { 0, 1000000L };
+    nanosleep(&nap, NULL);
+  }
+  hostgate_penalize(u, LATE_PENALTY_MS);
   void *ret;
   pthread_join(th, &ret);
-  assert((long)(intptr_t)ret >= 350);       /* waited the penalty, not 100 ms */
+  /* waited the penalty, not the budget */
+  assert((long)(intptr_t)ret >= LATE_PENALTY_MS - 200);
   /* It failed open at the cap, and that start is stamped. */
   hg_slot *s = lookup("late.example");
   assert(s && mono_ms() - s->last_start_ms < 200);
@@ -260,8 +284,8 @@ static void test_camera_policy(void) {
   assert(hostgate_camera_addr_check("10.1.2.3") == HG_URL_PRIVATE);
   assert(hostgate_camera_addr_check("127.0.0.1") == HG_URL_PRIVATE);
   assert(hostgate_camera_addr_check("8.8.8.8") == HG_URL_OK);
-  /* The general floor is unchanged: llama-server on loopback still works. */
-  assert(hostgate_url_check("http://127.0.0.1:8080/v1") == HG_URL_OK);
+  /* The general floor refuses loopback by default since 2026-11-12 (7.). */
+  assert(hostgate_url_check("http://127.0.0.1:8080/v1") == HG_URL_PRIVATE);
 
   /* The removed operator opt-in opens nothing. */
   setenv("JO_CAMERA_ALLOW_LAN", "1", 1);
@@ -270,7 +294,11 @@ static void test_camera_policy(void) {
   assert(hostgate_camera_addr_check("10.1.2.3") == HG_URL_PRIVATE);
   unsetenv("JO_CAMERA_ALLOW_LAN");
 
+  /* The seam opens the LAN only under a lowered floor: the default (strict)
+   * floor beats it, which is why every fixture test sets "0". */
   hostgate_camera_test_allow_lan(1);
+  assert(hostgate_camera_url_check("http://192.168.1.10/snap.jpg", 0) == HG_URL_PRIVATE);
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
   assert(hostgate_camera_url_check("http://192.168.1.10/snap.jpg", 0) == HG_URL_OK);
   assert(hostgate_camera_url_check("rtsp://127.0.0.1:554/live", 0) == HG_URL_OK);
   assert(hostgate_camera_addr_check("10.1.2.3") == HG_URL_OK);
@@ -289,6 +317,46 @@ static void test_camera_policy(void) {
   assert(hostgate_camera_url_check("http://192.168.1.10/", 0) == HG_URL_PRIVATE);
 }
 
+/* 7. The general outbound floor and the service scope. */
+static void test_general_floor(void) {
+  const char *priv[] = { "http://127.0.0.1:8080/v1", "http://10.0.0.5/",
+                         "http://192.168.1.10/", "http://[::1]/",
+                         "http://localhost:8080/", "http://100.64.0.1/", NULL };
+  /* default: unset, empty, "1", "yes" are all strict */
+  const char *strict_vals[] = { NULL, "", "1", "yes" };
+  for (int v = 0; v < 4; v++) {
+    if (strict_vals[v]) setenv("JO_HTTP_BLOCK_PRIVATE", strict_vals[v], 1);
+    else unsetenv("JO_HTTP_BLOCK_PRIVATE");
+    for (int i = 0; priv[i]; i++)
+      assert(hostgate_url_check(priv[i]) == HG_URL_PRIVATE);
+    assert(hostgate_addr_check_floor("127.0.0.1") == HG_URL_PRIVATE);
+    assert(hostgate_addr_check_floor("172.16.3.4") == HG_URL_PRIVATE);
+    assert(hostgate_url_check("https://93.184.216.34/x") == HG_URL_OK);
+    assert(hostgate_addr_check_floor("8.8.8.8") == HG_URL_OK);
+  }
+  /* the service scope: lenient floor, restored on exit, metadata still out */
+  unsetenv("JO_HTTP_BLOCK_PRIVATE");
+  int prev = hostgate_service_scope(1);
+  assert(prev == 0);
+  assert(hostgate_url_check("http://127.0.0.1:8080/v1") == HG_URL_OK);
+  assert(hostgate_url_check("http://localhost:8080/") == HG_URL_OK);
+  assert(hostgate_addr_check_floor("127.0.0.1") == HG_URL_OK);
+  assert(hostgate_addr_check_floor("10.0.0.5") == HG_URL_OK);
+  assert(hostgate_url_check("http://169.254.169.254/latest/") == HG_URL_PRIVATE);
+  assert(hostgate_url_check("http://metadata.google.internal/") == HG_URL_PRIVATE);
+  assert(hostgate_addr_check_floor("169.254.169.254") == HG_URL_PRIVATE);
+  assert(hostgate_addr_check_floor("fe80::1") == HG_URL_PRIVATE);
+  /* a camera is never a service: the scope does not touch the camera policy */
+  assert(hostgate_camera_url_check("rtsp://127.0.0.1:554/live", 0) == HG_URL_PRIVATE);
+  assert(hostgate_service_scope(prev) == 1);
+  assert(hostgate_url_check("http://127.0.0.1:8080/v1") == HG_URL_PRIVATE);
+  /* "0" is the operator's opt-out: the old floor for every fetch */
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
+  for (int i = 0; priv[i]; i++) assert(hostgate_url_check(priv[i]) == HG_URL_OK);
+  assert(hostgate_url_check("http://169.254.169.254/") == HG_URL_PRIVATE);
+  unsetenv("JO_HTTP_BLOCK_PRIVATE");
+}
+
 int main(void) {
   setenv("JO_HOST_MIN_GAP_OVERRIDES",
          " Padded.Example = 700 ,\tTABBED.example\t=900,plain.example=300", 1);
@@ -302,6 +370,7 @@ int main(void) {
   test_penalty_reaches_a_parked_waiter();
   test_first_request_never_waits();
   test_camera_policy();
+  test_general_floor();
   printf("test_hostgate: OK\n");
   return 0;
 }

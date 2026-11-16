@@ -16,6 +16,7 @@ import FollowPanel from './components/panels/FollowPanel.jsx';
 import useDataSources from './hooks/useDataSources';
 import { Button, LoadingState, Page, EmptyState } from './components/ui/kit.jsx';
 import { ServerSettings } from './components/auth/OnboardingFlow.jsx';
+import ErrorBoundary from './components/ui/ErrorBoundary.jsx';
 
 const lazy = (loader) => React.lazy(loader);
 const IntelPage = lazy(() => import('./components/intel/IntelPage.jsx'));
@@ -118,9 +119,13 @@ function Shell() {
   const { stats, isConnected, lastUpdate, error: sourcesError } = useDataSources();
   const { theme, toggle } = useTheme();
   const status = { isConnected, activeSources: stats?.online, sourcesError, lastUpdate };
+  const location = useLocation();
 
+  // A page that throws while rendering fails inside the shell (navigation
+  // stays usable) and the boundary resets on the next route.
   return (
     <AppShell theme={theme} onToggleTheme={toggle} status={status}>
+      <ErrorBoundary label="This page" resetKey={location.pathname}>
       <Suspense fallback={<Fallback />}>
         <Routes>
           <Route path="/" element={<MapPage />} />
@@ -163,6 +168,7 @@ function Shell() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
+      </ErrorBoundary>
     </AppShell>
   );
 }
@@ -210,8 +216,12 @@ function Gate() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Gate />
-    </AuthProvider>
+    // The root boundary: there was none anywhere until 2026-11-07, so any
+    // render-time exception unmounted the whole application to a blank page.
+    <ErrorBoundary label="The application">
+      <AuthProvider>
+        <Gate />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

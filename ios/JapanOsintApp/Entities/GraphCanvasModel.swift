@@ -40,7 +40,7 @@ final class GraphCanvasModel: ObservableObject {
     let rootId: String
 
     /// Server-side and canvas-side node ceiling. Kept equal to the server's own
-    /// default (`entityapi_graph` caps at 300) so "the cap" means one number.
+    /// default (`entityapi_graph_scoped` caps at 300) so "the cap" means one number.
     static let nodeCap = 300
     /// Degree above which a node counts as a hub. Sent as `exclude_hubs` — a
     /// hub is still SHOWN (the edge that found it is real intel), it is just

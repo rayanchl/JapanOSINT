@@ -79,7 +79,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "market-expectation",
     .tags = "\"brazil\",\"centralbank\",\"bcb\",\"forecast\",\"economy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?%24top=100&%24format=json",
+    /* `$orderby=Data desc, <id tuple>` + `$skip=0` (2026-11-07). Unsorted, this
+     * hourly row read an ARBITRARY 2,000 Focus forecasts: page 1 was dated
+     * 2017-06-19 and $skip=2000 2003-05-05. Newest-first on the row's own
+     * identity tuple makes the run a stated window (pages 1..20 measured
+     * 2026-10-30 .. 2026-10-22); it does not cycle, so desc is the question.
+     * $orderby=frobnicate is HTTP 400; 100 of 100 distinct on page 1 and
+     * $skip 0 / 100 disjoint. */
+    .url = "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?%24top=100&%24format=json&%24skip=0&%24orderby=Data%20desc,Indicador,IndicadorDetalhe,DataReferencia,baseCalculo",
     .array_path = "value",
     .interval = 3600,
     .page_param = "%24skip",
@@ -392,8 +399,19 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "budget-report",
     .tags = "\"brazil\",\"treasury\",\"budget\",\"fiscal\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/rreo?an_exercicio=2023&nr_periodo=1&co_tipo_demonstrativo=RREO&no_anexo=RREO-Anexo%2001&co_esfera=E&id_ente=41&limit=500",
+    /* 2026-11-09: an_exercicio was frozen at 2023 (and nr_periodo at the
+     * year's FIRST bimester). It is now LAST year's 6th bimester, which RREO
+     * reports cumulatively ("até o bimestre"), i.e. the whole executed year,
+     * stepping back a year while it is not yet filed (due end of January):
+     * measured that day, 2025/6 answers 690 rows over two 500-row pages
+     * (500 + 190, hasMore true then false) and 2026/6 `count: 0`. A
+     * bimester-by-bimester read of the CURRENT year cannot be expressed: no
+     * date token renders ceil(month/2). The records carry `exercicio` and
+     * `periodo`, so they now lead id_keys: cod_conta+coluna alone (690 of
+     * 690 within one report) would have overwritten each year with the next. */
+    .url = "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/rreo?an_exercicio={date-1y:%Y}&nr_periodo=6&co_tipo_demonstrativo=RREO&no_anexo=RREO-Anexo%2001&co_esfera=E&id_ente=41&limit=500",
     .array_path = "items",
+    .date_back = 1, .date_step = "y",
     .interval = 21600,
     /* ORDS returns up to `limit` rows per request and defaults that to 5000, so
      * an undeclared limit made every page the WHOLE result set while the offset
@@ -404,7 +422,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "offset",
     .page_size = 500,
     .page_start = 0,
-    .id_keys = "cod_conta+coluna",
+    .id_keys = "exercicio+periodo+cod_conta+coluna",
     .title_keys = "conta,coluna",
     .description = "Line-by-line budget execution as every Brazilian state and "
       "municipality reported it to the National Treasury: the reporting "
@@ -420,8 +438,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "annual-account",
     .tags = "\"brazil\",\"treasury\",\"accounts\",\"fiscal\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/dca?an_exercicio=2023&id_ente=41&no_anexo=DCA-Anexo%20I-C&limit=500",
+    /* 2026-11-09: an_exercicio was frozen at 2023. It is now LAST year,
+     * stepping back a year while the annual accounts are not yet filed (due
+     * 30 April): measured that day, 2025 answers 347 rows (hasMore false,
+     * 347 distinct whole) and 2026 `count: 0`. `exercicio` now leads
+     * id_keys (347 of 347), so each year is kept rather than overwritten. */
+    .url = "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/dca?an_exercicio={date-1y:%Y}&id_ente=41&no_anexo=DCA-Anexo%20I-C&limit=500",
     .array_path = "items",
+    .date_back = 1, .date_step = "y",
     .interval = 21600,
     /* Same ORDS defect as BR_SICONFI_RREO above: the undeclared limit made the
      * server return the whole 301-row set on every 25-row offset step. Verified
@@ -430,7 +454,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "offset",
     .page_size = 500,
     .page_start = 0,
-    .id_keys = "cod_conta+coluna",
+    .id_keys = "exercicio+cod_conta+coluna",
     .title_keys = "conta,coluna",
     .description = "The annual balance-sheet filing every Brazilian federative "
       "entity makes to the National Treasury, by account line: entity "
@@ -732,7 +756,10 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "mining-licence",
     .tags = "\"colombia\",\"mining\",\"anm\",\"licence\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/42ha-fhvj.json?%24limit=1000",
+    /* 2026-11-07: `$order=:id`: a paged walk with no order. Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/42ha-fhvj.json?%24limit=1000&%24order=%3Aid",
     .interval = 86400,
     .page_param = "%24offset",
     .page_size = 1000,
@@ -795,7 +822,11 @@ static const hp_source HP3B19_LATAM[] = {
      * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
      * no row, and DESC answers a different set — so the parameter is honoured
      * rather than silently ignored, which is what rule 4d says to check. */
-    .url = "https://www.datos.gov.co/resource/r85m-vv6c.json?%24limit=1000&%24order=%3Aid",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/r85m-vv6c.json?%24limit=1000&%24order=%3Aid&%24select=*,:id",
+    .id_keys = ":id",
     .interval = 21600,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -840,7 +871,11 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "sanction-record",
     .tags = "\"colombia\",\"procurement\",\"sanction\",\"secop\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/it5q-hg94.json?%24limit=1000",
+    /* 2026-11-07: `$order=:id`: a paged walk with no order; `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/it5q-hg94.json?%24limit=1000&%24select=*,:id&%24order=%3Aid",
+    .id_keys = ":id",
     .interval = 3600,
     .page_param = "%24offset",
     .page_size = 1000,
@@ -932,7 +967,10 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "enforcement-action",
     .tags = "\"colombia\",\"invima\",\"enforcement\",\"health\",\"sanction\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/rq4n-pzga.json?%24limit=1000",
+    /* 2026-11-07: `$order=:id`: a paged walk with no order. Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/rq4n-pzga.json?%24limit=1000&%24order=%3Aid",
     .id_keys = "numero_proceso",
     .interval = 3600,
     .page_param = "%24offset",
@@ -951,7 +989,11 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "sanction-record",
     .tags = "\"colombia\",\"accountant\",\"sanction\",\"professional\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/fs36-azrv.json?%24limit=1000",
+    /* 2026-11-07: `$order=:id`: a paged walk with no order; `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/fs36-azrv.json?%24limit=1000&%24select=*,:id&%24order=%3Aid",
+    .id_keys = ":id",
     .interval = 3600,
     .page_param = "%24offset",
     .page_size = 1000,
@@ -970,7 +1012,11 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "licence-record",
     .tags = "\"colombia\",\"cannabis\",\"licence\",\"minjusticia\",\"regulation\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/9m2f-pdxx.json?%24limit=1000",
+    /* 2026-11-07: `$order=:id`: a paged walk with no order; `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/9m2f-pdxx.json?%24limit=1000&%24select=*,:id&%24order=%3Aid",
+    .id_keys = ":id",
     .interval = 21600,
     .page_param = "%24offset",
     .page_size = 1000,
@@ -995,7 +1041,11 @@ static const hp_source HP3B19_LATAM[] = {
      * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
      * no row, and DESC answers a different set — so the parameter is honoured
      * rather than silently ignored, which is what rule 4d says to check. */
-    .url = "https://www.datos.gov.co/resource/8hqm-7fdt.json?%24limit=1000&%24order=%3Aid",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/8hqm-7fdt.json?%24limit=1000&%24order=%3Aid&%24select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -1048,7 +1098,11 @@ static const hp_source HP3B19_LATAM[] = {
      * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
      * no row, and DESC answers a different set — so the parameter is honoured
      * rather than silently ignored, which is what rule 4d says to check. */
-    .url = "https://www.datos.gov.co/resource/my8c-6xkk.json?%24limit=1000&%24order=%3Aid",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/my8c-6xkk.json?%24limit=1000&%24order=%3Aid&%24select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -1463,14 +1517,21 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "business-licence",
     .tags = "\"costarica\",\"heredia\",\"licence\",\"business\",\"municipal\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sig.heredia.go.cr/server/rest/services/Patentes/PatentesVista/MapServer/0/query?where=1%3D1&outFields=*&f=json&returnGeometry=false&resultRecordCount=1000",
+    /* A KEYSET on OBJECTID, 2026-11-07. The resultOffset walk slows with depth on
+     * this server — resultOffset=6000 took 27.4 s — so runs were killed at
+     * ~6,000 of 10,089 (returnCountOnly) and the cycle never reached the
+     * rest. `where=OBJECTID>{v}` with `orderByFields=OBJECTID ASC` answers the
+     * same depth in 4.7 s (OBJECTID>5000: 1,000 features, 5001..19521 — the
+     * ids have gaps, which a keyset does not care about). OBJECTID is the
+     * layer's esriFieldTypeOID field; maxRecordCount is 1,000. */
+    .url = "https://sig.heredia.go.cr/server/rest/services/Patentes/PatentesVista/MapServer/0/query?where=1%3D1&outFields=*&f=json&returnGeometry=false&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .interval = 86400,
-    .page_param = "resultOffset",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .next_path = "features.$last.attributes.OBJECTID",
+    .next_tmpl = "https://sig.heredia.go.cr/server/rest/services/Patentes/PatentesVista/MapServer/0/query?where=OBJECTID%3E{v}&outFields=*&f=json&returnGeometry=false&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
+    .page_resume = 1,
     .page_size = 1000,
-    .page_start = 0,
-    .page_zero_based = 1,
+    .timeout_ms = 45000,
     .id_keys = "attributes.OBJECTID",
     .title_keys = "attributes.NOMBRE_COMERCIAL",
     .description = "Ten thousand municipal business licences in Heredia, Costa Rica, "
@@ -2243,7 +2304,12 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "dataset-record",
     .tags = "\"martinique\",\"opendata\",\"catalogue\",\"france\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.gouv.fr/api/1/datasets/?q=Martinique&page_size=100",
+    /* `sort=created` (ascending), 2026-11-07: the relevance-default order is not
+     * stable across pages — the unsorted two-page walk returned 110 records,
+     * 109 distinct, i.e. one dataset served twice and another not at all.
+     * Sorted ascending and descending each give 110 of 110 (total 110 both
+     * ways, first ids differ); `sort=frobnicate` is refused (no `data`). */
+    .url = "https://www.data.gouv.fr/api/1/datasets/?q=Martinique&page_size=100&sort=created",
     .array_path = "data",
     .id_keys = "id",
     .interval = 86400,

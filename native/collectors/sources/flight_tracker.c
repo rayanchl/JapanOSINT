@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 /* query_opensky_aircraft: GET states/all?icao24=<icao24>, decode states[0]
  * into a real flight-state object. Returns the decoded state on success
@@ -137,7 +138,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "entity", q);
   cJSON_AddBoolToObject(props, "success", 1);   /* a live state vector was returned */
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   /* remote_key = flight:<icao24>. */

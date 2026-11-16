@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "_timefmt.inc"
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 /* Emit one intel row for a single USGS feature. Returns 1 if emitted. */
 static int emit_quake(intel_sink *sink, cJSON *ft) {
@@ -69,7 +70,7 @@ static int emit_quake(intel_sink *sink, cJSON *ft) {
   if (mag) cJSON_AddNumberToObject(props_out, "magnitude", mag->valuedouble);
   if (al && al->valuestring) cJSON_AddStringToObject(props_out, "alert_level", al->valuestring);
   cJSON_AddBoolToObject(props_out, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props_out);
+  jo_props_absorb(props_out, bj); char *pj = cJSON_PrintUnformatted(props_out);
 
   /* Stable per-quake key = USGS event id (globally unique, dedup-safe). */
   char rk[160];
@@ -85,7 +86,7 @@ static int emit_quake(intel_sink *sink, cJSON *ft) {
   intel_item it = {0};
   it.remote_key   = rk;
   it.title        = title;
-  it.body         = bj;
+  it.body = bj;
   it.summary      = place && place->valuestring ? place->valuestring : "earthquake";
   it.published_at = iso[0] ? iso : NULL;
   it.has_geo      = has_geo;

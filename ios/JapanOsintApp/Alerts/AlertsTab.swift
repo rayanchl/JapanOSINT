@@ -308,8 +308,13 @@ struct AlertRuleRow: View {
     }
 
     private var isMuted: Bool {
-        guard let until = rule.muted_until else { return false }
-        return until > "now()" || !until.isEmpty   // server-truth; local string compare ok for "exists"
+        // The server never clears `muted_until` when a mute expires, so its
+        // presence is not the answer: an expired "Mute 1h" read as muted
+        // forever. Compare the instant (SQLite `datetime('now','+N seconds')`)
+        // with now; an unparseable value is treated as muted, the safe side.
+        guard let until = rule.muted_until, !until.isEmpty else { return false }
+        guard let d = isoToDate(until) else { return true }
+        return d > Date()
     }
 
     private var iconColor: Color {

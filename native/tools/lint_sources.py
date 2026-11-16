@@ -110,7 +110,13 @@ def inline_includes(path, seen=None):
     base = os.path.dirname(real)
     out = []
     pos = 0
-    for m in re.finditer(r'^[ \t]*#[ \t]*include[ \t]*"([^"]+\.inc)"[ \t]*$',
+    # A trailing comment is legal C after the include and the compiler takes
+    # the line; the matcher must too. It required end-of-line right after the
+    # quote, so `#include "_vjson_idkeys.inc"   /* ... */` was never inlined
+    # and six VJSON_IDKEYS rows read as unregistered (2026-11-08: the count
+    # fell 61,527 -> 61,521 while the binary still registered all of them).
+    for m in re.finditer(r'^[ \t]*#[ \t]*include[ \t]*"([^"]+\.inc)"'
+                         r'[ \t]*(?:/\*.*?\*/[ \t]*|//[^\n]*)?$',
                          text, re.M):
         out.append(text[pos:m.start()])
         # Mirror the compiler's -iquote search: the including file's own

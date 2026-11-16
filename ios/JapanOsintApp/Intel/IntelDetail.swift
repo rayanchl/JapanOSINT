@@ -497,7 +497,14 @@ struct IntelDetail: View {
                     }
                 }
                 .buttonStyle(.bordered)
-                .disabled(revealing || revealReason.trimmingCharacters(in: .whitespaces).isEmpty)
+                .disabled(revealing || revealReason.trimmingCharacters(in: .whitespaces).isEmpty
+                          || revealReason.utf8.count > 500)
+                // core/breach_adapter.c refuses a reason over 500 bytes with
+                // 400 `reason_too_long`; say so before sending.
+                if revealReason.utf8.count > 500 {
+                    Text("Reason is \(revealReason.utf8.count) bytes; the server accepts at most 500.")
+                        .font(.caption2).foregroundStyle(theme.danger)
+                }
                 if let e = revealError {
                     Text(e).font(.caption2).foregroundStyle(theme.danger)
                 }

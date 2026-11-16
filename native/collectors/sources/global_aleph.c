@@ -87,7 +87,7 @@ static int emit_entity(intel_sink *sink, const cJSON *e) {
   if (coll)         cJSON_AddStringToObject(p, "collection", coll);
   if (countries[0]) cJSON_AddStringToObject(p, "countries", countries);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p);
   cJSON_Delete(p);
 
   char link[512] = {0};
@@ -97,7 +97,7 @@ static int emit_entity(intel_sink *sink, const cJSON *e) {
   it.remote_key      = id ? id : name;
   it.title           = name ? name : id;
   it.summary         = schema;
-  it.body            = bj;
+  it.body = bj;
   it.link            = link[0] ? link : NULL;
   it.record_type     = "aleph-entity";
   it.properties_json = pj;
@@ -136,10 +136,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   char *body = jo_get(ctx, url, hdrs, "aleph");
-  if (!body) return 0;                 /* non-200 → honest empty */
+  if (!body) return jo_fail_rc(jo_last_status(), 0);                 /* 2026-11-07: 404/204 empty, any other refusal -1 (was "non-200 → honest empty") */
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;

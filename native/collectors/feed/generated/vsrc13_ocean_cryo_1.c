@@ -56,9 +56,22 @@ VJSON_IDKEYS(sci_erddap_upwell_grid, "sci-erddap-upwell-grid", "NOAA Upwell — 
   "Machine-readable list of every dataset served by the NOAA Upwell ERDDAP node, with dataset id, title and institution — the entry point for its buoy, glider, mooring and satellite time series.",
   "Dataset ID");
 
+/* WFS rows in this file: `startIndex=0` (2026-11-07). geojson_emit_paged()
+ * advances a WFS cursor only when the URL already names one AND the body's own
+ * numberMatched/totalFeatures exceeds what was read (mechanism 3), so a row
+ * without `startIndex` read ONE page of a declared total and stopped. Measured
+ * per row (count=5 at startIndex 0 and 5): where the server accepted paging
+ * without a sort — GeoServer does that only when it can order by the
+ * feature type's primary key — the two pages were disjoint and the row gets
+ * `startIndex=0` alone. Where it refused ("Cannot do natural order without a
+ * primary key"), the row also gets `sortBy=<a property distinct on the
+ * row's first 200 features>`, checked the same way (pages disjoint, total
+ * unchanged; a bogus sortBy is HTTP 400 "Illegal property name", so the
+ * server reads it). Probe-sized pages (count 2/3/20/50) are 1000 now. The
+ * 20-page geojson ceiling still bounds a run; the remainder is disclosed. */
 VGEO(sci_eu_emodnet_humanact_wfs, "sci-eu-emodnet-humanact-wfs", "EMODnet Human Activities — offshore wind farm polygons", "EMODnet Human Activities — offshore wind farm polygons",
   "ocean_cryo", "environment",
-  "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=emodnet:windfarmspoly&outputFormat=application/json&count=500",
+  "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=emodnet:windfarmspoly&outputFormat=application/json&count=500&startIndex=0",
   "en", "[\"eur\",\"ocean\",\"energy\",\"windfarm\",\"geojson\"]", 86400,
   "European offshore wind farm polygons with status, power, turbine count and operator — real per-record geometry.");
 

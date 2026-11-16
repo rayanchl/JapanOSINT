@@ -12,6 +12,9 @@
 #include "relevance.h"      /* run-time rule-4d check on a pivot's answer */
 #include "service_vec.h"    /* the resolver's embedding fallback asks the router */
 #include "qembed.h"
+#include "keysapi.h"        /* a workspace's own key for its pivots */
+#include "../lib/hpengine.h" /* hp_source_get, hp_run_key_set */
+#include <openssl/crypto.h>  /* OPENSSL_cleanse */
 #include <time.h>
 #include "../third_party/cJSON.h"
 #include <stdio.h>
@@ -518,15 +521,6 @@ static cJSON *osint_service_id_array(int limit) {
   return a;
 }
 
-/* The osint_analysis JSON schema with its `recommended_services` and per-entity
- * `services` enums replaced by the LIVE registry, so the analysis LLM can only
- * recommend services that actually exist — and EVERY registered service is
- * recommendable — with zero manual enum maintenance when the registry changes.
- * malloc'd; caller frees. NULL → caller falls back to the static schema file. */
-char *osint_analysis_schema_dynamic(void) {
-  return osint_analysis_schema_dynamic_limited(0);
-}
-
 /* The enum builder both public entry points share. `ids` is the permitted
  * vocabulary and is consumed here. Split out so the semantic router can pass
  * the exact ids IT listed: the schema is what the model is ALLOWED to answer
@@ -680,6 +674,18 @@ static int dual_emit(struct intel_sink *s, const intel_item *it) {
   dual_sink *d = (dual_sink *)s->ctx;
   int rc = d->real ? d->real->emit(d->real, it) : 1;
   int notice = intel_item_is_notice(it);
+  /* A FETCH-FAILURE disclosure is stored as a record (the run line counts it,
+   * CLAUDE.md rule 1), but it is not an ANSWER: counted as one here, a pivot
+   * whose upstream refused it reported success=1, confidence 70 and
+   * record_count 1 — the disclosure handed to the analyst as a finding about
+   * the entity. It rides with the notices, and names the outcome. */
+  int failure = it && it->record_type &&
+                !strcmp(it->record_type, "collector-fetch-failure");
+  if (failure) {
+    notice = 1;
+    if (!d->notice_status[0])
+      snprintf(d->notice_status, sizeof d->notice_status, "fetch_failed");
+  }
   /* capture the service's payload: body preferred, else properties. Every
    * record is appended — parsed when it is JSON so downstream keeps the
    * structure, otherwise kept verbatim as a string. Notices go to their own
@@ -726,43 +732,132 @@ static int dual_emit(struct intel_sink *s, const intel_item *it) {
   return rc;
 }
 
-/* Byte-for-byte the same verdict core/scheduler.c:run_status() reaches, so a
- * source's fetch_log rows mean the same thing whichever path produced them. It
- * is duplicated rather than shared because the scheduler's copy is static and
- * lives behind a worker-pool header this file does not otherwise include; if a
- * third caller ever needs it, that is the moment to lift it into db.h. */
-static const char *dispatch_run_status(int rc, long records, int hosts,
-                                       int hosts_ok, const char **why) {
-  *why = NULL;
-  if (rc >= 0) return "ok";
-  if (records > 0) return "ok";
-  if (hosts > 0 && hosts_ok == hosts) return "ok";
-  *why = (hosts > 0) ? "run returned non-zero; no host answered"
-                     : "run returned non-zero";
-  return "error";
-}
+/* The run verdict is core/scheduler.c's run_status(), exported as
+ * sched_run_status(). This file used to carry a hand copy "byte-for-byte the
+ * same" — one more copy to drift (audit 2026-11-07). */
 
 static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
                          const char *entity, const char *entity_type,
                          intel_sink *persist, osint_result *out,
-                         int operator_call);
+                         int operator_call, const char *tenant_id);
 
 int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
                    const char *entity, const char *entity_type,
                    intel_sink *persist, osint_result *out) {
-  return dispatch_impl(db, llm, service, entity, entity_type, persist, out, 0);
+  return dispatch_impl(db, llm, service, entity, entity_type, persist, out, 0,
+                       NULL);
+}
+
+int osint_dispatch_tenant(db_handle *db, llm_client *llm, const char *service,
+                          const char *entity, const char *entity_type,
+                          intel_sink *persist, osint_result *out,
+                          const char *tenant_id) {
+  return dispatch_impl(db, llm, service, entity, entity_type, persist, out, 0,
+                       tenant_id);
 }
 
 int osint_dispatch_operator(db_handle *db, llm_client *llm, const char *service,
                             const char *entity, const char *entity_type,
                             intel_sink *persist, osint_result *out) {
-  return dispatch_impl(db, llm, service, entity, entity_type, persist, out, 1);
+  return dispatch_impl(db, llm, service, entity, entity_type, persist, out, 1,
+                       NULL);
+}
+
+/* Qualifies every uid with the workspace (dispatch_impl, "workspace-private"):
+ * "<source>|ws:<tenant>|<remote_key>", or "ws:<tenant>|<explicit uid>". The
+ * key is never cut: the sink's own make_uid() hashes an over-long uid instead
+ * of truncating it, so this allocates exactly what it needs. */
+typedef struct {
+  intel_sink base;
+  intel_sink *inner;
+  const char *source_id, *tenant;
+} ws_uid_sink;
+
+static int ws_uid_emit(intel_sink *self, const intel_item *it) {
+  ws_uid_sink *w = (ws_uid_sink *)self->ctx;
+  const char *explicit_uid = (it->uid && *it->uid) ? it->uid : NULL;
+  const char *key = explicit_uid ? explicit_uid : it->remote_key;
+  if (!key || !*key) return w->inner->emit(w->inner, it);  /* refused there */
+  size_t n = strlen(w->source_id) + strlen(w->tenant) + strlen(key) + 8;
+  char *uid = malloc(n);
+  if (!uid) return -1;
+  if (explicit_uid) snprintf(uid, n, "ws:%s|%s", w->tenant, explicit_uid);
+  else              snprintf(uid, n, "%s|ws:%s|%s", w->source_id, w->tenant, key);
+  intel_item c = *it;
+  c.uid = uid;
+  int rc = w->inner->emit(w->inner, &c);
+  free(uid);
+  return rc;
+}
+
+/* ── a workspace's key for a HAND-WRITTEN collector (2026-11-16) ─────────
+ * An hp row names its credential up front (key_env), so dispatch_impl
+ * resolves it before the run. A hand-written collector names its credential
+ * only when it reads it, through jo_getenv()/jo_env() (source.h). So for such
+ * a run the dispatcher installs a resolver on the run's thread that answers
+ * from the workspace's saved keys, and decides where the rows go and what to
+ * scrub LAZILY: from the first emit after a workspace key was handed out, rows
+ * are the workspace's (tenant + "ws:" uid, as for an hp row) and every value
+ * handed out is redacted. A collector reads its key before it fetches, so
+ * nothing it fetched with the key is emitted before that. */
+#define WS_KEY_MAX 8
+typedef struct {
+  db_handle *db;
+  const char *tenant;
+  struct { char name[96]; char *val; } k[WS_KEY_MAX];
+  int n;
+  int used;                       /* a workspace key was handed out */
+} ws_key_resolver;
+
+static const char *ws_key_resolve(void *ctx, const char *name) {
+  ws_key_resolver *r = (ws_key_resolver *)ctx;
+  for (int i = 0; i < r->n; i++)
+    if (!strcmp(r->k[i].name, name)) return r->k[i].val;   /* cached, hit or miss */
+  if (r->n >= WS_KEY_MAX || strlen(name) >= sizeof r->k[0].name) return NULL;
+  /* keysapi_tenant_secret answers only names on the known-credential list, so
+   * configuration (JO_*) can never be supplied by a workspace. */
+  char *v = keysapi_tenant_secret(r->db, r->tenant, name);
+  snprintf(r->k[r->n].name, sizeof r->k[0].name, "%s", name);
+  r->k[r->n].val = v;
+  r->n++;
+  if (v) r->used = 1;
+  return v;
+}
+
+static void ws_key_resolver_free(ws_key_resolver *r) {
+  for (int i = 0; i < r->n; i++)
+    if (r->k[i].val) { OPENSSL_cleanse(r->k[i].val, strlen(r->k[i].val)); free(r->k[i].val); }
+  r->n = 0;
+}
+
+/* Redacts every value the resolver has handed out so far (a scrub chain built
+ * per item, since the set can grow during the run). */
+typedef struct { intel_sink base; intel_sink *inner; ws_key_resolver *r; } ws_dyn_scrub;
+static int ws_dyn_scrub_emit(intel_sink *self, const intel_item *it) {
+  ws_dyn_scrub *w = (ws_dyn_scrub *)self->ctx;
+  keysapi_scrub_sink chain[WS_KEY_MAX];
+  intel_sink *next = w->inner;
+  for (int i = w->r->n - 1; i >= 0; i--) {
+    if (!w->r->k[i].val) continue;
+    keysapi_scrub_sink_init(&chain[i], next, w->r->k[i].val);
+    next = &chain[i].base;
+  }
+  return next->emit(next, it);
+}
+
+/* Where a hand-written collector's rows go: the shared corpus until a
+ * workspace key has been handed out, the workspace's own rows from then on. */
+typedef struct { intel_sink base; ws_key_resolver *r; intel_sink *shared, *ws; } ws_route;
+static int ws_route_emit(intel_sink *self, const intel_item *it) {
+  ws_route *w = (ws_route *)self->ctx;
+  intel_sink *dst = w->r->used ? w->ws : w->shared;
+  return dst->emit(dst, it);
 }
 
 static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
                          const char *entity, const char *entity_type,
                          intel_sink *persist, osint_result *out,
-                         int operator_call) {
+                         int operator_call, const char *tenant_id) {
   memset(out, 0, sizeof *out);
   char canon[64];
   if (!osint_canon(service, canon, sizeof canon)) {
@@ -823,12 +918,50 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
    * run-wide "osint-search" sink. See intel_sink_rebind() for why. Falls back
    * to the caller's sink when it is not an intel sink (main.c --dispatch and
    * the offline tests both pass one that is, but this must not assume it). */
-  intel_sink own; int own_ok = intel_sink_rebind(persist, def->id, &own);
+  /* THE WORKSPACE'S OWN KEY, looked up FIRST because it decides where the
+   * rows go (see the key block below for how the key itself is handled). */
+  const hp_source *hps = hp_source_get(def->id);
+  char *tkey = (tenant_id && *tenant_id && hps && hps->key_env)
+               ? keysapi_tenant_secret(db, tenant_id, hps->key_env) : NULL;
+
+  /* A run made with a workspace's own key stores its records as THAT
+   * WORKSPACE'S (2026-11-14, the owner's decision "workspace-private"): a paid
+   * or licensed key's results stay with whoever holds the key. They are
+   * written under the workspace's tenant AND under a workspace-qualified uid
+   * (ws_uid_emit), because the upsert never rewrites tenant_id: under the
+   * plain uid a record the shared corpus already holds would stay shared, and
+   * one stored here first would hide the shared copy from every other
+   * workspace. Reads already give a workspace "its own rows + the shared
+   * corpus", so its members see both. A run with no workspace key — the
+   * environment's, or none — stores in the shared corpus as before. */
+  intel_sink own;
+  int own_ok = tkey ? intel_sink_rebind_tenant(persist, def->id, tenant_id, &own)
+                    : intel_sink_rebind(persist, def->id, &own);
+  ws_uid_sink wsu = { .base = { .ctx = &wsu, .emit = ws_uid_emit },
+                      .inner = own_ok ? &own : persist,
+                      .source_id = def->id, .tenant = tenant_id };
+
+  /* A hand-written collector dispatched for a workspace (no hp key_env to
+   * resolve up front): the lazy resolver above, with the workspace's own sink
+   * prepared beside the shared one so the route can switch at the first emit
+   * after a key is handed out. */
+  int lazy = tenant_id && *tenant_id && strcmp(tenant_id, "legacy") &&
+             strcmp(tenant_id, "platform") && !hps && !tkey;   /* hp rows: key_env above */
+  ws_key_resolver wkr = { .db = db, .tenant = tenant_id };
+  intel_sink own_t;
+  int own_t_ok = lazy ? intel_sink_rebind_tenant(persist, def->id, tenant_id, &own_t) : 0;
+  ws_uid_sink wsu_t = { .base = { .ctx = &wsu_t, .emit = ws_uid_emit },
+                        .inner = own_t_ok ? &own_t : persist,
+                        .source_id = def->id, .tenant = tenant_id };
+  ws_route route = { .base = { .ctx = &route, .emit = ws_route_emit }, .r = &wkr,
+                     .shared = own_ok ? &own : persist, .ws = &wsu_t.base };
+  if (lazy && !own_t_ok) lazy = 0;      /* cannot keep the rows private: env only */
 
   dual_sink ds = {0};
   ds.base.ctx = &ds;
   ds.base.emit = dual_emit;
-  ds.real = own_ok ? &own : persist;
+  ds.real = lazy ? &route.base
+          : (tkey && own_ok) ? &wsu.base : own_ok ? &own : persist;
 
   http_client *http = http_client_new();
   volatile int cancel = 0;
@@ -846,6 +979,36 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
   ctx.http        = http;
   ctx.llm         = llm;
   ctx.cancel      = &cancel;
+  /* The operator's per-source body ceiling: the scheduler resolved it and this
+   * path did not, so `http_body_ceiling_bytes` was ignored on every pivot run
+   * (audit 2026-11-07). Bound for the whole run, as the scheduler does. */
+  ctx.body_ceiling = sched_body_ceiling_for(db, def->id);
+  size_t prev_ceiling = http_run_body_ceiling_set(ctx.body_ceiling);
+
+  /* THE WORKSPACE'S OWN KEY (2026-11-12, the repository owner's decision: "use
+   * them for pivots"). A pivot dispatched for a workspace resolves the row's
+   * key_env from that workspace's saved key (core/keysapi.c) before the
+   * environment; scheduled runs never come through here and keep the env. The
+   * plaintext lives only for this run: handed to hpengine through a
+   * thread-local, scrubbed out of everything the collector emits — the
+   * response's captured records AND the stored rows — because core/intel.c
+   * redacts environment values only and these rows land in the SHARED corpus,
+   * then cleansed and freed. A hand-written collector reads its key through
+   * jo_env() (lib/jocore.h), which this does not reach yet. */
+  ctx.tenant_id = tenant_id;
+  if (tkey) hp_run_key_set(hps->key_env, tkey);
+  keysapi_scrub_sink scrub_run, scrub_real;
+  keysapi_scrub_sink_init(&scrub_run, &ds.base, tkey);
+  keysapi_scrub_sink_init(&scrub_real, ds.real, tkey);
+  /* The hand-written-collector path: its keys are only known once read, so
+   * the scrub is the dynamic one over whatever the resolver handed out. */
+  ws_dyn_scrub dyn_run  = { .base = { .ctx = &dyn_run,  .emit = ws_dyn_scrub_emit },
+                            .inner = &ds.base, .r = &wkr };
+  ws_dyn_scrub dyn_real = { .base = { .ctx = &dyn_real, .emit = ws_dyn_scrub_emit },
+                            .inner = ds.real, .r = &wkr };
+  intel_sink *run_sink  = lazy ? &dyn_run.base  : &scrub_run.base;
+  intel_sink *real_sink = lazy ? &dyn_real.base : &scrub_real.base;
+  if (lazy) jo_env_resolver_set(ws_key_resolve, &wkr);
 
   /* The four observability systems the scheduled path has always had and this
    * one never did. evidence and content-change are thread-local scopes that
@@ -858,7 +1021,10 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
   evidence_scope_begin(db, def->id, entity);
   content_change_scope_begin(db, def->id);
 
-  int rc = def->run(&ctx, &ds.base);
+  int rc = def->run(&ctx, run_sink);
+  http_run_body_ceiling_set(prev_ceiling);
+  if (tkey) hp_run_key_set(NULL, NULL);
+  if (lazy) jo_env_resolver_set(NULL, NULL);
 
   content_change_scope_end();
   evidence_scope_end();
@@ -872,6 +1038,18 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
     int ok = 0;
     if (http_client_host_at(http, i, NULL, &ok) && ok) hosts_ok++;
   }
+  unsigned long long bytes_in = http_client_bytes_in(http);
+  /* The scheduler's disclosure, for the path that never filed one: a bespoke
+   * or VJSON pivot that was refused left NOTHING in the database, so "what do
+   * we have on X" could not tell a refusal from an honest no. Same triggers,
+   * same record, written to the real sink only — it is not an answer, so it
+   * must not enter the response's records (see dual_emit). */
+  if (db && def->collector && def->collector[0] != '_')
+    sched_disclose_if_silent(real_sink, def, entity, rc, ds.n_emit,
+                             ds.n_notices, http);
+  if (tkey) { OPENSSL_cleanse(tkey, strlen(tkey)); free(tkey); tkey = NULL; }
+  int lazy_used = lazy && wkr.used;
+  ws_key_resolver_free(&wkr);
 
   out->success    = (rc >= 0 && ds.n_emit > 0) ? 1 : 0;
   out->confidence = out->success ? 70 : 0;     /* JS default */
@@ -984,7 +1162,17 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
   cJSON_Delete(ds.notes);
 
   http_client_free(http);   /* after reading its host log */
+  /* The distinct rows this run left, read BEFORE the rebound sink is freed —
+   * the scheduler's fetch_log.stored and sources-row figures (rule 4b). */
+  int stored_exact = 1;
+  /* a hand-written collector that used a workspace key stored into the
+   * workspace's own sink, not the shared one */
+  intel_sink *counted = lazy_used ? &own_t : &own;
+  int counted_ok = lazy_used ? own_t_ok : own_ok;
+  long stored = counted_ok ? intel_sink_stored(counted, &stored_exact) : -1;
+  long stored_notices = counted_ok ? intel_sink_stored_notices(counted) : 0;
   if (own_ok) intel_sink_free(&own);
+  if (own_t_ok) intel_sink_free(&own_t);
 
   /* Stage 0+1, exactly as scheduler_run_source() does it: log the run and let
    * the breaker see it. Without this a pivot source could fail every time and
@@ -993,8 +1181,13 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
    * duration_outlier on their own LLM calls. */
   if (db && def->collector && def->collector[0] != '_') {
     const char *why = NULL;
-    const char *status = dispatch_run_status(rc, ds.n_emit, hosts, hosts_ok, &why);
+    const char *status = sched_run_status(rc, ds.n_emit, hosts, hosts_ok, &why);
     long flid = fetch_log_write(db, def->id, status, ds.n_emit, duration_ms, why);
+    sched_fetch_log_set_bytes(db, flid, bytes_in);   /* as the scheduler records it */
+    if (stored >= 0) sched_fetch_log_set_stored(db, flid, stored, stored_exact);
+    sched_sources_row_record(db, def->id, status,
+                             stored >= 0 ? stored - stored_notices : ds.n_emit,
+                             duration_ms, why);
     anomaly_detect(db, def->id, flid, status, ds.n_emit, duration_ms);
   }
 

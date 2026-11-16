@@ -194,8 +194,10 @@ char *source_settings_json(db_handle *db, const char *source_id,
       cJSON_AddNumberToObject(o, "min", (double)k->lo);
       cJSON_AddNumberToObject(o, "max", (double)k->hi);
       cJSON_AddNumberToObject(o, "default", (double)base);
-      cJSON_AddStringToObject(o, "default_basis", strcmp(source_interval_policy_mode(&st, sd), "declared")
-                              ? "the system-wide policy" : (sd->adaptive_interval && st.freshness_interval > 0) ? "measured from its newest item" : "as declared");
+      cJSON_AddStringToObject(o, "default_basis",
+                              cadence_exempt_reason(sd) ? "realtime or maintenance: its own cadence, outside the system-wide policy"
+                              : strcmp(source_interval_policy_mode(&st, sd), "declared")
+                              ? "the system-wide policy" :(sd->adaptive_interval && st.freshness_interval > 0) ? "measured from its newest item" : "as declared");
       cJSON_AddNumberToObject(o, "value", (double)(ov.present ? ov.interval_sec : base));
       cJSON_AddBoolToObject(o, "enabled", ov.present && ov.enabled);
       cJSON_AddBoolToObject(o, "configured", ov.present);

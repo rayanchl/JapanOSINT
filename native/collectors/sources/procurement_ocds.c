@@ -158,7 +158,7 @@ static int emit_release(intel_sink *sink, const cJSON *rel, const char *portal) 
   if (cur)   cJSON_AddStringToObject(props, "value_currency", cur);
   if (ocid)  cJSON_AddStringToObject(props, "ocid", ocid);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   /* summary: "buyer — 12345 CUR" */
@@ -172,7 +172,7 @@ static int emit_release(intel_sink *sink, const cJSON *rel, const char *portal) 
   it.remote_key      = ocid ? ocid : (tid ? tid : title);
   it.title           = title ? title : ocid;
   it.summary         = summ[0] ? summ : NULL;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = date;
   it.record_type     = "ocds-release";
@@ -205,12 +205,12 @@ static int query_portal(const source_ctx *ctx, intel_sink *sink,
   char url[1024];
   snprintf(url, sizeof url, p->q_url, enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "ocds");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int emitted = 0;
 
@@ -256,15 +256,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
 
-  int total = 0;
+  int total = 0, failed = 0;
   for (int i = 0; i < N_PORTALS; i++) {
     if (ctx->cancel && *ctx->cancel) break;
-    total += query_portal(ctx, sink, &PORTALS[i], enc);
+    jo_acc(query_portal(ctx, sink, &PORTALS[i], enc), &total, &failed);
   }
 
   free(enc);
   fprintf(stderr, "[ocds] emitted %d across %d portals\n", total, N_PORTALS);
-  return 0;   /* honest empty is not an error */
+  return (failed && total == 0) ? -1 : 0;   /* honest empty 0; refused/unparsable fetch with nothing emitted is -1 (2026-11-07) */
 }
 
 static const source_def procurement_ocds_def = {

@@ -1,5 +1,8 @@
 #include "keysapi.h"
+#include "jo_codec.h"
 #include "credtab.h"
+#include "../source.h"          /* registry_all — the rows' own key_env names */
+#include "../lib/hpengine.h"   /* hp_source_get */
 #include "audit.h"
 #include "auth.h"
 #include "../third_party/cJSON.h"
@@ -37,13 +40,63 @@ static char *jstr(cJSON *o, int *st, int code) {
  * that still does not fit is an error (cred_known_vars returns -1, loudly),
  * never a shorter list. */
 typedef struct { const char **N, **R; int n; } known_list;
+
+/* The `key_env` names the REGISTERED hpengine rows declare, beyond the
+ * hand-maintained credential table. Measured 2026-11-07: 74 distinct key_env
+ * names on 167 rows, of which 60 (on 149 rows — CQC_API_KEY, FEC_API_KEY,
+ * CONGRESS_GOV_API_KEY …) were not in core/credtab.c, so PUT /api/keys
+ * answered "Unknown key" for the very variable the engine's own gated notice
+ * told the operator to set. Built once from the registry: the names are
+ * string literals in the tables and live for the process. */
+static const char **g_row_keys;
+/* Per key: 1 when at least one SCHEDULED row (interval > 0) declares it — a
+ * run on the scheduler needs it, so it is "required". A key named only by
+ * entity pivots is needed only when someone asks that pivot, and is labelled
+ * "row" (review 2026-11-07: every row-declared name used to read "required",
+ * which overstated it on /api/keys). is_known() accepts both alike. */
+static unsigned char *g_row_sched;
+static int g_row_nkeys;
+static pthread_once_t g_row_keys_once = PTHREAD_ONCE_INIT;
+static void row_keys_build(void) {
+  int n = registry_count();
+  const source_def **all = registry_all();
+  if (n <= 0 || !all) return;
+  g_row_keys = calloc((size_t)n, sizeof *g_row_keys);
+  g_row_sched = calloc((size_t)n, 1);
+  if (!g_row_keys || !g_row_sched) {
+    free(g_row_keys); free(g_row_sched); g_row_keys = NULL; g_row_sched = NULL;
+    return;
+  }
+  for (int i = 0; i < n; i++) {
+    const hp_source *h = all[i] ? hp_source_get(all[i]->id) : NULL;
+    const char *k = h ? h->key_env : NULL;
+    if (!k || !*k) continue;
+    int sched = all[i]->update_interval_sec > 0;
+    int at = -1;
+    for (int j = 0; j < g_row_nkeys && at < 0; j++) if (!strcmp(g_row_keys[j], k)) at = j;
+    if (at < 0) { at = g_row_nkeys++; g_row_keys[at] = k; }
+    if (sched) g_row_sched[at] = 1;
+  }
+}
+
 static int known_load(known_list *k) {
-  int cap = cred_known_capacity();
+  pthread_once(&g_row_keys_once, row_keys_build);
+  int cap = cred_known_capacity() + g_row_nkeys;
   if (cap < 1) cap = 1;
   k->N = calloc((size_t) cap, sizeof *k->N);
   k->R = calloc((size_t) cap, sizeof *k->R);
   k->n = (k->N && k->R) ? cred_known_vars(k->N, k->R, cap) : -1;
   if (k->n < 0) { free(k->N); free(k->R); k->N = k->R = NULL; return -1; }
+  /* append the rows' names the table does not already carry */
+  for (int i = 0; i < g_row_nkeys && k->n < cap; i++) {
+    int dup = 0;
+    for (int j = 0; j < k->n && !dup; j++) dup = !strcmp(k->N[j], g_row_keys[i]);
+    if (!dup) {
+      k->N[k->n] = g_row_keys[i];
+      k->R[k->n] = g_row_sched[i] ? "required" : "row";
+      k->n++;
+    }
+  }
   return 0;
 }
 static void known_free(known_list *k) { free(k->N); free(k->R); k->N = k->R = NULL; }
@@ -58,34 +111,6 @@ static int is_known(const char *name, const char **role) {
   known_free(&k);
   return hit;
 }
-static int b64_rev[256];
-static void b64_rev_init(void) {
-  for (int i=0;i<256;i++) b64_rev[i]=-1;
-  const char *T="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-  for (int i=0;i<64;i++) b64_rev[(unsigned char)T[i]]=i;
-}
-static int b64_decode(const char *in, unsigned char *out, int outcap) {
-  /* `static int init=0; if(!init){...}` here was an unsynchronized
-   * check-then-fill on shared state: this runs inside master_key(), which
-   * every /api/tenant-keys request re-derives on its own httpd worker
-   * thread, so concurrent first calls raced on writing the same 256-int
-   * table. The writes happen to be idempotent (same table every time), so
-   * this was silent in practice, but it is the exact data race this
-   * codebase uses pthread_once to close everywhere else (see
-   * http_client_global_init, hostgate.c's cfg_once). */
-  static pthread_once_t once = PTHREAD_ONCE_INIT;
-  pthread_once(&once, b64_rev_init);
-  int *rev = b64_rev;
-  int val=0,bits=-8,o=0;
-  for (const char *p=in; *p; p++) {
-    if (*p=='=' ) break;
-    int c=rev[(unsigned char)*p]; if (c<0) continue;
-    val=(val<<6)|c; bits+=6;
-    if (bits>=0){ if(o<outcap) out[o++]=(unsigned char)((val>>bits)&0xFF); bits-=8; }
-  }
-  return o;
-}
-
 /* ── api-keys.json overlay (apiKeysStore.js) ──────────────────────────── */
 static void overlay_path(char *p, size_t n) {
   snprintf(p, n, "%s/data/api-keys.json", JO_REPO_ROOT);
@@ -108,13 +133,26 @@ static cJSON *overlay_read(void) {
   if (!j || !cJSON_IsObject(j)) { cJSON_Delete(j); j=cJSON_CreateObject(); }
   return j;
 }
-static void overlay_write(cJSON *o) {
+/* 0 on success, -1 when the overlay could not be written. It returned
+ * nothing, so a failed write (no data/ directory, a full disk) answered
+ * `"set":true` from the in-memory copy and the next GET read null — a key the
+ * operator was told was saved, and was not (probed 2026-11-07). */
+static int overlay_write(cJSON *o) {
   char p[1024], tmp[1056]; overlay_path(p, sizeof p);
   snprintf(tmp, sizeof tmp, "%s.tmp", p);
   char *txt = cJSON_Print(o);            /* pretty, like JSON.stringify(,,2) */
+  if (!txt) return -1;
+  int ok = 0;
   FILE *f = fopen(tmp, "wb");
-  if (f) { fwrite(txt, 1, strlen(txt), f); fclose(f); rename(tmp, p); }
+  if (f) {
+    size_t n = strlen(txt);
+    ok = fwrite(txt, 1, n, f) == n;
+    if (fclose(f) != 0) ok = 0;
+    if (ok && rename(tmp, p) != 0) ok = 0;
+    if (!ok) remove(tmp);
+  }
   free(txt);
+  return ok ? 0 : -1;
 }
 /* resolved value: overlay non-empty string wins, else process env. */
 static const char *resolved_env(cJSON *ov, const char *name) {
@@ -141,11 +179,18 @@ static int master_key(unsigned char out[32]) {
     for (int i = 0; i < 32; i++) { unsigned x; sscanf(raw+2*i,"%2x",&x); out[i]=(unsigned char)x; }
     return 1;
   }
-  unsigned char buf[256];
-  int n = b64_decode(raw, buf, sizeof buf);
-  if (n < 32) return 0;
-  memcpy(out, buf, 32);
-  return 1;
+  /* Standard base64 through jo_codec.h (2026-11-12): this file kept its own
+   * decoder, one of three copies in core/, with a pthread_once-filled table and
+   * a signed accumulator. jo_b64_decode() keeps its behaviour — stop at '=',
+   * skip bytes outside the alphabet — and the decoded bytes are cleansed. */
+  size_t n = 0;
+  unsigned char *buf = jo_b64_decode(raw, L, &n);
+  if (!buf) return 0;
+  int ok = n >= 32;
+  if (ok) memcpy(out, buf, 32);
+  OPENSSL_cleanse(buf, n);
+  free(buf);
+  return ok;
 }
 static int derive_key(const char *tenant_id, unsigned char out[32]) {
   unsigned char mk[32];
@@ -303,7 +348,11 @@ char *keysapi_platform(db_handle *db, const tenant_ctx *t, const char *method,
     const char *val = (jv&&cJSON_IsString(jv))?jv->valuestring:"";
     cJSON_DeleteItemFromObject(ov,name);          /* clear */
     if (val[0]) cJSON_AddStringToObject(ov,name,val);  /* set when non-empty */
-    overlay_write(ov);
+    if (overlay_write(ov) != 0) {
+      if (jb) cJSON_Delete(jb);
+      cJSON_Delete(ov);
+      return jerr(st, 500, "key_store_write_failed");
+    }
     if (jb) cJSON_Delete(jb);
     cJSON *o=cJSON_CreateObject();
     cJSON_AddStringToObject(o,"name",name);
@@ -536,6 +585,109 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
   cJSON_Delete(ov); return jerr(st,404,"not_found");
 }
 
+/* ── a workspace's key for its pivots (see keysapi.h) ────────────────────── */
+char *keysapi_tenant_secret(db_handle *db, const char *tenant_id,
+                            const char *name) {
+  if (!db || !db->h || !tenant_id || !*tenant_id || !name || !*name) return NULL;
+  /* The shared corpus pseudo-tenant and the operator chain own no workspace
+   * keys: a run attributed to them is the platform's, which uses the env. */
+  if (!strcmp(tenant_id, "legacy") || !strcmp(tenant_id, "platform")) return NULL;
+  /* Only a KNOWN CREDENTIAL name resolves (2026-11-16). A hand-written
+   * collector's every jo_getenv() — configuration included — now asks this
+   * function first during a workspace's pivot (core/osint_dispatch.c), so a
+   * row in tenant_secrets under a configuration name (JO_HTTP_BLOCK_PRIVATE,
+   * say) must never be able to answer. The save path already refuses unknown
+   * names; this holds even for a row written another way. */
+  if (is_known(name, NULL) != 1) return NULL;
+  sqlite3_stmt *s;
+  char *val = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT encrypted_value FROM tenant_secrets WHERE tenant_id=?1 AND key_name=?2",
+        -1, &s, NULL) != SQLITE_OK) return NULL;
+  sqlite3_bind_text(s, 1, tenant_id, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 2, name, -1, SQLITE_TRANSIENT);
+  if (sqlite3_step(s) == SQLITE_ROW && sqlite3_column_type(s, 0) == SQLITE_BLOB)
+    val = secret_decrypt(tenant_id, sqlite3_column_blob(s, 0),
+                         sqlite3_column_bytes(s, 0));
+  sqlite3_finalize(s);
+  if (!val) return NULL;
+  /* The scrub sink matches the key's exact bytes in what a collector stores;
+   * a key this short would match ordinary text and redact real data (intel.c
+   * draws the same line at 12 for env values it only GUESSES are secrets).
+   * Such a value is not used — the run falls back to the environment, and the
+   * log says so rather than silently ignoring the workspace's setting. */
+  if (strlen(val) < KEYSAPI_PIVOT_KEY_MIN) {
+    fprintf(stderr, "[keys] workspace %s: stored %s is shorter than %d "
+                    "characters — not used for pivots, environment used\n",
+            tenant_id, name, KEYSAPI_PIVOT_KEY_MIN);
+    OPENSSL_cleanse(val, strlen(val));
+    free(val);
+    return NULL;
+  }
+  if (sqlite3_prepare_v2(db->h,
+        "UPDATE tenant_secrets SET last_used_at=datetime('now') "
+        "WHERE tenant_id=?1 AND key_name=?2", -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, tenant_id, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 2, name, -1, SQLITE_TRANSIENT);
+    sqlite3_step(s);
+    sqlite3_finalize(s);
+  }
+  return val;
+}
+
+/* Every occurrence of w->secret in v replaced, malloc'd; NULL when v holds
+ * none (the common case: one memmem-equivalent scan per field). */
+static char *scrub_str(const keysapi_scrub_sink *w, const char *v) {
+  if (!v || !*v || !strstr(v, w->secret)) return NULL;
+  static const char RED[] = "[redacted]";
+  size_t n = 0, kl = w->secret_len;
+  for (const char *p = strstr(v, w->secret); p; p = strstr(p + kl, w->secret)) n++;
+  char *o = malloc(strlen(v) - n * kl + n * (sizeof RED - 1) + 1), *d = o;
+  if (!o) return NULL;
+  const char *r = v;
+  for (const char *p = strstr(r, w->secret); p; p = strstr(r, w->secret)) {
+    memcpy(d, r, (size_t)(p - r)); d += p - r;
+    memcpy(d, RED, sizeof RED - 1); d += sizeof RED - 1;
+    r = p + kl;
+  }
+  strcpy(d, r);
+  return o;
+}
+
+static int scrub_emit(intel_sink *self, const intel_item *it) {
+  keysapi_scrub_sink *w = (keysapi_scrub_sink *)self->ctx;
+  if (!w->secret_len) return w->inner->emit(w->inner, it);
+  intel_item c = *it;
+  const char **f[] = { &c.uid, &c.remote_key, &c.title, &c.body, &c.summary,
+                       &c.link, &c.author, &c.lang, &c.published_at,
+                       &c.geometry_geojson, &c.record_type, &c.sub_source_id,
+                       &c.properties_json, &c.tags_json };
+  enum { NF = (int)(sizeof f / sizeof f[0]) };
+  char *own[NF] = {0};
+  int any = 0;
+  for (int i = 0; i < NF; i++) {
+    own[i] = scrub_str(w, *f[i]);
+    if (own[i]) { *f[i] = own[i]; any = 1; }
+  }
+  /* A field that holds the key and could not be scrubbed (allocation
+   * failure) must not be written as-is: refuse the item, as a failed write. */
+  int leak = 0;
+  for (int i = 0; i < NF; i++)
+    if (!own[i] && *f[i] && strstr(*f[i], w->secret)) leak = 1;
+  int rc = leak ? -1 : w->inner->emit(w->inner, any ? &c : it);
+  for (int i = 0; i < NF; i++) free(own[i]);
+  return rc;
+}
+
+void keysapi_scrub_sink_init(keysapi_scrub_sink *w, intel_sink *inner,
+                             const char *secret) {
+  w->inner = inner;
+  w->secret = secret ? secret : "";
+  w->secret_len = secret ? strlen(secret) : 0;
+  w->base.ctx = w;
+  w->base.emit = scrub_emit;
+}
+
 /* ── /admin/break-glass/login (breakGlass.js) ─────────────────────────── */
 static int base32_decode(const char *s, unsigned char *out, int cap) {
   int val=0,bits=0,o=0;
@@ -560,17 +712,6 @@ static void totp_at(const unsigned char *key,int klen,long step,char out[7]){
   unsigned bin=((mac[off]&0x7F)<<24)|((mac[off+1]&0xFF)<<16)|
                ((mac[off+2]&0xFF)<<8)|(mac[off+3]&0xFF);
   snprintf(out,7,"%06u",bin%1000000u);
-}
-static char *b64url(const unsigned char *in,int len){
-  static const char T[]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-  char *o=malloc(((len+2)/3)*4+1); int p=0;
-  for (int i=0;i<len;i+=3){
-    unsigned a=in[i],b=i+1<len?in[i+1]:0,c=i+2<len?in[i+2]:0,v=(a<<16)|(b<<8)|c;
-    o[p++]=T[(v>>18)&63]; o[p++]=T[(v>>12)&63];
-    if(i+1<len)o[p++]=T[(v>>6)&63];
-    if(i+2<len)o[p++]=T[v&63];
-  }
-  o[p]=0; return o;
 }
 
 char *keysapi_breakglass(db_handle *db, const char *body,
@@ -639,12 +780,12 @@ char *keysapi_breakglass(db_handle *db, const char *body,
   cJSON_AddNumberToObject(pl,"iat",(double)now);
   cJSON_AddNumberToObject(pl,"exp",(double)(now+BREAK_GLASS_TTL_SEC));
   char *pj=cJSON_PrintUnformatted(pl); cJSON_Delete(pl);
-  char *h64=b64url((unsigned char*)hj,strlen(hj));
-  char *p64=b64url((unsigned char*)pj,strlen(pj));
+  char *h64=jo_b64url_encode((unsigned char*)hj, strlen(hj));
+  char *p64=jo_b64url_encode((unsigned char*)pj, strlen(pj));
   char si[4096]; snprintf(si,sizeof si,"%s.%s",h64,p64);
   unsigned char mac[32]; unsigned int ml=32;
   HMAC(EVP_sha256(),jwt,(int)strlen(jwt),(unsigned char*)si,strlen(si),mac,&ml);
-  char *s64=b64url(mac,32);
+  char *s64=jo_b64url_encode(mac, 32);
   char tok[4608]; snprintf(tok,sizeof tok,"%s.%s.%s",h64,p64,s64);
   free(hj);free(pj);free(h64);free(p64);free(s64);
   if(jb)cJSON_Delete(jb);

@@ -120,6 +120,8 @@ void feed_status_describe(long st, char *out, size_t cap) {
   if (!out || !cap) return;
   if (st == FEED_ST_TRANSPORT)      snprintf(out, cap, "a transport failure");
   else if (st == FEED_ST_UNPARSED)  snprintf(out, cap, "an HTTP 2xx whose body was not JSON");
+  else if (st == FEED_ST_DECLARED_EMPTY)
+    snprintf(out, cap, "HTTP 404 with the upstream's own no-data wording (an empty result)");
   else if (st > 0)                  snprintf(out, cap, "HTTP %ld", st);
   else                              snprintf(out, cap, "an unrecorded failure");
 }
@@ -129,6 +131,12 @@ static void feed_note_status(int rc, const http_response *r, const cJSON *parsed
   if (rc != 0) g_feed_json_status = FEED_ST_TRANSPORT;
   else if (r->status >= 200 && r->status < 300 && r->body && !parsed)
     g_feed_json_status = FEED_ST_UNPARSED;
+  /* A 404 carrying the service's own no-data wording is an honest empty and
+   * is recorded as such, so a page walker can tell it from a refusal (see
+   * feed_status_body_is_declared_empty in feedlib.h). A 204 keeps its own
+   * number — that predicate's comment says why. */
+  else if (r->status == 404 && feed_status_body_is_declared_empty(404, r->body))
+    g_feed_json_status = FEED_ST_DECLARED_EMPTY;
   else g_feed_json_status = r->status;
 }
 

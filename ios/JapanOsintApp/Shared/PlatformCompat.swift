@@ -100,6 +100,17 @@ extension View {
         #endif
     }
 
+    /// Number pad on iOS; no-op on macOS. For the source pages' numeric
+    /// settings (bytes, seconds), which take whole numbers only.
+    @ViewBuilder
+    func compatKeyboardNumber() -> some View {
+        #if os(iOS)
+        keyboardType(.numberPad)
+        #else
+        self
+        #endif
+    }
+
     /// Email keyboard on iOS; no-op on macOS. `email == false` falls back to
     /// the URL keyboard to mirror the iOS call sites that branch on field type.
     @ViewBuilder

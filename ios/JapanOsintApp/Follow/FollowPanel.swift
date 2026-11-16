@@ -11,6 +11,13 @@ struct FollowPanel: View {
     @State private var paused = false
     @State private var loading = false
     @State private var primeFailed = false
+    /// Why the history prime answered without data, when that is the
+    /// server's own answer rather than an outage: the native server has no
+    /// collector-tap ring buffer and answers GET /api/follow/recent with
+    /// 501 not_implemented on every call (core/miscapi.c miscapi_follow_recent),
+    /// and the route is operator-only (403). Either used to read as "backend
+    /// offline" with a retry that could never succeed.
+    @State private var historyNote: String?
     @State private var subscription: AnyCancellable?
 
     private var maxEvents: Int { max(1, settings.followLogMaxEntries) }
@@ -19,6 +26,14 @@ struct FollowPanel: View {
         VStack(spacing: 0) {
             controls
             Divider()
+            if let historyNote {
+                Text(historyNote)
+                    .font(.caption2)
+                    .foregroundStyle(theme.textMuted)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(8)
+                    .background(theme.surfaceElevated)
+            }
             // `primeFailed` is the REST prime failing — that alone is the
             // offline signal. The realtime socket being down is not: it is an
             // enhancement over the same data, and gating on it made this claim
@@ -159,6 +174,18 @@ struct FollowPanel: View {
         do {
             let env = try await apiClient.api.recentFollow(limit: maxEvents)
             events = env.events
+            primeFailed = false
+            historyNote = nil
+        } catch APIError.http(501, let body) {
+            struct Body: Decodable { let detail: String? }
+            let detail = body.data(using: .utf8)
+                .flatMap { try? JSONDecoder().decode(Body.self, from: $0) }?.detail
+            historyNote = "Request history is not available on this server"
+                + (detail.map { " (\($0))" } ?? "")
+                + ". Live events appear below while the realtime channel is connected."
+            primeFailed = false
+        } catch APIError.http(403, _) {
+            historyNote = "Request history is a platform-operator view; this account cannot read it."
             primeFailed = false
         } catch {
             primeFailed = true

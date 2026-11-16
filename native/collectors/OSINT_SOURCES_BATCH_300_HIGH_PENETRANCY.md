@@ -146,7 +146,7 @@ to build and verify anything:
 - `core/searchapi.{c,h}` — `searchapi_analyze()` took 3 args while `httpd.c`
   called it with 4 and had a 429 `too_many_searches` branch that could never
   fire. Added the `status_out` parameter and the concurrency cap it implied
-  (`JO_SEARCH_MAX_CONCURRENT`, default 4) so an unbounded thread-per-search is no
+  (`JO_MAX_CONCURRENT_SEARCHES`, default 4 — core/searchapi.c; this note named it `JO_SEARCH_MAX_CONCURRENT`, which nothing reads) so an unbounded thread-per-search is no
   longer a trivial DoS.
 - `core/httpclient.{c,h}` — `http_client_global_init()` was called by
   `camera_stills.c` but never defined; factored the existing once-only

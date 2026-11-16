@@ -42,7 +42,7 @@ static int ww_geocode(const source_ctx *ctx, const char *entity, const char *tag
     enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (weather)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, tag);
   if (!body) return 0;
   cJSON *root = cJSON_Parse(body);
@@ -90,12 +90,12 @@ static int ww_openmeteo(const source_ctx *ctx, intel_sink *sink, const char *q) 
     "wind_speed_10m_max,weather_code&timezone=auto&forecast_days=7",
     lat, lon);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (weather)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "openmeteo");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *daily = cJSON_GetObjectItem(root, "daily");
   cJSON *time  = daily ? cJSON_GetObjectItem(daily, "time") : NULL;
@@ -140,7 +140,7 @@ static int ww_openmeteo(const source_ctx *ctx, intel_sink *sink, const char *q) 
       cJSON_AddStringToObject(props, "source", "Open-Meteo");
       cJSON_AddStringToObject(props, "date", day);
       cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props);
+      jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
       cJSON_Delete(props);
 
       char key[384];
@@ -149,7 +149,7 @@ static int ww_openmeteo(const source_ctx *ctx, intel_sink *sink, const char *q) 
       intel_item it = {0};
       it.remote_key      = key;
       it.title           = title;
-      it.body            = bj;
+      it.body = bj;
       it.summary         = place[0] ? place : q;
       it.lang            = "en";
       it.published_at    = day;
@@ -177,16 +177,15 @@ static int ww_nws(const source_ctx *ctx, intel_sink *sink, const char *q) {
     return 0;
   }
   const char *hdrs[] = { "Accept: application/geo+json, application/json",
-                         "User-Agent: JapanOSINT/1.0 (weather; osint@example.org)",
                          NULL };
   /* step 1: /points/<lat>,<lon> → gridpoint metadata carrying forecast URL */
   char purl[512];
   snprintf(purl, sizeof purl, "https://api.weather.gov/points/%.4f,%.4f", lat, lon);
   char *pbody = jo_get(ctx, purl, hdrs, "nws");
-  if (!pbody) return 0;
+  if (!pbody) return jo_fail_rc(jo_last_status(), 0);
   cJSON *proot = cJSON_Parse(pbody);
   free(pbody);
-  if (!proot) return 0;
+  if (!proot) return -1;
   cJSON *pprops = cJSON_GetObjectItem(proot, "properties");
   const char *furl = pprops ? jo_sv(pprops, "forecast") : NULL;
   char forecast_url[600] = {0};
@@ -199,10 +198,10 @@ static int ww_nws(const source_ctx *ctx, intel_sink *sink, const char *q) {
 
   /* step 2: forecast → periods[] */
   char *fbody = jo_get(ctx, forecast_url, hdrs, "nws");
-  if (!fbody) return 0;
+  if (!fbody) return jo_fail_rc(jo_last_status(), 0);
   cJSON *froot = cJSON_Parse(fbody);
   free(fbody);
-  if (!froot) return 0;
+  if (!froot) return -1;
   cJSON *fprops  = cJSON_GetObjectItem(froot, "properties");
   cJSON *periods = fprops ? cJSON_GetObjectItem(fprops, "periods") : NULL;
 
@@ -241,7 +240,7 @@ static int ww_nws(const source_ctx *ctx, intel_sink *sink, const char *q) {
       cJSON_AddStringToObject(props, "source", "US NWS");
       cJSON_AddStringToObject(props, "period", pname);
       cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props);
+      jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
       cJSON_Delete(props);
 
       char key[384];
@@ -250,7 +249,7 @@ static int ww_nws(const source_ctx *ctx, intel_sink *sink, const char *q) {
       intel_item it = {0};
       it.remote_key      = key;
       it.title           = title;
-      it.body            = bj;
+      it.body = bj;
       it.summary         = detail ? detail : shortf;
       it.lang            = "en";
       it.published_at    = start;
@@ -278,12 +277,12 @@ static int ww_metar(const source_ctx *ctx, intel_sink *sink, const char *q) {
     "https://aviationweather.gov/api/data/metar?ids=%s&format=json", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (weather)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "metar");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   /* API returns a top-level array of observation objects. */
   int emitted = 0;
@@ -325,7 +324,7 @@ static int ww_metar(const source_ctx *ctx, intel_sink *sink, const char *q) {
       cJSON_AddStringToObject(props, "source", "Aviation Weather Center");
       if (icao) cJSON_AddStringToObject(props, "icao", icao);
       cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props);
+      jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
       cJSON_Delete(props);
 
       char key[256];
@@ -334,7 +333,7 @@ static int ww_metar(const source_ctx *ctx, intel_sink *sink, const char *q) {
       intel_item it = {0};
       it.remote_key      = key;
       it.title           = title;
-      it.body            = bj;
+      it.body = bj;
       it.summary         = raw;
       it.lang            = "en";
       it.published_at    = rt;
@@ -354,9 +353,9 @@ static int ww_metar(const source_ctx *ctx, intel_sink *sink, const char *q) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
   if (!q) return -1;
-  if (strcmp(ctx->source_id, "OPENMETEO_GLOBAL") == 0) { ww_openmeteo(ctx, sink, q); return 0; }
-  if (strcmp(ctx->source_id, "NWS_US") == 0)           { ww_nws(ctx, sink, q);       return 0; }
-  if (strcmp(ctx->source_id, "AVIATION_METAR") == 0)   { ww_metar(ctx, sink, q);     return 0; }
+  if (strcmp(ctx->source_id, "OPENMETEO_GLOBAL") == 0) { return ww_openmeteo(ctx, sink, q) < 0 ? -1 : 0; }
+  if (strcmp(ctx->source_id, "NWS_US") == 0)           { return ww_nws(ctx, sink, q) < 0 ? -1 : 0; }
+  if (strcmp(ctx->source_id, "AVIATION_METAR") == 0)   { return ww_metar(ctx, sink, q) < 0 ? -1 : 0; }
   return -1;
 }
 

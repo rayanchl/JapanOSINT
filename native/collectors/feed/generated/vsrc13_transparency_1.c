@@ -302,44 +302,57 @@ VJSON(cyb_findtender_ocds_tender, "cyb-findtender-ocds-tender", "UK Find a Tende
   "en", "[\"gbr\",\"procurement\",\"ocds\",\"contracts\"]", 21600,
   "High-value UK tender opportunities in OCDS form, the post-Brexit replacement for TED coverage of the UK.");
 
+/* Tweede Kamer / Folketing OData rows: `$orderby=<modified> desc,<key>`
+ * (2026-11-07), copied from the sorted siblings (GewijzigdOp desc on TK
+ * Besluit, opdateringsdato desc on ft.dk Sag/Sagstrin/Dokument) and made a
+ * TOTAL order with the entity key, because many records share one timestamp
+ * (TK Stemming/Document, ft.dk Stemme: identical GewijzigdOp/opdateringsdato
+ * on consecutive rows). Without an order these $top/$skip walks read an
+ * arbitrary slice — TK's default first rows are dated 2008, 2019, 2024 mixed —
+ * of collections up to 1,035,132 (TK Stemming) and 1,840,932 (ft.dk Stemme);
+ * neither server publishes a nextLink for these requests. With it, the
+ * 20-page ceiling is the most recently modified $top x 20, a window. Both
+ * servers read the clause: a bogus $orderby is HTTP 400 ("Could not find a
+ * property named 'Frobnicate'" on TK). Small entity sets (TK Zaal 64,
+ * Fractie 160, Commissie 234; ft.dk Aktørtype 13 …) read whole either way. */
 VJSON(cyb_folketing_afstemning, "cyb-folketing-afstemning", "Danish Parliament ODA — votes", "デンマーク議会 採決",
   "transparency", "politics",
-  "https://oda.ft.dk/api/Afstemning?%24top=50",
+  "https://oda.ft.dk/api/Afstemning?%24top=50&%24orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"parliament\",\"voting\",\"transparency\"]", 43200,
   "Folketing votes with conclusion and vote type.");
 
 VJSON(cyb_folketing_dokument, "cyb-folketing-dokument", "Danish Parliament ODA — documents", "デンマーク議会 文書",
   "transparency", "politics",
-  "https://oda.ft.dk/api/Dokument?%24top=50",
+  "https://oda.ft.dk/api/Dokument?%24top=50&%24orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"parliament\",\"legislation\",\"transparency\"]", 28800,
   "Documents tied to Folketing cases with type, date and title.");
 
 VJSON(cyb_folketing_oda_aktor, "cyb-folketing-oda-aktor", "Danish Parliament ODA — actors", "デンマーク議会 関係者",
   "transparency", "politics",
-  "https://oda.ft.dk/api/Akt%C3%B8r?%24top=50",
+  "https://oda.ft.dk/api/Akt%C3%B8r?%24top=50&%24orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"parliament\",\"politics\",\"transparency\"]", 86400,
   "Actors in the Folketing system: members, ministries, committees and external parties.");
 
 VJSON(cyb_folketing_oda_sag, "cyb-folketing-oda-sag", "Danish Parliament ODA — cases", "デンマーク議会 案件",
   "transparency", "politics",
-  "https://oda.ft.dk/api/Sag?%24top=50",
+  "https://oda.ft.dk/api/Sag?%24top=50&%24orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"parliament\",\"legislation\",\"transparency\"]", 21600,
   "Folketing cases including bills, motions and inquiries with status and type.");
 
 VJSON(cyb_folketing_sagstrin, "cyb-folketing-sagstrin", "Danish Parliament ODA — case stages", "デンマーク議会 審議段階",
   "transparency", "politics",
-  "https://oda.ft.dk/api/Sagstrin?%24top=50",
+  "https://oda.ft.dk/api/Sagstrin?%24top=50&%24orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"parliament\",\"legislation\",\"transparency\"]", 43200,
   "Stage-by-stage progress of Folketing cases through readings and committee.");
 
 VJSON(cyb_folketing_stemme, "cyb-folketing-stemme", "Danish Parliament ODA — individual votes", "デンマーク議会 個別投票",
   "transparency", "politics",
-  "https://oda.ft.dk/api/Stemme?%24top=50",
+  "https://oda.ft.dk/api/Stemme?%24top=50&%24orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"parliament\",\"voting\",\"transparency\"]", 57600,
   "Individual member votes attached to each Folketing division.");
@@ -496,12 +509,23 @@ VJSON(cyb_scotparl_regions, "cyb-scotparl-regions", "Scottish Parliament — reg
   "en", "[\"gbr\",\"scotland\",\"parliament\",\"geo\"]", 86400,
   "Scottish Parliament electoral regions used for list seats.");
 
-VJSON(cyb_sejm_pl_interpellations, "cyb-sejm-pl-interpellations", "Sejm of Poland — interpellations", "ポーランド下院 質問書",
-  "transparency", "politics",
-  "https://api.sejm.gov.pl/sejm/term10/interpellations",
-  "",
-  "pl", "[\"pol\",\"parliament\",\"questions\",\"transparency\"]", 21600,
-  "Written interpellations to Polish ministers with sender, recipient and reply status.");
+/* 2026-11-07: this row asked for the bare collection, which answers the FIRST 50
+ * interpellations by num (1..50) and nothing past them: one page, no size the walk could
+ * advance, every run, of 20,935. And it keyed on VJSON's fallback (title, link, date)
+ * although the record's identity is `num`, the key eur-sejm-term10-committees-sits
+ * (vsrc13_europe_gov_2.c) already measured (2,000 emitted / 1,982 stored on the fallback).
+ * Now: VJSON_KEYED on num, limit=100&offset=0 so the walk pages, and sort_by=-num so the
+ * twenty pages a run are the NEWEST 2,000 rather than the oldest (the sibling reads the
+ * collection from num=1 upward). Measured 2026-11-07: sort_by=-num answers 20935, 20934 ...;
+ * sort_by=num and the control sort_by=frobnicate both answer 1..5 (an unknown key is
+ * ignored, so the direction is the evidence the parameter is read); offset=100 answers
+ * 101..200, disjoint. Interpellations arrive at ~30 a day, so a newest-first walk barely
+ * drifts inside one run; the 16,935 in the middle need a cycling hp row (page_resume).
+ *
+ * 2026-11-12: MOVED to collectors/pivot/table/hp3b31_eunat.c, same id. No
+ * cycle was needed after all: `limit=50000` answers the whole term in ONE
+ * request (20,989 records, nums 1..20,989, 28 MB in 47 s), which a VJSON row
+ * cannot wait for (over its timeout) and an hp row can (`timeout_ms`). */
 
 VJSON(cyb_sejm_pl_prints, "cyb-sejm-pl-prints", "Sejm of Poland — parliamentary prints", "ポーランド下院 議案文書",
   "transparency", "politics",
@@ -519,98 +543,125 @@ VJSON(cyb_sejm_pl_processes, "cyb-sejm-pl-processes", "Sejm of Poland — legisl
 
 VJSON(cyb_tweedekamer_activiteit, "cyb-tweedekamer-activiteit", "Dutch House of Representatives — activities", "オランダ下院 議事活動",
   "transparency", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Activiteit?%24top=50",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Activiteit?%24top=50&%24orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"parliament\",\"politics\",\"transparency\"]", 21600,
   "Scheduled and held parliamentary activities including debates and committee sessions.");
 
 VJSON(cyb_tweedekamer_besluit, "cyb-tweedekamer-besluit", "Dutch House of Representatives — decisions", "オランダ下院 決定",
   "transparency", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Besluit?%24top=50",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Besluit?%24top=50&%24orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"parliament\",\"voting\",\"transparency\"]", 43200,
   "Decisions taken on parliamentary cases, with outcome and decision text.");
 
 VJSON(cyb_tweedekamer_document, "cyb-tweedekamer-document", "Dutch House of Representatives — documents", "オランダ下院 文書",
   "transparency", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Document?%24top=50",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Document?%24top=50&%24orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"parliament\",\"legislation\",\"transparency\"]", 21600,
   "Documents submitted to the Tweede Kamer with type, date and case linkage.");
 
 VJSON(cyb_tweedekamer_fractie, "cyb-tweedekamer-fractie", "Dutch House of Representatives — parliamentary groups", "オランダ下院 会派",
   "transparency", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Fractie?%24top=50",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Fractie?%24top=50&%24orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"parliament\",\"politics\",\"transparency\"]", 86400,
   "Parliamentary groups with seat counts and active periods.");
 
 VJSON(cyb_tweedekamer_stemming, "cyb-tweedekamer-stemming", "Dutch House of Representatives — votes", "オランダ下院 採決",
   "transparency", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Stemming?%24top=50",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Stemming?%24top=50&%24orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"parliament\",\"voting\",\"transparency\"]", 43200,
   "Individual and party votes recorded on Tweede Kamer decisions.");
 
 VJSON(cyb_tweedekamer_zaak, "cyb-tweedekamer-zaak", "Dutch House of Representatives — cases (Zaak)", "オランダ下院 案件",
   "transparency", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Zaak?%24top=50",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Zaak?%24top=50&%24orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"parliament\",\"legislation\",\"transparency\"]", 21600,
   "Parliamentary cases in the Tweede Kamer data warehouse, the spine linking documents, decisions and votes.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_committee_publications, "cyb-ukparl-committee-publications", "UK Parliament — committee publications", "英国議会 委員会刊行物",
   "transparency", "politics",
-  "https://committees-api.parliament.uk/api/Publications?take=50",
+  "https://committees-api.parliament.uk/api/Publications?take=50&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"committee\",\"transparency\"]", 21600,
   "Committee reports, written and oral evidence as published.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_committees, "cyb-ukparl-committees", "UK Parliament — select committees", "英国議会 特別委員会",
   "transparency", "politics",
-  "https://committees-api.parliament.uk/api/Committees?take=50",
+  "https://committees-api.parliament.uk/api/Committees?take=50&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"committee\",\"transparency\"]", 86400,
   "Select committees of both Houses with remit, membership and current status.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip.
+ * take 50 -> 25: the API caps a page at 25 (take=50 answered 25), and a capped page reads as SHORT, which ends the walk at page 1. */
 VJSON(cyb_ukparl_commons_divisions, "cyb-ukparl-commons-divisions", "UK Parliament — Commons division results", "英国議会 下院採決結果",
   "transparency", "politics",
-  "https://commonsvotes-api.parliament.uk/data/divisions.json/search?queryParameters.take=50",
+  "https://commonsvotes-api.parliament.uk/data/divisions.json/search?queryParameters.take=25&queryParameters.skip=0",
   "",
   "en", "[\"gbr\",\"parliament\",\"voting\",\"transparency\"]", 21600,
   "Recorded House of Commons votes with aye and no counts per division.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip.
+ * take 50 -> 20: the API caps a page at 20 (take=50 answered 20 of 650), which read as a short page and ended the walk. */
 VJSON(cyb_ukparl_constituencies, "cyb-ukparl-constituencies", "UK Parliament — constituency search", "英国議会 選挙区検索",
   "transparency", "politics",
-  "https://members-api.parliament.uk/api/Location/Constituency/Search?take=50",
+  "https://members-api.parliament.uk/api/Location/Constituency/Search?take=20&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"politics\",\"geo\"]", 86400,
   "Westminster constituencies with current sitting member and boundary period.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_edm_list, "cyb-ukparl-edm-list", "UK Parliament — early day motions", "英国議会 早期動議",
   "transparency", "politics",
-  "https://oralquestionsandmotions-api.parliament.uk/EarlyDayMotions/list?parameters.take=50",
+  "https://oralquestionsandmotions-api.parliament.uk/EarlyDayMotions/list?parameters.take=50&parameters.skip=0",
   "response",
   "en", "[\"gbr\",\"parliament\",\"motions\",\"transparency\"]", 21600,
   "Early day motions with sponsors and signature counts, a read on backbench political attention.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip.
+ * take 50 -> 20: the API caps a page at 20 (take=50 answered 20 of 4,169), which read as a short page and ended the walk. */
 VJSON(cyb_ukparl_interests, "cyb-ukparl-interests", "UK Parliament — registered financial interests", "英国議会 議員利害関係登録",
   "transparency", "politics",
-  "https://interests-api.parliament.uk/api/v1/Interests/?take=50",
+  "https://interests-api.parliament.uk/api/v1/Interests/?take=20&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"lobbying\",\"transparency\"]", 43200,
   "Members' registered financial interests, gifts, donations and outside employment.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_lords_divisions, "cyb-ukparl-lords-divisions", "UK Parliament — Lords division results", "英国議会 上院採決結果",
   "transparency", "politics",
-  "https://lordsvotes-api.parliament.uk/data/Divisions/search?take=50",
+  "https://lordsvotes-api.parliament.uk/data/Divisions/search?take=50&skip=0",
   "",
   "en", "[\"gbr\",\"parliament\",\"voting\",\"transparency\"]", 21600,
   "Recorded House of Lords votes with content and not-content tallies.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_members_search, "cyb-ukparl-members-search", "UK Parliament — members search API", "英国議会 議員検索API",
   "transparency", "politics",
-  "https://members-api.parliament.uk/api/Members/Search?take=20",
+  "https://members-api.parliament.uk/api/Members/Search?take=20&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"politics\",\"transparency\"]", 86400,
   "Current and former members of both Houses with party, constituency and service dates.");
@@ -622,16 +673,22 @@ VJSON(cyb_ukparl_parties_commons, "cyb-ukparl-parties-commons", "UK Parliament �
   "en", "[\"gbr\",\"parliament\",\"politics\",\"transparency\"]", 86400,
   "Parties currently represented in the House of Commons with seat counts.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_statutory_instruments, "cyb-ukparl-statutory-instruments", "UK Parliament — statutory instruments", "英国議会 委任立法",
   "transparency", "politics",
-  "https://statutoryinstruments-api.parliament.uk/api/v2/StatutoryInstrument?take=50",
+  "https://statutoryinstruments-api.parliament.uk/api/v2/StatutoryInstrument?take=50&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"legislation\",\"transparency\"]", 43200,
   "Statutory instruments before Parliament, the delegated-legislation pipeline including sanctions regulations.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_treaties, "cyb-ukparl-treaties", "UK Parliament — treaties laid before Parliament", "英国議会 提出条約",
   "transparency", "politics",
-  "https://treaties-api.parliament.uk/api/Treaty?take=50",
+  "https://treaties-api.parliament.uk/api/Treaty?take=50&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"treaty\",\"transparency\"]", 86400,
   "Treaties laid before the UK Parliament with scrutiny status and department.");

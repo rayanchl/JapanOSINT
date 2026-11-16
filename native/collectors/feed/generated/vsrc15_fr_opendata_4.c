@@ -296,9 +296,17 @@ VJSON_KEYED(fr_data_toulouse_metropole_fr_publisher_mairie_de_toulouse, "fr-data
   "Every dataset on this portal whose publisher is Mairie de Toulouse — the publisher's full stream, with field schema and record counts. Served by the ODS platform at data.toulouse-metropole.fr.",
   "dataset_id");
 
+/* A publisher-filtered row answers an honest 0 when the portal RENAMES the
+ * publisher, which reads exactly like a publisher that stopped publishing.
+ * Measured 2026-11-07 against each portal's own publisher facet: the rows
+ * below whose filter now names the portal's current spelling were 0 under
+ * the old one (see each id's changes.tsv line: "Administration du Premier
+ * ministre" -> "Direction de l'information légale et administrative (Premier
+ * ministre)", 0 -> 1; "Meteo France" -> "Météo-France", 0 -> 1). The ids keep
+ * the old slug so no uid moves. */
 VJSON(fr_data_toulouse_metropole_fr_publisher_meteo_france, "fr-data-toulouse-metropole-fr-publisher-meteo-france", "data.toulouse-metropole.fr — publisher-meteo-france (France)", "data.toulouse-metropole.fr — publisher-meteo-france (France)",
   "fr_opendata", "opendata",
-  "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets?where=publisher%3D%22Meteo%20France%22&limit=100&order_by=dataset_id",
+  "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets?where=publisher%3D%22M%C3%A9t%C3%A9o-France%22&limit=100&order_by=dataset_id",
   "results",
   "fr", "[\"fr\",\"ods\",\"opendata\",\"publisher-meteo-france\"]", 86400,
   "Every dataset on this portal whose publisher is Meteo France — the publisher's full stream, with field schema and record counts. Served by the ODS platform at data.toulouse-metropole.fr.");

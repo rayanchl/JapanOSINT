@@ -15,16 +15,15 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *CX_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int run_ethplorer(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://api.ethplorer.io/getAddressInfo/%s?apiKey=freekey", enc);
-  const char *hdrs[] = { "Accept: application/json", CX_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "ETHPLORER_ADDR");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *addr = jo_sv(root, "address");
   if (!addr) { cJSON_Delete(root); return 0; }
   const cJSON *eth = cJSON_GetObjectItem(root, "ETH");
@@ -57,7 +56,7 @@ static int run_ethplorer(const source_ctx *ctx, intel_sink *sink, const char *en
   cJSON_AddStringToObject(p, "chain", "eth");
   cJSON_AddStringToObject(p, "address", addr);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char rk[300], link[320], title[300];
   snprintf(rk, sizeof rk, "eth:%s", addr);
   snprintf(link, sizeof link, "https://etherscan.io/address/%s", addr);
@@ -77,11 +76,11 @@ static int run_ethplorer(const source_ctx *ctx, intel_sink *sink, const char *en
 static int run_mempool(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://mempool.space/api/address/%s", enc);
-  const char *hdrs[] = { "Accept: application/json", CX_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "MEMPOOL_ADDR");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *addr = jo_sv(root, "address");
   if (!addr) { cJSON_Delete(root); return 0; }
   const cJSON *cs = cJSON_GetObjectItem(root, "chain_stats");
@@ -108,7 +107,7 @@ static int run_mempool(const source_ctx *ctx, intel_sink *sink, const char *enc)
   cJSON_AddStringToObject(p, "chain", "btc");
   cJSON_AddStringToObject(p, "address", addr);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char rk[300], link[320], title[300];
   snprintf(rk, sizeof rk, "btcmp:%s", addr);
   snprintf(link, sizeof link, "https://mempool.space/address/%s", addr);
@@ -135,7 +134,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "MEMPOOL_ADDR"))   n = run_mempool(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define CX_DEF(sym, ID, NM, DESC) \

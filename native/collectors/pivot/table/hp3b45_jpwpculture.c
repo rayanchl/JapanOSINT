@@ -21,6 +21,11 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B45_JPWPCULTURE[] = {
   { .id = "JO45_WP_CURRENTNDL_STORYEN", .name = "カレントアウェアネス・ポータル — custom post type `story_en` (News from Current "
       "Awareness Portal) (WordPress REST)",
@@ -79,9 +84,17 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "カレントアウェアネス・ポータル カレントアウェアネス-R（ニュース記事）（WordPress REST）",
     .category = "library", .portal = "https://current.ndl.go.jp/",
     .record_type = "cpt-car",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://current.ndl.go.jp/wp-json/wp/v2/car?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 43533, 100 ids ascending on page 1. */
+    .url = "https://current.ndl.go.jp/wp-json/wp/v2/car?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -109,6 +122,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "カレントアウェアネス・ポータル カレントアウェアネス等の刊行物の記事（WordPress REST）",
     .category = "library", .portal = "https://current.ndl.go.jp/",
     .record_type = "cpt-book",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://current.ndl.go.jp/wp-json/wp/v2/book?per_page=100&orderby=date&order=desc",
@@ -135,6 +149,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "カレントアウェアネス・ポータル 当サイトからのお知らせ記事（WordPress REST）",
     .category = "library", .portal = "https://current.ndl.go.jp/",
     .record_type = "cpt-story",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://current.ndl.go.jp/wp-json/wp/v2/story?per_page=100&orderby=date&order=desc",
@@ -160,6 +175,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "香川県立図書館 投稿（WordPress REST）",
     .category = "library", .portal = "https://www.library.pref.kagawa.lg.jp/",
     .record_type = "site-post",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.library.pref.kagawa.lg.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -184,6 +200,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "香川県立図書館 固定ページ（WordPress REST）",
     .category = "library", .portal = "https://www.library.pref.kagawa.lg.jp/",
     .record_type = "site-page",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.library.pref.kagawa.lg.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
@@ -208,6 +225,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "香川県立図書館 利用者一覧（WordPress REST）",
     .category = "library", .portal = "https://www.library.pref.kagawa.lg.jp/",
     .record_type = "site-user",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.library.pref.kagawa.lg.jp/wp-json/wp/v2/users?per_page=100",
@@ -232,6 +250,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 投稿（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "site-post",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -257,6 +276,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 固定ページ（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "site-page",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
@@ -283,6 +303,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 今日コノゴロ（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "cpt-konogoro",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/konogoro?per_page=100&orderby=date&order=desc",
@@ -308,6 +329,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 行事情報（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "cpt-yl-event",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/yl_event?per_page=100&orderby=date&order=desc",
@@ -333,6 +355,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 資料展示（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "cpt-material",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/material?per_page=100&orderby=date&order=desc",
@@ -359,6 +382,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 センターニュース（旧）（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "cpt-centernews",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/centernews?per_page=100&orderby=date&order=desc",
@@ -385,6 +409,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 明治維新人物（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "cpt-meijiishin",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/meijiishin?per_page=100&orderby=date&order=desc",
@@ -411,6 +436,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 ふるさと文学（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "cpt-furusato-gallery",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/furusato_gallery?per_page=100&orderby=date&order=desc",
@@ -437,6 +463,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 おうちでおはなし会（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "cpt-ohanashikai",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/ohanashikai?per_page=100&orderby=date&order=desc",
@@ -463,6 +490,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 センター行事報告（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "cpt-center-event",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/center_event?per_page=100&orderby=date&order=desc",
@@ -488,6 +516,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 ニュースを読む（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "cpt-news",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/news?per_page=100&orderby=date&order=desc",
@@ -514,6 +543,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 センター行事案内（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "cpt-center-annai",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/center_annai?per_page=100&orderby=date&order=desc",
@@ -540,6 +570,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 行事報告（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "cpt-event-report",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/event-report?per_page=100&orderby=date&order=desc",
@@ -565,6 +596,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .name_ja = "山口県立山口図書館 利用者一覧（WordPress REST）",
     .category = "library", .portal = "https://library.pref.yamaguchi.lg.jp/",
     .record_type = "site-user",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://library.pref.yamaguchi.lg.jp/wp-json/wp/v2/users?per_page=100",

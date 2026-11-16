@@ -1,5 +1,7 @@
 /* core/evidence.c — see evidence.h for the design, the DDL and the wiring. */
 #include "evidence.h"
+#include "jo_page.h"
+#include "jo_codec.h"
 #include "audit.h"
 #include "operatorgate.h"
 #include "../third_party/cJSON.h"
@@ -143,15 +145,10 @@ static int table_exists(db_handle *db, const char *name) {
 /* ── hashing ──────────────────────────────────────────────────────────────
  * Identical construction to tenantapi.c's row_hash_of(): a cJSON object built
  * in lexicographic key order, PrintUnformatted (== JSON.stringify), SHA-256
- * hex. Reusing the scheme rather than inventing one means an auditor learns
- * the verification procedure once and it holds for both chains. */
+ * hex (jo_sha256_hex). Reusing the scheme rather than inventing one means an
+ * auditor learns the verification procedure once and it holds for both
+ * chains. */
 
-static void sha256_hex_bytes(const void *b, size_t n, char out[65]) {
-  unsigned char d[SHA256_DIGEST_LENGTH];
-  SHA256((const unsigned char *)b, n, d);
-  for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
-    snprintf(out + i * 2, 3, "%02x", d[i]);
-}
 static void put(cJSON *o, const char *k, const char *v) {
   cJSON_AddItemToObject(o, k, v ? cJSON_CreateString(v) : cJSON_CreateNull());
 }
@@ -183,7 +180,7 @@ static void row_hash_of(const char *blob_path, const char *captured_at,
   put(o, "source_id", source_id);
   char *cj = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
-  if (cj) { sha256_hex_bytes(cj, strlen(cj), out); free(cj); }
+  if (cj) { jo_sha256_hex(cj, strlen(cj), out); free(cj); }
   else    { snprintf(out, 65, "%s", ""); }
 }
 
@@ -536,7 +533,7 @@ int evidence_capture(db_handle *db, const char *item_uid, const char *source_id,
   else                       snprintf(uid, sizeof uid, "src:%s", source_id);
 
   char sha[65];
-  sha256_hex_bytes(body, body_len, sha);
+  jo_sha256_hex(body, body_len, sha);
 
   /* An existing blob costs no new bytes, so it is admitted even at budget —
    * refusing it would only cost us the custody row, not disk. */
@@ -771,13 +768,7 @@ char *evidence_list_for_item(db_handle *db, const char *item_uid, int limit,
 
   if (total >= 0 && (long long)offset + count < total) more = 1;
 
-  cJSON *page = cJSON_CreateObject();
-  cJSON_AddNumberToObject(page, "limit", lim);
-  cJSON_AddNumberToObject(page, "offset", offset);
-  cJSON_AddNumberToObject(page, "count", count);
-  if (total >= 0) cJSON_AddNumberToObject(page, "total", (double)total);
-  else            cJSON_AddNullToObject(page, "total");
-  cJSON_AddBoolToObject(page, "has_more", more);
+  cJSON *page = jo_page_new(lim, offset, count, total, more);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "item_uid", item_uid);
   /* present/evicted need a filesystem check per blob, so they describe the
@@ -939,7 +930,7 @@ char *evidence_raw(db_handle *db, const auth_user *u, const char *evidence_id,
    * bytes no longer hash to its name is exactly the case this module exists
    * to detect, and serving it as evidence would be worse than serving nothing. */
   char actual[65];
-  sha256_hex_bytes(buf, len, actual);
+  jo_sha256_hex(buf, len, actual);
   if (strcmp(actual, sha) != 0) {
     fprintf(stderr, "[evidence] blob %s hashes to %s — refusing to serve\n",
             sha, actual);

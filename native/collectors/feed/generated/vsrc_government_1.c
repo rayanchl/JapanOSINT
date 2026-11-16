@@ -138,23 +138,41 @@ VJSON(gov_co_secop2, "gov-co-secop2", "SECOP II — Colombian Procurement", "SEC
   "es", "[\"colombia\",\"procurement\",\"contracts\",\"latam\"]", 3600,
   "Colombian SECOP II electronic contracting records including awards and modifications.");
 
+/* Scoped Socrata catalogue rows below carry `order=createdAt` (2026-11-07),
+ * as their scoped siblings already do. Without it the catalogue answers in
+ * relevance order, which promises nothing stable across an offset walk.
+ * Measured on api.us.socrata.com: `order=createdAt` is NEWEST FIRST (NYC,
+ * 3,032 datasets, first 2026-09-29; `createdAt ASC` answers 2011), the total
+ * does not move, offset=3 continues the same order, and `order=frobnicate` is
+ * HTTP 400 "not a supported sort". Newest-first means a dataset created during
+ * the walk can repeat one record at a page seam, never skip one; the
+ * 20-page ceiling is then the newest 2,000 (limit=100) or 1,000 (limit=50). */
 VJSON(gov_co_socrata_catalog, "gov-co-socrata-catalog", "datos.gov.co — Colombian Dataset Catalogue", "datos.gov.co コロンビア データ目録",
   "government", "transparency",
-  "https://api.us.socrata.com/api/catalog/v1?domains=www.datos.gov.co&limit=50",
+  "https://api.us.socrata.com/api/catalog/v1?domains=www.datos.gov.co&limit=50&order=createdAt",
   "results",
   "es", "[\"colombia\",\"opendata\",\"catalogue\",\"latam\"]", 86400,
   "Catalogue of Colombian government open datasets, the discovery layer above SECOP and others.");
 
+/* 2026-11-07: publishedFrom was frozen at 2026-07-01, a lower bound that grew forever. The search answers
+ * newest first, 100 a page, with a links.next cursor the walk follows, and the host rate-limits at
+ * 12 requests per 120 s (HTTP 429 "Rate limit of 12 exceeded", Retry-After 120, measured
+ * 2026-11-07), so a walk over four months of releases at 100 a page runs into the limit
+ * before it ends. A rolling 7 days ({date-7d}) is ~350 releases (100 covered 2026-11-06T12:18 to
+ * 2026-11-08T10:14), about four requests: complete, and well inside the limit. */
 VJSON(gov_contractsfinder_ocds, "gov-contractsfinder-ocds", "Contracts Finder — UK OCDS Feed", "英国契約検索 OCDSフィード",
   "government", "procurement",
-  "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-07-01",
+  "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom={date-7d}",
   "releases",
   "en", "[\"uk\",\"procurement\",\"contracts\",\"ocds\"]", 3600,
   "OCDS releases for below-threshold UK public contracts and awards from Contracts Finder.");
 
+/* 2026-11-07: RecallDateStart was frozen at 2026-01-01 (a lower bound that grows through the year and then
+ * goes stale). {date-1y} is a rolling year: 574 recalls, newest 2026-11-05, one complete root
+ * array (measured 2026-11-07; 514 from 2026-01-01). */
 VJSON(gov_cpsc_recalls, "gov-cpsc-recalls", "CPSC — Consumer Product Recalls", "米国CPSC 製品リコール",
   "government", "regulator",
-  "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallDateStart=2026-01-01",
+  "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallDateStart={date-1y}",
   "",
   "en", "[\"usa\",\"cpsc\",\"recalls\",\"consumer\"]", 21600,
   "US Consumer Product Safety Commission recall records with hazard, remedy, importer and units.");

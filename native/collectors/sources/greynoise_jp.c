@@ -25,7 +25,7 @@ static const char *IPS[] = {
 };
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("GREYNOISE_API_KEY");
+  const char *key = jo_getenv("GREYNOISE_API_KEY");
   char keyh[256];
   const char *hdrs_keyed[3];
   const char *hdrs_anon[2] = { "Accept: application/json", NULL };

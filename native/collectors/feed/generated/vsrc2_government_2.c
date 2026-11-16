@@ -255,9 +255,14 @@ VRSS(jpx_jst_rss_topics_xml, "jpx-jst-rss-topics-xml", "Japan Science and Techno
   "ja", "[\"japan\",\"government\",\"local-gov\"]", 3600,
   "General notices from the authority — Japan Science and Technology Agency.");
 
+/* 2026-11-12: `from=2026-01-01` was frozen at authoring. The API answers
+ * newest first (first records 2026-10-08, 2026-10-05 ...), so the floor never
+ * changed WHICH 30 are read — only numberOfRecords, which it froze to "since
+ * January 2026" (429). `{date-1y}` keeps it the trailing year: rendered
+ * 2025-11-12 it answered numberOfRecords 536 and the same newest 30. */
 VJSON(jpx_kokkai_meetinglist_sangiin, "jpx-kokkai-meetinglist-sangiin", "Diet sitting index — House of Councillors", "国会会議録検索システム 参議院会議一覧",
   "government", "local-gov",
-  "https://kokkai.ndl.go.jp/api/meeting_list?nameOfHouse=%E5%8F%82%E8%AD%B0%E9%99%A2&maximumRecords=30&recordPacking=json&from=2026-01-01",
+  "https://kokkai.ndl.go.jp/api/meeting_list?nameOfHouse=%E5%8F%82%E8%AD%B0%E9%99%A2&maximumRecords=30&recordPacking=json&from={date-1y}",
   "meetingrecord",
   "ja", "[\"japan\",\"diet\",\"parliament\",\"upper-house\"]", 86400,
   "Index of House of Councillors sittings with committee and date.");

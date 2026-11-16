@@ -120,14 +120,14 @@ static int emit_entity(intel_sink *sink, const cJSON *e) {
   if (status) cJSON_AddStringToObject(props, "status", status);
   if (addr)   cJSON_AddStringToObject(props, "address", addr);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   intel_item it = {0};
   it.remote_key      = ico ? ico : name;
   it.title           = name ? name : ico;
   it.summary         = addr ? addr : status;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "sk";
   it.published_at    = est;
   it.record_type     = "sk-rpo-entity";
@@ -151,13 +151,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "sk_rpo");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   /* RPO OPEN returns { "results": [ ... ] } */
   cJSON *results = cJSON_GetObjectItem(root, "results");

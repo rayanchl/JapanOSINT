@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import LineChip from './LineChip.jsx';
-import apiUrl from '../../../utils/apiUrl.js';
+import { api, errorMessage, rejectBodyError } from '../../../api/client.js';
 
 export default function VehiclePopup({ properties }) {
   const tripId = properties?.trip_id;
@@ -13,16 +13,18 @@ export default function VehiclePopup({ properties }) {
     let cancelled = false;
     (async () => {
       try {
-        const r = await fetch(apiUrl(`/api/transit/vehicle/${encodeURIComponent(tripId)}/info`));
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const body = await r.json();
+        // A 200 {"error":…} (the route's old not-found shape) is a failure,
+        // and so is a body without `trip`: `data.trip.route_color` below
+        // would otherwise throw and take the map down with it (2026-11-07).
+        const body = rejectBodyError(await api.get(`/api/transit/vehicle/${encodeURIComponent(tripId)}/info`));
+        if (!body || typeof body !== 'object' || !body.trip) throw new Error('the server returned no trip record');
         if (!cancelled) setData(body);
       } catch (e) {
-        if (!cancelled) setError(e.message);
+        if (!cancelled) setError(errorMessage(e));
       }
     })();
     return () => { cancelled = true; };
-  }, [tripId]);
+  }, [tripId, synthetic]);
 
   // An estimated marker must say so plainly, and must not imply a real vehicle
   // sits here. The old copy for this case was "Not a schedule-backed vehicle",
@@ -45,7 +47,7 @@ export default function VehiclePopup({ properties }) {
   if (!tripId) {
     return <div className="text-xs text-gray-500">No trip id on this vehicle.</div>;
   }
-  if (error) return <div className="text-xs text-gray-500">{error}</div>;
+  if (error) return <div className="text-xs text-red-400">{error}</div>;
   if (!data) return <div className="text-xs text-gray-500">Loading…</div>;
 
   const delayMin = data.next_stop?.delay_s != null

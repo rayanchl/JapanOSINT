@@ -28,11 +28,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "wikidata");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *search = cJSON_GetObjectItem(root, "search");
   int emitted = 0;
@@ -71,14 +71,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddStringToObject(props, "entity_id", id);
       cJSON_AddStringToObject(props, "query", q);
       cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props);
+      jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
       cJSON_Delete(props);
 
       intel_item it = {0};
       it.remote_key      = id;
       it.title           = label ? label : id;
       it.summary         = desc;
-      it.body            = bj;
+      it.body = bj;
       it.lang            = "en";
       it.link            = link;
       it.record_type     = "wikidata-entity";

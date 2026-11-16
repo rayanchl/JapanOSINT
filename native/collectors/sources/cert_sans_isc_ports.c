@@ -85,8 +85,6 @@ static int emit_port(intel_sink *s, cJSON *rec) {
 static int run(const source_ctx *c, intel_sink *s) {
   const char *hdrs[] = {
     "accept: application/json",
-    "User-Agent: JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "ISC API consumer; contact via repo issues)",
     NULL };
   cJSON *doc = feed_get_json_h(c->http, ISC_URL, hdrs, 20000);
   if (!doc) {

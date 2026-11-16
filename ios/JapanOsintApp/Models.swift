@@ -467,12 +467,57 @@ struct StatusRow: Decodable, Identifiable, Hashable {
     /// renders it as "unrated", never as zero. Optional so cached JSON
     /// predating the field still decodes.
     let trust: SourceTrust?
+    /// The scheduler's own state for the row — sched_obj() in
+    /// core/statusapi.c (271-298), emitted on every row (:422; breach rows
+    /// carry tracked:false). `effectiveInterval` is the interval the scheduler
+    /// is ACTUALLY keeping after the last run — the composed cadence (override,
+    /// else policy over measured/declared) with failure backoff applied —
+    /// which `policyInterval` above is not: that one is the policy applied to
+    /// the DECLARED interval only. Optional so older payloads still decode.
+    let sched: StatusSched?
 
     /// Gated rows take precedence over the underlying probe status — they
     /// haven't been probed and shouldn't be coloured as online/offline.
     var statusKind: OsintSource.StatusKind {
         if gated == true { return .gated }
         return OsintSource.StatusKind(rawValue: status ?? "") ?? .unknown
+    }
+}
+
+/// `sched` on a /api/status row (core/statusapi.c sched_obj, 271-298):
+/// tracked, declaredInterval, effectiveInterval, measuredInterval,
+/// consecutiveFailures, consecutiveEmpties, backedOff, backoffUntil,
+/// quarantined, repairQuarantined. Decoded field by field without throwing,
+/// because the synthesized StatusRow decode would otherwise lose the WHOLE
+/// row to one oddly-typed field here.
+struct StatusSched: Decodable, Hashable {
+    let tracked: Bool?
+    let declaredInterval: Double?
+    let effectiveInterval: Double?
+    let measuredInterval: Double?
+    let consecutiveFailures: Int?
+    let consecutiveEmpties: Int?
+    let backedOff: Bool?
+    let backoffUntil: String?
+    let quarantined: Bool?
+    let repairQuarantined: Bool?
+    private enum K: String, CodingKey {
+        case tracked, declaredInterval, effectiveInterval, measuredInterval
+        case consecutiveFailures, consecutiveEmpties, backedOff, backoffUntil
+        case quarantined, repairQuarantined
+    }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        tracked = try? c.decodeIfPresent(Bool.self, forKey: .tracked)
+        declaredInterval = try? c.decodeIfPresent(Double.self, forKey: .declaredInterval)
+        effectiveInterval = try? c.decodeIfPresent(Double.self, forKey: .effectiveInterval)
+        measuredInterval = try? c.decodeIfPresent(Double.self, forKey: .measuredInterval)
+        consecutiveFailures = (try? c.decodeIfPresent(Double.self, forKey: .consecutiveFailures)).map { Int($0) }
+        consecutiveEmpties = (try? c.decodeIfPresent(Double.self, forKey: .consecutiveEmpties)).map { Int($0) }
+        backedOff = try? c.decodeIfPresent(Bool.self, forKey: .backedOff)
+        backoffUntil = try? c.decodeIfPresent(String.self, forKey: .backoffUntil)
+        quarantined = try? c.decodeIfPresent(Bool.self, forKey: .quarantined)
+        repairQuarantined = try? c.decodeIfPresent(Bool.self, forKey: .repairQuarantined)
     }
 }
 
@@ -1436,28 +1481,35 @@ struct MaintenanceDigest: Decodable {
     let autoDismissed: [RepairRow]
     let needsHuman: [RepairRow]
     let concurrency: ConcurrencySnapshot?
+    /// How much of each list the digest served: list name → {limit, offset,
+    /// count, total, has_more} (maintenanceapi.c ml_page/ml_embed, digest
+    /// ~384-386). The repair lists are a first page of 50, url_overrides of
+    /// 100, quarantined whole (limit null); the rest is
+    /// GET /api/admin/maintenance/lists/:name. Empty from an older server.
+    let pages: [String: OffsetPage]
 
     private enum K: String, CodingKey {
         case generatedAt = "generated_at", windowHours = "window_hours", totals
         case successByClass = "success_by_class", worstSources = "worst_sources"
         case quarantined, urlOverrides = "url_overrides", autoFixed = "auto_fixed"
         case awaitingReview = "awaiting_review", autoDismissed = "auto_dismissed"
-        case needsHuman = "needs_human", concurrency
+        case needsHuman = "needs_human", concurrency, pages
     }
     init(from d: Decoder) throws {
         let c = try d.container(keyedBy: K.self)
         generatedAt = try c.decodeIfPresent(String.self, forKey: .generatedAt)
         windowHours = try c.decodeIfPresent(Int.self, forKey: .windowHours)
         totals = try c.decodeIfPresent(RepairTotals.self, forKey: .totals)
-        successByClass = (try? c.decode([RepairClassStat].self, forKey: .successByClass)) ?? []
-        worstSources = (try? c.decode([RepairSourceStat].self, forKey: .worstSources)) ?? []
-        quarantined = (try? c.decode([QuarantineRow].self, forKey: .quarantined)) ?? []
-        urlOverrides = (try? c.decode([UrlOverrideRow].self, forKey: .urlOverrides)) ?? []
-        autoFixed = (try? c.decode([RepairRow].self, forKey: .autoFixed)) ?? []
+        successByClass = c.lossyArray(RepairClassStat.self, forKey: .successByClass)
+        worstSources = c.lossyArray(RepairSourceStat.self, forKey: .worstSources)
+        quarantined = c.lossyArray(QuarantineRow.self, forKey: .quarantined)
+        urlOverrides = c.lossyArray(UrlOverrideRow.self, forKey: .urlOverrides)
+        autoFixed = c.lossyArray(RepairRow.self, forKey: .autoFixed)
         awaitingReview = try c.decodeIfPresent(AwaitingReview.self, forKey: .awaitingReview)
-        autoDismissed = (try? c.decode([RepairRow].self, forKey: .autoDismissed)) ?? []
-        needsHuman = (try? c.decode([RepairRow].self, forKey: .needsHuman)) ?? []
+        autoDismissed = c.lossyArray(RepairRow.self, forKey: .autoDismissed)
+        needsHuman = c.lossyArray(RepairRow.self, forKey: .needsHuman)
         concurrency = try c.decodeIfPresent(ConcurrencySnapshot.self, forKey: .concurrency)
+        pages = (try? c.decodeIfPresent([String: OffsetPage].self, forKey: .pages)) ?? [:]
     }
 }
 
@@ -1569,8 +1621,8 @@ struct AwaitingReview: Decodable {
     private enum K: String, CodingKey { case awaitingPr = "awaiting_pr", awaitingApply = "awaiting_apply" }
     init(from d: Decoder) throws {
         let c = try d.container(keyedBy: K.self)
-        awaitingPr = (try? c.decode([RepairRow].self, forKey: .awaitingPr)) ?? []
-        awaitingApply = (try? c.decode([RepairRow].self, forKey: .awaitingApply)) ?? []
+        awaitingPr = c.lossyArray(RepairRow.self, forKey: .awaitingPr)
+        awaitingApply = c.lossyArray(RepairRow.self, forKey: .awaitingApply)
     }
     /// Everything that needs a human decision, regardless of PR-vs-apply split.
     var all: [RepairRow] { awaitingApply + awaitingPr }
@@ -1628,6 +1680,11 @@ struct RepairRow: Decodable, Identifiable {
     /// approve to apply live.
     var isApprovable: Bool { status == "verified" && action == "url_swap" }
 
+    /// An APPLIED url_swap — the one shape DELETE /api/admin/repairs/:id
+    /// undoes (maintenance_repair_revert answers 409 not_revertable for any
+    /// other status/action, maintenanceapi.c:660).
+    var isRevertable: Bool { status == "merged" && action == "url_swap" }
+
     /// Parsed `patch` payload (old/new URL + whether a runtime override would
     /// actually rewrite traffic).
     var proposedSwap: RepairPatch? {
@@ -1659,16 +1716,36 @@ struct SourcePipeline: Decodable {
     let fetchLog: [FetchRun]
     let anomalies: [AnomalyRow]
     let repairs: [RepairRow]
+    /// fetch_log (30), anomalies (20) and repairs (30) are first pages; this
+    /// says how many of each exist (maintenanceapi.c, source detail ~446-449).
+    /// The rest is GET /api/admin/maintenance/source/:id/<list>.
+    let pages: [String: OffsetPage]
     private enum K: String, CodingKey {
-        case generatedAt = "generated_at", source, fetchLog = "fetch_log", anomalies, repairs
+        case generatedAt = "generated_at", source, fetchLog = "fetch_log", anomalies, repairs, pages
     }
     init(from d: Decoder) throws {
         let c = try d.container(keyedBy: K.self)
         generatedAt = try c.decodeIfPresent(String.self, forKey: .generatedAt)
         source = try c.decode(PipelineSource.self, forKey: .source)
-        fetchLog = (try? c.decode([FetchRun].self, forKey: .fetchLog)) ?? []
-        anomalies = (try? c.decode([AnomalyRow].self, forKey: .anomalies)) ?? []
-        repairs = (try? c.decode([RepairRow].self, forKey: .repairs)) ?? []
+        fetchLog = c.lossyArray(FetchRun.self, forKey: .fetchLog)
+        anomalies = c.lossyArray(AnomalyRow.self, forKey: .anomalies)
+        repairs = c.lossyArray(RepairRow.self, forKey: .repairs)
+        pages = (try? c.decodeIfPresent([String: OffsetPage].self, forKey: .pages)) ?? [:]
+    }
+}
+
+/// One page of a maintenance list: {data, page:{limit, offset, count, total,
+/// has_more}, meta} — maintenance_list() (maintenanceapi.c:289-322), behind
+/// GET /api/admin/maintenance/lists/:name and
+/// GET /api/admin/maintenance/source/:id/{fetch_log,anomalies,repairs}.
+struct MaintenanceListEnvelope<Row: Decodable>: Decodable {
+    let rows: [Row]
+    let page: OffsetPage?
+    private enum K: String, CodingKey { case data, page }
+    init(from d: Decoder) throws {
+        let c = try d.container(keyedBy: K.self)
+        rows = c.lossyArray(Row.self, forKey: .data)
+        page = try? c.decodeIfPresent(OffsetPage.self, forKey: .page)
     }
 }
 
@@ -1795,5 +1872,23 @@ struct OkResult: Decodable {
         ok = try c.decodeIfPresent(Bool.self, forKey: .ok)
         status = try c.decodeIfPresent(String.self, forKey: .status)
         newURL = try c.decodeIfPresent(String.self, forKey: .newURL)
+    }
+}
+
+// ── lossy list decoding ──────────────────────────────────────────────────
+//
+// `(try? c.decode([T].self, …)) ?? []` threw the WHOLE list away when one
+// element failed to decode, so a single row the server shaped differently
+// read as "nothing here" — the per-source pipeline showed no repairs at all
+// because each repair row lacked one field. Decode element by element and
+// drop only the element that fails.
+private struct LossyElement<T: Decodable>: Decodable {
+    let value: T?
+    init(from d: Decoder) throws { value = try? T(from: d) }
+}
+
+extension KeyedDecodingContainer {
+    func lossyArray<T: Decodable>(_ type: T.Type, forKey key: Key) -> [T] {
+        ((try? decode([LossyElement<T>].self, forKey: key)) ?? []).compactMap(\.value)
     }
 }

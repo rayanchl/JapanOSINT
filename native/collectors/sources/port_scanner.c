@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 /* SSRF gate. This collector never touches core/httpclient.c — it opens raw
  * sockets — so hostgate, the protocol pins and the per-hop peer recheck that
@@ -92,7 +93,7 @@ static int emit_open_port(intel_sink *sink, const char *host, int port,
   cJSON_AddStringToObject(props, "host", host);
   cJSON_AddNumberToObject(props, "port", port);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[320];
   snprintf(rk, sizeof rk, "port:%s:%d", host, port);
@@ -102,7 +103,7 @@ static int emit_open_port(intel_sink *sink, const char *host, int port,
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = service;
   it.record_type     = "osint_service_result";
   it.properties_json = pj;

@@ -20,6 +20,11 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B22_DEEPARCHIVE[] = {
   { .id = "WAYBACK_AVAILABILITY_PIVOT", .name = "Wayback Machine availability API - closest snapshot for a URL",
     .category = "investigation", .portal = "https://archive.org/help/wayback_api.php",
@@ -2363,6 +2368,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .name_ja = "ジャパンサーチ横断検索",
     .category = "investigation", .portal = "https://jpsearch.go.jp",
     .record_type = "cultural-heritage-record",
+    .lang = "ja",
     .tags = "\"japan\",\"jpsearch\",\"ndl\",\"heritage\",\"search\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://jpsearch.go.jp/api/item/search/jps-cross?keyword={q}&size=100",
@@ -3308,7 +3314,8 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "scholarly-work",
     .tags = "\"openalex\",\"sdg16\",\"peace-justice\",\"institutions\",\"latest\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.openalex.org/works?filter=sustainable_development_goals.id:https://metadata.un.org/sdg/16&per-page=100&sort=publication_date:desc&mailto=rayanchouialkessal@gmail.com",
+    .url = "https://api.openalex.org/works?filter=sustainable_development_goals.id:https://metadata.un.org/sdg/16&per-page=100&sort=publication_date:desc&mailto=rayanchouialkessal@gmail.com&api_key={key}",
+    .key_env = "OPENALEX_API_KEY",   /* 2026-11-11, owner's decision: keyless OpenAlex is an IP-shared daily budget (HTTP 429 "no API key"); gated like its siblings */
     .array_path = "results",
     .date_keys = "publication_date",
     .id_keys = "id",
@@ -3328,7 +3335,8 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "scholarly-work",
     .tags = "\"openalex\",\"repository\",\"grey-literature\",\"latest\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.openalex.org/works?filter=locations.source.type:repository&per-page=100&sort=publication_date:desc&mailto=rayanchouialkessal@gmail.com",
+    .url = "https://api.openalex.org/works?filter=locations.source.type:repository&per-page=100&sort=publication_date:desc&mailto=rayanchouialkessal@gmail.com&api_key={key}",
+    .key_env = "OPENALEX_API_KEY",   /* 2026-11-11, owner's decision: keyless OpenAlex is an IP-shared daily budget (HTTP 429 "no API key"); gated like its siblings */
     .array_path = "results",
     .date_keys = "publication_date",
     .id_keys = "id",
@@ -3560,6 +3568,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .name_ja = "CiNii Research 論文検索",
     .category = "investigation", .portal = "https://cir.nii.ac.jp",
     .record_type = "scholarly-record",
+    .lang = "ja",
     .tags = "\"japan\",\"cinii\",\"nii\",\"search\",\"articles\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://cir.nii.ac.jp/opensearch/articles?q={q}&format=json&count=100",
@@ -3581,6 +3590,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .name_ja = "CiNii Research 研究データ検索",
     .category = "investigation", .portal = "https://cir.nii.ac.jp",
     .record_type = "scholarly-record",
+    .lang = "ja",
     .tags = "\"japan\",\"cinii\",\"nii\",\"search\",\"data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://cir.nii.ac.jp/opensearch/data?q={q}&format=json&count=100",
@@ -3602,6 +3612,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .name_ja = "CiNii Research プロジェクト検索",
     .category = "investigation", .portal = "https://cir.nii.ac.jp",
     .record_type = "scholarly-record",
+    .lang = "ja",
     .tags = "\"japan\",\"cinii\",\"nii\",\"search\",\"projects\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://cir.nii.ac.jp/opensearch/projects?q={q}&format=json&count=100",
@@ -3623,6 +3634,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .name_ja = "CiNii Research 博士論文検索",
     .category = "investigation", .portal = "https://cir.nii.ac.jp",
     .record_type = "scholarly-record",
+    .lang = "ja",
     .tags = "\"japan\",\"cinii\",\"nii\",\"search\",\"dissertations\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://cir.nii.ac.jp/opensearch/dissertations?q={q}&format=json&count=100",

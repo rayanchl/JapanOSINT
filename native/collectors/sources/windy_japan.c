@@ -10,6 +10,7 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 #define POINT_FORECAST_URL "https://api.windy.com/api/point-forecast/v2"
 #define TIMEOUT_MS 15000
@@ -125,10 +126,10 @@ static cJSON *fetch_point(http_client *http, const char *key,
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("WINDY_API_KEY");
+  const char *key = jo_getenv("WINDY_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[windy-japan] gated (no WINDY_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "windy-japan", "windy-japan", (const char *const[]){"WINDY_API_KEY", NULL}, NULL, NULL);
   }
   cJSON *features = cJSON_CreateArray();
   for (int i = 0; i < GRID_N; i++) {

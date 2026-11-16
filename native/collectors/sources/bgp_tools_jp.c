@@ -79,7 +79,7 @@ static long *fetch_jp_asn_set(http_client *http, size_t *out_n) {
 /* parseCsvAsn: skip blank / "asn"-prefixed lines; split on first comma;
  * strip leading/trailing quote from name; numeric asn only. */
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *ua = getenv("BGPTOOLS_USER_AGENT");
+  const char *ua = jo_getenv("BGPTOOLS_USER_AGENT");
   if (!ua || !*ua || ci_contains(ua, "example.com") || ci_contains(ua, "@example") ||
       !strchr(ua, '@')) {
     fprintf(stderr, "[bgp-tools-jp] no valid BGPTOOLS_USER_AGENT — 0 rows\n");

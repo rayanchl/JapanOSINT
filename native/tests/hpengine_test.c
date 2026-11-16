@@ -176,6 +176,22 @@ const char *http_tls_cause_label(int cause) {
 const char *http_tls_cause_remedy(int cause) {
   return cause == HTTP_TLS_NONE ? "" : "STUB-REMEDY";
 }
+/* The slug is a fixed vocabulary the records are queried on, so the stub keeps
+ * the real one's values (test_http_tls_cause.c pins the real function). */
+const char *http_tls_cause_name(int cause) {
+  switch (cause) {
+    case HTTP_TLS_NO_LOCAL_ISSUER:   return "no_local_issuer";
+    case HTTP_TLS_EXPIRED:           return "expired";
+    case HTTP_TLS_NOT_YET_VALID:     return "not_yet_valid";
+    case HTTP_TLS_HOSTNAME_MISMATCH: return "hostname_mismatch";
+    case HTTP_TLS_SELF_SIGNED:       return "self_signed";
+    case HTTP_TLS_REVOKED:           return "revoked";
+    case HTTP_TLS_UNRECOGNIZED_NAME: return "unrecognized_name";
+    case HTTP_TLS_HANDSHAKE:         return "handshake";
+    case HTTP_TLS_NONE:              return "none";
+    default:                         return "other";
+  }
+}
 /* lib/jsonlist.c is linked for jsonlist_next_page(), the paging decision the
  * page_walk rows share with every VJSON collector (and lib/pagewalk.c because
  * jsonlist.c calls into it). The operator URL override and the feed key hash
@@ -1020,6 +1036,14 @@ static const hp_source T[] = {
     .array_path = "items", .title_keys = "name", .id_keys = "num",
     .detail_url = "https://x.test/hd/{v}", .detail_key = "num",
     .interval = 3600, .record_type = "t-deephdr", .free_tier = 1, .description = "d" },
+  /* require_keys (37g): a placeholder row with only the table date filled. */
+  { .id = "T_REQKEYS", .name = "require_keys", .url = "https://x.test/rq",
+    .array_path = ".", .require_keys = "code", .id_keys = "code", .title_keys = "name",
+    .interval = 3600, .record_type = "t-reqkeys", .free_tier = 1, .description = "d" },
+  /* A detail hop on a row that declares NO id_keys (37f). */
+  { .id = "T_DEEP_NOID", .name = "detail hop, no id_keys", .url = "https://x.test/hn",
+    .array_path = "items", .detail_url = "https://x.test/hnd/{v}", .detail_key = "num",
+    .interval = 3600, .record_type = "t-deepnoid", .free_tier = 1, .description = "d" },
   /* A CSV row whose detail hop is keyed on a column. */
   { .id = "T_CSV_DEEP", .name = "csv with a detail hop", .url = "https://x.test/cd.csv",
     .mode = HP_CSV, .title_keys = "name", .id_keys = "id",
@@ -3496,6 +3520,59 @@ int main(void) {
      strstr(g_cap[1].props, "detail body is not JSON") != NULL,
      "37c: JSON merges; an HTML detail body is stamped, not passed off as empty");
 
+  /* 37e. Two leading UTF-8 BOMs (a theme and a plugin each emitting one):
+   * cJSON skips one, so the body read as non-JSON every run. */
+  fx_reset();
+  fx_add("/hl", 200, "\xEF\xBB\xBF\xEF\xBB\xBF{\"items\":[{\"name\":\"P\",\"num\":\"9\"}]}");
+  fx_add("/hd/", 200, "{\"role\":\"registered\"}");
+  setenv("HP_TEST_DKEY", "s3cret", 1);
+  rc = run_source("T_DEEP_HDR", "");
+  unsetenv("HP_TEST_DKEY");
+  ok(rc == 0 && g_ncap == 1,
+     "37e: a body behind two BOMs parses and its record is emitted");
+
+  /* 37f. Identity comes from the LIST record, before the hop. The detail
+   * carries an `id` the list record lacks; hp_flat_get's last-segment match
+   * used to key the record on detail.id when the hop ran and on its title when
+   * the budget ran out — two uids for one record across runs. */
+  fx_reset();
+  fx_add("/hnd/", 200, "{\"id\":\"D1\",\"role\":\"registered\"}");
+  fx_add("/hn", 200, "{\"items\":[{\"name\":\"P\",\"num\":\"9\"}]}");
+  rc = run_source("T_DEEP_NOID", "");
+  ok(rc == 0 && g_ncap == 1 && strstr(g_cap[0].props, "\"detail.id\":\"D1\"") &&
+     !strstr(g_cap[0].key, "D1") && strstr(g_cap[0].key, "|P"),
+     "37f: a deepened record keeps the uid its list record gives it, not detail.id");
+
+  /* 37g. require_keys: TWSE serves one all-blank row (only its table date
+   * filled) while a quarter is unpublished — a placeholder, not a record. */
+  fx_reset();
+  fx_add("/rq", 200, "[{\"date\":\"1151112\",\"code\":\"\",\"name\":\"\"},"
+                     "{\"date\":\"1151112\",\"code\":\"2330\",\"name\":\"TSMC\"}]");
+  rc = run_source("T_REQKEYS", "");
+  ok(rc == 0 && g_ncap == 1 && strstr(g_cap[0].key, "2330"),
+     "37g: a row missing a require_keys field is a placeholder, not stored");
+  fx_reset();
+  fx_add("/rq", 200, "[{\"date\":\"1151112\",\"code\":\"\"}]");
+  rc = run_source("T_REQKEYS", "");
+  ok(rc == 0 && g_ncap == 0, "37g: a file holding only the placeholder stores nothing and is not an error");
+
+  /* 37d. Records that point at the SAME detail record share one hop: the
+   * second merges the first's fields from this run's cache and spends no
+   * request and no budget (DHS: thousands of data points per indicator). */
+  fx_reset();
+  fx_add("/cdd/r2", 200, "{\"owner\":\"Bo\"}");
+  fx_add("/cdd/r1", 200, "{\"owner\":\"Al\"}");
+  fx_add("/cd.csv", 200, "id,name\nr1,one\nr1,again\nr2,two\n");
+  rc = run_source("T_CSV_DEEP", "");
+  ok(rc == 0 && cap_count("t-csvdeep", NULL) == 3 && g_ncalls == 3,
+     "37d: two records naming one detail make ONE hop between them (1 list + 2 hops)");
+  ok(g_ncap == 3 && strstr(g_cap[0].props, "\"detail.owner\":\"Al\"") &&
+     strstr(g_cap[1].props, "\"detail.owner\":\"Al\"") &&
+     strstr(g_cap[1].props, "\"detail_url\"") &&
+     strstr(g_cap[2].props, "\"detail.owner\":\"Bo\"") &&
+     !strstr(g_cap[1].props, "_detail_pending"),
+     "37d: the cached record carries the same merged fields, nothing stamped pending");
+
   /* 38. The TIME budget: 3 records, 600 ms per request, a 1 s clock armed at
    * the first hop. Hops 1 and 2 start inside it, the third does not. */
   setenv("JO_HP_DETAIL_SEC", "1", 1);
@@ -4261,6 +4338,57 @@ int main(void) {
      "42c: a count-shaped field inside a record is not read as the "
      "collection's total");
 
+  /* 42d-42g. THE TOTALS AN ELEMENT SEARCH FOR `<name>` COULD NOT REACH
+   *      (audit 2026-11-07): a namespace-prefixed element (SRU's
+   *      `<srw:numberOfRecords>`), an attribute after the records (OAI-PMH's
+   *      `completeListSize`), and an attribute on the root (WFS 2.0's
+   *      `numberMatched`) — plus the WFS 1.1 attribute that must NOT be read,
+   *      because `numberOfFeatures` is the size of THIS response. */
+  fx_reset();
+  fx_add("/kkj?Count=2", 200,
+         "<srw:searchRetrieveResponse xmlns:srw=\"s\"><srw:numberOfRecords>812"
+         "</srw:numberOfRecords><srw:records>"
+         "<SearchResult><Key>k1</Key><ProjectName>one</ProjectName></SearchResult>"
+         "<SearchResult><Key>k2</Key><ProjectName>two</ProjectName></SearchResult>"
+         "</srw:records></srw:searchRetrieveResponse>");
+  rc = run_source("T_XML_TOTAL", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"records_available\":812") != NULL,
+       "42d: a namespace-prefixed SRU total is read"); }
+  fx_reset();
+  fx_add("/kkj?Count=2", 200,
+         "<OAI-PMH><ListRecords>"
+         "<SearchResult><Key>k1</Key><ProjectName>one</ProjectName></SearchResult>"
+         "<SearchResult><Key>k2</Key><ProjectName>two</ProjectName></SearchResult>"
+         "<resumptionToken completeListSize=\"62484\" cursor=\"0\">t</resumptionToken>"
+         "</ListRecords></OAI-PMH>");
+  rc = run_source("T_XML_TOTAL", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"records_available\":62484") != NULL,
+       "42e: OAI-PMH's completeListSize, after the records, is read"); }
+  fx_reset();
+  fx_add("/kkj?Count=2", 200,
+         "<wfs:FeatureCollection numberMatched=\"5000\" numberReturned=\"2\">"
+         "<SearchResult><Key>k1</Key><ProjectName>one</ProjectName></SearchResult>"
+         "<SearchResult><Key>k2</Key><ProjectName>two</ProjectName></SearchResult>"
+         "</wfs:FeatureCollection>");
+  rc = run_source("T_XML_TOTAL", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"records_available\":5000") != NULL,
+       "42f: a WFS 2.0 numberMatched attribute is read"); }
+  fx_reset();
+  fx_add("/kkj?Count=2", 200,
+         "<wfs:FeatureCollection numberOfFeatures=\"9999\">"
+         "<SearchResult><Key>k1</Key><ProjectName>one</ProjectName></SearchResult>"
+         "<SearchResult><Key>k2</Key><ProjectName>two</ProjectName></SearchResult>"
+         "</wfs:FeatureCollection>");
+  rc = run_source("T_XML_TOTAL", NULL);
+  ok(rc == 0 && cap_count("collector-truncation-notice", NULL) == 0,
+     "42g: WFS 1.1's numberOfFeatures (this response's size) is NOT a total");
+
   /* 43. A REPEAT AFTER A SHORT PAGE IS NOT EVIDENCE OF AN IGNORED PARAMETER.
    *     Two identical bodies fit two readings — the parameter was ignored, or
    *     the collection ended where the short page said it did — and nothing in
@@ -4358,6 +4486,148 @@ int main(void) {
   ok(rc == 0 && cap_count("collector-shape-notice", NULL) == 0,
      "57d: a page that emitted anything files no unlabelled-anchor notice");
 
+  /* ── 59. A BOT WALL SERVED AS HTTP 403 ──────────────────────────────────
+   *
+   * The wall vocabulary ran only where a 200 failed to parse, so a 403 whose
+   * body is a JS challenge was reported as "the upstream refused this client"
+   * with the remedy "check whether the row needs a credential (key_env) or a
+   * User-Agent it is not sending". Measured 2026-11-05 across the 738 rows the
+   * complete registry sweep read as HTTP 403: of their 555 hosts, the agent
+   * ladder recovered almost none, and 54 of 60 refusing hosts sampled were
+   * Cloudflare, 52 of them this challenge. So the old remedy named a knob that
+   * cannot move — the mistake this engine has now made four times (Archive-It,
+   * the Imperva wall, FDSN's nodata=404, and here).
+   *
+   * The fixture body is the real one's distinguishing content: the challenge
+   * script path and its options variable. */
+  fx_reset();
+  fx_add("/us?per_page=100", 403,
+         "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment..."
+         "</title></head><body><div id=\"challenge-error-title\"></div>"
+         "<script src=\"/cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/v1\">"
+         "</script><script>window._cf_chl_opt={cvId:\"3\"};</script>"
+         "</body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL &&
+       strstr(nt->props, "CHALLENGE wall") != NULL &&
+       strstr(nt->props, "do NOT bisect the User-Agent") != NULL &&
+       strstr(nt->props, "a User-Agent it is not sending") == NULL &&
+       strstr(nt->props, "\"http_status\":403") != NULL,
+       "59: a bot wall served as 403 is named as one, and the remedy no longer "
+       "sends the reader to bisect an agent that cannot work");
+    (void)rc; }
+
+  /* 59b. THE CONTROL, and the one that keeps the old behaviour honest: an
+   *      ordinary 403 with nothing wall-shaped in it must STILL get the
+   *      credential/agent remedy, because for those hosts it is the right one
+   *      — 491 rows were recovered that way on 2026-10-20. */
+  fx_reset();
+  fx_add("/us?per_page=100", 403, "{\"error\":\"forbidden: api key required\"}");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "a User-Agent it is not sending") != NULL &&
+       strstr(nt->props, "CHALLENGE wall") == NULL &&
+       strstr(nt->props, "BOT-WALL") == NULL,
+       "59b: a plain 403 keeps the credential/agent remedy — the wall test must "
+       "not swallow the case the agent ladder really fixes");
+    (void)rc; }
+
+  /* 59c. THE FALSE POSITIVE THAT NARROWED THE DETECTOR, and the control that
+   *      matters most here. Cloudflare injects its challenge SCRIPT into
+   *      ordinary error pages as well, so `cdn-cgi/challenge-platform` is not
+   *      a challenge marker: measured 2026-11-05 it is in 46 of 50 hosts that
+   *      refused every agent AND in 1 of the 6 an agent recovered.
+   *      www.salemcountynj.gov is that one — a plain 1,901-byte "403
+   *      Forbidden" carrying the tag, whose feed the agent minus the word
+   *      "collector" fetches 200 twice over. Keying on it would have told the
+   *      reader not to try the one thing that works, so this body must keep
+   *      the credential/agent remedy. */
+  fx_reset();
+  fx_add("/us?per_page=100", 403,
+         "<!DOCTYPE html><html style=\"height:100%\"><head><title> 403 Forbidden"
+         "</title></head><body><script src=\"/cdn-cgi/challenge-platform/h/b/"
+         "scripts/jsd/main.js\"></script></body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "CHALLENGE wall") == NULL &&
+       strstr(nt->props, "a User-Agent it is not sending") != NULL,
+       "59c: an ordinary Cloudflare 403 that merely carries the injected "
+       "challenge script is NOT called a challenge — the agent ladder fixes it");
+    (void)rc; }
+
+  /* 59d. The STALE-VOCABULARY half, a second defect in its own right: the
+   *      markers this engine already carried measured 0 of 50 on those hosts,
+   *      so the wall went unnamed even on the 200 path it did cover. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "<!DOCTYPE html><html><head><title>Just a moment...</title></head>"
+         "<body><script>window._cf_chl_opt={cvId:\"3\"};</script></body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL &&
+       strstr(nt->props, "the endpoint may have moved") == NULL,
+       "59d: the current-generation challenge marker is detected on a "
+       "non-parsing 200 too, not just the previous generation's");
+    (void)rc; }
+
+  /* 59e. THE SAME CHALLENGE AT 200 GETS THE SAME REMEDY AS AT 403. The
+   *      remedy used to depend on the STATUS: at 403 "do NOT bisect the
+   *      User-Agent", at 200 "bisect the User-Agent" — for one Cloudflare
+   *      body, which no agent reaches either way (audit 2026-11-07). */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "<!DOCTYPE html><html><head><title>Just a moment...</title></head>"
+         "<body><script>window._cf_chl_opt={cvId:\"3\"};</script></body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "do NOT bisect the User-Agent") != NULL &&
+       strstr(nt->props, "Bisect the User-Agent") == NULL,
+       "59e: a challenge served as 200 gets the no-agent remedy, as at 403");
+    (void)rc; }
+
+  /* 59f. A RATE-LIMIT BODY ON A 403 was detected and then thrown away: both
+   *      readers of the flag were gated on a 200, so "API rate limit exceeded"
+   *      got "check the credential or the User-Agent". */
+  fx_reset();
+  fx_add("/us?per_page=100", 403, "{\"message\":\"API rate limit exceeded\"}");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "rate limited") != NULL &&
+       strstr(nt->props, "a User-Agent it is not sending") == NULL,
+       "59f: a 403 whose body says rate limit is named as a rate limit");
+    (void)rc; }
+
+  /* 59g. A WALL IN A MODE THAT NEVER CONSULTED THE VOCABULARY. Only the JSON
+   *      driver asked whether a 200 body was a wall, so an XML row served a
+   *      bot wall emitted nothing, filed nothing and returned rc=0 — the
+   *      invisible nothing rule 1 is about. */
+  fx_reset();
+  fx_add("/x?q=", 200,
+         "<!DOCTYPE html><html><head><noscript><title>Pardon Our Interruption"
+         "</title></noscript></head><body>bot</body></html>");
+  rc = run_source("T_XML", "x");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL,
+       "59g: an XML row served a 200 bot wall files a fetch-failure naming it");
+    (void)rc; }
+
+  /* 59h. ITS CONTROL: an XML row whose 200 body is an honest empty document
+   *      still files nothing. */
+  fx_reset();
+  fx_add("/x?q=", 200, "<?xml version=\"1.0\"?><list></list>");
+  rc = run_source("T_XML", "x");
+  ok(cap_count("collector-fetch-failure", NULL) == 0,
+     "59h: an empty XML document is not promoted to a wall");
+  (void)rc;
+
   /* 44. A RATE-LIMIT PAGE SERVED AS HTTP 200 is a refusal wearing a success
    *     status, and no status check can see it. Archive-It does exactly that
    *     — `<title>Rate limit reached</title>` with a 200 — so the
@@ -4411,7 +4681,8 @@ int main(void) {
   { const cap *nt = NULL;
     ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
        strstr(nt->props, "BOT-WALL interstitial") != NULL &&
-       strstr(nt->props, "UA_OVERRIDE") != NULL &&
+       strstr(nt->props, "core/host_agents.def") != NULL &&
+       strstr(nt->props, "UA_OVERRIDE") == NULL &&   /* the table moved 2026-10-21 */
        strstr(nt->props, "the endpoint may have moved") == NULL &&
        strstr(nt->props, "RATE-LIMIT") == NULL,
        "45: a bot wall served as 200 is named as one, and the remedy is the "
@@ -4575,7 +4846,8 @@ int main(void) {
     ok(pw_odata_v2_count(a) == 46144 && pw_odata_v2_count(b) == -1 &&
        pw_odata_v2_count(c) == -1 && pw_odata_v2_count(d) == 7 &&
        pw_odata_v2_count(e) == -1 && pw_odata_v2_count(f) == -1 &&
-       jsonlist_declared_total(a) == 46144 && jsonlist_declared_total(b) == -1,
+       jo_declared_total(a, JO_TOTAL_TRUST_BARE_COUNT, NULL, 0) == 46144 &&
+       jo_declared_total(b, JO_TOTAL_TRUST_BARE_COUNT, NULL, 0) == -1,
        "58c: digits only; a number is kept, a sign, a letter or an empty string is not");
     cJSON_Delete(a); cJSON_Delete(b); cJSON_Delete(c);
     cJSON_Delete(d); cJSON_Delete(e); cJSON_Delete(f); }

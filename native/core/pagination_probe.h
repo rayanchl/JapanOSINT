@@ -48,10 +48,6 @@ char *pagination_probe_start(db_handle *shared, int limit, int *http_status);
 /* Snapshot of one job, or of all jobs when `job_id` is NULL. Always malloc'd. */
 char *pagination_probe_status(const char *job_id);
 
-/* Candidate count without running anything — what the survey WOULD ask for.
- * Used by the status route so an operator can see the scope before starting. */
-int pagination_probe_candidates(void);
-
 /* Ask a running survey to stop. Returns immediately; the thread observes the
  * flag between candidates and between the two page fetches. Called from the
  * shutdown path — a detached survey holding a DB handle must not outlive the

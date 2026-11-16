@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* One DART disclosure row (list.json "list" element) → one intel_item. */
 static int emit_disclosure(intel_sink *sink, const cJSON *r) {
@@ -57,14 +58,14 @@ static int emit_disclosure(intel_sink *sink, const cJSON *r) {
   if (corp_cls) cJSON_AddStringToObject(props, "corp_cls", corp_cls);
   if (stock)    cJSON_AddStringToObject(props, "stock_code", stock);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   intel_item it = {0};
   it.remote_key      = rcept ? rcept : rept;
   it.title           = rept ? rept : corp;
   it.summary         = corp;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "ko";
   it.published_at    = rcept_dt;
   it.link            = link[0] ? link : NULL;
@@ -109,14 +110,14 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   if (code)  cJSON_AddStringToObject(props, "corp_code", code);
   if (stock) cJSON_AddStringToObject(props, "stock_code", stock);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   intel_item it = {0};
   it.remote_key      = code ? code : corp;
   it.title           = corp ? corp : corp_e;
   it.summary         = ceo;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "ko";
   it.published_at    = est;
   it.link            = hp;
@@ -135,7 +136,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = jo_env("DART_API_KEY");
   if (!key) {
     fprintf(stderr, "[kr_dart] gated (no DART_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "kr_dart", "kr_dart", (const char *const[]){"DART_API_KEY", NULL}, NULL, NULL);
   }
 
   /* 8-digit numeric entity → treat as DART corp_code → company profile. */
@@ -149,10 +150,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              "https://opendart.fss.or.kr/api/company.json?crtfc_key=%s&corp_code=%s",
              key, q);
     char *body = jo_get(ctx, url, NULL, "kr_dart");
-    if (!body) return 0;
+    if (!body) return jo_fail_rc(jo_last_status(), 0);
     cJSON *root = cJSON_Parse(body);
     free(body);
-    if (!root) return 0;
+    if (!root) return -1;
     const char *st = jo_sv(root, "status");   /* "000" == ok */
     int emitted = 0;
     if (st && strcmp(st, "000") == 0) emitted += emit_company(sink, root);
@@ -169,10 +170,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
            "https://opendart.fss.or.kr/api/list.json?crtfc_key=%s&page_count=100",
            key);
   char *body = jo_get(ctx, url, NULL, "kr_dart");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   const char *st = jo_sv(root, "status");
   if (st && strcmp(st, "000") != 0) {

@@ -19,7 +19,7 @@
 /* ---- PR TIMES press-release RSS (LIVE, keyless) -------------------------- */
 static int run_prtimes(const source_ctx *ctx, intel_sink *sink) {
   char *body = jo_get(ctx, "https://prtimes.jp/index.rdf", NULL, "prtimes");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   int emitted = 0;
   char *p = body, *e;
   /* Was `emitted < 30`: the RDF is already fetched, so a cap here throws away

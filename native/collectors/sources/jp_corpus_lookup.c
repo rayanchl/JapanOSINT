@@ -165,7 +165,7 @@ static int emit_hit(intel_sink *sink, cJSON *hit, const cJSON *retrieval) {
   cJSON_AddBoolToObject(props, "success", 1);
   if (retrieval)
     cJSON_AddItemToObject(props, "retrieval", cJSON_Duplicate(retrieval, 1));
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[400];
   snprintf(rk, sizeof rk, "corpus:%s", uid ? uid : (title ? title : "?"));
@@ -178,7 +178,7 @@ static int emit_hit(intel_sink *sink, cJSON *hit, const cJSON *retrieval) {
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title ? title : (uid ? uid : "corpus hit");
-  it.body            = bj;
+  it.body = bj;
   it.summary         = summary ? summary : (title ? title : "corpus hit");
   it.link            = link;
   it.record_type     = "osint_service_result";
@@ -529,7 +529,12 @@ static int corpus_hybrid(const source_ctx *ctx, intel_sink *sink, sqlite3 *db,
                            "the question was routed to the 4096 nearest scheduled "
                            "sources the index can return, and the farthest of them "
                            "still passed the similarity floor, so more may be related",
-                           "raise JO_ROUTE_MIN_COS to narrow the routing");
+                           /* a remedy must name the knob that moves: a stored
+                            * override outranks $JO_ROUTE_MIN_COS in
+                            * core/thresholds.c (2026-11-07) */
+                           "raise route_min_cos to narrow the routing: Admin › "
+                           "Thresholds, or PUT /api/admin/thresholds/route_min_cos "
+                           "(a stored override outranks $JO_ROUTE_MIN_COS)");
   }
 
   fprintf(stderr, "[corpus] hybrid %s: %d emitted (fts arm %d, vector arm %d, "

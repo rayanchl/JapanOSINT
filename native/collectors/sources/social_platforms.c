@@ -77,7 +77,7 @@ static int reddit_run(const source_ctx *ctx, intel_sink *sink) {
 static int twitter_run(const source_ctx *ctx, intel_sink *sink) {
   const char *u = handle(ctx->entity);
   if (!u || !*u) return 0;
-  const char *tok = getenv("TWITTER_BEARER_TOKEN");
+  const char *tok = jo_getenv("TWITTER_BEARER_TOKEN");
   if (!tok || !*tok) return 0;
   char url[320];
   snprintf(url, sizeof url,
@@ -102,7 +102,7 @@ static int twitter_run(const source_ctx *ctx, intel_sink *sink) {
 static int facebook_run(const source_ctx *ctx, intel_sink *sink) {
   const char *u = handle(ctx->entity);
   if (!u || !*u) return 0;
-  const char *tok = getenv("FACEBOOK_ACCESS_TOKEN");
+  const char *tok = jo_getenv("FACEBOOK_ACCESS_TOKEN");
   if (!tok || !*tok) return 0;
   char url[400];
   snprintf(url, sizeof url, "https://graph.facebook.com/v19.0/%s?fields=name,about,link&access_token=%s", u, tok);

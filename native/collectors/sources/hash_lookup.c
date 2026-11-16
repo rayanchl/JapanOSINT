@@ -48,7 +48,7 @@ static const char *hash_type_name(hash_type_t t) {
 
 /* query_virustotal: key-gated; without VIRUSTOTAL_API_KEY → NULL (note). */
 static cJSON *query_virustotal(http_client *http, const char *hash) {
-  const char *api_key = getenv("VIRUSTOTAL_API_KEY");
+  const char *api_key = jo_getenv("VIRUSTOTAL_API_KEY");
   if (!api_key || !*api_key) return NULL;
 
   cJSON *result = cJSON_CreateObject();

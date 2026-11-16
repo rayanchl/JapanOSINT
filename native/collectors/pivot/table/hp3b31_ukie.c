@@ -146,12 +146,26 @@ static const hp_source HP3B31_UKIE[] = {
     .name_ja = "英国議会 利益登録簿", .category = "government",
     .portal = "https://interests-api.parliament.uk", .record_type = "uk-member-interest",
     .tags = "\"uk\",\"parliament\",\"conflict-of-interest\"", .free_tier = 1,
-    .url = "https://interests-api.parliament.uk/api/v1/Interests/?Take=100",
+    /* 2026-11-08, measured: the API serves AT MOST 20 records a page
+     * (Take=100 answers 20 of totalResults 4,169), so `page_size = 100` read
+     * page 1 as a short page and ended the walk — 20 records a run — and had
+     * it continued, Skip would have stepped 100 over pages of 20 and dropped
+     * four records in five. The records are bare objects ({"id":…,
+     * "summary":…, "member":{…}}), so the `value.`-prefixed keys this row
+     * declared matched nothing and every uid was a content hash. SortOrder
+     * accepts only PublishingDateDescending and CategoryAscending (the
+     * schema's own enum; `Frobnicate` is a 400), and a category order has
+     * ties, so there is no stable ascending walk: the row reads the whole
+     * register in ONE daily run instead (≈209 pages, headroom to 260), where
+     * a walk that completes cannot drift across runs. The two VJSON rows on
+     * this endpoint (gov-ukparl-interests, cyb-ukparl-interests) read its
+     * newest 400. */
+    .url = "https://interests-api.parliament.uk/api/v1/Interests/?Take=20&Skip=0",
     .array_path = "items", .filter_query = 1,
-    .title_keys = "value.summary,value.member.nameDisplayAs",
-    .id_keys = "value.id", .date_keys = "value.registrationDate",
-    .page_param = "Skip", .page_size = 100, .page_start = 0, .page_max = 40,
-    .interval = 21600,
+    .title_keys = "summary,member.nameDisplayAs",
+    .id_keys = "id", .date_keys = "registrationDate",
+    .page_param = "Skip", .page_size = 20, .page_start = 0, .page_max = 260,
+    .interval = 86400,
     .description = "The machine-readable register of members' financial "
       "interests — outside employment, shareholdings, gifts, overseas visits "
       "and who paid for them. The formal record of who is paying a legislator" },

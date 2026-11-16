@@ -20,6 +20,7 @@
  * rather than papered over. (transitapi.h's DEVIATIONS list is owned
  * elsewhere; this note belongs there too.) */
 #include "transitapi.h"
+#include "jo_codec.h"
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
 #include <stdio.h>
@@ -55,54 +56,8 @@ static char *err_not_implemented(const char *detail) {
   return dup_json(o);
 }
 
-/* hex 2-char → byte, or -1 */
-static int hexv(int c) {
-  if (c >= '0' && c <= '9') return c - '0';
-  if (c >= 'a' && c <= 'f') return c - 'a' + 10;
-  if (c >= 'A' && c <= 'F') return c - 'A' + 10;
-  return -1;
-}
 
-/* In-place-ish percent + '+' decode of a query-string token into `out`
- * (NUL-terminated, truncated to cap). */
-static void url_decode(const char *s, size_t n, char *out, size_t cap) {
-  size_t o = 0;
-  for (size_t i = 0; i < n && o + 1 < cap; i++) {
-    int c = (unsigned char)s[i];
-    if (c == '+') { out[o++] = ' '; continue; }
-    if (c == '%' && i + 2 < n) {
-      int h = hexv((unsigned char)s[i + 1]);
-      int l = hexv((unsigned char)s[i + 2]);
-      if (h >= 0 && l >= 0) { out[o++] = (char)((h << 4) | l); i += 2; continue; }
-    }
-    out[o++] = (char)c;
-  }
-  out[o] = 0;
-}
 
-/* Extract query param `key` from raw query string into `out`. Returns 1 if
- * present (even if empty value), else 0 and out[0]=0. */
-static int qget(const char *query, const char *key, char *out, size_t cap) {
-  out[0] = 0;
-  if (!query || !*query) return 0;
-  size_t klen = strlen(key);
-  const char *p = query;
-  while (*p) {
-    const char *amp = strchr(p, '&');
-    const char *seg_end = amp ? amp : p + strlen(p);
-    const char *eq = memchr(p, '=', (size_t)(seg_end - p));
-    const char *kstart = p;
-    size_t kn = eq ? (size_t)(eq - p) : (size_t)(seg_end - p);
-    if (kn == klen && memcmp(kstart, key, klen) == 0) {
-      const char *vstart = eq ? eq + 1 : seg_end;
-      url_decode(vstart, (size_t)(seg_end - vstart), out, cap);
-      return 1;
-    }
-    if (!amp) break;
-    p = amp + 1;
-  }
-  return 0;
-}
 
 /* Math.min(hi, Math.max(lo, Number(raw)||def)) — JS verbatim. Note the
  * `|| def` is JS falsy: Number("")===0, 0||def===def; NaN||def===def. */
@@ -111,7 +66,7 @@ static double js_number(const char *s);
 static int qint(const char *query, const char *key, int def, int lo, int hi) {
   char buf[32];
   double v = def;
-  if (qget(query, key, buf, sizeof buf) && buf[0]) {
+  if (jo_qs_get(query, key, buf, sizeof buf, JO_QS_DECODE | JO_QS_BARE_KEY) && buf[0]) {
     double n = js_number(buf);
     v = (n != n || n == 0.0) ? (double)def : n;    /* Number(x) || def */
   }
@@ -138,7 +93,7 @@ static double js_number(const char *s) {
 
 static int parse_bbox(const char *query, bbox_t *b) {
   char raw[256];
-  if (!qget(query, "bbox", raw, sizeof raw) || !raw[0]) return 0;  /* !raw → null */
+  if (!jo_qs_get(query, "bbox", raw, sizeof raw, JO_QS_DECODE | JO_QS_BARE_KEY) || !raw[0]) return 0;  /* !raw → null */
   /* String(raw).split(',').map(Number); length must be exactly 4 and all
    * Number.isFinite. Split strictly on ',' (== JS, empty token → Number("")
    * → 0). */
@@ -233,7 +188,7 @@ static const char *mode_to_source_id(const char *mode) {
 
 static char *route_routes(db_handle *db, const char *query) {
   char mode[32];
-  qget(query, "mode", mode, sizeof mode);
+  jo_qs_get(query, "mode", mode, sizeof mode, JO_QS_DECODE | JO_QS_BARE_KEY);
   for (char *p = mode; *p; p++) *p = (char)tolower((unsigned char)*p);
   if (strcmp(mode, "train") && strcmp(mode, "subway") && strcmp(mode, "bus"))
     return err_json("mode must be train|subway|bus");
@@ -388,7 +343,7 @@ static char *route_stop_departures(db_handle *db, const char *stopId,
                                     const char *query) {
   if (!stopId || !*stopId) return err_json("missing stopId");
   char tbuf[64];
-  int has_t = qget(query, "t", tbuf, sizeof tbuf);
+  int has_t = jo_qs_get(query, "t", tbuf, sizeof tbuf, JO_QS_DECODE | JO_QS_BARE_KEY);
   /* We accept only the default-now path precisely (JS new Date()); an
    * explicit ?t= is parsed for validity but service-day math uses local
    * now exactly as JS would for "now". A malformed explicit t → 400. */
@@ -634,7 +589,7 @@ static int parse_iso_utc(const char *s, time_t *out) {
 
 static char *route_active_trips(db_handle *db, const char *query) {
   char tbuf[64];
-  int has_t = qget(query, "t", tbuf, sizeof tbuf);
+  int has_t = jo_qs_get(query, "t", tbuf, sizeof tbuf, JO_QS_DECODE | JO_QS_BARE_KEY);
   time_t at_utc = 0;
   int have_at = 0;
   if (has_t && tbuf[0]) {
@@ -874,7 +829,19 @@ static char *route_active_trips(db_handle *db, const char *query) {
 /* ===================================================================== */
 
 /* departures (dir=1) or arrivals (dir=0) for a stop_id at >= nowSec.
- * Appends rows to `arr` with the JS spread {...d, wall_sec, [member_mode]}. */
+ * Appends rows to `arr` with the JS spread {...d, wall_sec, [member_mode]}.
+ *
+ * The delay falls back to the other half of the stop update (2026-11-12): a
+ * GTFS-RT StopTimeUpdate that gives only an arrival means the departure is
+ * that late too, and the measured Japanese feeds split both ways — buscatch
+ * publishes arrival only (1,093 of 14,616 updates), Nagai departure only —
+ * so reading one column left those operators' boards without delays they
+ * publish. A delay counts only if it was RECEIVED in the last 30 minutes: it
+ * is minute-scale data, gtfs_rt_jp.c replaces an operator's rows only when it
+ * runs, and under the default 6 h system cadence an unrefreshed row would show
+ * a six-hour-old delay as live. A board with no fresh update shows the
+ * timetable, which is what it showed before any realtime row existed. `routeIdSet` collects "org_id<US>route_id" pairs, because a route
+ * id like "3" exists at many operators and an alert must stay with its own. */
 static void query_stop_times(db_handle *db, const char *stopId, int nowSec,
                              int departures, cJSON *arr,
                              const char *member_mode /* NULL = single */,
@@ -883,22 +850,24 @@ static void query_stop_times(db_handle *db, const char *stopId, int nowSec,
     "SELECT st.trip_id, st.stop_sequence, st.departure_sec, "
     " tr.headsign, tr.route_id, r.short_name AS route_short, "
     " r.long_name AS route_long, r.color AS route_color, "
-    " rt.departure_delay_s AS delay_s "
+    " COALESCE(rt.departure_delay_s, rt.arrival_delay_s) AS delay_s, st.org_id "
     "FROM gtfs_stop_times st "
     "JOIN gtfs_trips tr ON tr.org_id=st.org_id AND tr.feed_id=st.feed_id AND tr.trip_id=st.trip_id "
     "LEFT JOIN gtfs_routes r ON r.org_id=tr.org_id AND r.feed_id=tr.feed_id AND r.route_id=tr.route_id "
     "LEFT JOIN gtfs_rt_trip_updates rt ON rt.org_id=st.org_id AND rt.trip_id=st.trip_id AND rt.stop_sequence=st.stop_sequence "
+    " AND rt.received_at >= strftime('%Y-%m-%dT%H:%M:%SZ','now','-30 minutes') "
     "WHERE st.stop_id=?1 AND st.departure_sec>=?2 "
     "ORDER BY st.departure_sec ASC LIMIT 10"
    :
     "SELECT st.trip_id, st.stop_sequence, st.arrival_sec, "
     " tr.headsign, tr.route_id, r.short_name AS route_short, "
     " r.long_name AS route_long, r.color AS route_color, "
-    " rt.arrival_delay_s AS delay_s "
+    " COALESCE(rt.arrival_delay_s, rt.departure_delay_s) AS delay_s, st.org_id "
     "FROM gtfs_stop_times st "
     "JOIN gtfs_trips tr ON tr.org_id=st.org_id AND tr.feed_id=st.feed_id AND tr.trip_id=st.trip_id "
     "LEFT JOIN gtfs_routes r ON r.org_id=tr.org_id AND r.feed_id=tr.feed_id AND r.route_id=tr.route_id "
     "LEFT JOIN gtfs_rt_trip_updates rt ON rt.org_id=st.org_id AND rt.trip_id=st.trip_id AND rt.stop_sequence=st.stop_sequence "
+    " AND rt.received_at >= strftime('%Y-%m-%dT%H:%M:%SZ','now','-30 minutes') "
     "WHERE st.stop_id=?1 AND st.arrival_sec>=?2 "
     "ORDER BY st.arrival_sec ASC LIMIT 10";
 
@@ -925,7 +894,10 @@ static void query_stop_times(db_handle *db, const char *stopId, int nowSec,
                               (double)sqlite3_column_int64(s, 2));
     if (member_mode) cJSON_AddStringToObject(d, "member_mode", member_mode);
     if (routeIdSet && sqlite3_column_type(s, 4) != SQLITE_NULL) {
-      const char *rid = col_text(s, 4);
+      char ridbuf[512];
+      const char *r0 = col_text(s, 4), *org = col_text(s, 9);
+      snprintf(ridbuf, sizeof ridbuf, "%s\x1f%s", org ? org : "", r0 ? r0 : "");
+      const char *rid = r0 ? ridbuf : NULL;
       int seen = 0, m = cJSON_GetArraySize(routeIdSet);
       for (int i = 0; i < m; i++) {
         cJSON *e = cJSON_GetArrayItem(routeIdSet, i);
@@ -986,14 +958,22 @@ static int is_cluster_uid(const char *u) {
   return n == 40;
 }
 
-/* alerts: for each route id, gtfs_rt_alerts WHERE route_ids LIKE %"rid"%,
- * up to 10 total. `dedupe` => skip dup header|description (cluster path). */
+/* alerts: for each (operator, route id), gtfs_rt_alerts of THAT operator
+ * whose route_ids JSON contains "rid", up to 10 total. `dedupe` => skip dup
+ * header|description (cluster path).
+ *
+ * Scoped to the operator since 2026-11-12, when gtfs_rt_jp.c began writing
+ * this table: route ids are an operator's own namespace, so matching on the id
+ * alone showed one bus company's alert on another's board wherever both had a
+ * route "3". The id is LIKE-escaped, because "_" (common in route ids) is a
+ * LIKE wildcard. */
 static void collect_alerts(db_handle *db, cJSON *routeIds, int dedupe,
                            cJSON *alerts) {
   sqlite3_stmt *s = NULL;
   if (sqlite3_prepare_v2(db->h,
         "SELECT header_text, description_text, effect FROM gtfs_rt_alerts "
-        "WHERE route_ids LIKE ?1 LIMIT 10", -1, &s, NULL) != SQLITE_OK)
+        "WHERE org_id=?2 AND route_ids LIKE ?1 ESCAPE '\\' LIMIT 10", -1, &s, NULL)
+        != SQLITE_OK)
     return;
   cJSON *seen = dedupe ? cJSON_CreateArray() : NULL;
   int m = cJSON_GetArraySize(routeIds);
@@ -1001,10 +981,20 @@ static void collect_alerts(db_handle *db, cJSON *routeIds, int dedupe,
     if (cJSON_GetArraySize(alerts) >= 10) break;
     cJSON *re = cJSON_GetArrayItem(routeIds, i);
     if (!re || !cJSON_IsString(re)) continue;
-    char needle[256];
-    snprintf(needle, sizeof needle, "%%\"%s\"%%", re->valuestring);
+    const char *sep = strchr(re->valuestring, '\x1f');
+    if (!sep) continue;
+    char org[256], esc[512], needle[600];
+    snprintf(org, sizeof org, "%.*s", (int)(sep - re->valuestring), re->valuestring);
+    size_t k = 0;
+    for (const char *c = sep + 1; *c && k + 2 < sizeof esc; c++) {
+      if (*c == '%' || *c == '_' || *c == '\\') esc[k++] = '\\';
+      esc[k++] = *c;
+    }
+    esc[k] = 0;
+    snprintf(needle, sizeof needle, "%%\"%s\"%%", esc);
     sqlite3_reset(s);
     sqlite3_bind_text(s, 1, needle, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 2, org, -1, SQLITE_TRANSIENT);
     while (sqlite3_step(s) == SQLITE_ROW) {
       const char *h = col_text(s, 0);
       const char *d = col_text(s, 1);
@@ -1400,9 +1390,10 @@ static char *vehicle_info(db_handle *db, const char *tripIdRaw) {
   sqlite3_stmt *ns = NULL;
   if (sqlite3_prepare_v2(db->h,
         "SELECT st.stop_sequence, st.stop_id, st.arrival_sec, st.departure_sec, "
-        "rt.arrival_delay_s AS delay_s "
+        "COALESCE(rt.arrival_delay_s, rt.departure_delay_s) AS delay_s "
         "FROM gtfs_stop_times st LEFT JOIN gtfs_rt_trip_updates rt "
         "ON rt.org_id=st.org_id AND rt.trip_id=st.trip_id AND rt.stop_sequence=st.stop_sequence "
+        " AND rt.received_at >= strftime('%Y-%m-%dT%H:%M:%SZ','now','-30 minutes') "
         "WHERE st.org_id=?1 AND st.feed_id=?2 AND st.trip_id=?3 "
         "AND st.arrival_sec>=?4 ORDER BY st.arrival_sec ASC LIMIT 1",
         -1, &ns, NULL) == SQLITE_OK) {
@@ -1497,7 +1488,7 @@ char *transitapi(db_handle *db, const char *path, const char *query) {
     char enc[512];
     if (n >= sizeof enc) n = sizeof enc - 1;
     memcpy(enc, rest, n); enc[n] = 0;
-    url_decode(enc, n, stopId, sizeof stopId);
+    jo_url_decode(enc, n, stopId, sizeof stopId);
     return route_stop_departures(db, stopId, query);
   }
 
@@ -1510,7 +1501,7 @@ char *transitapi(db_handle *db, const char *path, const char *query) {
     size_t n = (size_t)(tail - rest);
     if (n >= sizeof enc) n = sizeof enc - 1;
     memcpy(enc, rest, n); enc[n] = 0;
-    url_decode(enc, n, uid, sizeof uid);
+    jo_url_decode(enc, n, uid, sizeof uid);
     return station_summary(db, uid);
   }
 
@@ -1523,7 +1514,7 @@ char *transitapi(db_handle *db, const char *path, const char *query) {
     size_t n = (size_t)(tail - rest);
     if (n >= sizeof enc) n = sizeof enc - 1;
     memcpy(enc, rest, n); enc[n] = 0;
-    url_decode(enc, n, tid, sizeof tid);
+    jo_url_decode(enc, n, tid, sizeof tid);
     return vehicle_info(db, tid);
   }
 

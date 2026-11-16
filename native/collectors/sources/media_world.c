@@ -32,9 +32,9 @@ static int mw_wikinews(const source_ctx *ctx, intel_sink *sink, const char *q) {
     "&format=json&search=%s", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (osint@example.org)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "WIKINEWS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
   if (!cJSON_IsArray(root)) { cJSON_Delete(root); return 0; }
@@ -96,7 +96,7 @@ static int mw_gdelt_tv(const source_ctx *ctx, intel_sink *sink, const char *q) {
     "&format=json&maxrecords=25", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (osint@example.org)", NULL };
+                         NULL };
   /* GDELT scans the whole Internet Archive TV corpus for a clipgallery and
    * reliably takes 14-18s; jo_get()'s shared 20s budget was losing the race
    * (status=0, transport timeout) so the service always looked empty. Do the
@@ -186,15 +186,35 @@ static int mw_commoncrawl(const source_ctx *ctx, intel_sink *sink, const char *q
   snprintf(pat, sizeof pat, "%s/*", hb);
   char *enc = jo_urlencode(pat);
   if (!enc) return 0;
+  /* THE NEWEST CRAWL, read from the publisher's own index list (2026-11-07).
+   * The index was pinned at CC-MAIN-2024-51, so every pivot answered from a
+   * December-2024 crawl for ever; collinfo.json lists the crawls newest first
+   * (measured that day: CC-MAIN-2026-43, 2026-10-05..18) and names each one's
+   * cdx-api URL, so the row follows the publisher instead of a frozen id. */
+  const char *hdrs[] = { "Accept: application/json", NULL };
+  char api[256] = "";
+  {
+    /* A LOOKUP, not a source: nothing from this document is stored here (the
+     * catalogue itself is commoncrawl-index-catalog in soc_webarchive.c), so
+     * the dup-endpoint lint's premise — the same records stored twice — does
+     * not apply; it is recorded in tools/lint_baseline.json for that reason. */
+    char *ci = jo_get(ctx, "https://index.commoncrawl.org/collinfo.json", hdrs,
+                      "COMMONCRAWL_CDX");
+    if (!ci) { free(enc); return jo_fail_rc(jo_last_status(), 0); }
+    cJSON *cj = cJSON_Parse(ci);
+    free(ci);
+    const char *cdx = jo_sv(cJSON_GetArrayItem(cj, 0), "cdx-api");  /* exhaustive-ok: collinfo.json is newest-first; element 0 IS the newest crawl */
+    if (cdx) snprintf(api, sizeof api, "%s", cdx);
+    cJSON_Delete(cj);
+    if (!api[0]) { free(enc); return -1; }      /* the list's shape changed */
+  }
   char url[1024];
-  snprintf(url, sizeof url,
-    "https://index.commoncrawl.org/CC-MAIN-2024-51-index?url=%s&output=json&limit=50",
-    enc);
+  snprintf(url, sizeof url, "%s?url=%s&output=json&limit=50", api, enc);
   free(enc);
-  const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (osint@example.org)", NULL };
   char *body = jo_get(ctx, url, hdrs, "COMMONCRAWL_CDX");
-  if (!body) return 0;
+  /* 404 is the index's own "No Captures found for: <pattern>" (measured
+   * 2026-11-07 for an invented domain); a 503 is the index refusing. */
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
 
   int emitted = 0;
   char *line = body;
@@ -258,12 +278,12 @@ static int mw_google_books(const source_ctx *ctx, intel_sink *sink, const char *
     "https://www.googleapis.com/books/v1/volumes?q=%s&maxResults=20&country=US", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (osint@example.org)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "GOOGLE_BOOKS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *items = cJSON_GetObjectItem(root, "items");
   int emitted = 0;
   if (cJSON_IsArray(items)) {
@@ -311,14 +331,14 @@ static int mw_google_books(const source_ctx *ctx, intel_sink *sink, const char *
       if (authors[0]) cJSON_AddStringToObject(props, "authors", authors);
       if (pub) cJSON_AddStringToObject(props, "published", pub);
       cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props);
+      jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
       cJSON_Delete(props);
 
       intel_item it = {0};
       it.remote_key      = id ? id : title;
       it.title           = title;
       it.summary         = authors[0] ? authors : desc;
-      it.body            = bj;
+      it.body = bj;
       it.author          = authors[0] ? authors : NULL;
       it.link            = link;
       it.published_at    = pub;
@@ -336,15 +356,16 @@ static int mw_google_books(const source_ctx *ctx, intel_sink *sink, const char *
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
+  int rc = 0;   /* a helper's -1 = refused/unparsable fetch (2026-11-07) */
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
   if (!q) return -1;
 
-  if (strcmp(ctx->source_id, "WIKINEWS") == 0)        mw_wikinews(ctx, sink, q);
-  else if (strcmp(ctx->source_id, "GDELT_TV") == 0)   mw_gdelt_tv(ctx, sink, q);
-  else if (strcmp(ctx->source_id, "COMMONCRAWL_CDX") == 0) mw_commoncrawl(ctx, sink, q);
-  else if (strcmp(ctx->source_id, "GOOGLE_BOOKS") == 0) mw_google_books(ctx, sink, q);
+  if (strcmp(ctx->source_id, "WIKINEWS") == 0)        rc = mw_wikinews(ctx, sink, q);
+  else if (strcmp(ctx->source_id, "GDELT_TV") == 0)   rc = mw_gdelt_tv(ctx, sink, q);
+  else if (strcmp(ctx->source_id, "COMMONCRAWL_CDX") == 0) rc = mw_commoncrawl(ctx, sink, q);
+  else if (strcmp(ctx->source_id, "GOOGLE_BOOKS") == 0) rc = mw_google_books(ctx, sink, q);
   else return -1;
-  return 0;   /* honest empty is not an error */
+  return rc < 0 ? -1 : 0;   /* honest empty 0, refused fetch -1 */
 }
 
 #define MW_DEF(SYM, ID, NAME, NAMEJA, URL, DESC) \

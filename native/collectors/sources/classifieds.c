@@ -54,25 +54,40 @@ static const jp_area AREAS[] = {
 };
 #define NAREA ((int)(sizeof(AREAS) / sizeof(AREAS[0])))
 
-/* JS findArea(text): first area whose .area substring matches, else first
- * whose .pref substring matches, else null. */
-static const jp_area *find_area(const char *text) {
+/* The area whose NAME occurs in `text` (a municipality like "世田谷区" or
+ * "横浜市中区"), else NULL. Only a named area earns a pin: its centroid is a
+ * real place the listing says it is in.
+ *
+ * 2026-11-12: the JS port also matched a PREFECTURE and then pinned the ad at
+ * whichever ward came first/last for that prefecture, writing that ward's
+ * name into `area` — a 西東京市 listing stored as 目黒区. And it could only
+ * match a prefecture spelt in full, which jmty no longer writes: the label
+ * is "東京", "大阪", "愛知" (measured on page 1 of all 12 slugs). So every
+ * listing outside 北海道 (spelt in full) was DROPPED: 285 emitted per run =
+ * 57 Hokkaido items x 5 pages, of ~700 titled items fetched per page set.
+ * Measured on page 1 of the 12 slugs: 699 titled listings, 57 kept before,
+ * all 699 emitted now (591 resolve a prefecture). */
+static const jp_area *area_by_name(const char *text) {
   if (!text || !text[0]) return NULL;
   for (int i = 0; i < NAREA; i++)
     if (strstr(text, AREAS[i].area)) return &AREAS[i];
-  for (int i = 0; i < NAREA; i++)
-    if (strstr(text, AREAS[i].pref)) return &AREAS[i];
   return NULL;
 }
 
-/* JS AREA_BY_PREF = Object.fromEntries(map([pref,area])): on duplicate pref
- * the LAST array entry wins. */
-static const jp_area *area_by_pref(const char *text) {
+/* jmty's prefecture label ("東京", "北海道") as the full prefecture name, or
+ * NULL when this table does not hold that prefecture (埼玉, 茨城, 滋賀 … —
+ * the raw label is kept on the record either way). The short form is the
+ * full name less its last character (都/府/県, three bytes in UTF-8). */
+static const char *pref_full(const char *text) {
   if (!text || !text[0]) return NULL;
-  const jp_area *hit = NULL;
-  for (int i = 0; i < NAREA; i++)
-    if (strcmp(AREAS[i].pref, text) == 0) hit = &AREAS[i];
-  return hit;
+  size_t tl = strlen(text);
+  for (int i = 0; i < NAREA; i++) {
+    const char *pf = AREAS[i].pref;
+    size_t pl = strlen(pf);
+    if (strcmp(pf, text) == 0) return pf;
+    if (pl > 3 && tl == pl - 3 && strncmp(pf, text, tl) == 0) return pf;
+  }
+  return NULL;
 }
 
 /* Mirror block.match(/<needle>[^>]*>([^<]+)</): find needle, then the next
@@ -204,18 +219,28 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         char *href   = cap_href(block);
 
         if (title && title[0]) {
-          const char *areatxt = areatx ? areatx : "";
-          const jp_area *area = find_area(areatxt);
-          if (!area) area = find_area(slug);
-          if (!area) area = area_by_pref(areatxt);
-          if (area) {
+          /* Every titled listing is emitted (see area_by_name above); a pin
+           * only where the listing names a municipality in AREAS. */
+          const jp_area *area = area_by_name(city);
+          if (!area) area = area_by_name(areatx);
+          const char *pref = area ? area->pref : pref_full(areatx);
+          {
             /* The JS original scattered each ad by a random ±0.015°/±0.02°
              * around the area centroid. That is an INVENTED coordinate: it
              * renders a made-up street-level position for a listing whose
              * only published location is a prefecture/municipality name, and
              * it moves on every run. Pin the honest area centroid instead and
-             * declare the precision in properties. */
-            cJSON *f = gj_point_feature(area->lon, area->lat);
+             * declare the precision in properties. A listing with no named
+             * area gets `"geometry": null` (lib/geojson.c treats it as no
+             * location), never a prefecture's arbitrary ward. */
+            cJSON *f;
+            if (area) {
+              f = gj_point_feature(area->lon, area->lat);
+            } else {
+              f = cJSON_CreateObject();
+              cJSON_AddStringToObject(f, "type", "Feature");
+              cJSON_AddItemToObject(f, "geometry", cJSON_CreateNull());
+            }
 
             cJSON *p = cJSON_CreateObject();   /* EXACT JS key order */
             /* Identity from the listing's own article slug where available —
@@ -247,11 +272,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
               cJSON_AddStringToObject(p, "price_display", price);
             else
               cJSON_AddItemToObject(p, "price_display", cJSON_CreateNull());
-            cJSON_AddStringToObject(p, "area", area->area);
-            cJSON_AddStringToObject(p, "prefecture", area->pref);
+            if (area) cJSON_AddStringToObject(p, "area", area->area);
+            else      cJSON_AddItemToObject(p, "area", cJSON_CreateNull());
+            if (pref) cJSON_AddStringToObject(p, "prefecture", pref);
+            else      cJSON_AddItemToObject(p, "prefecture", cJSON_CreateNull());
+            if (areatx && areatx[0])
+              cJSON_AddStringToObject(p, "prefecture_label", areatx);
             if (city && city[0]) cJSON_AddStringToObject(p, "municipality", city);
             /* be explicit that the pin is an area centroid, not the listing */
-            cJSON_AddStringToObject(p, "geo_precision", "area-centroid");
+            cJSON_AddStringToObject(p, "geo_precision",
+              area ? "area-centroid"
+                   : "none: the listing names no municipality this table can "
+                     "place; no coordinate is invented");
             char *rurl = (href && href[0]) ? resolve_url(href) : NULL;
             if (rurl)
               cJSON_AddStringToObject(p, "url", rurl);

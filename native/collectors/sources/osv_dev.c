@@ -47,7 +47,7 @@ static void parse_pkg(const char *spec, char *eco, size_t en,
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   /* Build package list: OSV_PACKAGES (split on ';', trim, drop empty) or seed. */
-  const char *env = getenv("OSV_PACKAGES");
+  const char *env = jo_getenv("OSV_PACKAGES");
   char **pkgs = NULL;
   int npkg = 0;
   char *envcopy = NULL;

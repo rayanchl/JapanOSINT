@@ -4,7 +4,7 @@
  * yields 0 rows JS falls back to SEED; we emit 0 (correctness-neutral).
  *
  * For slug in [13 slugs], page 1..5:
- *   GET https://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=030&bs=040&ta=<slug>&page=<p>
+ *   GET https://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=<region>&bs=040&ta=<JIS pref code>&page=<p>
  *   items = html.split(/cassetteitem"/).slice(1); break page if 0; per block:
  *     title = /cassetteitem_content-title[^>]*>([^<]+)</
  *     addr  = /cassetteitem_detail-col1[^>]*>([^<]+)</
@@ -96,9 +96,21 @@ static char *match_cls(const char *block, const char *cls) {
   return strndup(s, (size_t)(te - s));
 }
 
-static const char *SLUGS[] = {
-  "tokyo","kanagawa","osaka","aichi","hokkaido","fukuoka","hyogo",
-  "chiba","saitama","kyoto","hiroshima","miyagi","shizuoka",
+/* 2026-11-12: `ta=<romaji slug>` (tokyo, osaka, ...) answers HTTP 200 with
+ * SUUMO's 12,438-byte エラー page ("please check the URL") for every slug, so
+ * the run fetched 161,694 bytes over 13 requests and parsed nothing. The
+ * search takes the JIS prefecture code in `ta` AND the matching SUUMO region
+ * in `ar` — a code under the wrong region answers a 64 KB page with no
+ * listings (ta=27 under ar=030: 0 blocks; under ar=060: 36). Measured one
+ * request per prefecture: all 13 below answer 36 cassetteitem blocks on
+ * page 1; Hiroshima is ar=080 (070 and 090 answer none). Pages 1 and 2 of
+ * Tokyo share no /chintai/jnc_ detail id. */
+static const struct { const char *slug, *ar, *ta; } SLUGS[] = {
+  {"tokyo","030","13"},    {"kanagawa","030","14"}, {"osaka","060","27"},
+  {"aichi","050","23"},    {"hokkaido","010","01"}, {"fukuoka","090","40"},
+  {"hyogo","060","28"},    {"chiba","030","12"},    {"saitama","030","11"},
+  {"kyoto","060","26"},    {"hiroshima","080","34"},{"miyagi","020","04"},
+  {"shizuoka","050","22"},
 };
 #define NSLUG ((int)(sizeof SLUGS / sizeof SLUGS[0]))
 
@@ -109,8 +121,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     for (int page = 1; page <= 5; page++) {
       char url[256];
       snprintf(url, sizeof url,
-        "https://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=030&bs=040&ta=%s&page=%d",
-        SLUGS[si], page);
+        "https://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=%s&bs=040&ta=%s&page=%d",
+        SLUGS[si].ar, SLUGS[si].ta, page);
       char *html = feed_get_text(ctx->http, url, 12000);
       if (!html) break;                       /* if (!html) break (next slug) */
 

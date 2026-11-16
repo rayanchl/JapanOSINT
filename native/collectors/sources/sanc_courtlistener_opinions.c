@@ -25,6 +25,7 @@
  * how a previous audit ended up matching "PUTIN" inside "COMPUTING".
  */
 #include "sanc_common.inc"
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
@@ -106,7 +107,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (cJSON_IsNumber(count))
       cJSON_AddNumberToObject(props, "total_matches", count->valuedouble);
     cJSON_AddBoolToObject(props, "success", 1);
-    char *pj = cJSON_PrintUnformatted(props);
+    jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
     intel_item it = {0};

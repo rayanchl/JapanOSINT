@@ -27,35 +27,33 @@ import re
 import sys
 
 ID_RE = re.compile(r'\.id\s*=\s*"([^"]+)"')
-PP_RE = re.compile(r'\.page_param\s*=\s*"([A-Za-z0-9_]+)"')
+# Any page_param spelling: `$offset`, `%24skip`, `page%5Bnumber%5D` and
+# `page[number]` are 450+ rows the alphanumeric class could not see.
+PP_RE = re.compile(r'\.page_param\s*=\s*"([^"]+)"')
 URL_RE = re.compile(r'\.url\s*=\s*((?:"(?:[^"\\]|\\.)*"\s*)+)')
 LIT_RE = re.compile(r'"((?:[^"\\]|\\.)*)"')
 
 
 def scan(root):
+    """Rows read with tools/ctable.py, the shared C row reader: a row is its
+    own braces (not "from this `.id =` to the next one", which let a field in
+    a comment or a neighbouring struct count), and a .url is every adjacent
+    literal and string macro joined. A url ctable cannot read as a string is
+    still counted as `unreadable`, as before."""
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import ctable
     hits, total, unreadable = [], 0, 0
-    for dirpath, _dirs, files in os.walk(root):
-        for f in files:
-            if not f.endswith((".c", ".inc")):
-                continue
-            path = os.path.join(dirpath, f)
-            text = open(path, encoding="utf-8", errors="replace").read()
-            marks = list(ID_RE.finditer(text))
-            for i, m in enumerate(marks):
-                end = marks[i + 1].start() if i + 1 < len(marks) else min(len(text), m.start() + 6000)
-                block = text[m.start():end]
-                pm = PP_RE.search(block)
-                if not pm:
-                    continue
-                total += 1
-                um = URL_RE.search(block)
-                if not um:
-                    unreadable += 1          # runtime-composed url; not judged
-                    continue
-                url = "".join(LIT_RE.findall(um.group(1)))
-                key = pm.group(1)
-                if re.search(r"[?&]" + re.escape(key) + r"=", url):
-                    hits.append((path, m.group(1), key, url))
+    for r in ctable.iter_rows(root, need="page_param"):
+        key = r.s("page_param")
+        if not key:
+            continue
+        total += 1
+        url = r.s("url")
+        if not url:
+            unreadable += 1          # runtime-composed url; not judged
+            continue
+        if re.search(r"[?&]" + re.escape(key) + r"=", url):
+            hits.append((r.file, r.s("id"), key, url))
     return hits, total, unreadable
 
 

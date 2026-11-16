@@ -20,11 +20,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B25_JPRECOVERED[] = {
   { .id = "JP25_JPREC_JPNIC_AS_NUMBERS", .name = "JPNIC assigned AS numbers",
     .name_ja = "JPNIC AS番号割り当て一覧",
     .category = "infrastructure", .portal = "https://www.nic.ad.jp",
     .record_type = "as-assignment",
+    .lang = "ja",
     .tags = "\"japan\",\"jpnic\",\"asn\",\"network\",\"registry\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.nic.ad.jp/ja/ip/as-numbers.txt",
@@ -47,6 +53,7 @@ static const hp_source HP3B25_JPRECOVERED[] = {
     .name_ja = "ヤマハ ルーター セキュリティ情報",
     .category = "security", .portal = "https://www.rtpro.yamaha.co.jp",
     .record_type = "security-advisory",
+    .lang = "ja",
     .tags = "\"japan\",\"yamaha\",\"router\",\"advisory\",\"cve\",\"jvn\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.rtpro.yamaha.co.jp/RT/FAQ/Security/index.html",

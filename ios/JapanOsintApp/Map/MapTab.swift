@@ -1001,7 +1001,8 @@ struct MapTab: View {
             stats.record(
                 layerId: id,
                 total: cached.features.count,
-                bySource: extractBySource(cached.meta?["bySource"]?.value)
+                bySource: extractBySource(cached.meta?["bySource"]?.value),
+                available: partialAvailable(cached.meta)
             )
             errorMessage = nil
             layerLoadState.removeValue(forKey: id)
@@ -1023,18 +1024,26 @@ struct MapTab: View {
                 windowSeconds: playback.isReplaying ? playback.window.seconds : nil
             )
             featuresByLayer[id] = fc.features
+            // The first page of a layer FC is capped at 10,000 features
+            // server-side (core/dataapi.c LAYER_FC_DEFAULT_LIMIT) and says so
+            // in `_meta`. Page the rest — up to the map's own bound — rather
+            // than presenting the first 10,000 as the whole layer.
+            let (full, pagingNote) = try await pageLayerRemainder(layerId: id, first: fc)
             // Retain static-layer payloads for the rest of the session so a
             // later re-activation is instant. Skipped for time-coded/live
             // layers whose data changes with the slider.
             if layer.isStatic {
-                layerCache.store(fc, for: id)
+                layerCache.store(full, for: id)
             }
             stats.record(
                 layerId: id,
-                total: fc.features.count,
-                bySource: extractBySource(fc.meta?["bySource"]?.value)
+                total: full.features.count,
+                bySource: extractBySource(full.meta?["bySource"]?.value),
+                available: partialAvailable(full.meta)
             )
-            errorMessage = nil
+            // A later page that failed is stated, not swallowed: the layer
+            // shows what loaded and the Layers tab reads "N of M".
+            errorMessage = pagingNote.map { "[\(registry.displayName(for: layer))] \($0)" }
             await holdLoadingFloor(startedAt: startedAt)
             layerLoadState.removeValue(forKey: id)
         } catch is CancellationError {
@@ -1048,6 +1057,79 @@ struct MapTab: View {
             await holdLoadingFloor(startedAt: startedAt)
             layerLoadState.removeValue(forKey: id)
         }
+    }
+
+    /// The map holds at most this many features of one layer. A layer FC
+    /// can hold hundreds of thousands of rows (one crime layer measured
+    /// ~300 MB unbounded — dataapi.c), which no phone renders; past this bound
+    /// the Layers tab states "N of M" from the server's own count instead of
+    /// loading more. The bound is the VIEW's: every row stays reachable
+    /// server-side by offset.
+    static let layerFeatureCap = 50_000
+    private static let layerPageSize = 10_000
+
+    private func metaInt(_ meta: [String: AnyCodable]?, _ key: String) -> Int? {
+        let v = meta?[key]?.value
+        if let n = v as? Int { return n }
+        if let d = v as? Double { return Int(d) }
+        if let n = v as? NSNumber { return n.intValue }
+        return nil
+    }
+
+    /// Follows `_meta.next_offset` through GET /api/layers/:id/geojson while
+    /// the server reports `truncated`, publishing each page as it lands.
+    /// Only a layer FC (its `_meta` names a `layer`) is paged — a source's
+    /// FeatureCollection carries no such cursor. The returned collection's
+    /// `_meta` is the first page's with `records_used`/`truncated` restated
+    /// for everything loaded, so a cached copy reports the same "N of M".
+    private func pageLayerRemainder(layerId: String,
+                                    first: FeatureCollection) async throws -> (FeatureCollection, String?) {
+        guard var meta = first.meta,
+              (meta["truncated"]?.value as? Bool) == true,
+              meta["layer"]?.value is String,
+              var next = metaInt(meta, "next_offset") else { return (first, nil) }
+        let available = metaInt(meta, "records_available")
+        var used = metaInt(meta, "records_used") ?? first.features.count
+        var features = first.features
+        let api = apiClient.api
+        var more = true
+        var note: String?
+        while more, used < Self.layerFeatureCap {
+            try Task.checkCancellation()
+            let want = min(Self.layerPageSize, Self.layerFeatureCap - used)
+            let page: FeatureCollection
+            do {
+                page = try await api.layerGeoJSONPage(layerId: layerId, limit: want, offset: next)
+            } catch {
+                // A cancelled walk (layer toggled off) must stay a
+                // cancellation — URLSession reports it as URLError.cancelled.
+                if Task.isCancelled { throw error }
+                note = "stopped after \(used.formatted())\(available.map { " of \($0.formatted())" } ?? "") features — the next page failed: \(error.localizedDescription)"
+                break
+            }
+            try Task.checkCancellation()
+            features.append(contentsOf: page.features)
+            featuresByLayer[layerId] = features
+            let got = metaInt(page.meta, "records_used") ?? page.features.count
+            used += got
+            if got == 0 { break }
+            if (page.meta?["truncated"]?.value as? Bool) == true, let n = metaInt(page.meta, "next_offset") {
+                next = n
+            } else {
+                more = false
+            }
+        }
+        meta["records_used"] = AnyCodable(used)
+        meta["truncated"] = AnyCodable(available.map { used < $0 } ?? more)
+        return (FeatureCollection(features: features, meta: meta), note)
+    }
+
+    /// The server's declared total when the loaded part is smaller than it —
+    /// nil for a complete load or an uncounted one.
+    private func partialAvailable(_ meta: [String: AnyCodable]?) -> Int? {
+        guard (meta?["truncated"]?.value as? Bool) == true,
+              let avail = metaInt(meta, "records_available") else { return nil }
+        return avail
     }
 
     /// Coerces the dynamic `_meta.bySource` payload (server emits it for

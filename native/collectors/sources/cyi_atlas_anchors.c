@@ -17,13 +17,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 #define FIRST_URL "https://atlas.ripe.net/api/v2/anchors/?format=json&page_size=500"
 /* The `next` link decides where the walk ends; this is only a runaway guard
  * against a server that never stops handing back a next link. It was set at 5,
  * which at page_size=500 is 2,500 anchors against a mesh that already reports
  * count=1,785 — two more pages of growth and the tail would have been dropped
- * with no error and no notice. Raised, made raisable with $JO_ATLAS_MAX_PAGES,
+ * with no error and no notice. Raised, made raisable with $JO_PAGE_MAX,
  * and a guard that actually bites is now disclosed in the data. */
 #define MAX_PAGES 40   /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
 
@@ -32,8 +33,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(url, sizeof url, "%s", FIRST_URL);
 
   int max_pages = MAX_PAGES;
-  const char *penv = getenv("JO_ATLAS_MAX_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_ATLAS_MAX_PAGES) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  max_pages = jo_page_max_for(max_pages);
 
   int n = 0, pages = 0, fetched_any = 0, count = -1, stopped_early = 0;
   while (url[0] && pages < max_pages) {
@@ -137,7 +141,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                     "the anchor page walk stopped before RIPE's `next` chain "
                     "ran out — either the page-walk ceiling was reached or a "
                     "page failed to fetch",
-                    "raise $JO_ATLAS_MAX_PAGES, or re-run if a page failed");
+                    "raise $JO_PAGE_MAX, or re-run if a page failed");
   return 0;
 }
 

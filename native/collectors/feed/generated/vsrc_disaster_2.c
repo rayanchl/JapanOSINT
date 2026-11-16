@@ -469,8 +469,18 @@ VRSS(geo_jtwc_rss, "geo-jtwc-rss", "JTWC — tropical cyclone warnings", "JTWC �
   "en", "[\"typhoon\",\"jtwc\",\"pacific\"]", 1800,
   "Joint Typhoon Warning Center product feed for the Pacific and Indian Oceans.");
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(geo_la_active_hurricanes, "geo-la-active-hurricanes", "Active hurricanes and cyclones (Esri Living Atlas)", "活動中のハリケーン・低気圧",
   "disaster", "weather",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Active_Hurricanes_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Active_Hurricanes_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"hurricane\",\"cyclone\",\"global\"]", 1800,
   "Current global tropical cyclone positions from NHC/JTWC feeds.");

@@ -37,6 +37,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* ── small helpers ──────────────────────────────────────────────────────── */
 static char *ps_b64(const char *in) {
@@ -77,7 +78,7 @@ static int ps_emit_data(intel_sink *sink, const char *service, const char *sourc
   cJSON_AddStringToObject(props, "entity", entity);
   cJSON_AddStringToObject(props, "source", source);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
   intel_item it = {0};
   it.remote_key = remote_key; it.title = title; it.summary = summary; it.body = bj;
@@ -241,7 +242,7 @@ static int ps_reddit(const source_ctx *ctx, intel_sink *sink, const char *name, 
 
 /* UK Companies House officer search (key-gated). */
 static int ps_uk_companies(const source_ctx *ctx, intel_sink *sink, const char *name, const char *svc) {
-  const char *key = getenv("COMPANIES_HOUSE_API_KEY");
+  const char *key = jo_getenv("COMPANIES_HOUSE_API_KEY");
   if (!key || !*key) return 0;
   char enc[256]; jo_urlencode_buf(name, enc, sizeof enc);
   char url[500];
@@ -281,7 +282,7 @@ static int ps_opencorporates(const source_ctx *ctx, intel_sink *sink, const char
   char url[400];
   snprintf(url, sizeof url,
     "https://api.opencorporates.com/v0.4/officers/search?q=%s&per_page=5", enc);
-  const char *tok = getenv("OPENCORPORATES_API_KEY");
+  const char *tok = jo_getenv("OPENCORPORATES_API_KEY");
   char tokurl[480];
   if (tok && *tok) { snprintf(tokurl, sizeof tokurl, "%s&api_token=%s", url, tok); }
   cJSON *j = ps_get_json(ctx->http, (tok && *tok) ? tokurl : url, NULL);
@@ -334,47 +335,50 @@ int pw_run_gravatar(const source_ctx *ctx, intel_sink *sink, const char *q);
 static int person_run(const source_ctx *ctx, intel_sink *sink) {
   const char *name = ctx->entity;
   if (!name || !*name) return 0;
-  int t = 0;
+  /* jo_acc, never `t +=`: the helpers return -1 on a failed fetch now, and
+   * summing them made a run that stored records report -1 (review
+   * 2026-11-08: Wikipedia 1 record + KAKEN 429 + Gravatar 5xx = -1). */
+  int t = 0, failed = 0;
   /* real parsed APIs — GitHub/Gravatar reuse the richer people_world.c code and
    * emit under the GITHUB_USER|<login> / GRAVATAR_GLOBAL|<hash> keys so the sink
    * dedups them against the standalone GITHUB_USER / GRAVATAR_GLOBAL sources. */
-  t += pw_run_github(ctx, sink, name);
-  t += ps_wikipedia(ctx, sink, name, "PERSON_SEARCH");
-  t += ps_duckduckgo(ctx, sink, name, "PERSON_SEARCH");
-  t += pw_run_gravatar(ctx, sink, name);
-  t += ps_hackernews(ctx, sink, name, "PERSON_SEARCH");
-  t += ps_stackoverflow(ctx, sink, name, "PERSON_SEARCH");
-  t += ps_reddit(ctx, sink, name, "PERSON_SEARCH");
+  jo_acc(pw_run_github(ctx, sink, name), &t, &failed);
+  jo_acc(ps_wikipedia(ctx, sink, name, "PERSON_SEARCH"), &t, &failed);
+  jo_acc(ps_duckduckgo(ctx, sink, name, "PERSON_SEARCH"), &t, &failed);
+  jo_acc(pw_run_gravatar(ctx, sink, name), &t, &failed);
+  jo_acc(ps_hackernews(ctx, sink, name, "PERSON_SEARCH"), &t, &failed);
+  jo_acc(ps_stackoverflow(ctx, sink, name, "PERSON_SEARCH"), &t, &failed);
+  jo_acc(ps_reddit(ctx, sink, name, "PERSON_SEARCH"), &t, &failed);
   /* company / officer APIs (shared with COMPANY_SEARCH) */
-  t += ps_uk_companies(ctx, sink, name, "PERSON_SEARCH");
-  t += ps_opencorporates(ctx, sink, name, "PERSON_SEARCH");
+  jo_acc(ps_uk_companies(ctx, sink, name, "PERSON_SEARCH"), &t, &failed);
+  jo_acc(ps_opencorporates(ctx, sink, name, "PERSON_SEARCH"), &t, &failed);
   /* sanctions / PEP (PEP_CHECK, WATCHLIST_CHECK_NEW) + US court records */
-  t += jo_pep_run(ctx, sink);
-  t += jo_watchlist_run(ctx, sink);
-  t += jo_court_records_run(ctx, sink);
+  jo_acc(jo_pep_run(ctx, sink), &t, &failed);
+  jo_acc(jo_watchlist_run(ctx, sink), &t, &failed);
+  jo_acc(jo_court_records_run(ctx, sink), &t, &failed);
   /* JP researcher + residential pivots (KAKEN/CINII/RESEARCHMAP/MANSION) */
-  t += run_kaken(ctx, sink);
-  t += run_cinii(ctx, sink);
-  t += run_researchmap(ctx, sink);
-  t += run_mansion(ctx, sink);
+  jo_acc(run_kaken(ctx, sink), &t, &failed);
+  jo_acc(run_cinii(ctx, sink), &t, &failed);
+  jo_acc(run_researchmap(ctx, sink), &t, &failed);
+  jo_acc(run_mansion(ctx, sink), &t, &failed);
   /* No fabrication: directory lookup-link cards (constructed search URLs, never
    * fetched) were removed — only genuinely-fetched providers above emit. */
   /* run() must return 0 on success: core/scheduler.c does
    * `status = rc == 0 ? "ok" : "error"` and feeds it to anomaly_detect(), so
    * returning the row count marked every good run (50 rows) as a failure. */
-  return t >= 0 ? 0 : -1;
+  return (failed && t == 0) ? -1 : 0;
 }
 
 /* ── COMPANY_SEARCH: all-business/company pivot ───────────────────────────── */
 static int company_run(const source_ctx *ctx, intel_sink *sink) {
   const char *name = ctx->entity;
   if (!name || !*name) return 0;
-  int t = 0;
-  t += ps_uk_companies(ctx, sink, name, "COMPANY_SEARCH");
-  t += ps_opencorporates(ctx, sink, name, "COMPANY_SEARCH");
+  int t = 0, failed = 0;   /* jo_acc: see person_run */
+  jo_acc(ps_uk_companies(ctx, sink, name, "COMPANY_SEARCH"), &t, &failed);
+  jo_acc(ps_opencorporates(ctx, sink, name, "COMPANY_SEARCH"), &t, &failed);
   /* No fabrication: business-registry lookup-link cards removed (constructed
    * URLs were never fetched); only real officer-API results above emit. */
-  return t >= 0 ? 0 : -1;          /* see person_run(): 0 == ok, <0 == error */
+  return (failed && t == 0) ? -1 : 0;          /* see person_run(): 0 == ok, <0 == error */
 }
 
 static const source_def person_search_def = {
@@ -406,7 +410,7 @@ REGISTER_SOURCE(company_search_def)
 static int feed_emit(const source_ctx *ctx, intel_sink *sink, const char *url,
                      const char *service, const char *rectype, const char *tag) {
   char *body = jo_get(ctx, url, NULL, tag);
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   int emitted = 0;
   char *p = body, *e;
   for (;;) {                     /* every <item>/<entry> the feed carries */
@@ -490,7 +494,7 @@ static int run_mansion(const source_ctx *ctx, intel_sink *sink) {
 
 static int run_tdb_tsr(const source_ctx *ctx, intel_sink *sink) {
   (void)sink; (void)ctx;
-  if (!jo_env("TDB_TSR_API_KEY")) { fprintf(stderr, "[tdb-tsr] gated (no TDB_TSR_API_KEY, paid)\n"); return 0; }
+  if (!jo_env("TDB_TSR_API_KEY")) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "tdb-tsr", "tdb-tsr", (const char *const[]){"TDB_TSR_API_KEY", NULL}, NULL, NULL);
   fprintf(stderr, "[tdb-tsr] key present but endpoint not provisioned\n");
   return 0;
 }

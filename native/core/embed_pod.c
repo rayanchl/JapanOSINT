@@ -358,7 +358,6 @@ int embed_detect_model(http_client *http, const char *base, char *out,
                        size_t cap) {
   return vecindex_detect_model(http, base, out, cap);
 }
-int embed_live_model(char *out, size_t cap) { return vecindex_live_model(out, cap); }
 int embed_live_query_model(char *out, size_t cap) { return vecindex_live_query_model(out, cap); }
 
 /* ---- post-batch hooks ---------------------------------------------------- */

@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 static const char *BASES[] = {
   "https://api.odpt.org/api/v4/",
@@ -16,11 +17,11 @@ static const char *BASES[] = {
 };
 
 static const char *odpt_tok(void) {
-  const char *t = getenv("ODPT_TOKEN");
+  const char *t = jo_getenv("ODPT_TOKEN");
   if (t && *t) return t;
-  t = getenv("ODPT_CONSUMER_KEY");
+  t = jo_getenv("ODPT_CONSUMER_KEY");
   if (t && *t) return t;
-  t = getenv("ODPT_CHALLENGE_TOKEN");
+  t = jo_getenv("ODPT_CHALLENGE_TOKEN");
   if (t && *t) return t;
   return NULL;
 }
@@ -59,7 +60,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *tok = odpt_tok();
   if (!tok) {
     fprintf(stderr, "[odpt-flight] gated (no ODPT token)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "odpt-flight", "odpt-flight", (const char *const[]){"ODPT_TOKEN", "ODPT_CONSUMER_KEY", "ODPT_CHALLENGE_TOKEN", NULL}, NULL, NULL);
   }
   const char *RDF[] = {
     "odpt:FlightInformationArrival", "odpt:FlightInformationDeparture",

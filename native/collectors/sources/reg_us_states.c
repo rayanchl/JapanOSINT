@@ -174,7 +174,7 @@ static int emit_ny_socrata(const source_ctx *ctx, intel_sink *sink,
                            const char *url) {
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "us_states_sos.NY");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
   if (!cJSON_IsArray(root)) { cJSON_Delete(root); return 0; }
@@ -211,14 +211,14 @@ static int emit_ny_socrata(const source_ctx *ctx, intel_sink *sink,
     cJSON_AddStringToObject(props, "state", "NY");
     if (dosid) cJSON_AddStringToObject(props, "dos_id", dosid);
     cJSON_AddBoolToObject(props, "success", 1);
-    char *pj = cJSON_PrintUnformatted(props);
+    jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
     intel_item it = {0};
     it.remote_key      = dosid ? dosid : name;
     it.title           = name;
     it.summary         = county;
-    it.body            = bj;
+    it.body = bj;
     it.lang            = "en";
     it.published_at    = ist;
     it.record_type     = "us-company";

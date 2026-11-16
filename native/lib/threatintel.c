@@ -17,8 +17,8 @@ static void abusech_init(void) {
    * (urlhaus-jp, threatfox-jp via threatintel_collect; threatfeeds-world and
    * HASH_LOOKUP inline). Deliberately NOT a new name — one credential should
    * not have two spellings. */
-  const char *k = getenv("ABUSE_CH_AUTH_KEY");
-  if (!k || !*k) k = getenv("THREATFOX_AUTH_KEY");
+  const char *k = jo_getenv("ABUSE_CH_AUTH_KEY");
+  if (!k || !*k) k = jo_getenv("THREATFOX_AUTH_KEY");
   if (!k || !*k) return;
   /* Truncation would send a corrupt key and get a confusing 401, so refuse
    * rather than half-send it. */
@@ -38,11 +38,6 @@ const char *abusech_auth_header(void) {
   return g_abusech_ok ? g_abusech_hdr : NULL;
 }
 
-int abusech_have_key(void) {
-  pthread_once(&g_abusech_once, abusech_init);
-  return g_abusech_ok;
-}
-
 int threatintel_collect(const source_ctx *ctx, intel_sink *sink,
                          const char *env_key, const char *const *fallbacks,
                          ti_run run, void *ud) {
@@ -50,10 +45,10 @@ int threatintel_collect(const source_ctx *ctx, intel_sink *sink,
 
   const char *key = NULL;
   if (env_key) {
-    const char *v = getenv(env_key);
+    const char *v = jo_getenv(env_key);
     if (v && *v) key = v;
     for (int i = 0; !key && fallbacks && fallbacks[i]; i++) {
-      v = getenv(fallbacks[i]);
+      v = jo_getenv(fallbacks[i]);
       if (v && *v) key = v;
     }
     if (!key) {

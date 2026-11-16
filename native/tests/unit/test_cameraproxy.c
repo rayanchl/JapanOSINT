@@ -52,7 +52,10 @@ int main(void) {
   const char *dbp = getenv("JO_DB");
   assert(dbp && "run.sh sets JO_DB to a scratch database");
   assert(db_open(&g_db, dbp, NULL) == 0);
-  unsetenv("JO_HTTP_BLOCK_PRIVATE");
+  /* The strict outbound floor is the default since 2026-11-12 and beats the
+   * camera test seam; this test's fixtures are on 127.0.0.1, so it lowers the
+   * floor explicitly (the camera policy itself stays strict without the seam). */
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
 
   put_camera("loop", "http://127.0.0.1:9/snap.jpg");
   put_camera("lan", "http://192.168.1.20/snap.jpg");

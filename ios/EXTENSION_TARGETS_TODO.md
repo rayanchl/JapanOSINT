@@ -16,6 +16,26 @@ JapanOsintApp`). Consequently:
 * `NSSupportsLiveActivities` has been **removed** from `Info.plist` — see step 7
   for when to put it back.
 
+So today **every extension feature is inert**: no widget renders, no share
+sheet entry appears, no background refresh runs, and no Live Activity starts.
+`WidgetSnapshotBuilder.refresh` returns at its first line
+(`AppGroup.snapshotURL == nil`) and writes nothing. None of that changes until
+the targets and entitlements below exist.
+
+**What the snapshot will contain once it can be written** (as of 2026-11-07,
+`JapanOsintApp/Widgets/WidgetSnapshotBuilder.swift`):
+
+| Field | Source | When it is empty |
+| --- | --- | --- |
+| `unreadAlerts`, `latestAlerts` | `GET /api/alert-events/unread-count`, `GET /api/alert-events?limit=5` | the fetch failed — the previous snapshot is kept |
+| `latestQuake` | `GET /api/intel/items?source=jma-earthquake&limit=1` (newest stored JMA bulletin; magnitude / max intensity from the row's properties) | no stored row, or its time does not parse — nil, never "now" |
+| `activeWarnings` | `GET /api/intel/items?source=jma-warnings&limit=100`, the titles of office rows with `properties.warning_count > 0` fetched in the last 12 h | no office has a warning, the collector has not run in 12 h, or the fetch failed |
+
+`latestQuake` and `activeWarnings` used to be hard-coded `nil` / `[]`, so the
+quake widget could only ever have rendered empty. They are best-effort: a
+failure there never costs the alert half of the snapshot. Neither has been seen
+rendering on a device — that needs the targets below.
+
 **Do not hand-edit `project.pbxproj` to fix this.** Adding two targets by hand
 means inventing a dozen consistent 24-hex object IDs across
 `PBXNativeTarget` / `PBXFileSystemSynchronizedRootGroup` /

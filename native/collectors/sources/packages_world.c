@@ -19,7 +19,6 @@
 #include "_jp_osint.inc"
 
 /* crates.io / npm require a descriptive UA or they 403. */
-static const char *PK_UA = "User-Agent: JapanOSINT/1.0 (osint-supplychain; osint@example.org)";
 
 static int pk_emit(intel_sink *sink, const char *service, const char *rtype,
                    const char *rk, const char *title, const char *summary,
@@ -42,11 +41,11 @@ static int pk_emit(intel_sink *sink, const char *service, const char *rtype,
 static int run_npm(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://registry.npmjs.org/-/v1/search?text=%s&size=20", enc);
-  const char *hdrs[] = { "Accept: application/json", PK_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "NPM_REGISTRY");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *objs = cJSON_GetObjectItem(root, "objects");
   int emitted = 0;
   if (cJSON_IsArray(objs)) {
@@ -81,11 +80,11 @@ static int run_npm(const source_ctx *ctx, intel_sink *sink, const char *enc) {
 static int run_pypi(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://pypi.org/pypi/%s/json", enc);
-  const char *hdrs[] = { "Accept: application/json", PK_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "PYPI_PROJECT");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *info = cJSON_GetObjectItem(root, "info");
   if (!info) { cJSON_Delete(root); return 0; }
   const char *name = jo_sv(info, "name");
@@ -115,11 +114,11 @@ static int run_pypi(const source_ctx *ctx, intel_sink *sink, const char *enc) {
 static int run_crates(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://crates.io/api/v1/crates?q=%s&per_page=20", enc);
-  const char *hdrs[] = { "Accept: application/json", PK_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "CRATES_IO");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *crates = cJSON_GetObjectItem(root, "crates");
   int emitted = 0;
   if (cJSON_IsArray(crates)) {
@@ -151,9 +150,9 @@ static int run_crates(const source_ctx *ctx, intel_sink *sink, const char *enc) 
 static int run_rubygems(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://rubygems.org/api/v1/search.json?query=%s", enc);
-  const char *hdrs[] = { "Accept: application/json", PK_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "RUBYGEMS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
   if (!cJSON_IsArray(root)) { if (root) cJSON_Delete(root); return 0; }
   int emitted = 0;
@@ -185,11 +184,11 @@ static int run_rubygems(const source_ctx *ctx, intel_sink *sink, const char *enc
 static int run_packagist(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://packagist.org/search.json?q=%s&per_page=20", enc);
-  const char *hdrs[] = { "Accept: application/json", PK_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "PACKAGIST");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;
   if (cJSON_IsArray(results)) {
@@ -219,11 +218,11 @@ static int run_packagist(const source_ctx *ctx, intel_sink *sink, const char *en
 static int run_dockerhub(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://hub.docker.com/v2/search/repositories/?query=%s&page_size=20", enc);
-  const char *hdrs[] = { "Accept: application/json", PK_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "DOCKERHUB");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;
   if (cJSON_IsArray(results)) {
@@ -269,7 +268,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "DOCKERHUB"))    n = run_dockerhub(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define PK_DEF(sym, ID, NM, DESC) \

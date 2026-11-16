@@ -13,17 +13,16 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *CO_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int ckan_search(const source_ctx *ctx, intel_sink *sink, const char *service,
                        const char *api_base, const char *web_base, const char *enc) {
   char url[640];
   snprintf(url, sizeof url, "%s/api/3/action/package_search?q=%s&rows=20", api_base, enc);
-  const char *hdrs[] = { "Accept: application/json", CO_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, service);
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *result = cJSON_GetObjectItem(root, "result");
   const cJSON *results = result ? cJSON_GetObjectItem(result, "results") : NULL;
   int n = 0;
@@ -44,7 +43,7 @@ static int ckan_search(const source_ctx *ctx, intel_sink *sink, const char *serv
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", service); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
       char link[512] = {0};
       if (name && web_base) snprintf(link, sizeof link, "%s/dataset/%s", web_base, name);
@@ -75,7 +74,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "IE_OPENDATA")) n = ckan_search(ctx, sink, "IE_OPENDATA", "https://data.gov.ie", "https://data.gov.ie", enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define CO_DEF(sym, ID, NM, DESC) \

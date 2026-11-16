@@ -14,17 +14,16 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *US_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int run_fedreg(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url,
     "https://www.federalregister.gov/api/v1/documents.json?conditions[term]=%s&per_page=20&order=newest", enc);
-  const char *hdrs[] = { "Accept: application/json", US_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "FEDERAL_REGISTER");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *results = cJSON_GetObjectItem(root, "results");
   int n = 0;
   if (cJSON_IsArray(results)) {
@@ -49,7 +48,7 @@ static int run_fedreg(const source_ctx *ctx, intel_sink *sink, const char *enc) 
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "FEDERAL_REGISTER"); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       intel_item it = {0};
       it.remote_key = docnum ? docnum : title; it.title = title; it.summary = agency;
       it.body = bj; it.link = html; it.lang = "en"; it.published_at = date;
@@ -82,11 +81,11 @@ static int run_npi(const source_ctx *ctx, intel_sink *sink, const char *raw) {
       "https://npiregistry.cms.hhs.gov/api/?version=2.1&organization_name=%s*&limit=20", encq ? encq : "");
     free(encq);
   }
-  const char *hdrs[] = { "Accept: application/json", US_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "US_NPI_PROVIDER");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *results = cJSON_GetObjectItem(root, "results");
   int n = 0;
   if (cJSON_IsArray(results)) {
@@ -121,7 +120,7 @@ static int run_npi(const source_ctx *ctx, intel_sink *sink, const char *raw) {
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "US_NPI_PROVIDER"); if (npi[0]) cJSON_AddStringToObject(p, "npi", npi);
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", desc ? desc : "", (city && state) ? " · " : "", (city && state) ? city : "");
       intel_item it = {0};
       it.remote_key = npi[0] ? npi : name; it.title = name; it.summary = summ[0] ? summ : NULL;
@@ -138,11 +137,11 @@ static int run_npi(const source_ctx *ctx, intel_sink *sink, const char *raw) {
 static int run_courtlistener(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://www.courtlistener.com/api/rest/v4/search/?q=%s&type=o", enc);
-  const char *hdrs[] = { "Accept: application/json", US_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "COURTLISTENER");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *results = cJSON_GetObjectItem(root, "results");
   int n = 0;
   if (cJSON_IsArray(results)) {
@@ -161,7 +160,7 @@ static int run_courtlistener(const source_ctx *ctx, intel_sink *sink, const char
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "COURTLISTENER"); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char link[320] = {0};
       if (absu) snprintf(link, sizeof link, "https://www.courtlistener.com%s", absu);
       intel_item it = {0};
@@ -191,7 +190,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(enc);
   }
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define US_DEF(sym, ID, NM, CAT, DESC) \

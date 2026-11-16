@@ -14,30 +14,38 @@ VJSON(afr_ilgov_org_the_israel_lands_administration, "afr-ilgov-org-the-israel-l
   "he", "[\"isr\",\"opendata\",\"ckan\"]", 28800,
   "CKAN dataset listing published by Israel Land Authority on Israel's national open-data portal.");
 
+/* datastore_search rows below carry `sort=_id asc` (2026-11-07). An offset
+ * walk with no declared order relies on the backend's default; CKAN's
+ * datastore `_id` is its own sequential row id. Measured one or two rows per
+ * host (izmir, data.gov.il, data.gov.au, QLD, VIC, Mauritius, Panama,
+ * data.gov.sg): `_id desc` answers the opposite end, a bogus sort is refused
+ * (409, or a 404 page on data.gov.il), and the total does not move. The
+ * unsorted first page was already _id 1,2,3 on every one, so this is
+ * STABILISING, not a recovery: 0 records were measured lost without it. */
 VJSON(afr_izmir_ds_co2_emisyon_degerleri_ton_ve_d2ec44, "afr-izmir-ds-co2-emisyon-degerleri-ton-ve-d2ec44", "Izmir Metropolitan Municipality open data — CO2 emission values", "Izmir Metropolitan Municipality open data — CO2 emission values",
   "mena_gov", "environment",
-  "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=d2ec448e-f225-430e-9e26-2a7b51e539b6&limit=100",
+  "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=d2ec448e-f225-430e-9e26-2a7b51e539b6&limit=100&sort=_id%20asc",
   "result.records",
   "tr", "[\"tur\",\"opendata\",\"ckan\",\"izmir\"]", 43200,
   "Izmir municipal open-data records for CO2 emission values, published as CKAN JSON.");
 
 VJSON(afr_izmir_ds_eshot_otobus_hat_listesi_bd6c84, "afr-izmir-ds-eshot-otobus-hat-listesi-bd6c84", "Izmir Metropolitan Municipality open data — ESHOT bus route list", "Izmir Metropolitan Municipality open data — ESHOT bus route list",
   "mena_gov", "transport",
-  "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=bd6c84f8-49ba-4cf4-81f8-81a0fbb5caa3&limit=100",
+  "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=bd6c84f8-49ba-4cf4-81f8-81a0fbb5caa3&limit=100&sort=_id%20asc",
   "result.records",
   "tr", "[\"tur\",\"opendata\",\"ckan\",\"izmir\"]", 64800,
   "Izmir municipal open-data records for ESHOT bus route list, published as CKAN JSON.");
 
 VJSON(afr_izmir_ds_izmir_ili_arizali_kazali_ara_e48328, "afr-izmir-ds-izmir-ili-arizali-kazali-ara-e48328", "Izmir Metropolitan Municipality open data — breakdown and accident vehicle records", "Izmir Metropolitan Municipality open data — breakdown and accident vehicle records",
   "mena_gov", "transport",
-  "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=e4832801-ccfe-4e29-8a14-5c7d63545984&limit=100",
+  "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=e4832801-ccfe-4e29-8a14-5c7d63545984&limit=100&sort=_id%20asc",
   "result.records",
   "tr", "[\"tur\",\"opendata\",\"ckan\",\"izmir\"]", 86400,
   "Izmir municipal open-data records for breakdown and accident vehicle records, published as CKAN JSON.");
 
 VJSON(afr_izmir_ds_taksi_durak_bilgileri_64a725, "afr-izmir-ds-taksi-durak-bilgileri-64a725", "Izmir Metropolitan Municipality open data — taxi rank locations", "Izmir Metropolitan Municipality open data — taxi rank locations",
   "mena_gov", "transport",
-  "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=64a72577-5f4c-404c-8842-780d88f351df&limit=100",
+  "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=64a72577-5f4c-404c-8842-780d88f351df&limit=100&sort=_id%20asc",
   "result.records",
   "tr", "[\"tur\",\"opendata\",\"ckan\",\"izmir\"]", 21600,
   "Izmir municipal open-data records for taxi rank locations, published as CKAN JSON.");

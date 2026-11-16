@@ -182,7 +182,17 @@ static const hp_source HP3_ENERGY[] = {
     .record_type = "climate-observation",
     .tags = "\"climate\",\"weather\",\"nasa\",\"energy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M%2CWS10M%2CALLSKY_SFC_SW_DWN&community=RE&longitude=139.7&latitude=35.7&start=20240101&end=20240131&format=JSON",
+    /* 2026-11-09: the window was frozen at 2024-01-01..31, so every run
+     * re-read January 2024. It is now the month-to-date of the day 7 days ago
+     * (start = that month's 1st, end = that day): measured that day, T2M and
+     * WS10M were filled to 2026-11-06 and ALLSKY_SFC_SW_DWN to 2026-11-03
+     * (fill -999 after), so a 7-day lag reads only filled days. The response is
+     * ONE root record whose fallback key was the constant header.title, so
+     * every window overwrote the last; header.start (YYYYMM01) keys one record
+     * per month, updated until the month is complete. Rendered URL measured:
+     * start=20261101&end=20261102, HTTP 200, header.start 20261101. */
+    .url = "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M%2CWS10M%2CALLSKY_SFC_SW_DWN&community=RE&longitude=139.7&latitude=35.7&start={date-7d:%Y%m01}&end={date-7d:%Y%m%d}&format=JSON",
+    .id_keys = "header.start",
     .interval = 3600,
     .description = "NASA satellite-derived surface meteorology and solar irradiance "
       "for any point on earth: temperature, wind speed, humidity and "

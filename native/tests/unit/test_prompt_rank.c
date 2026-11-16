@@ -64,6 +64,9 @@ static int shown_n(cJSON *v, int k) {
 }
 
 int main(void) {
+  /* The outbound floor refuses loopback by default (2026-11-12); this test's
+   * stub servers are on 127.0.0.1, so it opts out before any request. */
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
   unsetenv("JO_EMBED_URL"); unsetenv("JO_EMBED_QUERY_URL"); unsetenv("JO_EMBED_MODEL");
   unsetenv("JO_PROMPT_RECORDS_PER_SERVICE");
   cJSON *results = make_results();

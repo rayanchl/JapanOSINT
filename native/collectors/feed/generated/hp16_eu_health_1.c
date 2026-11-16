@@ -18,7 +18,12 @@ static const hp_source T[] = {
     .collector = "eu_health", .category = "health",
     .description = "246 citing records for one MED id, each with id, source (MED/PPR/PMC), citationType, title, authorString, journal, year, page and citedByCount - i.e. the citing works already hydrated, including preprints. Forward-citation hop the tree lacked.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "health-record", .tags = "\"eu\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/29456894/citations?format=json&pageSize=25",
+    /* `&page=1` bound 2026-11-12: this citations/references API is 1-based
+     * (measured: no page and page=1 answer the same first ids, page=2 the next
+     * 25, page=0 is refused "Invalid page number"), so an unbound first page
+     * cost the page_walk probe a repeat request of page 1 (CLAUDE.md, "A
+     * UID-COLLISION of exactly one page size on a page_walk row"). */
+    .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/29456894/citations?format=json&pageSize=25&page=1",
     .array_path = "citationlist.citation",
     .detail_url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/{v}/citations?format=json&pageSize=100", .detail_key = "pmid",
     .page_walk = 1,
@@ -40,7 +45,12 @@ static const hp_source T[] = {
     .collector = "eu_health", .category = "health",
     .description = "The parsed and matched reference list: each reference with its own id/source, title, authors, journal, year, volume, pages, citedOrder and a match flag showing whether Europe PMC resolved it to a real record.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "health-record", .tags = "\"eu\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/29456894/references?format=json&pageSize=25",
+    /* `&page=1` bound 2026-11-12: this citations/references API is 1-based
+     * (measured: no page and page=1 answer the same first ids, page=2 the next
+     * 25, page=0 is refused "Invalid page number"), so an unbound first page
+     * cost the page_walk probe a repeat request of page 1 (CLAUDE.md, "A
+     * UID-COLLISION of exactly one page size on a page_walk row"). */
+    .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/29456894/references?format=json&pageSize=25&page=1",
     .array_path = "referencelist.reference",
     .detail_url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/{v}/references?format=json&pageSize=100", .detail_key = "pmid",
     .page_walk = 1,

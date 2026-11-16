@@ -207,6 +207,7 @@ static const hp_source HP3B19_TELECOM[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://mastedatabasen.dk/Master/antenner.json?radius=400000&lat=56.0&long=10.5&maxantal=200000",
     .interval = 86400,
+    .timeout_ms = 90000,   /* 2026-11-07: the 35,678,971-byte body (71,865 antennas) took 23.2 s and 24.7 s, past the engine's 20 s default, so every run timed out */
     .lat_key = "wgs84koordinat.bredde",
     .lon_key = "wgs84koordinat.laengde",
     .title_keys = "vejnavn.navn",
@@ -1006,7 +1007,11 @@ static const hp_source HP3B19_TELECOM[] = {
     .record_type = "market-statistic",
     .tags = "\"colombia\",\"mobile\",\"subscribers\",\"statistics\",\"mintic\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/nrst-mwx4.json?$limit=50000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/nrst-mwx4.json?$limit=50000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "$offset",
     .page_size = 50000,
@@ -1024,7 +1029,11 @@ static const hp_source HP3B19_TELECOM[] = {
     .record_type = "market-statistic",
     .tags = "\"colombia\",\"broadband\",\"statistics\",\"mintic\",\"operator\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/n48w-gutb.json?$limit=50000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/n48w-gutb.json?$limit=50000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "$offset",
     .page_size = 50000,
@@ -1042,7 +1051,11 @@ static const hp_source HP3B19_TELECOM[] = {
     .record_type = "market-statistic",
     .tags = "\"colombia\",\"mobile\",\"broadband\",\"traffic\",\"mintic\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/4z5v-cr6b.json?$limit=50000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/4z5v-cr6b.json?$limit=50000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "$offset",
     .page_size = 50000,
@@ -1059,7 +1072,11 @@ static const hp_source HP3B19_TELECOM[] = {
     .record_type = "market-statistic",
     .tags = "\"colombia\",\"universalservice\",\"coverage\",\"mintic\",\"rural\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/rejx-ewy7.json?$limit=50000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/rejx-ewy7.json?$limit=50000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "$offset",
     .page_size = 50000,
@@ -1076,7 +1093,11 @@ static const hp_source HP3B19_TELECOM[] = {
     .record_type = "carrier-record",
     .tags = "\"usa\",\"fcc\",\"broadband\",\"provider\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcc.gov/resource/awrw-t4m8.json?$limit=50000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on opendata.fcc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://opendata.fcc.gov/resource/awrw-t4m8.json?$limit=50000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 604800,
     .page_param = "$offset",
     .page_size = 50000,
@@ -1094,7 +1115,11 @@ static const hp_source HP3B19_TELECOM[] = {
     .record_type = "carrier-record",
     .tags = "\"usa\",\"fcc\",\"broadband\",\"provider\",\"form477\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcc.gov/resource/yd9y-6jqe.json?$limit=50000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on opendata.fcc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://opendata.fcc.gov/resource/yd9y-6jqe.json?$limit=50000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 604800,
     .page_param = "$offset",
     .page_size = 50000,

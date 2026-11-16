@@ -110,7 +110,7 @@ static cJSON *search_pastebin(http_client *h, const char *q) {
 }
 
 static cJSON *search_intelx(http_client *h, const char *q) {
-  const char *key = getenv("INTELX_API_KEY");
+  const char *key = jo_getenv("INTELX_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[DARK_WEB_MONITOR] intelx skipped (no INTELX_API_KEY)\n");
     return NULL;   /* upstream returns NULL → key omitted from output */
@@ -169,13 +169,13 @@ static int emit_item(intel_sink *sink, const char *q, const char *rk,
   cJSON_AddStringToObject(props, "entity", q);
   cJSON_AddBoolToObject(props, "success", 1);  /* a real hit was parsed */
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = summary;
   it.record_type     = "osint_service_result";
   it.properties_json = pj;

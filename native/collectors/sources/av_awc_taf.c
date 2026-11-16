@@ -81,7 +81,7 @@ static int taf_chunk(const source_ctx *ctx, intel_sink *sink, int start,
   char url[512];
   snprintf(url, sizeof url,
            "https://aviationweather.gov/api/data/taf?ids=%s&format=json", ids);
-  const char *hdrs[] = { "Accept: application/json", AV_UA_HDR, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "awc-taf");
   if (!body) return -1;
   cJSON *doc = cJSON_Parse(body);

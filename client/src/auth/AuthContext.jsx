@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { api, ApiError } from '../api/client.js';
-import { sessionStore, supabaseClient, coalescedRefresh, installFetchInterceptor, onSessionLost, REFRESH } from './session.js';
+import { sessionStore, supabaseClient, coalescedRefresh, installFetchInterceptor, onSessionLost, onTenantRejected, REFRESH } from './session.js';
 import { makePkcePair, AuthError } from './supabase.js';
 import { claimLocalData, releaseLocalData } from './localData.js';
 
@@ -119,6 +119,18 @@ export function AuthProvider({ children }) {
     setMe(null);
     setGate(GATE.onboarding);
   }), []);
+
+  // The server refused the stored workspace id (403 not_a_member); session.js
+  // has already cleared it. Re-read /api/me ONCE — coalesced, so a burst of
+  // refused requests costs one call — and adopt the workspace it reports.
+  const tenantRecovery = useRef(null);
+  useEffect(() => onTenantRejected(() => {
+    if (tenantRecovery.current) return;
+    tenantRecovery.current = api.get('/api/me')
+      .then((m) => adopt(m))
+      .catch(() => { /* keep what we have; the next request tries again */ })
+      .finally(() => { tenantRecovery.current = null; });
+  }), [adopt]);
 
   const establish = useCallback(async (session) => {
     sessionStore.setTokens(session.access_token, session.refresh_token);

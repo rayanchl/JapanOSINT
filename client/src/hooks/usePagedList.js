@@ -41,10 +41,24 @@ export function nextOffset(page, fallback = 0) {
   return fallback;
 }
 
-/** {total, hasMore} out of a page block. total stays null when the server sent null. */
-export function pageBound(page) {
+/**
+ * {total, hasMore} out of a page block. total stays null when the server sent null.
+ *
+ * Some routes answer `page:{limit, offset, total}` with no `has_more` (GET
+ * /api/sources/:id/logs, miscapi.c). There `shown` (the rows held) against the
+ * measured `total` is the answer, so a list of 20 of 4,312 runs is not read as
+ * complete just because one field was not sent. A missing total stays
+ * "unknown", never "no more".
+ */
+export function pageBound(page, shown) {
   const total = page && Number.isFinite(page.total) ? page.total : null;
-  return { total, hasMore: Boolean(page?.has_more) };
+  let hasMore = Boolean(page?.has_more);
+  if (page && page.has_more === undefined && total != null) {
+    const held = Number.isFinite(shown) ? shown
+      : (Number.isFinite(page.offset) && Number.isFinite(page.count) ? page.offset + page.count : null);
+    if (held != null) hasMore = held < total;
+  }
+  return { total, hasMore };
 }
 
 /**
@@ -95,7 +109,7 @@ export function usePagedList(path, { pageSize = 50, deps = [], key = 'id', enabl
   useEffect(() => { reload(); }, [reload]);
 
   const loadMore = useCallback(async () => {
-    if (!path || !page?.has_more) return;
+    if (!path || !pageBound(page, shown.current).hasMore) return;
     const my = seq.current;
     setLoadingMore(true);
     try {
@@ -111,7 +125,7 @@ export function usePagedList(path, { pageSize = 50, deps = [], key = 'id', enabl
     }
   }, [path, page, pageSize, key]);
 
-  const { total, hasMore } = pageBound(page);
+  const { total, hasMore } = pageBound(page, rows.length);
   return { rows, page, meta, total, hasMore, error, moreError, loading, loaded, loadingMore, loadMore, reload, setRows };
 }
 

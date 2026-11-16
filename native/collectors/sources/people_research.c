@@ -15,11 +15,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 static int run_places(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return -1;
   const char *key = jo_env("GOOGLE_PLACES_API_KEY");
-  if (!key) { fprintf(stderr, "[gplaces] gated (no GOOGLE_PLACES_API_KEY)\n"); return 0; }
+  if (!key) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "gplaces", "gplaces", (const char *const[]){"GOOGLE_PLACES_API_KEY", NULL}, NULL, NULL);
   char *q = jo_urlencode(ctx->entity); if (!q) return 0;
   char url[768];
   snprintf(url, sizeof url,

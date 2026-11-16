@@ -66,7 +66,10 @@ static void put(const char *dir, const char *name, const char *body) {
 }
 
 int main(void) {
-  unsetenv("JO_HTTP_BLOCK_PRIVATE");
+  /* The strict outbound floor is the default since 2026-11-12 and beats the
+   * camera test seam; this test's fixtures are on 127.0.0.1, so it lowers the
+   * floor explicitly (the camera policy itself stays strict without the seam). */
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
 
   /* 1. resolution */
   resolve_is("http://93.184.216.34/live/cam1/index.m3u8?t=1", "seg-1.ts",

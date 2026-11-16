@@ -58,7 +58,7 @@ static cJSON *run_at(db_handle *db, llm_client *llm, intel_sink *sink,
   if (out_ntasks) *out_ntasks = tl.n;
 
   cJSON *results = cJSON_CreateArray();
-  run_tasks(rp, db, llm, sink, &tl, results);
+  run_tasks(rp, db, llm, sink, &tl, results, "");   /* ownerless run */
 
   tasklist_free(&tl);
   strset_free(&ex);

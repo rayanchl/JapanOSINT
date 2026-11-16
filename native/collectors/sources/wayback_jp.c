@@ -22,7 +22,7 @@
  *
  * So the bound stays, and it is walked and stated rather than hidden:
  *   - each run reads WB_PAGES_DEF consecutive CDX pages per host
- *     ($JO_WAYBACK_PAGES overrides), every capture on every page emitted;
+ *     ($JO_PAGE_MAX overrides), every capture on every page emitted;
  *   - the walk RESUMES: the page after the last one read is kept in the
  *     host's truncation notice, and the next run starts there, wrapping to
  *     page 0 after the last page — so the whole index is read over a cycle
@@ -62,6 +62,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 static const char *TARGETS[] = {
   "kantei.go.jp", "mod.go.jp", "mofa.go.jp", "meti.go.jp", "soumu.go.jp",
@@ -290,7 +291,7 @@ static void wb_notice(intel_sink *sink, const wb_host *h, int budget) {
   jo_truncation_notice_ex(sink, WB_SRC, h->host, h->used, -1, reason,
     h->failed_page >= 0 || h->pages_total < 0
       ? "re-run; the walk resumes from next_page"
-      : "the next run continues from next_page; raise $JO_WAYBACK_PAGES to read "
+      : "the next run continues from next_page; raise $JO_PAGE_MAX to read "
         "more of each host per run",
     extra);
 }
@@ -298,8 +299,11 @@ static void wb_notice(intel_sink *sink, const wb_host *h, int budget) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { "accept: application/json", NULL };
   int budget = WB_PAGES_DEF;
-  const char *be = getenv("JO_WAYBACK_PAGES");
-  if (be && *be) { int v = atoi(be); if (v > 0) budget = v; }
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_WAYBACK_PAGES) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  budget = jo_page_max_for(budget);
 
   int n = 0, hosts_ok = 0, halted = 0;
   for (int ti = 0; ti < NT; ti++) {

@@ -83,7 +83,7 @@ static int emit_tender(intel_sink *sink, const cJSON *t) {
   if (cur)    cJSON_AddStringToObject(props, "value_currency", cur);
   if (status) cJSON_AddStringToObject(props, "status", status);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char summary[512] = {0};
@@ -98,7 +98,7 @@ static int emit_tender(intel_sink *sink, const cJSON *t) {
   it.remote_key      = tid ? tid : title;
   it.title           = title ? title : tid;
   it.summary         = summary[0] ? summary : buyer;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "uk";
   it.published_at    = date[0] ? date : NULL;
   it.link            = link[0] ? link : NULL;

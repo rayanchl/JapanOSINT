@@ -8,69 +8,79 @@
 #include "_verified_macros.inc"
 #include "lib/pagewalk.h"
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(geo_la_asam_events, "geo-la-asam-events", "ASAM — anti-shipping activity messages", "ASAM — 船舶被害情報",
   "disaster", "ocean",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/ASAM_events_V1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/ASAM_events_V1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"piracy\",\"maritime\",\"security\"]", 21600,
   "Reported piracy and anti-shipping incidents with coordinates.");
 
 VGEO(geo_la_cap_alerts, "geo-la-cap-alerts", "Global CAP alerts feed (Esri Living Atlas)", "世界CAP警報フィード",
   "disaster", "weather",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/CAP_Alerts_Feed/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300&geometryPrecision=3",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/CAP_Alerts_Feed/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300&geometryPrecision=3&orderByFields=OBJECTID%20ASC",
   "en", "[\"cap\",\"global\",\"warning\"]", 900,
   "Aggregated Common Alerting Protocol alerts from many national authorities.");
 
 VGEO(geo_la_live_stream_gauges, "geo-la-live-stream-gauges", "Live stream gauges (Esri Living Atlas)", "リアルタイム河川水位計",
   "disaster", "flood",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Live_Stream_Gauges_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Live_Stream_Gauges_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"flood\",\"gauges\",\"realtime\"]", 1800,
   "Live US stream gauge readings with flood category styling.");
 
 VGEO(geo_la_modis_thermal, "geo-la-modis-thermal", "MODIS thermal hotspots", "MODIS 熱異常",
   "disaster", "wildfire",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/MODIS_Thermal_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/MODIS_Thermal_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
   "en", "[\"wildfire\",\"modis\",\"thermal\"]", 3600,
   "MODIS thermal anomaly points with confidence and FRP.");
 
 VGEO(geo_la_monitored_volcanoes, "geo-la-monitored-volcanoes", "Monitored global volcanoes (USGS/Esri)", "監視対象の世界の火山",
   "disaster", "volcano",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Monitored_Global_USGS_Volcanos/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Monitored_Global_USGS_Volcanos/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=ObjectId%20ASC",
   "en", "[\"volcano\",\"monitoring\",\"alertlevel\"]", 3600,
   "Volcanoes under instrumental monitoring with current alert level.");
 
 VGEO(geo_la_noaa_storm_reports, "geo-la-noaa-storm-reports", "NOAA storm reports (Esri Living Atlas)", "NOAA 暴風雨報告",
   "disaster", "weather",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/NOAA_storm_reports_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/NOAA_storm_reports_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"noaa\",\"storm\",\"reports\"]", 3600,
   "Recent US storm reports served as points.");
 
 VGEO(geo_la_nws_watches_warnings, "geo-la-nws-watches-warnings", "NWS watches and warnings polygons (Esri)", "NWS 警報・注意報ポリゴン",
   "disaster", "weather",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/NWS_Watches_Warnings_v1/FeatureServer/6/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=200&geometryPrecision=3",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/NWS_Watches_Warnings_v1/FeatureServer/6/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=200&geometryPrecision=3&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"nws\",\"warning\",\"polygon\"]", 900,
   "Current US watch/warning polygons as ArcGIS GeoJSON.");
 
 VGEO(geo_la_recent_hurricanes, "geo-la-recent-hurricanes", "Recent hurricanes and cyclones (Esri Living Atlas)", "最近のハリケーン・低気圧",
   "disaster", "weather",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Recent_Hurricanes_v1/FeatureServer/1/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Recent_Hurricanes_v1/FeatureServer/1/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"hurricane\",\"cyclone\",\"tracks\"]", 3600,
   "Recent-season cyclone tracks and positions.");
 
 VGEO(geo_la_usgs_seismic, "geo-la-usgs-seismic", "USGS seismic data layer (Esri Living Atlas)", "USGS 地震データレイヤ",
   "disaster", "seismic",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/USGS_Seismic_Data_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/USGS_Seismic_Data_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
   "en", "[\"earthquake\",\"usgs\",\"layer\"]", 1800,
   "Recent USGS earthquakes republished as an Esri feature layer.");
 
 VGEO(geo_la_viirs_thermal, "geo-la-viirs-thermal", "VIIRS thermal hotspots and fire activity", "VIIRS 熱異常・火災活動",
   "disaster", "wildfire",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Satellite_VIIRS_Thermal_Hotspots_and_Fire_Activity/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Satellite_VIIRS_Thermal_Hotspots_and_Fire_Activity/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
   "en", "[\"wildfire\",\"viirs\",\"thermal\"]", 3600,
   "VIIRS thermal anomalies served as points with brightness and FRP.");
 
 VGEO(geo_la_wildfire_aggregated, "geo-la-wildfire-aggregated", "Global aggregated wildfire activity (Esri)", "世界の山火事活動 集約",
   "disaster", "wildfire",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Wildfire_aggregated_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Wildfire_aggregated_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
   "en", "[\"wildfire\",\"global\",\"aggregated\"]", 3600,
   "Aggregated wildfire activity clusters derived from satellite detections.");
 
@@ -287,7 +297,7 @@ VRSS(geo_nhc_two_epac, "geo-nhc-two-epac", "NHC — Eastern Pacific tropical wea
 
 VGEO(geo_nifc_incidents, "geo-nifc-incidents", "NIFC — current US wildfire incident locations", "NIFC — 米国 現行山火事位置",
   "disaster", "wildfire",
-  "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_Current/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000",
+  "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_Current/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"wildfire\",\"nifc\",\"incident\"]", 1800,
   "Authoritative US interagency wildfire incident points with size and containment.");
 
@@ -299,7 +309,7 @@ VGEO(geo_nifc_perimeters_tiny, "geo-nifc-perimeters-tiny", "NIFC — current US 
 
 VGEO(geo_nifc_usa_wildfires, "geo-nifc-usa-wildfires", "USA current wildfires (Esri Living Atlas)", "米国 現行山火事",
   "disaster", "wildfire",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/USA_Wildfires_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/USA_Wildfires_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"wildfire\",\"incident\"]", 1800,
   "Aggregated current US wildfire incidents.");
 
@@ -311,13 +321,13 @@ VRSS(geo_noaa_pacific_tsunami, "geo-noaa-pacific-tsunami", "NTWC — Pacific tsu
 
 VGEO(geo_noaa_riv_gauges, "geo-noaa-riv-gauges", "NOAA — river gauge observations (nowCOAST)", "NOAA — 河川水位計(nowCOAST)",
   "disaster", "flood",
-  "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000",
+  "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000&orderByFields=objectid%20ASC",
   "en", "[\"usa\",\"noaa\",\"flood\",\"gauges\"]", 1800,
   "US river gauge status points including flood stage exceedance.");
 
 VGEO(geo_noaa_riv_gauges_flood, "geo-noaa-riv-gauges-flood", "NOAA — river gauges at major flood", "NOAA — 大氾濫段階の水位計",
   "disaster", "flood",
-  "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/0/query?where=status%3D%27major%27&outFields=*&f=geojson&resultRecordCount=500",
+  "https://mapservices.weather.noaa.gov/eventdriven/rest/services/water/riv_gauges/MapServer/0/query?where=status%3D%27major%27&outFields=*&f=geojson&resultRecordCount=500&orderByFields=objectid%20ASC",
   "en", "[\"usa\",\"noaa\",\"flood\",\"major\"]", 1800,
   "Filtered view of gauges currently at major flood stage.");
 
@@ -329,7 +339,7 @@ VCSV(geo_noaa_storm_reports, "geo-noaa-storm-reports", "SPC — today's local st
 
 VGEO(geo_noaa_wwa_current, "geo-noaa-wwa-current", "NOAA current warnings (nowCOAST)", "NOAA 現行警報(nowCOAST)",
   "disaster", "weather",
-  "https://mapservices.weather.noaa.gov/eventdriven/rest/services/WWA/watch_warn_adv/MapServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=200&geometryPrecision=2&returnGeometry=true",
+  "https://mapservices.weather.noaa.gov/eventdriven/rest/services/WWA/watch_warn_adv/MapServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=200&geometryPrecision=2&returnGeometry=true&orderByFields=objectid%20ASC",
   "en", "[\"usa\",\"noaa\",\"warning\"]", 900,
   "NOAA event-driven current warning polygons.");
 

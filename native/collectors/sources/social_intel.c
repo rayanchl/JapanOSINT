@@ -75,7 +75,6 @@ static cJSON *query_github(http_client *http, const char *username) {
   snprintf(url, sizeof url, "https://api.github.com/users/%s", username);
   const char *headers[] = {
     "Accept: application/vnd.github.v3+json",
-    "User-Agent: OSINT-Platform/1.0",
     NULL
   };
   cJSON *json = feed_get_json_h(http, url, headers, 30000);
@@ -127,7 +126,6 @@ static cJSON *query_reddit(http_client *http, const char *username) {
   char url[256];
   snprintf(url, sizeof url, "https://www.reddit.com/user/%s/about.json", username);
   const char *headers[] = {
-    "User-Agent: OSINT-Platform/1.0 (Educational Research)",
     NULL
   };
   cJSON *json = feed_get_json_h(http, url, headers, 30000);

@@ -106,13 +106,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(url, sizeof url,
     "https://api-krs.ms.gov.pl/api/krs/OdpisAktualny/%s?rejestr=P&format=json", q);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "pl_krs");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   const cJSON *odpis = cJSON_GetObjectItem(root, "odpis");
   const cJSON *dane  = odpis ? cJSON_GetObjectItem(odpis, "dane") : NULL;
@@ -150,14 +150,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "krs", q);
   if (addr) cJSON_AddStringToObject(props, "address", addr);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   intel_item it = {0};
   it.remote_key      = q;
   it.title           = name;
   it.summary         = addr;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "pl";
   it.link            = url;
   it.record_type     = "krs-entity";

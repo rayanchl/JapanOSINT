@@ -67,10 +67,10 @@ static int mr_run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(url, sizeof url, "https://minhareceita.org/%s", cnpj);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "BR_MINHARECEITA");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *r = cJSON_Parse(body);
   free(body);
-  if (!r) return 0;
+  if (!r) return -1;
 
   const char *razao = jo_sv(r, "razao_social");
   if (!razao) { cJSON_Delete(r); return 0; }
@@ -158,10 +158,10 @@ static int ws_run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(url, sizeof url, "https://publica.cnpj.ws/cnpj/%s", cnpj);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "BR_CNPJ_WS");
-  if (!body) return 0;                 /* 404 / 429 throttle → honest empty */
+  if (!body) return jo_fail_rc(jo_last_status(), 1);                 /* 404 → honest empty; 429 throttle / 5xx → -1 (2026-11-07) */
   cJSON *r = cJSON_Parse(body);
   free(body);
-  if (!r) return 0;
+  if (!r) return -1;
 
   const char *razao = jo_sv(r, "razao_social");
   if (!razao) { cJSON_Delete(r); return 0; }

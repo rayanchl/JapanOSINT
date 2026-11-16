@@ -1865,27 +1865,7 @@ static const hp_source HP3B19_CYBER[] = {
       "Latin American national CERT output is almost absent from "
       "aggregated threat feeds" },
 
-  { .id = "CERT_PH_WP_POSTS", .name = "NCERT Philippines — advisories as structured records",
-    .name_ja = "フィリピンNCERT 勧告",
-    .category = "threat", .portal = "https://www.ncert.gov.ph",
-    .record_type = "advisory-record",
-    .tags = "\"cert\",\"csirt\",\"philippines\",\"advisory\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ncert.gov.ph/wp-json/wp/v2/posts?per_page=50",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .detail_key = "id",
-    .detail_url = "https://www.ncert.gov.ph/wp-json/wp/v2/posts/{v}",
-    .interval = 86400,
-    .page_param = "offset",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
-    .page_size = 50,
-    .title_keys = "title.rendered",
-    .description = "The Philippine national computer emergency response team's "
-      "advisories and incident notices as structured records with "
-      "timestamps, categories and full body text. Southeast Asian CERT "
-      "advisories frequently name locally targeted campaigns that never "
-      "reach Western reporting" },
+  /* CERT_PH_WP_POSTS: removed 2026-11-11 (owner's decision) — the WordPress REST API answers 401 "must be logged in"; the feed, sitemaps and homepage sit behind a Cloudflare JavaScript challenge. docs/removed-sources-2026-11-11-dead.tsv */
 
   { .id = "CERT_KH_WP_POSTS", .name = "CamCERT Cambodia — advisories as structured records",
     .name_ja = "カンボジアCamCERT 勧告",

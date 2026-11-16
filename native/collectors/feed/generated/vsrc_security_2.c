@@ -220,11 +220,7 @@ VJSON(cyb_msrc_updates, "cyb-msrc-updates", "Microsoft MSRC CVRF Updates", "Micr
   "en", "[\"microsoft\",\"msrc\",\"patchtuesday\",\"cvrf\"]", 21600,
   "Index of Microsoft monthly security update documents in CVRF form.");
 
-VRSS(cyb_ncert_ph, "cyb-ncert-ph", "NCERT Philippines", "フィリピン NCERT",
-  "security", "advisory",
-  "https://www.ncert.gov.ph/feed/",
-  "en", "[\"ncert\",\"philippines\",\"dict\",\"advisory\"]", 21600,
-  "Philippine national CERT advisories published by the DICT.");
+/* cyb-ncert-ph: removed 2026-11-11 (owner's decision) — ncert.gov.ph/feed/ answers 403 with a Cloudflare "Just a moment..." JavaScript challenge, twice, as does the whole site. docs/removed-sources-2026-11-11-dead.tsv */
 
 VRSS(cyb_ncsc_fi_fi, "cyb-ncsc-fi-fi", "NCSC-FI (Finnish)", "フィンランド NCSC（フィンランド語）",
   "security", "advisory",

@@ -102,15 +102,22 @@ int main(void) {
   cJSON *est = cJSON_GetObjectItem(j, "estimate");
   double rows = cJSON_GetObjectItem(est, "scheduled_rows")->valuedouble;
   double eff = cJSON_GetObjectItem(est, "runs_per_day_effective")->valuedouble;
-  /* daily global: one run per row per day — except a maintenance pod, which
-   * the policy does not reach and which keeps the interval it declares */
-  double want = 0; const source_def **all = registry_all();
+  /* daily global: one run per row per day — for the rows the policy governs.
+   * Realtime rows (transport, or declared under an hour) and maintenance pods
+   * run at their own cadence (2026-11-14), and the estimate counts them so:
+   * recomputed here from the registry by the same rule, not from the reply. */
+  double ex_rows = cJSON_GetObjectItem(est, "exempt_rows")->valuedouble;
+  double want = 0, want_ex = 0; const source_def **all = registry_all();
   for (int i = 0; i < registry_count(); i++) {
     long d = all[i]->update_interval_sec;
-    if (d > 0) want += sched_is_pod(all[i]) ? 86400.0 / (double)d : 1.0;
+    if (d <= 0) continue;
+    if (cadence_exempt_reason(all[i])) { want += 86400.0 / (double)d; want_ex++; }
+    else want += 1.0;
   }
-  assert(rows > 0 && eff == (double)(long)(want + 0.5) && eff >= rows);
-  printf("  json: %0.f scheduled rows, %0.f runs/day under a daily global policy\n", rows, eff);
+  assert(rows > 0 && ex_rows > 0 && ex_rows < rows && ex_rows == want_ex);
+  assert(eff == (double)(long)(want + 0.5));
+  printf("  json: %0.f scheduled rows, %0.f runs/day under a daily global policy "
+         "(%0.f realtime/pod rows at their own cadence)\n", rows, eff, ex_rows);
   cJSON_Delete(j); free(js);
 
   /* a stored policy no PUT would accept is not honoured at boot: the next

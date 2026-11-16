@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "lib/pagewalk.h"   /* jo_page_max_for: the operator brake */
 #include "lib/jocore.h"
 #include "lib/rss_atom.h"
 
@@ -50,8 +51,7 @@ static int jstage_walk(const source_ctx *c, intel_sink *s, const char *id,
     if (n >= 0) fprintf(stderr, "[%s] emitted %d (unpaged list)\n", id, n);
     return n;
   }
-  const char *pm = getenv("JO_PAGE_MAX");
-  int page_max = pm && atoi(pm) > 0 ? atoi(pm) : 20;
+  int page_max = jo_page_max_for(0);   /* exhaustive-ok: the tree's one ceiling (20) under $JO_PAGE_MAX, read in lib/pagewalk.c rather than by hand here */
   long total = jstage_total(c, base);
   const int count = jstage_count();
   int emitted = 0, pages = 0, stopped = 0;

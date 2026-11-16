@@ -51,12 +51,6 @@ bloom *bloom_new(unsigned long long n, double p) {
 unsigned long long bloom_capacity(const bloom *b) { return b ? b->n_design : 0; }
 unsigned long long bloom_count(const bloom *b)    { return b ? b->count : 0; }
 
-double bloom_fp_estimate(const bloom *b) {
-  if (!b || !b->m) return 1.0;
-  double x = 1.0 - exp(-(double)b->k * (double)b->count / (double)b->m);
-  return pow(x, (double)b->k);
-}
-
 int bloom_saturated(const bloom *b) {
   return b && b->n_design && b->count > b->n_design;
 }

@@ -37,8 +37,18 @@ import sys
 # constant bound next to its real one (`i < n && i < 50`), or when a constant
 # bound on it reads a cJSON array (_const_index_loop).
 _COUNTER = (r'(?:\b(?:count|counted|considered|emitted|n|nf|nrec|nrows|'
-            r'nitems|nseen|rows|items|recs|records|found|hits)\b'
+            r'nitems|nseen|rows|items|recs|records|found|hits|'
+            # 2026-11-07: counters the tree really bounds records with and
+            # this list could not see (a resolved-route index, a probe tally,
+            # a per-board local count)
+            r'ri|tried|probed|local)\b'
             r'|\w*GetArraySize\s*\([^)]*\))')
+# A loop's constant bound: a two-digit literal, or (2026-11-07) a CAP-NAMED
+# macro — `while (n < ES_MAX)` and `while (count < PER_BOARD_LIMIT)` are the
+# same cap as `while (n < 40)` with the number one #define away, and the
+# literal-only pattern read them clean. Only names that SAY cap (MAX, CAP,
+# LIMIT, PAGES), so `i < NUM_FIELDS` is not one.
+_CAPBOUND = r'(?:\d{2,}\b|[A-Z][A-Z0-9_]*(?:MAX|CAP|LIMIT|PAGES)[A-Z0-9_]*\b)'
 # The real bound of a sized loop: a name, a member, or a call
 # (`n`, `ctx->n`, `cJSON_GetArraySize(arr)`).
 _BOUND = r'[A-Za-z_][\w.]*(?:->\w+)*(?:\([^()]*\))?'
@@ -49,10 +59,18 @@ CHECKS = [
      "hardcoded record cap — the upstream, not us, decides how many records exist",
      # Only names that bound RECORDS. Buffer sizes (MAX_LINE, URL_MAX, MAX_HOSTS)
      # are allocation limits, not editorial ones, and are not discards.
+     # 2026-11-07: the noun list missed the DOMAIN nouns collectors actually
+     # cap — routes (HK_MAX_ROUTES_RESOLVED), sites (WMN_MAX_SITES), logs
+     # (MAX_LOGS), files (ES_MAX_FILES), a per-<anything> limit
+     # (PER_BOARD_LIMIT) — and a bare page count (`#define PAGES 3`), so each
+     # read clean while bounding what it fetched.
      re.compile(r'#define\s+\w*(?:ITEM|REC|RESULT|ROW|HIT|ENTR|FEATURE|EMIT|'
-                r'PER_REG|PER_SOURCE|TOTAL|PAGE|CAND|MATCH)\w*(?:MAX|CAP|LIMIT)\w*\s+\d+|'
+                r'PER_REG|PER_SOURCE|TOTAL|PAGE|CAND|MATCH|ROUTE|SITE|LOG|FILE|'
+                r'BOARD|PER_[A-Z]+)\w*(?:MAX|CAP|LIMIT)\w*\s+\d+|'
                 r'#define\s+\w*(?:MAX|CAP|LIMIT)\w*(?:ITEM|REC|RESULT|ROW|HIT|ENTR|'
-                r'FEATURE|EMIT|PER_REG|TOTAL|PAGE|CAND|MATCH)\w*\s+\d+|'
+                r'FEATURE|EMIT|PER_REG|TOTAL|PAGE|CAND|MATCH|ROUTE|SITE|LOG|FILE|'
+                r'BOARD)\w*\s+\d+|'
+                r'#define\s+(?:\w+_)?PAGES\s+\d+|'
                 r'\b(?:int|const int)\s+\w*(?:max|cap|limit)\w*\s*=\s*\d+\s*;',
                 re.I),
      "drop the cap, or make it the upstream's page size and paginate"),
@@ -65,7 +83,7 @@ CHECKS = [
     # two-digit bound so `if (n == 0) break` (an exhausted upstream) is not one.
     ("loop-break",
      "break out of a record loop on a counter — records after it are discarded",
-     re.compile(r'if\s*\([^)]*?\b(?:n|i|count|emitted|nrec|rows?)\b(?:\+\+|--)?\s*'
+     re.compile(r'if\s*\([^)]*?\b(?:n|i|count|emitted|nrec|rows?|ri|tried|probed|local)\b(?:\+\+|--)?\s*'
                 r'(?:(?:>=|>)\s*(?:\d+|[A-Z_]{3,})|==\s*(?:\d{2,}|[A-Z_]{3,}))'
                 r'\s*\)\s*break'),
      "emit every record; if a bound is unavoidable, stamp it on the output"),
@@ -126,8 +144,8 @@ CHECKS = [
      # A constant-bound `for (i = 0; i < 24; i++)` is flagged separately, and
      # only when its body reads a cJSON array at that index or emits
      # (see _const_index_loop): the same shape walks hex digits and months.
-     re.compile(r'\bwhile\s*\([^;{]*?' + _COUNTER + r'\s*<=?\s*\d{2,}\b'
-                r'|\bfor\s*\([^;]*;[^;{]*?' + _COUNTER + r'\s*<=?\s*\d{2,}\b'
+     re.compile(r'\bwhile\s*\([^;{]*?' + _COUNTER + r'\s*<=?\s*' + _CAPBOUND +
+                r'|\bfor\s*\([^;]*;[^;{]*?' + _COUNTER + r'\s*<=?\s*' + _CAPBOUND +
                 r'|\b(?:for\s*\([^;]*;|while\s*\()[^;{]*?\b(?P<v>\w+)\s*<=?\s*'
                 + _BOUND + r'\s*&&\s*(?P=v)\s*<=?\s*\d{2,}\b'
                 r'|\b(?:for\s*\([^;]*;|while\s*\()[^;{]*?\b(?P<w>\w+)\s*<=?\s*'
@@ -483,6 +501,27 @@ SELFTEST = [
      {("loop-cap", 1), ("loop-cap", 2), ("loop-cap", 3), ("loop-cap", 4),
       ("loop-cap", 5)},
      {("loop-cap", 6), ("loop-cap", 7)}),
+    # 2026-11-07: domain-noun record caps, a bare page count, a loop bounded
+    # by a CAP-NAMED macro, and the counters ri/tried/probed/local. The
+    # buffer guard and the non-cap macro are controls.
+    ("#define HK_MAX_ROUTES_RESOLVED 10\n"
+     "#define WMN_MAX_SITES 40\n"
+     "#define MAX_LOGS 12\n"
+     "#define ES_MAX_FILES 8\n"
+     "#define PER_BOARD_LIMIT  40\n"
+     "#define PAGES 3\n"
+     "#define MAX_LINE 4096\n"
+     "while (n < ES_MAX) { emit(); }\n"
+     "while (count < PER_BOARD_LIMIT) { emit(); }\n"
+     "while (n < NUM_FIELDS) { n++; }\n"
+     "for (; tried < 30; tried++) emit();\n"
+     "if (ri++ >= 10) break;\n"
+     "if (probed >= MAX_PROBES) break;\n"
+     "if (local > 40) break;\n",
+     {("record-cap", 1), ("record-cap", 2), ("record-cap", 3), ("record-cap", 4),
+      ("record-cap", 5), ("record-cap", 6), ("loop-cap", 8), ("loop-cap", 9),
+      ("loop-cap", 11), ("loop-break", 12), ("loop-break", 13), ("loop-break", 14)},
+     {("record-cap", 7), ("loop-cap", 10)}),
     # single-page: an unpaged row is not excused by its paged NEIGHBOUR; a
     # page_walk row is walked only in HP_JSON; Pagina=1 / $skip=0 / page=0 /
     # first=1 are all a first page.
@@ -566,6 +605,11 @@ def selftest():
 
 def main():
     broken = selftest()
+    if "--selftest-only" in sys.argv[1:]:
+        for b in broken:
+            print("  " + b)
+        print("audit fixtures: %s" % ("FAILED" if broken else "all pass"))
+        return 2 if broken else 0
     if broken:
         print("audit self-test FAILED — a check no longer sees the discard it "
               "was written for, so a clean scan would mean nothing:")

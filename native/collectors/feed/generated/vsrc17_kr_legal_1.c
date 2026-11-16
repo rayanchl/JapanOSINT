@@ -7,9 +7,11 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
-VJSON(kr_treaties, "kr-treaties", "Korea — treaty register search", "Korea — treaty register search",
+/* 2026-11-11 (owner's decision): OC=test is refused by law.go.kr ("register your server IP"); gated on LAW_GO_KR_OC, sent as OC=. */
+VJSON_KEYQ(kr_treaties, "kr-treaties", "Korea — treaty register search", "Korea — treaty register search",
   "kr_legal", "legal",
-  "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=trty&type=JSON&query=%ED%86%B5%EC%83%81",
+  "https://www.law.go.kr/DRF/lawSearch.do?target=trty&type=JSON&query=%ED%86%B5%EC%83%81",
   "trtysearch.trty",
   "ko", "[\"kr\",\"legal\",\"batch17\",\"high-penetrancy\"]", 43200,
-  "Treaties Korea is party to: id, 조약명 (naming the counterparty state), 서명일자, 조약번호, 조약구분코드 (bilateral/multilateral) and 관보게제일자 (official gazette publication date). Bilateral instruments behind Korean trade and investment relationships.");
+  "Treaties Korea is party to: id, 조약명 (naming the counterparty state), 서명일자, 조약번호, 조약구분코드 (bilateral/multilateral) and 관보게제일자 (official gazette publication date). Bilateral instruments behind Korean trade and investment relationships.",
+  "LAW_GO_KR_OC", "OC", "an OC account id from the open.law.go.kr developer portal (free; tied to a registered server IP)");

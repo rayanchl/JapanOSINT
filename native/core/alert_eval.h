@@ -411,18 +411,6 @@ void alert_eval_on_item(db_handle *db, const char *tenant_id,
 
 /* ── item 21: the entity-mention reconciling sweep ───────────────────────── */
 
-/* Run ONE sweep pass and return the number of items re-evaluated. Walks
- * entity_mentions written since the persisted watermark (alert_eval_cursor)
- * and re-evaluates each newly-mentioned item against the enabled rules that
- * carry an entity term, via the same eval path the live ingest uses.
- *
- * Idempotent, restart-safe, and bounded: at most ~10k mentions per call, and
- * the watermark only advances over ranges it actually drained. Swallows every
- * SQLite error. Safe to call from any thread; safe to call when no watchlist
- * exists (it just advances the watermark). Exposed separately from the worker
- * so a CLI/test can drive one deterministic pass. */
-int  alert_eval_sweep_entities(db_handle *db);
-
 /* Start/stop the background sweep worker (default every 30s, override with
  * JO_ALERT_SWEEP_SEC; disable entirely with JO_NO_ALERT_SWEEP). Mirrors
  * alert_deliver_start/stop. WITHOUT THIS THREAD RUNNING, ENTITY WATCHLISTS

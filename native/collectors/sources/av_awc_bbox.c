@@ -69,7 +69,7 @@ static cJSON *awc_tile(const source_ctx *ctx, const char *path,
   snprintf(url, sizeof url,
            "https://aviationweather.gov/api/data/%s?format=json%s"
            "&bbox=%.4f,%.4f,%.4f,%.4f", path, extra ? extra : "", a, b, c, d);
-  const char *hdrs[] = { "Accept: application/json", AV_UA_HDR, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, tag);
   if (!body) return NULL;
   cJSON *doc = cJSON_Parse(body);

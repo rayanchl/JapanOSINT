@@ -25,6 +25,13 @@ intel_sink intel_sink_make(db_handle *db, const char *source_id,
 int intel_sink_rebind(const intel_sink *base, const char *source_id,
                       intel_sink *out);
 
+/* intel_sink_rebind(), but the rows are written under `tenant_id` instead of
+ * the base sink's tenant. For a pivot run with a WORKSPACE's own key
+ * (core/osint_dispatch.c): its records are that workspace's, not the shared
+ * corpus's (the owner's decision of 2026-11-14). Same return contract. */
+int intel_sink_rebind_tenant(const intel_sink *base, const char *source_id,
+                             const char *tenant_id, intel_sink *out);
+
 /* Releases the state intel_sink_make() allocated. There was no such call
  * until the scheduler became a worker pool: every make() heap-allocates a
  * sink_state and no caller freed it, so the process leaked one per source run
@@ -92,5 +99,9 @@ int intel_item_is_notice(const intel_item *it);
  * per-row repair, not a bulk one. `keywords` is reset exactly as the ingest
  * path resets it (translate.c's rowid watermark is what restores it). */
 int intel_fts_remirror(db_handle *db, const char *uid);
+
+/* Forget the cached set of credential values the sink redacts from every
+ * stored record (see emit() in intel.c); for tests. */
+void intel_secrets_reset(void);
 
 #endif

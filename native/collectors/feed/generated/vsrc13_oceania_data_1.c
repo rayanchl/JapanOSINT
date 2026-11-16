@@ -7,21 +7,31 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(sas_arc_nsw_bfpl, "sas-arc-nsw-bfpl", "NSW DCCEEW — bushfire prone land", "NSW DCCEEW — bushfire prone land",
   "oceania_data", "hazard",
-  "https://mapprod3.environment.nsw.gov.au/arcgis/rest/services/Fire/BFPL/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson",
+  "https://mapprod3.environment.nsw.gov.au/arcgis/rest/services/Fire/BFPL/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"aus\",\"nsw\",\"bushfire\",\"geo\"]", 86400,
   "Bushfire prone land polygons used for NSW development planning controls.");
 
 VGEO(sas_arc_nsw_edufac, "sas-arc-nsw-edufac", "NSW Spatial Services — education facilities", "NSW Spatial Services — education facilities",
   "oceania_data", "opendata",
-  "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Education_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson",
+  "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Education_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"nsw\",\"education\",\"geo\"]", 86400,
   "Point locations of NSW schools, TAFEs and universities with names and types.");
 
 VGEO(sas_arc_nsw_emergfac, "sas-arc-nsw-emergfac", "NSW Spatial Services — emergency service facilities", "NSW Spatial Services — emergency service facilities",
   "oceania_data", "hazard",
-  "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Emergency_Service_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson",
+  "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Emergency_Service_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"nsw\",\"emergency\",\"geo\"]", 86400,
   "Point locations and attributes of NSW fire, ambulance, police and SES facilities.");
 
@@ -49,31 +59,31 @@ REGISTER_SOURCE(sas_arc_nsw_env);
 
 VGEO(sas_arc_nsw_fire_hist, "sas-arc-nsw-fire-hist", "NSW NPWS — fire history polygons", "NSW NPWS — fire history polygons",
   "oceania_data", "hazard",
-  "https://mapprod3.environment.nsw.gov.au/arcgis/rest/services/Fire/NPWS_Fire_History/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson",
+  "https://mapprod3.environment.nsw.gov.au/arcgis/rest/services/Fire/NPWS_Fire_History/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"aus\",\"nsw\",\"bushfire\",\"geo\"]", 86400,
   "Mapped extents and dates of past bushfires and hazard reduction burns on NSW park estate.");
 
 VGEO(sas_arc_nsw_foi, "sas-arc-nsw-foi", "NSW Spatial Services — features of interest", "NSW Spatial Services — features of interest",
   "oceania_data", "opendata",
-  "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Features_of_Interest_Category/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson",
+  "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Features_of_Interest_Category/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"nsw\",\"geo\",\"poi\"]", 86400,
   "Named points of interest across NSW: landmarks, community and utility features.");
 
 VGEO(sas_arc_nsw_healthfac, "sas-arc-nsw-healthfac", "NSW Spatial Services — health facilities", "NSW Spatial Services — health facilities",
   "oceania_data", "health",
-  "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Health_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson",
+  "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Health_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"nsw\",\"health\",\"geo\"]", 86400,
   "Point locations of NSW hospitals, community health and aged-care facilities.");
 
 VGEO(sas_arc_nsw_justfac, "sas-arc-nsw-justfac", "NSW Spatial Services — justice facilities", "NSW Spatial Services — justice facilities",
   "oceania_data", "opendata",
-  "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Justice_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson",
+  "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Justice_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"nsw\",\"justice\",\"geo\"]", 86400,
   "Point locations of NSW courts, correctional centres and justice facilities.");
 
 VGEO(sas_arc_nsw_reef, "sas-arc-nsw-reef", "NSW DCCEEW — seabed reef extent", "NSW DCCEEW — seabed reef extent",
   "oceania_data", "environment",
-  "https://mapprod3.environment.nsw.gov.au/arcgis/rest/services/Marine/NSW_seabed_reef_extent/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson",
+  "https://mapprod3.environment.nsw.gov.au/arcgis/rest/services/Marine/NSW_seabed_reef_extent/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"aus\",\"nsw\",\"marine\",\"geo\"]", 86400,
   "Mapped rocky reef extents along the NSW coast from seabed mapping surveys.");
 
@@ -97,7 +107,7 @@ REGISTER_SOURCE(sas_arc_nsw_spatial);
 
 VGEO(sas_arc_nsw_transfac, "sas-arc-nsw-transfac", "NSW Spatial Services — transport facilities", "NSW Spatial Services — transport facilities",
   "oceania_data", "transport",
-  "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Transport_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson",
+  "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_FOI_Transport_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"nsw\",\"transport\",\"geo\"]", 86400,
   "Point locations of NSW airports, wharves, rail stations and freight terminals.");
 
@@ -119,37 +129,37 @@ REGISTER_SOURCE(sas_arc_qld);
 
 VGEO(sas_arc_qld_basins, "sas-arc-qld-basins", "Queensland FloodCheck — drainage basins", "Queensland FloodCheck — drainage basins",
   "oceania_data", "environment",
-  "https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/QueenslandBasins/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson",
+  "https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/QueenslandBasins/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"qld\",\"water\",\"geo\"]", 86400,
   "Queensland river basin boundaries underpinning flood and water-resource assessment.");
 
 VGEO(sas_arc_qld_firescar, "sas-arc-qld-firescar", "Queensland — fire scar mapping", "Queensland — fire scar mapping",
   "oceania_data", "hazard",
-  "https://spatial-gis.information.qld.gov.au/arcgis/rest/services/Environment/FireScarMapping/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson",
+  "https://spatial-gis.information.qld.gov.au/arcgis/rest/services/Environment/FireScarMapping/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"qld\",\"bushfire\",\"geo\"]", 86400,
   "Satellite-derived fire scar polygons across Queensland with burn dates.");
 
 VGEO(sas_arc_qld_floodgauge, "sas-arc-qld-floodgauge", "Queensland FloodCheck — flood gauge network", "Queensland FloodCheck — flood gauge network",
   "oceania_data", "hazard",
-  "https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/FloodGauges/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&geometryPrecision=5&f=geojson",
+  "https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/FloodGauges/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&geometryPrecision=5&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"qld\",\"flood\",\"geo\"]", 43200,
   "Locations and identifiers of Queensland flood-warning gauges used in FloodCheck.");
 
 VGEO(sas_arc_qld_lga, "sas-arc-qld-lga", "Queensland FloodCheck — local government areas", "Queensland FloodCheck — local government areas",
   "oceania_data", "opendata",
-  "https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/LocalGovernmentAuthorities/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson",
+  "https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/LocalGovernmentAuthorities/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"qld\",\"boundaries\",\"geo\"]", 86400,
   "Queensland local government area boundaries as used by the FloodCheck portal.");
 
 VGEO(sas_arc_qld_parksfire, "sas-arc-qld-parksfire", "Queensland Parks — fire history", "Queensland Parks — fire history",
   "oceania_data", "hazard",
-  "https://spatial-gis.information.qld.gov.au/arcgis/rest/services/Environment/ParksFireHistory/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson",
+  "https://spatial-gis.information.qld.gov.au/arcgis/rest/services/Environment/ParksFireHistory/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"qld\",\"bushfire\",\"geo\"]", 86400,
   "Recorded fire extents and dates on Queensland protected-area estate.");
 
 VGEO(sas_arc_qld_towns, "sas-arc-qld-towns", "Queensland FloodCheck — town locations", "Queensland FloodCheck — town locations",
   "oceania_data", "opendata",
-  "https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/Towns/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&geometryPrecision=5&f=geojson",
+  "https://spatial-gis.information.qld.gov.au/arcgis/rest/services/FloodCheck/Towns/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&geometryPrecision=5&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"qld\",\"geo\",\"places\"]", 86400,
   "Gazetted Queensland town points used to index flood studies by locality.");
 
@@ -171,19 +181,19 @@ REGISTER_SOURCE(sas_arc_tas);
 
 VGEO(sas_arc_tas_geol, "sas-arc-tas-geol", "Tasmania LIST — geology and soils layer", "Tasmania LIST — geology and soils layer",
   "oceania_data", "environment",
-  "https://services.thelist.tas.gov.au/arcgis/rest/services/Public/GeologicalAndSoils/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=100&geometryPrecision=5&f=geojson",
+  "https://services.thelist.tas.gov.au/arcgis/rest/services/Public/GeologicalAndSoils/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=100&geometryPrecision=5&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"aus\",\"tas\",\"geology\",\"geo\"]", 86400,
   "Tasmanian geological units and soil mapping polygons.");
 
 VGEO(sas_arc_tas_infra, "sas-arc-tas-infra", "Tasmania LIST — infrastructure layer", "Tasmania LIST — infrastructure layer",
   "oceania_data", "transport",
-  "https://services.thelist.tas.gov.au/arcgis/rest/services/Public/Infrastructure/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson",
+  "https://services.thelist.tas.gov.au/arcgis/rest/services/Public/Infrastructure/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"aus\",\"tas\",\"infrastructure\",\"geo\"]", 86400,
   "Tasmanian infrastructure features: utilities, transport and communications assets.");
 
 VGEO(sas_arc_tas_marine, "sas-arc-tas-marine", "Tasmania LIST — marine and coastal layer", "Tasmania LIST — marine and coastal layer",
   "oceania_data", "environment",
-  "https://services.thelist.tas.gov.au/arcgis/rest/services/Public/MarineAndCoastal/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson",
+  "https://services.thelist.tas.gov.au/arcgis/rest/services/Public/MarineAndCoastal/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"aus\",\"tas\",\"marine\",\"geo\"]", 86400,
   "Tasmanian coastal and marine features including reserves and coastal geomorphology.");
 
@@ -202,43 +212,43 @@ VJSON(sas_arc_vicorg, "sas-arc-vicorg", "Victorian Government — ArcGIS Online 
 
 VGEO(sas_arc_wa_bounds, "sas-arc-wa-bounds", "WA SLIP — administrative boundaries", "WA SLIP — administrative boundaries",
   "oceania_data", "opendata",
-  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Boundaries/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson",
+  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Boundaries/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=50&geometryPrecision=4&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"wa\",\"boundaries\",\"geo\"]", 86400,
   "Western Australian local government and administrative boundary polygons.");
 
 VGEO(sas_arc_wa_edu, "sas-arc-wa-edu", "WA SLIP — education facilities", "WA SLIP — education facilities",
   "oceania_data", "opendata",
-  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Education/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson",
+  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Education/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson&orderByFields=oid%20ASC",
   "en", "[\"aus\",\"wa\",\"education\",\"geo\"]", 86400,
   "Point locations of Western Australian schools and education facilities.");
 
 VGEO(sas_arc_wa_env, "sas-arc-wa-env", "WA SLIP — environment layer", "WA SLIP — environment layer",
   "oceania_data", "environment",
-  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Environment/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=100&geometryPrecision=5&f=geojson",
+  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Environment/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=100&geometryPrecision=5&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"wa\",\"environment\",\"geo\"]", 86400,
   "Western Australian environmental features: reserves, vegetation and conservation areas.");
 
 VGEO(sas_arc_wa_health, "sas-arc-wa-health", "WA SLIP — health facilities", "WA SLIP — health facilities",
   "oceania_data", "health",
-  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Health/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson",
+  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Health/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"wa\",\"health\",\"geo\"]", 86400,
   "Point locations of Western Australian hospitals and health service facilities.");
 
 VGEO(sas_arc_wa_infra, "sas-arc-wa-infra", "WA SLIP — infrastructure and utilities", "WA SLIP — infrastructure and utilities",
   "oceania_data", "transport",
-  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Infrastructure_and_Utilities/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson",
+  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Infrastructure_and_Utilities/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson&orderByFields=objectid%20ASC",
   "en", "[\"aus\",\"wa\",\"infrastructure\",\"geo\"]", 86400,
   "Western Australian utility and infrastructure asset locations.");
 
 VGEO(sas_arc_wa_marine, "sas-arc-wa-marine", "WA SLIP — marine and estuaries", "WA SLIP — marine and estuaries",
   "oceania_data", "environment",
-  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Marine_and_Estuaries/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=100&geometryPrecision=5&f=geojson",
+  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Marine_and_Estuaries/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=100&geometryPrecision=5&f=geojson&orderByFields=objectid_1%20ASC",
   "en", "[\"aus\",\"wa\",\"marine\",\"geo\"]", 86400,
   "Western Australian marine parks, estuaries and coastal management features.");
 
 VGEO(sas_arc_wa_mining, "sas-arc-wa-mining", "WA SLIP — industry and mining", "WA SLIP — industry and mining",
   "oceania_data", "economy",
-  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Industry_and_Mining/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson",
+  "https://services.slip.wa.gov.au/public/rest/services/SLIP_Public_Services/Industry_and_Mining/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=200&geometryPrecision=5&f=geojson&orderByFields=oid%20ASC",
   "en", "[\"aus\",\"wa\",\"mining\",\"geo\"]", 86400,
   "Western Australian mine sites, tenements and industrial facility locations.");
 

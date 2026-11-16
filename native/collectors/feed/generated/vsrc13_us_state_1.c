@@ -74,15 +74,25 @@ static int ags_dir_collect(const source_ctx *c, intel_sink *s, const char *id,
     .description = DESC, .layer = NULL, .free_tier = 1 };                     \
   REGISTER_SOURCE(SYM)
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(nam_ags_arizona_social_vulnerability_index_azsvi_by_tracts_a, "nam-ags-arizona-social-vulnerability-index-azsvi-by-tracts-a", "Arizona Social Vulnerability Index (AZSVI) by Tracts — ADHS AZSVIOverall", "Arizona Social Vulnerability Index (AZSVI) by Tracts — ADHS AZSVIOverall",
   "us_state", "health",
-  "https://services1.arcgis.com/mpVYz37anSdrK4d8/arcgis/rest/services/Arizona_Social_Vulnerability_Index_Overall/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services1.arcgis.com/mpVYz37anSdrK4d8/arcgis/rest/services/Arizona_Social_Vulnerability_Index_Overall/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"health\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer 'ADHS AZSVIOverall' from the 'Arizona Social Vulnerability Index (AZSVI) by Tracts' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_bpd_crimes_bpd_crimes, "nam-ags-bpd-crimes-bpd-crimes", "BPD Crimes — BPD Crimes", "BPD Crimes — BPD Crimes",
   "us_state", "opendata",
-  "https://services1.arcgis.com/WHM6qC35aMtyAAlN/arcgis/rest/services/BPD_Crimes_Public/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services1.arcgis.com/WHM6qC35aMtyAAlN/arcgis/rest/services/BPD_Crimes_Public/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"opendata\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'BPD Crimes' from the 'BPD Crimes' service, GeoJSON with per-feature geometry.");
 
@@ -115,50 +125,50 @@ VGEO(nam_ags_bpd_crimes_bpd_crimes, "nam-ags-bpd-crimes-bpd-crimes", "BPD Crimes
  * 9,953 distinct over the same 10,000 features on 2026-09-15. */
 VGEO_IDKEYS(nam_ags_california_transit_stops_ca_transit_stops, "nam-ags-california-transit-stops-ca-transit-stops", "California Transit Stops — CA Transit Stops", "California Transit Stops — CA Transit Stops",
   "us_state", "transport",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHrailroad/CA_Transit_Stops/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHrailroad/CA_Transit_Stops/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'CA Transit Stops' from the 'California Transit Stops' service, GeoJSON with per-feature geometry.",
   "OBJECTID");
 
 VGEO(nam_ags_cfp_priority_highway_freight_network_truck_crashes_a, "nam-ags-cfp-priority-highway-freight-network-truck-crashes-a", "CFP Priority Highway Freight Network — Truck Crashes All / Truck VMT TrkCrshRt", "CFP Priority Highway Freight Network — Truck Crashes All / Truck VMT TrkCrshRt",
   "us_state", "transport",
-  "https://services2.arcgis.com/aIrBD8yn1TDTEXoz/arcgis/rest/services/CFP_Priority_Highway_Freight_Network_(PHFN)_group_layer_view/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services2.arcgis.com/aIrBD8yn1TDTEXoz/arcgis/rest/services/CFP_Priority_Highway_Freight_Network_(PHFN)_group_layer_view/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=FID%20ASC",
   "en", "[\"usa\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'Truck Crashes All / Truck VMT TrkCrshRt' from the 'CFP Priority Highway Freight Network' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_cfp_priority_highway_freight_network_truck_crashes_p, "nam-ags-cfp-priority-highway-freight-network-truck-crashes-p", "CFP Priority Highway Freight Network — Truck Crashes per Mile TrkCrshPM", "CFP Priority Highway Freight Network — Truck Crashes per Mile TrkCrshPM",
   "us_state", "transport",
-  "https://services2.arcgis.com/aIrBD8yn1TDTEXoz/arcgis/rest/services/CFP_Priority_Highway_Freight_Network_(PHFN)_group_layer_view/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services2.arcgis.com/aIrBD8yn1TDTEXoz/arcgis/rest/services/CFP_Priority_Highway_Freight_Network_(PHFN)_group_layer_view/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=FID%20ASC",
   "en", "[\"usa\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'Truck Crashes per Mile TrkCrshPM' from the 'CFP Priority Highway Freight Network' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_indiana_trails_inventory_open_trails_allopentrails, "nam-ags-indiana-trails-inventory-open-trails-allopentrails", "Indiana Trails Inventory Open Trails — AllOpenTrails", "Indiana Trails Inventory Open Trails — AllOpenTrails",
   "us_state", "transport",
-  "https://gisdata.in.gov/server/rest/services/Hosted/Trails_AGOL_RO/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://gisdata.in.gov/server/rest/services/Hosted/Trails_AGOL_RO/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=objectid%20ASC",
   "en", "[\"usa\",\"transport\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer 'AllOpenTrails' from the 'Indiana Trails Inventory Open Trails' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_land_ownership_land_ownership, "nam-ags-land-ownership-land-ownership", "Land Ownership — Land Ownership", "Land Ownership — Land Ownership",
   "us_state", "opendata",
-  "https://gis.trustlands.utah.gov/mapping/rest/services/Land_Ownership/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://gis.trustlands.utah.gov/mapping/rest/services/Land_Ownership/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=objectid%20ASC",
   "en", "[\"usa\",\"opendata\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer 'Land Ownership' from the 'Land Ownership' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_lion_bike_network_view_lion, "nam-ags-lion-bike-network-view-lion", "LION Bike Network View — LION", "LION Bike Network View — LION",
   "us_state", "transport",
-  "https://services.arcgis.com/wmZOI9vyUBq1zTZx/arcgis/rest/services/LION_Bike_Network_View/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/wmZOI9vyUBq1zTZx/arcgis/rest/services/LION_Bike_Network_View/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'LION' from the 'LION Bike Network View' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_maine_stream_habitat_viewer_crossings, "nam-ags-maine-stream-habitat-viewer-crossings", "Maine Stream Habitat Viewer — Crossings", "Maine Stream Habitat Viewer — Crossings",
   "us_state", "environment",
-  "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/arcgis/rest/services/Maine_Stream_Habitat_Viewer/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/arcgis/rest/services/Maine_Stream_Habitat_Viewer/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"environment\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'Crossings' from the 'Maine Stream Habitat Viewer' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_medical_authoritative_data_nursing_homes, "nam-ags-medical-authoritative-data-nursing-homes", "Medical Authoritative Data — Nursing Homes", "Medical Authoritative Data — Nursing Homes",
   "us_state", "health",
-  "https://services2.arcgis.com/xtuWQvb2YQnp0z3F/arcgis/rest/services/Medical_Authoritative_Data/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services2.arcgis.com/xtuWQvb2YQnp0z3F/arcgis/rest/services/Medical_Authoritative_Data/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID_1%20ASC",
   "en", "[\"usa\",\"health\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'Nursing Homes' from the 'Medical Authoritative Data' service, GeoJSON with per-feature geometry.");
 
@@ -170,25 +180,25 @@ VGEO(nam_ags_montana_air_quality_monitoring_data_montana_air_qual, "nam-ags-mont
 
 VGEO(nam_ags_oahu_pedestrian_and_bicycle_crash_cluster_classified, "nam-ags-oahu-pedestrian-and-bicycle-crash-cluster-classified", "Oahu Pedestrian and Bicycle Crash Cluster Classified Streets — Oahu Pedestrian and Bicycle Crash Cluster Classified Streets", "Oahu Pedestrian and Bicycle Crash Cluster Classified Streets — Oahu Pedestrian and Bicycle Crash Cluster Classified Streets",
   "us_state", "transport",
-  "https://services.arcgis.com/HQ0xoN0EzDPBOEci/arcgis/rest/services/Oahu_Pedestrian_and_Bicycle_Crash_Cluster_Classified_Streets/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/HQ0xoN0EzDPBOEci/arcgis/rest/services/Oahu_Pedestrian_and_Bicycle_Crash_Cluster_Classified_Streets/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=FID%20ASC",
   "en", "[\"usa\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'Oahu Pedestrian and Bicycle Crash Cluster Classified Streets' from the 'Oahu Pedestrian and Bicycle Crash Cluster Classified Streets' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_police_crime_mapping_crimedata, "nam-ags-police-crime-mapping-crimedata", "Police Crime Mapping — CrimeData", "Police Crime Mapping — CrimeData",
   "us_state", "crime",
-  "https://services6.arcgis.com/yCArG7wGXGyWLqav/arcgis/rest/services/Police_Crime_Mapping/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/yCArG7wGXGyWLqav/arcgis/rest/services/Police_Crime_Mapping/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"crime\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'CrimeData' from the 'Police Crime Mapping' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_wv_efire_inform_view_origins, "nam-ags-wv-efire-inform-view-origins", "WV EFire InFORM view — Origins", "WV EFire InFORM view — Origins",
   "us_state", "opendata",
-  "https://services6.arcgis.com/iQxzOWEp1MXm2FTa/arcgis/rest/services/WV_EFire_InFORM_view/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/iQxzOWEp1MXm2FTa/arcgis/rest/services/WV_EFire_InFORM_view/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=objectid%20ASC",
   "en", "[\"usa\",\"opendata\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer 'Origins' from the 'WV EFire InFORM view' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_wv_efire_inform_view_perimeters, "nam-ags-wv-efire-inform-view-perimeters", "WV EFire InFORM view — Perimeters", "WV EFire InFORM view — Perimeters",
   "us_state", "opendata",
-  "https://services6.arcgis.com/iQxzOWEp1MXm2FTa/arcgis/rest/services/WV_EFire_InFORM_view/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/iQxzOWEp1MXm2FTa/arcgis/rest/services/WV_EFire_InFORM_view/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=objectid%20ASC",
   "en", "[\"usa\",\"opendata\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer 'Perimeters' from the 'WV EFire InFORM view' service, GeoJSON with per-feature geometry.");
 
@@ -206,49 +216,49 @@ VRSS(nam_calif_oal_rss, "nam-calif-oal-rss", "California Office of Administrativ
 
 VGEO(nam_caltrans_airport_runways_airport_runways, "nam-caltrans-airport-runways-airport-runways", "Caltrans — Airport Runways (Airport Runways)", "Caltrans — Airport Runways (Airport Runways)",
   "us_state", "transport",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHaviation/Airport_Runways/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHaviation/Airport_Runways/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"ca\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Caltrans: Airport Runways, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_caltrans_all_roads_all_roads, "nam-caltrans-all-roads-all-roads", "Caltrans — All Roads (All Roads)", "Caltrans — All Roads (All Roads)",
   "us_state", "transport",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHhighway/All_Roads/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHhighway/All_Roads/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"ca\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Caltrans: All Roads, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_caltrans_cctv_cctv, "nam-caltrans-cctv-cctv", "Caltrans — CCTV (CCTV)", "Caltrans — CCTV (CCTV)",
   "us_state", "opendata",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHhighway/CCTV/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHhighway/CCTV/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"ca\",\"opendata\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Caltrans: CCTV, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_caltrans_ccvra_erosion_risk_ccvra_erosion_risk, "nam-caltrans-ccvra-erosion-risk-ccvra-erosion-risk", "Caltrans — CCVRA Erosion Risk (CCVRA Erosion Risk)", "Caltrans — CCVRA Erosion Risk (CCVRA Erosion Risk)",
   "us_state", "opendata",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CCVRA/CCVRA_Erosion_Risk/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CCVRA/CCVRA_Erosion_Risk/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"ca\",\"opendata\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Caltrans: CCVRA Erosion Risk, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_caltrans_crs_functional_classification_crs_functional_class, "nam-caltrans-crs-functional-classification-crs-functional-class", "Caltrans — CRS - Functional Classification (CRS Functional Classification)", "Caltrans — CRS - Functional Classification (CRS Functional Classification)",
   "us_state", "opendata",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHhighway/CRS_Functional_Classification/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHhighway/CRS_Functional_Classification/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"ca\",\"opendata\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Caltrans: CRS - Functional Classification, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_caltrans_hospital_heliports_hospital_heliports, "nam-caltrans-hospital-heliports-hospital-heliports", "Caltrans — Hospital Heliports (Hospital Heliports)", "Caltrans — Hospital Heliports (Hospital Heliports)",
   "us_state", "health",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHaviation/Hospital_Heliports/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHaviation/Hospital_Heliports/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"ca\",\"health\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Caltrans: Hospital Heliports, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_caltrans_local_bridges_local_bridges, "nam-caltrans-local-bridges-local-bridges", "Caltrans — Local Bridges (Local Bridges)", "Caltrans — Local Bridges (Local Bridges)",
   "us_state", "transport",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHhighway/Local_Bridges/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHhighway/Local_Bridges/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"ca\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Caltrans: Local Bridges, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_caltrans_public_airport_public_airports, "nam-caltrans-public-airport-public-airports", "Caltrans — Public Airports (Public Airport)", "Caltrans — Public Airports (Public Airport)",
   "us_state", "transport",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHaviation/Public_Airport/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CHaviation/Public_Airport/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"ca\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Caltrans: Public Airports, returned as GeoJSON with per-feature geometry.");
 
@@ -353,61 +363,61 @@ AGSDIR(nam_md_imap_services, "nam-md-imap-services", "Maryland iMAP — ArcGIS s
 
 VGEO(nam_md_md_bepscoveredbuildings_maryland_beps_covered_buil, "nam-md-md-bepscoveredbuildings-maryland-beps-covered-buil", "Maryland iMAP — Maryland BEPS Covered Buildings (MD BEPSCoveredBuildings)", "Maryland iMAP — Maryland BEPS Covered Buildings (MD BEPSCoveredBuildings)",
   "us_state", "opendata",
-  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_BEPSCoveredBuildings/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_BEPSCoveredBuildings/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"md\",\"opendata\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Maryland iMAP: Maryland BEPS Covered Buildings, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_md_md_censusdata_census_tracts, "nam-md-md-censusdata-census-tracts", "Maryland iMAP — Census Tracts (MD CensusData)", "Maryland iMAP — Census Tracts (MD CensusData)",
   "us_state", "opendata",
-  "https://mdgeodata.md.gov/imap/rest/services/Demographics/MD_CensusData/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://mdgeodata.md.gov/imap/rest/services/Demographics/MD_CensusData/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID_1%20ASC",
   "en", "[\"usa\",\"md\",\"opendata\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer from Maryland iMAP: Census Tracts, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_md_md_chesapeakebaydeadzones_chesapeake_bay_dead_zone, "nam-md-md-chesapeakebaydeadzones-chesapeake-bay-dead-zone", "Maryland iMAP — Chesapeake Bay Dead Zones (MD ChesapeakeBayDeadZones)", "Maryland iMAP — Chesapeake Bay Dead Zones (MD ChesapeakeBayDeadZones)",
   "us_state", "opendata",
-  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_ChesapeakeBayDeadZones/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_ChesapeakeBayDeadZones/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"md\",\"opendata\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer from Maryland iMAP: Chesapeake Bay Dead Zones, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_md_md_coastalresiliencyassessment_priority_shoreline, "nam-md-md-coastalresiliencyassessment-priority-shoreline", "Maryland iMAP — Priority Shoreline Areas (MD CoastalResiliencyAssessment)", "Maryland iMAP — Priority Shoreline Areas (MD CoastalResiliencyAssessment)",
   "us_state", "environment",
-  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_CoastalResiliencyAssessment/FeatureServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_CoastalResiliencyAssessment/FeatureServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"md\",\"environment\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Maryland iMAP: Priority Shoreline Areas, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_md_md_criticalareas_critical_areas_counties, "nam-md-md-criticalareas-critical-areas-counties", "Maryland iMAP — Critical Areas Counties (MD CriticalAreas)", "Maryland iMAP — Critical Areas Counties (MD CriticalAreas)",
   "us_state", "opendata",
-  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_CriticalAreas/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_CriticalAreas/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"md\",\"opendata\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Maryland iMAP: Critical Areas Counties, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_md_md_criticalareas_critical_areas_towns, "nam-md-md-criticalareas-critical-areas-towns", "Maryland iMAP — Critical Areas Towns (MD CriticalAreas)", "Maryland iMAP — Critical Areas Towns (MD CriticalAreas)",
   "us_state", "opendata",
-  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_CriticalAreas/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_CriticalAreas/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"md\",\"opendata\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Maryland iMAP: Critical Areas Towns, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_md_md_focalareas_targeted_ecological_areas, "nam-md-md-focalareas-targeted-ecological-areas", "Maryland iMAP — Targeted Ecological Areas (MD FocalAreas)", "Maryland iMAP — Targeted Ecological Areas (MD FocalAreas)",
   "us_state", "environment",
-  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_FocalAreas/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_FocalAreas/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"md\",\"environment\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Maryland iMAP: Targeted Ecological Areas, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_md_md_nutrientmanagementsetbacksfromwaterways_rivers, "nam-md-md-nutrientmanagementsetbacksfromwaterways-rivers", "Maryland iMAP — Rivers Streams and Ditches (MD NutrientManagementSetbacksFromWaterways)", "Maryland iMAP — Rivers Streams and Ditches (MD NutrientManagementSetbacksFromWaterways)",
   "us_state", "environment",
-  "https://mdgeodata.md.gov/imap/rest/services/Agriculture/MD_NutrientManagementSetbacksFromWaterways/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://mdgeodata.md.gov/imap/rest/services/Agriculture/MD_NutrientManagementSetbacksFromWaterways/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"md\",\"environment\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Maryland iMAP: Rivers Streams and Ditches, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_md_md_pointsourcedischarges_point_source_discharges, "nam-md-md-pointsourcedischarges-point-source-discharges", "Maryland iMAP — Point Source Discharges (MD PointSourceDischarges)", "Maryland iMAP — Point Source Discharges (MD PointSourceDischarges)",
   "us_state", "opendata",
-  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_PointSourceDischarges/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_PointSourceDischarges/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"md\",\"opendata\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Maryland iMAP: Point Source Discharges, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_md_md_protectedlands_md_environmental_trust_easements, "nam-md-md-protectedlands-md-environmental-trust-easements", "Maryland iMAP — MD Environmental Trust Easements (MD ProtectedLands)", "Maryland iMAP — MD Environmental Trust Easements (MD ProtectedLands)",
   "us_state", "environment",
-  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_ProtectedLands/FeatureServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_ProtectedLands/FeatureServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"md\",\"environment\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Maryland iMAP: MD Environmental Trust Easements, returned as GeoJSON with per-feature geometry.");
 

@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 #define FIRST_PAGE_SIZE 100
 /* Runaway guard, not an editorial bound: the walk normally ends on `total`
@@ -33,7 +34,7 @@
  * FIRST is a growing membership, though, and a ceiling that quietly clipped
  * the directory once it passed 1,200 teams would be invisible — so a run that
  * ends here says so with a collector-truncation-notice, and the ceiling is
- * raisable with $JO_FIRST_MAX_PAGES. */
+ * raisable with $JO_PAGE_MAX. */
 #define FIRST_MAX_PAGES 12   /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
 
 static void put(cJSON *p, const char *out_key, cJSON *rec, const char *in_key) {
@@ -94,8 +95,11 @@ static int run(const source_ctx *c, intel_sink *s) {
   int total_rows = 0, pages_ok = 0;
   double total = -1;
   int max_pages = FIRST_MAX_PAGES, hit_ceiling = 0, walked_out = 0, mid_fail = 0;
-  const char *penv = getenv("JO_FIRST_MAX_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_FIRST_MAX_PAGES) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  max_pages = jo_page_max_for(max_pages);
   char url[160];
 
   for (int page = 0; page < max_pages; page++) {
@@ -138,7 +142,7 @@ static int run(const source_ctx *c, intel_sink *s) {
                     total > 0 ? (long)total : -1,
                     "the page-walk ceiling stopped the run before FIRST's team "
                     "directory was exhausted",
-                    "raise $JO_FIRST_MAX_PAGES");
+                    "raise $JO_PAGE_MAX");
   /* A mid-walk page fetch failure (network blip, upstream 5xx) also leaves the
    * directory incomplete, and unlike the ceiling case above it is unpredictable
    * — it can recur on later scheduled runs too, and the only trace of it was

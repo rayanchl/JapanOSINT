@@ -23,6 +23,7 @@
 #include "alert_deliver.h"
 #include "httpclient.h"
 #include "intelapi.h"
+#include "jo_codec.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <curl/curl.h>
@@ -207,23 +208,6 @@ static size_t mail_read(char *buf, size_t sz, size_t nm, void *ud) {
   return n;
 }
 
-static void b64(const unsigned char *in, size_t n, char *out, size_t out_sz) {
-  static const char *A =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-  size_t o = 0;
-  for (size_t i = 0; i < n; i += 3) {
-    if (o + 5 >= out_sz) break;
-    unsigned v = (unsigned)in[i] << 16;
-    if (i + 1 < n) v |= (unsigned)in[i+1] << 8;
-    if (i + 2 < n) v |= (unsigned)in[i+2];
-    out[o++] = A[(v >> 18) & 0x3F];
-    out[o++] = A[(v >> 12) & 0x3F];
-    out[o++] = (i + 1 < n) ? A[(v >> 6) & 0x3F] : '=';
-    out[o++] = (i + 2 < n) ? A[v & 0x3F] : '=';
-  }
-  out[o] = '\0';
-}
-
 /* Rule names here are routinely Japanese. A raw 8-bit Subject: is illegal and
  * gets mangled or bounced by strict MTAs, so non-ASCII subjects go out as an
  * RFC 2047 base64 encoded-word. ASCII subjects stay readable in the raw log. */
@@ -244,9 +228,17 @@ static void encode_subject(const char *name, char *out, size_t out_sz) {
   for (const char *p = raw; *p; p++)
     if ((unsigned char)*p > 0x7F || (unsigned char)*p < 0x20) { ascii = 0; break; }
   if (ascii) { snprintf(out, out_sz, "%s", raw); return; }
-  char enc[512];
-  b64((const unsigned char *)raw, strlen(raw), enc, sizeof enc);
+  /* Standard padded base64 from core/jo_codec.h (2026-11-12; this file had
+   * its own copy, same alphabet and padding). The old copy wrote into a
+   * 512-byte buffer and stopped short of overflowing it, but raw is at most
+   * 255 bytes = 344 encoded, so that bound never fired and the output is
+   * byte-identical. On allocation failure the subject falls back to a fixed
+   * ASCII one — never to `raw`, which is exactly the header-injection path
+   * the comment above closes. */
+  char *enc = jo_b64_encode(raw, strlen(raw));
+  if (!enc) { snprintf(out, out_sz, "[JapanOSINT] alert"); return; }
   snprintf(out, out_sz, "=?UTF-8?B?%s?=", enc);
+  free(enc);
 }
 
 static int smtp_config(const char **url, const char **user,

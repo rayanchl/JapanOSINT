@@ -88,8 +88,8 @@ static int on_msg(const char *data, size_t len, void *udp) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *we = getenv("BLUESKY_JETSTREAM_WINDOW_MS");
-  const char *me = getenv("BLUESKY_JETSTREAM_MAX");
+  const char *we = jo_getenv("BLUESKY_JETSTREAM_WINDOW_MS");
+  const char *me = jo_getenv("BLUESKY_JETSTREAM_MAX");
   int window = we ? atoi(we) : 8000;
   int max    = me ? atoi(me) : 200;
   if (window <= 0) window = 8000;

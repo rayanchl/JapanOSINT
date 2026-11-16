@@ -17,6 +17,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 /* Emit one intel row for a single OpenCorporates company object. Returns 1 if
  * emitted. */
@@ -53,7 +54,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   cJSON_AddStringToObject(props, "source", "OpenCorporates");
   if (st && cJSON_IsString(st)) cJSON_AddStringToObject(props, "status", st->valuestring);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   /* Stable per-company key = jurisdiction:company_number. */
@@ -64,7 +65,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = name ? name : "company";
-  it.body            = bj;
+  it.body = bj;
   it.summary         = name ? name : "company";
   it.link            = (url && cJSON_IsString(url)) ? url->valuestring : NULL;
   it.record_type     = "osint_service_result";

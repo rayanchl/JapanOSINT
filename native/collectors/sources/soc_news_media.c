@@ -54,7 +54,6 @@
 #include <string.h>
 
 static const char *const SOC_UA[] = {
-  "User-Agent: JapanOSINT-native/1.0 (OSINT research collector; +https://github.com/)",
   "Accept: application/json", NULL
 };
 
@@ -63,7 +62,7 @@ static const char *const SOC_UA[] = {
 static int run_guardian(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!jo_looks_like_keyword(q)) return 0;
-  const char *key = getenv("GUARDIAN_API_KEY");
+  const char *key = jo_getenv("GUARDIAN_API_KEY");
   if (!key || !*key) key = "test";   /* the publisher's documented open tier */
   char *enc = soc_urlenc(q);
   char *kenc = soc_urlenc(key);

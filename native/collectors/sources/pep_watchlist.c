@@ -16,16 +16,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 static int opensanctions(const source_ctx *ctx, intel_sink *sink, const char *entity,
                          const char *service, const char *tags, int pep_only) {
-  const char *key = getenv("OPENSANCTIONS_API_KEY");
+  const char *key = jo_getenv("OPENSANCTIONS_API_KEY");
   if (!key || !*key) {
     /* honest empty without a key — but SAY so, otherwise a gated run is
      * indistinguishable from "screened and clean", which is the one wrong
      * conclusion a sanctions check must never invite. */
-    fprintf(stderr, "[%s] gated (no OPENSANCTIONS_API_KEY)\n", service);
-    return 0;
+    return jo_needs_credential(sink, service, service,
+                               (const char *const[]){"OPENSANCTIONS_API_KEY", NULL}, NULL, NULL);
   }
   char enc[512]; jo_urlencode_buf(entity, enc, sizeof enc);
   char url[700];

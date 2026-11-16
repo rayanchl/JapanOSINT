@@ -47,7 +47,10 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .record_type = "citation-record",
     .tags = "\"research\",\"citation\",\"europepmc\",\"bibliometrics\"",
     .mode = HP_JSON, .want = HP_NUMERIC, .free_tier = 1,
-    .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/{qd}/citations?format=json&pageSize=100",
+    /* `&page=1` bound 2026-11-12 so page 1 is asked for, not defaulted: the
+     * API is 1-based (no page and page=1 answer the same first ids, page=2
+     * the next, page=0 is refused "Invalid page number"). */
+    .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/{qd}/citations?format=json&pageSize=100&page=1",
     .array_path = "citationList.citation",
     .id_keys = "id",
     .page_param = "page",
@@ -65,7 +68,9 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .record_type = "citation-record",
     .tags = "\"research\",\"citation\",\"europepmc\",\"references\"",
     .mode = HP_JSON, .want = HP_NUMERIC, .free_tier = 1,
-    .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/{qd}/references?format=json&pageSize=100",
+    /* `&page=1` bound 2026-11-12, as EUROPEPMC_CITATIONS above (1-based,
+     * measured on the references endpoint too). */
+    .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/{qd}/references?format=json&pageSize=100&page=1",
     .array_path = "referenceList.reference",
     .id_keys = "id",
     .page_param = "page",
@@ -613,7 +618,10 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .record_type = "software-record",
     .tags = "\"research\",\"openaire\",\"software\",\"repository\",\"eu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.openaire.eu/search/software?keywords={q}&format=json&size=50",
+    /* `&page=1` bound 2026-11-12: the legacy search API is 1-based (no page
+     * and page=1 answer the same first five software ids and header page 1;
+     * page=2 the next five; total 8,971 for "climate" unchanged by page). */
+    .url = "https://api.openaire.eu/search/software?keywords={q}&format=json&size=50&page=1",
     .array_path = "response.results.result",
     .page_param = "page",
     .page_start = 1,

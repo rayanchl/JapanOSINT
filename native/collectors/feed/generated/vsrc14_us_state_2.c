@@ -8,37 +8,52 @@
 #include "_verified_macros.inc"
 #include "_vjson_idkeys.inc"
 
+/* Scoped Socrata catalogue rows below carry `order=createdAt` (2026-11-07),
+ * as their scoped siblings already do. Without it the catalogue answers in
+ * relevance order, which promises nothing stable across an offset walk.
+ * Measured on api.us.socrata.com: `order=createdAt` is NEWEST FIRST (NYC,
+ * 3,032 datasets, first 2026-09-29; `createdAt ASC` answers 2011), the total
+ * does not move, offset=3 continues the same order, and `order=frobnicate` is
+ * HTTP 400 "not a supported sort". Newest-first means a dataset created during
+ * the walk can repeat one record at a page seam, never skip one; the
+ * 20-page ceiling is then the newest 2,000 (limit=100) or 1,000 (limit=50). */
 VJSON(us_socrata_discovery_pennsylvania, "us-socrata-discovery-pennsylvania", "Commonwealth of Pennsylvania Open Data — Asset Discovery", "ペンシルベニア州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.pa.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.pa.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"pennsylvania\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.pa.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
+/* 2026-11-09: order=dataset_id, not createdAt. createdAt has TIES, and the
+ * walk read 696 of resultSetSize 696 with 2 datasets twice (vgcx-wfte,
+ * arai-ggjv) — so 2 others were never served. dataset_id is unique, honoured
+ * (a different first page; `order=frobnicate` is 400) and the total does not
+ * move. This catalogue completes inside the 20-page ceiling, so a total order
+ * reads all of it; the larger catalogues keep createdAt's newest 2,000. */
 VJSON(us_socrata_discovery_seattle, "us-socrata-discovery-seattle", "City of Seattle Open Data — Asset Discovery", "シアトル市 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.seattle.gov&search_context=data.seattle.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.seattle.gov&search_context=data.seattle.gov&order=dataset_id",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"seattle\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.seattle.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_sfgov, "us-socrata-discovery-sfgov", "City of San Francisco Open Data — Asset Discovery", "サンフランシスコ市 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.sf.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.sf.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"sfgov\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.sf.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_texas, "us-socrata-discovery-texas", "State of Texas Open Data — Asset Discovery", "テキサス州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.texas.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.texas.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"texas\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.texas.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_washington, "us-socrata-discovery-washington", "Washington State Open Data — Asset Discovery", "ワシントン州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.wa.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.wa.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"washington\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.wa.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
@@ -92,12 +107,8 @@ VJSON(us_socrata_metadata_chicago, "us-socrata-metadata-chicago", "City of Chica
   "en", "[\"usa\",\"opendata\",\"socrata\",\"metadata\",\"chicago\"]", 86400,
   "Portal-side metadata for the assets hosted on data.cityofchicago.org: name, description, category, tags, attribution, licence, owner and provenance for each view.");
 
-VJSON(us_socrata_metadata_chronicdata, "us-socrata-metadata-chronicdata", "US CDC Chronic Disease Data — Asset Metadata", "米国CDC 慢性疾患 メタデータ",
-  "us_state", "opendata",
-  "https://chronicdata.cdc.gov/api/views/metadata/v1?limit=500&page_size=500&page=1",
-  "",
-  "en", "[\"usa\",\"opendata\",\"socrata\",\"metadata\",\"chronicdata\"]", 86400,
-  "Portal-side metadata for the assets hosted on chronicdata.cdc.gov: name, description, category, tags, attribution, licence, owner and provenance for each view.");
+/* us-socrata-metadata-chronicdata: removed 2026-11-11 (owner's decision) — a twin of us-socrata-metadata-cdc: alias host; identical metadata id sets.
+   docs/removed-sources-2026-11-11-twins.tsv */
 
 VJSON(us_socrata_metadata_colorado, "us-socrata-metadata-colorado", "State of Colorado Open Data — Asset Metadata", "コロラド州 メタデータ",
   "us_state", "opendata",
@@ -280,7 +291,15 @@ VJSON(us_socrata_metadata_washington, "us-socrata-metadata-washington", "Washing
  * sweep's 2-8% per-query losses came from (assets have a unique permalink;
  * the same asset re-served twice upserts onto itself while the one it
  * displaced is never fetched). `order=createdAt` is accepted by the API and
- * makes the walk repeatable (identical pages on re-fetch, 0 overlap). */
+ * makes the walk repeatable (identical pages on re-fetch, 0 overlap).
+ *
+ * 2026-11-07: bare `order=createdAt` is DESCENDING, newest first (Chicago's scoped catalogue:
+ * 2026-10-26 first, `createdAt ASC` answers 2010, the control `order=frobnicate` is HTTP 400).
+ * So these rows read the NEWEST limit x 20 pages (2,000 at limit=100), not the whole match set:
+ * every query measured that day fits (311 service requests 483, arrests 450, building permits
+ * 1,079, school enrollment 934), and one that outgrows it stops at the page ceiling and files
+ * the ceiling's truncation notice. That notice cannot yet name the match set's size, because
+ * the catalogue's `resultSetSize` is not a declared-total spelling (lib/pagewalk.c). */
 VJSON(us_socrata_search_311_requests, "us-socrata-search-311-requests", "Socrata Cross-Portal Search — 311 Service Requests", "Socrata 横断検索 311 service requests",
   "us_state", "government",
   "https://api.us.socrata.com/api/catalog/v1?limit=100&q=311%20service%20requests&order=createdAt",

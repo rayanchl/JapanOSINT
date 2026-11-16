@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { LuDatabase, LuClock, LuScrollText, LuKey, LuRefreshCw, LuPlay, LuLockOpen, LuWrench } from 'react-icons/lu';
-import { api, ApiError } from '../../api/client.js';
+import { api, ApiError, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { useMoreRows } from '../../hooks/usePagedList.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import ThresholdsTab from './ThresholdsTab.jsx';
+import CollectorTtlsTab from './CollectorTtlsTab.jsx';
+import StationMergesTab from './StationMergesTab.jsx';
 import {
   Page, Section, Row, Card, Pill, Button, Input, Field, Segmented, Sheet, Toggle,
   ConfirmDialog, ErrorNotice, EmptyState, LoadingState, BoundNote, PagedFooter, KV, Spinner, cx, toast,
@@ -22,6 +24,9 @@ const TABS = [
   { value: 'breach', label: 'Breach corpus' },
   { value: 'pagination', label: 'Pagination' },
   { value: 'thresholds', label: 'Thresholds' },
+  { value: 'ttls', label: 'Cache TTLs' },
+  { value: 'station-merges', label: 'Station merges' },
+  { value: 'audit', label: 'Audit log' },
   { value: 'server', label: 'Server' },
 ];
 
@@ -96,12 +101,122 @@ export default function AdminPage() {
       {tab === 'breach' && <BreachTab />}
       {tab === 'pagination' && <PaginationTab />}
       {tab === 'thresholds' && <ThresholdsTab />}
+      {tab === 'ttls' && <CollectorTtlsTab />}
+      {tab === 'station-merges' && <StationMergesTab />}
+      {tab === 'audit' && <AuditTab />}
       {tab === 'server' && <ServerTab />}
       <SourcePipelineSheet sourceId={pipelineId} onClose={() => setPipelineId(null)} />
       {auth.isPlatformAdmin === false && (
         <ErrorNotice title="The server answered 403 for this account on an operator route">Everything on this page will be refused until the account is listed in PLATFORM_OPERATOR_EMAILS / PLATFORM_OPERATOR_IDS.</ErrorNotice>
       )}
     </Page>
+  );
+}
+
+/**
+ * The audit hash chain of the ACTIVE workspace (tenant): GET /api/audit
+ * (newest first, limit/offset, tenantapi_audit_list) and GET /api/audit/verify
+ * (re-walks the whole chain with the writer's own hash function and counts
+ * the rows it cannot verify as `unchained` rather than passing over them).
+ * Neither had a UI until 2026-11-07. The list route answers
+ * {limit, offset, count} and no total, so a full page means "there may be
+ * more", which is what the footer says.
+ *
+ * `?scope=platform` (2026-11-12) reads the OPERATOR chain instead — rows the
+ * server writes under the reserved "platform" tenant (break-glass logins,
+ * cadence/schedule/threshold edits, collector runs, raw evidence reads),
+ * which no page could show before. The server answers it to a platform
+ * operator only and 403s anyone else, so the switch is offered to operators
+ * and a refusal is still rendered as the server's.
+ */
+const AUDIT_PAGE = 100;
+export function AuditTab() {
+  const auth = useAuth();
+  const [chain, setChain] = useState('workspace');
+  const scopeQuery = chain === 'platform' ? { scope: 'platform' } : {};
+  const [rows, setRows] = useState([]);
+  const [page, setPage] = useState(null);
+  const [state, setState] = useState({ loading: true, error: null, moreError: null, loadingMore: false });
+  const [verify, setVerify] = useState({ busy: false, data: null, error: null });
+  const seq = useRef(0);
+  const load = async (offset = 0) => {
+    const my = offset === 0 ? ++seq.current : seq.current;
+    setState((s) => (offset === 0 ? { ...s, loading: true, error: null } : { ...s, loadingMore: true, moreError: null }));
+    try {
+      const j = await api.get('/api/audit', { query: { limit: AUDIT_PAGE, offset, ...scopeQuery } });
+      if (my !== seq.current) return;
+      const d = Array.isArray(j?.data) ? j.data : [];
+      setRows((xs) => (offset === 0 ? d : [...xs, ...d]));
+      setPage(j?.page || null);
+      setState({ loading: false, error: null, moreError: null, loadingMore: false });
+    } catch (e) {
+      if (my !== seq.current) return;
+      setState((s) => (offset === 0 ? { ...s, loading: false, error: e } : { ...s, loadingMore: false, moreError: e }));
+    }
+  };
+  useEffect(() => { setRows([]); setPage(null); setVerify({ busy: false, data: null, error: null }); load(0); }, [chain]); // eslint-disable-line react-hooks/exhaustive-deps
+  const runVerify = async () => {
+    setVerify({ busy: true, data: null, error: null });
+    try { setVerify({ busy: false, data: await api.get('/api/audit/verify', { query: scopeQuery }), error: null }); }
+    catch (e) { setVerify({ busy: false, data: null, error: e }); }
+  };
+  const mayHaveMore = page && Number.isFinite(page.count) && page.count >= (page.limit || AUDIT_PAGE);
+  const v = verify.data;
+  return (
+    <div className="space-y-4">
+      {auth?.isPlatformAdmin && (
+        <div className="flex items-center gap-2 text-[11px] text-osint-muted">
+          <Segmented value={chain} onChange={setChain} options={[{ value: 'workspace', label: 'This workspace' }, { value: 'platform', label: 'Platform (operators)' }]} />
+          <span>{chain === 'platform' ? 'Operator actions recorded under the platform chain. Platform operators only.' : 'The active workspace\'s own chain.'}</span>
+        </div>
+      )}
+      <Section label="Chain verification" right={<Button size="sm" busy={verify.busy} onClick={runVerify}>Verify the whole chain</Button>}>
+        <div className="text-[11px] text-osint-muted">Re-hashes every audit row of {chain === 'platform' ? 'the platform chain' : 'this workspace'} in order. Rows written without a hash cannot be verified and are counted, not skipped.</div>
+        {verify.error && <ErrorNotice error={verify.error} title="Verification could not run" />}
+        {v && (
+          <KV className="mt-2" pairs={[
+            ['result', <Pill tone={v.ok ? 'success' : 'danger'}>{v.ok ? 'chain intact' : 'chain BROKEN'}</Pill>],
+            ['rows verified', v.count],
+            v.brokenAt != null && ['broken at chain_seq', v.brokenAt],
+            v.reason && ['reason', v.reason],
+            ['unchained (not verifiable)', v.unchained == null ? 'not measured' : v.unchained],
+            v.tip && ['chain tip', typeof v.tip === 'object' ? JSON.stringify(v.tip) : String(v.tip)],
+          ].filter(Boolean)} />
+        )}
+      </Section>
+      <Section label="Audit events" right={<Button size="sm" variant="ghost" onClick={() => load(0)}><LuRefreshCw size={12} /></Button>} padded={false}>
+        {state.loading && rows.length === 0 && <LoadingState label="Loading audit events…" />}
+        {state.error && <div className="p-2"><ErrorNotice error={state.error} title={opError(state.error) || 'Could not load the audit log'} onRetry={() => load(0)} /></div>}
+        {!state.loading && !state.error && rows.length === 0 && <EmptyState title={chain === 'platform' ? 'No audit events recorded in the platform chain.' : 'No audit events recorded for this workspace.'} />}
+        {rows.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full text-[11px]">
+              <thead><tr className="text-osint-muted text-left border-b border-osint-border"><th className="px-3 py-1">seq</th><th className="pr-2">when</th><th className="pr-2">action</th><th className="pr-2">target</th><th className="pr-2">user</th><th className="pr-2">ip</th><th>hash</th></tr></thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr key={r.id} className="border-b border-osint-border/30 align-top">
+                    <td className="px-3 py-1 font-mono">{r.chain_seq ?? '—'}</td>
+                    <td className="pr-2 font-mono whitespace-nowrap" title={r.ts}>{shortTime(r.ts)}</td>
+                    <td className="pr-2 font-mono">{r.action}</td>
+                    <td className="pr-2 font-mono break-all">{r.target || ''}</td>
+                    <td className="pr-2 font-mono break-all">{r.user_id || ''}</td>
+                    <td className="pr-2 font-mono">{r.ip || ''}</td>
+                    <td className="font-mono text-osint-muted" title={r.row_hash || 'unchained'}>{r.row_hash ? `${String(r.row_hash).slice(0, 10)}…` : 'unchained'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {rows.length > 0 && (
+          <div className="flex items-center gap-2 px-3 py-2 text-[11px] font-mono text-osint-muted">
+            <span>{rows.length} events shown{mayHaveMore ? ' · the last page was full, so more may exist (the server reports no total)' : ' · end of the log'}</span>
+            {mayHaveMore && <Button size="sm" busy={state.loadingMore} onClick={() => load(rows.length)}>Load more</Button>}
+            {state.moreError && <span className="text-neon-red">next page failed — {errorMessage(state.moreError)}</span>}
+          </div>
+        )}
+      </Section>
+    </div>
   );
 }
 
@@ -579,7 +694,16 @@ function StepCard({ n, title, hint, children }) {
 }
 
 function BreachTab() {
-  const status = useApi('/api/status');
+  /* The catalogue counters come from /api/status?summary=1 (2026-11-07): the
+   * full /api/status this read is the whole source catalogue plus every
+   * breach row, tens of MB, for two numbers the summary carries
+   * (breachTotal / breachMaterialized are counted over every row server
+   * side). The breach-id suggestions need the rows themselves and no route
+   * lists breach-catalogue ids on their own, so that download happens only
+   * when asked for. */
+  const status = useApi('/api/status?summary=1');
+  const [wantIds, setWantIds] = useState(false);
+  const idsQ = useApi(wantIds ? '/api/status' : null, { enabled: wantIds, deps: [wantIds] });
   const jobsQ = useApi('/api/admin/breach/jobs');
   const jobs = jobsQ.data?.jobs || [];
   const busyAny = jobs.some(isRunning);
@@ -611,7 +735,7 @@ function BreachTab() {
   const [confirmIngest, setConfirmIngest] = useState(false);
 
   const summary = status.data?.summary;
-  const breachSources = useMemo(() => (status.data?.apis || []).filter((s) => s.category === 'breach'), [status.data]);
+  const breachSources = useMemo(() => (idsQ.data?.apis || []).filter((s) => s.category === 'breach'), [idsQ.data]);
   const suggestions = useMemo(() => {
     const q = sourceId.toLowerCase();
     const pool = q ? breachSources.filter((s) => s.id.toLowerCase().includes(q) || (s.name || '').toLowerCase().includes(q)) : breachSources;
@@ -717,6 +841,10 @@ function BreachTab() {
           <Field label="Source (breach id)">
             <Input mono list="breach-source-ids" placeholder="breach id" value={sourceId} onChange={(e) => setSourceId(e.target.value)} />
             <datalist id="breach-source-ids">{suggestions.map((s) => <option key={s.id} value={s.id}>{s.name || s.id}</option>)}</datalist>
+            {!wantIds && <button type="button" className="mt-1 text-[10px] text-accent hover:underline" onClick={() => setWantIds(true)}>suggest breach ids (downloads the full status catalogue)</button>}
+            {idsQ.loading && <div className="text-[10px] text-osint-muted">loading breach ids…</div>}
+            {idsQ.error && <div className="text-[10px] text-neon-red font-mono">breach ids unavailable — {errorMessage(idsQ.error)}</div>}
+            {idsQ.data && breachSources.length > suggestions.length && <div className="text-[10px] text-osint-muted">suggesting {suggestions.length} of {breachSources.length} matching breach ids — type more to narrow</div>}
           </Field>
           <Field label="Stage from URL">
             <div className="flex gap-2">

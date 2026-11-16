@@ -47,11 +47,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B31_JPGOV[] = {
   /* ── The corporate number spine ───────────────────────────────────────── */
   { .id = "JP_NTA_HOUJIN_WEBAPI", .name = "NTA — corporate number (法人番号) Web-API",
     .name_ja = "国税庁 法人番号システムWeb-API", .category = "government",
     .portal = "https://www.houjin-bangou.nta.go.jp", .record_type = "jp-entity",
+    .lang = "ja",
     .tags = "\"jp\",\"registry\",\"identity\"", .key_env = "NTA_HOUJIN_APP_ID",
     .free_tier = 1, .type = "api", .mode = HP_CSV,
     .url = "https://api.houjin-bangou.nta.go.jp/4/name?id={key}&name={q}"
@@ -67,6 +73,7 @@ static const hp_source HP3B31_JPGOV[] = {
   { .id = "JP_NTA_INVOICE_ISSUER", .name = "NTA — qualified invoice issuer register",
     .name_ja = "国税庁 適格請求書発行事業者公表", .category = "government",
     .portal = "https://www.invoice-kohyo.nta.go.jp", .record_type = "jp-tax-registration",
+    .lang = "ja",
     .tags = "\"jp\",\"tax\",\"identity\"", .key_env = "NTA_INVOICE_APP_ID",
     .want = HP_NUMERIC, .free_tier = 1,
     /* Registration numbers are "T" + 13 digits. {qd} keeps only the digits, so the
@@ -82,6 +89,7 @@ static const hp_source HP3B31_JPGOV[] = {
   { .id = "JP_GBIZINFO_COMPANY", .name = "gBizINFO — government-held company profile",
     .name_ja = "gBizINFO 法人情報", .category = "government",
     .portal = "https://info.gbiz.go.jp", .record_type = "jp-entity",
+    .lang = "ja",
     .tags = "\"jp\",\"registry\",\"government\"", .key_env = "GBIZINFO_API_TOKEN",
     .free_tier = 1,
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
@@ -96,6 +104,7 @@ static const hp_source HP3B31_JPGOV[] = {
   { .id = "JP_GBIZINFO_SUBSIDY", .name = "gBizINFO — subsidies received (補助金)",
     .name_ja = "gBizINFO 補助金情報", .category = "government",
     .portal = "https://info.gbiz.go.jp", .record_type = "jp-subsidy",
+    .lang = "ja",
     .tags = "\"jp\",\"subsidy\",\"public-money\"", .key_env = "GBIZINFO_API_TOKEN",
     .free_tier = 1,
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
@@ -111,6 +120,7 @@ static const hp_source HP3B31_JPGOV[] = {
   { .id = "JP_GBIZINFO_PROCUREMENT", .name = "gBizINFO — government contracts won (調達)",
     .name_ja = "gBizINFO 調達情報", .category = "government",
     .portal = "https://info.gbiz.go.jp", .record_type = "jp-public-contract",
+    .lang = "ja",
     .tags = "\"jp\",\"procurement\",\"public-money\"", .key_env = "GBIZINFO_API_TOKEN",
     .free_tier = 1,
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
@@ -126,6 +136,7 @@ static const hp_source HP3B31_JPGOV[] = {
   { .id = "JP_GBIZINFO_CERTIFICATION", .name = "gBizINFO — certifications & commendations (認定)",
     .name_ja = "gBizINFO 表彰/認定情報", .category = "government",
     .portal = "https://info.gbiz.go.jp", .record_type = "jp-certification",
+    .lang = "ja",
     .tags = "\"jp\",\"certification\",\"government\"", .key_env = "GBIZINFO_API_TOKEN",
     .free_tier = 1,
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
@@ -142,6 +153,7 @@ static const hp_source HP3B31_JPGOV[] = {
   { .id = "JP_GBIZINFO_PATENT", .name = "gBizINFO — patents held (特許)",
     .name_ja = "gBizINFO 特許情報", .category = "research",
     .portal = "https://info.gbiz.go.jp", .record_type = "jp-patent",
+    .lang = "ja",
     .tags = "\"jp\",\"patent\",\"ip\"", .key_env = "GBIZINFO_API_TOKEN",
     .free_tier = 1,
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
@@ -157,6 +169,7 @@ static const hp_source HP3B31_JPGOV[] = {
   { .id = "JP_GBIZINFO_FINANCE", .name = "gBizINFO — financial summary (財務情報)",
     .name_ja = "gBizINFO 財務情報", .category = "finance",
     .portal = "https://info.gbiz.go.jp", .record_type = "jp-financials",
+    .lang = "ja",
     .tags = "\"jp\",\"financials\"", .key_env = "GBIZINFO_API_TOKEN", .free_tier = 1,
     .url = "https://info.gbiz.go.jp/hojin/v1/hojin?name={q}&limit=5000",
     .headers = { "X-hojinInfo-api-token: {key}", NULL },
@@ -172,6 +185,7 @@ static const hp_source HP3B31_JPGOV[] = {
   { .id = "JP_EGOV_LAW_SEARCH", .name = "e-Gov — Japanese statute & ordinance API",
     .name_ja = "e-Gov 法令検索API", .category = "government",
     .portal = "https://laws.e-gov.go.jp", .record_type = "jp-legislation",
+    .lang = "ja",
     .tags = "\"jp\",\"law\"", .free_tier = 1,
     .url = "https://laws.e-gov.go.jp/api/2/keyword?keyword={q}&limit=500",
     .array_path = "items", .title_keys = "law_info.law_title,revision_info.law_title",
@@ -185,6 +199,7 @@ static const hp_source HP3B31_JPGOV[] = {
     .name = "Kanpō — official gazette, each day's table of contents",
     .name_ja = "官報 日次目次（直近90日）", .category = "government",
     .portal = "https://www.kanpo.go.jp/", .record_type = "jp-gazette-notice",
+    .lang = "ja",
     .tags = "\"jp\",\"gazette\",\"insolvency\",\"notice\",\"kanpo\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kanpo.go.jp/{date:%Y%m%d}/{date:%Y%m%d}.fullcontents.html",
@@ -212,6 +227,7 @@ static const hp_source HP3B31_JPGOV[] = {
   { .id = "JP_MLIT_LAND_TRADE_PRICES", .name = "MLIT — actual land transaction prices",
     .name_ja = "国土交通省 不動産取引価格情報", .category = "government",
     .portal = "https://www.land.mlit.go.jp", .record_type = "jp-land-transaction",
+    .lang = "ja",
     .tags = "\"jp\",\"property\",\"prices\"", .free_tier = 1,
     .url = "https://www.land.mlit.go.jp/webland/api/TradeListSearch?from=20051&to=20244&area={qd}",
     .array_path = "data", .title_keys = "Municipality,DistrictName",
@@ -231,6 +247,7 @@ static const hp_source HP3B31_JPGOV[] = {
     .portal = "https://www.pmda.go.jp/review-services/drug-reviews/"
               "review-information/p-drugs/0010.html",
     .record_type = "jp-medical-approval",
+    .lang = "ja",
     .tags = "\"jp\",\"health\",\"regulatory\",\"pmda\",\"drug-approval\"",
     .mode = HP_XLSX, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.pmda.go.jp/files/000281578.xlsx",
@@ -270,6 +287,7 @@ static const hp_source HP3B31_JPGOV[] = {
   { .id = "JP_ESTAT_STATSLIST", .name = "e-Stat — official statistics catalogue API",
     .name_ja = "e-Stat 統計表情報API", .category = "government",
     .portal = "https://www.e-stat.go.jp", .record_type = "jp-statistic",
+    .lang = "ja",
     .tags = "\"jp\",\"statistics\",\"open-data\"", .key_env = "ESTAT_APP_ID",
     .free_tier = 1,
     .url = "https://api.e-stat.go.jp/rest/3.0/app/json/getStatsList?appId={key}"
@@ -288,6 +306,7 @@ static const hp_source HP3B31_JPGOV[] = {
   { .id = "JP_NDL_SEARCH_API", .name = "National Diet Library — search OpenSearch API",
     .name_ja = "国立国会図書館サーチAPI", .category = "research",
     .portal = "https://ndlsearch.ndl.go.jp", .record_type = "jp-bibliographic",
+    .lang = "ja",
     .tags = "\"jp\",\"library\",\"archive\"", .free_tier = 1,
     .type = "api", .mode = HP_HTML,
     .url = "https://ndlsearch.ndl.go.jp/api/opensearch?any={q}&cnt=200",

@@ -1,4 +1,6 @@
 #include "entityapi.h"
+#include "jo_page.h"
+#include "../lib/jocore.h"
 #include "entitystore.h"          /* ES_BREACH_TENANT + the scope migration */
 #include "fts.h"
 #include "entity_vec.h"           /* the hybrid search's vector arm */
@@ -64,17 +66,7 @@ static long count1_t(sqlite3 *h, const char *sql, const char *tenant) {
  * breaks. Only /api/sources/:id/logs had to change shape, because a bare JSON
  * array has nowhere to put any of this — see miscapi.c. */
 
-/* Node's new Date().toISOString(), the modulo-clamped spelling used across
- * this tree so -Wformat-truncation can prove the 24 chars fit. */
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
+/* ISO-8601 UTC with milliseconds: jo_iso_now_ms() (lib/jocore.h). */
 
 /* Step-and-finalize a prepared COUNT(*). -1 when the count could not be taken,
  * which the envelope must render as null: rule 1 forbids reporting a number we
@@ -97,7 +89,7 @@ static void add_page_meta(cJSON *o, int limit, int offset, long total,
   else           cJSON_AddNumberToObject(page, "total", (double)total);
   cJSON_AddItemToObject(o, "page", page);
 
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddItemToObject(meta, "filters", filters ? filters : cJSON_CreateObject());
@@ -180,10 +172,6 @@ static long count1_ts(sqlite3 *h, const char *sql, const char *tenant,
   }
   sqlite3_finalize(s);
   return n;
-}
-
-char *entityapi_stats(db_handle *db, const char *tenant) {
-  return entityapi_stats_scoped(db, tenant, 0);
 }
 
 char *entityapi_stats_scoped(db_handle *db, const char *tenant,
@@ -792,11 +780,6 @@ static cJSON *exposure_summary(db_handle *db, const char *entity_id) {
 
 /* GET /api/entities/:type/:id/breaches — the breaches this entity appears in.
  * NULL if the entity is missing or the type does not match (caller → 404). */
-char *entityapi_breaches(db_handle *db, const char *type, const char *id,
-                         int limit, int offset, const char *tenant) {
-  return entityapi_breaches_scoped(db, type, id, limit, offset, tenant, 0);
-}
-
 char *entityapi_breaches_scoped(db_handle *db, const char *type, const char *id,
                                 int limit, int offset, const char *tenant,
                                 int is_operator) {
@@ -904,11 +887,6 @@ char *entityapi_breaches_scoped(db_handle *db, const char *type, const char *id,
   char *js = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
   return js;
-}
-
-char *entityapi_get(db_handle *db, const char *type, const char *id,
-                    const char *tenant) {
-  return entityapi_get_scoped(db, type, id, tenant, 0);
 }
 
 char *entityapi_get_scoped(db_handle *db, const char *type, const char *id,
@@ -1021,13 +999,6 @@ static long entity_degree(db_handle *db, const char *eid) {
   }
   sqlite3_finalize(s);
   return n;
-}
-
-char *entityapi_graph(db_handle *db, const char *type, const char *id, int depth,
-                      const char *rel_types, int exclude_hubs, int max_nodes,
-                      const char *tenant) {
-  return entityapi_graph_scoped(db, type, id, depth, rel_types, exclude_hubs,
-                                max_nodes, tenant, 0);
 }
 
 char *entityapi_graph_scoped(db_handle *db, const char *type, const char *id,
@@ -1229,11 +1200,6 @@ char *entityapi_graph_scoped(db_handle *db, const char *type, const char *id,
   #undef PUSH
 }
 
-char *entityapi_mentions(db_handle *db, const char *type, const char *id,
-                         int limit, int offset, const char *tenant) {
-  return entityapi_mentions_scoped(db, type, id, limit, offset, tenant, 0);
-}
-
 char *entityapi_mentions_scoped(db_handle *db, const char *type, const char *id,
                                 int limit, int offset, const char *tenant,
                                 int is_operator) {
@@ -1385,7 +1351,7 @@ static char *merges_body(db_handle *db, const char *id, const char *tenant,
 
   /* Visible total first, so the bounded view can say how many of how many it
    * is showing (house rule 2) instead of ending at an unexplained page edge. */
-  long total = 0;
+  long total = -1;          /* -1 = the count failed: "total": null, not 0 */
   {
     char csql[512];
     snprintf(csql, sizeof csql, "SELECT COUNT(*)%s", WHERE_VIS);
@@ -1439,12 +1405,8 @@ static char *merges_body(db_handle *db, const char *id, const char *tenant,
   int shown = cJSON_GetArraySize(arr);
   cJSON *root = cJSON_CreateObject();
   cJSON_AddItemToObject(root, "merges", arr);
-  cJSON *meta = cJSON_CreateObject();
-  cJSON_AddNumberToObject(meta, "returned", shown);
-  cJSON_AddNumberToObject(meta, "total", (double)total);
-  cJSON_AddNumberToObject(meta, "limit", limit);
-  cJSON_AddNumberToObject(meta, "offset", offset);
-  cJSON_AddBoolToObject(meta, "has_more", offset + shown < total);
+  cJSON *meta = jo_page_fields(cJSON_CreateObject(), limit, offset, shown, total,
+                               total >= 0 && offset + shown < total, "returned");
   cJSON_AddItemToObject(root, "meta", meta);
   cJSON *scope = cJSON_CreateObject();
   cJSON_AddBoolToObject(scope, "breach_counterparts_included", is_operator ? 1 : 0);
@@ -1454,11 +1416,6 @@ static char *merges_body(db_handle *db, const char *id, const char *tenant,
   char *js = cJSON_PrintUnformatted(root);
   cJSON_Delete(root);
   return js;
-}
-
-char *entityapi_merges(db_handle *db, const char *type, const char *id,
-                       int limit, int offset, const char *tenant) {
-  return entityapi_merges_scoped(db, type, id, limit, offset, tenant, 0);
 }
 
 char *entityapi_merges_scoped(db_handle *db, const char *type, const char *id,

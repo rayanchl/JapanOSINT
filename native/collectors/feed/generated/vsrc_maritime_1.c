@@ -220,69 +220,79 @@ VGEO(sec_noaa_nav_managers, "sec-noaa-nav-managers", "NOAA Navigation Manager Ar
   "en", "[\"noaa\",\"navigation\",\"contact\"]", 604800,
   "NOAA regional navigation manager points of contact with their real published office locations.");
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(sec_noaa_ntm_aoi, "sec-noaa-ntm-aoi", "NOAA Notice to Mariners Chart Update Areas", "NOAA 水路通報 海図更新区域",
   "maritime", "navwarning",
-  "https://gis.charttools.noaa.gov/arcgis/rest/services/MarineChart_Services/NNU_AOI_PRODUCTION/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=500&geometryPrecision=5&outSR=4326&f=geojson",
+  "https://gis.charttools.noaa.gov/arcgis/rest/services/MarineChart_Services/NNU_AOI_PRODUCTION/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=500&geometryPrecision=5&outSR=4326&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"ntm\",\"chart\",\"update\",\"noaa\"]", 86400,
   "Areas of NOAA electronic navigational charts changed by recent Notices to Mariners, with real chart-update geometry.");
 
 VGEO(sec_noaa_ntm_beta_crit, "sec-noaa-ntm-beta-crit", "NOAA Critical Chart Corrections", "NOAA 重要海図訂正",
   "maritime", "navwarning",
-  "https://gis.charttools.noaa.gov/arcgis/rest/services/MarineChart_Services/beta_notice_to_mariner_critical_updates/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=500&geometryPrecision=5&outSR=4326&f=geojson",
+  "https://gis.charttools.noaa.gov/arcgis/rest/services/MarineChart_Services/beta_notice_to_mariner_critical_updates/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=500&geometryPrecision=5&outSR=4326&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"ntm\",\"critical\",\"correction\",\"aton\"]", 86400,
   "Critical Notice to Mariners corrections (aids to navigation added, moved or removed) as points with real published latitude/longitude.");
 
 VGEO(sec_ntad_ferry_routes, "sec-ntad-ferry-routes", "NTAD Ferry Routes", "NTAD フェリー航路",
   "maritime", "shipping",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Ferry_Routes/FeatureServer/0/query?where=1%3D1&outFields=OBJECTID&resultRecordCount=100&geometryPrecision=5&outSR=4326&f=geojson",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Ferry_Routes/FeatureServer/0/query?where=1%3D1&outFields=OBJECTID&resultRecordCount=100&geometryPrecision=5&outSR=4326&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"ferry\",\"route\",\"ntad\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Ferry Routes) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 
 VGEO(sec_ntad_ferry_terminals, "sec-ntad-ferry-terminals", "NTAD Ferry Terminals", "NTAD フェリーターミナル",
   "maritime", "shipping",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Ferry_Terminals/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Ferry_Terminals/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"ferry\",\"terminal\",\"ntad\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Ferry Terminals) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 
 VGEO(sec_ntad_intermodal_liquid_bulk, "sec-ntad-intermodal-liquid-bulk", "NTAD Liquid Bulk Terminals", "NTAD 液体バルクターミナル",
   "maritime", "shipping",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Intermodal_Freight_Facilities_Liquid_Bulk/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Intermodal_Freight_Facilities_Liquid_Bulk/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"intermodal\",\"liquid-bulk\",\"terminal\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Liquid Bulk Terminals) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 
 VGEO(sec_ntad_intermodal_pipeline_terminals, "sec-ntad-intermodal-pipeline-terminals", "NTAD Pipeline Terminals", "NTAD パイプラインターミナル",
   "maritime", "shipping",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Intermodal_Freight_Facilities_Pipeline_Terminals/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Intermodal_Freight_Facilities_Pipeline_Terminals/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"intermodal\",\"pipeline\",\"terminal\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Pipeline Terminals) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 
 VGEO(sec_ntad_intermodal_roro, "sec-ntad-intermodal-roro", "NTAD Ro-Ro Terminals", "NTAD ローロー船ターミナル",
   "maritime", "shipping",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Intermodal_Freight_Facilities_Marine_Roll_on_Roll_off/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Intermodal_Freight_Facilities_Marine_Roll_on_Roll_off/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"intermodal\",\"roro\",\"terminal\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Ro-Ro Terminals) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 
 VGEO(sec_ntad_marad_gateways, "sec-ntad-marad-gateways", "NTAD MARAD Gateway Offices", "NTAD MARADゲートウェイ事務所",
   "maritime", "shipping",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_DOT_MARAD_Gateway_Offices/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_DOT_MARAD_Gateway_Offices/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"marad\",\"gateway\",\"ntad\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD MARAD Gateway Offices) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 
 VGEO(sec_ntad_marine_highways, "sec-ntad-marine-highways", "NTAD Marine Highways", "NTAD 海上ハイウェイ",
   "maritime", "shipping",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Marine_Highways/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Marine_Highways/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300&orderByFields=OBJECTID%20ASC",
   "en", "[\"marine-highway\",\"corridor\",\"ntad\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Marine Highways) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 
 VGEO(sec_ntad_principal_ports, "sec-ntad-principal-ports", "NTAD Principal Ports", "NTAD 主要港湾",
   "maritime", "shipping",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Hazard_Exposure_Principal_Ports/FeatureServer/0/query?where=1%3D1&outFields=OBJECTID&resultRecordCount=100&geometryPrecision=5&outSR=4326&f=geojson",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Hazard_Exposure_Principal_Ports/FeatureServer/0/query?where=1%3D1&outFields=OBJECTID&resultRecordCount=100&geometryPrecision=5&outSR=4326&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"port\",\"ntad\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Principal Ports) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 
 VGEO(sec_ntad_strategic_seaports, "sec-ntad-strategic-seaports", "NTAD Commercial Strategic Seaports", "NTAD 戦略商業港湾",
   "maritime", "shipping",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Commercial_Strategic_Seaports/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Commercial_Strategic_Seaports/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"port\",\"strategic\",\"seaport\",\"ntad\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Commercial Strategic Seaports) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 

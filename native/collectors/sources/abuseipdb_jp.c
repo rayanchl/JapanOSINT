@@ -13,7 +13,7 @@
 /* _satelliteSeeds TOKYO (== feodo_tracker_jp.c). */
 
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
-  const char *lim = getenv("ABUSEIPDB_LIMIT");
+  const char *lim = jo_getenv("ABUSEIPDB_LIMIT");
   long limit = (lim && *lim) ? strtol(lim, NULL, 10) : 10000;
   char url[256];
   snprintf(url, sizeof url,
@@ -80,7 +80,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
    * elsewhere this session, so the check is duplicated here rather than
    * fixed once; see the unification report. The condition is identical to
    * the toolkit's (getenv on the env_key, no fallbacks passed). */
-  if (!getenv("ABUSEIPDB_API_KEY") || !*getenv("ABUSEIPDB_API_KEY")) {
+  if (!jo_getenv("ABUSEIPDB_API_KEY") || !*jo_getenv("ABUSEIPDB_API_KEY")) {
     static const char *const envs[] = { "ABUSEIPDB_API_KEY", NULL };
     return jo_needs_credential(sink, "abuseipdb-jp", "AbuseIPDB blacklist (JP)",
                                envs, "https://api.abuseipdb.com/api/v2/blacklist",

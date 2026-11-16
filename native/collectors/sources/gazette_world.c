@@ -132,12 +132,12 @@ static const int NGAZ = (int)(sizeof(GAZ) / sizeof(GAZ[0]));
 static int uk_json_emit(const source_ctx *ctx, intel_sink *sink,
                         const char *url, int cap) {
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "uk-gazette");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *entries = cJSON_GetObjectItem(root, "entry");
   int emitted = 0;

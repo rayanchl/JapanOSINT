@@ -11,7 +11,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *CGV_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
@@ -22,11 +21,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char url[512];
   snprintf(url, sizeof url, "https://members-api.parliament.uk/api/Members/Search?Name=%s&take=20", enc);
   free(enc);
-  const char *hdrs[] = { "Accept: application/json", CGV_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "UK_PARLIAMENT");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *items = cJSON_GetObjectItem(root, "items");
   int n = 0;
   if (cJSON_IsArray(items)) {
@@ -49,7 +48,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "UK_PARLIAMENT"); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char rk[64], link[128] = {0};
       if (idn && cJSON_IsNumber(idn)) { snprintf(rk, sizeof rk, "ukmp:%.0f", idn->valuedouble); snprintf(link, sizeof link, "https://members.parliament.uk/member/%.0f", idn->valuedouble); }
       else snprintf(rk, sizeof rk, "ukmp:%s", name);
@@ -64,7 +63,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON_Delete(root);
   fprintf(stderr, "[UK_PARLIAMENT] emitted %d\n", n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 static const source_def uk_parliament_def = {

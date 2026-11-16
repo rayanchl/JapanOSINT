@@ -7,23 +7,31 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* data.cms.gov data-api rows: size=2 was the authoring probe's page, so each
+ * run stored 2 records (2026-11-07). They read size=1000 now — and still ONE
+ * page: measured, this API ignores `page` (page=1 and page=2 answer the first
+ * page again) and honours only `offset`, while jsonlist's `size` family
+ * advances `page`, so the walk's repeat guard ends at page 1. 1,000 of the
+ * totals /data/stats declares (59,071 to 3,672,532) is a bounded read and the
+ * full page is disclosed as truncation; reading these whole needs an hp row
+ * with page_param=offset (or a `size`/`offset` pager in lib/jsonlist.c). */
 VJSON(us_cms_opt_out_affidavits, "us-cms-opt-out-affidavits", "CMS — Medicare opt-out affidavits", "CMS — Medicare opt-out affidavits",
   "us_health", "health",
-  "https://data.cms.gov/data-api/v1/dataset/9887a515-7552-4693-bf58-735c77af46d7/data?size=2",
+  "https://data.cms.gov/data-api/v1/dataset/9887a515-7552-4693-bf58-735c77af46d7/data?size=1000",
   "",
   "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Clinicians who have formally opted out of Medicare. Fields: First Name, Last Name, NPI, Specialty, Optout Effective Date, Optout End Date, First Line Street Address, Second Line Street Address, City Name, State Code, Zip code, 'Eligible to Order and Refer' flag, Last updated. Addresses and dates for every opted-out practitioner.");
 
 VJSON(us_cms_order_and_referring, "us-cms-order-and-referring", "CMS — Medicare order-and-referring eligibility", "CMS — Medicare order-and-referring eligibility",
   "us_health", "health",
-  "https://data.cms.gov/data-api/v1/dataset/c99b5865-1119-4436-bb80-c5af2773ea1f/data?size=2",
+  "https://data.cms.gov/data-api/v1/dataset/c99b5865-1119-4436-bb80-c5af2773ea1f/data?size=1000",
   "",
   "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Which clinicians are legally eligible to order/refer, by programme: NPI, LAST_NAME, FIRST_NAME, and Y/N flags for PARTB, DME, HHA, PMD, HOSPICE. Refreshed every 3.5 days. A clinician who loses a flag has effectively been cut off — a direct enforcement signal.");
 
 VJSON(us_cms_pos_file_iqies, "us-cms-pos-file-iqies", "CMS — Provider of Services file (iQIES)", "CMS — Provider of Services file (iQIES)",
   "us_health", "health",
-  "https://data.cms.gov/data-api/v1/dataset/086e48c4-87a6-4be1-8823-29e8da8f225b/data?size=2",
+  "https://data.cms.gov/data-api/v1/dataset/086e48c4-87a6-4be1-8823-29e8da8f225b/data?size=1000",
   "",
   "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
   "12 KB for 2 rows — the full certification record for every non-hospital Medicare provider: prvdr_num (CCN), fac_name, prvdr_sbtyp_id, mdcd_vndr_num, orgnl_prtcptn_dt (original participation date), prvdr_type_id, st_adr, city_name, ssa_cnty_cd, zip_cd, phne_num, crtfctn_dt, TRMNTN_EXPRTN_DT (termination/expiration date — i.e. when CMS cut them off), state_cd, ssa_state_cd, plus scores of certification, bed-count and service-offering fields.");
@@ -37,21 +45,21 @@ VJSON(us_cms_provider_data_dataset_detail, "us-cms-provider-data-dataset-detail"
 
 VJSON(us_cms_revalidation_clinic_group_reassignment, "us-cms-revalidation-clinic-group-reassignment", "CMS — revalidation clinic group practice reassignment", "CMS — revalidation clinic group practice reassignment",
   "us_health", "health",
-  "https://data.cms.gov/data-api/v1/dataset/e1f1fa9a-d6b4-417e-948a-c72dead8a41c/data?size=2",
+  "https://data.cms.gov/data-api/v1/dataset/e1f1fa9a-d6b4-417e-948a-c72dead8a41c/data?size=1000",
   "",
   "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
   "The individual-to-group affiliation graph: Group PAC ID, Group Enrollment ID, Group Legal Business Name, Group State Code, Group Due Date, Group Reassignments and Physician Assistants count, Record Type ('Reassignment'), Individual Enrollment ID, Individual NPI, Individual First/Last Name, Individual specialty, state and due date. Shows exactly which clinicians bill under which practice entity.");
 
 VJSON(us_cms_revalidation_due_date, "us-cms-revalidation-due-date", "CMS — provider revalidation due date list", "CMS — provider revalidation due date list",
   "us_health", "health",
-  "https://data.cms.gov/data-api/v1/dataset/3746498e-874d-45d8-9c69-68603cafea60/data?size=2",
+  "https://data.cms.gov/data-api/v1/dataset/3746498e-874d-45d8-9c69-68603cafea60/data?size=1000",
   "",
   "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Enrollment ID, National Provider Identifier, First/Last Name, Organization Name, Enrollment State Code, Enrollment Type, Provider Type Text, Enrollment Specialty, Revalidation Due Date, Adjusted Due Date, Individual Total Reassign To, Receiving Benefits Reassignment count. A missed revalidation is how providers get deactivated — the leading indicator of removal from Medicare.");
 
 VJSON(us_cms_revalidation_reassignment_list, "us-cms-revalidation-reassignment-list", "CMS — revalidation reassignment list", "CMS — revalidation reassignment list",
   "us_health", "health",
-  "https://data.cms.gov/data-api/v1/dataset/20f51cff-4137-4f3a-b6b7-bfc9ad57983b/data?size=2",
+  "https://data.cms.gov/data-api/v1/dataset/20f51cff-4137-4f3a-b6b7-bfc9ad57983b/data?size=1000",
   "",
   "en", "[\"us\",\"health\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Group PAC ID, Group Enrollment ID, Group Legal Business Name, Group State Code, Group Due Date, Group Reassignments and Physician Assistants, Record Type, Individual PAC ID, Individual Enrollment ID, Individual NPI and name, Individual Specialty Description, Individual State Code and Due Date. Second view of the billing-reassignment network.");

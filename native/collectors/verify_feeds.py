@@ -17,6 +17,14 @@ import sys, json, csv, io, re, gzip, socket
 import urllib.request, urllib.error
 from urllib.parse import urlsplit, urlunsplit, quote
 from concurrent.futures import ThreadPoolExecutor
+import os as _os
+# The wall vocabulary is the ENGINE's (lib/hpengine.c hp_body_is_*), read out
+# of the C by tools/jo_http.py so a marker cannot be in one copy and missing
+# from the other — see wall_kind() there for why `cf_chl_opt` is the challenge
+# discriminator and `cdn-cgi/challenge-platform` is not.
+sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.dirname(
+    _os.path.abspath(__file__))), "tools"))
+from jo_http import wall_kind          # noqa: E402
 
 TIMEOUT = 25
 UA = ("Mozilla/5.0 (compatible; JapanOSINT-verify/1.0; "
@@ -91,26 +99,9 @@ def count_json(text):
     if isinstance(doc, list):
         return "json-array", len(doc)
     if isinstance(doc, dict):
-        # ArcGIS and several OGC servers answer HTTP 200 with an error
-        # DOCUMENT. Without this, {"error":{"code":400,"details":[...]}} scores
-        # as a healthy feed named "json:error.details" — a live-looking source
-        # that fetches nothing, which is the exact failure mode this harness
-        # exists to catch. Found by the aviation/maritime discovery pass.
-        err = doc.get("error")
-        if isinstance(err, (dict, str)) and len(doc) <= 3:
-            return "__error__", 0
-        if doc.get("status") in ("error", "ERROR", "failed"):
-            return "__error__", 0
-        # Auth/quota refusals served as HTTP 200 with a tiny JSON body. GIE's
-        # gas-storage APIs do exactly this: {"error":"access denied",
-        # "message":"Invalid or missing API key"} parses as a two-key document
-        # and would otherwise be catalogued as a working keyless source.
-        if len(doc) <= 4:
-            blob = " ".join(str(v) for v in doc.values() if isinstance(v, str))
-            if REFUSAL.search(blob):
-                return "__error__", 0
         # GeoJSON first — it is the shape the map layers want.
-        if doc.get("type") == "FeatureCollection" and isinstance(doc.get("features"), list):
+        if doc.get("type") == "FeatureCollection" and isinstance(doc.get("features"), list) \
+                and doc["features"]:
             return "geojson", len(doc["features"])
         # Otherwise the longest list of dicts anywhere shallow in the doc.
         best, bestk = 0, None
@@ -122,6 +113,34 @@ def count_json(text):
                 for k2, v2 in v.items():
                     if isinstance(v2, list) and len(v2) > best:
                         best, bestk = len(v2), f"{k}.{k2}"
+        # A document that HANDED OVER records is not an error report, whatever
+        # else it says — the engine's rule (lib/hpengine.c hp_json_error_doc is
+        # asked only once no records array was found). These checks used to run
+        # FIRST, so {"error":"","results":[…]}, {"status":"error","items":[…]}
+        # and {"success":true,"message":"API key accepted","data":[…]} were all
+        # scored dead by the gate that decides whether a row ships.
+        if best and bestk.split(".", 1)[0] not in ("error", "errors", "fault"):
+            return f"json:{bestk}", best
+        # ArcGIS and several OGC servers answer HTTP 200 with an error
+        # DOCUMENT. Without this, {"error":{"code":400,"details":[...]}} scores
+        # as a healthy feed named "json:error.details" — a live-looking source
+        # that fetches nothing, which is the exact failure mode this harness
+        # exists to catch. Found by the aviation/maritime discovery pass. An
+        # EMPTY error value is not an error (the engine's rule too).
+        err = doc.get("error")
+        if ((isinstance(err, dict) and err) or (isinstance(err, str) and err)) \
+                and len(doc) <= 3:
+            return "__error__", 0
+        if doc.get("status") in ("error", "ERROR", "failed"):
+            return "__error__", 0
+        # Auth/quota refusals served as HTTP 200 with a tiny JSON body. GIE's
+        # gas-storage APIs do exactly this: {"error":"access denied",
+        # "message":"Invalid or missing API key"} parses as a two-key document
+        # and would otherwise be catalogued as a working keyless source.
+        if len(doc) <= 4:
+            blob = " ".join(str(v) for v in doc.values() if isinstance(v, str))
+            if REFUSAL.search(blob):
+                return "__error__", 0
         if best:
             return f"json:{bestk}", best
         # An envelope whose ONLY list is empty is a result set with no results,
@@ -166,6 +185,15 @@ def verify(rec):
     try:
         status, ctype, raw = fetch(url)
     except urllib.error.HTTPError as e:
+        # A 401/403 that is a JS challenge or a rate-limit page is named as
+        # one (the engine reads a 4xx body for exactly those two).
+        try:
+            eb = e.read(256 * 1024).decode("utf-8", "replace")
+        except Exception:
+            eb = ""
+        wk = wall_kind(eb, e.code)
+        if wk:
+            return (sid, url, wk, "", 0, e.code, len(eb), "")
         return (sid, url, "HTTP_ERR", "", 0, e.code, 0, str(e.reason)[:60])
     except urllib.error.URLError as e:
         return (sid, url, "NET_ERR", "", 0, 0, 0, str(e.reason)[:60])
@@ -196,7 +224,10 @@ def verify(rec):
         return (sid, url, "EMPTY_RESULTSET", "", 0, status, nbytes, head)
     if not kind:
         head = re.sub(r"\s+", " ", text[:80])
-        return (sid, url, "UNPARSEABLE", "", 0, status, nbytes, head)
+        # A 200 bot wall / challenge / rate-limit page is a refusal with a
+        # remedy, not an unparseable body (CLAUDE.md rule 1).
+        wk = wall_kind(text, status)
+        return (sid, url, wk or "UNPARSEABLE", "", 0, status, nbytes, head)
     if items < 1:
         return (sid, url, "EMPTY", kind, 0, status, nbytes, "parsed but zero items")
     return (sid, url, "PASS", kind, items, status, nbytes, "")

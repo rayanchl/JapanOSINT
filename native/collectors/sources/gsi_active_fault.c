@@ -67,7 +67,7 @@ static int normalize(cJSON *data, cJSON *out) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *override = getenv("GSI_ACTIVE_FAULT_GEOJSON_URL");
+  const char *override = jo_getenv("GSI_ACTIVE_FAULT_GEOJSON_URL");
   const char *urls[2]; int nu = 0;
   if (override && *override) urls[nu++] = override;
   urls[nu++] = CANDIDATE_URL;

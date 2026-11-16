@@ -132,14 +132,14 @@ static int emit_dataset(intel_sink *sink, const cJSON *pkg,
   cJSON_AddStringToObject(props, "country", pt->country);
   if (orgname) cJSON_AddStringToObject(props, "organization", orgname);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   intel_item it = {0};
   it.remote_key      = link;
   it.title           = title;
   it.summary         = orgname ? orgname : pt->label;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = meta;
   it.link            = link;
@@ -158,7 +158,7 @@ static int query_portal(const source_ctx *ctx, intel_sink *sink,
                         const ckan_portal *pt, const char *enc, const char *q,
                         int page_max, long *status_out) {
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   long start = 0, total = -1, used = 0, fail_status = 0;
   int pages = 0, failed = 0;
   const char *reason = NULL, *remedy = NULL;

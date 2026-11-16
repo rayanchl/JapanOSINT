@@ -12,7 +12,7 @@
 #define API_URL "https://portal.msil.go.jp/api/v1/ports?bbox=122,24,146,46&limit=1000"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *k = getenv("UMISHIRU_API_KEY");
+  const char *k = jo_getenv("UMISHIRU_API_KEY");
   if (!k || !*k) {
     /* The JS original fell back to a curated SEED here, which rule 1 forbids
      * and rule 8 dropped — leaving a silent 0. The state is the record now. */

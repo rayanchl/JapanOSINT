@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* Parse "lat,lon" (optionally with spaces) out of s. Returns 1 on success. */
 static int aq_parse_latlon(const char *s, double *lat, double *lon) {
@@ -89,7 +90,7 @@ static int aq_emit_openaq_v3(intel_sink *sink, const cJSON *loc) {
   cJSON_AddStringToObject(props, "source", "OpenAQ");
   if (cc) cJSON_AddStringToObject(props, "country", cc);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char key[256];
@@ -100,7 +101,7 @@ static int aq_emit_openaq_v3(intel_sink *sink, const cJSON *loc) {
   it.remote_key      = key;
   it.title           = name ? name : "OpenAQ location";
   it.summary         = cc;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.has_geo         = hasgeo;
   it.lat = lat; it.lon = lon;
@@ -144,7 +145,7 @@ static int aq_emit_openaq_v2(intel_sink *sink, const cJSON *m, int idx) {
   cJSON_AddStringToObject(props, "parameter", param);
   if (ctry) cJSON_AddStringToObject(props, "country", ctry);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char title[256];
@@ -159,7 +160,7 @@ static int aq_emit_openaq_v2(intel_sink *sink, const cJSON *m, int idx) {
   it.remote_key      = key;
   it.title           = title;
   it.summary         = city ? city : ctry;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = utc;
   it.has_geo         = hasgeo;
@@ -190,12 +191,12 @@ static int run_openaq(const source_ctx *ctx, intel_sink *sink) {
     char khdr[256];
     snprintf(khdr, sizeof khdr, "X-API-Key: %s", key);
     const char *hdrs[] = { khdr, "Accept: application/json",
-                           "User-Agent: JapanOSINT/1.0 (air-quality)", NULL };
+                           NULL };
     char *body = jo_get(ctx, url, hdrs, "OPENAQ_GLOBAL");
-    if (!body) return 0;
+    if (!body) return jo_fail_rc(jo_last_status(), 0);
     cJSON *root = cJSON_Parse(body);
     free(body);
-    if (!root) return 0;
+    if (!root) return -1;
     cJSON *results = cJSON_GetObjectItem(root, "results");
     int emitted = 0;
     if (cJSON_IsArray(results)) {
@@ -220,15 +221,15 @@ static int run_openaq(const source_ctx *ctx, intel_sink *sink) {
       "https://api.openaq.org/v2/measurements?limit=50&order_by=datetime&sort=desc");
   }
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (air-quality)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "OPENAQ_GLOBAL");
   if (!body) {
     fprintf(stderr, "[OPENAQ_GLOBAL] gated (no OPENAQ_KEY, v2 unreachable)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "OPENAQ_GLOBAL", "OPENAQ_GLOBAL", (const char *const[]){"OPENAQ_KEY", NULL}, NULL, NULL);
   }
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0, idx = 0;
   if (cJSON_IsArray(results)) {
@@ -245,7 +246,7 @@ static int run_openaq(const source_ctx *ctx, intel_sink *sink) {
  *   time:{iso}, iaqi:{ pm25:{v}, pm10:{v}, ... } } }. */
 static int run_waqi(const source_ctx *ctx, intel_sink *sink) {
   const char *token = jo_env("AQICN_TOKEN");
-  if (!token) { fprintf(stderr, "[WAQI_GLOBAL] gated (no AQICN_TOKEN)\n"); return 0; }
+  if (!token) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "WAQI_GLOBAL", "WAQI_GLOBAL", (const char *const[]){"AQICN_TOKEN", NULL}, NULL, NULL);
 
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
   double lat, lon;
@@ -263,12 +264,12 @@ static int run_waqi(const source_ctx *ctx, intel_sink *sink) {
   char url[1024];
   snprintf(url, sizeof url, "https://api.waqi.info/feed/%s/?token=%s", station, token);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (air-quality)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "WAQI_GLOBAL");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   const char *status = jo_sv(root, "status");
   cJSON *d = cJSON_GetObjectItem(root, "data");
@@ -319,7 +320,7 @@ static int run_waqi(const source_ctx *ctx, intel_sink *sink) {
   if (hasaqi) cJSON_AddNumberToObject(props, "aqi", aqi);
   if (domin) cJSON_AddStringToObject(props, "dominant_pollutant", domin);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char title[320];
@@ -333,7 +334,7 @@ static int run_waqi(const source_ctx *ctx, intel_sink *sink) {
   it.remote_key      = key;
   it.title           = title;
   it.summary         = domin;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = iso;
   it.link            = curl;
@@ -376,12 +377,12 @@ static int run_openmeteo(const source_ctx *ctx, intel_sink *sink) {
     "&current=pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone,"
     "european_aqi,us_aqi", lat, lon);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (air-quality)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "OPENMETEO_AQ");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *cur = cJSON_GetObjectItem(root, "current");
   if (!cJSON_IsObject(cur)) { cJSON_Delete(root); fprintf(stderr, "[OPENMETEO_AQ] no current block\n"); return 0; }
@@ -415,7 +416,7 @@ static int run_openmeteo(const source_ctx *ctx, intel_sink *sink) {
   if (haseaqi) cJSON_AddNumberToObject(props, "european_aqi", eaqi);
   if (hasusaqi) cJSON_AddNumberToObject(props, "us_aqi", usaqi);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char title[256];
@@ -428,7 +429,7 @@ static int run_openmeteo(const source_ctx *ctx, intel_sink *sink) {
   it.remote_key      = key;
   it.title           = title;
   it.summary         = NULL;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = ctime;
   it.has_geo         = 1;

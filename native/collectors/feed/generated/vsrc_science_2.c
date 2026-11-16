@@ -7,12 +7,8 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
-VJSON(geo_inat_birds, "geo-inat-birds", "iNaturalist — bird observations", "iNaturalist — 鳥類の観測",
-  "science", "biodiversity",
-  "https://api.inaturalist.org/v1/observations?per_page=100&taxon_id=3&geo=true&order_by=created_at",
-  "results",
-  "en", "[\"inaturalist\",\"birds\",\"aves\"]", 10800,
-  "Recent bird observations worldwide.");
+/* geo-inat-birds: moved to collectors/pivot/table/hp3_inat.c (2026-11-09) — a
+   keyset row (id_below), as its three siblings already are. */
 
 /* geo-inat-observations-japan: moved to collectors/pivot/table/hp3_inat.c (2026-10-24).
    A descending order over a live head drifts under the walk — page 1
@@ -40,12 +36,8 @@ VJSON(geo_inat_birds, "geo-inat-birds", "iNaturalist — bird observations", "iN
    against page 2 overlapped by 10 of 200 — so it reads down the API's own
    keyset cursor (id_below) instead. The measurement is in that file. */
 
-VJSON(geo_inaturalist_obs_threatened, "geo-inaturalist-obs-threatened", "iNaturalist — threatened species observations", "iNaturalist — 絶滅危惧種の観測",
-  "science", "biodiversity",
-  "https://api.inaturalist.org/v1/observations?per_page=200&threatened=true&geo=true",
-  "results",
-  "en", "[\"inaturalist\",\"threatened\",\"conservation\"]", 21600,
-  "Observations of taxa listed as threatened.");
+/* geo-inaturalist-obs-threatened: moved to collectors/pivot/table/hp3_inat.c (2026-11-09) — a
+   keyset row (id_below), as its three siblings already are. */
 
 VJSON(geo_jma_himawari_targettimes_jp, "geo-jma-himawari-targettimes-jp", "JMA Himawari imagery timestamps (Japan sector)", "気象庁 ひまわり画像時刻(日本域)",
   "science", "earthobs",
@@ -60,21 +52,31 @@ VGEO(geo_jshis_pshm_avr, "geo-jshis-pshm-avr", "J-SHIS probabilistic seismic haz
   "ja", "[\"japan\",\"hazard\",\"jshis\"]", 86400,
   "NIED national seismic hazard mesh value at a queried coordinate.");
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(geo_la_day_night_terminator, "geo-la-day-night-terminator", "Day/night terminator line", "昼夜境界線",
   "science", "spaceweather",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Day_Night_Terminator/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=20",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Day_Night_Terminator/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=20&orderByFields=OBJECTID%20ASC",
   "en", "[\"terminator\",\"solar\",\"global\"]", 3600,
   "Current solar terminator geometry, useful for imagery and outage context.");
 
 VGEO(geo_la_historical_quakes, "geo-la-historical-quakes", "Historical earthquakes layer (Esri)", "歴史地震レイヤ",
   "science", "seismic",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Historical_Quakes/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Historical_Quakes/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"earthquake\",\"historical\",\"layer\"]", 86400,
   "Historical significant earthquake points with magnitude and depth.");
 
 VGEO(geo_la_seaice_north, "geo-la-seaice-north", "Arctic median sea ice extent (Esri)", "北極海氷 中央値範囲",
   "science", "ocean",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/seaice_extent_N_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=20&geometryPrecision=2",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/seaice_extent_N_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=20&geometryPrecision=2&orderByFields=OBJECTID%20ASC",
   "en", "[\"seaice\",\"arctic\",\"polygon\"]", 86400,
   "Median Arctic sea ice edge polygons by month, the anomaly reference.");
 
@@ -170,9 +172,14 @@ VJSON(geo_noaa_hazel_quakes, "geo-noaa-hazel-quakes", "NOAA NCEI significant ear
   "en", "[\"earthquake\",\"historical\",\"ncei\"]", 86400,
   "Curated historical significant earthquakes with damage and fatality fields.");
 
-VJSON(geo_noaa_hazel_quakes_recent, "geo-noaa-hazel-quakes-recent", "NOAA NCEI significant earthquakes since 2024", "NOAA NCEI 顕著地震(2024年以降)",
+/* 2026-11-12: `minYear=2024` was frozen at authoring; `{date-2y:%Y}` keeps
+ * "this year and the two before" rolling. Rendered 2024 it answered
+ * totalItems 100 on ONE page of itemsPerPage 200 (totalPages 1), dated
+ * 2024-01-01 .. 2026-10, so the read is complete. The name says "last three
+ * calendar years" now instead of the frozen year. */
+VJSON(geo_noaa_hazel_quakes_recent, "geo-noaa-hazel-quakes-recent", "NOAA NCEI significant earthquakes, last three calendar years", "NOAA NCEI 顕著地震(直近3暦年)",
   "science", "seismic",
-  "https://www.ngdc.noaa.gov/hazel/hazard-service/api/v1/earthquakes?minYear=2024",
+  "https://www.ngdc.noaa.gov/hazel/hazard-service/api/v1/earthquakes?minYear={date-2y:%Y}",
   "items",
   "en", "[\"earthquake\",\"historical\",\"ncei\"]", 86400,
   "Recent slice of the NCEI significant earthquake database.");
@@ -230,9 +237,15 @@ VJSON(geo_obis_occurrence, "geo-obis-occurrence", "OBIS — marine species occur
   "en", "[\"obis\",\"marine\",\"occurrence\"]", 21600,
   "Ocean Biodiversity Information System occurrence records with coordinates.");
 
-VJSON(geo_obis_occurrence_recent, "geo-obis-occurrence-recent", "OBIS — marine occurrences since 2026", "OBIS — 2026年以降の海洋記録",
+/* 2026-11-07: startdate was frozen at 2026-01-01 (3,321,365 records by 2026-11-07) and the walk read 200
+ * of them in uuid order, an arbitrary slice: OBIS ignores `page` (page=2 re-serves page 1) and
+ * pages only on an `after` keyset VJSON cannot follow. A rolling 30-day eventDate window holds
+ * 4,134 (measured 2026-11-07) and size=10000 is OBIS's maximum (10001 is HTTP 400), so one
+ * request reads the window COMPLETE (11 MB); a window over 10,000 comes back full and the walk
+ * discloses it against `total`. */
+VJSON(geo_obis_occurrence_recent, "geo-obis-occurrence-recent", "OBIS — marine occurrences, last 30 days", "OBIS — 直近30日の海洋記録",
   "science", "biodiversity",
-  "https://api.obis.org/v3/occurrence?size=200&startdate=2026-01-01",
+  "https://api.obis.org/v3/occurrence?size=10000&startdate={date-30d}",
   "results",
   "en", "[\"obis\",\"marine\",\"recent\"]", 21600,
   "Recent marine biodiversity records.");
@@ -324,15 +337,34 @@ VJSON(geo_stac_cnes_geodes, "geo-stac-cnes-geodes", "CNES GEODES — STAC collec
   "en", "[\"stac\",\"france\",\"cnes\",\"catalog\"]", 86400,
   "French space agency Earth observation collections.");
 
+/* THE TWO DEA EXPLORER ROWS READ NEWEST-FIRST (2026-11-07).
+ *
+ * `/stac/collections/<c>/items?limit=50` 302s to `/stac/search?collection=<c>`
+ * and that search's default order is OLDEST FIRST: measured the same minute,
+ * Africa's first page is 2015-10-22 (6,643,582 matched) and Australia's
+ * 2013-03-19 (145,562 matched) — so these hourly rows re-stored the same
+ * twenty pages of 2013/2015 scenes every run while the archive grew behind
+ * them, the dea-stac shape CLAUDE.md records under rule 2. `sortby=-datetime`
+ * on the search path is honoured on both hosts (first page 2026-11-06 /
+ * 2026-11-04; the control `sortby=-frobnicate` answers the 2013 default),
+ * and the server's own `next` link carries the sort: page 2 continues
+ * strictly older with 0 overlap of 50 on both. The 20-page ceiling is now
+ * the newest 1,000 scenes, a window rather than an arbitrary slice.
+ *
+ * geo-stac-dea-africa-items now reads the same search as the hand-written
+ * `dea-stac` (collectors/sources/geoeo_stac_items.c), hourly at 50 a page
+ * against that row's six-hourly 100: a duplicate read of one upstream, kept
+ * and reported rather than removed, because removal changes the registry
+ * count. */
 VGEO(geo_stac_dea_africa_items, "geo-stac-dea-africa-items", "Digital Earth Africa — Sentinel-2 L2A", "Digital Earth Africa — Sentinel-2 L2A(アフリカ)",
   "science", "earthobs",
-  "https://explorer.digitalearth.africa/stac/collections/s2_l2a/items?limit=50",
+  "https://explorer.digitalearth.africa/stac/search?collections=s2_l2a&limit=50&sortby=-datetime",
   "en", "[\"stac\",\"africa\",\"sentinel2\"]", 3600,
   "Analysis-ready Sentinel-2 over Africa with scene footprints.");
 
 VGEO(geo_stac_dea_australia_items, "geo-stac-dea-australia-items", "Digital Earth Australia — Landsat 8 ARD", "Digital Earth Australia — Landsat 8 ARD(豪州)",
   "science", "earthobs",
-  "https://explorer.dea.ga.gov.au/stac/collections/ga_ls8c_ard_3/items?limit=50",
+  "https://explorer.dea.ga.gov.au/stac/search?collections=ga_ls8c_ard_3&limit=50&sortby=-datetime",
   "en", "[\"stac\",\"australia\",\"landsat\"]", 3600,
   "Australian analysis-ready Landsat scene index.");
 

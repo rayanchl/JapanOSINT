@@ -31,6 +31,10 @@
  *                                       are never deleted
  *   JO_RETAIN_ALERT_EVENT_DAYS    365   alert events (the inbox's history)
  *                                       with no delivery still pending
+ *   JO_RETAIN_CACHE_GRACE_DAYS     7   collector_cache rows expired this long
+ *                                       (readers serve a stale entry while a
+ *                                       rebuild is due; 0 deletes on expiry),
+ *                                       and the LLM response cache past its TTL
  *   JO_RETAIN_BATCH              5000   rows per DELETE statement
  *
  * WHY BATCHED. Each DELETE is its own autocommit transaction over at most
@@ -54,6 +58,7 @@
  * never behind (or in front of) a collector. */
 #include "source.h"
 #include "core/db.h"
+#include "core/llmcache.h"     /* LLMCACHE_TABLE, llmcache_ttl — the LLM cache prune */
 #include "third_party/sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -208,8 +213,50 @@ static long retain_fetch_log(sqlite3 *h, int days, int keep, int batch,
 }
 
 typedef struct {
-  long fetch_log, repairs, anomalies, deliveries, events;
+  long fetch_log, repairs, anomalies, deliveries, events, cache, llmcache;
 } retain_counts;
+
+/* Two tables that grew without bound because nothing ever deleted from them
+ * (audit 2026-11-07): collector_cache, where the isochrone writes one row per
+ * origin, date and 15-minute bucket and an expired row is only skipped on
+ * read; and the LLM response cache, pruned only when a lookup happened to hit
+ * a stale key. A cache row is deleted once it has been expired for
+ * JO_RETAIN_CACHE_GRACE_DAYS (7): several readers deliberately serve a stale
+ * entry while a rebuild is due, and a grace keeps that working. */
+static long retain_cache(sqlite3 *h, int grace_days, int batch,
+                         const volatile int *cancel) {
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(h,
+        "DELETE FROM collector_cache WHERE key IN (SELECT key FROM collector_cache"
+        " WHERE fetched_at + ttl_ms < ?1 LIMIT ?2)", -1, &s, NULL) != SQLITE_OK)
+    return -1;
+  long long cutoff = (long long)time(NULL) * 1000LL - (long long)grace_days * 86400000LL;
+  long total = 0;
+  for (;;) {
+    sqlite3_bind_int64(s, 1, cutoff);
+    sqlite3_bind_int(s, 2, batch);
+    int rc = sqlite3_step(s);
+    sqlite3_reset(s);
+    if (rc != SQLITE_DONE) break;
+    int n = sqlite3_changes(h);
+    total += n;
+    if (n < batch || cancelled(cancel)) break;
+    pause_ms(RETAIN_PAUSE_MS);
+  }
+  sqlite3_finalize(s);
+  return total;
+}
+static long retain_llmcache(sqlite3 *h) {
+  long ttl = llmcache_ttl();
+  if (ttl <= 0) return 0;                 /* cache off: nothing is written */
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(h, "DELETE FROM " LLMCACHE_TABLE " WHERE created_at < ?1",
+                         -1, &s, NULL) != SQLITE_OK) return -1;  /* table absent */
+  sqlite3_bind_int64(s, 1, (long long)time(NULL) - ttl);
+  long n = sqlite3_step(s) == SQLITE_DONE ? sqlite3_changes(h) : -1;
+  sqlite3_finalize(s);
+  return n;
+}
 
 static void retain_all(sqlite3 *h, const volatile int *cancel, retain_counts *c) {
   memset(c, 0, sizeof *c);
@@ -219,7 +266,10 @@ static void retain_all(sqlite3 *h, const volatile int *cancel, retain_counts *c)
   int an_days = env_days("JO_RETAIN_ANOMALY_DAYS", 90, 31);
   int dl_days = env_days("JO_RETAIN_ALERT_DELIVERY_DAYS", 30, 1);
   int ev_days = env_days("JO_RETAIN_ALERT_EVENT_DAYS", 365, 1);
+  int cg_days = env_days("JO_RETAIN_CACHE_GRACE_DAYS", 7, 0);
   ensure_indexes(h);
+  if (!cancelled(cancel)) c->cache = retain_cache(h, cg_days, batch, cancel);
+  if (!cancelled(cancel)) c->llmcache = retain_llmcache(h);
 
   if (an_days > 0 && !cancelled(cancel)) {
     /* Repair rows first: they reference the anomaly. */
@@ -264,12 +314,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   retain_counts c;
   retain_all(ctx->db->h, ctx->cancel, &c);
   if (c.fetch_log > 0 || c.repairs > 0 || c.anomalies > 0 || c.deliveries > 0 ||
-      c.events > 0 || cancelled(ctx->cancel))
+      c.events > 0 || c.cache > 0 || c.llmcache > 0 || cancelled(ctx->cancel))
     fprintf(stderr, "[retention] deleted fetch_log=%ld collector_repair=%ld "
-                    "collector_anomaly=%ld alert_deliveries=%ld alert_events=%ld%s\n",
+                    "collector_anomaly=%ld alert_deliveries=%ld alert_events=%ld "
+                    "collector_cache=%ld llm_cache=%ld%s\n",
             c.fetch_log > 0 ? c.fetch_log : 0, c.repairs > 0 ? c.repairs : 0,
             c.anomalies > 0 ? c.anomalies : 0, c.deliveries > 0 ? c.deliveries : 0,
-            c.events > 0 ? c.events : 0,
+            c.events > 0 ? c.events : 0, c.cache > 0 ? c.cache : 0,
+            c.llmcache > 0 ? c.llmcache : 0,
             cancelled(ctx->cancel) ? " (cancelled; the next run continues)" : "");
   return 0;
 }

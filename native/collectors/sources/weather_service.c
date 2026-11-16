@@ -289,13 +289,13 @@ static int emit_weather(intel_sink *sink, const char *loc, const char *rk,
   cJSON_AddStringToObject(props, "entity", loc);
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = summary;
   it.published_at    = published_at;
   it.has_geo         = has_geo;
@@ -343,7 +343,7 @@ static int run_weather(const source_ctx *ctx, intel_sink *sink) {
   if (!current && om_raw) current = open_meteo_current(om_raw, lat, lon);
 
   if (!current) {
-    const char *owm = getenv("OPENWEATHERMAP_API_KEY");
+    const char *owm = jo_getenv("OPENWEATHERMAP_API_KEY");
     if (owm && *owm) {
       cJSON *o = get_weather_owm(ctx->http, loc, owm);
       if (o && !cJSON_GetObjectItem(o, "status")) current = o;

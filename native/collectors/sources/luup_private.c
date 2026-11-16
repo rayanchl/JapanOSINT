@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 #define HOMEPAGE  "https://luup.sc/"
 #define PORTS_API "https://api.luup.sc/v1/ports"
@@ -48,7 +49,7 @@ static int emit_row(intel_sink *sink, intel_item *it) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *token = getenv("LUUP_MOBILE_TOKEN");
+  const char *token = jo_getenv("LUUP_MOBILE_TOKEN");
   int has_key = token && *token;
   int portal_live = probe_head(ctx->http, HOMEPAGE);
   char now[32]; probe_iso_now(now, sizeof now);
@@ -62,14 +63,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     (void)portal_live; (void)now;
     fprintf(stderr, "[luup-private] gated (no LUUP_MOBILE_TOKEN) — "
                     "per-port reads need a bearer from LUUP mobile sign-up\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "luup-private", "luup-private", (const char *const[]){"LUUP_MOBILE_TOKEN", NULL}, NULL, NULL);
   }
 
   char authh[512];
   snprintf(authh, sizeof authh, "Authorization: Bearer %s", token);
   const char *hdrs[] = {
     authh,
-    "User-Agent: JapanOSINT/1.0 (defensive-infra-research; read-only)",
     "Accept: application/json",
     NULL,
   };

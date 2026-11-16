@@ -20,11 +20,11 @@ static const char *BASES[] = {
 };
 
 static const char *odpt_tok(void) {
-  const char *t = getenv("ODPT_TOKEN");
+  const char *t = jo_getenv("ODPT_TOKEN");
   if (t && *t) return t;
-  t = getenv("ODPT_CONSUMER_KEY");
+  t = jo_getenv("ODPT_CONSUMER_KEY");
   if (t && *t) return t;
-  t = getenv("ODPT_CHALLENGE_TOKEN");
+  t = jo_getenv("ODPT_CHALLENGE_TOKEN");
   if (t && *t) return t;
   return NULL;
 }

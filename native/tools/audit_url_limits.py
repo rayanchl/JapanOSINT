@@ -118,6 +118,24 @@ def functions(text):
             for i in range(len(starts) - 1)]
 
 
+# A file-scope `#define NAME "…limit=200…"` — the commonest way a bespoke
+# collector names its request — lives OUTSIDE every function, so the
+# function-scoped scan below never read it: measured 2026-11-07, 85 limit
+# sites in 47 files were invisible that way (a define that sat between two
+# functions was read as part of the PREVIOUS function and judged by that
+# function's paging). A define is now judged by the functions that USE it: a
+# candidate when at least one user shows no paging (and, unless --all, no
+# entity). A define no function uses is not fetched by this file's code
+# (a `source_def.url` is the human-facing portal, source.h) and is skipped.
+DEFINE_LINE = re.compile(r'^[ \t]*#[ \t]*define[ \t]+([A-Za-z_]\w*)\b[^\n]*(?:\\\n[^\n]*)*', re.M)
+
+
+def _blank_defines(text):
+    """`text` with every #define line blanked (newlines kept), so a define is
+    judged once, by its users, and not again as part of a neighbour."""
+    return DEFINE_LINE.sub(lambda m: re.sub(r"[^\n]", " ", m.group(0)), text)
+
+
 def scan(paths, require_scheduled=True, skip_pivots=True):
     hits = []
     for path in paths:
@@ -127,7 +145,22 @@ def scan(paths, require_scheduled=True, skip_pivots=True):
             continue
         if require_scheduled and not SCHEDULED.search(text):
             continue
-        for line0, body in functions(text):
+        funcs = functions(_blank_defines(text))
+        for dm in DEFINE_LINE.finditer(text):
+            lims = [m for m in LIMIT_PARAM.finditer(dm.group(0)) if int(m.group(1)) > 1]
+            if not lims:
+                continue
+            name = re.compile(r"\b%s\b" % re.escape(dm.group(1)))
+            users = [b for _l, b in funcs if name.search(b)]
+            if not any(not PAGING.search(b) and not (skip_pivots and ENTITY.search(b))
+                       for b in users):
+                continue
+            line = text[:dm.start()].count("\n") + 1
+            for m in lims:
+                hits.append({"file": path, "line": line + dm.group(0)[:m.start()].count("\n"),
+                             "param": m.group(0).lstrip("?&"), "value": int(m.group(1)),
+                             "define": dm.group(1)})
+        for line0, body in funcs:
             if PAGING.search(body):
                 continue
             if skip_pivots and ENTITY.search(body):
@@ -144,7 +177,36 @@ def scan(paths, require_scheduled=True, skip_pivots=True):
     return hits
 
 
+def self_test():
+    """The file-scope define case, and its controls."""
+    import tempfile
+    src = ('#define FEED_URL "https://x.example/a.json?limit=200"\n'
+           '#define WALK_URL "https://x.example/b.json?limit=200&offset=0"\n'
+           '#define UNUSED_URL "https://x.example/c.json?limit=50"\n'
+           'static const source_def d = { .update_interval_sec = 3600 };\n'
+           'static int run_a(const source_ctx *c) {\n  return get(c, FEED_URL);\n}\n'
+           'static int run_b(const source_ctx *c) {\n  return pw_walk(c, WALK_URL);\n}\n'
+           'static int run_c(const source_ctx *c) {\n'
+           '  return get(c, "https://x.example/d.json?rows=30");\n}\n')
+    with tempfile.NamedTemporaryFile("w", suffix=".c", delete=False) as fh:
+        fh.write(src)
+        path = fh.name
+    try:
+        got = sorted((h["line"], h["param"]) for h in scan([path]))
+    finally:
+        os.unlink(path)
+    want = [(1, "limit=200"), (12, "rows=30")]
+    if got != want:
+        print("audit_url_limits SELF-TEST FAIL  got=%s want=%s" % (got, want))
+        return False
+    return True
+
+
 def main():
+    if "--self-test" in sys.argv[1:]:
+        ok = self_test()
+        print("audit_url_limits fixtures: %s" % ("all pass" if ok else "FAILED"))
+        return 0 if ok else 2
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default="collectors",
                     help="collector tree root (default: collectors)")

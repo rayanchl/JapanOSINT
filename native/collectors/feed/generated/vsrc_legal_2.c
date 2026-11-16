@@ -142,44 +142,59 @@ VRSS(gov_justice_news, "gov-justice-news", "US Department of Justice — All New
   "en", "[\"usa\",\"doj\",\"prosecution\",\"enforcement\"]", 3600,
   "All Department of Justice news items: indictments, settlements, policy and leadership announcements.");
 
-VJSON(gov_kr_law_search, "gov-kr-law-search", "Korea Law Information — Statute Search", "韓国法令情報 法令検索",
+/* 2026-11-11 (owner's decision): OC=test is refused by law.go.kr ("register your server IP"); gated on LAW_GO_KR_OC, sent as OC=. */
+VJSON_KEYQ(gov_kr_law_search, "gov-kr-law-search", "Korea Law Information — Statute Search", "韓国法令情報 法令検索",
   "legal", "parliament",
-  "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=law&type=JSON&display=20",
+  "https://www.law.go.kr/DRF/lawSearch.do?target=law&type=JSON&display=20",
   "lawsearch.law",
   "ko", "[\"korea\",\"legislation\",\"statute\",\"asia\"]", 86400,
-  "Korean national statute search API returning law names, ministries and effective dates.");
+  "Korean national statute search API returning law names, ministries and effective dates.",
+  "LAW_GO_KR_OC", "OC", "an OC account id from the open.law.go.kr developer portal (free; tied to a registered server IP)");
 
+/* Tweede Kamer / Folketing OData rows: `$orderby=<modified> desc,<key>`
+ * (2026-11-07), copied from the sorted siblings (GewijzigdOp desc on TK
+ * Besluit, opdateringsdato desc on ft.dk Sag/Sagstrin/Dokument) and made a
+ * TOTAL order with the entity key, because many records share one timestamp
+ * (TK Stemming/Document, ft.dk Stemme: identical GewijzigdOp/opdateringsdato
+ * on consecutive rows). Without an order these $top/$skip walks read an
+ * arbitrary slice — TK's default first rows are dated 2008, 2019, 2024 mixed —
+ * of collections up to 1,035,132 (TK Stemming) and 1,840,932 (ft.dk Stemme);
+ * neither server publishes a nextLink for these requests. With it, the
+ * 20-page ceiling is the most recently modified $top x 20, a window. Both
+ * servers read the clause: a bogus $orderby is HTTP 400 ("Could not find a
+ * property named 'Frobnicate'" on TK). Small entity sets (TK Zaal 64,
+ * Fractie 160, Commissie 234; ft.dk Aktørtype 13 …) read whole either way. */
 VJSON(gov_nl_tweedekamer_besluit, "gov-nl-tweedekamer-besluit", "Tweede Kamer — Decisions", "オランダ下院 決定",
   "legal", "parliament",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Besluit?$top=20&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Besluit?$top=20&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"netherlands\",\"parliament\",\"decisions\"]", 3600,
   "Decisions taken by the Dutch House of Representatives on tabled business.");
 
 VJSON(gov_nl_tweedekamer_document, "gov-nl-tweedekamer-document", "Tweede Kamer — Parliamentary Documents", "オランダ下院 議会文書",
   "legal", "parliament",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Document?$top=20&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Document?$top=20&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"netherlands\",\"parliament\",\"documents\"]", 3600,
   "Documents tabled in the Dutch House of Representatives via the official OData magazine.");
 
 VJSON(gov_nl_tweedekamer_persoon, "gov-nl-tweedekamer-persoon", "Tweede Kamer — Person Registry", "オランダ下院 人物登録",
   "legal", "parliament",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Persoon?$top=20&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Persoon?$top=20&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"netherlands\",\"parliament\",\"members\",\"pep\"]", 86400,
   "Registry of persons appearing in Dutch parliamentary records: MPs, ministers and officials.");
 
 VJSON(gov_nl_tweedekamer_stemming, "gov-nl-tweedekamer-stemming", "Tweede Kamer — Votes", "オランダ下院 採決",
   "legal", "parliament",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Stemming?$top=20&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Stemming?$top=20&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"netherlands\",\"parliament\",\"votes\"]", 3600,
   "Vote records in the Dutch House of Representatives by party and motion.");
 
 VJSON(gov_nl_tweedekamer_zaak, "gov-nl-tweedekamer-zaak", "Tweede Kamer — Parliamentary Cases", "オランダ下院 議案",
   "legal", "parliament",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Zaak?$top=20&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Zaak?$top=20&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"netherlands\",\"parliament\",\"cases\"]", 3600,
   "Cases (zaken) before the Dutch House of Representatives with type and status.");
@@ -198,12 +213,12 @@ VJSON(gov_no_stortinget_representanter, "gov-no-stortinget-representanter", "Sto
   "no", "[\"norway\",\"parliament\",\"members\",\"pep\"]", 86400,
   "Sitting members of the Norwegian Storting with party and county.");
 
-VJSON(gov_no_stortinget_saker, "gov-no-stortinget-saker", "Stortinget — Parliamentary Cases", "ノルウェー議会 議案",
-  "legal", "parliament",
-  "https://data.stortinget.no/eksport/saker?format=json&sesjonid=2025-2026",
-  "saker_liste",
-  "no", "[\"norway\",\"parliament\",\"bills\"]", 3600,
-  "All cases before the Norwegian Storting for the current session with committee and status.");
+/* gov-no-stortinget-saker REMOVED 2026-11-12, fused into eur-stortinget-saker
+ * (vsrc13_europe_gov_2.c), which now reads the current session every run and
+ * every past session over a cycle — the owner's decision ("Fuse current and
+ * history, they are one source after all"). This row was pinned to
+ * `sesjonid=2025-2026`, closed since the 2026-2027 session began; evidence in
+ * docs/removed-sources-2026-11-11-twins.tsv. */
 
 VJSON(gov_no_stortinget_sesjoner, "gov-no-stortinget-sesjoner", "Stortinget — Sessions", "ノルウェー議会 会期",
   "legal", "parliament",

@@ -177,7 +177,7 @@ static int verify_smtp(const char *email, const char *mx_host) {
 
 /* query_hunter_io: key-gated on HUNTER_API_KEY → NULL without it. */
 static cJSON *query_hunter_io(http_client *http, const char *email) {
-  const char *api_key = getenv("HUNTER_API_KEY");
+  const char *api_key = jo_getenv("HUNTER_API_KEY");
   if (!api_key || !*api_key) return NULL;
   char url[1024];
   snprintf(url, sizeof url,

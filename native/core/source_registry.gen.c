@@ -291,7 +291,6 @@ static const src_meta M[]={
 {"bird-makeup-jp","bird.makeup (JP bridge)","bird.makeup (X ブリッジ)","social","api","https://bird.makeup/","X accounts mirrored as ActivityPub via bird.makeup (JP-relevant handles). ToS caveat",NULL,"bird-makeup-jp",1,900},
 {"suumo-rental-density","Suumo Rental Density","Suumo 賃貸物件数","classifieds","api","https://suumo.jp/chintai/","Per-prefecture count of Suumo rental listings (density proxy). Daily cadence max",NULL,"suumo-rental-density",1,86400},
 {"note-com-trending","note.com Trending","note トレンド","social","api","https://note.com/","Trending hashtags/notes on note.com (unofficial endpoints)",NULL,"note-com-trending",1,1800},
-{"mercari-trending","Mercari Trending","メルカリ トレンド","classifieds","api","https://jp.mercari.com/","Mercari trending search keywords (consumer demand signal). ToS caveat",NULL,"mercari-trending",1,86400},
 {"greynoise-jp","GreyNoise (curated IPs)","GreyNoise (IPリスト)","cyber","api","https://api.greynoise.io/v3/community","GreyNoise classifier output for a curated IP list. Free community tier; GREYNOISE_API_KEY raises limits",NULL,"greynoise-jp",1,3600},
 {"cam-camscape","Camscape (Japan search)","Camscape 日本検索","infrastructure","scraped","https://www.camscape.com/?s=japan","Camscape search results for Japan cameras (6 pages, YouTube-backed feeds)",NULL,"cameras",1,21600},
 {"cam-webcamendirect_list","Webcamendirect (JP)","webcamendirect 日本","infrastructure","scraped","https://webcamendirect.net/japon","webcamendirect.net /japon listing + 5 curated detail URLs",NULL,"cameras",1,21600},

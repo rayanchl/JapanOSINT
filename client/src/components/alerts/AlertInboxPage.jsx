@@ -26,6 +26,55 @@ import { canWriteWorkspace } from '../../auth/roles.js';
  */
 const PAGE = 100;
 
+/**
+ * GET /api/alert-events/:id/deliveries — every delivery row for one event
+ * (alertsapi.c alertdeliveriesapi): channel, attempt, status, HTTP code,
+ * error, next attempt, plus a summary. The ledger was written on every
+ * attempt and had no UI until 2026-11-07, so "why did this alert never
+ * arrive" could only be answered from `delivered_channels`.
+ */
+export function DeliveriesPanel({ eventId }) {
+  const [state, setState] = useState({ loading: true, data: null, error: null });
+  useEffect(() => {
+    let alive = true;
+    setState({ loading: true, data: null, error: null });
+    api.get(`/api/alert-events/${encodeURIComponent(eventId)}/deliveries`)
+      .then((d) => { if (alive) setState({ loading: false, data: d, error: null }); })
+      .catch((e) => { if (alive) setState({ loading: false, data: null, error: e }); });
+    return () => { alive = false; };
+  }, [eventId]);
+  if (state.loading) return <div className="text-[11px] text-osint-muted">Loading delivery attempts…</div>;
+  if (state.error) return <div className="text-[11px] text-neon-red font-mono">Delivery ledger unavailable — {errorMessage(state.error)}</div>;
+  const rows = Array.isArray(state.data?.data) ? state.data.data : [];
+  const sum = state.data?.summary || {};
+  return (
+    <div className="mt-2 border-t border-osint-border/40 pt-2 text-[11px]">
+      <div className="font-mono text-osint-muted">
+        {rows.length} row{rows.length === 1 ? '' : 's'} · {sum.total_attempts ?? 0} attempts · ok {sum.ok ?? 0} · pending {sum.pending ?? 0} · failed {sum.failed ?? 0} · dead {sum.dead ?? 0} · skipped {sum.skipped ?? 0}
+      </div>
+      {sum.note && <div className="text-osint-muted mt-0.5">{sum.note}</div>}
+      {rows.length > 0 && (
+        <table className="w-full mt-1">
+          <thead><tr className="text-osint-muted text-left"><th className="pr-2">channel</th><th className="pr-2">target</th><th className="pr-2">attempt</th><th className="pr-2">status</th><th className="pr-2">HTTP</th><th className="pr-2">when</th><th>error</th></tr></thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.id} className="border-t border-osint-border/30 align-top">
+                <td className="pr-2 font-mono">{r.no_channel_attempted ? 'none attempted' : `${r.channel_type} #${r.channel_idx}`}</td>
+                <td className="pr-2 font-mono break-all">{r.target || '—'}</td>
+                <td className="pr-2 font-mono">{r.attempt}</td>
+                <td className="pr-2"><Pill tone={r.status === 'ok' ? 'success' : r.status === 'pending' ? 'accent' : 'danger'}>{r.status}</Pill></td>
+                <td className="pr-2 font-mono">{r.http_code ?? '—'}</td>
+                <td className="pr-2 font-mono" title={r.attempted_at || r.next_attempt_at || ''}>{r.attempted_at ? relativeTime(r.attempted_at) : r.next_attempt_at ? `next ${relativeTime(r.next_attempt_at)}` : '—'}</td>
+                <td className="text-osint-muted break-all">{r.error || ''}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
+
 export default function AlertInboxPage() {
   const auth = useAuth();
   const canMute = canWriteWorkspace(auth.role);
@@ -35,6 +84,7 @@ export default function AlertInboxPage() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(null);
+  const [openDeliveries, setOpenDeliveries] = useState(null);
   // Only the newest request may write. Without this, switching All → Unread
   // while the All page was still in flight let the late All answer land under
   // the Unread filter.
@@ -139,9 +189,11 @@ export default function AlertInboxPage() {
                       <option value="unmute">Unmute rule</option>
                     </Select>
                   )}
+                  <Button size="sm" variant="ghost" onClick={() => setOpenDeliveries((x) => (x === ev.id ? null : ev.id))} title="Per-channel delivery attempts">Deliveries</Button>
                   <CopyButton text={ev.item_uid} label="Copy id" />
                 </div>
               </div>
+              {openDeliveries === ev.id && <div className="px-3 pb-3"><DeliveriesPanel eventId={ev.id} /></div>}
             </Card>
           ))}
           <div className="flex items-center justify-between pt-1">

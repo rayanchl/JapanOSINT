@@ -21,7 +21,7 @@ static int env_int(const char *k, int dflt) {
 /* core/thresholds.c: runtime override > JO_STORY_TAU > STORY_TAU_DEFAULT. */
 double story_tau(void)        { return threshold_get("story_tau"); }
 int    story_max_members(void){ return env_int("JO_STORY_MAX_MEMBERS", STORY_MAX_MEMBERS_DEFAULT); }
-int    novelty_days(void)     { return env_int("JO_NOVELTY_DAYS", NOVELTY_DAYS_DEFAULT); }
+static int    novelty_days(void)     { return env_int("JO_NOVELTY_DAYS", NOVELTY_DAYS_DEFAULT); }
 static int budget_ms(void)    { return env_int("JO_STORY_BUDGET_MS", STORY_BUDGET_MS_DEFAULT); }
 
 void story_migrate(db_handle *db) {
@@ -37,7 +37,8 @@ void story_migrate(db_handle *db) {
     NULL, NULL, NULL);
 }
 
-void story_id_for(const char *seed_uid, char *out, size_t cap) {
+/* The story id for a seed uid ("st-" + 16 hex). out >= 20 bytes. */
+static void story_id_for(const char *seed_uid, char *out, size_t cap) {
   snprintf(out, cap, "st-%016llx", vecindex_hash(seed_uid ? seed_uid : ""));
 }
 

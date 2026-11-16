@@ -1,4 +1,6 @@
 #include "alertsapi.h"
+#include "jo_codec.h"
+#include "../lib/jocore.h"
 #include "alert_deliver.h"
 #include "breach_adapter.h"
 #include "alert_eval.h"
@@ -126,90 +128,9 @@ static cJSON *safe_json(const char *s, int as_array) {
  * exactly as intelapi.c gates it, so the worst case is one extra empty page,
  * never a lost row. */
 
-/* Buffer.from(str,'utf8').toString('base64url') — no padding, +/ → -_.
- * Byte-for-byte the copy in intelapi.c / aoiapi.c / timelineapi.c: the cursor
- * these routes hand out must decode with the same reader as every other one. */
-static char *b64url(const char *in) {
-  static const char T[] =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-  size_t len = strlen(in);
-  char *out = malloc(((len + 2) / 3) * 4 + 1);
-  if (!out) return NULL;
-  size_t o = 0;
-  for (size_t i = 0; i < len; i += 3) {
-    unsigned a = (unsigned char)in[i];
-    unsigned b = i + 1 < len ? (unsigned char)in[i + 1] : 0;
-    unsigned cc = i + 2 < len ? (unsigned char)in[i + 2] : 0;
-    unsigned v = (a << 16) | (b << 8) | cc;
-    out[o++] = T[(v >> 18) & 63];
-    out[o++] = T[(v >> 12) & 63];
-    if (i + 1 < len) out[o++] = T[(v >> 6) & 63];
-    if (i + 2 < len) out[o++] = T[v & 63];
-  }
-  out[o] = 0;
-  return out;
-}
-/* Inverse of b64url(); NULL on an invalid char → the caller ignores the cursor
- * and serves page 1, the same forgiving stance as intelapi.c and aoiapi.c. */
-static char *b64url_decode(const char *in) {
-  static signed char R[256];
-  static int init = 0;
-  if (!init) {
-    for (int i = 0; i < 256; i++) R[i] = -1;
-    const char *T =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-    for (int i = 0; i < 64; i++) R[(unsigned char)T[i]] = (signed char)i;
-    init = 1;
-  }
-  size_t len = strlen(in);
-  char *out = malloc(len / 4 * 3 + 4);
-  if (!out) return NULL;
-  size_t o = 0; unsigned v = 0; int bits = 0;
-  for (size_t i = 0; i < len; i++) {
-    signed char d = R[(unsigned char)in[i]];
-    if (d < 0) { free(out); return NULL; }
-    v = (v << 6) | (unsigned)d; bits += 6;
-    if (bits >= 8) { bits -= 8; out[o++] = (char)((v >> bits) & 0xFF); }
-  }
-  out[o] = 0;
-  return out;
-}
 
-/* Node's new Date().toISOString(), same modulo-clamped spelling intelapi.c
- * uses so -Wformat-truncation can prove the 24 chars fit. */
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
+/* ISO-8601 UTC with milliseconds: jo_iso_now_ms() (lib/jocore.h). */
 
-/* Read one parameter out of a raw "a=1&b=2" query string into out[], anchored
- * on a parameter boundary so "limit" cannot be matched inside "xlimit".
- * Returns 1 when the key was present (out[] may still be empty). */
-static int qs_param(const char *qs, const char *key, char *out, size_t cap) {
-  if (!out || cap == 0) return 0;
-  out[0] = 0;
-  if (!qs || !*qs || !key) return 0;
-  size_t kl = strlen(key);
-  for (const char *p = qs; *p; ) {
-    const char *amp = strchr(p, '&');
-    size_t seglen = amp ? (size_t)(amp - p) : strlen(p);
-    if (seglen > kl && p[kl] == '=' && strncmp(p, key, kl) == 0) {
-      size_t vl = seglen - kl - 1;
-      if (vl >= cap) vl = cap - 1;
-      memcpy(out, p + kl + 1, vl);
-      out[vl] = 0;
-      return 1;
-    }
-    if (!amp) break;
-    p = amp + 1;
-  }
-  return 0;
-}
 
 /* Decode a keyset cursor. On success *holder owns the parsed cJSON (free it
  * with cJSON_Delete after the query has run — *p and *u point INTO it). A
@@ -218,7 +139,7 @@ static void cursor_decode(const char *cur, cJSON **holder,
                           const char **p, const char **u) {
   *holder = NULL; *p = NULL; *u = NULL;
   if (!cur || !*cur) return;
-  char *dec = b64url_decode(cur);
+  char *dec = jo_b64url_decode_str(cur);
   if (!dec) return;
   cJSON *j = cJSON_Parse(dec);
   free(dec);
@@ -246,7 +167,7 @@ static char *events_envelope(cJSON *arr, long total, int lim,
     cJSON_AddStringToObject(cur, "u", last_u ? last_u : "");
     char *cj = cJSON_PrintUnformatted(cur);
     cJSON_Delete(cur);
-    char *enc = cj ? b64url(cj) : NULL;
+    char *enc = cj ? jo_b64url_encode_str(cj) : NULL;
     if (enc) cJSON_AddStringToObject(page, "next_cursor", enc);
     else     cJSON_AddNullToObject(page, "next_cursor");
     free(cj); free(enc);
@@ -259,7 +180,7 @@ static char *events_envelope(cJSON *arr, long total, int lim,
   if (total < 0) cJSON_AddNullToObject(page, "total");
   else           cJSON_AddNumberToObject(page, "total", (double)total);
 
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddItemToObject(meta, "filters", filters);
@@ -975,7 +896,7 @@ char *alerteventsapi(db_handle *db, const char *tid, const char *uid,
 
   /* tiny query-string reader: qs is "a=1&b=2". The old spelling was a bare
    * strstr() per key, which matched the key anywhere — "?xlimit=1" set limit,
-   * and "?next_cursor=" would have set cursor. qs_param() anchors on a
+   * and "?next_cursor=" would have set cursor. jo_qs_get() anchors on a
    * parameter boundary instead. Values are taken raw: the three parameters
    * read here are two integers and a base64url cursor, none of which contains
    * a character that needs percent-decoding. */
@@ -983,9 +904,9 @@ char *alerteventsapi(db_handle *db, const char *tid, const char *uid,
   char qcursor[768] = {0};
   if (qs && *qs) {
     char v[768];
-    if (qs_param(qs, "unread", v, sizeof v)) qflag  = atoi(v);
-    if (qs_param(qs, "limit",  v, sizeof v)) qlimit = atoi(v);
-    qs_param(qs, "cursor", qcursor, sizeof qcursor);
+    if (jo_qs_get(qs, "unread", v, sizeof v, 0)) qflag  = atoi(v);
+    if (jo_qs_get(qs, "limit", v, sizeof v, 0)) qlimit = atoi(v);
+    jo_qs_get(qs, "cursor", qcursor, sizeof qcursor, 0);
   }
 
   if (is_get && strcmp(seg, "unread-count") == 0) {

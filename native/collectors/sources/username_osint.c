@@ -199,6 +199,7 @@ typedef struct {
   const char *user;
   intel_sink *sink;
   volatile int *cancel;
+  http_client *http;         /* the run's client; workers absorb into it */
 } work_t;
 
 static void *worker(void *arg) {
@@ -222,6 +223,11 @@ static void *worker(void *arg) {
     }
   }
 
+  /* Fold this worker's requests into the run's client, so the run line and
+   * the fetch-failure disclosure count them (http_client_absorb). */
+  pthread_mutex_lock(&w->mu);
+  http_client_absorb(w->http, h);
+  pthread_mutex_unlock(&w->mu);
   http_client_free(h);
   return NULL;
 }
@@ -237,7 +243,8 @@ int jo_sherlock_run(const source_ctx *ctx, intel_sink *sink) {
   if (n == 0) return 0;
 
   work_t w = { .idx = idx, .n = n, .next = 0, .user = user,
-               .sink = sink, .cancel = ctx->cancel };
+               .sink = sink, .cancel = ctx->cancel,
+               .http = ctx->http };
   pthread_mutex_init(&w.mu, NULL);
 
   int nt = NUM_WORKERS < n ? NUM_WORKERS : n;

@@ -142,18 +142,11 @@ static const hp_source HP_RESEARCH[] = {
       "count, h-index and homepage. Useful for confirming whether a claimed academic "
       "record exists at the scale claimed" },
 
-  { .id = "EUROPEPMC_SEARCH", .name = "Europe PMC — life-science literature",
-    .name_ja = "Europe PMC — 生命科学文献", .category = "research",
-    .portal = "https://europepmc.org", .record_type = "research-work",
-    .tags = "\"research\",\"biomed\"", .free_tier = 1,
-    .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={q}"
-           "&format=json&pageSize=40&resultType=core",
-    .array_path = "resultList.result", .title_keys = "title", .id_keys = "id",
-    .date_keys = "firstPublicationDate",
-    .page_param = "page", .page_start = 1,
-    .description = "Europe PMC records including preprints, patents citing papers, "
-      "grant acknowledgements and author affiliations — the grant IDs in the core "
-      "result set link a paper to a specific funded project" },
+  /* EUROPEPMC_SEARCH removed 2026-11-14 (the owner's decision): the same
+   * search endpoint as EUROPE_PMC_SEARCH (hp3_research.c), which now reads
+   * resultType=core and keys on source+id; this row keyed on id alone, which
+   * collides across Europe PMC's sources (MED, PMC, PPR, PAT number their
+   * own). docs/removed-sources-2026-11-14-overlaps.tsv. */
 
   /* ── Grants ────────────────────────────────────────────────────────────── */
   { .id = "OPENAIRE_PROJECTS", .name = "OpenAIRE — EU-funded projects",

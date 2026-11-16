@@ -21,11 +21,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B41_JPMUNIWP[] = {
   { .id = "JO41_WP_CITY_013323", .name = "北海道福島町 — notices (WordPress REST)",
     .name_ja = "北海道福島町 新着情報（WordPress REST）",
     .category = "government", .portal = "https://www.town.fukushima.hokkaido.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.town.fukushima.hokkaido.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -52,6 +58,7 @@ static const hp_source HP3B41_JPMUNIWP[] = {
     .name_ja = "北海道和寒町 新着情報（WordPress REST）",
     .category = "government", .portal = "https://www.town.wassamu.hokkaido.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.town.wassamu.hokkaido.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -78,6 +85,7 @@ static const hp_source HP3B41_JPMUNIWP[] = {
     .name_ja = "北海道剣淵町 新着情報（WordPress REST）",
     .category = "government", .portal = "https://www.town.kembuchi.hokkaido.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.town.kembuchi.hokkaido.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -104,6 +112,7 @@ static const hp_source HP3B41_JPMUNIWP[] = {
     .name_ja = "青森県新郷村 新着情報（WordPress REST）",
     .category = "government", .portal = "https://www.vill.shingo.aomori.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.vill.shingo.aomori.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -130,6 +139,7 @@ static const hp_source HP3B41_JPMUNIWP[] = {
     .name_ja = "埼玉県横瀬町 新着情報（WordPress REST）",
     .category = "government", .portal = "https://www.town.yokoze.saitama.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.town.yokoze.saitama.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -156,6 +166,7 @@ static const hp_source HP3B41_JPMUNIWP[] = {
     .name_ja = "埼玉県小鹿野町 新着情報（WordPress REST）",
     .category = "government", .portal = "https://www.town.ogano.lg.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.town.ogano.lg.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -182,6 +193,7 @@ static const hp_source HP3B41_JPMUNIWP[] = {
     .name_ja = "東京都神津島村 新着情報（WordPress REST）",
     .category = "government", .portal = "https://vill.kouzushima.tokyo.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://vill.kouzushima.tokyo.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -208,6 +220,7 @@ static const hp_source HP3B41_JPMUNIWP[] = {
     .name_ja = "長野県南相木村 新着情報（WordPress REST）",
     .category = "government", .portal = "https://www.minamiaiki.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.minamiaiki.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -234,6 +247,7 @@ static const hp_source HP3B41_JPMUNIWP[] = {
     .name_ja = "長野県根羽村 新着情報（WordPress REST）",
     .category = "government", .portal = "https://www.nebamura.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.nebamura.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -260,6 +274,7 @@ static const hp_source HP3B41_JPMUNIWP[] = {
     .name_ja = "静岡県御殿場市 新着情報（WordPress REST）",
     .category = "government", .portal = "https://www.city.gotemba.lg.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.city.gotemba.lg.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -286,6 +301,7 @@ static const hp_source HP3B41_JPMUNIWP[] = {
     .name_ja = "静岡県河津町 新着情報（WordPress REST）",
     .category = "government", .portal = "https://www.town.kawazu.shizuoka.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.town.kawazu.shizuoka.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -312,6 +328,7 @@ static const hp_source HP3B41_JPMUNIWP[] = {
     .name_ja = "三重県紀宝町 新着情報（WordPress REST）",
     .category = "government", .portal = "https://www.town.kiho.lg.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.town.kiho.lg.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -334,36 +351,48 @@ static const hp_source HP3B41_JPMUNIWP[] = {
       "as the body, so this is the organisation's own notice text "
       "rather than a headline." },
 
-  { .id = "JO41_WP_CITY_324485", .name = "島根県美郷町 — notices (WordPress REST)",
-    .name_ja = "島根県美郷町 新着情報（WordPress REST）",
-    .category = "government", .portal = "https://www.town.shimane-misato.lg.jp/",
-    .record_type = "municipal-notice",
-    .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.town.shimane-misato.lg.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
+  /* 2026-11-11: RE-POINTED. The town re-platformed: every path on
+   * www.town.shimane-misato.lg.jp, the old WordPress REST route included,
+   * now 302s to https://gov.town.shimane-misato.lg.jp/, whose /wp-json/
+   * answers 404 (not WordPress). The new homepage declares exactly one
+   * feed, <link rel="alternate" type="application/rss+xml" href="/feed/">,
+   * which answers 200, 285,810 bytes of RSS 2.0: 1,125 items, 490 of them
+   * dated notices (2020-01-01 .. 2026-11-11, newest 広島ドラゴンフライズ共同応援
+   * 参加者募集); the rest are the site's section and file pages — the feed's
+   * own <description> is "sitemap", so the record_type says page, not
+   * notice. No paging: one request is the whole feed. Keyed on `link`:
+   * 1,105 distinct links over 1,116 distinct whole items — 11 links carry
+   * two genuinely different items (e.g. two years' 施政方針 on one page),
+   * which the in-page collision guard keeps apart by content hash; the
+   * other 9 repeats are byte-identical and collapse as real dedupe. */
+  { .id = "JO41_WP_CITY_324485", .name = "島根県美郷町 — site feed (RSS)",
+    .name_ja = "島根県美郷町 サイトフィード（RSS）",
+    .category = "government", .portal = "https://gov.town.shimane-misato.lg.jp/",
+    .record_type = "municipal-page",
+    .lang = "ja",
+    .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"rss\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://gov.town.shimane-misato.lg.jp/feed/",
+    .array_path = "item",
+    .body_keys = "content:encoded,description",
+    .date_keys = "dc:date,pubDate",
+    .id_keys = "link",
     .interval = 21600,
     .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
     .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST posts feed of 島根県美郷町 "
-      "(www.town.shimane-misato.lg.jp, 団体コード 324485). Fetched "
-      "2026-10-06: 6 posts on the first page, each record carrying "
-      "author,categories,comment_status,content,date,date_gmt,excerpt,featured_media,format,guid,id,link. "
-      "First post: オープンカンファレンス観覧者募集. content.rendered is kept as the "
-      "body, so this is the organisation's own notice text rather than "
-      "a headline." },
+    .title_keys = "title",
+    .description = "The whole-site RSS feed of 島根県美郷町 "
+      "(gov.town.shimane-misato.lg.jp, 団体コード 324485), the feed the "
+      "town's homepage declares since it left WordPress. Fetched "
+      "2026-11-11: 1,125 items — 490 dated notices from 2020 to today, "
+      "the rest the site's section and document pages, each with its "
+      "title and link; 97 carry a description." },
 
   { .id = "JO41_WP_CITY_394114", .name = "高知県津野町 — notices (WordPress REST)",
     .name_ja = "高知県津野町 新着情報（WordPress REST）",
     .category = "government", .portal = "https://town.kochi-tsuno.lg.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://town.kochi-tsuno.lg.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -390,6 +419,7 @@ static const hp_source HP3B41_JPMUNIWP[] = {
     .name_ja = "沖縄県国頭村 新着情報（WordPress REST）",
     .category = "government", .portal = "https://www.vill.kunigami.okinawa.jp/",
     .record_type = "municipal-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"municipality\",\"localgov\",\"notice\",\"wordpress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.vill.kunigami.okinawa.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",

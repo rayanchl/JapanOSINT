@@ -25,8 +25,6 @@ int  bloom_maybe(const bloom *b, const void *data, size_t len);
  * before letting a hit suppress a write. */
 unsigned long long bloom_capacity(const bloom *b);
 unsigned long long bloom_count(const bloom *b);
-/* Estimated false-positive rate at the current fill: (1-e^(-k*count/m))^k. */
-double bloom_fp_estimate(const bloom *b);
 /* 1 once insertions exceed the design capacity (i.e. the FP rate has drifted
  * well past the target it was sized for). */
 int    bloom_saturated(const bloom *b);

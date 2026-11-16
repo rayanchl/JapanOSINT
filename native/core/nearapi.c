@@ -1,6 +1,7 @@
 /* core/nearapi.c — proximity search over intel_items (roadmap item 32).
  * Contract, index rationale and the row-shape argument are in nearapi.h. */
 #include "nearapi.h"
+#include "jo_codec.h"
 #include "intelapi.h"
 #include "embed_pod.h"
 #include "semsearchapi.h"
@@ -47,55 +48,11 @@ static void sql_append(char *buf, size_t cap, int *o, const char *fmt, ...) {
   *o = ((size_t) *o + (size_t) n >= cap) ? (int) cap - 1 : *o + n;
 }
 
-static int hexv(int c) {
-  if (c >= '0' && c <= '9') return c - '0';
-  if (c >= 'a' && c <= 'f') return c - 'a' + 10;
-  if (c >= 'A' && c <= 'F') return c - 'A' + 10;
-  return -1;
-}
-/* Decodes into out[cap]; returns 1 when the decoded value did NOT fit (the
- * output is then a truncated prefix the caller must refuse, not use). */
-static int url_decode(const char *s, size_t n, char *out, size_t cap) {
-  size_t o = 0, i = 0;
-  for (; i < n && o + 1 < cap; i++) {
-    int c = (unsigned char) s[i];
-    if (c == '+') { out[o++] = ' '; continue; }
-    if (c == '%' && i + 2 < n) {
-      int h = hexv((unsigned char) s[i + 1]), l = hexv((unsigned char) s[i + 2]);
-      if (h >= 0 && l >= 0) { out[o++] = (char) ((h << 4) | l); i += 2; continue; }
-    }
-    out[o++] = (char) c;
-  }
-  out[o] = 0;
-  return i < n;
-}
-/* 1 = present, 0 = absent. A value too long for `out` sets *too_long: a
- * truncated filter is a DIFFERENT filter (a clipped `since`, a clipped
- * source id, half a phrase), and httpd.c's intel_items_run() answers the
- * same case with a 414 rather than honour half of what was asked. This used
- * to clip silently. */
-static int qget(const char *query, const char *key, char *out, size_t cap,
-                int *too_long) {
-  out[0] = 0;
-  if (!query || !*query) return 0;
-  size_t klen = strlen(key);
-  const char *p = query;
-  while (*p) {
-    const char *amp = strchr(p, '&');
-    const char *seg_end = amp ? amp : p + strlen(p);
-    const char *eq = memchr(p, '=', (size_t) (seg_end - p));
-    size_t kn = eq ? (size_t) (eq - p) : (size_t) (seg_end - p);
-    if (kn == klen && memcmp(p, key, klen) == 0) {
-      const char *vstart = eq ? eq + 1 : seg_end;
-      if (url_decode(vstart, (size_t) (seg_end - vstart), out, cap) && too_long)
-        *too_long = 1;
-      return 1;
-    }
-    if (!amp) break;
-    p = amp + 1;
-  }
-  return 0;
-}
+/* Query parameters go through jo_qs_get_tl() (core/jo_codec.h): 1 = present,
+ * 0 = absent, and a value too long for `out` sets *too_long — a truncated
+ * filter is a DIFFERENT filter (a clipped `since`, a clipped source id, half
+ * a phrase), and httpd.c's intel_items_run() answers the same case with a 414
+ * rather than honour half of what was asked. This used to clip silently. */
 static char *errj(int *st, int code, const char *msg) {
   *st = code;
   cJSON *o = cJSON_CreateObject();
@@ -154,12 +111,12 @@ static char *near_run(db_handle *db, const char *tenant, const char *near,
   char v[256];
   int too_long = 0;
   double radius = NEAR_RADIUS_DEF;
-  if (qget(qs, "radius_m", v, sizeof v, &too_long) && *v) radius = strtod(v, NULL);
+  if (jo_qs_get_tl(qs, "radius_m", v, sizeof v, JO_QS_DECODE | JO_QS_BARE_KEY, &too_long) && *v) radius = strtod(v, NULL);
   if (!(radius > 0)) radius = NEAR_RADIUS_DEF;
   if (radius > NEAR_RADIUS_MAX) radius = NEAR_RADIUS_MAX;
 
   int limit = NEAR_LIMIT_DEF;
-  if (qget(qs, "limit", v, sizeof v, &too_long) && *v) limit = atoi(v);
+  if (jo_qs_get_tl(qs, "limit", v, sizeof v, JO_QS_DECODE | JO_QS_BARE_KEY, &too_long) && *v) limit = atoi(v);
   if (limit < 1) limit = NEAR_LIMIT_DEF;
   if (limit > NEAR_LIMIT_MAX) limit = NEAR_LIMIT_MAX;
 
@@ -168,12 +125,12 @@ static char *near_run(db_handle *db, const char *tenant, const char *near,
    * does not refuse. */
   char f_source[160] = {0}, f_rtype[64] = {0}, f_since[48] = {0}, f_until[48] = {0},
        f_q[256] = {0}, f_qalt[256] = {0};
-  qget(qs, "source", f_source, sizeof f_source, &too_long);
-  qget(qs, "record_type", f_rtype, sizeof f_rtype, &too_long);
-  qget(qs, "since", f_since, sizeof f_since, &too_long);
-  qget(qs, "until", f_until, sizeof f_until, &too_long);
-  qget(qs, "q", f_q, sizeof f_q, &too_long);
-  qget(qs, "qAlt", f_qalt, sizeof f_qalt, &too_long);
+  jo_qs_get_tl(qs, "source", f_source, sizeof f_source, JO_QS_DECODE | JO_QS_BARE_KEY, &too_long);
+  jo_qs_get_tl(qs, "record_type", f_rtype, sizeof f_rtype, JO_QS_DECODE | JO_QS_BARE_KEY, &too_long);
+  jo_qs_get_tl(qs, "since", f_since, sizeof f_since, JO_QS_DECODE | JO_QS_BARE_KEY, &too_long);
+  jo_qs_get_tl(qs, "until", f_until, sizeof f_until, JO_QS_DECODE | JO_QS_BARE_KEY, &too_long);
+  jo_qs_get_tl(qs, "q", f_q, sizeof f_q, JO_QS_DECODE | JO_QS_BARE_KEY, &too_long);
+  jo_qs_get_tl(qs, "qAlt", f_qalt, sizeof f_qalt, JO_QS_DECODE | JO_QS_BARE_KEY, &too_long);
   if (too_long) {
     *status = 414;
     return strdup("{\"error\":\"filter_too_long\",\"detail\":\"a query parameter "
@@ -411,7 +368,7 @@ char *nearapi_items_route(db_handle *db, const char *tenant, const char *near,
   /* ?lang_view= — the same shaping httpd.c's intel_lang_view applies to the
    * inline path, done here because this runs on a worker. */
   char lv[16];
-  if (qget(qs, "lang_view", lv, sizeof lv, NULL) && lv[0]) {
+  if (jo_qs_get_tl(qs, "lang_view", lv, sizeof lv, JO_QS_DECODE | JO_QS_BARE_KEY, NULL) && lv[0]) {
     char *sh = translate_shape_items(db, out, translate_view_parse(lv));
     if (sh) { free(out); out = sh; }
   }

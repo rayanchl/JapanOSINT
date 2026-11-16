@@ -11,12 +11,26 @@ manifest is rewritten in place; ids that could not be re-read land in
 IDS_FILE.bad with the reason, and are the caller's to drop."""
 import sys, re, subprocess, datetime, collections, argparse, concurrent.futures as cf
 
-UA = "Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)"
+# Shelling out to curl still goes through THE trust set (jo_tls, rule 4c):
+# system roots + session CA + the intermediates the engine loads.
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import jo_tls as _jo_tls
+import manifest
+JO_CURL_TLS = _jo_tls.curl_args()
+
+
+# The request is the ENGINE's (tools/jo_http.py): JO_USER_AGENT, or the
+# core/host_agents.def agent for a listed host, and the engine's Accept.
+# This tool used to send an agent of its own (one of eight spellings in
+# this directory, 2026-11-07), so a host walled against one agent read
+# differently here than in the engine.
+import jo_http as _jo_http
 DATE = re.compile(rb"<(pubDate|dc:date|updated|published)>([^<]{8,40})<")
 
 
 def get(url):
-    r = subprocess.run(["curl", "-sS", "-L", "--compressed", "--max-time", "25", "-A", UA,
+    r = subprocess.run(["curl", *JO_CURL_TLS, "-sS", "-L", "--compressed", "--max-time", "25", *_jo_http.curl_header_args(url),
                         "-o", "-", "-w", "\n%{http_code}", url], capture_output=True)
     b = r.stdout; i = b.rfind(b"\n")
     return b[i + 1:].decode(errors="ignore"), b[:i]
@@ -61,7 +75,11 @@ def main():
         # keep what the row already carries beyond the feed opts: its interval
         # (measured, possibly re-tuned) and any documentation opt
         iv = re.search(r"(?:^|;)interval=(\d+)", f[12])
-        extra = "".join(";" + p for p in f[12].split(";")
+        # manifest.split_opts, never a bare split(";"): a header value carries
+        # `\;` (the compat User-Agent does), and splitting on it wrote back a
+        # half User-Agent with the next opt glued on — the swallowed-opt shape
+        # gen_hp_batch.py rejects. Re-escape on the way out.
+        extra = "".join(";" + p.replace(";", "\\;") for p in manifest.split_opts(f[12])
                         if p.split("=", 1)[0] in ("pagination_ok", "header1", "header2", "header3", "adaptive_interval"))
         f[12] = opts_for(kind, ap, iv.group(1) if iv else "3600", extra)
         f[11] = re.sub(r"^Fetched \S+: \d+ items, \w+ feed, newest [^.]*\.",

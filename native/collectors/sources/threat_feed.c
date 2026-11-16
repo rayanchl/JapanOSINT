@@ -99,7 +99,7 @@ static int query_otx(http_client *http, const char *ind, ioc_t t, intel_sink *si
   char url[512];
   snprintf(url, sizeof url, "https://otx.alienvault.com/api/v1/indicators/%s/%s",
            ioc_str(t), ind);
-  const char *key = getenv("OTX_API_KEY");
+  const char *key = jo_getenv("OTX_API_KEY");
   const char *hdrs[3]; int h = 0;
   if (key && *key) { hdrs[h++] = "X-OTX-API-KEY"; hdrs[h++] = key; }
   hdrs[h] = NULL;

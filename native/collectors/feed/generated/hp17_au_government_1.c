@@ -18,7 +18,17 @@ static const hp_source T[] = {
     .collector = "au_government", .category = "government",
     .description = "Every Commonwealth body: Id (O-xxxxxx), Title, Portfolio, Classification (primary body / subsidiary), Type of Body (non-corporate Commonwealth entity, company, statutory authority), GFS sector classification, materiality and a prose description. Maps the federal entity graph.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "government-record", .tags = "\"au\",\"government\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=90b13a5b-fd2e-440c-b253-9cbf314d3da3&limit=100",
+    /* 2026-11-07: `sort=_id asc` and `id_keys = "_id"`. The walk follows the
+     * datastore's own `_links.next`, which is an OFFSET link with no sort
+     * unless the request carries one — measured: with it, the next link
+     * reads `…&sort=_id+asc&offset=50`, so the order is kept on every page.
+     * On four data.gov.au resources (5515dfcc, 91d80440, 55ad4b1c, 90b13a5b):
+     * sort=frobnicate 409, asc and desc differ, totals unchanged, offset
+     * pages disjoint. No id_keys was declared and `_id` is not in the
+     * engine's fallback list, so records keyed on a title and could
+     * collapse across pages. */
+    .url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=90b13a5b-fd2e-440c-b253-9cbf314d3da3&limit=100&sort=_id%20asc",
+    .id_keys = "_id",
     .array_path = "result.records",
     .detail_url = "https://data.gov.au/data/api/3/action/datastore_search?resource_id=90b13a5b-fd2e-440c-b253-9cbf314d3da3&filters=%7B%22_id%22%3A{v}%7D", .detail_key = "_id",
     .page_walk = 1,

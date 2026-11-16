@@ -20,11 +20,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B25_JPMEDIA2[] = {
   { .id = "JPMEDIA_HOKKAIDO_SHIMBUN", .name = "Hokkaido Shimbun",
     .name_ja = "北海道新聞",
     .category = "media", .portal = "https://www.hokkaido-np.co.jp/",
     .record_type = "news-article",
+    .lang = "ja",
     .tags = "\"japan\",\"media\",\"news\",\"regional\",\"tradepress\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.hokkaido-np.co.jp/output/7/free/index.ad.xml",
@@ -42,6 +48,7 @@ static const hp_source HP3B25_JPMEDIA2[] = {
     .name_ja = "山陽新聞",
     .category = "media", .portal = "https://www.sanyonews.jp/",
     .record_type = "news-article",
+    .lang = "ja",
     .tags = "\"japan\",\"media\",\"news\",\"regional\",\"tradepress\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.sanyonews.jp/output/free.xml",
@@ -75,6 +82,7 @@ static const hp_source HP3B25_JPMEDIA2[] = {
     .name_ja = "琉球新報",
     .category = "media", .portal = "https://ryukyushimpo.jp/",
     .record_type = "news-article",
+    .lang = "ja",
     .tags = "\"japan\",\"media\",\"news\",\"regional\",\"tradepress\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://ryukyushimpo.jp/wp-json/wp/v2/posts?per_page=100",
@@ -94,6 +102,7 @@ static const hp_source HP3B25_JPMEDIA2[] = {
     .name_ja = "東北放送",
     .category = "media", .portal = "https://www.tbc-sendai.co.jp/",
     .record_type = "news-article",
+    .lang = "ja",
     .tags = "\"japan\",\"media\",\"news\",\"regional\",\"tradepress\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tbc-sendai.co.jp/feed",
@@ -110,6 +119,7 @@ static const hp_source HP3B25_JPMEDIA2[] = {
     .name_ja = "琉球朝日放送",
     .category = "media", .portal = "https://www.qab.co.jp/",
     .record_type = "news-article",
+    .lang = "ja",
     .tags = "\"japan\",\"media\",\"news\",\"regional\",\"tradepress\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.qab.co.jp/feed/",
@@ -126,6 +136,7 @@ static const hp_source HP3B25_JPMEDIA2[] = {
     .name_ja = "レスポンス",
     .category = "media", .portal = "https://response.jp/",
     .record_type = "news-article",
+    .lang = "ja",
     .tags = "\"japan\",\"media\",\"news\",\"regional\",\"tradepress\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://response.jp/rss20/index.rdf",
@@ -191,6 +202,7 @@ static const hp_source HP3B25_JPMEDIA2[] = {
     .name_ja = "トラベルボイス",
     .category = "media", .portal = "https://www.travelvoice.jp/",
     .record_type = "news-article",
+    .lang = "ja",
     .tags = "\"japan\",\"media\",\"news\",\"regional\",\"tradepress\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.travelvoice.jp/feed",
@@ -223,6 +235,7 @@ static const hp_source HP3B25_JPMEDIA2[] = {
     .name_ja = "ログミーBiz",
     .category = "media", .portal = "https://logmi.jp/",
     .record_type = "news-article",
+    .lang = "ja",
     .tags = "\"japan\",\"media\",\"news\",\"regional\",\"tradepress\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://logmi.jp/RSS/feed.xml",
@@ -259,6 +272,7 @@ static const hp_source HP3B25_JPMEDIA2[] = {
     .name_ja = "小学館",
     .category = "media", .portal = "https://www.shogakukan.co.jp/",
     .record_type = "news-article",
+    .lang = "ja",
     .tags = "\"japan\",\"media\",\"news\",\"regional\",\"tradepress\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.shogakukan.co.jp/rss.xml",
@@ -275,6 +289,7 @@ static const hp_source HP3B25_JPMEDIA2[] = {
     .name_ja = "幻冬舎",
     .category = "media", .portal = "https://www.gentosha.co.jp/",
     .record_type = "news-article",
+    .lang = "ja",
     .tags = "\"japan\",\"media\",\"news\",\"regional\",\"tradepress\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.gentosha.co.jp/topic/rss.xml",
@@ -291,6 +306,7 @@ static const hp_source HP3B25_JPMEDIA2[] = {
     .name_ja = "集英社",
     .category = "media", .portal = "https://www.shueisha.co.jp/",
     .record_type = "news-article",
+    .lang = "ja",
     .tags = "\"japan\",\"media\",\"news\",\"regional\",\"tradepress\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.shueisha.co.jp/feed",

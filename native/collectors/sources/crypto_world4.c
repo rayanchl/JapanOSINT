@@ -16,24 +16,24 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
-static const char *C4_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int etherscan_family(const source_ctx *ctx, intel_sink *sink,
                             const char *service, const char *host, const char *keyenv,
                             const char *chain, const char *symbol, const char *explorer,
                             const char *enc) {
   const char *key = jo_env(keyenv);
-  if (!key) { fprintf(stderr, "[%s] no %s\n", service, keyenv); return 0; }
+  if (!key) return jo_needs_credential(sink, service, service, (const char *const[]){keyenv, NULL}, NULL, NULL);
   char url[640];
   snprintf(url, sizeof url,
     "https://%s/api?module=account&action=balance&address=%s&tag=latest&apikey=%s",
     host, enc, key);
-  const char *hdrs[] = { "Accept: application/json", C4_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, service);
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *status = jo_sv(root, "status");
   const char *result = jo_sv(root, "result");
   /* status "1" = OK with a numeric wei string in result. */
@@ -54,7 +54,7 @@ static int etherscan_family(const source_ctx *ctx, intel_sink *sink,
   cJSON_AddStringToObject(p, "chain", chain);
   cJSON_AddStringToObject(p, "address", ctx->entity);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
   char rk[300], link[360], title[320];
   snprintf(rk, sizeof rk, "%s:%s", chain, ctx->entity);
@@ -87,7 +87,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "GNOSIS_BALANCE"))      n = etherscan_family(ctx, sink, "GNOSIS_BALANCE", "api.gnosisscan.io", "GNOSISSCAN_API_KEY", "gnosis", "xDAI", "gnosisscan.io", enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define C4_DEF(sym, ID, NM, DESC) \

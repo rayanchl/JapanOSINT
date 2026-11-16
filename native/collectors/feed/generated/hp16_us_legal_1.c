@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .description = "2,573 Competition and Markets Authority cases (mergers, cartels, market investigations, consumer enforcement). Per row: title naming the parties, link, description of the transaction/conduct, case_type, case_state (open/closed), opened_date, closed_date, market_sector. Detail hop via the GOV.UK Content API returns the full case page including every published document (decision notices, provisional findings, undertakings, penalty notices) with dates and file URLs. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.gov.uk/api/search.json?filter_format=cma_case&count=100&order=public_timestamp&fields=title,link,description,case_type,case_state,opened_date,closed_date,market_sector",
+    .id_keys = "link",   /* 2026-11-09: as its siblings; a GOV.UK search result is one page, its link */
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_param = "start",
@@ -33,6 +34,7 @@ static const hp_source T[] = {
     .description = "Employment Tribunal judgments, title carries claimant v respondent employer and case number (e.g. 2600557/2024), plus decision categories and decision date. Detail hop via the Content API yields the full decision page with the downloadable judgment documents. Names employers found liable for discrimination, unfair dismissal, whistleblowing detriment. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.gov.uk/api/search.json?filter_format=employment_tribunal_decision&count=100&order=public_timestamp&fields=title,link,description,tribunal_decision_categories,tribunal_decision_decision_date",
+    .id_keys = "link",   /* 2026-11-09: as its siblings; a GOV.UK search result is one page, its link */
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_param = "start",
@@ -47,6 +49,7 @@ static const hp_source T[] = {
     .description = "Upper Tribunal Tax and Chancery decisions - HMRC v taxpayer, financial-services regulatory references, VAT and avoidance-scheme litigation. Neutral citation, parties, category and decision date; Content API detail hop returns the full judgment. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.gov.uk/api/search.json?filter_format=tax_tribunal_decision&count=100&order=public_timestamp&fields=title,link,description,tribunal_decision_category,tribunal_decision_decision_date",
+    .id_keys = "link",   /* 2026-11-09: as its siblings; a GOV.UK search result is one page, its link */
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_param = "start",
@@ -61,6 +64,7 @@ static const hp_source T[] = {
     .description = "Upper Tribunal AAC decisions with neutral citation ([2026] UKUT 276 (AAC)), parties, subject categories, decision date and the judges. Content API detail hop returns the full decision document. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.gov.uk/api/search.json?filter_format=utaac_decision&count=100&order=public_timestamp&fields=title,link,description,tribunal_decision_categories,tribunal_decision_decision_date,tribunal_decision_judges",
+    .id_keys = "link",   /* 2026-11-09: as its siblings; a GOV.UK search result is one page, its link */
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_param = "start",
@@ -116,7 +120,13 @@ static const hp_source T[] = {
     .collector = "us_legal", .category = "legal",
     .description = "Federal PACER/RECAP dockets. count 98124 dockets / document_count 520436 for one query. Each row carries docketNumber, caseName, court, assignedTo judge name + assigned_to_id, referredTo, dateFiled, dateTerminated, cause, natureOfSuit, juryDemand, and a nested recap_documents[] array with entry_number, description, is_available, filepath_local and page_count. This is the deep RECAP hop that works WITHOUT a token (the REST /dockets/ endpoint is 401 anonymously).  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    /* 2026-11-07: the v4 search is no longer anonymous — this URL answers HTTP
+     * 401 {"detail":"Authentication credentials were not provided."} — so it
+     * takes the token the hp_courts_legal.c rows use (CL_AUTH there). The
+     * description's "works WITHOUT a token" is the 2026-10 reading. */
     .url = "https://www.courtlistener.com/api/rest/v4/search/?q=Google&type=r",
+    .key_env = "COURTLISTENER_API_KEY",
+    .headers = { "Authorization: Token {key}", NULL },
     .array_path = "results",
     .id_keys = "docket_id",
     .detail_url = "https://www.courtlistener.com/api/rest/v4/people/{v}/", .detail_key = "assigned_to_id",
@@ -293,10 +303,18 @@ static const hp_source T[] = {
     .collector = "us_legal", .category = "legal",
     .description = "Keyless SCOTUS case index. Each case: ID, name, href (api.oyez.org/cases/{term}/{docket}), docket_number, additional_docket_numbers, timeline[] of events (Granted/Argued/Decided with unix dates), lower_court, facts_of_the_case, question, conclusion, term, and labelled issue areas.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.oyez.org/cases?filter=term:2022&labels=true&per_page=100",
-    .detail_url = "https://api.oyez.org/cases/2022/{v}", .detail_key = "docket_number",
+    /* 2026-11-09: the term was frozen at 2022 (decided in June 2023), in
+     * the list URL AND the detail hop. {date-9m:%Y} is the SITTING term: a
+     * term YYYY opens in October YYYY, so it reads 2026 from Oct 2026 to
+     * Sep 2027. Measured that day: term:2026 answers 38 cases (38 distinct
+     * docket numbers), term:2027 an empty array, term:2025 60, term:2022 62;
+     * /cases/2026/25-170 answers HTTP 200 for its case. page_resume is gone:
+     * a term is under 100 cases, one page, so the cycle was a no-op, and the
+     * engine refuses page_resume on a row with a date token anyway. Records
+     * key on Oyez's own case `ID` (fallback list), unique across terms. */
+    .url = "https://api.oyez.org/cases?filter=term:{date-9m:%Y}&labels=true&per_page=100",
+    .detail_url = "https://api.oyez.org/cases/{date-9m:%Y}/{v}", .detail_key = "docket_number",
     .page_walk = 1,
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 43200, .free_tier = 1 },
 

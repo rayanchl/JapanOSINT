@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { LuFolderPlus } from 'react-icons/lu';
-import { api } from '../../api/client.js';
+import { api, errorMessage } from '../../api/client.js';
 import { usePaged } from '../../hooks/useCases.js';
 import { parseServerTime } from '../../utils/time.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
@@ -18,7 +18,7 @@ export function CasePickerSheet({ open, onClose, refType, refId, label, onPinned
   // Keyset-paged (no server total). This used to read ONE page of 100 and
   // drop the cursor, so a workspace with more open cases could not pin to the
   // older ones and was not told they existed.
-  const { rows: cases, hasMore, error, loading, loadingMore, reload, loadMore } = usePaged(
+  const { rows: cases, hasMore, error, moreError, loading, loadingMore, reload, loadMore } = usePaged(
     open ? '/api/cases?status=open' : null, { limit: 100, enabled: open, deps: [open] },
   );
   const [busy, setBusy] = useState(null);
@@ -70,6 +70,7 @@ export function CasePickerSheet({ open, onClose, refType, refId, label, onPinned
           <div className="flex items-center justify-between gap-2">
             <BoundNote shown={cases.length} total={hasMore ? null : cases.length} more={hasMore} noun="open cases" />
             {hasMore && <Button size="sm" busy={loadingMore} onClick={loadMore}>Load more</Button>}
+            {moreError && <span className="text-[11px] text-neon-red font-mono">next page failed — {errorMessage(moreError)}</span>}
           </div>
         )}
         <div className="flex gap-2">

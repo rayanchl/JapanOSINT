@@ -519,7 +519,15 @@ static int v6_class(const unsigned char *a) {
   return 0;
 }
 
-int hostgate_addr_check(const char *ip_text, int strict) {
+/* Classifies one already-resolved address in its textual form ("93.184.216.34",
+ * "::1"). `strict` selects the same two strengths as above. This is what the
+ * per-connection callback in httpclient.c reaches (through
+ * hostgate_addr_check_floor), so a redirect or a rebound DNS
+ * answer is judged on the address we actually connected to rather than on the
+ * name we started from. Unparseable text is allowed (fail open: the floor check
+ * has already run on the URL, and a curl-reported peer we cannot parse is not
+ * evidence of an attack). */
+static int hostgate_addr_check(const char *ip_text, int strict) {
   if (!ip_text || !*ip_text) return HG_URL_OK;
   struct in_addr  v4;
   struct in6_addr v6;
@@ -535,13 +543,48 @@ int hostgate_addr_check(const char *ip_text, int strict) {
   return HG_URL_OK;
 }
 
-/* JO_HTTP_BLOCK_PRIVATE=1 raises the floor to the strict ruleset for every
- * outbound fetch. Off by default because llama-server lives on 127.0.0.1 and
- * LAN cameras are a shipped feature — turning it on is a deployment decision,
- * not something this file may make on the operator's behalf. */
+/* THE FLOOR IS STRICT BY DEFAULT (2026-11-12, the repository owner's
+ * decision: "Block by default"). Every outbound fetch refuses loopback,
+ * RFC1918, CGNAT, unique-local IPv6, link-local and the metadata range unless
+ * the operator sets JO_HTTP_BLOCK_PRIVATE=0. Until this date the default was
+ * the lenient floor (metadata/link-local only), justified by "llama-server
+ * lives on 127.0.0.1" — which made every COLLECTOR fetch, and every redirect a
+ * collector's upstream hands us, able to reach this host's own API and the
+ * LAN. A collector URL is not operator-chosen: an LLM-proposed override, a
+ * {q} pivot, a 302 from an upstream all decide it.
+ *
+ * The operator's OWN service endpoints — the LLM / embedding / vision servers
+ * configured as loopback URLs, the identity provider's JWKS — are exempt by an
+ * EXPLICIT per-call flag (hostgate_service_scope(), set by
+ * http_request_service() in core/httpclient.c), never by a host list. A host
+ * list derived from those URLs would also admit a COLLECTOR URL that happens
+ * to name 127.0.0.1:8080, which is exactly the target the floor protects; the
+ * flag marks the CALL, so only code that read the URL from operator config
+ * can use it. The exempt call still gets the lenient floor, not no floor:
+ * metadata and link-local stay refused, including on a redirect.
+ *
+ * Unset, empty or any value but "0" is strict. */
 static int floor_is_strict(void) {
   const char *e = getenv("JO_HTTP_BLOCK_PRIVATE");
-  return (e && *e && strcmp(e, "0") != 0) ? 1 : 0;
+  return (e && !strcmp(e, "0")) ? 0 : 1;
+}
+
+/* Per-thread: the fetch in flight on this thread is to an operator-configured
+ * service endpoint. Thread-local because libcurl's easy interface runs the
+ * per-connection callback on the calling thread, so the scope covers the URL
+ * check, every redirect hop and the resolved-address check of that one call. */
+static __thread int g_service_scope;
+
+int hostgate_service_scope(int on) {
+  int prev = g_service_scope;
+  g_service_scope = on ? 1 : 0;
+  return prev;
+}
+
+/* The strength the fetch in flight is judged at. The camera policy below does
+ * NOT read this: a camera is never an operator service. */
+static int floor_strict_now(void) {
+  return g_service_scope ? 0 : floor_is_strict();
 }
 
 /* Scheme + literal-host check. No DNS: this runs on every outbound request and
@@ -561,18 +604,18 @@ static int url_check(const char *url, int strict) {
 }
 
 int hostgate_url_check(const char *url) {
-  return url_check(url, floor_is_strict());
+  return url_check(url, floor_strict_now());
 }
 
 /* The floor, applied to an already-resolved address. httpclient.c's
  * per-connection callback used to hardcode `strict = 0`, which quietly made
- * JO_HTTP_BLOCK_PRIVATE=1 a no-op for every HOSTNAME target: url_check() can
+ * the strict floor a no-op for every HOSTNAME target: url_check() can
  * only judge literal addresses, so the resolved-address callback is the ONLY
  * place a name pointing at 10.0.0.5 is ever seen. Keeping the strength choice
  * here — rather than at the call site — is what stops the two halves of the
  * same policy from disagreeing again. */
 int hostgate_addr_check_floor(const char *ip_text) {
-  return hostgate_addr_check(ip_text, floor_is_strict());
+  return hostgate_addr_check(ip_text, floor_strict_now());
 }
 
 /* The strict RULESET without the DNS half. For a URL that is a match KEY
@@ -633,7 +676,8 @@ static int g_camera_test_lan;
 void hostgate_camera_test_allow_lan(int on) { g_camera_test_lan = on ? 1 : 0; }
 
 /* Always strict for camera destinations, except under a unit test's fixture
- * server — and strict even then when JO_HTTP_BLOCK_PRIVATE raised the floor. */
+ * server — and strict even then unless JO_HTTP_BLOCK_PRIVATE=0 lowered the
+ * floor (a fixture test sets both; strict is the default since 2026-11-12). */
 static int camera_strict(void) {
   return floor_is_strict() || !g_camera_test_lan;
 }

@@ -7,9 +7,19 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(afr_ekur_ekurhuleni_ekurhuleni_firehydrants_fire_hydr_0, "afr-ekur-ekurhuleni-ekurhuleni-firehydrants-fire-hydr-0", "City of Ekurhuleni — fire hydrants", "City of Ekurhuleni — fire hydrants",
   "africa_hazard", "hazard",
-  "https://gis.ekurhuleni.gov.za/arcgis/rest/services/Ekurhuleni/Ekurhuleni_FireHydrants/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://gis.ekurhuleni.gov.za/arcgis/rest/services/Ekurhuleni/Ekurhuleni_FireHydrants/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"zaf\",\"ekurhuleni\",\"geospatial\",\"municipal\"]", 86400,
   "Fire hydrant asset locations across the City of Ekurhuleni.");
 
@@ -21,13 +31,13 @@ VRSS(afr_gdacs_eq, "afr-gdacs-eq", "GDACS — Earthquake alerts (24h)", "GDACS �
 
 VGEO(afr_grid3_exposure_profile_by_state_nga_exposure_profi_0, "afr-grid3-exposure-profile-by-state-nga-exposure-profi-0", "GRID3 — Nigeria exposure risk profile by state", "GRID3 — Nigeria exposure risk profile by state",
   "africa_hazard", "hazard",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/Exposure_Profile_by_state/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/Exposure_Profile_by_state/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"nga\",\"cod\",\"geospatial\",\"grid3\"]", 86400,
   "State-level exposure risk indicators used in Nigerian epidemic and disaster preparedness planning.");
 
 VGEO(afr_grid3_grid3_nga_fire_stations_nga_fire_stations_gr_0, "afr-grid3-grid3-nga-fire-stations-nga-fire-stations-gr-0", "GRID3 — Nigeria fire stations", "GRID3 — Nigeria fire stations",
   "africa_hazard", "hazard",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_Fire_Stations/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_Fire_Stations/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=FID%20ASC",
   "en", "[\"nga\",\"cod\",\"geospatial\",\"grid3\"]", 86400,
   "Geolocated Nigerian fire stations, useful for emergency-response coverage analysis.");
 
@@ -80,9 +90,17 @@ VJSON(afr_ilgov_org_meteorological_service, "afr-ilgov-org-meteorological-servic
   "he", "[\"isr\",\"opendata\",\"ckan\"]", 43200,
   "CKAN dataset listing published by Israel Meteorological Service on Israel's national open-data portal.");
 
+/* datastore_search rows below carry `sort=_id asc` (2026-11-07). An offset
+ * walk with no declared order relies on the backend's default; CKAN's
+ * datastore `_id` is its own sequential row id. Measured one or two rows per
+ * host (izmir, data.gov.il, data.gov.au, QLD, VIC, Mauritius, Panama,
+ * data.gov.sg): `_id desc` answers the opposite end, a bogus sort is refused
+ * (409, or a 404 page on data.gov.il), and the total does not move. The
+ * unsorted first page was already _id 1,2,3 on every one, so this is
+ * STABILISING, not a recovery: 0 records were measured lost without it. */
 VJSON(afr_izmir_ds_afet_ve_acil_durum_toplanma_e62687, "afr-izmir-ds-afet-ve-acil-durum-toplanma-e62687", "Izmir Metropolitan Municipality open data — disaster assembly areas", "Izmir Metropolitan Municipality open data — disaster assembly areas",
   "africa_hazard", "hazard",
-  "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=e626876b-f121-4101-90c2-b6db03b13d6b&limit=100",
+  "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=e626876b-f121-4101-90c2-b6db03b13d6b&limit=100&sort=_id%20asc",
   "result.records",
   "tr", "[\"tur\",\"opendata\",\"ckan\",\"izmir\"]", 21600,
   "Izmir municipal open-data records for disaster assembly areas, published as CKAN JSON.");

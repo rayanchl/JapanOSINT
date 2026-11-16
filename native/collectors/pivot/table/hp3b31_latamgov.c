@@ -112,7 +112,15 @@ static const hp_source HP3B31_LATAMGOV[] = {
     .name_ja = "コロンビア オープンデータ目録", .category = "government",
     .portal = "https://www.datos.gov.co", .record_type = "co-dataset",
     .tags = "\"co\",\"open-data\",\"catalog\"", .free_tier = 1,
-    .url = "https://www.datos.gov.co/api/catalog/v1?q={q}&domains=www.datos.gov.co&search_context=www.datos.gov.co&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://www.datos.gov.co/api/catalog/v1?q={q}&domains=www.datos.gov.co&search_context=www.datos.gov.co&limit=100&order=createdAt%20ASC",
     .array_path = "results", .title_keys = "resource.name,resource.description",
     .id_keys = "resource.id", .date_keys = "resource.updatedAt",
     .link_keys = "permalink",

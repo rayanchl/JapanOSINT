@@ -8,21 +8,31 @@
 #include "_verified_macros.inc"
 #include "_vjson_idkeys.inc"
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(nam_ags_metro_transportation_network_tnet_in_king_county_for, "nam-ags-metro-transportation-network-tnet-in-king-county-for", "Metro Transportation Network (TNET) in King County for Car Mode — CAR Mode from Transportation Network", "Metro Transportation Network (TNET) in King County for Car Mode — CAR Mode from Transportation Network",
   "us_local", "transport",
-  "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/TRANS_NETWORK_CAR_LINE_1460/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services/TRANS_NETWORK_CAR_LINE_1460/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'CAR Mode from Transportation Network' from the 'Metro Transportation Network (TNET) in King County for Car Mode' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_nibrs_group_a_crime_data_nibrs_group_a_crime_data, "nam-ags-nibrs-group-a-crime-data-nibrs-group-a-crime-data", "NIBRS Group A Crime Data — NIBRS Group A Crime Data", "NIBRS Group A Crime Data — NIBRS Group A Crime Data",
   "us_local", "crime",
-  "https://services1.arcgis.com/UWYHeuuJISiGmgXx/arcgis/rest/services/NIBRS_GroupA_Crime_Data/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services1.arcgis.com/UWYHeuuJISiGmgXx/arcgis/rest/services/NIBRS_GroupA_Crime_Data/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=RowID%20ASC",
   "en", "[\"usa\",\"crime\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer 'NIBRS Group A Crime Data' from the 'NIBRS Group A Crime Data' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_road_centerlines_road_centerlines, "nam-ags-road-centerlines-road-centerlines", "Road Centerlines — Road Centerlines", "Road Centerlines — Road Centerlines",
   "us_local", "transport",
-  "https://services3.arcgis.com/AcvBA1fcgucsFQvO/arcgis/rest/services/Road_Centerlines/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services3.arcgis.com/AcvBA1fcgucsFQvO/arcgis/rest/services/Road_Centerlines/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=objectid%20ASC",
   "en", "[\"usa\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'Road Centerlines' from the 'Road Centerlines' service, GeoJSON with per-feature geometry.");
 
@@ -285,43 +295,43 @@ REGISTER_SOURCE(nam_dc_arcgis_services);
 
 VGEO(nam_dc_environment_energy_building_energy_benchmarks, "nam-dc-environment-energy-building-energy-benchmarks", "District of Columbia (DC GIS) — Building Energy Benchmarks (Environment Energy)", "District of Columbia (DC GIS) — Building Energy Benchmarks (Environment Energy)",
   "us_local", "environment",
-  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Environment_Energy/MapServer/45/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Environment_Energy/MapServer/45/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"dc\",\"environment\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from District of Columbia (DC GIS): Building Energy Benchmarks, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_dc_environment_energy_building_energy_performance_dat, "nam-dc-environment-energy-building-energy-performance-dat", "District of Columbia (DC GIS) — Building Energy Performance Data (Environment Energy)", "District of Columbia (DC GIS) — Building Energy Performance Data (Environment Energy)",
   "us_local", "environment",
-  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Environment_Energy/MapServer/75/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Environment_Energy/MapServer/75/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"dc\",\"environment\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from District of Columbia (DC GIS): Building Energy Performance Data, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_dc_environment_energy_webmercator_building_energy_ben, "nam-dc-environment-energy-webmercator-building-energy-ben", "District of Columbia (DC GIS) — Building Energy Benchmarks (Environment Energy WebMercator)", "District of Columbia (DC GIS) — Building Energy Benchmarks (Environment Energy WebMercator)",
   "us_local", "environment",
-  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Environment_Energy_WebMercator/FeatureServer/45/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Environment_Energy_WebMercator/FeatureServer/45/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"dc\",\"environment\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from District of Columbia (DC GIS): Building Energy Benchmarks, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_dc_environment_energy_webmercator_building_energy_per, "nam-dc-environment-energy-webmercator-building-energy-per", "District of Columbia (DC GIS) — Building Energy Performance Data (Environment Energy WebMercator)", "District of Columbia (DC GIS) — Building Energy Performance Data (Environment Energy WebMercator)",
   "us_local", "environment",
-  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Environment_Energy_WebMercator/FeatureServer/75/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Environment_Energy_WebMercator/FeatureServer/75/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"dc\",\"environment\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from District of Columbia (DC GIS): Building Energy Performance Data, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_dc_floodmap_zoning_districts, "nam-dc-floodmap-zoning-districts", "District of Columbia (DC GIS) — Zoning Districts (floodmap)", "District of Columbia (DC GIS) — Zoning Districts (floodmap)",
   "us_local", "opendata",
-  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_APPS/floodmap/MapServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_APPS/floodmap/MapServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"dc\",\"opendata\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer from District of Columbia (DC GIS): Zoning Districts, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_dc_zoning_dcgis_zoningply, "nam-dc-zoning-dcgis-zoningply", "District of Columbia (DC GIS) — DCGIS.ZoningPly (Zoning)", "District of Columbia (DC GIS) — DCGIS.ZoningPly (Zoning)",
   "us_local", "opendata",
-  "https://maps2.dcgis.dc.gov/dcgis/rest/services/Zoning/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://maps2.dcgis.dc.gov/dcgis/rest/services/Zoning/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"dc\",\"opendata\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer from District of Columbia (DC GIS): DCGIS.ZoningPly, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_dc_zoning_webmercator_dcgis_zoningply, "nam-dc-zoning-webmercator-dcgis-zoningply", "District of Columbia (DC GIS) — DCGIS.ZoningPly (Zoning WebMercator)", "District of Columbia (DC GIS) — DCGIS.ZoningPly (Zoning WebMercator)",
   "us_local", "opendata",
-  "https://maps2.dcgis.dc.gov/dcgis/rest/services/Zoning_WebMercator/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://maps2.dcgis.dc.gov/dcgis/rest/services/Zoning_WebMercator/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"dc\",\"opendata\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer from District of Columbia (DC GIS): DCGIS.ZoningPly, returned as GeoJSON with per-feature geometry.");
 

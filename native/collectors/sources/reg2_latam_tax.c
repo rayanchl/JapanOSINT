@@ -83,10 +83,10 @@ static int pe_run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(url, sizeof url, "https://api.apis.net.pe/v1/ruc?numero=%s", ruc);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "PE_RUC_LOOKUP");
-  if (!body) return 0;                       /* not found / unavailable */
+  if (!body) return jo_fail_rc(jo_last_status(), 0);                       /* 404/204 empty; unavailable -1 */
   cJSON *r = cJSON_Parse(body);
   free(body);
-  if (!r) return 0;
+  if (!r) return -1;
 
   const char *nombre = jo_sv(r, "nombre");
   if (!nombre) { cJSON_Delete(r); return 0; }
@@ -154,10 +154,10 @@ static int ec_run(const source_ctx *ctx, intel_sink *sink) {
            "/rest/ConsolidadoContribuyente/obtenerPorNumerosRuc?&ruc=%s", ruc);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "EC_SRI_RUC");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *doc = cJSON_Parse(body);
   free(body);
-  if (!doc) return 0;
+  if (!doc) return -1;
   if (!cJSON_IsArray(doc)) { cJSON_Delete(doc); return 0; }
 
   int n = 0;
@@ -252,10 +252,10 @@ static int cr_run(const source_ctx *ctx, intel_sink *sink) {
            "https://api.hacienda.go.cr/fe/ae?identificacion=%s", id);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "CR_HACIENDA_TAXPAYER");
-  if (!body) return 0;      /* 404 = unknown id → clean empty, not a failure */
+  if (!body) return jo_fail_rc(jo_last_status(), 1);      /* 404 = unknown id → clean empty, not a failure */
   cJSON *r = cJSON_Parse(body);
   free(body);
-  if (!r) return 0;
+  if (!r) return -1;
 
   const char *nombre = jo_sv(r, "nombre");
   if (!nombre) { cJSON_Delete(r); return 0; }

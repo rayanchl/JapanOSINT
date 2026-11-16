@@ -19,6 +19,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 /* Extraction is local (POSIX regex over the input text) — there is no upstream
  * to be polite to, so every match is reported. The old MAX_MATCHES=100 dropped
@@ -138,7 +139,7 @@ static int emit_ioc(intel_sink *sink, sset *seen,
   cJSON_AddStringToObject(props, "service", "DATA_EXTRACTOR");
   cJSON_AddStringToObject(props, "ioc_type", type);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[640];
   snprintf(rk, sizeof rk, "ioc:%s:%s", type, value);
@@ -148,7 +149,7 @@ static int emit_ioc(intel_sink *sink, sset *seen,
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = type;
   it.record_type     = "osint_service_result";
   it.properties_json = pj;

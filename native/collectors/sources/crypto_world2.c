@@ -18,8 +18,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *CW_UA =
-  "User-Agent: JapanOSINT/1.0 (+https://github.com/; osint@example.org)";
 
 /* Shared emitter: body/props are cJSON objects owned by caller (deleted here). */
 static int cw_emit(intel_sink *sink, const char *service, const char *rtype,
@@ -52,11 +50,11 @@ static int cw_emit(intel_sink *sink, const char *service, const char *rtype,
 static int run_coingecko(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://api.coingecko.com/api/v3/search?query=%s", enc);
-  const char *hdrs[] = { "Accept: application/json", CW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "coingecko");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *coins = cJSON_GetObjectItem(root, "coins");
   int emitted = 0;
   if (cJSON_IsArray(coins)) {
@@ -102,9 +100,9 @@ static int ci_contains(const char *hay, const char *needle) {
   return 0;
 }
 static int run_defillama(const source_ctx *ctx, intel_sink *sink, const char *raw) {
-  const char *hdrs[] = { "Accept: application/json", CW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, "https://api.llama.fi/protocols", hdrs, "defillama");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
   if (!cJSON_IsArray(root)) { if (root) cJSON_Delete(root); return 0; }
   int emitted = 0;
@@ -144,11 +142,11 @@ static int run_blockcypher(const source_ctx *ctx, intel_sink *sink, const char *
   char url[512];
   snprintf(url, sizeof url,
     "https://api.blockcypher.com/v1/btc/main/addrs/%s/balance", enc);
-  const char *hdrs[] = { "Accept: application/json", CW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "blockcypher");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *addr = jo_sv(root, "address");
   const cJSON *bal = cJSON_GetObjectItem(root, "final_balance");
   const cJSON *ntx = cJSON_GetObjectItem(root, "n_tx");
@@ -177,11 +175,11 @@ static int run_blockchaininfo(const source_ctx *ctx, intel_sink *sink, const cha
   char enc[256]; { char *e = jo_urlencode(raw); if (!e) return 0; snprintf(enc, sizeof enc, "%s", e); free(e); }
   char url[512];
   snprintf(url, sizeof url, "https://blockchain.info/rawaddr/%s?limit=0", enc);
-  const char *hdrs[] = { "Accept: application/json", CW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "blockchain_info");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *addr = jo_sv(root, "address");
   const cJSON *fb = cJSON_GetObjectItem(root, "final_balance");
   const cJSON *ntx = cJSON_GetObjectItem(root, "n_tx");
@@ -218,7 +216,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "BLOCKCHAIN_INFO"))  n = run_blockchaininfo(ctx, sink, q);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define CW_DEF(sym, ID, NM, DESC) \

@@ -349,6 +349,56 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
+**The registered count is 105,208** (2026-11-14, `make source-count` on the
+merge of main's batch 67 and its scheduling audit, both floors re-recorded from
+that build): main's 105,229 less this branch's same net 21.
+
+**It was 98,707 earlier that evening** (the merge of main's batch 66): main's
+98,728 less the same net 21.
+
+**It was 93,142 an hour earlier** (`make source-count` on the
+merge of main's batch 65, both floors re-recorded from that build): main's
+93,163 less this branch's net 21 (the 16 below and these five).
+
+**This branch's count was 88,499** (2026-11-14, `make source-count`, both
+floors re-recorded from that build): 88,504 less five rows that read strict
+subsets of another row — three Sejm interpellation rows, a second reading of
+BC's mineral-tenure layer and a twin Europe PMC search pivot, whose
+`resultType=core` moved onto the row kept (the owner's decision,
+`docs/removed-sources-2026-11-14-overlaps.tsv`).
+
+**It was 88,504 earlier that day** (`make source-count` on the
+second merge of main that day, both floors re-recorded from that build): main's
+88,520 after batch 64, less this branch's same net 16. Main moved twice while
+this branch's PR waited, and each time only the two floor files conflicted —
+which is why they are re-measured and never hand-merged.
+
+**It was 85,751 an hour earlier** (measured with `make
+source-count` on the merge of main and both floors re-recorded from that
+build): main's 85,767 — batches 59 to 63, which main's own commits record —
+less this branch's net 16 since the merge base (12 twins and 5 dead rows
+removed on 2026-11-11, then the round below: one fused, one dead, four added).
+The arithmetic and the measurement agree to the row.
+
+**This branch's count was 61,511** (2026-11-14, `make source-count`, both
+floors re-recorded from that build): 61,510 less `gov-no-stortinget-saker`
+(fused into `eur-stortinget-saker`, which now reads the current session and
+cycles through every past one — the owner's decision "they are one source
+after all") and `mercari-trending` (its endpoint 404s while the site answers;
+`docs/removed-sources-2026-11-11-dead.tsv`), plus `gtfs-rt-jp` (the GTFS
+Realtime collector, `lib/gtfsrt.c`) and the two layers New York DEC split its
+remediation register into (`us-ny-dec-remediation-noaction`, `-closed`).
+Round three of the audit: `docs/audit-round2-2026-11-09.md`.
+
+**The registered count was 61,510** (2026-11-11, `make source-count`, both
+floors re-recorded from that build): 61,527 less 12 twin registrations
+(`docs/removed-sources-2026-11-11-twins.tsv` — six UK Parliament endpoints
+read twice, five rows on `chronicdata.cdc.gov`, which is an alias of
+`data.cdc.gov`, and one jishin.go.jp feed) and 5 dead rows
+(`docs/removed-sources-2026-11-11-dead.tsv`), each the owner's decision with
+its evidence recorded. Round two of the audit and what it measured:
+`docs/audit-round2-2026-11-09.md`.
+
 **The registered count is 61,527** (2026-10-30, `make source-count`, both
 floors re-recorded from that build): 57,905 plus **batch 57's 3,622 Japanese
 rows** — eight beats in `collectors/pivot/table/hp3b57_*.c`, every one measured
@@ -681,7 +731,7 @@ three mechanisms with three precedences — `UA_OVERRIDE` and `BROWSER_HOSTS` in
 beat both. Now one line per host names one agent kind (`HA_NOCOLLECTOR`,
 `HA_CONTACT`, `HA_RCORP`, `HA_COMPAT`, `HA_BROWSER`), and for a listed host the
 table's agent goes on the wire whatever a row set; an unlisted host keeps a
-row's own header, else `JO_USER_AGENT`. 403 hosts. `./bin/japanosint
+row's own header, else `JO_USER_AGENT`. 403 hosts when it was built (420 on 2026-11-07 — read the file, not this number). `./bin/japanosint
 --host-agents` prints it (host, kind, agent, extra headers), and
 `tools/probe_hp_batch.py` reads the same file, so the probe sends what the
 engine sends. Measured before the move: no other source fetches from the 320
@@ -1009,6 +1059,50 @@ The lessons from batches 43–48 that a new batch must not relearn:
   first as a header on each row, since 2026-10-21 as an `HA_COMPAT` line in
   `core/host_agents.def`; the four that refused twice stay out. Try that
   agent before calling a 403 dead.
+
+  **AND THE SAME LEVER, ON THE SAME-LOOKING CLASS SIXTEEN DAYS LATER,
+  RECOVERED FOUR ROWS OF 738** (2026-11-05,
+  `docs/http403-agent-sweep-2026-11-05.{md,tsv}`). The complete registry
+  sweep left 738 rows measured at HTTP 403 and the paragraph above named the
+  remedy, so all 555 hosts behind them were walked through the whole ladder.
+  **304 hosts (404 rows) refused ALL FIVE agents**, the browser profile
+  included; **214 (295 rows) answer the ENGINE agent again** — the 403 was
+  nine days stale, and a sample of 20 run through the engine stores records on
+  17, so ~250 rows were recovered by elapsed time and nothing else; 20 only
+  ever answered with an egress-shaped failure and are unmeasured from here;
+  and 17 "recovered" on one reading. **Re-measuring those 17 twice each left
+  6, and the ENGINE then left 4.** Three lessons, each of which cost a wrong
+  change that was nearly made:
+
+  * **Re-ask with the ENGINE agent before writing any entry.** 8 of the 17
+    were the host FLAPPING, not the agent working. Going straight to
+    `HA_COMPAT` would have "recovered" 214 hosts and written 214 permanent
+    table lines that do nothing.
+  * **The probe and the engine disagree, and the engine wins** — this file's
+    own rule, met head-on. `www.rakuten-bank.co.jp` answers 200 to
+    `HA_CONTACT` twice through the sweep's client and **403 to all four agents
+    through `--run`**, because the hosts in that block judge the engine's
+    `Accept`/`Accept-Encoding` headers and not the agent alone. Measure a
+    candidate through `--run` before writing it down.
+  * **A 403 class is not one thing.** 54 of 60 refusing hosts sampled are
+    Cloudflare and 52 serve a JAVASCRIPT CHALLENGE, which no agent and no
+    pacing reaches — so the engine's standing 403 remedy ("a credential or a
+    User-Agent it is not sending") was aiming 404 rows at a knob that cannot
+    move. `lib/hpengine.c` names that shape now, and the marker had to be
+    MEASURED rather than guessed: `cf_chl_opt` is in 45 of 50 walls and 0 of
+    the 6 confirmed agent recoveries, while the obvious
+    `cdn-cgi/challenge-platform` is in 46 of 50 **and 1 of the 6** — Cloudflare
+    injects that script into ordinary error pages, and `www.salemcountynj.gov`
+    serves a plain 1,901-byte 403 carrying it whose feed the agent minus
+    "collector" fetches 200. Keying on it would have told the reader not to try
+    the one thing that works. The engine's OWN existing markers measured **0 of
+    50**, so the wall went unnamed even on the 200 path the detector covered —
+    a second, independent defect. `hptest` 59–59d, 59c being that false
+    positive pinned as a control.
+
+  So: **a remedy that worked on one cohort is a hypothesis about the next
+  one.** Both paragraphs are kept, each with its date and its numbers, because
+  the first is not wrong — it is a measurement of a different population.
 * **A URL changed after validation is unvalidated** (an unescaped `&amp;`
   made Joomla serve Atom where rows declared RSS), **a well-formed feed with
   zero items is `EMPTY_RESULTSET`**, **a substring count of `<item` counts the
@@ -2511,9 +2605,30 @@ pinned in `test_sched_backoff.c` / `test_sched_pool.c`:
 Two numbers it measured that are decisions rather than defects: at a mean run
 of 6.2 s (uniform sample of 400) the default 8 workers lap the fleet in about
 18 h, so **the 6 h policy needs `JO_SCHED_WORKERS=24`** (27 on the 90,907
-scheduled rows main held by the time this merged); and the policy holds
+scheduled rows main held by the time this merged); and the policy held
 the 22 real-time feeds (`wolfx-eew` 10 s, `jma-tsunami` 60 s) at six hours
-until each is given its own interval.
+until each was given its own interval — which the next paragraph's rule ended
+the same day.
+
+**Realtime rows run outside the policy** (2026-11-14, the owner's decision:
+"let all transport or live-needing sources be real time"). A transport source
+(category `transport`) or any source declaring an interval under an hour runs
+at its OWN cadence — declared, or measured for an adaptive row — the same way
+a `_` maintenance pod always has. One rule, `cadence_exempt_reason()` in
+`core/cadence.c`, applied in ONE place — `source_interval_default()`, through
+`cadence_apply_for()` — which `sched_row_interval()`, `sched_next_due()` and
+every source page already read (`policy`/`cadenceBasis` say `realtime` or
+`pod`); the cost estimate counts the same rows as `exempt_rows`. The two
+sessions met on this in a merge: main exempted pods inside that function, this
+branch exempted pods and realtime rows beside it, and the merge keeps main's
+one composition with the wider rule in it. An operator's per-source interval still outranks it. Why
+the boundary is an hour, measured: 1,024 rows declare under an hour and only
+ONE of them between 30 and 60 minutes, while 2,006 of the 2,239 transport rows
+declare LONGER than six hours (static timetables), so for those "real time"
+means as declared and they run less often than the policy would make them. The
+cost: about +122,000 runs a day on ~345,000. It is what makes the departures
+board's GTFS-RT delays live, since the board ignores a delay older than 30
+minutes. `test_sched_backoff.c` pins both halves and the 3,599 / 3,600 s edge.
 
 What a choice costs is in the response, measured over the registry, not
 guessed: `estimate.runs_per_day_declared` against
@@ -2604,8 +2719,9 @@ label removed them from the only path left that could run them.
 Two things now hold it:
 
 * `registry.c` prints `[registry] NEVER-RUNS id '…'` for any source with
-  interval 0 under a collector that is neither `"osint"` nor an internal `_`
-  lane, beside the DUPLICATE and OVERFLOW reports it already makes for the same
+  interval 0 that `registry_is_entity_pivot()` does not accept — the rule
+  is `source_never_runs()` now, not the collector label this bullet first
+  described (the `osint` label was removed in round 5) — beside the DUPLICATE and OVERFLOW reports it already makes for the same
   reason, and **`make registry-floor` fails on a non-zero count**. The `_`
   exemption is the convention `source.h` documents; `PORT_SCANNER` is
   deliberately `_probe` because it opens raw sockets, and keeping it out of the
@@ -3219,7 +3335,7 @@ probe is the tool that decides whether a row ships:
   against the real messages on the wire the same day (badssl.com's expired,
   wrong-host, self-signed and untrusted-root hosts, plus the two SNI hosts).
 
-* **`registry.faa.gov` is gone, and the measurement is why.** Three rows read
+* **OVERTURNED — kept as the record of a removal that did not stand** (see the browser-profile paragraph under rule 1: `FAA_REGISTRY` and `US_FAA_AIRCRAFT_REGISTRY` are registered again, on an `HA_BROWSER` line). **`registry.faa.gov` is gone, and the measurement is why.** Three rows read
   it — `US_FAA_AIRCRAFT_REGISTRY`, `FAA_NNUMBER_REGISTRY` and `FAA_REGISTRY`
   (a bespoke collector in `collectors/sources/vehicles_world.c`) — and all
   three are removed as of 2026-10-21. One request per agent that day: the
@@ -4586,6 +4702,21 @@ measured those worse here and defaults them off. Full readings:
   was changed.** `docs/threshold-labels.jsonl` is the next step and it is human
   work.
 
+  **The tool for that human work is `tools/threshold_label.py`** (2026-11-16,
+  the owner's decision: a labelling page, not a guessed value). `candidates`
+  draws pairs for the seven pair-judgeable keys from a REAL, populated
+  database (questions from `search_run_owners`/`search_history`, records,
+  entities, semantic alert rules, and source cards from
+  `--dump-source-cards`); with `--embed-url` they are spread over the whole
+  score range so the verdicts land around the boundary, without it
+  word-overlap pairs are mixed with random ones. A pool the database does not
+  have yields NO pairs and says so — a never-searched database offers no
+  question-based pairs rather than invented questions. `serve` is a page on
+  127.0.0.1 that shows one pair at a time, hides the score so it cannot anchor
+  the verdict, and appends `{"key","a","b","same","note"}` lines to the labels
+  file `measure_thresholds.py --labels` reads; a resumed session skips what is
+  already labelled. Its `--self-test` is in `make tools-selftest`.
+
 Running the harness for real also found three defects in it, the worst being
 that **its negative set was EMPTY on a real database**: `pairs_story` read a
 prefix `order by cluster_id` and then required two different sources, and on a
@@ -4680,6 +4811,59 @@ failing tests repaired. What it guarantees, and the knobs it adds:
   rtmp/tcp/udp network inputs have no boxed path and are refused.
   `test_netjail.c` decodes a real HLS frame through the box when ffmpeg is
   installed (CI installs it), as root and as an unprivileged user.
+  **Every outbound fetch refuses private addresses BY DEFAULT** (2026-11-12,
+  the owner's decision "block by default"): loopback, RFC1918, CGNAT,
+  unique-local, link-local and metadata, on the URL, every redirect and the
+  resolved address. `JO_HTTP_BLOCK_PRIVATE=0` restores the old floor (metadata
+  and link-local only). The operator's own service endpoints — the LLM,
+  embedding and vision servers, the IdP's JWKS — are exempt by an explicit
+  per-call flag, `http_request_service()`, never by a host list (a list built
+  from those URLs would also admit a collector URL naming the same
+  `127.0.0.1:8080`). A unit test talking to a 127.0.0.1 stub sets
+  `JO_HTTP_BLOCK_PRIVATE=0` before its first request; `test_llm_queue` does not,
+  on purpose, so it proves the exemption end to end. **The operator's egress
+  proxy is not a target either** (2026-11-14): behind a forward proxy the peer
+  libcurl connects to is the PROXY, and this tree's own cloud container runs
+  one on `127.0.0.1` — the first strict build refused every fetch the engine
+  made, in under a second, while `JO_HTTP_BLOCK_PRIVATE=0` stored 429 records
+  for the same run. A peer that is exactly an endpoint named in the proxy
+  variables libcurl reads (`https_proxy`, `http_proxy`, `all_proxy`) is
+  allowed, matched on address AND port, so another port on the same loopback
+  address is still refused (`test_http_egress_proxy.c`). **A security default
+  must be measured through the real egress before it ships**: every unit test
+  passed, because no unit test runs behind a proxy.
+* **Workspace keys are used for that workspace's pivots** (2026-11-12, the
+  owner's decision): a pivot dispatched for a workspace
+  (`osint_dispatch_tenant()`) resolves the hp row's `key_env` from that
+  workspace's saved key (`keysapi_tenant_secret()`) before the environment, and
+  a scrub sink redacts the key from every record the run emits or stores —
+  `core/intel.c` only redacts environment values. Scheduled runs keep the
+  environment. **The records such a run fetches are that workspace's**
+  (2026-11-14, the owner's decision): stored under its tenant and a
+  workspace-qualified uid (`<source>|ws:<tenant>|<key>`), because the upsert
+  never rewrites `tenant_id` — under the plain uid a record the shared corpus
+  already held would stay shared. A run with no workspace key stores in the
+  shared corpus as before. `test_tenant_pivot_key.c` pins it end to end.
+  **Hand-written collectors see workspace keys too** (2026-11-16): a
+  collector names its credential only when it reads it, so the dispatcher
+  installs a thread-local resolver for the run (`jo_env_resolver_set`,
+  `lib/joenv.c`) and decides privacy and scrubbing LAZILY — from the first emit
+  after a workspace key was handed out, the rows are the workspace's (tenant +
+  `ws:` uid) and every value handed out is redacted. **So a collector reads a
+  credential through `jo_getenv()` or `jo_env()`, never `getenv()`** — 177
+  such reads across 123 collector files and `lib/threatintel.c` were moved
+  when this landed, because a direct `getenv` is a workspace key that silently
+  never arrives. Only a known-credential name resolves
+  (`keysapi_tenant_secret` checks the list on READ, not only on save), so a
+  stray `tenant_secrets` row named `JO_HTTP_BLOCK_PRIVATE` cannot reach a
+  collector's configuration; both halves are pinned, and each fails the test
+  when removed.
+* **The platform audit chain is readable**: `GET /api/audit[/verify]?scope=platform`
+  reads the rows written under the reserved `platform` tenant (break-glass,
+  cadence/threshold edits, collector runs, raw evidence reads), for a platform
+  operator only (`opgate_check`, the `/api/admin/thresholds` gate) and 403
+  otherwise; an unknown scope is a 400, never the workspace's chain
+  (`tenantapi_audit_chain()`, `test_audit_chain.c`).
 * **LLM queue**: bounded lanes (`JO_LLM_QUEUE_MAX`, default 64 waiting; a job
   waits at most `JO_LLM_QUEUE_WAIT_FACTOR` × its timeout, default 4), no retry
   after a timeout, queue time reported apart from model time;
@@ -4688,7 +4872,19 @@ failing tests repaired. What it guarantees, and the knobs it adds:
   translation inputs are FENCED as untrusted text; a run's synthesis row is
   neither translated nor mined for entities. An LLM outage is NOT charged to
   the items it was asked about (only an answer the model gave is).
-* **Scheduler**: a boot ramp (`JO_SCHED_RAMP_SEC`, 900 s) instead of a stampede,
+* **Scheduler**: `JO_SCHED_WORKERS` defaults to **40** (ceiling 64; was 8 and
+  32, the owner's decision of 2026-11-16) — the fleet needs ~38 busy workers to
+  hold the 6 h policy (~529,000 runs a day at a 6.2 s mean run), and the old
+  ceiling SILENTLY clamped a request for 40 to 32 (`busy=32/32`); every
+  scheduler knob now says on stderr when its value is clamped. Measured
+  against one database, 240 s each, boot ramp off: 8 workers 250 runs (median
+  run 1.8 s), 32 483 (3.8 s), 40 479 (5.2 s); no `EMIT-FAILED` and no
+  "database is locked" at any of them, so SQLite is not the limit. **In this
+  container throughput plateaus at ~2 runs/s between 32 and 40** — extra
+  workers only lengthened each run, which is this container's egress, not the
+  database — so whether 40 delivers the ~6 runs/s the 6 h lap needs is a
+  property of the deployment's network and is unmeasured from here. Read the
+  heartbeat's `deferred=N` on the real host before raising it further. A boot ramp (`JO_SCHED_RAMP_SEC`, 900 s) instead of a stampede,
   a maintenance lane (`JO_SCHED_MAINT_WORKERS`, 2) that collectors and pods
   never share, real cancellation; `log-retention` prunes fetch_log, anomalies,
   repairs and alert deliveries/events in `JO_RETAIN_BATCH` (5,000) batches.

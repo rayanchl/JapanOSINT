@@ -113,7 +113,6 @@ export const LAYER_ICONS = {
   jmaOceanWave: MdWaves,
   jmaOceanTemp: MdWaves,
   jmaTide: MdWaves,
-  nowphasWave: MdWaves,
   lighthouseMap: MdLightbulb,
 
   // Transport
@@ -160,8 +159,6 @@ export const LAYER_ICONS = {
   bosaiShelter: MdShield,
   hazardMapPortal: MdWarning,
   crime: MdLocalPolice,
-  droneNofly: MdWarning,
-  jcgPatrol: MdAnchor,
 
   // Cyber / OSINT
   cameras: MdCameraAlt,
@@ -298,7 +295,6 @@ export const LAYER_ICONS = {
   yahooRealtime: MdTrendingUp,
   mastodonJpInstances: MdChat,
   blueskyJetstreamJp: MdChat,
-  niconicoRanking: MdMic,
   wikipediaJaRecent: MdBook,
   osmChangesetsJp: MdMap,
   yahooNewsJpRss: MdChat,

@@ -25,6 +25,8 @@
  * the one rule that can leave a token the same length.
  */
 #include "content_change.h"
+#include "jo_codec.h"
+#include "../lib/jocore.h"
 #include "evidence.h"
 #include "intel.h"
 #include "../source.h"
@@ -132,23 +134,17 @@ static const char *ctext(sqlite3_stmt *s, int i) {
   return sqlite3_column_type(s, i) == SQLITE_NULL
            ? NULL : (const char *)sqlite3_column_text(s, i);
 }
-static void sha256_hex_bytes(const void *b, size_t n, char out[65]) {
-  unsigned char d[SHA256_DIGEST_LENGTH];
-  SHA256((const unsigned char *)b, n, d);
-  for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
-    snprintf(out + i * 2, 3, "%02x", d[i]);
-}
 /* The normalizer version is part of the hash preimage on purpose: two hashes
  * produced by different strip rules are not comparable and must not collide.
  * Hashing the digest rather than prefixing the text avoids copying a multi-MB
  * document just to prepend eighteen bytes. */
 static void sha256_norm(const char *text, char out[65]) {
   char inner[65], pre[128];
-  sha256_hex_bytes(text, strlen(text), inner);
+  jo_sha256_hex(text, strlen(text), inner);
   int n = snprintf(pre, sizeof pre, "content_change/v%d\n%s",
                    CC_NORM_VERSION, inner);
   if (n < 0 || (size_t)n >= sizeof pre) n = (int)strlen(pre);
-  sha256_hex_bytes(pre, (size_t)n, out);
+  jo_sha256_hex(pre, (size_t)n, out);
 }
 static void now_utc_sql(char out[20]) {
   time_t t = time(NULL);
@@ -156,12 +152,7 @@ static void now_utc_sql(char out[20]) {
   gmtime_r(&t, &g);
   strftime(out, 20, "%Y-%m-%d %H:%M:%S", &g);
 }
-static void now_iso(char out[32]) {
-  time_t t = time(NULL);
-  struct tm g;
-  gmtime_r(&t, &g);
-  strftime(out, 32, "%Y-%m-%dT%H:%M:%SZ", &g);
-}
+/* ISO-8601 UTC, whole seconds: jo_iso_now_sec() (lib/jocore.h). */
 static unsigned fnv32(const char *s) {
   unsigned h = 2166136261u;
   while (*s) { h ^= (unsigned char)*s++; h *= 16777619u; }
@@ -1204,7 +1195,7 @@ static void emit_change(db_handle *db, const char *sid, const char *key,
    * one overwritten row; the second keeps a page that oscillates between two
    * states over hours from folding every visit to state B onto one item. */
   char uid[512], iso[32];
-  now_iso(iso);
+  jo_iso_now_sec(iso, sizeof iso);
   snprintf(uid, sizeof uid, "%.200s|content_change|%08x|%.12s|%lld",
            sid, fnv32(key), new_sha, (long long)time(NULL));
 
@@ -1378,7 +1369,7 @@ static int capture_inner(db_handle *db, const char *source_id,
   }
 
   char raw_sha[65];
-  sha256_hex_bytes(body, body_len, raw_sha);
+  jo_sha256_hex(body, body_len, raw_sha);
 
   /* Reuse of the roadmap-17 blob store, and ONLY on a genuine change — see the
    * storage note in the header. It is a no-op unless the operator has set
@@ -1393,7 +1384,7 @@ static int capture_inner(db_handle *db, const char *source_id,
   char ev_uid[288];
   if (strlen(key) > 180) {
     char khash[65];
-    sha256_hex_bytes((const unsigned char *)key, strlen(key), khash);
+    jo_sha256_hex((const unsigned char *)key, strlen(key), khash);
     snprintf(ev_uid, sizeof ev_uid, "cc:%.80s|h:%.32s", source_id, khash);
   } else {
     snprintf(ev_uid, sizeof ev_uid, "cc:%.80s|%.180s", source_id, key);
@@ -1411,7 +1402,27 @@ static int capture_inner(db_handle *db, const char *source_id,
   return CC_CHANGED;
 }
 
-int content_change_capture(db_handle *db, const char *source_id,
+/* THE CAPTURE ENTRY POINT. Extracts text from `body`, normalizes it, hashes the
+ * normalized text and compares against the most recent snapshot for
+ * (source_id, ref_key). First sighting stores a baseline and emits NOTHING. A
+ * differing hash stores a new snapshot, prunes to JO_CCHANGE_KEEP, hands the
+ * raw bytes to evidence_capture() and emits ONE intel item through the standard
+ * intel_sink with record_type='content_change', its properties carrying the
+ * unified diff.
+ *
+ * CONTRACT: this can never fail the fetch or the ingest that triggered it. It
+ * has no error path that propagates — every allocation failure, SQLite error,
+ * malformed document and absent table is swallowed and reported only through
+ * the advisory return code and stderr. It never longjmps, never aborts, never
+ * blocks on the network, and is re-entrancy guarded (an emit that provokes an
+ * outbound request cannot recurse into capture on the same thread).
+ *
+ * `ref_key` identifies the thing being watched WITHIN the source — a URL for a
+ * scraped page, an item uid for a document inside a feed. NULL means "use the
+ * canonicalized `url`", which is the right answer for every scraped source.
+ * `content_type` may be NULL (HTML is then sniffed from the first byte).
+ * `body` need not be NUL-terminated; `body_len` is authoritative. */
+static int content_change_capture(db_handle *db, const char *source_id,
                            const char *ref_key, const char *url,
                            const void *body, size_t body_len,
                            const char *content_type) {

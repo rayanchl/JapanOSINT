@@ -15,10 +15,15 @@ import { renderByModality, GEO_SUFFIXES } from './renderers/modalityRenderers.js
 import useLiveVehicles from '../../hooks/useLiveVehicles';
 import { getLayerIcon } from '../../utils/layerIcons';
 import apiUrl from '../../utils/apiUrl.js';
+import { api, ApiError, errorMessage } from '../../api/client.js';
 import { rasterizeIcon } from '../../utils/iconRaster';
 import { createRailwayLineTags } from '../../utils/railwayLineTags';
 import { useSatelliteTracks } from '../../hooks/useSatelliteTracks.js';
 import { satelliteColor } from '../../utils/satelliteColor.js';
+
+/* Set once /api/transit/station-boundaries refuses with 501/404 (see the
+ * station-footprint effect); module scope = this page session. */
+let stationBoundariesRefusal = null;
 
 // Per-layer handles for DOM-based add-ons (e.g. railway line tags) that
 // live outside MapLibre's layer system and must be torn down alongside
@@ -2492,33 +2497,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
       });
       break;
 
-    case 'nowphasWave':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'wave_height_m'], 1.5],
-            0.5, 4,
-            1.5, 8,
-            2.5, 14,
-          ],
-          'circle-color': [
-            'match', ['get', 'sensor_type'],
-            'gps_buoy', '#1565c0',
-            'ultrasonic', '#0288d1',
-            '#01579b',
-          ],
-          'circle-opacity': opacity * 0.85,
-          'circle-stroke-width': 1.5,
-          'circle-stroke-color': '#ffffff',
-          'circle-stroke-opacity': opacity * 0.7,
-        },
-      });
-      break;
-
     case 'lighthouseMap':
       map.addLayer({
         id: mainLayerId,
@@ -2569,66 +2547,6 @@ function addLayerToMapInner(map, layerId, layerDef, opacity, sourceId, mainLayer
           'circle-stroke-width': 1.5,
           'circle-stroke-color': '#ffffff',
           'circle-stroke-opacity': opacity * 0.6,
-        },
-      });
-      break;
-
-    case 'droneNofly':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'radius_km'], 5],
-            1, 5,
-            5, 10,
-            9, 16,
-            25, 30,
-          ],
-          'circle-color': [
-            'match', ['get', 'restriction'],
-            'absolute', '#b71c1c',
-            'permit', '#fb8c00',
-            '#9e9e9e',
-          ],
-          'circle-opacity': opacity * 0.35,
-          'circle-stroke-width': 2,
-          'circle-stroke-color': [
-            'match', ['get', 'restriction'],
-            'absolute', '#b71c1c',
-            'permit', '#fb8c00',
-            '#9e9e9e',
-          ],
-          'circle-stroke-opacity': opacity * 0.85,
-        },
-      });
-      break;
-
-    case 'jcgPatrol':
-      map.addLayer({
-        id: mainLayerId,
-        type: 'circle',
-        source: sourceId,
-        paint: {
-          'circle-radius': [
-            'interpolate', ['linear'],
-            ['coalesce', ['get', 'vessels_count'], 5],
-            3, 5,
-            10, 9,
-            18, 14,
-          ],
-          'circle-color': [
-            'match', ['get', 'base_type'],
-            'rcgh', '#00695c',
-            'office', '#26a69a',
-            '#00838f',
-          ],
-          'circle-opacity': opacity * 0.85,
-          'circle-stroke-width': 1.5,
-          'circle-stroke-color': '#ffffff',
-          'circle-stroke-opacity': opacity * 0.7,
         },
       });
       break;
@@ -4559,7 +4477,13 @@ export default function MapView({ layers, layerData, catalog, onFeatureClick, on
                       || layers?.unifiedSubways?.visible
                       || layers?.unifiedBuses?.visible);
     const zoom = map.getZoom();
-    const shouldShow = transitOn && zoom >= 14 && viewport;
+    // stationBoundariesRefusal: the server said it cannot serve this route
+    // (501 not_implemented — transitapi.c route_station_boundaries — or a
+    // 404 on a build without it). Measured 2026-11-07: it answers 501 on
+    // every call, and this effect re-ran on EVERY viewport move at zoom
+    // >= 14. One refusal is remembered for the session; a new page load
+    // asks again, so a server that gains the route is noticed.
+    const shouldShow = transitOn && zoom >= 14 && viewport && !stationBoundariesRefusal;
 
     const SRC = 'station-boundaries';
     const LYR = 'station-boundaries-fill';
@@ -4576,10 +4500,9 @@ export default function MapView({ layers, layerData, catalog, onFeatureClick, on
     (async () => {
       try {
         const bbox = `${viewport.minLng},${viewport.minLat},${viewport.maxLng},${viewport.maxLat}`;
-        const res = await fetch(apiUrl(`/api/transit/station-boundaries?bbox=${encodeURIComponent(bbox)}`));
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const fc = await res.json();
+        const fc = await api.get(`/api/transit/station-boundaries?bbox=${encodeURIComponent(bbox)}`);
         if (cancelled) return;
+        if (!fc || fc.type !== 'FeatureCollection') throw new Error('the server returned no FeatureCollection');
         if (!map.getSource(SRC)) {
           map.addSource(SRC, { type: 'geojson', data: fc });
           map.addLayer({
@@ -4608,7 +4531,10 @@ export default function MapView({ layers, layerData, catalog, onFeatureClick, on
           if (src && src.type === 'geojson') src.setData(fc);
         }
       } catch (err) {
-        if (!cancelled) console.warn('[MapView] station-boundaries', err?.message);
+        if (err instanceof ApiError && (err.status === 501 || err.status === 404)) {
+          stationBoundariesRefusal = errorMessage(err);
+        }
+        if (!cancelled) console.warn('[MapView] station-boundaries', errorMessage(err));
       }
     })();
     return () => { cancelled = true; };

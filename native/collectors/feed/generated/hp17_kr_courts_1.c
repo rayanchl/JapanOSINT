@@ -18,9 +18,10 @@ static const hp_source T[] = {
     .collector = "kr_courts", .category = "courts",
     .description = "Constitutional Court rulings: id, 사건번호 (e.g. 2002헌가20), 종국일자, 사건명 naming the statute under challenge, 헌재결정례일련번호 and detail link. The detail service returns the reviewed provision text and the full reasoning.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "courts-record", .tags = "\"kr\",\"courts\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "ko",
-    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=detc&type=JSON&query=%ED%9A%8C%EC%82%AC",
+    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC={key}&target=detc&type=JSON&query=%ED%9A%8C%EC%82%AC",
+    .key_env = "LAW_GO_KR_OC",   /* 2026-11-11, owner's decision: OC=test is refused ("register your server IP"); OC is the account id open.law.go.kr issues for a registered IP */
     .array_path = "detcsearch.detc",
-    .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC=test&target=detc&ID={v}&type=JSON", .detail_key = "헌재결정례일련번호",
+    .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC={key}&target=detc&ID={v}&type=JSON", .detail_key = "헌재결정례일련번호",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
@@ -29,9 +30,10 @@ static const hp_source T[] = {
     .collector = "kr_courts", .category = "courts",
     .description = "Korean court judgments matching a query: id, 사건번호 (case number, e.g. 대법원-2025-두-34754), 사건명 (case name, which names the parties), 선고일자, 법원명, 사건종류명, 판례일련번호 and 판례상세링크. The detail service returns 판시사항, 판결요지 and the full reasoning. This is Korea's case-law layer, keyless.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "courts-record", .tags = "\"kr\",\"courts\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "ko",
-    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=prec&type=JSON&query=%ED%9A%8C%EC%82%AC",
+    .url = "https://www.law.go.kr/DRF/lawSearch.do?OC={key}&target=prec&type=JSON&query=%ED%9A%8C%EC%82%AC",
+    .key_env = "LAW_GO_KR_OC",   /* 2026-11-11, owner's decision: OC=test is refused ("register your server IP"); OC is the account id open.law.go.kr issues for a registered IP */
     .array_path = "precsearch.prec",
-    .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC=test&target=prec&ID={v}&type=JSON", .detail_key = "판례일련번호",
+    .detail_url = "https://www.law.go.kr/DRF/lawService.do?OC={key}&target=prec&ID={v}&type=JSON", .detail_key = "판례일련번호",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

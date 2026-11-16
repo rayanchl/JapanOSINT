@@ -129,7 +129,7 @@ static void al_feature(cJSON *feats, const cJSON *ac, const char *channel) {
 /* Fetch one airplanes.live v2 URL and emit its `ac[]`. Exactly one request. */
 static int al_fetch(const source_ctx *ctx, intel_sink *sink, const char *url,
                     const char *channel, const char *tag) {
-  const char *hdrs[] = { "Accept: application/json", AV_UA_HDR, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, tag);
   if (!body) { fprintf(stderr, "[%s] fetch failed\n", tag); return -1; }
   cJSON *doc = cJSON_Parse(body);

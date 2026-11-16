@@ -146,33 +146,46 @@ VGEO(geo_dwd_biowetter_small, "geo-dwd-biowetter-small", "DWD — biometeorologi
   "en", "[\"germany\",\"biometeorology\",\"health\"]", 21600,
   "Health-relevant biometeorological forecast by area polygon.");
 
+/* WFS rows in this file: `startIndex=0` (2026-11-07). geojson_emit_paged()
+ * advances a WFS cursor only when the URL already names one AND the body's own
+ * numberMatched/totalFeatures exceeds what was read (mechanism 3), so a row
+ * without `startIndex` read ONE page of a declared total and stopped. Measured
+ * per row (count=5 at startIndex 0 and 5): where the server accepted paging
+ * without a sort — GeoServer does that only when it can order by the
+ * feature type's primary key — the two pages were disjoint and the row gets
+ * `startIndex=0` alone. Where it refused ("Cannot do natural order without a
+ * primary key"), the row also gets `sortBy=<a property distinct on the
+ * row's first 200 features>`, checked the same way (pages disjoint, total
+ * unchanged; a bogus sortBy is HTTP 400 "Illegal property name", so the
+ * server reads it). Probe-sized pages (count 2/3/20/50) are 1000 now. The
+ * 20-page geojson ceiling still bounds a run; the remainder is disclosed. */
 VGEO(geo_dwd_ceilometer, "geo-dwd-ceilometer", "DWD — ceilometer network", "ドイツ気象局 — シーロメータ観測網",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Ceilometer&outputFormat=application/json&count=500",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Ceilometer&outputFormat=application/json&count=500&startIndex=0",
   "en", "[\"germany\",\"cloud\",\"ceilometer\"]", 3600,
   "Cloud base and aerosol backscatter sites across Germany.");
 
 VGEO(geo_dwd_eprofile, "geo-dwd-eprofile", "DWD — E-PROFILE profiler network", "ドイツ気象局 — E-PROFILE 観測網",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:E-PROFILE&outputFormat=application/json&count=500",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:E-PROFILE&outputFormat=application/json&count=500&startIndex=0",
   "en", "[\"europe\",\"profiler\",\"aerosol\"]", 3600,
   "European ceilometer/wind-profiler network stations.");
 
 VGEO(geo_dwd_eucos_gbon, "geo-dwd-eucos-gbon", "DWD — GBON surface station network", "ドイツ気象局 — GBON 地上観測網",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:EUCOS_surface_GBON&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:EUCOS_surface_GBON&outputFormat=application/json&count=1000&sortBy=ID&startIndex=0",
   "en", "[\"global\",\"stations\",\"gbon\"]", 86400,
   "WMO Global Basic Observing Network surface stations.");
 
 VGEO(geo_dwd_eucos_surface, "geo-dwd-eucos-surface", "DWD — EUCOS surface station network", "ドイツ気象局 — EUCOS 地上観測網",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:EUCOS_surface_stations&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:EUCOS_surface_stations&outputFormat=application/json&count=1000&sortBy=FI_WMO_IDENT&startIndex=0",
   "en", "[\"europe\",\"stations\",\"eucos\"]", 86400,
   "European composite observing system surface stations.");
 
 VGEO(geo_dwd_euro24_poi, "geo-dwd-euro24-poi", "DWD — European city forecast points", "ドイツ気象局 — 欧州都市予報地点",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:euro24_poi&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:euro24_poi&outputFormat=application/json&count=1000&startIndex=0",
   "en", "[\"europe\",\"forecast\",\"cities\"]", 10800,
   "24-hour forecast values at selected European points.");
 
@@ -184,31 +197,31 @@ VGEO(geo_dwd_pollenflug, "geo-dwd-pollenflug", "DWD — pollen forecast areas", 
 
 VGEO(geo_dwd_rbsn_ff, "geo-dwd-rbsn-ff", "DWD — WMO RBSN global wind", "ドイツ気象局 — WMO RBSN 全球風",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_FF&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_FF&outputFormat=application/json&count=1000&startIndex=0",
   "en", "[\"global\",\"synop\",\"rbsn\",\"wind\"]", 3600,
   "Global RBSN wind speed/direction reports by station.");
 
 VGEO(geo_dwd_rbsn_rh, "geo-dwd-rbsn-rh", "DWD — WMO RBSN global humidity", "ドイツ気象局 — WMO RBSN 全球湿度",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_RH&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_RH&outputFormat=application/json&count=1000&startIndex=0",
   "en", "[\"global\",\"synop\",\"rbsn\",\"humidity\"]", 3600,
   "Global RBSN relative humidity reports by station.");
 
 VGEO(geo_dwd_rbsn_rr, "geo-dwd-rbsn-rr", "DWD — WMO RBSN global precipitation", "ドイツ気象局 — WMO RBSN 全球降水",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_RR&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_RR&outputFormat=application/json&count=1000&startIndex=0",
   "en", "[\"global\",\"synop\",\"rbsn\",\"precipitation\"]", 3600,
   "Global RBSN precipitation reports by station.");
 
 VGEO(geo_dwd_rbsn_t2m, "geo-dwd-rbsn-t2m", "DWD — WMO RBSN global 2 m temperature", "ドイツ気象局 — WMO RBSN 全球気温",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_T2m&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_T2m&outputFormat=application/json&count=1000&startIndex=0",
   "en", "[\"global\",\"synop\",\"rbsn\",\"temperature\"]", 3600,
   "Global WMO Regional Basic Synoptic Network temperature observations with station coordinates.");
 
 VGEO(geo_dwd_uv_stationen, "geo-dwd-uv-stationen", "DWD — UV index stations", "ドイツ気象局 — UV指数観測地点",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Uv_Stationen&outputFormat=application/json&count=500",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Uv_Stationen&outputFormat=application/json&count=500&sortBy=STATIONS_ID&startIndex=0",
   "en", "[\"uv\",\"germany\",\"health\"]", 21600,
   "UV index measurement sites and current values.");
 
@@ -218,9 +231,12 @@ VGEO(geo_eccc_aqhi_forecasts, "geo-eccc-aqhi-forecasts", "Environment Canada —
   "en", "[\"canada\",\"aqhi\",\"forecast\"]", 10800,
   "Canadian AQHI forecast values by community.");
 
+/* 2026-11-07: Unsorted, this collection answers neither order (2026-11-06T11, then 10, then 08 at the head of
+ * 7,686), measured 2026-11-07. Newest first, id as the tiebreak, inside a 7-hour window (6 h system
+ * cadence plus slack): 790 records, read COMPLETE in two pages (500 + 290, overlap 0). */
 VGEO(geo_eccc_aqhi_obs, "geo-eccc-aqhi-obs", "Environment Canada — AQHI observations", "カナダ環境省 — 大気質健康指数 観測",
   "environment", "airquality",
-  "https://api.weather.gc.ca/collections/aqhi-observations-realtime/items?f=json&limit=500",
+  "https://api.weather.gc.ca/collections/aqhi-observations-realtime/items?f=json&limit=500&sortby=-observation_datetime,id&datetime={ago:25200}/..",
   "en", "[\"canada\",\"aqhi\",\"airquality\"]", 3600,
   "Canadian Air Quality Health Index observations by community.");
 
@@ -236,15 +252,23 @@ VGEO(geo_eccc_citypage_small, "geo-eccc-citypage-small", "Environment Canada —
   "en", "[\"canada\",\"forecast\",\"cities\"]", 3600,
   "Current conditions and forecast per Canadian city location.");
 
+/* 2026-11-07: Unsorted, this collection answers 1897-04-11 first of 184,195,778 (measured 2026-11-07), so 20
+ * pages were the 4,000 oldest days of one station. Newest first, ID as the tiebreak (total unchanged,
+ * page 1 vs next overlap 0 of 200). No date window: publication lags, so a window anchored on today
+ * could read empty; the newest 4,000 a run are disclosed against the whole total. */
 VGEO(geo_eccc_climate_daily, "geo-eccc-climate-daily", "Environment Canada — daily climate observations", "カナダ環境省 — 日別気候観測",
   "environment", "weather",
-  "https://api.weather.gc.ca/collections/climate-daily/items?f=json&limit=200",
+  "https://api.weather.gc.ca/collections/climate-daily/items?f=json&limit=200&sortby=-LOCAL_DATE,ID",
   "en", "[\"canada\",\"climate\",\"daily\"]", 86400,
   "Daily temperature and precipitation by climate station.");
 
+/* 2026-11-07: Unsorted, this collection answers 1972-06-29 first of 278,176,859 (measured 2026-11-07). Newest
+ * first, STN_ID as the tiebreak: without one page 1 vs the next link overlapped 25 of 200 (ties on
+ * the hour reshuffle); with it 0, total unchanged. `,ID` is an HTTP 500 here. No date window: the
+ * newest record was ~12 h behind the clock, so a window anchored on now could read empty. */
 VGEO(geo_eccc_climate_hourly, "geo-eccc-climate-hourly", "Environment Canada — hourly climate observations", "カナダ環境省 — 毎時気候観測",
   "environment", "weather",
-  "https://api.weather.gc.ca/collections/climate-hourly/items?f=json&limit=200",
+  "https://api.weather.gc.ca/collections/climate-hourly/items?f=json&limit=200&sortby=-UTC_DATE,STN_ID",
   "en", "[\"canada\",\"climate\",\"hourly\"]", 3600,
   "Hourly climate observations by station.");
 
@@ -267,9 +291,13 @@ VGEO(geo_eccc_forecast_zones, "geo-eccc-forecast-zones", "Environment Canada —
   "en", "[\"canada\",\"zones\",\"reference\"]", 86400,
   "Canadian public forecast zone polygons.");
 
+/* 2026-11-07: Unsorted, this collection answers 2010-04-17 first of 69,158,003 (measured 2026-11-07). Newest
+ * first, IDENTIFIER as the tiebreak (overlap page 1 vs next 3 of 300 without it, 0 with it, total
+ * unchanged). No window: the newest DATE was 2026-06-30, four months behind, and only 358 records
+ * fall in the last 200 days, so a window anchored on today would read almost nothing. */
 VGEO(geo_eccc_hydro_daily, "geo-eccc-hydro-daily", "Environment Canada — daily mean discharge", "カナダ環境省 — 日平均流量",
   "environment", "flood",
-  "https://api.weather.gc.ca/collections/hydrometric-daily-mean/items?f=json&limit=300",
+  "https://api.weather.gc.ca/collections/hydrometric-daily-mean/items?f=json&limit=300&sortby=-DATE,IDENTIFIER",
   "en", "[\"canada\",\"hydrology\",\"daily\"]", 86400,
   "Daily mean water level and discharge by Canadian station.");
 
@@ -297,9 +325,16 @@ VGEO(geo_eccc_swob_marine, "geo-eccc-swob-marine", "Environment Canada — marin
   "en", "[\"canada\",\"marine\",\"stations\"]", 86400,
   "Canadian marine surface observation platforms.");
 
+/* 2026-11-07: Unsorted, this collection answers OLDEST first (2026-10-10T06:05 at the head of 13,918,334),
+ * measured 2026-11-07. Newest first now, in a 7-hour window (6 h system cadence plus slack):
+ * numberMatched 146,232, the newest 10,000 read and the rest disclosed. The SWOB key keeps its
+ * '-value' suffix (plain -date_tm is 400). NO tiebreak exists here: adding any second key (id,
+ * msc_id-value, stn_id-value) answers numberMatched 0, a sort read as a filter, so it is not used;
+ * ties on the minute reshuffle between requests and page 1 vs the next link overlap 25-42 of 500,
+ * a skip inside a read that already discloses most of its window as unread. */
 VGEO(geo_eccc_swob_realtime, "geo-eccc-swob-realtime", "Environment Canada — surface observations (SWOB)", "カナダ環境省 — 地上実況(SWOB)",
   "environment", "weather",
-  "https://api.weather.gc.ca/collections/swob-realtime/items?f=json&limit=500",
+  "https://api.weather.gc.ca/collections/swob-realtime/items?f=json&limit=500&sortby=-date_tm-value&datetime={ago:25200}/..",
   "en", "[\"canada\",\"observations\",\"realtime\"]", 900,
   "Real-time Canadian surface weather observations with station coordinates.");
 
@@ -398,9 +433,11 @@ VJSON(geo_hko_current, "geo-hko-current", "Hong Kong Observatory — current wea
   "en", "[\"hongkong\",\"observations\"]", 1800,
   "Hong Kong district temperature, rainfall and humidity readings.");
 
+/* 2026-11-07: year was frozen at 2026; the predictions are published a year ahead (year=2027 answers 365
+ * daily rows, measured 2026-11-07), so {date:%Y} reads the current year's table every year. */
 VJSON(geo_hko_tides, "geo-hko-tides", "Hong Kong Observatory — tidal predictions", "香港天文台 — 潮汐予測",
   "environment", "ocean",
-  "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=HHOT&lang=en&rformat=json&station=CLK&year=2026",
+  "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=HHOT&lang=en&rformat=json&station=CLK&year={date:%Y}",
   "data",
   "en", "[\"hongkong\",\"tide\",\"sealevel\"]", 86400,
   "Hourly tidal height predictions for a Hong Kong station.");

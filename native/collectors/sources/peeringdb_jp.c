@@ -15,6 +15,7 @@
 #include "source.h"
 #include "lib/feedlib.h"
 #include "lib/geojson.h"
+#include "lib/jocore.h"   /* jo_trunc_notice_scoped */
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,7 +23,16 @@
 #include <math.h>
 #include <time.h>
 
-#define URL_NET "https://www.peeringdb.com/api/net?info_traffic__contains=&info_scope__contains=&info_type__contains=&policy_general__contains=&country=JP&depth=0&limit=1000"
+/* /api/net has NO `country` field, and PeeringDB IGNORES the unknown filter:
+ * measured 2026-11-07, `country=JP` and the control `country=ZZ` each answered
+ * the same 1,000 networks worldwide (the limit) — so this row stored a
+ * worldwide first-1,000 slice labelled Japan. The network's country lives on
+ * its organisation: `org__country=JP` answers 287 networks and
+ * `org__country=ZZ` answers 0, so the filter is honoured (the same filter
+ * collectors/pivot/table/hp3b23_jpcyber.c already used). 287 < limit, so one
+ * request is the whole set; a full page is disclosed below. */
+#define URL_NET "https://www.peeringdb.com/api/net?org__country=JP&depth=0&limit=1000"
+#define PDB_NET_LIMIT 1000
 #define URL_IX  "https://www.peeringdb.com/api/ix?country=JP&depth=0&limit=500"
 #define URL_FAC "https://www.peeringdb.com/api/fac?country=JP&depth=0&limit=1000"
 
@@ -126,6 +136,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *ixs  = fetch_pdb(ctx, URL_IX,  &dIx);
   pdb_pause();
   cJSON *facs = fetch_pdb(ctx, URL_FAC, &dFac);
+  int n_net = nets ? cJSON_GetArraySize(nets) : 0;
+  int any_ok = (nets || ixs || facs);
   fprintf(stderr, "[peeringdb-jp] fetched net=%d ix=%d fac=%d\n",
           nets ? cJSON_GetArraySize(nets) : -1,
           ixs  ? cJSON_GetArraySize(ixs)  : -1,
@@ -287,6 +299,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[peeringdb-jp] emitted %d\n", n);
+  /* A page that came back exactly full may have more behind it: say so
+   * rather than read a limit as the set (ix 27 / fac 114 / net 287 measured
+   * 2026-11-07, all far below their limits). */
+  if (n_net >= PDB_NET_LIMIT)
+    jo_trunc_notice_scoped(sink, ctx->source_id, "net", URL_NET, n_net, -1,
+                           "the /api/net page came back exactly full (limit=1000)",
+                           "add skip= paging to the /api/net request");
+  /* all three fetches refused or unparsable: a failure, not an empty JP */
+  if (!any_ok) return -1;
   return n >= 0 ? 0 : -1;
 }
 

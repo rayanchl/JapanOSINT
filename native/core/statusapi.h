@@ -6,22 +6,8 @@
 #define JO_STATUSAPI_H
 #include "db.h"
 
-/* Returns malloc'd {summary,apis,view,vectorIndexes,timestamp} (200). NULL →
- * caller 500. `vectorIndexes` is {"<index>": {embedded, eligible, failed,
- * refused, backlog, model, dim, state, last_run}} for every lib/vecindex
- * index — eligible/backlog null until measured, never estimated.
- *
- * `include_breach` appends the breach_meta catalog (~1k rows) to `apis` as
- * synthesized sources with category "breach", so the app's Sources screen can
- * show them next to real collectors. It is operator-only and the caller decides:
- * httpd.c passes opgate_check(&usr)==0. Ordinary users get the payload they
- * always got — this is why it is a parameter and not a query flag. `summary`
- * always carries breachTotal/breachMaterialized (0 when not included) so a
- * client can decode them unconditionally. */
-char *statusapi_build(db_handle *db, int include_breach);
-
-/* The same payload, bounded. `limit <= 0` (and summary_only == 0) is exactly
- * statusapi_build(): every row, which is what both clients get by default and
+/* The /api/status payload, optionally bounded. `limit <= 0` (and
+ * summary_only == 0) is every row, which is what both clients get by default and
  * what they will keep getting until they ask for less.
  *
  *   limit > 0        one page of apis[], starting at `offset`

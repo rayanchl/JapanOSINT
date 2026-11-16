@@ -35,9 +35,15 @@ VJSON_PREP(sci_nasa_genelab_studies, "sci-nasa-genelab-studies", "NASA GeneLab /
   "Omics datasets from spaceflight experiments, indexed by OSD accession.",
   "accession", genelab_prep);
 
+/* 2026-11-12: `year_start=2025` was frozen at authoring (a floor that only
+ * grows). `{date-1y:%Y}` keeps the authoring intent — last year and this —
+ * rolling: rendered 2025 it answered total_hits 5,385 (2026 alone: 3,229).
+ * The next-page link is at `collection.links` (rel=next), which
+ * jo_next_link() does not read (it reads a root `links` array), so this
+ * row reads one page of 100 a run. */
 VJSON(sci_nasa_images_search, "sci-nasa-images-search", "NASA image and media library", "NASA 画像・映像ライブラリ",
   "space", "spaceflight",
-  "https://images-api.nasa.gov/search?q=spacecraft&media_type=image&year_start=2025",
+  "https://images-api.nasa.gov/search?q=spacecraft&media_type=image&year_start={date-1y:%Y}",
   "collection.items",
   "en", "[\"nasa\",\"imagery\",\"media\"]", 21600,
   "Keyword search over NASA's public image, audio and video library.");

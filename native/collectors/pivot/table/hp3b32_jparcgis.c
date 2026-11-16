@@ -21,6 +21,11 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B32_JPARCGIS[] = {
   { .id = "JO32_ARC_MLIT_BRIDGE", .name = "MLIT Data Platform: national road bridge inspection register "
       "(RSDB)",
@@ -465,6 +470,7 @@ static const hp_source HP3B32_JPARCGIS[] = {
     .name_ja = "兵庫県 交通事故発生状況",
     .category = "public-safety", .portal = "https://www.arcgis.com/home/item.html?id=8937aca5bdf442699ec71b233ccb3259",
     .record_type = "traffic-accident",
+    .lang = "ja",
     .tags = "\"japan\",\"hyogo\",\"traffic-accident\",\"road-safety\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services6.arcgis.com/vgk9QzEU5SI8I6pT/arcgis/rest/services/traffic_accident_lite/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0",
@@ -502,6 +508,7 @@ static const hp_source HP3B32_JPARCGIS[] = {
     .name_ja = "兵庫県 犯罪発生情報（2018〜2023）",
     .category = "public-safety", .portal = "https://www.arcgis.com/home/item.html?id=22e3679d3e1e464d85fff56aedf23ee2",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"hyogo\",\"crime\",\"theft\",\"police-open-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services6.arcgis.com/vgk9QzEU5SI8I6pT/arcgis/rest/services/%E7%8A%AF%E7%BD%AAdeta2/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=0",
@@ -759,6 +766,7 @@ static const hp_source HP3B32_JPARCGIS[] = {
     .name_ja = "福岡県鳥獣被害対策システム 捕獲情報",
     .category = "environment", .portal = "https://www.arcgis.com/home/item.html?id=9fd3e5a7bcbd49688fabdd35c1955442",
     .record_type = "wildlife-capture",
+    .lang = "ja",
     .tags = "\"japan\",\"fukuoka\",\"wildlife\",\"hunting\",\"deer\",\"boar\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services1.arcgis.com/UzywP0SobSWMx2Pl/arcgis/rest/services/Hokaku_Excel_point_view/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0",
@@ -788,6 +796,7 @@ static const hp_source HP3B32_JPARCGIS[] = {
     .name_ja = "富山県ツキノワグマ出没情報地図 クマっぷ",
     .category = "environment", .portal = "https://www.arcgis.com/home/item.html?id=9d7af8de27b345f3b08dc4890165d129",
     .record_type = "bear-sighting",
+    .lang = "ja",
     .tags = "\"japan\",\"toyama\",\"bear\",\"wildlife\",\"sighting\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services7.arcgis.com/pUdPpUsq83Kw8pWi/arcgis/rest/services/survey123_3f07f1f9864d43368d48b5f373d6cd68_results/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=objectid&resultRecordCount=1000&resultOffset=0",

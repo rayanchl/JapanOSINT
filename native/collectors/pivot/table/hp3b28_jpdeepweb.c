@@ -20,6 +20,11 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B28_JPDEEPWEB[] = {
   { .id = "JO28_JPCERT_TSUBAME_REPORTLIST", .name = "JPCERT/CC TSUBAME quarterly report archive — link list",
     .name_ja = "JPCERT/CC インターネット定点観測レポート一覧",
@@ -62,6 +67,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "JPCERT/CC インシデント報告対応レポート一覧",
     .category = "threat", .portal = "https://www.jpcert.or.jp",
     .record_type = "incident-handling-report",
+    .lang = "ja",
     .tags = "\"japan\",\"jpcert\",\"incident\",\"archive\",\"report\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jpcert.or.jp/ir/report.html",
@@ -124,6 +130,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "情報セキュリティ10大脅威（年次アーカイブ）",
     .category = "advisory", .portal = "https://www.ipa.go.jp",
     .record_type = "annual-threat-ranking",
+    .lang = "ja",
     .tags = "\"japan\",\"ipa\",\"threats\",\"ranking\",\"annual\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ipa.go.jp/security/10threats/index.html",
@@ -140,6 +147,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "IPA 情報セキュリティ安心相談窓口 公開レポート一覧",
     .category = "advisory", .portal = "https://www.ipa.go.jp",
     .record_type = "consultation-trend-report",
+    .lang = "ja",
     .tags = "\"japan\",\"ipa\",\"anshin\",\"scam\",\"consultation\",\"quarterly\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ipa.go.jp/security/anshin/",
@@ -158,6 +166,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "総務省サイバーセキュリティ統括官室 新着情報",
     .category = "advisory", .portal = "https://www.soumu.go.jp",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"mic\",\"soumu\",\"iot\",\"notice\",\"cyder\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.soumu.go.jp/main_sosiki/cybersecurity/",
@@ -175,6 +184,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "警察庁サイバー警察局 広報誌一覧",
     .category = "threat", .portal = "https://www.npa.go.jp",
     .record_type = "threat-newsletter",
+    .lang = "ja",
     .tags = "\"japan\",\"npa\",\"police\",\"cyber\",\"newsletter\",\"iot\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.npa.go.jp/bureau/cyber/index.html",
@@ -193,6 +203,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "警察庁 サイバー空間をめぐる脅威の情勢等（アーカイブ）",
     .category = "threat", .portal = "https://www.npa.go.jp",
     .record_type = "cybercrime-statistics-report",
+    .lang = "ja",
     .tags = "\"japan\",\"npa\",\"police\",\"statistics\",\"cybercrime\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.npa.go.jp/publications/statistics/cybersecurity/",
@@ -210,6 +221,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "ICT-ISAC Japan 新着情報",
     .category = "threat", .portal = "https://www.ict-isac.jp",
     .record_type = "member-advisory",
+    .lang = "ja",
     .tags = "\"japan\",\"ict-isac\",\"telecom\",\"isac\",\"threat-sharing\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ict-isac.jp/",
@@ -226,6 +238,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "JC3 脅威情報（事例）",
     .category = "threat", .portal = "https://www.jc3.or.jp",
     .record_type = "fraud-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"jc3\",\"cybercrime\",\"phishing\",\"scam\",\"voicephishing\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jc3.or.jp/info/index.html",
@@ -243,6 +256,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "JC3 トピックス（統計）",
     .category = "threat", .portal = "https://www.jc3.or.jp",
     .record_type = "fraud-statistics-bulletin",
+    .lang = "ja",
     .tags = "\"japan\",\"jc3\",\"cybercrime\",\"statistics\",\"fraud\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jc3.or.jp/topics/",
@@ -259,6 +273,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "LAC WATCH 統合RSSフィード",
     .category = "threat", .portal = "https://www.lac.co.jp/lacwatch/",
     .record_type = "security-report",
+    .lang = "ja",
     .tags = "\"japan\",\"lac\",\"jsoc\",\"watch\",\"alert\",\"report\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.lac.co.jp/lacwatch/feed.xml",
@@ -284,6 +299,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "NTTセキュリティ・ジャパン サイバーセキュリティレポート一覧",
     .category = "threat", .portal = "https://jp.security.ntt",
     .record_type = "monthly-security-report",
+    .lang = "ja",
     .tags = "\"japan\",\"ntt\",\"security\",\"soc\",\"monthly\",\"report\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://jp.security.ntt/insights_resources/cyber_security_report",
@@ -304,6 +320,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "マクニカ セキュリティ研究センターブログ一覧",
     .category = "threat", .portal = "https://security.macnica.co.jp",
     .record_type = "research-post",
+    .lang = "ja",
     .tags = "\"japan\",\"macnica\",\"infostealer\",\"phishing\",\"ransomware\",\"research\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://security.macnica.co.jp/blog/",
@@ -326,6 +343,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "サイバーディフェンス研究所 ニュース一覧",
     .category = "threat", .portal = "https://www.cyberdefense.jp",
     .record_type = "corporate-news",
+    .lang = "ja",
     .tags = "\"japan\",\"cyberdefense\",\"forensics\",\"incidentresponse\",\"nec\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.cyberdefense.jp/news/",
@@ -344,6 +362,7 @@ static const hp_source HP3B28_JPDEEPWEB[] = {
     .name_ja = "ScanNetSecurity RSSフィード",
     .category = "threat", .portal = "https://scan.netsecurity.ne.jp",
     .record_type = "breach-news-article",
+    .lang = "ja",
     .tags = "\"japan\",\"scannetsecurity\",\"breach\",\"ransomware\",\"newsmedia\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://scan.netsecurity.ne.jp/rss/index.rdf",

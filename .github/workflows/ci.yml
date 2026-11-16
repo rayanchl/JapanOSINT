@@ -99,6 +99,24 @@ jobs:
         working-directory: native
         run: make selftest
 
+      # CLAUDE.md documents `make collectors-def-check` as failing while any
+      # registered collector key has no line in core/collectors.def (a key
+      # under grp_unassigned on every page), and no CI step ran it — so the
+      # check that was supposed to catch an unassigned beat caught nothing.
+      - name: Every collector has a group (collectors-def-check)
+        working-directory: native
+        run: make collectors-def-check
+
+      # The measuring tools' own fixtures: each tool's model of the engine
+      # (request headers, wall vocabulary, JSON path, key resolution, page-2
+      # arithmetic, C row reader, struct-field coverage). A tool whose model
+      # has drifted produces verdicts that read like measurements, so the
+      # fixtures are a gate, not a convenience. No network: the probe's
+      # fixtures run against a server on 127.0.0.1.
+      - name: Tool self-tests
+        working-directory: native
+        run: make tools-selftest
+
       - name: Unit tests (dispatcher fan-out)
         working-directory: native
         run: make unit
@@ -135,6 +153,14 @@ jobs:
       - name: RSS/Atom toolkit (a dead feed is not an empty feed)
         working-directory: native
         run: make rsstest
+
+      # The GTFS Realtime protobuf decoder (lib/gtfsrt.c): hand-encoded bytes
+      # only, no network — a negative delay, two translations, unknown fields
+      # skipped, truncation refused at every cut, and an empty body told apart
+      # from a header-only feed (an honest empty).
+      - name: GTFS Realtime decoder
+        working-directory: native
+        run: make gtfsrttest
 
       - name: Lint collector sources
         working-directory: native
@@ -514,6 +540,14 @@ jobs:
       - name: RSS/Atom toolkit (a dead feed is not an empty feed)
         working-directory: native
         run: make rsstest
+
+      # The GTFS Realtime protobuf decoder (lib/gtfsrt.c): hand-encoded bytes
+      # only, no network — a negative delay, two translations, unknown fields
+      # skipped, truncation refused at every cut, and an empty body told apart
+      # from a header-only feed (an honest empty).
+      - name: GTFS Realtime decoder
+        working-directory: native
+        run: make gtfsrttest
 
       # Deliberately NOT repeated here: lint-sources and audit-sources. Both
       # are pure python3 over the source text with no platform-dependent

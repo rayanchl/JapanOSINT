@@ -39,6 +39,31 @@ long cadence_apply(long declared);
 /* "declared" | "global" | "clamped" for a row declaring `declared`. */
 const char *cadence_mode_for(long declared);
 
+/* WHICH rows the policy does not move (2026-11-14, the owner's decision "let
+ * all transport or live-needing sources be real time"). Two kinds run at their
+ * OWN cadence — the declared interval, or the measured one for an adaptive
+ * row — whatever the system-wide policy says:
+ *   "pod"      a `_` maintenance pod: it asks no upstream (2026-11-07);
+ *   "realtime" a transport source (category "transport"), or any source
+ *              declaring an interval under CAD_REALTIME_BELOW_SEC — its author
+ *              measured minute-scale data (vehicle positions, webcams, grid
+ *              telemetry, quake and warning feeds), which a six-hour policy
+ *              turns into a stale snapshot.
+ * NULL for every other row. An operator's per-source interval still outranks
+ * both (core/source_interval.h). Measured over the registry when it shipped:
+ * 2,239 transport rows (2,006 of them declare LONGER than six hours — static
+ * timetables, which now run less often, as declared) and 1,024 rows declaring
+ * under an hour; together about +122,000 runs a day on 345,000. */
+#define CAD_REALTIME_BELOW_SEC 3600
+struct source_def;
+const char *cadence_exempt_reason(const struct source_def *d);
+
+/* The policy applied to THIS row's base interval (declared, or measured for
+ * an adaptive row): `base` unchanged for an exempt row, cadence_apply(base)
+ * otherwise. Every reader that shows or uses "the interval under policy"
+ * calls this, so a page cannot show a policy figure the scheduler ignores. */
+long cadence_apply_for(const struct source_def *d, long base);
+
 cadence_policy cadence_get(void);
 /* Where the current policy came from: "db" | "env" | "default". */
 const char *cadence_source(void);
@@ -56,7 +81,8 @@ int cadence_parse(const char *json, const cadence_policy *base, cadence_policy *
 
 /* The policy, its provenance and what it costs: the registry's scheduled
  * rows, runs/day as declared and runs/day under the policy — per-source
- * intervals honoured and maintenance pods exempt, as the scheduler runs them;
+ * intervals honoured, realtime rows and maintenance pods exempt, as the
+ * scheduler runs them (exempt_rows / exempt_runs_per_day count them);
  * the adaptive measurement and health backoff are per-row state and are not
  * counted. Malloc'd JSON. */
 char *cadence_json(db_handle *db);

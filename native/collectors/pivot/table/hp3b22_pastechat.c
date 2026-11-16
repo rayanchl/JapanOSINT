@@ -20,6 +20,11 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B22_PASTECHAT[] = {
   { .id = "NODEINFO_20_PIVOT", .name = "Fediverse nodeinfo 2.0 by instance host",
     .category = "social", .portal = "https://nodeinfo.diaspora.software",
@@ -1334,6 +1339,7 @@ static const hp_source HP3B22_PASTECHAT[] = {
   { .id = "MASTODON_ACTIVITY_MSTDN_JP", .name = "Mastodon instance activity - mstdn.jp",
     .category = "social", .portal = "https://mstdn.jp",
     .record_type = "fediverse-activity",
+    .lang = "ja",
     .tags = "\"fediverse\",\"mastodon\",\"activity\",\"metadata\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://mstdn.jp/api/v1/instance/activity",
@@ -2487,6 +2493,7 @@ static const hp_source HP3B22_PASTECHAT[] = {
   { .id = "NOSTR_RELAY_RELAY_NOSTR_WIREDNET_JP", .name = "Nostr relay descriptor - relay.nostr.wirednet.jp",
     .category = "social", .portal = "https://relay.nostr.wirednet.jp",
     .record_type = "nostr-relay",
+    .lang = "ja",
     .tags = "\"nostr\",\"relay\",\"nip11\",\"directory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://relay.nostr.wirednet.jp/",

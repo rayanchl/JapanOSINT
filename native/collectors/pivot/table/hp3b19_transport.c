@@ -254,7 +254,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "port-constraint",
     .tags = "\"maritime\",\"port\",\"bridge\",\"airdraft\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/dasz-28ip.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/dasz-28ip.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 604800,
     .page_param = "$offset",
     .page_size = 1000,
@@ -270,7 +274,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "port-throughput",
     .tags = "\"maritime\",\"port\",\"teu\",\"container\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/sn74-xpkp.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/sn74-xpkp.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "$offset",
     .page_size = 1000,
@@ -285,7 +293,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "port-throughput",
     .tags = "\"maritime\",\"port\",\"teu\",\"container\",\"timeseries\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/iahn-a7j4.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/iahn-a7j4.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "$offset",
     .page_size = 1000,
@@ -300,7 +312,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "port-performance",
     .tags = "\"maritime\",\"port\",\"dwell\",\"container\",\"congestion\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/nfsh-p62e.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/nfsh-p62e.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "month_year",
     .interval = 86400,
     .page_param = "$offset",
@@ -316,7 +332,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "port-performance",
     .tags = "\"maritime\",\"port\",\"dwell\",\"tanker\",\"congestion\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/abu9-jbyq.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/abu9-jbyq.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "month_year",
     .interval = 86400,
     .page_param = "$offset",
@@ -334,7 +354,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "fleet-capacity",
     .tags = "\"maritime\",\"container\",\"capacity\",\"fleet\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/x6rh-cpwu.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/x6rh-cpwu.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "date",
     .interval = 86400,
     .page_param = "$offset",
@@ -350,7 +374,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "terminal-facility",
     .tags = "\"maritime\",\"port\",\"rail\",\"intermodal\",\"terminal\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/ht7p-2x5y.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/ht7p-2x5y.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 604800,
     .page_param = "$offset",
     .page_size = 1000,
@@ -367,7 +395,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "freight-rate",
     .tags = "\"maritime\",\"barge\",\"inland\",\"grain\",\"mississippi\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/t48m-82hq.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/t48m-82hq.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "date",
     .interval = 86400,
     .page_param = "$offset",
@@ -762,8 +794,15 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "rail-node",
     .tags = "\"rail\",\"belgium\",\"infrabel\",\"network\",\"station\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/operationele-punten-van-het-netwerk/records?limit=100",
+    /* `order_by=ptcarid` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: ptcarid distinct over all 1,359 records read through
+     * /exports/json. Checked on this dataset: order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/operationele-punten-van-het-netwerk/records?limit=100&offset=0&order_by=ptcarid%20asc",
     .array_path = "results",
+    .id_keys = "ptcarid",   /* none declared; 1,359 of 1,359 distinct (2026-11-07) */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -780,8 +819,15 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "level-crossing",
     .tags = "\"rail\",\"belgium\",\"infrabel\",\"crossing\",\"safety\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/geoow/records?limit=100",
+    /* `order_by=fld_naam_ramses` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: fld_naam_ramses distinct over all 1,369 records read through
+     * /exports/json. Checked on INFRABEL_OPERATIONAL_POINTS (same host): order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/geoow/records?limit=100&offset=0&order_by=fld_naam_ramses%20asc",
     .array_path = "results",
+    .id_keys = "fld_naam_ramses",   /* none declared; 1,369 of 1,369 distinct (2026-11-07) */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -797,7 +843,13 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "rail-line",
     .tags = "\"rail\",\"belgium\",\"infrabel\",\"line\",\"track\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/lijnsecties/records?limit=100",
+    /* `order_by=ls_id` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: ls_id distinct over all 1,210 records read through
+     * /exports/json. Checked on INFRABEL_OPERATIONAL_POINTS (same host): order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/lijnsecties/records?limit=100&offset=0&order_by=ls_id%20asc",
     .array_path = "results",
     .id_keys = "ls_id",
     .interval = 86400,
@@ -815,8 +867,15 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "rail-siding",
     .tags = "\"rail\",\"belgium\",\"port\",\"freight\",\"siding\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/spooraansluitingen-in-havenzones-in-vlaanderen/records?limit=100",
+    /* `order_by=jaar,havenzone` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: jaar+havenzone distinct over all 104 records read through
+     * /exports/json. Checked on INFRABEL_OPERATIONAL_POINTS (same host): order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/spooraansluitingen-in-havenzones-in-vlaanderen/records?limit=100&offset=0&order_by=jaar%20asc%2Chavenzone%20asc",
     .array_path = "results",
+    .id_keys = "jaar+havenzone",   /* none declared; 104 of 104 distinct (2026-11-07) */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -851,7 +910,13 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "rail-incident",
     .tags = "\"rail\",\"belgium\",\"incident\",\"delay\",\"safety\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/belangrijkste-incidenten/records?limit=100",
+    /* `order_by=date,lijn,plaats,aard_van_incident,min_delay` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: date+lijn+plaats+aard_van_incident+min_delay distinct over all 948 records read through
+     * /exports/json. Checked on INFRABEL_OPERATIONAL_POINTS (same host): order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/belangrijkste-incidenten/records?limit=100&offset=0&order_by=date%20asc%2Clijn%20asc%2Cplaats%20asc%2Caard_van_incident%20asc%2Cmin_delay%20asc",
     .array_path = "results",
     /* ODS records carry no row id; live 2026-09-07 all 921 rows are distinct
      * on this tuple while date+line+place+cause alone collides (917). */
@@ -872,7 +937,13 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "signal-box",
     .tags = "\"rail\",\"belgium\",\"signalling\",\"control\",\"infrastructure\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/postes-de-signalisation/records?limit=100",
+    /* `order_by=jaar,area_nl` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: jaar+area_nl distinct over all 130 records read through
+     * /exports/json. Checked on INFRABEL_OPERATIONAL_POINTS (same host): order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/postes-de-signalisation/records?limit=100&offset=0&order_by=jaar%20asc%2Carea_nl%20asc",
     .array_path = "results",
     .id_keys = "jaar+areas",
     .interval = 86400,

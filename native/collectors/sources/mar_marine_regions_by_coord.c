@@ -48,10 +48,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
            qlat, qlon);
 
   char *body = jo_get(ctx, url, NULL, "MARINE_REGIONS_BY_COORD");
-  if (!body) return 0;                        /* 404 on land = honest empty */
+  if (!body) return jo_fail_rc(jo_last_status(), 1);                        /* 404 on land = honest empty; other refusals -1 */
   cJSON *doc = cJSON_Parse(body);
   free(body);
-  if (!doc) return 0;
+  if (!doc) return -1;
   cJSON *arr = cJSON_IsArray(doc) ? doc : cJSON_GetObjectItem(doc, "results");
 
   int n = 0;

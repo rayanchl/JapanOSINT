@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import apiUrl from '../utils/apiUrl.js';
+import { api, errorMessage } from '../api/client.js';
 import { buildCatalog } from './layerCatalog.js';
 import { LAYER_DEFINITIONS } from './layerDefinitions.js';
 
@@ -42,9 +42,9 @@ export function loadServerLayers({ force = false } = {}) {
   if (cachedServerLayers && !force) return Promise.resolve(cachedServerLayers);
   inflight = (async () => {
     try {
-      const res = await fetch(apiUrl('/api/layers'));
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const body = await res.json();
+      // Shared client (2026-11-07): the error text carries the server's own
+      // reason, not just "HTTP 500".
+      const body = await api.get('/api/layers');
       const arr = Array.isArray(body) ? body : (Array.isArray(body?.layers) ? body.layers : null);
       if (!arr) throw new Error('unexpected /api/layers shape');
       cachedServerLayers = arr;
@@ -53,7 +53,7 @@ export function loadServerLayers({ force = false } = {}) {
       writeSession(arr);
       return arr;
     } catch (err) {
-      catalogError = err?.message || 'request failed';
+      catalogError = errorMessage(err);
       console.warn('[useLayerCatalog] /api/layers failed:', catalogError);
       return cachedServerLayers; // null if we never had one
     } finally {

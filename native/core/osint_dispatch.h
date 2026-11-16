@@ -140,12 +140,12 @@ char *osint_services_list(void);
  * services + per-entity services) rebuilt from the LIVE registry, so the
  * analysis LLM can recommend exactly the services that exist — no manual enum
  * maintenance on registry changes. malloc'd; caller frees. NULL → fall back to
- * the static schema_load("osint_analysis"). */
-char *osint_analysis_schema_dynamic(void);
-
-/* Same, but the enums hold only the first `limit` entity-pivot services —
- * pass osint_catalogue_note.shown so what the model is ALLOWED to answer is
- * exactly what it was SHOWN. `limit` <= 0 means no limit. */
+ * the static schema_load("osint_analysis").
+ *
+ * The enums hold only the first `limit` entity-pivot services — pass
+ * osint_catalogue_note.shown so what the model is ALLOWED to answer is
+ * exactly what it was SHOWN. `limit` <= 0 means no limit. (The unlimited
+ * osint_analysis_schema_dynamic() had no caller; removed 2026-11-07.) */
 char *osint_analysis_schema_dynamic_limited(int limit);
 
 /* Same, but the enums hold exactly these ids — the counterpart to the semantic
@@ -183,6 +183,17 @@ int  osint_handler_key(const char *name, char *out, size_t n);
 int  osint_dispatch(db_handle *db, llm_client *llm, const char *service,
                     const char *entity, const char *entity_type,
                     intel_sink *persist, osint_result *out);
+
+/* osint_dispatch() on behalf of a WORKSPACE (2026-11-12): the pivot's key_env
+ * resolves from that workspace's saved key (core/keysapi.c,
+ * keysapi_tenant_secret) before the process environment, and the key is
+ * scrubbed from every record the run emits. tenant_id NULL, "" or "legacy" is
+ * exactly osint_dispatch(). For a search or run started in a tenant
+ * (core/pipeline.c passes the run's owner tenant). */
+int  osint_dispatch_tenant(db_handle *db, llm_client *llm, const char *service,
+                           const char *entity, const char *entity_type,
+                           intel_sink *persist, osint_result *out,
+                           const char *tenant_id);
 
 /* osint_dispatch() for a LOCAL OPERATOR (main.c --dispatch): also runs a
  * registered source that is not an entity pivot, e.g. `--dispatch

@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 #define TIMEOUT_MS 20000
 
@@ -43,16 +44,16 @@ static cJSON *num_or_null(const char *s) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("NASA_FIRMS_MAP_KEY");
-  if (!key || !*key) key = getenv("FIRMS_MAP_KEY");
+  const char *key = jo_getenv("NASA_FIRMS_MAP_KEY");
+  if (!key || !*key) key = jo_getenv("FIRMS_MAP_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[nasa-firms-jp] no NASA_FIRMS_MAP_KEY — 0 rows\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "nasa-firms-jp", "nasa-firms-jp", (const char *const[]){"NASA_FIRMS_MAP_KEY", NULL}, NULL, NULL);
   }
-  const char *sensor = getenv("FIRMS_SENSOR");
+  const char *sensor = jo_getenv("FIRMS_SENSOR");
   if (!sensor || !*sensor) sensor = "VIIRS_NOAA20_NRT";
   int days = 1;
-  const char *ds = getenv("FIRMS_DAYS");
+  const char *ds = jo_getenv("FIRMS_DAYS");
   if (ds && *ds) { int d = atoi(ds); days = d > 10 ? 10 : d; }
 
   char url[512];

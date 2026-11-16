@@ -131,9 +131,10 @@ static const hp_source T[] = {
     .collector = "jp_research", .category = "research",
     .description = "Researchers whose last known affiliation is a given institution (meta.count=45,762 at Kyoto University), each with ORCID, name variants, h-index and full affiliation history. The institution->people roster hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openalex.org/authors?filter=last_known_institutions.id:I22299242&per_page=10",
+    .url = "https://api.openalex.org/authors?filter=last_known_institutions.id:I22299242&per_page=10&api_key={key}",
+    .key_env = "OPENALEX_API_KEY",   /* 2026-11-11, owner's decision: keyless OpenAlex is an IP-shared daily budget (HTTP 429 "no API key"); gated like its siblings */
     .array_path = "results",
-    .detail_url = "https://api.openalex.org/authors/{v}", .detail_key = "id",
+    .detail_url = "https://api.openalex.org/authors/{v}?api_key={key}", .detail_key = "id",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
@@ -142,9 +143,10 @@ static const hp_source T[] = {
     .collector = "jp_research", .category = "research",
     .description = "1,140 Japanese funding bodies (JSPS/KAKENHI first), each with alternate names in Japanese and English, awards_count, works_count and cross-ids. Entry point for tracing Japanese public research money.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openalex.org/funders?filter=country_code:jp&per_page=25",
+    .url = "https://api.openalex.org/funders?filter=country_code:jp&per_page=25&api_key={key}",
+    .key_env = "OPENALEX_API_KEY",   /* 2026-11-11, owner's decision: keyless OpenAlex is an IP-shared daily budget (HTTP 429 "no API key"); gated like its siblings */
     .array_path = "results",
-    .detail_url = "https://api.openalex.org/funders/{v}", .detail_key = "id",
+    .detail_url = "https://api.openalex.org/funders/{v}?api_key={key}", .detail_key = "id",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
@@ -153,9 +155,10 @@ static const hp_source T[] = {
     .collector = "jp_research", .category = "research",
     .description = "All 19 institutions whose lineage contains Kyoto University - the sub-institutes, hospitals and centres rolled up under one parent org, each a full institution record with ROR and geo.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openalex.org/institutions?filter=lineage:I22299242&per_page=25",
+    .url = "https://api.openalex.org/institutions?filter=lineage:I22299242&per_page=25&api_key={key}",
+    .key_env = "OPENALEX_API_KEY",   /* 2026-11-11, owner's decision: keyless OpenAlex is an IP-shared daily budget (HTTP 429 "no API key"); gated like its siblings */
     .array_path = "results",
-    .detail_url = "https://api.openalex.org/institutions/{v}", .detail_key = "id",
+    .detail_url = "https://api.openalex.org/institutions/{v}?api_key={key}", .detail_key = "id",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

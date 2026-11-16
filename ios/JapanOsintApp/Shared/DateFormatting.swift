@@ -19,7 +19,16 @@ import Foundation
 // folded in here.
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Parse an ISO-8601 timestamp, with or without fractional seconds.
+/// Parse a server timestamp: RFC 3339 with or without fractional seconds, or
+/// SQLite's `datetime('now')` shape (`YYYY-MM-DD HH:MM:SS`, UTC, no `T`, no
+/// zone), or a bare `YYYY-MM-DD`.
+///
+/// The SQLite shape is what `alert_events.matched_at`, `search_history.ts`,
+/// `cases`, `annotations` and the scheduler's `last_check` hold, and this
+/// function used to reject it — so every one of those rows read "—", and the
+/// widget snapshot's `?? Date()` fallback stamped each alert as "now". The
+/// Cases subtree had grown its own tolerant copy (`caseDate`) for exactly this;
+/// it is folded in here and now delegates, so there is one parser again.
 func isoToDate(_ s: String?) -> Date? {
     guard let s, !s.isEmpty else { return nil }
     let f1 = ISO8601DateFormatter()
@@ -27,7 +36,14 @@ func isoToDate(_ s: String?) -> Date? {
     if let d = f1.date(from: s) { return d }
     let f2 = ISO8601DateFormatter()
     f2.formatOptions = [.withInternetDateTime]
-    return f2.date(from: s)
+    if let d = f2.date(from: s) { return d }
+    let sqlite = DateFormatter()
+    sqlite.locale = Locale(identifier: "en_US_POSIX")
+    sqlite.timeZone = TimeZone(identifier: "UTC")
+    sqlite.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    if let d = sqlite.date(from: s) { return d }
+    sqlite.dateFormat = "yyyy-MM-dd"
+    return sqlite.date(from: s)
 }
 
 /// An ISO-8601 timestamp as an abbreviated relative phrase ("3h ago"), or "—"

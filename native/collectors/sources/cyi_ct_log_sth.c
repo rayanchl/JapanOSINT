@@ -23,7 +23,9 @@
 #include <time.h>
 
 #define LIST_URL "https://www.gstatic.com/ct/log_list/v3/log_list.json"
-#define MAX_LOGS 12          /* bound one run; usable logs only */
+/* No log cap (2026-11-07). The old MAX_LOGS of 12 stopped at 12 of the 21
+ * usable logs the list declared that day (26 logs, 21 `usable`) and said
+ * nothing; the other nine are one request each to their operator's host. */
 
 /* epoch milliseconds -> ISO-8601 UTC. Returns out, or NULL when ms is not a
  * plausible timestamp (guarded numeric parse, R2-style). */
@@ -48,12 +50,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const cJSON *ops = cJSON_GetObjectItem(list, "operators");
   const cJSON *op;
   cJSON_ArrayForEach(op, ops) {
-    if (tried >= MAX_LOGS) break;
     const char *opname = jo_sv(op, "name");
     const cJSON *logs = cJSON_GetObjectItem(op, "logs");
     const cJSON *lg;
     cJSON_ArrayForEach(lg, logs) {
-      if (tried >= MAX_LOGS) break;
       const char *url = jo_sv(lg, "url");
       if (!url) continue;
       const cJSON *st = cJSON_GetObjectItem(lg, "state");

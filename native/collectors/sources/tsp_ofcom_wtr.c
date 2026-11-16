@@ -97,7 +97,7 @@ static void add_num(cJSON *o, const char *k, const char *v) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char range[64];
   snprintf(range, sizeof range, "Range: bytes=0-%d", RANGE_BYTES - 1);
-  const char *hdrs[] = { "User-Agent: JapanOSINT/1.0 (ofcom-wtr)", range, NULL };
+  const char *hdrs[] = { range, NULL };
   http_response hr = {0};
   int rc = http_request(ctx->http, "GET", WTR_URL, hdrs, NULL, 0, 120000, 1, &hr);
   if (rc != 0 || (hr.status != 200 && hr.status != 206) || !hr.body) {

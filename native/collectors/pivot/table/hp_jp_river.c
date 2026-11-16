@@ -50,6 +50,11 @@
 #define KWB_HDRS   { KWB_UA, KWB_REF, NULL }
 #define KWB_TAGS   "\"japan\",\"river\",\"flood\",\"mlit\",\"disaster\""
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP_JP_RIVER[] = {
   /* ── The announcement set: what MLIT is currently saying about the gauge
    * network. Mostly 欠測・未受信 (a gauge has stopped reporting) plus flood and
@@ -60,7 +65,7 @@ static const hp_source HP_JP_RIVER[] = {
     .name = "MLIT Kawabou — river information announcements",
     .name_ja = "国土交通省 川の防災情報 — お知らせ情報",
     .collector = "jp_river", .category = "disaster", .type = "api",
-    .portal = KWB_PORTAL, .record_type = "jp-river-info", .tags = KWB_TAGS,
+    .portal = KWB_PORTAL, .record_type = "jp-river-info", .lang = "ja", .tags = KWB_TAGS,
     .mode = HP_JSON, .want = HP_ANY,
     .url = KWB_FILES "/info/info/infolist.json", .headers = KWB_HDRS,
     .array_path = "info",
@@ -78,7 +83,7 @@ static const hp_source HP_JP_RIVER[] = {
     .name = "MLIT Kawabou — flood-prevention and optional announcements",
     .name_ja = "国土交通省 川の防災情報 — 水防警報・任意情報",
     .collector = "jp_river", .category = "disaster", .type = "api",
-    .portal = KWB_PORTAL, .record_type = "jp-river-alert", .tags = KWB_TAGS,
+    .portal = KWB_PORTAL, .record_type = "jp-river-alert", .lang = "ja", .tags = KWB_TAGS,
     .mode = HP_JSON, .want = HP_ANY,
     .url = KWB_FILES "/info/optional/kwb/optinfolist.json", .headers = KWB_HDRS,
     .array_path = "info",
@@ -96,7 +101,7 @@ static const hp_source HP_JP_RIVER[] = {
     .name = "MLIT Kawabou — emergency river announcements",
     .name_ja = "国土交通省 川の防災情報 — 緊急情報",
     .collector = "jp_river", .category = "disaster", .type = "api",
-    .portal = KWB_PORTAL, .record_type = "jp-river-emergency", .tags = KWB_TAGS,
+    .portal = KWB_PORTAL, .record_type = "jp-river-emergency", .lang = "ja", .tags = KWB_TAGS,
     .mode = HP_JSON, .want = HP_ANY,
     .url = KWB_FILES "/info/emergency/kwb/emginfolist.json", .headers = KWB_HDRS,
     .array_path = "info",
@@ -115,7 +120,7 @@ static const hp_source HP_JP_RIVER[] = {
     .name = "MLIT Kawabou — observatory detail by gauge code",
     .name_ja = "国土交通省 川の防災情報 — 観測所詳細",
     .collector = "osint_" "disaster", .category = "disaster", .type = "api",
-    .portal = KWB_PORTAL, .record_type = "jp-river-observatory", .tags = KWB_TAGS,
+    .portal = KWB_PORTAL, .record_type = "jp-river-observatory", .lang = "ja", .tags = KWB_TAGS,
     .mode = HP_JSON, .want = HP_NUMERIC,
     .url = KWB_FILES "/info/obslist/obs/{qd}.json", .headers = KWB_HDRS,
     .array_path = "tm",
@@ -132,7 +137,7 @@ static const hp_source HP_JP_RIVER[] = {
     .name = "MLIT Kawabou — telemetry clock",
     .name_ja = "国土交通省 川の防災情報 — 観測時刻",
     .collector = "jp_river", .category = "disaster", .type = "api",
-    .portal = KWB_PORTAL, .record_type = "jp-river-clock", .tags = KWB_TAGS,
+    .portal = KWB_PORTAL, .record_type = "jp-river-clock", .lang = "ja", .tags = KWB_TAGS,
     .mode = HP_JSON, .want = HP_ANY,
     .url = KWB_SYSTEM "/tmCrntTime.json", .headers = KWB_HDRS,
     /* The document is one scalar, {"crntObsTime":"2026/08/16 02:10"}, and the

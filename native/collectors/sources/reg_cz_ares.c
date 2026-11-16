@@ -60,7 +60,7 @@ static int emit_subject(intel_sink *sink, const cJSON *subj) {
   if (ico) cJSON_AddStringToObject(props, "ico", ico);
   if (pf)  cJSON_AddStringToObject(props, "legal_form", pf);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[256];
@@ -72,7 +72,7 @@ static int emit_subject(intel_sink *sink, const cJSON *subj) {
   it.remote_key      = ico ? ico : name;
   it.title           = name ? name : ico;
   it.summary         = addr;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = "cs";
   it.published_at    = datv;
   it.link            = ico ? link : NULL;
@@ -95,7 +95,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *hdrs[] = { "Accept: application/json",
                          "Content-Type: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   int emitted = 0;
 
   if (alldig && len == 8) {
@@ -103,10 +103,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(url, sizeof url,
       "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/%s", q);
     char *body = jo_get(ctx, url, hdrs, "cz_ares");
-    if (!body) return 0;
+    if (!body) return jo_fail_rc(jo_last_status(), 1);
     cJSON *root = cJSON_Parse(body);
     free(body);
-    if (!root) return 0;
+    if (!root) return -1;
     emitted += emit_subject(sink, root);   /* detail = single subject object */
     cJSON_Delete(root);
     fprintf(stderr, "[cz_ares] emitted %d\n", emitted);
@@ -134,7 +134,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   cJSON *root = cJSON_Parse(hr.body);
   http_response_free(&hr);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *arr = cJSON_GetObjectItem(root, "ekonomickeSubjekty");
   if (cJSON_IsArray(arr)) {

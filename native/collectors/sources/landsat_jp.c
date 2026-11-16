@@ -38,7 +38,7 @@ static int centroid(cJSON *geom, double *cx, double *cy) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *m2m = getenv("USGS_M2M_TOKEN");
+  const char *m2m = jo_getenv("USGS_M2M_TOKEN");
 
   /* from/to ARE the STAC "datetime" interval; without them there is no search
    * to POST, and substituting some other window would be inventing the query. */

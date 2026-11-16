@@ -17,7 +17,6 @@
 #include "lib/geojson.h"
 #include "_jp_osint.inc"
 
-#define AV_UA_HDR "User-Agent: JapanOSINT/1.0 (aviation collector)"
 
 /* Number-or-numeric-string field → double.
  * TRAP (quoted from the work list): the AWC products disagree on the JSON type
@@ -218,7 +217,7 @@ static inline int av_arcgis_run_ex(const source_ctx *ctx, intel_sink *sink,
              AV_ARC_BASE "%s/FeatureServer/0/query?where=1%%3D1&outFields=*"
              "&f=geojson&outSR=4326&resultOffset=%d&resultRecordCount=%d",
              service, offset, page);
-    const char *hdrs[] = { "Accept: application/json", AV_UA_HDR, NULL };
+    const char *hdrs[] = { "Accept: application/json", NULL };
     char *body = jo_get_t(ctx, url, hdrs, tag, timeout_ms);
     if (!body) return page_no == 0 ? -1 : total;   /* R3: only a real fetch
                                                     * failure is an error */

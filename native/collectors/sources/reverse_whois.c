@@ -229,7 +229,7 @@ static int emit_domain(intel_sink *sink, const char *domain, const char *source,
   if (registrar)  cJSON_AddStringToObject(props, "registrar", registrar);
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[320];
   snprintf(rk, sizeof rk, "domain:%s", domain);
@@ -242,7 +242,7 @@ static int emit_domain(intel_sink *sink, const char *domain, const char *source,
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = domain;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = summ;
   it.link            = NULL;
   it.published_at    = (registered && *registered) ? registered : NULL;
@@ -260,8 +260,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *entity = ctx->entity;
   if (!entity || !*entity) return -1;
 
-  const char *whoisxml_key = getenv("WHOISXML_API_KEY");
-  const char *securitytrails_key = getenv("SECURITYTRAILS_API_KEY");
+  const char *whoisxml_key = jo_getenv("WHOISXML_API_KEY");
+  const char *securitytrails_key = jo_getenv("SECURITYTRAILS_API_KEY");
 
   cJSON *combined = cJSON_CreateArray();
   query_viewdns_reverse(ctx->http, entity, combined);

@@ -25,9 +25,15 @@ VGEO(geo_asf_sentinel1, "geo-asf-sentinel1", "ASF — Sentinel-1 archive search"
   "en", "[\"sar\",\"sentinel1\",\"asf\",\"insar\"]", 3600,
   "Alaska Satellite Facility SAR search returning GeoJSON scene footprints.");
 
-VGEO(geo_asf_sentinel1_recent, "geo-asf-sentinel1-recent", "ASF — Sentinel-1 acquisitions since August 2026", "ASF — Sentinel-1 最新取得",
+/* 2026-11-07: start was frozen at 2026-08-01, a lower bound that grew forever (3,405,051 products since then,
+ * measured 2026-11-07). ASF answers newest first and maxResults=300 is one request with no
+ * paging and no total in the GeoJSON, so the row reads the newest 300 either way; the 7-hour
+ * window ({ago:25200}: the 6 h system cadence plus slack, ~9,000 products) keeps the query
+ * bounded and the name true. A complete read of the window wants paging ASF's GeoJSON does not
+ * publish; output=count gives the window's size in a separate request. */
+VGEO(geo_asf_sentinel1_recent, "geo-asf-sentinel1-recent", "ASF — Sentinel-1 acquisitions, newest 300", "ASF — Sentinel-1 最新取得",
   "science", "earthobs",
-  "https://api.daac.asf.alaska.edu/services/search/param?platform=SENTINEL-1&start=2026-08-01T00:00:00Z&output=geojson&maxResults=300",
+  "https://api.daac.asf.alaska.edu/services/search/param?platform=SENTINEL-1&start={ago:25200}&output=geojson&maxResults=300",
   "en", "[\"sar\",\"sentinel1\",\"asf\"]", 3600,
   "Recent Sentinel-1 acquisitions, the InSAR change-detection feed.");
 
@@ -219,9 +225,22 @@ VJSON_KEYED(geo_copernicus_odata_s2, "geo-copernicus-odata-s2", "Copernicus Data
   "en", "[\"sentinel2\",\"odata\",\"copernicus\"]", 3600,
   "Sentinel-2 products published in the last seven hours, oldest first.", "Id");
 
+/* WFS rows in this file: `startIndex=0` (2026-11-07). geojson_emit_paged()
+ * advances a WFS cursor only when the URL already names one AND the body's own
+ * numberMatched/totalFeatures exceeds what was read (mechanism 3), so a row
+ * without `startIndex` read ONE page of a declared total and stopped. Measured
+ * per row (count=5 at startIndex 0 and 5): where the server accepted paging
+ * without a sort — GeoServer does that only when it can order by the
+ * feature type's primary key — the two pages were disjoint and the row gets
+ * `startIndex=0` alone. Where it refused ("Cannot do natural order without a
+ * primary key"), the row also gets `sortBy=<a property distinct on the
+ * row's first 200 features>`, checked the same way (pages disjoint, total
+ * unchanged; a bogus sortBy is HTTP 400 "Illegal property name", so the
+ * server reads it). Probe-sized pages (count 2/3/20/50) are 1000 now. The
+ * 20-page geojson ceiling still bounds a run; the remainder is disclosed. */
 VGEO(geo_cwfis_nfdb_points, "geo-cwfis-nfdb-points", "CWFIS Canada — national fire database points", "カナダCWFIS — 全国火災データベース",
   "science", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:NFDB_point&outputFormat=application/json&srsName=EPSG:4326&count=500",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:NFDB_point&outputFormat=application/json&srsName=EPSG:4326&count=500&startIndex=0",
   "en", "[\"canada\",\"wildfire\",\"historical\"]", 86400,
   "Historical Canadian fire ignition points for baseline statistics.");
 
@@ -295,7 +314,7 @@ VRSS(geo_egypt_nriag, "geo-egypt-nriag", "NRIAG Egypt — geoscience bulletin", 
 
 VGEO(geo_emodnet_bathymetry_wfs, "geo-emodnet-bathymetry-wfs", "EMODnet Bathymetry — depth contours", "EMODnet 海底地形 — 等深線",
   "science", "ocean",
-  "https://ows.emodnet-bathymetry.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=emodnet:contours&outputFormat=application/json&count=200",
+  "https://ows.emodnet-bathymetry.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=emodnet:contours&outputFormat=application/json&count=200&startIndex=0",
   "en", "[\"bathymetry\",\"emodnet\",\"europe\"]", 86400,
   "European seabed depth contour geometry.");
 
@@ -389,16 +408,20 @@ VJSON(geo_gbif_datasets, "geo-gbif-datasets", "GBIF — dataset registry", "GBIF
   "en", "[\"gbif\",\"catalog\"]", 86400,
   "Registry of datasets published to GBIF.");
 
+/* 2026-11-07: year was frozen at 2026 and freezes on 2027-01-01; {date:%Y} is the current year (year=2026
+ * answers count 66,408,245 tree-wide, measured 2026-11-07). */
 VJSON(geo_gbif_occ_oceania, "geo-gbif-occ-oceania", "GBIF — Oceania occurrences", "GBIF — オセアニアの記録",
   "science", "biodiversity",
-  "https://api.gbif.org/v1/occurrence/search?hasCoordinate=true&limit=300&continent=OCEANIA&year=2026",
+  "https://api.gbif.org/v1/occurrence/search?hasCoordinate=true&limit=300&continent=OCEANIA&year={date:%Y}",
   "results",
   "en", "[\"gbif\",\"oceania\",\"occurrence\"]", 86400,
   "Georeferenced occurrences across the Pacific, an under-sampled region.");
 
-VJSON(geo_gbif_recent_geo, "geo-gbif-recent-geo", "GBIF — georeferenced occurrences, 2026", "GBIF — 位置情報付き記録(2026年)",
+/* 2026-11-07: year was frozen at 2026 and freezes on 2027-01-01; {date:%Y} is the current year (year=2026
+ * answers count 66,408,245, measured 2026-11-07). The walk reads 20 pages of 300 of that. */
+VJSON(geo_gbif_recent_geo, "geo-gbif-recent-geo", "GBIF — georeferenced occurrences, current year", "GBIF — 位置情報付き記録(当年)",
   "science", "biodiversity",
-  "https://api.gbif.org/v1/occurrence/search?hasCoordinate=true&limit=300&year=2026",
+  "https://api.gbif.org/v1/occurrence/search?hasCoordinate=true&limit=300&year={date:%Y}",
   "results",
   "en", "[\"gbif\",\"biodiversity\",\"occurrence\"]", 21600,
   "Species occurrence records with verified coordinates from the global aggregator.");
@@ -426,12 +449,12 @@ VJSON(geo_gfz_kp_nowcast, "geo-gfz-kp-nowcast", "GFZ Potsdam — Kp index nowcas
 
 VGEO(geo_gvp_eruptions, "geo-gvp-eruptions", "Smithsonian GVP — Holocene eruptions", "スミソニアン GVP — 完新世噴火",
   "science", "volcano",
-  "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=GVP-VOTW:Smithsonian_VOTW_Holocene_Eruptions&outputFormat=application/json&count=1000",
+  "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=GVP-VOTW:Smithsonian_VOTW_Holocene_Eruptions&outputFormat=application/json&count=1000&sortBy=Eruption_Number&startIndex=0",
   "en", "[\"volcano\",\"gvp\",\"eruption\"]", 86400,
   "Eruption records linked to volcano coordinates; the global eruption history layer.");
 
 VGEO(geo_gvp_pleistocene, "geo-gvp-pleistocene", "Smithsonian GVP — Pleistocene volcanoes", "スミソニアン GVP — 更新世火山",
   "science", "volcano",
-  "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=GVP-VOTW:Smithsonian_VOTW_Pleistocene_Volcanoes&outputFormat=application/json&count=1000",
+  "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=GVP-VOTW:Smithsonian_VOTW_Pleistocene_Volcanoes&outputFormat=application/json&count=1000&sortBy=Volcano_Number&startIndex=0",
   "en", "[\"volcano\",\"gvp\"]", 86400,
   "Pleistocene volcanic centres, useful for regional hazard context.");

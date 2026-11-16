@@ -81,12 +81,11 @@ static int nw_collect_feed(const source_ctx *ctx, intel_sink *sink,
                            const char *url, const char *publisher,
                            const char *lang, const char *query, int max) {
   const char *hdrs[] = {
-    "User-Agent: Mozilla/5.0 (JapanOSINT WorldNews)",
     "Accept: application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
     NULL
   };
   char *xml = jo_get(ctx, url, hdrs, "world-news-rss");
-  if (!xml) return 0;
+  if (!xml) return jo_fail_rc(jo_last_status(), 0);
 
   int emitted = 0;
   const char *cur = xml;
@@ -210,14 +209,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const int NFEEDS = (int)(sizeof(FEEDS) / sizeof(FEEDS[0]));
   const char *query = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
 
-  int total = 0;
+  int total = 0, failed = 0;
   for (int i = 0; i < NFEEDS; i++) {
     if (ctx->cancel && *ctx->cancel) break;
-    total += nw_collect_feed(ctx, sink, FEEDS[i].url, FEEDS[i].pub,
-                             FEEDS[i].lang, query, 40);
+    jo_acc(nw_collect_feed(ctx, sink, FEEDS[i].url, FEEDS[i].pub,
+                           FEEDS[i].lang, query, 40), &total, &failed);
   }
-  fprintf(stderr, "[world-news-rss] emitted %d across %d feeds\n", total, NFEEDS);
-  return 0;   /* honest empty is not an error */
+  fprintf(stderr, "[world-news-rss] emitted %d across %d feeds (%d refused)\n",
+          total, NFEEDS, failed);
+  return (failed && total == 0) ? -1 : 0;   /* honest empty 0; refused/unparsable fetch with nothing emitted is -1 (2026-11-07) */
 }
 
 static const source_def news_world_def = {

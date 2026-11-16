@@ -22,7 +22,7 @@ static void put_or_null(cJSON *p, const char *k, cJSON *r, const char *ik) {
 
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
   (void)key; (void)ud;
-  const char *tok = getenv("GITHUB_TOKEN");
+  const char *tok = jo_getenv("GITHUB_TOKEN");
   char authh[300];
   const char *hdrs_tok[] = {
     "accept: application/vnd.github+json",

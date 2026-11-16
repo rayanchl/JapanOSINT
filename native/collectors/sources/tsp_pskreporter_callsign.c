@@ -136,7 +136,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
 
   const char *hdrs[] = {
-    "User-Agent: JapanOSINT/1.0 (OSINT collector; one query per pivot)",
     "Accept: application/xml", NULL };
   http_response hr = {0};
   int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 30000, 0, &hr);

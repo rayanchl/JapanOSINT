@@ -7,39 +7,62 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(nam_ags_fatals_ksi_fatals_ksi, "nam-ags-fatals-ksi-fatals-ksi", "Fatals KSI — FATALS KSI", "Fatals KSI — FATALS KSI",
   "canada_gov", "transport",
-  "https://services.arcgis.com/S9th0jAJ7bqgIRjw/arcgis/rest/services/FATALS_KSI/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/S9th0jAJ7bqgIRjw/arcgis/rest/services/FATALS_KSI/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'FATALS KSI' from the 'Fatals KSI' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_killed_and_seriously_injured_total_ksi, "nam-ags-killed-and-seriously-injured-total-ksi", "Killed and Seriously Injured — TOTAL KSI", "Killed and Seriously Injured — TOTAL KSI",
   "canada_gov", "transport",
-  "https://services.arcgis.com/S9th0jAJ7bqgIRjw/arcgis/rest/services/TOTAL_KSI/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/S9th0jAJ7bqgIRjw/arcgis/rest/services/TOTAL_KSI/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'TOTAL KSI' from the 'Killed and Seriously Injured' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_traffic_collisions_collisions, "nam-ags-traffic-collisions-collisions", "Traffic Collisions — Collisions", "Traffic Collisions — Collisions",
   "canada_gov", "transport",
-  "https://services.arcgis.com/oNvpY90qsPDizwkN/arcgis/rest/services/wsdotTrafficCollisionsFS_NEW/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/oNvpY90qsPDizwkN/arcgis/rest/services/wsdotTrafficCollisionsFS_NEW/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'Collisions' from the 'Traffic Collisions' service, GeoJSON with per-feature geometry.");
 
+/* WFS rows in this file: `startIndex=0` (2026-11-07). geojson_emit_paged()
+ * advances a WFS cursor only when the URL already names one AND the body's own
+ * numberMatched/totalFeatures exceeds what was read (mechanism 3), so a row
+ * without `startIndex` read ONE page of a declared total and stopped. Measured
+ * per row (count=5 at startIndex 0 and 5): where the server accepted paging
+ * without a sort — GeoServer does that only when it can order by the
+ * feature type's primary key — the two pages were disjoint and the row gets
+ * `startIndex=0` alone. Where it refused ("Cannot do natural order without a
+ * primary key"), the row also gets `sortBy=<a property distinct on the
+ * row's first 200 features>`, checked the same way (pages disjoint, total
+ * unchanged; a bogus sortBy is HTTP 400 "Illegal property name", so the
+ * server reads it). Probe-sized pages (count 2/3/20/50) are 1000 now. The
+ * 20-page geojson ceiling still bounds a run; the remainder is disclosed. */
 VGEO(nam_bc_mine_permits_wfs, "nam-bc-mine-permits-wfs", "Government of British Columbia — permitted major mine areas", "Government of British Columbia — permitted major mine areas",
   "canada_gov", "energy",
-  "https://openmaps.gov.bc.ca/geo/pub/WHSE_MINERAL_TENURE.HSP_MJR_MINES_PERMTTD_AREAS_SP/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_MINERAL_TENURE.HSP_MJR_MINES_PERMTTD_AREAS_SP&outputFormat=application/json&count=200&srsName=EPSG:4326",
+  "https://openmaps.gov.bc.ca/geo/pub/WHSE_MINERAL_TENURE.HSP_MJR_MINES_PERMTTD_AREAS_SP/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_MINERAL_TENURE.HSP_MJR_MINES_PERMTTD_AREAS_SP&outputFormat=application/json&count=200&srsName=EPSG:4326&startIndex=0",
   "en", "[\"can\",\"bc\",\"mining\",\"energy\",\"geo\"]", 86400,
   "Permitted footprint polygons for British Columbia's major mines, with operator and permit identifiers.");
 
 VGEO(nam_bc_municipalities_wfs, "nam-bc-municipalities-wfs", "Government of British Columbia — municipal boundaries", "Government of British Columbia — municipal boundaries",
   "canada_gov", "opendata",
-  "https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP&outputFormat=application/json&count=100&srsName=EPSG:4326",
+  "https://openmaps.gov.bc.ca/geo/pub/WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_LEGAL_ADMIN_BOUNDARIES.ABMS_MUNICIPALITIES_SP&outputFormat=application/json&count=100&srsName=EPSG:4326&startIndex=0",
   "en", "[\"can\",\"bc\",\"boundaries\",\"geo\"]", 86400,
   "Legal municipal boundary polygons for British Columbia, for geocoding and administrative rollups.");
 
 VGEO(nam_bc_parks_wfs, "nam-bc-parks-wfs", "Government of British Columbia — provincial parks and protected areas", "Government of British Columbia — provincial parks and protected areas",
   "canada_gov", "environment",
-  "https://openmaps.gov.bc.ca/geo/pub/WHSE_TANTALIS.TA_PARK_ECORES_PA_SVW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_TANTALIS.TA_PARK_ECORES_PA_SVW&outputFormat=application/json&count=200&srsName=EPSG:4326",
+  "https://openmaps.gov.bc.ca/geo/pub/WHSE_TANTALIS.TA_PARK_ECORES_PA_SVW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_TANTALIS.TA_PARK_ECORES_PA_SVW&outputFormat=application/json&count=200&srsName=EPSG:4326&sortBy=OBJECTID&startIndex=0",
   "en", "[\"can\",\"bc\",\"environment\",\"geo\"]", 86400,
   "Boundaries of BC provincial parks, conservancies and ecological reserves as polygons.");
 
@@ -244,43 +267,43 @@ VGEO(nam_novascotia_nova_scotia_topographic_database_utiliti, "nam-novascotia-no
 
 VGEO(nam_sask_aboriginallands_indian_reserve_isc, "nam-sask-aboriginallands-indian-reserve-isc", "Government of Saskatchewan — Indian Reserve (ISC) (AboriginalLands)", "Government of Saskatchewan — Indian Reserve (ISC) (AboriginalLands)",
   "canada_gov", "opendata",
-  "https://gis.saskatchewan.ca/arcgis/rest/services/AboriginalLands/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://gis.saskatchewan.ca/arcgis/rest/services/AboriginalLands/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"sk\",\"opendata\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Government of Saskatchewan: Indian Reserve (ISC), returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_sask_aboriginallands_indian_reserve_nrcan, "nam-sask-aboriginallands-indian-reserve-nrcan", "Government of Saskatchewan — Indian Reserve (NRCan) (AboriginalLands)", "Government of Saskatchewan — Indian Reserve (NRCan) (AboriginalLands)",
   "canada_gov", "opendata",
-  "https://gis.saskatchewan.ca/arcgis/rest/services/AboriginalLands/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://gis.saskatchewan.ca/arcgis/rest/services/AboriginalLands/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"sk\",\"opendata\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Government of Saskatchewan: Indian Reserve (NRCan), returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_sask_canadiangeonameswater_canadian_geographic_names_wa, "nam-sask-canadiangeonameswater-canadian-geographic-names-wa", "Government of Saskatchewan — Canadian Geographic Names (Water Features) (CanadianGeoNamesWater)", "Government of Saskatchewan — Canadian Geographic Names (Water Features) (CanadianGeoNamesWater)",
   "canada_gov", "environment",
-  "https://gis.saskatchewan.ca/arcgis/rest/services/CanadianGeoNamesWater/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://gis.saskatchewan.ca/arcgis/rest/services/CanadianGeoNamesWater/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"sk\",\"environment\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Government of Saskatchewan: Canadian Geographic Names (Water Features), returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_sask_crownland_ag_crownland_ag, "nam-sask-crownland-ag-crownland-ag", "Government of Saskatchewan — CrownLand AG (CrownLand AG)", "Government of Saskatchewan — CrownLand AG (CrownLand AG)",
   "canada_gov", "opendata",
-  "https://gis.saskatchewan.ca/arcgis/rest/services/Agriculture/CrownLand_AG/MapServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://gis.saskatchewan.ca/arcgis/rest/services/Agriculture/CrownLand_AG/MapServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"sk\",\"opendata\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Government of Saskatchewan: CrownLand AG, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_sask_forestry_sfvi_forest_inventory_index, "nam-sask-forestry-sfvi-forest-inventory-index", "Government of Saskatchewan — SFVI Forest Inventory Index (Forestry)", "Government of Saskatchewan — SFVI Forest Inventory Index (Forestry)",
   "canada_gov", "environment",
-  "https://gis.saskatchewan.ca/arcgis/rest/services/Forestry/MapServer/3/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://gis.saskatchewan.ca/arcgis/rest/services/Forestry/MapServer/3/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"sk\",\"environment\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer from Government of Saskatchewan: SFVI Forest Inventory Index, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_sask_geology_faults_250k, "nam-sask-geology-faults-250k", "Government of Saskatchewan — Faults 250K (Geology)", "Government of Saskatchewan — Faults 250K (Geology)",
   "canada_gov", "opendata",
-  "https://gis.saskatchewan.ca/arcgis/rest/services/Economy/Geology/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://gis.saskatchewan.ca/arcgis/rest/services/Economy/Geology/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID_1%20ASC",
   "en", "[\"can\",\"sk\",\"opendata\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer from Government of Saskatchewan: Faults 250K, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_sask_geology_surficial_geology_linear_landforms_250k, "nam-sask-geology-surficial-geology-linear-landforms-250k", "Government of Saskatchewan — Surficial Geology Linear Landforms 250K (Geology)", "Government of Saskatchewan — Surficial Geology Linear Landforms 250K (Geology)",
   "canada_gov", "opendata",
-  "https://gis.saskatchewan.ca/arcgis/rest/services/Economy/Geology/MapServer/4/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://gis.saskatchewan.ca/arcgis/rest/services/Economy/Geology/MapServer/4/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"sk\",\"opendata\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer from Government of Saskatchewan: Surficial Geology Linear Landforms 250K, returned as GeoJSON with per-feature geometry.");
 
@@ -308,30 +331,30 @@ REGISTER_SOURCE(nam_sask_gis_services);
 
 VGEO(nam_sask_sasknamesdatabasewater_sask_names_database_water_f, "nam-sask-sasknamesdatabasewater-sask-names-database-water-f", "Government of Saskatchewan — Sask Names Database (Water Features) (SaskNamesDatabaseWater)", "Government of Saskatchewan — Sask Names Database (Water Features) (SaskNamesDatabaseWater)",
   "canada_gov", "environment",
-  "https://gis.saskatchewan.ca/arcgis/rest/services/SaskNamesDatabaseWater/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://gis.saskatchewan.ca/arcgis/rest/services/SaskNamesDatabaseWater/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"sk\",\"environment\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Government of Saskatchewan: Sask Names Database (Water Features), returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_sask_soils_saskatchewan_soils, "nam-sask-soils-saskatchewan-soils", "Government of Saskatchewan — Saskatchewan Soils (Soils)", "Government of Saskatchewan — Saskatchewan Soils (Soils)",
   "canada_gov", "environment",
-  "https://gis.saskatchewan.ca/arcgis/rest/services/Soils/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://gis.saskatchewan.ca/arcgis/rest/services/Soils/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"sk\",\"environment\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer from Government of Saskatchewan: Saskatchewan Soils, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_sask_wastemanagementareas_domestic_waste, "nam-sask-wastemanagementareas-domestic-waste", "Government of Saskatchewan — Domestic Waste (WasteManagementAreas)", "Government of Saskatchewan — Domestic Waste (WasteManagementAreas)",
   "canada_gov", "environment",
-  "https://gis.saskatchewan.ca/arcgis/rest/services/WasteManagementAreas/MapServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://gis.saskatchewan.ca/arcgis/rest/services/WasteManagementAreas/MapServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"sk\",\"environment\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Government of Saskatchewan: Domestic Waste, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_sask_watersaturatedsoils_string_bog, "nam-sask-watersaturatedsoils-string-bog", "Government of Saskatchewan — String Bog (WaterSaturatedSoils)", "Government of Saskatchewan — String Bog (WaterSaturatedSoils)",
   "canada_gov", "opendata",
-  "https://gis.saskatchewan.ca/arcgis/rest/services/WaterSaturatedSoils/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://gis.saskatchewan.ca/arcgis/rest/services/WaterSaturatedSoils/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"sk\",\"opendata\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer from Government of Saskatchewan: String Bog, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_sask_watersaturatedsoils_wetland, "nam-sask-watersaturatedsoils-wetland", "Government of Saskatchewan — Wetland (WaterSaturatedSoils)", "Government of Saskatchewan — Wetland (WaterSaturatedSoils)",
   "canada_gov", "environment",
-  "https://gis.saskatchewan.ca/arcgis/rest/services/WaterSaturatedSoils/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://gis.saskatchewan.ca/arcgis/rest/services/WaterSaturatedSoils/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"can\",\"sk\",\"environment\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer from Government of Saskatchewan: Wetland, returned as GeoJSON with per-feature geometry.");

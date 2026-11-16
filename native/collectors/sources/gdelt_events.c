@@ -120,7 +120,7 @@ static char *http_bytes(http_client *h, const char *url, size_t *len) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *se = getenv("GDELT_SLICES");
+  const char *se = jo_getenv("GDELT_SLICES");
   int slices = se ? atoi(se) : 1;
   if (slices < 1) slices = 1;
   if (slices > MAX_SLICES) slices = MAX_SLICES;

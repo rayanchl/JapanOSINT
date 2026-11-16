@@ -10,6 +10,7 @@
  * access control: ids leak through exports, logs, and shared links, so the
  * tenant predicate is what actually keeps tenants apart. */
 #include "annotationsapi.h"
+#include "jo_codec.h"
 #include "audit.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
@@ -54,95 +55,7 @@ static void add_str_or_null(cJSON *o, const char *k, const char *v) {
   cJSON_AddItemToObject(o, k, v ? cJSON_CreateString(v) : cJSON_CreateNull());
 }
 
-/* Buffer.from(str,'utf8').toString('base64url') — no padding, +/ → -_ */
-static char *b64url(const char *in) {
-  static const char T[] =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-  size_t len = strlen(in);
-  char *out = malloc(((len + 2) / 3) * 4 + 1);
-  if (!out) return NULL;
-  size_t o = 0;
-  for (size_t i = 0; i < len; i += 3) {
-    unsigned a = (unsigned char)in[i];
-    unsigned b = i + 1 < len ? (unsigned char)in[i + 1] : 0;
-    unsigned c = i + 2 < len ? (unsigned char)in[i + 2] : 0;
-    unsigned v = (a << 16) | (b << 8) | c;
-    out[o++] = T[(v >> 18) & 63];
-    out[o++] = T[(v >> 12) & 63];
-    if (i + 1 < len) out[o++] = T[(v >> 6) & 63];
-    if (i + 2 < len) out[o++] = T[v & 63];
-  }
-  out[o] = 0;
-  return out;
-}
-/* Inverse of b64url(); NULL on an invalid char → caller ignores the cursor
- * rather than erroring, matching intelapi's bad-cursor stance. */
-static char *b64url_decode(const char *in) {
-  static signed char R[256];
-  static int init = 0;
-  if (!init) {
-    for (int i = 0; i < 256; i++) R[i] = -1;
-    const char *T =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-    for (int i = 0; i < 64; i++) R[(unsigned char)T[i]] = (signed char)i;
-    init = 1;
-  }
-  size_t len = strlen(in);
-  char *out = malloc(len / 4 * 3 + 4);
-  if (!out) return NULL;
-  size_t o = 0; unsigned v = 0; int bits = 0;
-  for (size_t i = 0; i < len; i++) {
-    signed char d = R[(unsigned char)in[i]];
-    if (d < 0) { free(out); return NULL; }
-    v = (v << 6) | (unsigned)d; bits += 6;
-    if (bits >= 8) { bits -= 8; out[o++] = (char)((v >> bits) & 0xFF); }
-  }
-  out[o] = 0;
-  return out;
-}
 
-/* ── querystring (same shape as transitapi.c's qget) ──────────────────── */
-static int hexv(int c) {
-  if (c >= '0' && c <= '9') return c - '0';
-  if (c >= 'a' && c <= 'f') return c - 'a' + 10;
-  if (c >= 'A' && c <= 'F') return c - 'A' + 10;
-  return -1;
-}
-static void url_decode(const char *s, size_t n, char *out, size_t cap) {
-  size_t o = 0;
-  for (size_t i = 0; i < n && o + 1 < cap; i++) {
-    int c = (unsigned char)s[i];
-    if (c == '+') { out[o++] = ' '; continue; }
-    if (c == '%' && i + 2 < n) {
-      int h = hexv((unsigned char)s[i + 1]), l = hexv((unsigned char)s[i + 2]);
-      if (h >= 0 && l >= 0) { out[o++] = (char)((h << 4) | l); i += 2; continue; }
-    }
-    out[o++] = (char)c;
-  }
-  out[o] = 0;
-}
-/* Extract param `key` into `out` (URL-decoded, truncated to cap). 1 if the
- * key is present (even with an empty value), else 0 with out[0]=0. */
-static int qget(const char *query, const char *key, char *out, size_t cap) {
-  out[0] = 0;
-  if (!query || !*query) return 0;
-  size_t klen = strlen(key);
-  const char *p = query;
-  while (*p) {
-    const char *amp = strchr(p, '&');
-    const char *seg_end = amp ? amp : p + strlen(p);
-    const char *eq = memchr(p, '=', (size_t)(seg_end - p));
-    size_t kn = eq ? (size_t)(eq - p) : (size_t)(seg_end - p);
-    if (kn == klen && memcmp(p, key, klen) == 0) {
-      const char *vstart = eq ? eq + 1 : seg_end;
-      url_decode(vstart, (size_t)(seg_end - vstart), out, cap);
-      return 1;
-    }
-    if (!amp) break;
-    p = amp + 1;
-  }
-  return 0;
-}
 static int truthy(const char *v) {
   return v && (!strcmp(v,"1") || !strcmp(v,"true") || !strcmp(v,"yes"));
 }
@@ -326,12 +239,12 @@ static char *list_notes(db_handle *db, const tenant_ctx *t,
   char v_rt[48] = {0}, v_rid[ANN_REF_ID_MAX + 8] = {0},
        v_cid[ANN_CASE_ID_MAX + 8] = {0}, v_lim[24] = {0},
        v_cur[768] = {0}, v_inc[16] = {0};
-  qget(qs, "ref_type", v_rt, sizeof v_rt);
-  qget(qs, "ref_id", v_rid, sizeof v_rid);
-  qget(qs, "case_id", v_cid, sizeof v_cid);
-  qget(qs, "limit", v_lim, sizeof v_lim);
-  qget(qs, "cursor", v_cur, sizeof v_cur);
-  qget(qs, "include_deleted", v_inc, sizeof v_inc);
+  jo_qs_get(qs, "ref_type", v_rt, sizeof v_rt, JO_QS_DECODE | JO_QS_BARE_KEY);
+  jo_qs_get(qs, "ref_id", v_rid, sizeof v_rid, JO_QS_DECODE | JO_QS_BARE_KEY);
+  jo_qs_get(qs, "case_id", v_cid, sizeof v_cid, JO_QS_DECODE | JO_QS_BARE_KEY);
+  jo_qs_get(qs, "limit", v_lim, sizeof v_lim, JO_QS_DECODE | JO_QS_BARE_KEY);
+  jo_qs_get(qs, "cursor", v_cur, sizeof v_cur, JO_QS_DECODE | JO_QS_BARE_KEY);
+  jo_qs_get(qs, "include_deleted", v_inc, sizeof v_inc, JO_QS_DECODE | JO_QS_BARE_KEY);
 
   if (v_rt[0] && !note_ref_type_valid(v_rt))
     return err(st, 400, "invalid_ref_type");
@@ -348,7 +261,7 @@ static char *list_notes(db_handle *db, const tenant_ctx *t,
   /* keyset cursor {"p":created_at,"u":id}; malformed → ignored, page 1. */
   char *cur_p = NULL, *cur_u = NULL; cJSON *curj = NULL;
   if (v_cur[0]) {
-    char *dec = b64url_decode(v_cur);
+    char *dec = jo_b64url_decode_str(v_cur);
     if (dec) {
       curj = cJSON_Parse(dec); free(dec);
       if (curj) {
@@ -414,7 +327,7 @@ static char *list_notes(db_handle *db, const tenant_ctx *t,
     cJSON_AddStringToObject(cur, "p", last_created);
     cJSON_AddStringToObject(cur, "u", last_id);
     char *cj = cJSON_PrintUnformatted(cur); cJSON_Delete(cur);
-    char *enc = cj ? b64url(cj) : NULL;
+    char *enc = cj ? jo_b64url_encode_str(cj) : NULL;
     if (enc) cJSON_AddStringToObject(page, "next_cursor", enc);
     else     cJSON_AddNullToObject(page, "next_cursor");
     free(cj); free(enc);

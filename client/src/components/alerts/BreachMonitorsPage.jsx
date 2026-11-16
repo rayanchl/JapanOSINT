@@ -43,26 +43,17 @@ export default function BreachMonitorsPage() {
   const myId = auth.me?.user?.id;
   const canWrite = canWriteWorkspace(auth.role);
   const roNote = readOnlyNote(auth.role, 'monitor');
-  const [rows, setRows] = useState([]);
-  const [page, setPage] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // The one keyset hook (usePaged, 2026-11-07). The hand-rolled loader it
+  // replaces had no request-sequence guard, so a slow first page could land
+  // after a reload and overwrite it, and a failed "load more" replaced the
+  // list's own error.
+  const list = usePaged('/api/breach-monitors', { limit: 100 });
+  const { rows, setRows, error, moreError, loading, loadingMore, hasMore, total, reload, loadMore } = list;
   const [adding, setAdding] = useState(false);
   const [confirmDel, setConfirmDel] = useState(null);
   const [open, setOpen] = useState(null);
   const [busy, setBusy] = useState(null);
 
-  const load = async (cursor) => {
-    setLoading(true); setError(null);
-    try {
-      const j = await api.get('/api/breach-monitors', { query: { limit: 100, cursor } });
-      const d = Array.isArray(j?.data) ? j.data : [];
-      setRows((xs) => (cursor ? [...xs, ...d] : d));
-      setPage(j?.page || null);
-    } catch (e) { setError(e); }
-    finally { setLoading(false); }
-  };
-  useEffect(() => { load(); }, []);
 
   const del = async () => {
     const m = confirmDel; setConfirmDel(null); setBusy(m.id);
@@ -81,13 +72,13 @@ export default function BreachMonitorsPage() {
       subtitle="Watch an address, domain, username or phone number against the breach corpus. Only a hash is stored."
       actions={(
         <>
-          <Button onClick={() => load()} title="Reload"><LuRefreshCw size={13} /></Button>
+          <Button onClick={() => reload()} title="Reload"><LuRefreshCw size={13} /></Button>
           {canWrite && <Button variant="primary" onClick={() => setAdding(true)}><LuShieldPlus size={13} /> Add monitor</Button>}
         </>
       )}
     >
       {roNote && <div className="text-[11px] text-osint-muted">{roNote}</div>}
-      {error && <ErrorNotice error={error} title="Could not load monitors" onRetry={() => load()} />}
+      {error && <ErrorNotice error={error} title="Could not load monitors" onRetry={() => reload()} />}
       {loading && rows.length === 0 && !error && <LoadingState label="Loading monitors…" />}
       {!loading && !error && rows.length === 0 && (
         <EmptyState title="No monitors yet" action={canWrite ? <Button variant="primary" onClick={() => setAdding(true)}>Watch an identifier</Button> : null}>
@@ -122,8 +113,9 @@ export default function BreachMonitorsPage() {
             </Card>
           ))}
           <div className="flex items-center justify-between">
-            <BoundNote shown={rows.length} total={page?.next_cursor ? null : rows.length} more={Boolean(page?.next_cursor)} noun="monitors" />
-            {page?.next_cursor && <Button size="sm" busy={loading} onClick={() => load(page.next_cursor)}>Load more</Button>}
+            <BoundNote shown={rows.length} total={total ?? (hasMore ? null : rows.length)} more={hasMore} noun="monitors" />
+            {hasMore && <Button size="sm" busy={loadingMore} onClick={loadMore}>Load more</Button>}
+            {moreError && <span className="text-[11px] text-neon-red font-mono">next page failed — {errorMessage(moreError)}</span>}
           </div>
         </div>
       )}
@@ -147,7 +139,7 @@ export default function BreachMonitorsPage() {
 function MonitorHits({ monitor }) {
   // Keyset-paged: meta.count is the size of one page, so it used to be shown
   // as "N matches" for a monitor that may have many more.
-  const { rows: hits, hasMore, error, loading, loadingMore, reload, loadMore } = usePaged(`/api/breach-monitors/${encodeURIComponent(monitor.id)}/hits`, { limit: 100 });
+  const { rows: hits, hasMore, error, moreError, loading, loadingMore, reload, loadMore } = usePaged(`/api/breach-monitors/${encodeURIComponent(monitor.id)}/hits`, { limit: 100 });
   const loaded = !loading || hits.length > 0;
   return (
     <div className="border-t border-osint-border p-3 space-y-2 bg-osint-bg/40">
@@ -188,6 +180,7 @@ function MonitorHits({ monitor }) {
       {hasMore && (
         <div className="flex items-center justify-between">
           <BoundNote shown={hits.length} more noun="matches" />
+          {moreError && <span className="text-[11px] text-neon-red font-mono">next page failed — {errorMessage(moreError)}</span>}
           <Button size="sm" busy={loadingMore} onClick={loadMore}>Load more</Button>
         </div>
       )}

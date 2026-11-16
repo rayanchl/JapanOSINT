@@ -265,6 +265,48 @@ static const hp_source HP3_GOV[] = {
       "names, alternate names, country and hierarchical relationships. "
       "The funder identifier is the join key that reveals which state "
       "agency financed a given piece of research" },
+
+  /* MOVED HERE 2026-11-12 from a VJSON_KEYED row in
+   * collectors/feed/generated/vsrc17_int_aid_1.c, same id, because the year
+   * it reads had to stop being frozen and VJSON cannot do it honestly.
+   *
+   * The URL carried `year=2024`, frozen at authoring. The year is mandatory
+   * (no year is HTTP 400) and names a PERIOD: measured today, year=2024
+   * answers 5,192 projects, 2025 5,627, 2026 5,636 and 2027 an empty
+   * `count: 0`. So the row reads `{date:%Y}`, and `date_back = 1` with
+   * `date_step = "y"` steps to the previous year while the new one is still
+   * empty (January), instead of storing nothing.
+   *
+   * Why not just roll the VJSON row: a record's `budget` and `expense` are
+   * THAT YEAR's, and the record carries no year. Project 00134183 is in both
+   * the 2025 and 2026 lists with budget 218,867,512 vs 134,279,846 and
+   * expense 147,270,001 vs 128,470,419, so keying on project_id alone would
+   * overwrite one year's figures with the next at each roll. `date_field =
+   * "year"` stamps the rendered year on every record and `project_id+year`
+   * keeps one row per project-year. The 2026-09-07 note on the old row still
+   * holds: project_id is the identity within a year (200 of 200 distinct on
+   * a page, 199 distinct titles), the reason it was keyed at all.
+   *
+   * Paging: offset with limit=200 (the old row's measured size; offset=200
+   * answers a different first project). 5,636 / 200 = 29 pages, so page_max
+   * 40 leaves headroom rather than the 20-page default that read 4,000. */
+  { .id = "undp-transparency-projects", .name = "UNDP — transparency portal projects",
+    .name_ja = "UNDP — transparency portal projects",
+    .collector = "int_aid", .category = "aid", .record_type = "aid",
+    .portal = "https://open.undp.org", .lang = "en",
+    .tags = "\"int\",\"aid\",\"batch17\",\"high-penetrancy\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://api.open.undp.org/api/project_list/?year={date:%Y}&limit=200&offset=0",
+    .array_path = "data.data",
+    .date_back = 1, .date_step = "y", .date_field = "year",
+    .id_keys = "project_id+year", .title_keys = "title",
+    .page_param = "offset", .page_size = 200, .page_start = 0, .page_max = 40,
+    .interval = 86400,
+    .description = "UNDP project register for the current year (the previous "
+      "year while the new one is still empty): project_id, title, description, "
+      "that year's budget and expense in USD, country, sector list with codes, "
+      "SDG mappings, signature solution, donor list and gender/policy markers, "
+      "each record stamped with the year it was read for" },
 };
 
 HP_REGISTER_TABLE(HP3_GOV)

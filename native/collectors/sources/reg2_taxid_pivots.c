@@ -76,10 +76,10 @@ static int pl_run(const source_ctx *ctx, intel_sink *sink) {
            "https://wl-api.mf.gov.pl/api/search/nip/%s?date=%s", nip, today);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "PL_VAT_WHITELIST");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *doc = cJSON_Parse(body);
   free(body);
-  if (!doc) return 0;
+  if (!doc) return -1;
 
   const cJSON *res = cJSON_GetObjectItem(doc, "result");
   const cJSON *sub = res ? cJSON_GetObjectItem(res, "subject") : NULL;
@@ -292,10 +292,10 @@ static int vn_run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(url, sizeof url, "https://api.vietqr.io/v2/business/%s", mst);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "VN_TAXCODE_LOOKUP");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *doc = cJSON_Parse(body);
   free(body);
-  if (!doc) return 0;
+  if (!doc) return -1;
 
   const char *code = jo_sv(doc, "code");
   if (!code || strcmp(code, "00") != 0) {      /* not found is not a failure */

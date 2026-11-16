@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* one story → one intel_item. Returns 1 if emitted. */
 static int emit_story(intel_sink *sink, const cJSON *s) {
@@ -58,14 +59,14 @@ static int emit_story(intel_sink *sink, const cJSON *s) {
   if (media) cJSON_AddStringToObject(props, "media", media);
   if (date)  cJSON_AddStringToObject(props, "publish_date", date);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   intel_item it = {0};
   it.remote_key      = rkey;
   it.title           = title ? title : url;
   it.summary         = media;
-  it.body            = bj;
+  it.body = bj;
   it.lang            = lang;
   it.published_at    = date;
   it.link            = url;
@@ -84,7 +85,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = jo_env("MEDIACLOUD_API_KEY");
   if (!key) {
     fprintf(stderr, "[mediacloud] gated (no MEDIACLOUD_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "mediacloud", "mediacloud", (const char *const[]){"MEDIACLOUD_API_KEY", NULL}, NULL, NULL);
   }
 
   char *enc = jo_urlencode(q);
@@ -99,10 +100,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { authhdr, "Accept: application/json", NULL };
 
   char *body = jo_get(ctx, url, hdrs, "mediacloud");
-  if (!body) return 0;                 /* non-200 → honest empty */
+  if (!body) return jo_fail_rc(jo_last_status(), 0);                 /* 2026-11-07: 404/204 empty, any other refusal -1 (was "non-200 → honest empty") */
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   /* story-list responses put the array under "stories" (fallback "results"). */
   cJSON *stories = cJSON_GetObjectItem(root, "stories");

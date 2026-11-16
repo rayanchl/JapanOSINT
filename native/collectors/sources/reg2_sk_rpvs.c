@@ -44,6 +44,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 /* The RPVS OData service pages at TWENTY records and says so with an
  * `@odata.nextLink`; `$top` is rejected outright (HTTP 400), so the link is
@@ -57,13 +58,15 @@
  * partners stored 20 of them with nothing in the output to say so. The cap
  * below is a runaway guard on the WALK, not on the records, and hitting it is
  * disclosed as a collector-truncation-notice against the upstream's own
- * `@odata.count`. $JO_RPVS_PAGE_MAX raises it. */
+ * `@odata.count`. $JO_PAGE_MAX raises it. */
 #define RPVS_PAGE_MAX 60      /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice carrying @odata.count */
 
 static int rpvs_page_max(void) {
-  const char *e = getenv("JO_RPVS_PAGE_MAX");
-  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
-  return RPVS_PAGE_MAX;
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_RPVS_PAGE_MAX) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  return jo_page_max_for(RPVS_PAGE_MAX);
 }
 
 /* The upstream's own total for this filter, or -1 when it declined to say.
@@ -237,7 +240,7 @@ static int rpvs_partners_run(const source_ctx *ctx, intel_sink *sink) {
     jo_trunc_notice_scoped(sink, "SK_RPVS_PARTNERS", q, url, n, available,
                     "the RPVS OData walk stopped before the upstream ran out "
                     "of pages (page ceiling, or a mid-walk fetch failure)",
-                    "raise $JO_RPVS_PAGE_MAX, or narrow the ObchodneMeno filter");
+                    "raise $JO_PAGE_MAX, or narrow the ObchodneMeno filter");
 
   fprintf(stderr, "[sk_rpvs_partners] emitted %d across %d page(s)%s\n",
           n, pages, truncated ? " (TRUNCATED — notice emitted)" : "");
@@ -373,7 +376,7 @@ static int rpvs_ubo_run(const source_ctx *ctx, intel_sink *sink) {
     jo_trunc_notice_scoped(sink, "SK_RPVS_UBO", q, url, n, available,
                     "the RPVS OData walk stopped before the upstream ran out "
                     "of pages (page ceiling, or a mid-walk fetch failure)",
-                    "raise $JO_RPVS_PAGE_MAX, or query a rarer surname");
+                    "raise $JO_PAGE_MAX, or query a rarer surname");
 
   fprintf(stderr, "[sk_rpvs_ubo] emitted %d across %d page(s)%s\n",
           n, pages, truncated ? " (TRUNCATED — notice emitted)" : "");

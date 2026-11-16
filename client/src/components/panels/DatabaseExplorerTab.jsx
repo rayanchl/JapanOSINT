@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import apiUrl from '../../utils/apiUrl.js';
+import { api, errorMessage, rejectBodyError } from '../../api/client.js';
 
 const PAGE_SIZES = [25, 50, 100, 200];
 
@@ -33,19 +33,17 @@ export default function DatabaseExplorerTab() {
 
   // Load the table list once.
   useEffect(() => {
-    fetch(apiUrl('/api/db/tables'))
-      .then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      })
+    // Through the shared client (2026-11-07): the raw fetch turned a refusal
+    // into a bare "HTTP 403" and dropped the server's reason.
+    api.get('/api/db/tables')
       .then((j) => {
         // Server returns a bare array; older code returned { tables: [...] }.
-        const list = Array.isArray(j) ? j : (j.tables || []);
+        const list = Array.isArray(j) ? j : (rejectBodyError(j)?.tables || []);
         setTables(list);
         setTablesError(null);
         if (list.length && !selected) setSelected(list[0].name);
       })
-      .catch((err) => { setTables([]); setTablesError(err.message || 'request failed'); });
+      .catch((err) => { setTables([]); setTablesError(errorMessage(err)); });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -63,13 +61,13 @@ export default function DatabaseExplorerTab() {
       params.set('orderDir', orderDir);
     }
     setLoading(true);
-    fetch(apiUrl(`/api/db/tables/${encodeURIComponent(selected)}?${params}`))
-      .then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      })
-      .then((j) => { if (!ignore) { setData(j); setRowsError(null); } })
-      .catch((err) => { if (!ignore) { setData(null); setRowsError(err.message || 'request failed'); } })
+    // dbexplorerapi.c answers some refusals (an unknown column, a bad
+    // filter) with HTTP 200, `error` and an empty `rows` — read as "No rows."
+    // that was a claim about the table made out of a refused query. A body
+    // error is a failure here whatever the status (2026-11-07).
+    api.get(`/api/db/tables/${encodeURIComponent(selected)}?${params}`)
+      .then((j) => { rejectBodyError(j); if (!ignore) { setData({ ...j, rows: Array.isArray(j?.rows) ? j.rows : [] }); setRowsError(null); } })
+      .catch((err) => { if (!ignore) { setData(null); setRowsError(errorMessage(err)); } })
       .finally(() => { if (!ignore) setLoading(false); });
     return () => { ignore = true; };
   }, [selected, q, limit, offset, orderBy, orderDir]);

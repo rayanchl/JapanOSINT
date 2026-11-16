@@ -51,10 +51,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
            qlat, qlon);
 
   char *body = jo_get(ctx, url, NULL, "METNO_OCEAN_FORECAST");
-  if (!body) return 0;               /* 422 over land etc. -> honest empty */
+  /* 422 = a point over land: the upstream's own "no ocean here" (measured
+   * 2026-11-07, lat 48 lon 10 → 422). Any other refusal is -1, not empty. */
+  if (!body) { long st = jo_last_status(); return st == 422 ? 0 : jo_fail_rc(st, 0); }
   cJSON *doc = cJSON_Parse(body);
   free(body);
-  if (!doc) return 0;
+  if (!doc) return -1;
 
   cJSON *geom = cJSON_GetObjectItem(doc, "geometry");
   cJSON *co = geom ? cJSON_GetObjectItem(geom, "coordinates") : NULL;

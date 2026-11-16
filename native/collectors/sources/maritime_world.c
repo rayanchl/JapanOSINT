@@ -37,6 +37,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* AISSTREAM — WebSocket-only; gated on AISSTREAM_KEY, always honest-empty here. */
 static int run_aisstream(const source_ctx *ctx, intel_sink *sink) {
@@ -46,7 +47,7 @@ static int run_aisstream(const source_ctx *ctx, intel_sink *sink) {
   const char *key = jo_env("AISSTREAM_KEY");
   if (!key) {
     fprintf(stderr, "[aisstream] gated (no AISSTREAM_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "aisstream", "aisstream", (const char *const[]){"AISSTREAM_KEY", NULL}, NULL, NULL);
   }
   /* aisstream is wss:// only (subscribe frame with APIKey); our HTTP client
    * cannot open the WebSocket, so we honest-empty rather than fabricate a
@@ -64,7 +65,7 @@ static int run_equasis(const source_ctx *ctx, intel_sink *sink) {
   const char *pass = jo_env("EQUASIS_PASS");
   if (!user || !pass) {
     fprintf(stderr, "[equasis] gated (no EQUASIS_USER/EQUASIS_PASS)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "equasis", "equasis", (const char *const[]){"EQUASIS_USER", "EQUASIS_PASS", NULL}, NULL, NULL);
   }
   /* Equasis requires an authenticated session (login POST + cookie jar) before
    * its ship search will return data. We do not synthesize ownership records;

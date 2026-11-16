@@ -11,8 +11,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-static const char *WC_UA =
-  "User-Agent: JapanOSINT/1.0";
 
 static const struct { double lat; double lon; const char *name; } JP_CITIES[] = {
   { 35.6762, 139.6503, "Tokyo"    },
@@ -29,7 +27,7 @@ static const struct { double lat; double lon; const char *name; } JP_CITIES[] = 
 #define NCITIES ((int)(sizeof(JP_CITIES) / sizeof(JP_CITIES[0])))
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *hdrs[] = { "Accept: application/json", WC_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   int total = 0;
 
   for (int i = 0; i < NCITIES; i++) {

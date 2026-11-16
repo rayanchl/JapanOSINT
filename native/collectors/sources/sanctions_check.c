@@ -189,12 +189,12 @@ static int emit_entity(intel_sink *sink, cJSON *rec, const char *query,
   if (lists_j && cJSON_IsArray(lists_j))
     cJSON_AddItemToObject(props, "datasets", cJSON_Duplicate(lists_j, 1));
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = is_pep ? "Politically exposed person" : "Sanctions list match";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;

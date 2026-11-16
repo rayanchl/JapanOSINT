@@ -158,7 +158,7 @@ static int emit_recalls(intel_sink *sink, http_client *http, const char *vin,
       cJSON_AddStringToObject(props, "record", "recall");
       if (cid) cJSON_AddStringToObject(props, "campaign_number", cid);
       cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props);
+      jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
       char rk[160];
       snprintf(rk, sizeof rk, "recall:%s", cid ? cid : vin);
@@ -169,7 +169,7 @@ static int emit_recalls(intel_sink *sink, http_client *http, const char *vin,
       intel_item it = {0};
       it.remote_key      = rk;
       it.title           = title;
-      it.body            = bj;
+      it.body = bj;
       it.summary         = (co && cJSON_IsString(co)) ? co->valuestring : "recall";
       it.record_type     = "osint_service_result";
       it.properties_json = pj;
@@ -222,14 +222,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "record", "vin");
   cJSON_AddStringToObject(props, "vin", q);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[64]; snprintf(rk, sizeof rk, "vin:%s", q);
 
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = ttl;
-  it.body            = bj;
+  it.body = bj;
   it.summary         = "VIN decode";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;

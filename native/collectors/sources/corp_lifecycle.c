@@ -117,10 +117,10 @@ static int viab_rdap(const source_ctx *ctx, intel_sink *sink, const char *host) 
   snprintf(url, sizeof url, "https://rdap.org/domain/%s", host);
   const char *hdrs[] = { "Accept: application/rdap+json, application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "vendor-viability/rdap");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *data = cJSON_CreateObject();
   jo_add_str(data, "domain", jo_sv(root, "ldhName"));
@@ -195,10 +195,10 @@ static int viab_github(const source_ctx *ctx, intel_sink *sink, const char *slug
   }
 
   char *body = jo_get(ctx, url, hdrs, "vendor-viability/github");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   const char *full = jo_sv(root, "full_name");
   if (!full) { cJSON_Delete(root); return 0; }
@@ -256,10 +256,10 @@ static int viab_statuspage(const source_ctx *ctx, intel_sink *sink, const char *
     snprintf(url, sizeof url, "https://status.%s/api/v2/summary.json", host);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "vendor-viability/statuspage");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *st = cJSON_GetObjectItem(root, "status");
   const char *desc = jo_sv(st, "description");
@@ -310,21 +310,21 @@ static int run_viability(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return -1;
   if (!jo_looks_like_keyword(ctx->entity)) return 0;
 
-  int n = 0;
+  int n = 0, failed = 0;
   /* "owner/repo" is the GitHub form; anything else is treated as a host. */
   if (strchr(ctx->entity, '/') && !strstr(ctx->entity, "://")) {
-    n += viab_github(ctx, sink, ctx->entity);
+    jo_acc(viab_github(ctx, sink, ctx->entity), &n, &failed);
   } else {
     char host[256];
     if (!cl_hostify(ctx->entity, host, sizeof host)) {
       fprintf(stderr, "[vendor-viability] entity is neither owner/repo nor a host\n");
       return 0;
     }
-    n += viab_rdap(ctx, sink, host);
-    n += viab_statuspage(ctx, sink, host);
+    jo_acc(viab_rdap(ctx, sink, host), &n, &failed);
+    jo_acc(viab_statuspage(ctx, sink, host), &n, &failed);
   }
   fprintf(stderr, "[vendor-viability] emitted %d\n", n);
-  return 0;                                    /* honest empty is not an error */
+  return (failed && n == 0) ? -1 : 0;   /* honest empty 0; refused/unparsable fetch with nothing emitted is -1 (2026-11-07) */
 }
 
 /* --------------------------------------------------- GAZETTE_INSOLVENCY */

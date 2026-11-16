@@ -96,6 +96,11 @@ static const char *run_status(int rc, long records, int hosts, int hosts_ok,
   return "error";
 }
 
+const char *sched_run_status(int rc, long records, int hosts, int hosts_ok,
+                             const char **why) {
+  return run_status(rc, records, hosts, hosts_ok, why);
+}
+
 /* fetch_log.stored — house rule 4b's number, kept next to records_fetched so
  * the two can be compared over history rather than only in the run a human
  * happened to be watching. The column is added by db.c's ensure_column()
@@ -126,6 +131,13 @@ static void fetch_log_set_bytes(db_handle *db, long flid, unsigned long long byt
   sqlite3_bind_int64(s, 2, flid);
   sqlite3_step(s);
   sqlite3_finalize(s);
+}
+void sched_fetch_log_set_bytes(db_handle *db, long flid, unsigned long long bytes) {
+  fetch_log_set_bytes(db, flid, bytes);
+}
+static void fetch_log_set_stored(db_handle *db, long flid, long stored, int exact);
+void sched_fetch_log_set_stored(db_handle *db, long flid, long stored, int exact) {
+  fetch_log_set_stored(db, flid, stored, exact);
 }
 static void fetch_log_set_stored(db_handle *db, long flid, long stored,
                                  int exact) {
@@ -177,7 +189,13 @@ static long env_long(const char *name, long dflt, long lo, long hi) {
   char *end = NULL;
   long x = strtol(v, &end, 10);
   if (end == v) return dflt;
-  return x < lo ? lo : (x > hi ? hi : x);
+  long c = x < lo ? lo : (x > hi ? hi : x);
+  /* Say so: JO_SCHED_WORKERS=40 under a ceiling of 32 used to run 32 with
+   * nothing anywhere saying the operator's value was not what ran. */
+  if (c != x)
+    fprintf(stderr, "[sched] %s=%ld is outside %ld..%ld — using %ld\n",
+            name, x, lo, hi, c);
+  return c;
 }
 
 void sched_policy_load(sched_policy *p) {
@@ -282,7 +300,9 @@ long sched_state_base(const sched_state *st, long declared, int adaptive) {
  * (2026-10-20, when they met in a merge): the row's own measurement inside,
  * the operator's system-wide policy outside.
  *
- *   sched_row_interval = cadence_apply( sched_state_base(st, declared, adaptive) )
+ *   sched_row_interval = override, else source_interval_default(st, d)
+ *                      = cadence_apply_for( d, sched_state_base(st, declared, adaptive) )
+ *   (a pod or a realtime row is exempt: cadence_exempt_reason, core/cadence.c)
  *
  * So a feed whose items say "hourly" runs hourly under no policy, six-hourly
  * under an operator floor of six hours, and at the global cadence when one is
@@ -306,7 +326,7 @@ long sched_row_interval(const sched_state *st, const source_def *d) {
     long ov = source_interval_for(d->id);
     if (ov > 0) return ov;
   }
-  return source_interval_default(st, d);   /* the policy over the row's base; a pod is exempt */
+  return source_interval_default(st, d);   /* the policy over the row's base; a pod or realtime row is exempt */
 }
 
 long sched_next_delay(const sched_state *st, const sched_policy *p,
@@ -570,6 +590,15 @@ static void sched_state_record(db_handle *db, const source_def *d,
  * (the run line's second number), falling back to emits when the sink could
  * not count. last_success moves only on a successful run. */
 static void sources_row_record(db_handle *db, const char *id, const char *status,
+                               long records, long duration_ms, const char *why);
+/* The pivot path's copy of the sources-row update (core/osint_dispatch.c):
+ * without it every entity pivot that ever ran read "pending (never ran)" and
+ * records_count 0 on the Sources page and in /api/status (audit 2026-11-07). */
+void sched_sources_row_record(db_handle *db, const char *id, const char *status,
+                              long records, long duration_ms, const char *why) {
+  sources_row_record(db, id, status, records, duration_ms, why);
+}
+static void sources_row_record(db_handle *db, const char *id, const char *status,
                                long records, long duration_ms, const char *why) {
   int ok = status && !strcmp(status, "ok");
   const char *st = !ok ? "offline" : (records > 0 ? "online" : "degraded");
@@ -718,16 +747,7 @@ static void sched_disclose_fetch_failure(intel_sink *sink, const source_def *d,
   {
     int tls = http_last_tls_cause();
     if (tls != HTTP_TLS_NONE) {
-      cJSON_AddStringToObject(p, "tls_cause",
-        tls == HTTP_TLS_NO_LOCAL_ISSUER   ? "no_local_issuer"
-      : tls == HTTP_TLS_EXPIRED           ? "expired"
-      : tls == HTTP_TLS_NOT_YET_VALID     ? "not_yet_valid"
-      : tls == HTTP_TLS_HOSTNAME_MISMATCH ? "hostname_mismatch"
-      : tls == HTTP_TLS_SELF_SIGNED       ? "self_signed"
-      : tls == HTTP_TLS_REVOKED           ? "revoked"
-      : tls == HTTP_TLS_UNRECOGNIZED_NAME ? "unrecognized_name"
-      : tls == HTTP_TLS_HANDSHAKE         ? "handshake"
-                                          : "other");
+      cJSON_AddStringToObject(p, "tls_cause", http_tls_cause_name(tls));
       cJSON_AddStringToObject(p, "tls_detail", http_tls_cause_label(tls));
       cJSON_AddStringToObject(p, "tls_remedy", http_tls_cause_remedy(tls));
     }
@@ -802,6 +822,42 @@ static void sched_disclose_fetch_failure(intel_sink *sink, const source_def *d,
           rc, hosts_ok, hosts, bytes);
 }
 
+/* The disclosure for a run made OUTSIDE the worker pool (core/osint_dispatch.c,
+ * the entity-pivot path), with the transport evidence read off its own client.
+ * Same two triggers as the scheduled path below: the health verdict is not
+ * "ok", or the collector returned non-zero — and either way only when the run
+ * left nothing behind. */
+void sched_disclose_if_silent(intel_sink *sink, const source_def *d,
+                              const char *entity, int rc, long n_emit,
+                              long n_notices, http_client *http) {
+  if (!sink || !d || n_emit != 0 || n_notices != 0) return;
+  int hosts = http ? http_client_host_count(http) : 0, hosts_ok = 0;
+  char hosts_failed[256]; hosts_failed[0] = '\0';
+  for (int i = 0; i < hosts; i++) {
+    int ok = 0;
+    const char *h = http_client_host_at(http, i, NULL, &ok);
+    if (h && ok) { hosts_ok++; continue; }
+    if (!h) continue;
+    size_t have = strlen(hosts_failed), need = strlen(h) + (have ? 2 : 0);
+    if (have + need < sizeof hosts_failed - 1) {
+      if (have) strcat(hosts_failed, ", ");
+      strcat(hosts_failed, h);
+    }
+  }
+  const char *why = NULL;
+  const char *st = run_status(rc, n_emit, hosts, hosts_ok, &why);
+  if (strcmp(st, "ok") != 0 || rc < 0)
+    sched_disclose_fetch_failure(sink, d, entity, rc, hosts, hosts_ok,
+                                 hosts_failed,
+                                 http ? http_client_bytes_in(http) : 0,
+                                 http ? http_client_request_count(http) : 0, why);
+}
+
+size_t sched_body_ceiling_for(db_handle *db, const char *source_id) {
+  if (!db || !source_id) return 0;
+  return (size_t)source_settings_int(db, source_id, SRCSET_BODY_CEILING, 0);
+}
+
 int scheduler_run_source(db_handle *db, const source_def *d,
                          const char *entity) {
   intel_sink inner = intel_sink_make(db, d->id, "legacy");
@@ -849,7 +905,9 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   /* Same thread-local pattern for content-change detection (roadmap 26): the
    * httpclient hook needs a db_handle and source_id it cannot otherwise see. */
   content_change_scope_begin(db, d->id);
+  size_t prev_ceiling = http_run_body_ceiling_set(ctx.body_ceiling);
   int rc = d->run(&ctx, &sink);
+  http_run_body_ceiling_set(prev_ceiling);
   content_change_scope_end();
   evidence_scope_end();
   clock_gettime(CLOCK_MONOTONIC, &t1);
@@ -1519,8 +1577,22 @@ void scheduler_loop(db_handle *db) {
    * 16 → 97 runs. The work is network-bound, not CPU-bound, so the ceiling is
    * upstream politeness (hostgate) and sqlite write contention, not cores. 8
    * is the conservative default for a first deploy; raise it once the
-   * heartbeat below shows a standing backlog. 1 = the old serial behaviour. */
-  int workers = (int)env_long("JO_SCHED_WORKERS", 8, 1, 32);
+   * heartbeat below shows a standing backlog. 1 = the old serial behaviour.
+   *
+   * 40 since 2026-11-16 (the owner's decision). The fleet, not a guess, sets
+   * it: 102,953 scheduled rows make ~529,000 runs a day under the 6 h policy
+   * (126,000 of them the 1,024 realtime rows that run at their own cadence),
+   * and at the measured 6.2 s mean run that is ~38 workers kept busy — at 8 a
+   * lap took ~18-24 h, so "every six hours" was not what ran. The ceiling is
+   * 64 because 32 SILENTLY clamped a request for 40 to 32 (heartbeat
+   * busy=32/32), the knob's value not being what ran. Write contention was
+   * measured before the change, 240 s per setting against one database:
+   * 8 → 250 runs (median 1.8 s), 32 → 483 (3.8 s), 40 → 479 (5.2 s); no
+   * EMIT-FAILED and no "database is locked" at any of them. The plateau
+   * between 32 and 40 was the measuring container's egress, not SQLite, so on
+   * a deployment the ceiling is its network: read the heartbeat's deferred=N
+   * there before raising this further. */
+  int workers = (int)env_long("JO_SCHED_WORKERS", 40, 1, 64);
   /* The pods are few, mostly short, and must never wait on the fleet. Two, so
    * one long LLM-bound pod (repair, enrichment) cannot hold the WAL
    * checkpoint or retention behind it. */

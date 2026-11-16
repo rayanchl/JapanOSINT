@@ -14,7 +14,7 @@
  * so it stored THREE facilities per state — measured 2026-10-02 against
  * QueryRows of 31,027 (NJ), 89,657 (TX) and 523,874 (CA). It now asks for
  * 1,000 per page and walks pageno until the upstream's QueryRows is reached
- * or a page comes back short. At most JO_ECHO_PAGE_MAX pages (default 100,
+ * or a page comes back short. At most $JO_PAGE_MAX pages (default 100,
  * i.e. 100,000 facilities) are read per state; when that ceiling, or a later
  * page failing (QueryIDs are short-lived), stops a state short of QueryRows,
  * the shortfall is emitted as a collector-truncation-notice scoped to the
@@ -35,6 +35,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 #define SRC "epa-echo-facilities"
 
@@ -48,9 +49,11 @@ static void addstr(cJSON *p, const cJSON *o, const char *k, const char *out) {
 #define ECHO_PAGE 1000                  /* get_qid's maximum responseset */
 
 static int echo_page_max(void) {
-  const char *e = getenv("JO_ECHO_PAGE_MAX");
-  int v = e ? atoi(e) : 0;
-  return v > 0 ? v : 100;
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_ECHO_PAGE_MAX) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  return jo_page_max_for(100);
 }
 
 /* Emit every facility on one get_qid page; returns rows emitted. */
@@ -111,7 +114,7 @@ static int collect_state(const source_ctx *ctx, intel_sink *sink,
     jo_trunc_notice_scoped(sink, SRC, st,
       "https://echodata.epa.gov/echo/echo_rest_services.get_qid",
       seen_total, rows, why,
-      "raise JO_ECHO_PAGE_MAX (pages of 1,000 per state), or re-run");
+      "raise JO_PAGE_MAX (pages of 1,000 per state), or re-run");
   }
   return n;
 }

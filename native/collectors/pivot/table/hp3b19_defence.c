@@ -30,6 +30,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+THE+NAVY%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -55,6 +59,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+THE+ARMY%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -79,6 +87,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+THE+AIR+FORCE%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -103,6 +115,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEFENSE+LOGISTICS+AGENCY%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -126,6 +142,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+DEFENSE%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -148,6 +168,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221510%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -171,6 +195,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221520%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -193,6 +221,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221550%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -215,6 +247,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221005%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -268,6 +304,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221420%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -290,6 +330,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221810%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -313,6 +357,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221905%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -335,6 +383,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%225840%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -357,6 +409,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%225865%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -381,6 +437,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%226665%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -400,9 +460,19 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "defence-budget-line",
     .tags = "\"defence\",\"budget\",\"spending\",\"usa\",\"dod\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.usaspending.gov/api/v2/agency/097/sub_agency/?fiscal_year=2025&limit=100",
+    /* 2026-11-09: fiscal_year was frozen at 2025. {date-9m:%Y} is the most
+     * recent CLOSED US fiscal year (FY ends 30 Sep; FY2027 answered HTTP 400
+     * "outside the range of current submissions" on 2026-11-07), and
+     * date_back steps one year back if the year answers no records. The
+     * records carry no year, so date_field stamps the rendered one into id_keys
+     * — without it each year would overwrite the last year's figures.
+     * Measured that day: FY2026 answers 25 sub-agencies, 25 distinct `name`;
+     * the old key `abbreviation` is EMPTY on 4 of the 25 (21 distinct where
+     * present), which sent those 4 to the fallback list. */
+    .url = "https://api.usaspending.gov/api/v2/agency/097/sub_agency/?fiscal_year={date-9m:%Y}&limit=100",
     .array_path = "results",
-    .id_keys = "abbreviation",
+    .date_back = 1, .date_step = "y", .date_field = "fiscal_year",
+    .id_keys = "name+fiscal_year",
     .interval = 21600,
     .page_param = "page",
     .title_keys = "name",
@@ -420,9 +490,18 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "defence-budget-line",
     .tags = "\"defence\",\"budget\",\"appropriation\",\"usa\",\"dod\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.usaspending.gov/api/v2/agency/097/federal_account/?fiscal_year=2025&limit=100",
+    /* 2026-11-09: fiscal_year was frozen at 2025. {date-9m:%Y} is the most
+     * recent CLOSED US fiscal year (FY ends 30 Sep; FY2027 answered HTTP 400
+     * "outside the range of current submissions" on 2026-11-07), and
+     * date_back steps one year back if the year answers no records. The
+     * records carry no year, so date_field stamps the rendered one into id_keys
+     * — without it each year would overwrite the last year's figures.
+     * Measured that day: FY2026 answers 153 federal accounts over two pages
+     * (100 + 53), 153 distinct `code`. */
+    .url = "https://api.usaspending.gov/api/v2/agency/097/federal_account/?fiscal_year={date-9m:%Y}&limit=100",
     .array_path = "results",
-    .id_keys = "code",
+    .date_back = 1, .date_step = "y", .date_field = "fiscal_year",
+    .id_keys = "code+fiscal_year",
     .interval = 21600,
     .page_param = "page",
     .title_keys = "name",
@@ -441,17 +520,31 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "defence-budget-line",
     .tags = "\"defence\",\"budget\",\"program\",\"usa\",\"dod\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    /* `sort=name&order=asc` because this row cycles. The API names its
-     * allowed set in its own error: `Field 'sort' is outside valid values
+    /* `sort=name&order=asc` because this row cycled (until 2026-11-09, see
+     * below; the sort still makes the three-page walk repeatable). The API
+     * names its allowed set in its own error: `Field 'sort' is outside valid values
      * ['name', 'obligated_amount', 'gross_outlay_amount']` — the money
      * columns move between runs, the name does not. Measured 2026-10-24:
      * accepted, honoured, total unchanged at 209 (three pages, so the
      * cycle is a no-op and the sort is what makes it repeatable). */
-    .url = "https://api.usaspending.gov/api/v2/agency/097/program_activity/?fiscal_year=2025&limit=100&sort=name&order=asc",
+    /* 2026-11-09: fiscal_year was frozen at 2025. {date-9m:%Y} is the most
+     * recent CLOSED US fiscal year (FY ends 30 Sep; FY2027 answered HTTP 400
+     * "outside the range of current submissions" on 2026-11-07), and
+     * date_back steps one year back if the year answers no records. The
+     * records carry no year, so date_field stamps the rendered one into id_keys
+     * — without it each year would overwrite the last year's figures.
+     * This is the row date_back is for: measured that day, FY2026 answers
+     * HTTP 200 with `total: 0` (USDA's agency 012 too), so the run steps to
+     * FY2025, which answers 209 activities over three pages (100 + 100 + 9),
+     * 209 distinct `name`. page_resume is gone: three pages complete inside
+     * the ceiling (the 2026-10-24 note above says the cycle was a no-op), and
+     * the engine refuses page_resume on a row with a date token. */
+    .url = "https://api.usaspending.gov/api/v2/agency/097/program_activity/?fiscal_year={date-9m:%Y}&limit=100&sort=name&order=asc",
     .array_path = "results",
+    .date_back = 1, .date_step = "y", .date_field = "fiscal_year",
+    .id_keys = "name+fiscal_year",
     .interval = 21600,
     .page_param = "page",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "name",
     .description = "Every program activity the Department of Defense obligated "
       "against in the fiscal year, named as it appears in the budget "
@@ -467,8 +560,18 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "defence-budget-line",
     .tags = "\"defence\",\"budget\",\"objectclass\",\"usa\",\"dod\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.usaspending.gov/api/v2/agency/097/object_class/?fiscal_year=2025&limit=100",
+    /* 2026-11-09: fiscal_year was frozen at 2025. {date-9m:%Y} is the most
+     * recent CLOSED US fiscal year (FY ends 30 Sep; FY2027 answered HTTP 400
+     * "outside the range of current submissions" on 2026-11-07), and
+     * date_back steps one year back if the year answers no records. The
+     * records carry no year, so date_field stamps the rendered one into id_keys
+     * — without it each year would overwrite the last year's figures.
+     * Measured that day: FY2026 answers 35 object classes, 35 distinct `name`
+     * (the records carry no code). */
+    .url = "https://api.usaspending.gov/api/v2/agency/097/object_class/?fiscal_year={date-9m:%Y}&limit=100",
     .array_path = "results",
+    .date_back = 1, .date_step = "y", .date_field = "fiscal_year",
+    .id_keys = "name+fiscal_year",
     .interval = 21600,
     .page_param = "page",
     .title_keys = "name",
@@ -487,8 +590,17 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "defence-budget-line",
     .tags = "\"defence\",\"budget\",\"function\",\"usa\",\"dod\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.usaspending.gov/api/v2/agency/097/budget_function/?fiscal_year=2025",
+    /* 2026-11-09: fiscal_year was frozen at 2025. {date-9m:%Y} is the most
+     * recent CLOSED US fiscal year (FY ends 30 Sep; FY2027 answered HTTP 400
+     * "outside the range of current submissions" on 2026-11-07), and
+     * date_back steps one year back if the year answers no records. The
+     * records carry no year, so date_field stamps the rendered one into id_keys
+     * — without it each year would overwrite the last year's figures.
+     * Measured that day: FY2026 answers 6 budget functions, 6 distinct `name`. */
+    .url = "https://api.usaspending.gov/api/v2/agency/097/budget_function/?fiscal_year={date-9m:%Y}",
     .array_path = "results",
+    .date_back = 1, .date_step = "y", .date_field = "fiscal_year",
+    .id_keys = "name+fiscal_year",
     .interval = 21600,
     .title_keys = "name",
     .description = "Department of Defense obligations grouped by budget function and "
@@ -525,8 +637,18 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "defence-budget-line",
     .tags = "\"defence\",\"budget\",\"award\",\"usa\",\"dod\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.usaspending.gov/api/v2/agency/097/obligations_by_award_category/?fiscal_year=2025",
+    /* 2026-11-09: fiscal_year was frozen at 2025. {date-9m:%Y} is the most
+     * recent CLOSED US fiscal year (FY ends 30 Sep; FY2027 answered HTTP 400
+     * "outside the range of current submissions" on 2026-11-07), and
+     * date_back steps one year back if the year answers no records. The
+     * records carry no year, so date_field stamps the rendered one into id_keys
+     * — without it each year would overwrite the last year's figures.
+     * Measured that day: FY2026 answers 6 award categories, 6 distinct
+     * `category`. */
+    .url = "https://api.usaspending.gov/api/v2/agency/097/obligations_by_award_category/?fiscal_year={date-9m:%Y}",
     .array_path = "results",
+    .date_back = 1, .date_step = "y", .date_field = "fiscal_year",
+    .id_keys = "category+fiscal_year",
     .interval = 21600,
     .title_keys = "category",
     .description = "Department of Defense obligations split across the award "
@@ -571,13 +693,28 @@ static const hp_source HP3B19_DEFENCE[] = {
       "appear here as addressable records rather than as a browsable "
       "page" },
 
+  /* The twelve GOV.UK Search organisation rows below walk `start` in steps of
+   * 50 and used to declare no `order`, so their pages were Elasticsearch's
+   * relevance-default order over a live index — a walk with no stable sort,
+   * which skips a record for every one it repeats. They carry the ascending
+   * `order=public_timestamp` UK_GOVUK_MOD_PUBS above already carries, the
+   * offset bound in the URL (`start=0`), and `page_resume = 1` so that a
+   * collection which outgrows its ceiling is read over a cycle instead of an
+   * ascending walk dropping its NEWEST records. Measured 2026-11-07 (DES and
+   * the RPT format): `order=frobnicate` is HTTP 422, so the parameter is
+   * validated; `order=public_timestamp` and `-public_timestamp` answer
+   * different first pages; the search's own total is unchanged by the sort
+   * (594 / 594, 18,867 / 18,867); start=0 and start=50 are disjoint; and a
+   * deep page (start=5000) read twice is identical. Every org's total read the
+   * same day is under its ceiling, so each walk completes and the cycle is a
+   * no-op until it is not. */
   { .id = "UK_GOVUK_DES_PUBS", .name = "GOV.UK Search — Defence Equipment and Support publications",
     .name_ja = "GOV.UK 英国防装備支援庁刊行物",
     .category = "government", .portal = "https://www.gov.uk",
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"procurement\",\"des\",\"publication\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-equipment-and-support&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-equipment-and-support&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -585,6 +722,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -604,7 +742,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"research\",\"dstl\",\"science\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-science-and-technology-laboratory&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-science-and-technology-laboratory&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -612,9 +750,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
-    .page_max = 23,   /* 1,137 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
+    .page_max = 30,   /* 1,137 records at 50 a page, measured 2026-10-12; 1,140 on 2026-11-07 — 23 pages (1,150) left 10 of headroom, and an ascending walk cut short drops the NEWEST */
     .title_keys = "title",
     .description = "Documents published by Dstl, the MOD research agency, as "
       "structured records with title, path, format, organisation and "
@@ -630,7 +769,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"submarine\",\"nuclear\",\"sda\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=submarine-delivery-agency&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=submarine-delivery-agency&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -638,6 +777,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -656,7 +796,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"estate\",\"infrastructure\",\"dio\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-infrastructure-organisation&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-infrastructure-organisation&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -664,6 +804,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -681,7 +822,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"procurement\",\"pricing\",\"ssro\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=single-source-regulations-office&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=single-source-regulations-office&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -689,6 +830,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -707,7 +849,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"nuclear\",\"warhead\",\"awe\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=atomic-weapons-establishment&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=atomic-weapons-establishment&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -715,6 +857,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -732,7 +875,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"nuclear\",\"deterrent\",\"dno\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-nuclear-organisation&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-nuclear-organisation&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -740,6 +883,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -756,7 +900,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"innovation\",\"dasa\",\"funding\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-and-security-accelerator&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-and-security-accelerator&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -764,6 +908,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -781,7 +926,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "export-control-document",
     .tags = "\"exportcontrol\",\"uk\",\"licensing\",\"dualuse\",\"ecju\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=export-control-joint-unit&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=export-control-joint-unit&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -789,6 +934,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -808,7 +954,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "nuclear-regulatory-document",
     .tags = "\"nuclear\",\"uk\",\"regulator\",\"safeguards\",\"onr\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=office-for-nuclear-regulation&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=office-for-nuclear-regulation&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -816,6 +962,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -833,7 +980,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"hydrography\",\"maritime\",\"ukho\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=uk-hydrographic-office&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=uk-hydrographic-office&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -841,6 +988,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -858,7 +1006,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"safety\",\"inquiry\",\"dsa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-safety-authority&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-safety-authority&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -866,6 +1014,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",

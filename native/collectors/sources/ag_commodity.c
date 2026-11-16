@@ -42,6 +42,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* Emit one row. `data` is TAKEN OVER (printed, then deleted). Returns 1 if the
  * sink accepted it. */
@@ -75,7 +76,7 @@ static int run_nass(const source_ctx *ctx, intel_sink *sink) {
   const char *key = jo_env("USDA_NASS_KEY");
   if (!key) {
     fprintf(stderr, "[usda-nass-quickstats] gated (no USDA_NASS_KEY)\n");
-    return 0;                                   /* R6: gate, do not emit a row */
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "usda-nass-quickstats", "usda-nass-quickstats", (const char *const[]){"USDA_NASS_KEY", NULL}, NULL, NULL);                                   /* R6: gate, do not emit a row */
   }
   char since[16];
   jo_days_ago_iso(730, since, sizeof since);

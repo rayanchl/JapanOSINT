@@ -7,30 +7,38 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* datastore_search rows below carry `sort=_id asc` (2026-11-07). An offset
+ * walk with no declared order relies on the backend's default; CKAN's
+ * datastore `_id` is its own sequential row id. Measured one or two rows per
+ * host (izmir, data.gov.il, data.gov.au, QLD, VIC, Mauritius, Panama,
+ * data.gov.sg): `_id desc` answers the opposite end, a bogus sort is refused
+ * (409, or a 404 page on data.gov.il), and the total does not move. The
+ * unsorted first page was already _id 1,2,3 on every one, so this is
+ * STABILISING, not a recovery: 0 records were measured lost without it. */
 VJSON(il_appeals_tribunal_decisions, "il-appeals-tribunal-decisions", "Israel Appeals Tribunal (immigration/entry) — decisions register", "Israel Appeals Tribunal (immigration/entry) — decisions register",
   "il_legal", "legal",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=b9580b33-6b41-4ca3-b6e1-eb4bbf96a318&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=b9580b33-6b41-4ca3-b6e1-eb4bbf96a318&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"il\",\"legal\",\"batch17\",\"high-penetrancy\"]", 43200,
   "Tribunal decision index: application number, case number, which tribunal (e.g. Beer Sheva), the NAMED adjudicator, decision date, application type and subject (e.g. family reunification).");
 
 VJSON(il_authorized_prosecutors, "il-authorized-prosecutors", "Israel — prosecutors authorised by the Attorney General", "Israel — prosecutors authorised by the Attorney General",
   "il_legal", "legal",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=19ea0497-654a-4417-aa7a-0426a99ef946&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=19ea0497-654a-4417-aa7a-0426a99ef946&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"il\",\"legal\",\"batch17\",\"high-penetrancy\"]", 43200,
   "Named external and internal prosecutors carrying AG authorisation: first and last name, prosecutor type, statutory basis of the authorisation, the requesting public body, authorisation start and end dates and termination reason.");
 
 VJSON(il_decisive_appraisals, "il-decisive-appraisals", "Israel — decisive land appraisal decisions (shumot machriot)", "Israel — decisive land appraisal decisions (shumot machriot)",
   "il_legal", "legal",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=c4e178ff-9038-45f4-9dd1-fe7aeea6f70c&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=c4e178ff-9038-45f4-9dd1-fe7aeea6f70c&limit=100&sort=_id%20asc",
   "result.records",
   "en", "[\"il\",\"legal\",\"batch17\",\"high-penetrancy\"]", 43200,
   "Betterment-levy appraisal rulings with English column names: appraisal_header naming both parties, appraisal_type, appraiser_type, block and parcel, and the local planning committee. Names private parties against municipal committees.");
 
 VJSON(il_inheritance_registrar, "il-inheritance-registrar", "Israel Registrar of Inheritance — applications filed", "Israel Registrar of Inheritance — applications filed",
   "il_legal", "legal",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=7691b4a2-fe1d-44ec-9f1b-9f2f0a15381b&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=7691b4a2-fe1d-44ec-9f1b-9f2f0a15381b&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"il\",\"legal\",\"batch17\",\"high-penetrancy\"]", 43200,
   "Succession applications: filing date, application type (succession order vs probate), district, whether represented by counsel, application status, publication date and the newspaper that published the notice.");

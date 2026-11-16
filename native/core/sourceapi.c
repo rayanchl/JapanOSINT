@@ -8,6 +8,7 @@
  * 18,883 queries; the index is what keeps `kind` (which asks hpengine whether a
  * row takes an entity) from being re-derived on every request. */
 #include "sourceapi.h"
+#include "jo_page.h"
 #include "../source.h"
 #include "source_registry.h"
 #include "source_trust.h"
@@ -32,15 +33,7 @@
 
 /* ── small helpers ──────────────────────────────────────────────────────── */
 
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
+/* ISO-8601 UTC with milliseconds: jo_iso_now_ms() (lib/jocore.h). */
 static void iso_epoch(long long t, char *buf, size_t n) {
   time_t tt = (time_t)t; struct tm tm; gmtime_r(&tt, &tm);
   strftime(buf, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
@@ -387,7 +380,7 @@ static void snap_load(db_handle *db, snapshot *s) {
   s->trust = source_trust_load(db, &s->ntrust);
   if (s->trust) qsort(s->trust, (size_t)s->ntrust, sizeof *s->trust, id_cmp_trust);
   s->built_ms = now_ms();
-  iso_now(s->built_at, sizeof s->built_at);
+  jo_iso_now_ms(s->built_at, sizeof s->built_at);
 }
 
 /* Hands back a private COPY-BY-REFERENCE of the current snapshot under the
@@ -510,13 +503,16 @@ static cJSON *sched_json(const sched_t *r, const source_def *d, long long now) {
   else cJSON_AddNullToObject(o, "measuredInterval");
   const char *mode = source_interval_policy_mode(&sst, d);
   cJSON_AddNumberToObject(o, "policyInterval", (double)source_interval_default(&sst, d));
-  cJSON_AddStringToObject(o, "policy", mode);
+  /* "realtime" / "pod": the policy does not move this row (core/cadence.c) */
+  const char *exempt = declared > 0 ? cadence_exempt_reason(d) : NULL;
+  cJSON_AddStringToObject(o, "policy", exempt ? exempt : mode);
   /* And the one figure that outranks them (core/source_interval.h): an
    * interval the operator set for THIS source. Null when none is enabled. */
   long ov = declared > 0 ? source_interval_for(id) : 0;
   if (ov > 0) cJSON_AddNumberToObject(o, "overrideInterval", (double)ov);
   else cJSON_AddNullToObject(o, "overrideInterval");
   cJSON_AddStringToObject(o, "cadenceBasis", declared <= 0 ? "on demand" : ov > 0 ? "override"
+                          : exempt ? exempt
                           : strcmp(mode, "declared") ? "policy"
                           : (adaptive && r && r->freshness > 0) ? "measured" : "declared");
   long run = sched_next_delay(&sst, &pol, d);
@@ -524,6 +520,16 @@ static cJSON *sched_json(const sched_t *r, const source_def *d, long long now) {
   else cJSON_AddNullToObject(o, "runInterval");
   if (r && r->effective > 0) cJSON_AddNumberToObject(o, "effectiveInterval", (double)r->effective);
   else cJSON_AddNullToObject(o, "effectiveInterval");
+  /* What decided runInterval: the row's cadence as composed
+   * (sched_row_interval), or a health state stretching it. */
+  long live = declared > 0 ? sched_row_interval(&sst, d) : 0;
+  cJSON_AddStringToObject(o, "effectiveBasis",
+                          run <= 0 ? "on demand"
+                        : sst.quarantined ? "quarantine probe"
+                        : run != live ? (sst.consecutive_failures > 0
+                                           ? "health backoff"
+                                           : "last run's interval (until the next run)")
+                        : ov > 0 ? "override" : "cadence");
   cJSON_AddNumberToObject(o, "consecutiveFailures", r ? r->failures : 0);
   cJSON_AddNumberToObject(o, "consecutiveEmpties", r ? r->empties : 0);
   int backed = r && r->backoff_until > now;
@@ -750,13 +756,10 @@ static cJSON *search_obj(db_handle *db, const sourceapi_query *q, const char *fo
   for (int i = off; hits && i < nh && shown < lim; i++, shown++)
     cJSON_AddItemToArray(data, row_json(hits[i].e, s, now));
   cJSON_AddItemToObject(o, "data", data);
-  cJSON *page = cJSON_CreateObject();
-  cJSON_AddNumberToObject(page, "limit", lim);
-  cJSON_AddNumberToObject(page, "offset", off);
-  cJSON_AddNumberToObject(page, "count", shown);
-  cJSON_AddNumberToObject(page, "total", hits ? nh : 0);
-  cJSON_AddBoolToObject(page, "has_more", hits && off + shown < nh);
-  cJSON_AddItemToObject(o, "page", page);
+  /* A search that failed (no hit list) has no total: null, not 0 — a 0 here
+   * read as "nothing matched", which nothing measured (2026-11-07). */
+  cJSON_AddItemToObject(o, "page", jo_page_new(lim, off, shown, hits ? nh : -1,
+                                               hits && off + shown < nh));
   cJSON *fa = cJSON_CreateObject();
   cJSON_AddItemToObject(fa, "groups", facet_json(&f_grp, 40, 1));
   cJSON_AddItemToObject(fa, "collectors", facet_json(&f_coll, 80, 1));
@@ -770,7 +773,7 @@ static cJSON *search_obj(db_handle *db, const sourceapi_query *q, const char *fo
   cJSON_AddItemToObject(fa, "healths", facet_json(&f_health, 8, 0));
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddItemToObject(meta, "facets", fa);   /* inside meta: the {data,page,meta} envelope every list shares */
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddStringToObject(meta, "snapshot_at", s->built_at);
   cJSON_AddNumberToObject(meta, "registry_total", g_nreg);
@@ -963,7 +966,7 @@ char *sourceapi_collectors(db_handle *db) {
   cJSON_AddItemToObject(o, "data", data);
   cJSON_AddItemToObject(o, "groups", groups);
   cJSON *meta = cJSON_CreateObject();
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddStringToObject(meta, "snapshot_at", s->built_at);
   cJSON_AddNumberToObject(meta, "total", n);
@@ -1611,7 +1614,7 @@ char *sourceapi_detail(db_handle *db, const char *id) {
   cJSON_AddItemToObject(o, "provenance", prov_json(id));
 
   cJSON *meta = cJSON_CreateObject();
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddStringToObject(meta, "run", "/api/intel/sources/{id}/run");
   cJSON_AddStringToObject(meta, "items", "/api/intel/items?source={id}");
