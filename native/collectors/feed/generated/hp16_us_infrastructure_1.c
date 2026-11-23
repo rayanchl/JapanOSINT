@@ -104,6 +104,8 @@ static const hp_source T[] = {
     .description = "RDAP entity for an org handle: full autnums[] array (each with handle, start/endAutnum, name, events for registration and last-changed) and networks[], plus nested entities with vCard contact blocks. 95 KB for GOGL.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "infrastructure-record", .tags = "\"us\",\"infrastructure\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://rdap.arin.net/registry/entity/GOGL",
+    /* id_keys MEASURED 2026-11-16 on one list page: 55/55; was the title name, 31 distinct of 55. */
+    .id_keys = "handle",
     .array_path = "networks",
     .detail_url = "https://rdap.arin.net/registry/autnum/{v}", .detail_key = "endAutnum",
     .page_walk = 1,

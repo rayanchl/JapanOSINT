@@ -16,8 +16,8 @@ static const hp_source T[] = {
   { .id = "pl-bzp-board-search",
     .name = "eZamówienia / BZP (Poland) — public notice board search",
     .collector = "pl_procurement", .category = "procurement",
-    .description = "Poland's Biuletyn Zamowien Publicznych. Undocumented but keyless; I recovered the gateway from /mo-board/api/v1/Config (apiUrlQuery=/mo-board/api). Each row: noticeType, BZP notice number (2024/BZP 00104588/01), publication date, full order description, multi-line CPV list with Polish labels, offer-submission deadline, procedure result, buying organisation name/city/NUTS province/country, organizationNationalId (the Polish NIP — a hard join key to company data), organizationId, OCDS tenderId (ocds-148610-...), a contractors field, and objectId.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "procurement-record", .tags = "\"pl\",\"procurement\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "pl",
+    .description = "Poland's Biuletyn Zamowien Publicznych. Undocumented but keyless; I recovered the gateway from /mo-board/api/v1/Config (apiUrlQuery=/mo-board/api). Each row: noticeType, BZP notice number (2024/BZP 00104588/01), publication date, full order description, multi-line CPV list with Polish labels, offer-submission deadline, procedure result, buying organisation name/city/NUTS province/country, organizationNationalId (the Polish NIP — a hard join key to company data), organizationId, OCDS tenderId (ocds-148610-...), a contractors field, and objectId.",
+    .record_type = "procurement-record", .tags = "\"pl\",\"procurement\",\"batch16\"", .lang = "pl",
     /* No id_keys, so the engine keyed on the first scalar it found — and
      * `baseNoticeMOIdentifier` is NULL for 27 of 30 records (measured
      * 2026-10-20 over three pages), which collapsed them onto one uid. It only
@@ -27,8 +27,8 @@ static const hp_source T[] = {
      * `noticeNumber` and `bzpNumber` both 30 distinct — so this was our
      * identity and not the upstream's duplicates. */
     .url = "https://ezamowienia.gov.pl/mo-board/api/v1/Board/Search?PageSize=10",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME_PLUS_SIBLINGS, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
     .id_keys = "noticeNumber,bzpNumber,moIdentifier",
-    .detail_url = "https://ezamowienia.gov.pl/mo-board/api/v1/Board/Search?ObjectId={v}", .detail_key = "objectId",
     .page_param = "PageNumber",
     .page_start = 1,
     .interval = 21600, .free_tier = 1 },

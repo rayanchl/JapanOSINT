@@ -20,6 +20,8 @@ static const hp_source T[] = {
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .mode = HP_CSV,
     .url = "https://raw.githubusercontent.com/MobilityData/gbfs/master/systems.csv",
+    /* id_keys MEASURED 2026-11-16 on one list page: 1279/1279; was the title Name, 1247 distinct of 1279. */
+    .id_keys = "Auto-Discovery URL",
     .detail_url = "{v}", .detail_key = "Auto-Discovery URL",
     .interval = 3600, .free_tier = 1 },
 
@@ -70,10 +72,11 @@ static const hp_source T[] = {
   { .id = "us-fmcsa-carrier-census",
     .name = "FMCSA — motor carrier census (SAFER replacement)",
     .collector = "us_transport", .category = "transport",
-    .description = "Keyless substitute for the 403-blocked QCMobile/SAFER APIs. Per carrier: dot_number, status_code, add_date, mcs150_date, mcs150_mileage and year, dun_bradstreet_no, carrier_operation (interstate/intrastate), business_org_id, phy_omc_region, safety_inv_terr, legal and DBA name, physical and mailing address, phone, power units, driver count, hazmat flags, cargo-carried flags, and the safety rating with its rating date. Verified server-side filter ?dot_number=162845.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Keyless substitute for the 403-blocked QCMobile/SAFER APIs. Per carrier: dot_number, status_code, add_date, mcs150_date, mcs150_mileage and year, dun_bradstreet_no, carrier_operation (interstate/intrastate), business_org_id, phy_omc_region, safety_inv_terr, legal and DBA name, physical and mailing address, phone, power units, driver count, hazmat flags, cargo-carried flags, and the safety rating with its rating date. Verified server-side filter ?dot_number=162845.",
+    .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\"", .lang = "en",
     .url = "https://data.transportation.gov/resource/az4n-8mr2.json?$limit=100&$order=:id",
-    .detail_url = "https://data.transportation.gov/resource/az4n-8mr2.json?$limit=50&dot_number={v}", .detail_key = "dot_number",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "dot_number",   /* was the fallback (TITLE:legal_name); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 3600, .free_tier = 1 },
@@ -81,10 +84,11 @@ static const hp_source T[] = {
   { .id = "us-fmcsa-crash-file",
     .name = "FMCSA — motor carrier crash file",
     .collector = "us_transport", .category = "transport",
-    .description = "CARRIER → ITS CRASHES, the exact detail hop required. Per crash: crash_id, dot_number, report_state, report_number, report_date and time, report_seq_no, ci_status_code, final_status_date, location, state, county, fatalities, injuries, tow_away flag, vehicle configuration, hazmat released flag, weather and light conditions, road access control, trafficway description, and citation issued. Verified filter ?dot_number=728630.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "CARRIER → ITS CRASHES, the exact detail hop required. Per crash: crash_id, dot_number, report_state, report_number, report_date and time, report_seq_no, ci_status_code, final_status_date, location, state, county, fatalities, injuries, tow_away flag, vehicle configuration, hazmat released flag, weather and light conditions, road access control, trafficway description, and citation issued. Verified filter ?dot_number=728630.",
+    .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\"", .lang = "en",
     .url = "https://data.transportation.gov/resource/aayw-vxb3.json?$limit=100&$order=:id",
-    .detail_url = "https://data.transportation.gov/resource/aayw-vxb3.json?$limit=500&dot_number={v}", .detail_key = "dot_number",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME_PLUS_SIBLINGS, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "crash_id",   /* was the fallback (FIRST_SCALAR:change_date); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 3600, .free_tier = 1 },
@@ -92,10 +96,11 @@ static const hp_source T[] = {
   { .id = "us-fmcsa-vehicle-inspection-file",
     .name = "FMCSA — roadside vehicle inspection file",
     .collector = "us_transport", .category = "transport",
-    .description = "CARRIER → ITS ROADSIDE INSPECTIONS. Per inspection: inspection_id, dot_number, report_state, report_number, insp_date, insp_start_time/insp_end_time, region, ci_status_code, location_desc, inspection level, driver and vehicle out-of-service counts and OOS totals, hazmat inspection flag, unsafe-driving and fatigued-driving violation counts, and the vehicle/licence-plate identifiers. Verified filter ?dot_number=728630.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "CARRIER → ITS ROADSIDE INSPECTIONS. Per inspection: inspection_id, dot_number, report_state, report_number, insp_date, insp_start_time/insp_end_time, region, ci_status_code, location_desc, inspection level, driver and vehicle out-of-service counts and OOS totals, hazmat inspection flag, unsafe-driving and fatigued-driving violation counts, and the vehicle/licence-plate identifiers. Verified filter ?dot_number=728630.",
+    .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\"", .lang = "en",
     .url = "https://data.transportation.gov/resource/fx4q-ay7w.json?$limit=100&$order=:id",
-    .detail_url = "https://data.transportation.gov/resource/fx4q-ay7w.json?$limit=500&dot_number={v}", .detail_key = "dot_number",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME_PLUS_SIBLINGS, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "inspection_id",   /* was the fallback (FIRST_SCALAR:change_date); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 3600, .free_tier = 1 },
@@ -106,6 +111,8 @@ static const hp_source T[] = {
     .description = "100 manufacturers per page. Per row: Mfr_ID, Mfr_Name, Mfr_CommonName, Country, VehicleTypes[] with IsPrimary flag. The enumeration list whose Mfr_Name feeds the manufacturer-detail hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://vpic.nhtsa.dot.gov/api/vehicles/GetAllManufacturers?format=json&page=1",
+    /* id_keys MEASURED 2026-11-16 on one list page: 100/100; was the title VehicleTypes.0.Name, 17 distinct of 100. */
+    .id_keys = "Mfr_ID",
     .array_path = "results",
     .detail_url = "https://vpic.nhtsa.dot.gov/api/vehicles/GetManufacturerDetails/{v}?format=json", .detail_key = "Mfr_Name",
     .page_param = "page", .page_start = 1, .page_max = 20,   /* declared by the row's own URL */

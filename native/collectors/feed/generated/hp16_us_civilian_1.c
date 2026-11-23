@@ -37,41 +37,44 @@ static const hp_source T[] = {
   { .id = "littlesis-entity-connections",
     .name = "LittleSis entity connections (neighbour entities, hydrated)",
     .collector = "us_civilian", .category = "civilian",
-    .description = "The entities on the other end of every relationship, returned as FULL entity records (name, blurb, biography, types, aliases) rather than ids - so one request gives the whole first-degree network around a company or person already hydrated.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "The entities on the other end of every relationship, returned as FULL entity records (name, blurb, biography, types, aliases) rather than ids - so one request gives the whole first-degree network around a company or person already hydrated.",
+    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\"", .lang = "en",
     .url = "https://littlesis.org/api/entities/1/connections",
     .array_path = "data",
-    .detail_url = "https://littlesis.org/api/entities/{v}/connections", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME_PLUS_SIBLINGS, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "littlesis-entity-extensions",
     .name = "LittleSis entity type extensions",
     .collector = "us_civilian", .category = "civilian",
-    .description = "The typed extension records attached to an entity (Org -> Business -> PublicCompany), each with definition_id and display name. Tells a parser which additional typed field sets exist for that entity.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "The typed extension records attached to an entity (Org -> Business -> PublicCompany), each with definition_id and display name. Tells a parser which additional typed field sets exist for that entity.",
+    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\"", .lang = "en",
     .url = "https://littlesis.org/api/entities/1/extensions",
     .array_path = "data",
-    .detail_url = "https://littlesis.org/api/entities/{v}/extensions", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME_PLUS_SIBLINGS, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "littlesis-entity-lists",
     .name = "LittleSis lists containing an entity",
     .collector = "us_civilian", .category = "civilian",
-    .description = "Every curated list an entity belongs to (Fortune 1000, donor lists, board networks) with list id, description, entity_count and ranking flag. Reverse membership lookup - tells you what cohort researchers have already placed this entity in.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Every curated list an entity belongs to (Fortune 1000, donor lists, board networks) with list id, description, entity_count and ranking flag. Reverse membership lookup - tells you what cohort researchers have already placed this entity in.",
+    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\"", .lang = "en",
     .url = "https://littlesis.org/api/entities/1/lists",
     .array_path = "data",
-    .detail_url = "https://littlesis.org/api/entities/{v}/lists", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME_PLUS_SIBLINGS, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "us-austin-apd-crime-arcgis",
     .name = "Austin Police Dept reported crimes (city ArcGIS FeatureServer, non-Socrata)",
     .collector = "us_civilian", .category = "civilian",
-    .description = "CRIME_INCIDENT_POINTS_ID, RIN (report incident number), OCCURRENCE_DATE, OCCURRENCE_TIME, OCCURRENCE_WEEK_DAY, ADDRESS_BLOCK, offence fields and point geometry. Full ArcGIS query grammar (where=, time filters, geometry envelope, returnIdsOnly, orderByFields) so it can be paged exhaustively. Detail hop verified with objectIds=4388.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "CRIME_INCIDENT_POINTS_ID, RIN (report incident number), OCCURRENCE_DATE, OCCURRENCE_TIME, OCCURRENCE_WEEK_DAY, ADDRESS_BLOCK, offence fields and point geometry. Full ArcGIS query grammar (where=, time filters, geometry envelope, returnIdsOnly, orderByFields) so it can be paged exhaustively. Detail hop verified with objectIds=4388.",
+    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\"", .lang = "en",
     /* THIS ROW WAS STORING THE LAYER'S SCHEMA AS CRIME RECORDS, and the second
      * defect hid the first. Measured 2026-10-25.
      *
@@ -100,8 +103,8 @@ static const hp_source T[] = {
      * the layer's own returnCountOnly answers 297. */
     .url = "https://maps.austintexas.gov/arcgis/rest/services/CrimeViewer_new/APD_Reported_Crimes_new/FeatureServer/0/query?where=1%3D1&outFields=*&orderByFields=OBJECTID&resultRecordCount=1000&f=json",
     .array_path = "features",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
     .id_keys = "attributes.OBJECTID",
-    .detail_url = "https://maps.austintexas.gov/arcgis/rest/services/CrimeViewer_new/APD_Reported_Crimes_new/FeatureServer/0/query?objectIds={v}&outFields=*&f=json", .detail_key = "attributes.OBJECTID",
     .page_walk = 1,
     /* page_resume stays, and is now a genuine no-op rather than a cycle: the
      * layer holds 297 records and one page takes all of them, so the walk

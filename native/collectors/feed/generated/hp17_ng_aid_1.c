@@ -16,12 +16,12 @@ static const hp_source T[] = {
   { .id = "af-dportal-act-ng",
     .name = "d-portal (IATI) — aid activities in Nigeria",
     .collector = "ng_aid", .category = "aid",
-    .description = "Every IATI-published aid activity with Nigeria as recipient. Row: aid (activity identifier), reporting org name, reporting_ref, funder_ref, title, slug, status_code, day_start/day_end/day_length, description, commitment and spend in USD/EUR/GBP/CAD, flags. Detail by aid returns the single activity; the same aid also drives ?from=trans&aid= for individual transactions.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "aid-record", .tags = "\"ng\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Every IATI-published aid activity with Nigeria as recipient. Row: aid (activity identifier), reporting org name, reporting_ref, funder_ref, title, slug, status_code, day_start/day_end/day_length, description, commitment and spend in USD/EUR/GBP/CAD, flags. Detail by aid returns the single activity; the same aid also drives ?from=trans&aid= for individual transactions.",
+    .record_type = "aid-record", .tags = "\"ng\",\"aid\",\"batch17\"", .lang = "en",
     .url = "https://d-portal.org/q?from=act&country_code=NG&limit=5000&form=json",
     .array_path = "rows",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
     .id_keys = "aid",
-    .detail_url = "https://d-portal.org/q?from=act&aid={v}&form=json", .detail_key = "aid",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
@@ -61,8 +61,8 @@ static const hp_source T[] = {
   { .id = "af-dportal-trans-ng",
     .name = "d-portal (IATI) — aid transactions in Nigeria",
     .collector = "ng_aid", .category = "aid",
-    .description = "Activity rows joined to their individual transactions for Nigeria — adds trans_ref and trans_description on top of the activity fields. Detail hop by aid returns the full transaction ledger for that activity: trans_day, trans_currency, trans_value, USD/EUR/GBP/CAD equivalents, trans_code, trans_flow_code, trans_finance_code, trans_sector, trans_id.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "aid-record", .tags = "\"ng\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Activity rows joined to their individual transactions for Nigeria — adds trans_ref and trans_description on top of the activity fields. Detail hop by aid returns the full transaction ledger for that activity: trans_day, trans_currency, trans_value, USD/EUR/GBP/CAD equivalents, trans_code, trans_flow_code, trans_finance_code, trans_sector, trans_id.",
+    .record_type = "aid-record", .tags = "\"ng\",\"aid\",\"batch17\"", .lang = "en",
     /* RE-POINTED 2026-11-14 — THIS ROW NEVER FILTERED BY COUNTRY (rule 4d).
        It asked `from=act,trans&trans_country_code=NG`, and d-portal IGNORES
        that parameter: NG, GH and an impossible ZZ each return the same first
@@ -80,8 +80,8 @@ static const hp_source T[] = {
        cycle of 100,000 a run rather than its first slice re-read for ever. */
     .url = "https://d-portal.org/q?from=act,trans,country&country_code=NG&limit=5000&form=json&orderby=aid,trans_day,trans_value,trans_code",
     .array_path = "rows",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
     .id_keys = "aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country",
-    .detail_url = "https://d-portal.org/q?from=trans&aid={v}&form=json", .detail_key = "aid",
     .page_walk = 1,
     .page_resume = 1,
     .interval = 86400, .free_tier = 1 },

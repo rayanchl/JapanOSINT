@@ -1170,10 +1170,9 @@ static const hp_source HP3B19_SIGINT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=dd11fac6-4531-4a27-9c8c-a3a9e4ec2107&rows=1000",
     .array_path = "records",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME_PLUS_SIBLINGS, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
     .date_keys = "fields.emr_dt",
-    .detail_key = "fields.sup_id",
     .detail_path = "records",
-    .detail_url = "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=dd11fac6-4531-4a27-9c8c-a3a9e4ec2107&q=sup_id%3A{v}&rows=1000",
     .id_keys = "fields.sta_nm_anfr",
     .interval = 86400,
     .page_param = "start",

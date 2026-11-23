@@ -51,11 +51,12 @@ static const hp_source T[] = {
   { .id = "openaire-datasources-search",
     .name = "OpenAIRE data sources search",
     .collector = "eu_research", .category = "research",
-    .description = "Repositories and aggregators OpenAIRE harvests: official/English name, type scheme, OpenAIRE compatibility level, website, logo, original ids. Provenance registry - tells you which repository a record actually came from.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Repositories and aggregators OpenAIRE harvests: official/English name, type scheme, OpenAIRE compatibility level, website, logo, original ids. Provenance registry - tells you which repository a record actually came from.",
+    .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\"", .lang = "en",
     .url = "https://api.openaire.eu/graph/v1/dataSources?search=Zenodo&pageSize=100",
     .array_path = "results",
-    .detail_url = "https://api.openaire.eu/graph/v1/dataSources?search={v}&pageSize=50", .detail_key = "officialName",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 86400, .free_tier = 1 },
@@ -63,11 +64,12 @@ static const hp_source T[] = {
   { .id = "openaire-organizations-search",
     .name = "OpenAIRE organizations search",
     .collector = "eu_research", .category = "research",
-    .description = "118 org records for a name query: legal name, legal short name, website, country, OpenAIRE org id, pids and originalIds. The id used to attribute research products and projects to an institution.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "118 org records for a name query: legal name, legal short name, website, country, OpenAIRE org id, pids and originalIds. The id used to attribute research products and projects to an institution.",
+    .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\"", .lang = "en",
     .url = "https://api.openaire.eu/graph/v1/organizations?search=Kyoto&pageSize=100",
     .array_path = "results",
-    .detail_url = "https://api.openaire.eu/graph/v1/organizations?search={v}&pageSize=50", .detail_key = "legalName",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME_PLUS_SIBLINGS, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
@@ -89,22 +91,24 @@ static const hp_source T[] = {
   { .id = "openaire-project-by-id",
     .name = "OpenAIRE project by id (detail)",
     .collector = "eu_research", .category = "research",
-    .description = "One project resolved from its OpenAIRE id: grant code, acronym, title, dates, call id, open-access mandates, subjects and funding stream. The stable id that the research-products-by-project hop consumes.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "One project resolved from its OpenAIRE id: grant code, acronym, title, dates, call id, open-access mandates, subjects and funding stream. The stable id that the research-products-by-project hop consumes.",
+    .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\"", .lang = "en",
     .url = "https://api.openaire.eu/graph/v1/projects?id=corda__h2020::6c228bea4ee8a4ef22cd1d4fa079b63a",
     .array_path = "results",
-    .detail_url = "https://api.openaire.eu/graph/v1/projects?id={v}", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-projects-search",
     .name = "OpenAIRE Graph funded projects search",
     .collector = "eu_research", .category = "research",
-    .description = "5,202 funded projects: OpenAIRE project id, national/EU grant code, acronym, title, start/end dates, call identifier, keywords, and the fundings array (funder short name, jurisdiction, funding stream). Covers national funders (Czech TA, DFG, ANR...) as well as EU.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "5,202 funded projects: OpenAIRE project id, national/EU grant code, acronym, title, start/end dates, call identifier, keywords, and the fundings array (funder short name, jurisdiction, funding stream). Covers national funders (Czech TA, DFG, ANR...) as well as EU.",
+    .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\"", .lang = "en",
     .url = "https://api.openaire.eu/graph/v1/projects?search=hydrogen&pageSize=10",
     .array_path = "results",
-    .detail_url = "https://api.openaire.eu/graph/v1/projects?id={v}", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 86400, .free_tier = 1 },

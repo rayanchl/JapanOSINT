@@ -125,11 +125,12 @@ static const hp_source T[] = {
   { .id = "us-phl-carto-311",
     .name = "Philadelphia 311 service requests",
     .collector = "us_government", .category = "government",
-    .description = "service_request_id, status, status_notes, service_name, service_code, requested_datetime, updated_datetime, expected_datetime, agency_responsible, address, zipcode, lat/lon, media_url. Verified detail lookup by service_request_id=10007982.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "service_request_id, status, status_notes, service_name, service_code, requested_datetime, updated_datetime, expected_datetime, agency_responsible, address, zipcode, lat/lon, media_url. Verified detail lookup by service_request_id=10007982.",
+    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\"", .lang = "en",
     .url = "https://phl.carto.com/api/v2/sql?q=SELECT%20*%20FROM%20public_cases_fc%20LIMIT%205",
     .array_path = "rows",
-    .detail_url = "https://phl.carto.com/api/v2/sql?q=SELECT%20*%20FROM%20public_cases_fc%20WHERE%20service_request_id={v}", .detail_key = "service_request_id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "objectid",   /* was the fallback (FIRST_SCALAR:cartodb_id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
@@ -161,6 +162,8 @@ static const hp_source T[] = {
     .description = "157 federal accounts for USDA FY2024, each with code, name, obligated_amount, gross_outlay_amount and children[] listing the treasury account symbols beneath it. The appropriations map of an agency.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.usaspending.gov/api/v2/agency/012/federal_account/?fiscal_year=2024&limit=100",
+    /* id_keys MEASURED 2026-11-16 on one list page: 100/100; the uid came from the merged detail body (detail.id), so a record past the detail budget keyed differently from a deepened one. */
+    .id_keys = "code",
     .array_path = "results",
     .detail_url = "https://api.usaspending.gov/api/v2/federal_accounts/{v}/", .detail_key = "code",
     .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */

@@ -16,20 +16,22 @@ static const hp_source T[] = {
   { .id = "unsd-sdg-goal-list",
     .name = "UN Statistics — SDG goals",
     .collector = "int_government", .category = "government",
-    .description = "The 17 SDG goals with code, title, description and API uri. Detail hop verified with code 1 — returns that goal's targets, so this is the entry point to the whole SDG tree.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "government-record", .tags = "\"int\",\"government\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "The 17 SDG goals with code, title, description and API uri. Detail hop verified with code 1 — returns that goal's targets, so this is the entry point to the whole SDG tree.",
+    .record_type = "government-record", .tags = "\"int\",\"government\",\"batch17\"", .lang = "en",
     .url = "https://unstats.un.org/sdgapi/v1/sdg/Goal/List",
-    .detail_url = "https://unstats.un.org/sdgapi/v1/sdg/Goal/{v}/Target/List", .detail_key = "code",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "code",   /* was the fallback (ID_FALLBACK:code); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "unsd-sdg-indicator-list",
     .name = "UN Statistics — SDG indicators",
     .collector = "int_government", .category = "government",
-    .description = "251 official SDG indicators: goal, target, indicator code, full description, tier classification and the nested series that measure it. Detail hop verified with code 1.1.1 — returns every data series under that indicator.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "government-record", .tags = "\"int\",\"government\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "251 official SDG indicators: goal, target, indicator code, full description, tier classification and the nested series that measure it. Detail hop verified with code 1.1.1 — returns every data series under that indicator.",
+    .record_type = "government-record", .tags = "\"int\",\"government\",\"batch17\"", .lang = "en",
     .url = "https://unstats.un.org/sdgapi/v1/sdg/Indicator/List",
-    .detail_url = "https://unstats.un.org/sdgapi/v1/sdg/Indicator/{v}/Series/List", .detail_key = "code",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "code",   /* was the fallback (ID_FALLBACK:code); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

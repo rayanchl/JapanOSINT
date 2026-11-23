@@ -1077,6 +1077,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .tags = "\"transit\",\"usa\",\"onebusaway\",\"agency\",\"gtfs\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.pugetsound.onebusaway.org/api/where/agencies-with-coverage.json?key=TEST",
+    /* id_keys MEASURED 2026-11-16 on one list page: 12/12; the uid came from detail.0.id, the id of the first of 134 merged sibling records. */
+    .id_keys = "agencyId",
     .array_path = "data.list",
     .detail_key = "agencyId",
     .detail_path = "data.list",

@@ -27,11 +27,12 @@ static const hp_source T[] = {
   { .id = "europepmc-core-record",
     .name = "Europe PMC core record (full metadata)",
     .collector = "eu_health", .category = "health",
-    .description = "resultType=core returns the deep record: abstract, full author list with first/last names and affiliations, grants list (agency, grant id, acronym), MeSH terms, chemicals, full text ids, licence, and comment/correction links. Much richer than the lite search rows already in the tree.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "health-record", .tags = "\"eu\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "resultType=core returns the deep record: abstract, full author list with first/last names and affiliations, grants list (agency, grant id, acronym), MeSH terms, chemicals, full text ids, licence, and comment/correction links. Much richer than the lite search rows already in the tree.",
+    .record_type = "health-record", .tags = "\"eu\",\"health\",\"batch16\"", .lang = "en",
     .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:29456894&resultType=core&format=json",
     .array_path = "resultlist.result",
-    .detail_url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:{v}&resultType=core&format=json", .detail_key = "pmid",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 

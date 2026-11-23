@@ -28,11 +28,12 @@ static const hp_source T[] = {
   { .id = "af-pmg-calls-for-comment",
     .name = "PMG South Africa — parliamentary calls for public comment",
     .collector = "za_parliament", .category = "parliament",
-    .description = "Open public-participation windows on bills and inquiries. Row: id, committee_id, title, start_date, end_date, body (the full notice with submission contact details), summary, nid, url. Detail by id adds the embedded committee object.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Open public-participation windows on bills and inquiries. Row: id, committee_id, title, start_date, end_date, body (the full notice with submission contact details), summary, nid, url. Detail by id adds the embedded committee object.",
+    .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\"", .lang = "en",
     .url = "https://api.pmg.org.za/call-for-comment/",
     .array_path = "results",
-    .detail_url = "https://api.pmg.org.za/call-for-comment/{v}/", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_max = 35,   /* 1,727 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .interval = 86400, .free_tier = 1 },
@@ -40,11 +41,12 @@ static const hp_source T[] = {
   { .id = "af-pmg-gazettes",
     .name = "PMG South Africa — gazettes and media statements",
     .collector = "za_parliament", .category = "parliament",
-    .description = "411 gazette notices and Treasury/parliamentary media statements. Row: id, title, effective_date, start_date, nid, url and files[] carrying title, mime type, byte size, original filename and direct PDF url. Detail by id returns the record with its file list.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "411 gazette notices and Treasury/parliamentary media statements. Row: id, title, effective_date, start_date, nid, url and files[] carrying title, mime type, byte size, original filename and direct PDF url. Detail by id returns the record with its file list.",
+    .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\"", .lang = "en",
     .url = "https://api.pmg.org.za/gazette/",
     .array_path = "results",
-    .detail_url = "https://api.pmg.org.za/gazette/{v}/", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
@@ -63,22 +65,24 @@ static const hp_source T[] = {
   { .id = "af-pmg-ministers",
     .name = "PMG South Africa — ministers and their question dockets",
     .collector = "za_parliament", .category = "parliament",
-    .description = "41 serving South African ministers — a PEP list. Row: id, name, url, questions_url. Detail by id adds the committee they answer to; /minister/{id}/questions/ then returns 50 questions each with code, question_number, written/oral/president numbers, answer_type, date, year, full question and answer text, question_to_name and asked_by_name.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "41 serving South African ministers — a PEP list. Row: id, name, url, questions_url. Detail by id adds the committee they answer to; /minister/{id}/questions/ then returns 50 questions each with code, question_number, written/oral/president numbers, answer_type, date, year, full question and answer text, question_to_name and asked_by_name.",
+    .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\"", .lang = "en",
     .url = "https://api.pmg.org.za/minister/",
     .array_path = "results",
-    .detail_url = "https://api.pmg.org.za/minister/{v}/", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-policy-documents",
     .name = "PMG South Africa — policy documents",
     .collector = "za_parliament", .category = "parliament",
-    .description = "Green papers, white papers and departmental policy documents before Parliament. Row: id, title, effective_date, start_date, nid, url, files[] with title, mime, byte size, original filename and download url. Detail by id returns the record with its files.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Green papers, white papers and departmental policy documents before Parliament. Row: id, title, effective_date, start_date, nid, url, files[] with title, mime, byte size, original filename and download url. Detail by id returns the record with its files.",
+    .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\"", .lang = "en",
     .url = "https://api.pmg.org.za/policy-document/",
     .array_path = "results",
-    .detail_url = "https://api.pmg.org.za/policy-document/{v}/", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_max = 26,   /* 1,270 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .interval = 86400, .free_tier = 1 },
@@ -86,22 +90,24 @@ static const hp_source T[] = {
   { .id = "af-pmg-question-replies",
     .name = "PMG South Africa — ministerial question replies",
     .collector = "za_parliament", .category = "parliament",
-    .description = "Written and oral parliamentary questions with the minister's reply. Row: id, minister_id, title, start_date, body (full text of question and answer), question_number, nid, url, and an embedded minister object. Detail by id returns the whole reply. Pairs with /minister/{id}/questions/ which returns 50 questions per minister carrying asked_by_name and asked_by_member_id — the MP-to-minister accountability link.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Written and oral parliamentary questions with the minister's reply. Row: id, minister_id, title, start_date, body (full text of question and answer), question_number, nid, url, and an embedded minister object. Detail by id returns the whole reply. Pairs with /minister/{id}/questions/ which returns 50 questions per minister carrying asked_by_name and asked_by_member_id — the MP-to-minister accountability link.",
+    .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\"", .lang = "en",
     .url = "https://api.pmg.org.za/question_reply/",
     .array_path = "results",
-    .detail_url = "https://api.pmg.org.za/question_reply/{v}/", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-tabled-committee-reports",
     .name = "PMG South Africa — tabled committee reports",
     .collector = "za_parliament", .category = "parliament",
-    .description = "Formal reports tabled by parliamentary committees. Row: id, title, start_date, body, committee_id, embedded committee object, files[] with title, mime, byte size, original filename and download url. Detail by id adds petition_events.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Formal reports tabled by parliamentary committees. Row: id, title, start_date, body, committee_id, embedded committee object, files[] with title, mime, byte size, original filename and download url. Detail by id adds petition_events.",
+    .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\"", .lang = "en",
     .url = "https://api.pmg.org.za/tabled-committee-report/",
     .array_path = "results",
-    .detail_url = "https://api.pmg.org.za/tabled-committee-report/{v}/", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_max = 134,   /* 6,696 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
     .interval = 86400, .free_tier = 1 },

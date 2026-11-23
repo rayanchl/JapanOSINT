@@ -29,6 +29,8 @@ static const hp_source T[] = {
     .description = "All transit stops inside a bbox with stopId, name, lat/lon, level, timezone, free-text description of the physical stop, vertexType and served modes. Geographic entry point into the aggregated feed set.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "transport-record", .tags = "\"de\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.transitous.org/api/v1/map/stops?min=52.5,13.4&max=52.52,13.42",
+    /* id_keys MEASURED 2026-11-16 on one list page: 79/79; was the title name, 25 distinct of 79. */
+    .id_keys = "stopId",
     .detail_url = "https://api.transitous.org/api/v1/stoptimes?stopId={v}&n=10", .detail_key = "stopId",
     .page_walk = 1,
     .interval = 3600, .free_tier = 1 },

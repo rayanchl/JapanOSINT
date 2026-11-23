@@ -16,12 +16,12 @@ static const hp_source T[] = {
   { .id = "af-dportal-act-bw",
     .name = "d-portal (IATI) — aid activities in Botswana",
     .collector = "bw_aid", .category = "aid",
-    .description = "IATI aid activities with Botswana as recipient, with reporting organisation, funder reference, description, status and amounts. Detail hop by aid.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "aid-record", .tags = "\"bw\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "IATI aid activities with Botswana as recipient, with reporting organisation, funder reference, description, status and amounts. Detail hop by aid.",
+    .record_type = "aid-record", .tags = "\"bw\",\"aid\",\"batch17\"", .lang = "en",
     .url = "https://d-portal.org/q?from=act&country_code=BW&limit=5000&form=json",
     .array_path = "rows",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
     .id_keys = "aid",
-    .detail_url = "https://d-portal.org/q?from=act&aid={v}&form=json", .detail_key = "aid",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

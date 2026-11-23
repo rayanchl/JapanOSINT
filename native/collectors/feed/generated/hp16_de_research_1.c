@@ -74,11 +74,12 @@ static const hp_source T[] = {
   { .id = "datacite-prefixes",
     .name = "DataCite DOI prefix registry",
     .collector = "de_research", .category = "research",
-    .description = "Every DataCite DOI prefix with creation date and relationships to its clients and providers - attribution of an arbitrary DOI prefix to the organisation behind it.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"de\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Every DataCite DOI prefix with creation date and relationships to its clients and providers - attribution of an arbitrary DOI prefix to the organisation behind it.",
+    .record_type = "research-record", .tags = "\"de\",\"research\",\"batch16\"", .lang = "en",
     .url = "https://api.datacite.org/prefixes?page[size]=1000",
     .array_path = "data",
-    .detail_url = "https://api.datacite.org/prefixes/{v}", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
@@ -99,6 +100,8 @@ static const hp_source T[] = {
     .description = "Every Wikidata item whose statements point at a target item, with continuation token. Reverse-edge traversal - e.g. all people whose employer/alma mater is a given university - without writing SPARQL.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"de\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.wikidata.org/w/api.php?action=query&list=backlinks&bltitle=Q336264&format=json&bllimit=10",
+    /* id_keys MEASURED 2026-11-16 on one list page: 10/10; the uid came from detail.entities.<Q>.id. */
+    .id_keys = "pageid",
     .array_path = "query.backlinks",
     .detail_url = "https://www.wikidata.org/wiki/Special:EntityData/{v}.json", .detail_key = "title",
     .page_walk = 1,

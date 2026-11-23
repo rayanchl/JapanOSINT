@@ -16,11 +16,12 @@ static const hp_source T[] = {
   { .id = "np-bipad-earthquake",
     .name = "Nepal BIPAD - earthquake catalogue",
     .collector = "np_disaster", .category = "disaster",
-    .description = "National Seismological Centre earthquake catalogue: description (source), magnitude, GeoJSON epicentre point, address (district), eventOn timestamp and the ward/municipality/district/province codes. Detail endpoint verified with id 698.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "disaster-record", .tags = "\"np\",\"disaster\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "National Seismological Centre earthquake catalogue: description (source), magnitude, GeoJSON epicentre point, address (district), eventOn timestamp and the ward/municipality/district/province codes. Detail endpoint verified with id 698.",
+    .record_type = "disaster-record", .tags = "\"np\",\"disaster\",\"batch17\"", .lang = "en",
     .url = "https://bipadportal.gov.np/api/v1/earthquake/?format=json&limit=50",
     .array_path = "results",
-    .detail_url = "https://bipadportal.gov.np/api/v1/earthquake/{v}/?format=json", .detail_key = "id",
+    /* DETAIL HOP REMOVED 2026-11-23 (SAME, measured 2026-11-16, one list record against its own hop: the detail returned no field the list record lacks). It cost a request per record and stamped the rest _detail_pending for nothing. docs/detail-hop-measured-2026-11-16.tsv */
+    .id_keys = "id",   /* was the fallback (ID_FALLBACK:id); declared so the uid no longer depends on what a merged detail body offered */
     .page_walk = 1,
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 86400, .free_tier = 1 },

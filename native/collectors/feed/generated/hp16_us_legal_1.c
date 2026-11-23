@@ -360,6 +360,8 @@ static const hp_source T[] = {
     .description = "Keyless full docket for a Tax Court case: caseCaption, docketNumber(+suffix), createdAt, partyType, judge, and three deep arrays — docketEntries[] (index, filingDate, receivedAt, documentTitle, documentType, eventCode, filedBy, filedByRole, servedAt, servedPartiesCode, numberOfPages, isFileAttached, isSealed, isStricken, attachments, objections, lodged, signedJudgeName, docketEntryId), petitioners[] (name, state, contactId, serviceIndicator), irsPractitioners[] and privatePractitioners[] (name, barNumber, originalBarState, practiceType, practitionerType, admissionsDate, admissionsStatus). Case -> entries -> parties -> counsel in one request.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://public-api.dawson.ustaxcourt.gov/public-api/cases/12345-20",
+    /* id_keys MEASURED 2026-11-16 on one list page: 15/15; was the first scalar entityName, 1 distinct of 15. */
+    .id_keys = "docketEntryId",
     .array_path = "docketentries",
     .detail_url = "https://public-api.dawson.ustaxcourt.gov/public-api/12345-20/{v}/public-document-download-url", .detail_key = "docketEntryId",
     .page_walk = 1,
