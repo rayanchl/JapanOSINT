@@ -11,7 +11,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define API_URL "https://www.data.go.jp/data/api/action/package_search?rows=50"
+/* HOST CORRECTED 2026-11-23: www.data.go.jp 301s to data.e-gov.go.jp and DROPS
+ * THE QUERY STRING (Location: …/package_search, no ?rows=50), so this asked
+ * for 50 and was served the default 10. Asked of the target host directly the
+ * parameters are honoured (q=AED answers count 1,800 with 100 rows; an
+ * impossible word answers 0). */
+#define API_URL "https://data.e-gov.go.jp/data/api/action/package_search?rows=50"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *data = feed_get_json(ctx->http, API_URL, 10000);

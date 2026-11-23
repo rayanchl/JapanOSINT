@@ -253,6 +253,9 @@ python3 tools/audit_distinctness.py --self-test || { echo "FAILED"; fail=1; }
 # that system fields never enter the content hash.
 echo "--- socrata_id_churn self-test ---"
 python3 tools/socrata_id_churn.py --self-test || { echo "FAILED"; fail=1; }
+# Rule 4d for SCHEDULED rows: the grouping of rows into filter families and the
+# three-request verdict (real / sibling / impossible value).
+python3 tools/audit_scheduled_filter.py --self-test || { echo "FAILED"; fail=1; }
 
 if [ -n "${JO_UNIT_MATCH:-}" ]; then
   # Never let a filtered run be mistaken for a full one: a green partial run

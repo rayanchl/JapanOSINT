@@ -9671,26 +9671,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-website, country "
       "CL." },
 
-  { .id = "JO48_NEWS_Q18712763_5", .name = "ArchDaily (CL) - ArchDaily Global",
-    .name_ja = "ArchDaily (CL) - ArchDaily Global",
-    .category = "news", .collector = "news_latam", .portal = "https://www.archdaily.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.archdaily.com/br/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 24 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-website, country "
-      "CL." },
-
   { .id = "JO48_NEWS_Q18712763_6", .name = "ArchDaily (CL) - Type:   ArchDaily em Português",
     .name_ja = "ArchDaily (CL) - Type:   ArchDaily em Português",
     .category = "news", .collector = "news_latam", .portal = "https://www.archdaily.com.br/",
@@ -9708,26 +9688,6 @@ static const hp_source HP3B48_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 24 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "13:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-website, country "
-      "CL." },
-
-  { .id = "JO48_NEWS_Q18712763_7", .name = "ArchDaily (CL) - ArchDaily Global",
-    .name_ja = "ArchDaily (CL) - ArchDaily Global",
-    .category = "news", .collector = "news_latam", .portal = "https://www.archdaily.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.archdaily.com/cn/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 24 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as news-website, country "
       "CL." },
 

@@ -1,0 +1,16 @@
+id	file	url	reason
+JO57_Q750587	hp3b57_jpmuni.c	https://www.city.shirakawa.fukushima.jp/rss.php?mode=news&amp;type=1	decoded URL already registered in hp3b43_jprss.c
+JO57_Q750587_2	hp3b57_jpmuni.c	https://www.city.shirakawa.fukushima.jp/rss.php?mode=news&amp;type=2	decoded URL already registered in hp3b43_jprss.c
+JO57_Q750587_3	hp3b57_jpmuni.c	https://www.city.shirakawa.fukushima.jp/rss.php?mode=news&amp;type=3	decoded URL already registered in hp3b43_jprss.c
+JO57_Q905721	hp3b57_jpmuni.c	https://www.city.hidaka.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;new1=1	decoded URL already registered in hp3b43_jprss.c
+JO57_Q905721_2	hp3b57_jpmuni.c	https://www.city.hidaka.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=1025&amp;includeShortcut=1&amp;ignore=1	decoded URL already registered in hp3b43_jprss.c
+JO57_Q905721_3	hp3b57_jpmuni.c	https://www.city.hidaka.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=710&amp;includeShortcut=1&amp;ignore=1	decoded URL already registered in hp3b43_jprss.c
+JO57_Q905721_4	hp3b57_jpmuni.c	https://www.city.hidaka.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;dirId=711&amp;includeShortcut=1&amp;ignore=1	decoded URL already registered in hp3b43_jprss.c
+JO57_Q1205046	hp3b57_jpmuni.c	https://www.town.yabuki.fukushima.jp/rss.php?mode=news&amp;type=0	decoded URL already registered in hp3b43_jprss.c
+JO57_Q1205046_2	hp3b57_jpmuni.c	https://www.town.yabuki.fukushima.jp/rss.php?mode=news&amp;type=3	decoded URL already registered in hp3b43_jprss.c
+JO57_Q1205046_3	hp3b57_jpmuni.c	https://www.town.yabuki.fukushima.jp/rss.php?mode=news&amp;type=1	decoded URL already registered in hp3b43_jprss.c
+JO57_Q1203337	hp3b57_jpmuni.c	https://www.town.ibaraki-sakai.lg.jp/rss.php?mode=news&amp;type=0	decoded URL already registered in hp3b43_jprss.c
+JO57_Q387136_2	hp3b57_jpmuni.c	https://www.city.kawaguchi.lg.jp/cgi-bin/feed.php?type=rss_2.0&amp;new1=1	decoded URL already registered in hp3b25_jpmuni2.c
+JO48_NEWS_Q18712763_5	hp3b48_news.c	https://www.archdaily.com/br/feed	same global feed as JO48_NEWS_Q18712763 (all three 301 to feeds.feedburner.com/Archdaily; 200/29015 bytes/24 items for cl, br and an impossible zz)
+JO48_NEWS_Q18712763_7	hp3b48_news.c	https://www.archdaily.com/cn/feed	same global feed as JO48_NEWS_Q18712763 (all three 301 to feeds.feedburner.com/Archdaily; 200/29015 bytes/24 items for cl, br and an impossible zz)
+JPOD_DATAGOJP_INDEX	hp3b24_jpbulk.c	https://www.data.go.jp/data/api/3/action/package_list	301s to data.e-gov.go.jp package_list, the read JP25_JPNATGOV_EGOV_CKAN_LIST already makes (same array_path, same id_keys); 18,836 ids either way

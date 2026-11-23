@@ -7271,7 +7271,12 @@ static const hp_source HP3B43_JPRSS[] = {
     .tags = "\"japan\",\"municipal\",\"notice\",\"rss\",\"08\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     /* &amp; kept on purpose: decoding it stored less (2026-10-22, docs/amp-decode-2026-10-22.tsv) */
-    .url = "https://www.town.ibaraki-sakai.lg.jp/rss.php?mode=news&amp;type=1",
+    /* &amp; DECODED 2026-11-16: the literal `&amp;` sent `amp;type`, which this
+       server ignores, so this row and its siblings each stored the SAME default
+       feed under different names (tools/audit_scheduled_filter.py:
+       FILTER_IGNORED, byte-identical bodies for two real values and an
+       impossible one). Decoded, each value is its own feed. */
+    .url = "https://www.town.ibaraki-sakai.lg.jp/rss.php?mode=news&type=1",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
@@ -9534,7 +9539,12 @@ static const hp_source HP3B43_JPRSS[] = {
     .tags = "\"japan\",\"municipal\",\"notice\",\"rss\",\"12\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     /* &amp; kept on purpose: decoding it stored less (2026-10-22, docs/amp-decode-2026-10-22.tsv) */
-    .url = "https://www.city.sosa.lg.jp/rss.php?mode=news&amp;type=0",
+    /* &amp; DECODED 2026-11-16: the literal `&amp;` sent `amp;type`, which this
+       server ignores, so this row and its siblings each stored the SAME default
+       feed under different names (tools/audit_scheduled_filter.py:
+       FILTER_IGNORED, byte-identical bodies for two real values and an
+       impossible one). Decoded, each value is its own feed. */
+    .url = "https://www.city.sosa.lg.jp/rss.php?mode=news&type=0",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
@@ -9573,7 +9583,12 @@ static const hp_source HP3B43_JPRSS[] = {
     .tags = "\"japan\",\"municipal\",\"notice\",\"rss\",\"12\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     /* &amp; kept on purpose: decoding it stored less (2026-10-22, docs/amp-decode-2026-10-22.tsv) */
-    .url = "https://www.city.sosa.lg.jp/rss.php?mode=news&amp;type=1",
+    /* &amp; DECODED 2026-11-16: the literal `&amp;` sent `amp;type`, which this
+       server ignores, so this row and its siblings each stored the SAME default
+       feed under different names (tools/audit_scheduled_filter.py:
+       FILTER_IGNORED, byte-identical bodies for two real values and an
+       impossible one). Decoded, each value is its own feed. */
+    .url = "https://www.city.sosa.lg.jp/rss.php?mode=news&type=1",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
@@ -9593,7 +9608,12 @@ static const hp_source HP3B43_JPRSS[] = {
     .tags = "\"japan\",\"municipal\",\"notice\",\"rss\",\"12\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     /* &amp; kept on purpose: decoding it stored less (2026-10-22, docs/amp-decode-2026-10-22.tsv) */
-    .url = "https://www.city.sosa.lg.jp/rss.php?mode=news&amp;type=2",
+    /* &amp; DECODED 2026-11-16: the literal `&amp;` sent `amp;type`, which this
+       server ignores, so this row and its siblings each stored the SAME default
+       feed under different names (tools/audit_scheduled_filter.py:
+       FILTER_IGNORED, byte-identical bodies for two real values and an
+       impossible one). Decoded, each value is its own feed. */
+    .url = "https://www.city.sosa.lg.jp/rss.php?mode=news&type=2",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
