@@ -178,7 +178,7 @@ export function RepairCard({ row, busy, onApprove, onReject, onRevert, onOpenSou
       </div>
       {swap && <UrlDiff oldUrl={swap.old_url} newUrl={swap.new_url} />}
       {swap && swap.runtime_override === false && (
-        <div className="text-[11px] text-accent">old_url isn't matchable by a runtime override — applying records the swap but may not rewrite live traffic.</div>
+        <div className="text-[11px] text-accent">old_url isn&apos;t matchable by a runtime override — applying records the swap but may not rewrite live traffic.</div>
       )}
       {row.pr_url && <a href={row.pr_url} target="_blank" rel="noreferrer" className="text-xs text-accent hover:underline">Open PR ↗</a>}
       {(approvable && (onApprove || onReject)) || (row.status === 'merged' && onRevert) ? (
@@ -672,7 +672,7 @@ function BreachTab() {
             <div><div className="font-mono text-xl font-bold text-neon-red">{summary ? (summary.breachMaterialized ?? 0).toLocaleString() : '—'}</div><div className="text-[10px] text-osint-muted">with records</div></div>
           </div>
           <Button busy={runningCollector} onClick={runCollector}><LuPlay size={12} /> Run collector</Button>
-          <div className="text-[11px] text-osint-muted">Runs the breach-corpus collector, which loads the seed straight into the catalog — the same thing step 3 does, on the server's daily schedule.</div>
+          <div className="text-[11px] text-osint-muted">Runs the breach-corpus collector, which loads the seed straight into the catalog — the same thing step 3 does, on the server&apos;s daily schedule.</div>
         </StepCard>
 
         <StepCard n={2} title="Parse" hint="Reads and normalizes the seed. Writes nothing.">

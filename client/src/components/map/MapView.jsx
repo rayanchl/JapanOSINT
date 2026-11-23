@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useMemo, useLayoutEffect } from 'react';
 // maplibre-gl comes through utils/maplibre.js, which sets the v6 worker URL
 // (without it a production build never fires `load`) and provides the
 // `map.transform` alias deck.gl's MapboxOverlay needs on v6. The v6 bump
@@ -16,7 +16,6 @@ import useLiveVehicles from '../../hooks/useLiveVehicles';
 import { getLayerIcon } from '../../utils/layerIcons';
 import apiUrl from '../../utils/apiUrl.js';
 import { rasterizeIcon } from '../../utils/iconRaster';
-import { createRailwayLineTags } from '../../utils/railwayLineTags';
 import { useSatelliteTracks } from '../../hooks/useSatelliteTracks.js';
 import { satelliteColor } from '../../utils/satelliteColor.js';
 
@@ -4195,7 +4194,7 @@ export default function MapView({ layers, layerData, catalog, onFeatureClick, on
   // bare circles before their sprite existed are repainted with it.
   const [iconEpoch, setIconEpoch] = useState(0);
   const catalogRef = useRef(catalog);
-  catalogRef.current = catalog;
+  useLayoutEffect(() => { catalogRef.current = catalog; });
   const layerDefFor = useCallback((id) => catalogRef.current?.[id] || LAYER_DEFINITIONS[id], []);
   const bakedSceneIdsRef = useRef(new Set());
   const satelliteImageryVisibleRef = useRef(false);
@@ -4360,6 +4359,7 @@ export default function MapView({ layers, layerData, catalog, onFeatureClick, on
       map.remove();
       mapRef.current = null;
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- map construction is mount-once; onFeatureClick, onMapReady and the initial style are deliberately the first-render values
   }, []);
 
   // Server-only layers arrive after /api/layers answers: register their
@@ -4612,6 +4612,7 @@ export default function MapView({ layers, layerData, catalog, onFeatureClick, on
       }
     })();
     return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- `viewport` is keyed by its four scalar bounds so a new object with the same box does not refetch
   }, [mapReady,
       layers?.unifiedTrains?.visible,
       layers?.unifiedSubways?.visible,
@@ -4736,7 +4737,6 @@ export default function MapView({ layers, layerData, catalog, onFeatureClick, on
     // `layers` is read via the closure above only for initial visibility of a
     // newly-baked layer; visibility changes afterward are handled by the
     // separate effect below, so we deliberately don't rebind this effect.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Sync baked-layer visibility with the Satellite Imagery layer toggle.
@@ -4834,6 +4834,7 @@ export default function MapView({ layers, layerData, catalog, onFeatureClick, on
     layers?.plateauBuildings?.visible,
     layers?.plateauBuildings?.opacity,
     currentStyle,
+    pushDeckLayers,
   ]);
 
   // Re-channel basemap labels through deck.gl so they sit *above* PLATEAU
@@ -4935,7 +4936,7 @@ export default function MapView({ layers, layerData, catalog, onFeatureClick, on
         setBasemapBuildingsHidden(mapRef.current, true);
       }
     });
-  }, [currentStyle, layers, layerData]);
+  }, [currentStyle, layers, layerData, layerDefFor, onRenderNotice]);
 
   return (
     <div className="map-container">

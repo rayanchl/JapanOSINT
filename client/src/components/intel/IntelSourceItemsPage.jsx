@@ -4,7 +4,7 @@ import RunControl from '../sources/RunControl.jsx';
 import { useApi } from '../../hooks/useApi.js';
 import { useIntelItems, SINCE_PRESETS, useSinceIso } from '../../hooks/useIntel.js';
 import { useRecordSearch } from '../../api/searchHistory.js';
-import { Page, Card, Pill, Button, Input, Segmented, Toggle, ErrorNotice, EmptyState, LoadingState, BoundNote, KV, cx, toast } from '../ui/kit.jsx';
+import { Page, Card, Pill, Button, Input, Segmented, Toggle, ErrorNotice, EmptyState, LoadingState, BoundNote, KV, cx } from '../ui/kit.jsx';
 import IntelItemRow from './IntelItemRow.jsx';
 import { isSafeUrl } from '../../utils/safeUrl.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';

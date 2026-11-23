@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LuWifi, LuCircleCheck, LuCircleX, LuSun, LuMoon, LuRefreshCw } from 'react-icons/lu';
 import { api } from '../../api/client.js';

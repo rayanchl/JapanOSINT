@@ -1,3 +1,4 @@
+import { createElement } from 'react';
 // Per-layer flat icon mapping, powered by react-icons (Material Design +
 // Font Awesome where Material doesn't have a fit). Each entry is a React
 // component; consumers render it inline (LayerPanel) or stringify it
@@ -21,28 +22,22 @@ import {
   MdAccountBalance,
   MdGavel,
   MdFlag,
-  MdSchool,
   MdRestaurant,
   MdLocalBar,
   MdLocalCafe,
-  MdFastfood,
   MdLocalDrink,
   MdStore,
   MdLocalGroceryStore,
-  MdLocalMall,
-  MdShoppingBag,
   MdLocalGasStation,
   MdEvStation,
   MdElectricBolt,
   MdWaterDrop,
   MdWater,
   MdWhatshot,
-  MdBolt,
   MdCellTower,
   MdSatelliteAlt,
   MdRouter,
   MdWifi,
-  MdPhoneIphone,
   MdPhone,
   MdCameraAlt,
   MdPeople,
@@ -54,20 +49,16 @@ import {
   MdDirectionsCar,
   MdTraffic,
   MdAnchor,
-  MdLocalShipping,
   MdAttachMoney,
   MdTrendingUp,
   MdFactory,
   MdPrecisionManufacturing,
-  MdComputer,
   MdMemory,
   MdStorage,
-  MdRocketLaunch,
   MdShield,
   MdSecurity,
   MdRadar,
   MdPark,
-  MdForest,
   MdCastle,
   MdMuseum,
   MdStadium,
@@ -76,19 +67,15 @@ import {
   MdDownhillSkiing,
   MdStar,
   MdTempleBuddhist,
-  MdTempleHindu,
   MdCasino,
   MdMic,
   MdBook,
   MdBathtub,
   MdEmojiFoodBeverage,
   MdAgriculture,
-  MdSetMeal,
-  MdLocalLibrary,
   MdDirectionsSubway,
   MdMap,
   MdPublicOff,
-  MdTravelExplore,
   MdEmergency,
   MdWindPower,
   MdOilBarrel,
@@ -310,4 +297,10 @@ export const LAYER_ICONS = {
 
 export function getLayerIcon(layerId) {
   return LAYER_ICONS[layerId] || MdPlace;
+}
+
+// Module-level component so callers render a layer's icon without creating a
+// component type during their own render.
+export function LayerIcon({ layerId, ...props }) {
+  return createElement(getLayerIcon(layerId), props);
 }

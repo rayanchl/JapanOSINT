@@ -31,10 +31,9 @@ function jst(ms) {
  * layers the window does NOT filter, instead of pretending it does.
  */
 export default function TimeSlider({ tw, report, view, layers, catalog, collapsed, onToggleCollapsed }) {
-  const [, tick] = useState(0);
-  useEffect(() => { const t = setInterval(() => tick((x) => x + 1), 15000); return () => clearInterval(t); }, []);
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => { const t = setInterval(() => setNow(Date.now()), 15000); return () => clearInterval(t); }, []);
 
-  const now = Date.now();
   const lo = now - RANGE_SEC * 1000;
   const norm = tw.at == null ? 1 : Math.max(0, Math.min(1, (tw.at - lo) / (now - lo)));
 

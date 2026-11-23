@@ -28,16 +28,15 @@ export function buildTracks(fc) {
 }
 
 export function useSatelliteTracks(satelliteFc) {
-  const [features, setFeatures] = useState(() => buildTracks(satelliteFc));
+  // `tick` only forces the tracks to be re-derived (they depend on the clock).
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    setFeatures(buildTracks(satelliteFc));
     if (!satelliteFc?.features?.length) return undefined;
-    const id = setInterval(() => {
-      setFeatures(buildTracks(satelliteFc));
-    }, REFRESH_MS);
+    const id = setInterval(() => setTick((n) => n + 1), REFRESH_MS);
     return () => clearInterval(id);
   }, [satelliteFc]);
 
-  return useMemo(() => ({ type: 'FeatureCollection', features }), [features]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- `tick` is the refresh trigger, not a value read inside
+  return useMemo(() => ({ type: 'FeatureCollection', features: buildTracks(satelliteFc) }), [satelliteFc, tick]);
 }

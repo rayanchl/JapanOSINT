@@ -227,7 +227,7 @@ function FindingRow({ item, canWrite, busy, onUnpin, who }) {
           </div>
           {!resolved && (
             <div className="text-[11px] text-accent mt-1">
-              The referenced row couldn't be read when this was pinned, so there is no display copy. The pin is kept as a bare reference — it is still evidence that this was cited.
+              The referenced row couldn&apos;t be read when this was pinned, so there is no display copy. The pin is kept as a bare reference — it is still evidence that this was cited.
             </div>
           )}
         </div>
@@ -617,7 +617,7 @@ function DeleteCaseSheet({ open, onClose, caseRow, onConfirm }) {
         <div className="text-neon-red font-semibold">This cannot be undone</div>
         <div className="text-osint-muted">
           Deleting “{caseRow.name}” permanently removes its pinned references ({caseRow.item_count ?? 0}), notes, activity trail and roster.
-          The intel items, entities and breach records themselves are not deleted — only this case's record of citing them.
+          The intel items, entities and breach records themselves are not deleted — only this case&apos;s record of citing them.
         </div>
         <Field label={`Type “${caseRow.name}” — or the word DELETE — to enable the button.`}>
           <Input value={typed} onChange={(e) => setTyped(e.target.value)} autoFocus />

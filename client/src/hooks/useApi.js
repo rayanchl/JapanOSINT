@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { api } from '../api/client.js';
 
 /**
@@ -17,7 +17,7 @@ export function useApi(path, { deps = [], transform, enabled = true, poll = 0 } 
   const [loadedAt, setLoadedAt] = useState(null);
   const seq = useRef(0);
   const transformRef = useRef(transform);
-  transformRef.current = transform;
+  useLayoutEffect(() => { transformRef.current = transform; });
 
   const load = useCallback(async ({ silent = false } = {}) => {
     if (!path || !enabled) { setLoading(false); return; }
@@ -35,7 +35,7 @@ export function useApi(path, { deps = [], transform, enabled = true, poll = 0 } 
     } finally {
       if (my === seq.current) setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo -- caller-supplied `deps` are spread by design
   }, [path, enabled, ...deps]);
 
   useEffect(() => { load(); }, [load]);

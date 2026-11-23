@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LuUndo2, LuCircleCheck, LuX } from 'react-icons/lu';
 import useMapOverlayLayer from '../../../hooks/useMapOverlayLayer.js';
@@ -49,7 +49,7 @@ export default function AOIDrawOverlay({ mapRef, active, onClose, onSave }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const stateRef = useRef({ mode, sizing, center });
-  stateRef.current = { mode, sizing, center };
+  useLayoutEffect(() => { stateRef.current = { mode, sizing, center }; });
 
   const clearAll = useCallback(() => {
     setPoints([]); setClosed(false); setCenter(null); setSizing(false); setError(null);

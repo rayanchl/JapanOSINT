@@ -58,6 +58,7 @@ export default function useMapOverlayLayer(mapRef, sourceId, geojson, layerSpecs
       } catch { /* map torn down */ }
     };
     // layerSpecs are treated as static per mount; geojson identity drives updates.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // `mapRef.current` is a dependency on purpose: the map is created after the first render, and the parent's re-render once it exists is what mounts the layer.
+    // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/refs -- see above
   }, [mapRef, mapRef?.current, sourceId, geojson]);
 }

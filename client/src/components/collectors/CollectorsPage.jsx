@@ -149,8 +149,8 @@ export function SingletonFold({ items, groupKey }) {
 
 export default function CollectorsPage() {
   const { data, error, loading, reload } = useApi('/api/collectors');
-  const rows = Array.isArray(data?.data) ? data.data : [];
-  const groups = Array.isArray(data?.groups) ? data.groups : [];
+  const rows = useMemo(() => (Array.isArray(data?.data) ? data.data : []), [data]);
+  const groups = useMemo(() => (Array.isArray(data?.groups) ? data.groups : []), [data]);
   const [q, setQ] = useState('');
   const [sort, setSort] = useState('sources');
   const [closed, setClosed] = useState(() => new Set());

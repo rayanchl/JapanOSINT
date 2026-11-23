@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { LuX } from 'react-icons/lu';
 import MapView from './MapView';
@@ -110,7 +110,7 @@ export default function MapPage() {
   const { resolve: resolvePermalink } = usePermalink();
   const [permalinkError, setPermalinkError] = useState(null);
   const aoiDrawingRef = useRef(false);
-  aoiDrawingRef.current = aoiDrawing;
+  useLayoutEffect(() => { aoiDrawingRef.current = aoiDrawing; });
 
   const handleMapReady = useCallback((map) => {
     mapRef.current = map;

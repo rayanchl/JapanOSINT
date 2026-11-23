@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LuRefreshCw, LuMapPin, LuPencil, LuTrash2, LuBellRing, LuPenTool } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
-import { useApi } from '../../hooks/useApi.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import { canWriteWorkspace, readOnlyNote } from '../../auth/roles.js';
 import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import {
   Page, Card, Pill, Button, Input, TextArea, Field, Segmented, Sheet, ConfirmDialog, ErrorNotice, EmptyState,
-  LoadingState, BoundNote, CopyButton, toast, cx,
+  LoadingState, BoundNote, CopyButton, toast, 
 } from '../ui/kit.jsx';
 
 /**

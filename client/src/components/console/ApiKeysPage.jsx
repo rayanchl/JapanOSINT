@@ -121,7 +121,7 @@ export default function ApiKeysPage() {
           <div className="text-xs text-osint-muted flex items-center gap-2">
             {canManage ? <LuKeyRound size={14} className="text-accent" /> : <LuLock size={14} />}
             {canManage
-              ? <span>You can edit this workspace's keys. Policy: <span className="font-mono text-osint-text">{policy || '—'}</span></span>
+              ? <span>You can edit this workspace&apos;s keys. Policy: <span className="font-mono text-osint-text">{policy || '—'}</span></span>
               : <span>Read-only — your workspace owner restricts who can edit keys (policy <span className="font-mono">{policy}</span>).</span>}
           </div>
           {auth.role === 'owner' && <Button size="sm" onClick={() => setShowPolicy(true)}>Key-edit policy</Button>}
@@ -292,7 +292,7 @@ function KeyDetailSheet({ row, scope, canManage, statusRows, gatedPaging, onClos
               <Input type="password" mono placeholder="New value" value={newValue} onChange={(e) => setNewValue(e.target.value)} autoComplete="off" />
               <Button type="submit" variant="primary" busy={busy} disabled={!newValue}>Save</Button>
             </form>
-            <div className="text-[11px] text-osint-muted pt-2">Empty values aren't accepted here — use Clear to drop back to the {scope === 'workspace' ? 'platform default' : '.env-baked value'}.</div>
+            <div className="text-[11px] text-osint-muted pt-2">Empty values aren&apos;t accepted here — use Clear to drop back to the {scope === 'workspace' ? 'platform default' : '.env-baked value'}.</div>
             {working.byok && (
               <div className="pt-2">
                 <Button variant="danger" size="sm" busy={busy} onClick={() => setConfirmClear(true)}>Clear</Button>

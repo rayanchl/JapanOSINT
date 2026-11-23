@@ -79,7 +79,7 @@ export default function SearchHistoryDropdown({ open, onRun, limit = 20, onClose
         <LuUsers size={13} className="text-accent mt-0.5 flex-shrink-0" />
         <div className="min-w-0 text-[11px]">
           <div className="text-osint-text font-medium">Shared with your workspace</div>
-          <div className="text-osint-muted">Every member of this workspace sees every member's searches here, each with who ran it. Clearing removes only your own entries, and is not logged.</div>
+          <div className="text-osint-muted">Every member of this workspace sees every member&apos;s searches here, each with who ran it. Clearing removes only your own entries, and is not logged.</div>
         </div>
         <div className="ml-auto flex items-center gap-1">
           <Link to="/console/saved-searches" className="text-[11px] text-osint-muted hover:text-accent whitespace-nowrap" onClick={onClose}>Manage</Link>

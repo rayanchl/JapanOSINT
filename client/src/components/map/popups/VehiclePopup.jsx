@@ -22,7 +22,7 @@ export default function VehiclePopup({ properties }) {
       }
     })();
     return () => { cancelled = true; };
-  }, [tripId]);
+  }, [tripId, synthetic]);
 
   // An estimated marker must say so plainly, and must not imply a real vehicle
   // sits here. The old copy for this case was "Not a schedule-backed vehicle",

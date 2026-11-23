@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getLayerIcon } from '../../utils/layerIcons';
+import { LayerIcon } from '../../utils/layerIcons';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import {
   groupByCategory,
@@ -76,7 +76,6 @@ export function LayerStatusCell({ featureData, isActive, showSpinner }) {
 function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporalChange, featureData, forceLoading = false, renderNotices }) {
   const [showOpacity, setShowOpacity] = useState(false);
   const isActive = state.visible;
-  const Icon = getLayerIcon(id);
   const showSpinner = state.loading || (forceLoading && isActive);
 
   // For temporal layers, derive the sorted list of distinct year_month
@@ -119,7 +118,7 @@ function LayerToggleItem({ id, def, state, onToggle, onOpacityChange, onTemporal
           className="flex items-center gap-1.5 flex-1 min-w-0 text-left"
           onClick={() => setShowOpacity(!showOpacity)}
         >
-          <Icon size={14} color={def.color} aria-hidden="true" />
+          <LayerIcon layerId={id} size={14} color={def.color} aria-hidden="true" />
           <span className="flex flex-col min-w-0">
             <span className={`text-xs truncate ${isActive ? 'text-osint-text' : 'text-osint-muted'}`}>
               {def.name}

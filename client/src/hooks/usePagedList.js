@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { api } from '../api/client.js';
 
 /**
@@ -67,7 +67,7 @@ export function usePagedList(path, { pageSize = 50, deps = [], key = 'id', enabl
   const [loaded, setLoaded] = useState(false);
   const seq = useRef(0);
   const shown = useRef(0);
-  shown.current = rows.length;
+  useLayoutEffect(() => { shown.current = rows.length; });
 
   const reload = useCallback(async ({ silent = false } = {}) => {
     if (!path || !enabled) { setLoading(false); return; }
@@ -89,7 +89,7 @@ export function usePagedList(path, { pageSize = 50, deps = [], key = 'id', enabl
     } finally {
       if (my === seq.current) setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo -- caller-supplied `deps` are spread by design
   }, [path, enabled, pageSize, maxPage, ...deps]);
 
   useEffect(() => { reload(); }, [reload]);

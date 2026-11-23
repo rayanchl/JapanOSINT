@@ -4,7 +4,7 @@ import { LuExternalLink, LuDownload, LuShieldCheck, LuEye } from 'react-icons/lu
 import { api } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
-import { Page, Section, Pill, Button, ErrorNotice, LoadingState, KV, Segmented, BoundNote, PagedFooter, CopyButton, Input, cx, toast } from '../ui/kit.jsx';
+import { Page, Section, Pill, Button, ErrorNotice, LoadingState, KV, Segmented, PagedFooter, CopyButton, Input, cx, toast } from '../ui/kit.jsx';
 import { usePagedList } from '../../hooks/usePagedList.js';
 import SaveStarButton from '../saved/SaveStarButton.jsx';
 import PinToCaseButton from '../cases/CasePickerSheet.jsx';
@@ -89,7 +89,7 @@ export default function IntelItemPage() {
           <aside className="space-y-4 min-w-0">
             <Section label="Provenance">
               <KV pairs={[
-                ['uid', <span className="flex items-center gap-1 break-all">{uid}<CopyButton text={uid} /></span>],
+                ['uid', <span key="v" className="flex items-center gap-1 break-all">{uid}<CopyButton text={uid} /></span>],
                 ['source', item.provenance?.source_name], ['source id', item.source_id],
                 ['source (ja)', item.provenance?.source_name_ja], ['category', item.provenance?.category],
                 ['method', item.provenance?.collection_method], ['sub-source', item.sub_source_id],
@@ -292,7 +292,7 @@ function RevealSection({ uid }) {
   };
   return (
     <Section label="Leaked secret (operator)" right={<Button size="sm" variant="danger" busy={busy} disabled={!reason.trim()} onClick={reveal}><LuEye size={12} /> Reveal</Button>}>
-      <div className="text-xs text-osint-muted">Decrypts this breach record's secret server-side. Platform-operator role required; every reveal is audited with your reason.</div>
+      <div className="text-xs text-osint-muted">Decrypts this breach record&apos;s secret server-side. Platform-operator role required; every reveal is audited with your reason.</div>
       <Input className="mt-2" maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)}
         placeholder="Reason (case / ticket reference) — required, recorded in the audit log" />
       {res?.error && <ErrorNotice error={res.error} title={res.error.status === 403 ? 'Reveal refused: platform operator role required' : 'Reveal failed'} className="mt-2" />}

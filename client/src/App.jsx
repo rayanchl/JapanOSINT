@@ -80,7 +80,7 @@ function LoadingGate() {
         <LoadingState label="Connecting…" />
         {auth.connectionStalled && (
           <div>
-            <div className="text-sm font-semibold">Can't reach the backend</div>
+            <div className="text-sm font-semibold">Can&apos;t reach the backend</div>
             <div className="text-xs text-osint-muted">The API on this origin is not answering. Check that the server is running.</div>
           </div>
         )}

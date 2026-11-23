@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useLayoutEffect } from 'react';
 import { LuX, LuFootprints, LuCrosshair } from 'react-icons/lu';
 import useIsochrone from '../../../hooks/useIsochrone.js';
 import useMapOverlayLayer from '../../../hooks/useMapOverlayLayer.js';
@@ -37,7 +37,7 @@ export default function IsochroneOverlay({ mapRef, open, onClose }) {
   const [transfers, setTransfers] = useState(2);
   const [depart, setDepart] = useState('');   // '' = now
   const pickingRef = useRef(picking);
-  pickingRef.current = picking;
+  useLayoutEffect(() => { pickingRef.current = picking; });
 
   useEffect(() => {
     const map = mapRef?.current;

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import apiUrl from '../../utils/apiUrl.js';
 import { useApi } from '../../hooks/useApi.js';
 import { usePagedList } from '../../hooks/usePagedList.js';

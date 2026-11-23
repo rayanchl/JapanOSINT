@@ -132,7 +132,7 @@ function AuthStep({ onDone }) {
       </form>
 
       {settings === undefined && <div className="text-[11px] text-osint-muted text-center">Checking which sign-in providers this project enables…</div>}
-      {settings === null && <div className="text-[11px] text-osint-muted text-center">Could not read the project's provider list; every provider is shown, but only the ones enabled in Supabase will work.</div>}
+      {settings === null && <div className="text-[11px] text-osint-muted text-center">Could not read the project&apos;s provider list; every provider is shown, but only the ones enabled in Supabase will work.</div>}
       {settings?.signupDisabled && mode === 'signup' && <div className="text-[11px] text-accent text-center">Sign-up is disabled on this project; ask an admin for an invite.</div>}
 
       {providers.length > 0 && (
@@ -238,7 +238,7 @@ function FinishStep() {
   const auth = useAuth();
   return (
     <div className="space-y-4 text-center">
-      <h2 className="font-mono text-lg font-semibold">You're set</h2>
+      <h2 className="font-mono text-lg font-semibold">You&apos;re set</h2>
       <p className="text-xs text-osint-muted">
         New data lands on the Map and in the Intel feed as collectors run. Set up alert rules under Console → Alerts to get notified on matches.
       </p>

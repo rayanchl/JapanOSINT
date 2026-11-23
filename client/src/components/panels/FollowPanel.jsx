@@ -229,10 +229,10 @@ const HitRow = memo(function HitRow({ hit, hitKey, expanded, setExpanded }) {
 
 function RunBanner({ activeRuns, runs }) {
   // Tick once a second so elapsed timers update on screen.
-  const [, setTick] = useState(0);
+  const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     if (activeRuns.length === 0) return undefined;
-    const t = setInterval(() => setTick((x) => x + 1), 1000);
+    const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, [activeRuns.length]);
 
@@ -255,7 +255,7 @@ function RunBanner({ activeRuns, runs }) {
                 {r.collector_key}
               </span>
               <span className="text-osint-muted ml-2 shrink-0">
-                {r.trigger} · {r.hit_count || 0} hit · {fmtElapsed(Date.now() - r.started_ms)}
+                {r.trigger} · {r.hit_count || 0} hit · {fmtElapsed(Math.max(0, now - r.started_ms))}
               </span>
             </div>
           ))}

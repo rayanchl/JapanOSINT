@@ -223,7 +223,7 @@ function ToAlertSheet({ search, onClose, onCreated }) {
           <Section label="Deliver to">
             <ChannelsEditor channels={channels} onChange={setChannels} />
           </Section>
-          {why && <div className="rounded-md border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-accent">Why can't this be an alert? {why}</div>}
+          {why && <div className="rounded-md border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-accent">Why can&apos;t this be an alert? {why}</div>}
           {error && !why && <ErrorNotice error={error} title="Could not create the rule" />}
         </div>
       )}
@@ -274,7 +274,7 @@ function HistorySection({ onRun, mine = false }) {
       {rows.length > 0 && (
         <div className="px-3 py-2 space-y-0.5">
           <PagedFooter shown={rows.length} total={list.total} hasMore={list.hasMore} busy={list.loadingMore} onMore={list.loadMore} error={list.moreError} noun="recent searches" />
-          {meta?.retained_max != null && <div className="text-[10px] text-osint-muted">the server keeps each member's {meta.retained_max} most recent searches</div>}
+          {meta?.retained_max != null && <div className="text-[10px] text-osint-muted">the server keeps each member&apos;s {meta.retained_max} most recent searches</div>}
         </div>
       )}
       <ConfirmDialog open={confirmClear} onClose={() => setConfirmClear(false)} onConfirm={clear} title="Clear search history?" confirmLabel="Clear history" message="Removes every search you ran from the workspace history. Your teammates' searches and all saved searches are kept." />

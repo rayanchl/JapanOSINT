@@ -6,7 +6,7 @@ import { useApi } from '../../hooks/useApi.js';
 import { usePagedList } from '../../hooks/usePagedList.js';
 import RunControl from './RunControl.jsx';
 import { useAuthOptional } from '../../auth/AuthContext.jsx';
-import { Page, Card, Section, Pill, Button, KV, ErrorNotice, EmptyState, LoadingState, BoundNote, PagedFooter, Mono, Toggle, Input, Field, cx, toast } from '../ui/kit.jsx';
+import { Page, Card, Section, Pill, Button, KV, ErrorNotice, LoadingState, BoundNote, PagedFooter, Mono, Toggle, Input, Field, cx, toast } from '../ui/kit.jsx';
 import { isSafeUrl } from '../../utils/safeUrl.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import {
@@ -134,7 +134,7 @@ export function SettingsSection({ sourceId }) {
                    * number do not say this between them: a disabled knob with
                    * a tuned value in the box resolves to the default, and that
                    * is the thing an operator needs to read off the page. */
-                  ['in effect', <span className={cx(s.enabled && s.effective !== s.default && 'text-accent')}>
+                  ['in effect', <span key="v" className={cx(s.enabled && s.effective !== s.default && 'text-accent')}>
                     {fmtSetting(s.unit, s.effective)}{!s.enabled && ' — the default, because this setting is off'}
                   </span>],
                   s.configured && ['last changed', `${when(s.updated_at)}${s.updated_by ? ` by ${s.updated_by}` : ''}`],
@@ -335,12 +335,12 @@ export default function SourceDetailPage() {
             isHp && ['entity shape wanted', eng.want],
             isHp && ['entity tokens', (eng.entity_tokens || []).length ? eng.entity_tokens.join(' ') : 'none (fixed endpoint)'],
             isHp && ['request', eng.request?.method],
-            isHp && ['url template', <Template value={eng.request?.url} />],
-            isHp && eng.request?.post_body && ['POST body', <Template value={eng.request.post_body} />],
+            isHp && ['url template', <Template key="v" value={eng.request?.url} />],
+            isHp && eng.request?.post_body && ['POST body', <Template key="v" value={eng.request.post_body} />],
             isHp && eng.request?.content_type && ['content type', eng.request.content_type],
             isHp && (eng.request?.headers || []).length > 0 && ['headers (templates)', eng.request.headers.join(' | ')],
             isHp && ['credential', eng.request?.key_env ? `env ${eng.request.key_env}` : 'none required'],
-            isHp && eng.request?.index_url && ['index page followed each run', <Template value={eng.request.index_url} />],
+            isHp && eng.request?.index_url && ['index page followed each run', <Template key="v" value={eng.request.index_url} />],
             isHp && eng.request?.index_href_must && ['index link must contain', eng.request.index_href_must],
             isHp && eng.request?.charset && ['declared charset', eng.request.charset],
             isHp && eng.request?.timeout_ms && ['timeout', `${eng.request.timeout_ms} ms`],
@@ -363,7 +363,7 @@ export default function SourceDetailPage() {
               ['title keys', eng.parsing?.title_keys || 'default list (name / title / …)'],
               ['id keys', eng.parsing?.id_keys ? <span>{eng.parsing.id_keys} <span className="text-osint-muted">(+ composes, , chooses)</span></span> : 'default list (id / uid / guid / …)'],
               eng.parsing?.link_keys && ['link keys', eng.parsing.link_keys],
-              eng.parsing?.link_tmpl && ['link template', <Template value={eng.parsing.link_tmpl} />],
+              eng.parsing?.link_tmpl && ['link template', <Template key="v" value={eng.parsing.link_tmpl} />],
               eng.parsing?.date_keys && ['date keys', eng.parsing.date_keys],
               eng.parsing?.body_keys && ['body keys', eng.parsing.body_keys],
               (eng.parsing?.lat_key || eng.parsing?.latlon_key || eng.parsing?.lonlat_key) && ['coordinates', eng.parsing.latlon_key ? `${eng.parsing.latlon_key} (lat,lon)` : eng.parsing.lonlat_key ? `${eng.parsing.lonlat_key} (lon,lat)` : `${eng.parsing.lat_key} / ${eng.parsing.lon_key}`],
@@ -376,7 +376,7 @@ export default function SourceDetailPage() {
               eng.parsing?.max_items && ['max items', eng.parsing.max_items],
               ['detail hop', eng.detail_hop?.declared ? <span><Template value={eng.detail_hop.detail_url} /> <span className="text-osint-muted">via {eng.detail_hop.detail_key}{eng.detail_hop.detail_path ? ` → ${eng.detail_hop.detail_path}` : ''}{eng.detail_hop.detail_max ? `, at most ${eng.detail_hop.detail_max}` : ', every record (bounded by JO_HP_DETAIL_MAX)'}</span></span> : 'none'],
               ['paging', eng.paging?.strategy === 'single_request' ? 'single request' : `${eng.paging.strategy}${eng.paging.next_path ? ` ${eng.paging.next_path}` : ''}${eng.paging.page_param ? ` ${eng.paging.page_param}` : ''}${eng.paging.page_size ? `, ${eng.paging.page_size}/page` : ''}${eng.paging.page_zero_based ? ', 0-based' : ''}${eng.paging.page_max ? `, up to ${eng.paging.page_max} pages` : ''}`],
-              eng.paging?.next_tmpl && ['next page template', <Template value={eng.paging.next_tmpl} />],
+              eng.paging?.next_tmpl && ['next page template', <Template key="v" value={eng.paging.next_tmpl} />],
             ].filter(Boolean)} />
           </Card>
         </Section>
@@ -408,7 +408,7 @@ export default function SourceDetailPage() {
             ['portal', reg.url && isSafeUrl(reg.url) ? <a href={reg.url} target="_blank" rel="noreferrer" className="text-accent hover:underline">{reg.url}</a> : (reg.url || NOT_MEASURED)],
             ['fetch host', reg.host || NOT_MEASURED],
             ['license', reg.license || NOT_MEASURED],
-            ['map layer', <MapLayerNote layerId={d.layer_id ?? reg.layer ?? null} geocoded={d.records_geocoded ?? data.geocoded} />],
+            ['map layer', <MapLayerNote key="v" layerId={d.layer_id ?? reg.layer ?? null} geocoded={d.records_geocoded ?? data.geocoded} />],
             ['geocoded records', `${fmtCount(data.geocoded)} of ${fmtCount(data.item_count)}`],
             ['bounding box', data.bbox ? `${data.bbox.min_lat.toFixed(3)},${data.bbox.min_lon.toFixed(3)} → ${data.bbox.max_lat.toFixed(3)},${data.bbox.max_lon.toFixed(3)}` : 'no geocoded records'],
           ]} />
@@ -500,7 +500,7 @@ export default function SourceDetailPage() {
         {st.health && !st.health.working && (
           <Card>
             <KV pairs={[
-              ['not working', <Pill tone="danger">{st.health.state}</Pill>],
+              ['not working', <Pill key="v" tone="danger">{st.health.state}</Pill>],
               st.health.http_status && ['upstream answered', `HTTP ${st.health.http_status}${st.health.body_parsed === false ? ' · the body did not parse' : ''}`],
               st.health.outcome && ['the engine read it as', st.health.outcome],
               st.health.credentials_required?.length && ['needs a credential', st.health.credentials_required.join(', ')],
@@ -512,7 +512,7 @@ export default function SourceDetailPage() {
         )}
         <Card>
           <KV pairs={[
-            ['status', <Pill tone={statusTone(st.status)}>{st.status || 'pending — never run'}</Pill>],
+            ['status', <Pill key="v" tone={statusTone(st.status)}>{st.status || 'pending — never run'}</Pill>],
             ['last check / last success', `${when(st.last_check)} · ${when(st.last_success)}`],
             ['last run', st.records_last_run != null ? `${fmtCount(st.records_last_run)} records in ${st.response_time_ms ?? '?'} ms` : NOT_MEASURED],
             st.error_message && ['last error', st.error_message],

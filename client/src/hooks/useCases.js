@@ -125,7 +125,7 @@ export function usePaged(path, { limit = 50, enabled = true, deps = [] } = {}) {
       if (my !== seq.current) return;
       setError(e);
     } finally { if (my === seq.current) setLoading(false); }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo -- caller-supplied `deps` are spread by design
   }, [fetchPage, path, enabled, ...deps]);
 
   const loadMore = useCallback(async () => {

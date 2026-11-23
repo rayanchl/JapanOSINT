@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { api } from '../../api/client.js';
 
 /* A server-backed typeahead: the options are never preloaded. Each keystroke
@@ -16,7 +16,8 @@ export default function Typeahead({ value, valueLabel, onChange, pathFor, pick, 
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState(null);
   const seq = useRef(0);
-  const pickRef = useRef(pick); pickRef.current = pick;
+  const pickRef = useRef(pick);
+  useLayoutEffect(() => { pickRef.current = pick; });
 
   useEffect(() => {
     if (!open) return undefined;

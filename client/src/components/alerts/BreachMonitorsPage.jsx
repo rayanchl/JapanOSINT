@@ -10,7 +10,7 @@ import { canWriteWorkspace, isWorkspaceAdmin, readOnlyNote } from '../../auth/ro
 import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import {
   Page, Section, Card, Pill, Button, Input, Field, Select, Sheet, ConfirmDialog, ErrorNotice, EmptyState,
-  LoadingState, BoundNote, CopyButton, KV, toast, cx,
+  LoadingState, BoundNote, CopyButton, KV, toast, 
 } from '../ui/kit.jsx';
 
 /**

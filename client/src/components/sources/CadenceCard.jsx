@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
-import { Card, Pill, Button, Input, KV, ErrorNotice } from '../ui/kit.jsx';
+import { Card, Pill, Button, Input, ErrorNotice } from '../ui/kit.jsx';
 import { fmtInterval, fmtCount, policyLabel } from '../../utils/sourceFormat.js';
 
 /* The system-wide cadence policy (GET/PUT /api/sources/cadence): one global

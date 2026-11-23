@@ -8,7 +8,7 @@ import { useAuth } from '../../auth/AuthContext.jsx';
 import { useSearchStore } from '../../hooks/useSearch.js';
 import { KeyPolicySheet } from './ApiKeysPage.jsx';
 import {
-  Page, Section, Row, Card, Pill, Button, Input, Field, Select, Segmented,
+  Page, Section, Row, Pill, Button, Input, Field, Select, Segmented,
   ConfirmDialog, ErrorNotice, EmptyState, LoadingState, BoundNote, Spinner, cx, toast,
 } from '../ui/kit.jsx';
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
 import { subscribe, startSearch, fetchSuggestions, fetchSuggestionSet, attachRun, getRun } from '../store/searchStore.js';
 import apiUrl from '../utils/apiUrl.js';
 
@@ -41,7 +41,9 @@ export function useSearchSuggestions(query) {
   const asked = useRef(new Set());
   const inflight = useRef(null);
   const current = useRef(q);
-  current.current = q;
+  useLayoutEffect(() => { current.current = q; });
+  // Render-visible copy of `asked` (the ref stays the synchronous once-only guard).
+  const [askedSnap, setAskedSnap] = useState(() => new Set());
 
   // The fast path: one non-expanded request per settled query.
   useEffect(() => {
@@ -61,6 +63,7 @@ export function useSearchSuggestions(query) {
     const eq = (raw ?? current.current).trim();
     if (!eq || asked.current.has(eq)) return;
     asked.current.add(eq);
+    setAskedSnap(new Set(asked.current));
     inflight.current?.abort();
     const ctl = new AbortController();
     inflight.current = ctl;
@@ -86,7 +89,7 @@ export function useSearchSuggestions(query) {
   }, [q]);
 
   const canExpand = !!set && set.q === q && !!set.meta?.retrieval && !set.expanded
-    && expanding !== q && !asked.current.has(q);
+    && expanding !== q && !askedSnap.has(q);
 
   // Paused on this query and its ordinary answer is in (either order): ask once.
   useEffect(() => {

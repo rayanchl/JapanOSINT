@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { LuBellPlus, LuRefreshCw, LuPencil, LuTrash2, LuFlaskConical, LuHistory, LuBellOff, LuBell } from 'react-icons/lu';
+import { LuBellPlus, LuRefreshCw, LuPencil, LuTrash2, LuFlaskConical, LuHistory, LuBell } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { usePaged } from '../../hooks/useCases.js';
@@ -10,10 +10,10 @@ import { canWriteWorkspace, readOnlyNote } from '../../auth/roles.js';
 import { useMemberNames, authorLabel } from '../../hooks/useMembers.js';
 import {
   Page, Section, Card, Pill, Button, Input, TextArea, Field, Select, Toggle, Segmented, Sheet,
-  ConfirmDialog, ErrorNotice, EmptyState, LoadingState, BoundNote, KV, toast, cx,
+  ConfirmDialog, ErrorNotice, EmptyState, LoadingState, BoundNote, toast, cx,
 } from '../ui/kit.jsx';
 import {
-  ChannelsEditor, ChannelPills, validateChannels, MASKED, isMuted, muteLabel, MUTE_OPTIONS,
+  ChannelsEditor, ChannelPills, validateChannels, isMuted, muteLabel, MUTE_OPTIONS,
   splitList, joinList, predicateSummary, emptyChannel,
 } from './alertShared.jsx';
 
@@ -54,6 +54,7 @@ export default function AlertsPage() {
   const [params] = useSearchParams();
   const presetAoi = params.get('aoi');
   const presetNew = params.get('new');
+  const paramsKey = params.toString();
   const preset = useMemo(() => {
     if (!presetAoi && !presetNew) return null;
     const p = {};
@@ -64,7 +65,7 @@ export default function AlertsPage() {
     if (params.get('name')) p.name = params.get('name');
     return p;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [presetAoi, presetNew, params.toString()]);
+  }, [presetAoi, presetNew, paramsKey]);
   // A viewer following the link gets the list, not an editor the server refuses.
   useEffect(() => { if (preset && canWrite) setEditing('new'); }, [preset, canWrite]);
 

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import SaveStarButton from '../saved/SaveStarButton.jsx';
 import PinToCaseButton from '../cases/CasePickerSheet.jsx';
-import { getLayerIcon } from '../../utils/layerIcons';
+import { LayerIcon } from '../../utils/layerIcons';
 import apiUrl from '../../utils/apiUrl.js';
 import { LAYER_DEFINITIONS } from '../../hooks/useMapLayers';
 import StationPopup from './popups/StationPopup.jsx';
@@ -691,8 +691,6 @@ function FlightDetail({ properties }) {
   // and drew "???". Origin and destination are shown when the feature itself
   // carries them, and the line is omitted when it carries neither.
 
-  const coords = properties._coords; // injected below if available
-
   const highlighted = [
     'callsign', 'icao24', 'airline', 'aircraft_type', 'category',
     'origin', 'destination', 'origin_country', 'squawk',
@@ -1039,114 +1037,6 @@ function SatelliteTrackingDetail({ properties }) {
   );
 }
 
-// The board asked for ?limit=5 and rendered the answer as the whole schedule.
-// 20 is the server's own hard cap (native/core/transitapi.c: qint(...,1,20)),
-// so this asks for everything it will give and then states the bound.
-const DEPARTURES_LIMIT = 20;
-
-function BusStopDetail({ properties }) {
-  const [state, setState] = useState({ loading: true, departures: [], total: null, error: null });
-  const stopId = properties?.stop_id;
-  // GTFS-JP stop_ids are emitted by the gtfsJp collector as
-  // `GTFSJP_<orgId>_<rawStopId>`. Non-GTFS bus stops (OSM, MLIT P11) won't
-  // match — we show a clear message instead of calling the API.
-  const orgId = typeof stopId === 'string' && stopId.startsWith('GTFSJP_')
-    ? stopId.split('_')[1]
-    : null;
-
-  useEffect(() => {
-    if (!orgId || !stopId) {
-      setState({ loading: false, departures: [], total: null, error: 'No schedule data for this stop.' });
-      return;
-    }
-    let cancelled = false;
-    (async () => {
-      try {
-        // POST is idempotent on the server; cached after first success.
-        await fetch(apiUrl(`/api/transit/gtfs/hydrate/${encodeURIComponent(orgId)}`), { method: 'POST' });
-        const res = await fetch(
-          apiUrl(`/api/transit/gtfs/stop/${encodeURIComponent(stopId)}/departures?limit=${DEPARTURES_LIMIT}`),
-        );
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        if (cancelled) return;
-        setState({
-          loading: false,
-          departures: data.departures || [],
-          total: Number.isFinite(data.total) ? data.total : null,
-          error: null,
-        });
-      } catch (err) {
-        if (cancelled) return;
-        setState({ loading: false, departures: [], total: null, error: err?.message || 'fetch failed' });
-      }
-    })();
-    return () => { cancelled = true; };
-  }, [stopId, orgId]);
-
-  const highlighted = ['stop_id', 'name', 'operator', 'feed_id', 'source'];
-
-  return (
-    <div className="space-y-2">
-      <div className="text-sm font-medium text-gray-200">
-        {properties?.name || 'Bus stop'}
-      </div>
-      {properties?.operator && (
-        <div className="text-[10px] text-gray-500 font-mono">{properties.operator}</div>
-      )}
-      {state.loading && (
-        <div className="text-xs text-gray-400">Loading schedule…</div>
-      )}
-      {!state.loading && state.departures.length === 0 && (
-        <div className="text-xs text-gray-500">
-          {state.error || 'No upcoming departures today.'}
-        </div>
-      )}
-      {!state.loading && state.departures.length > 0 && (
-        <div className="space-y-1">
-          {/* State the bound in-band: this is a slice of the board, not the
-            * board. The endpoint returns no total, so when the response comes
-            * back full we can only say that more may exist. */}
-          <div className="text-[10px] text-gray-500 font-mono">
-            Next departures — showing {state.departures.length}
-            {state.total != null
-              ? ` of ${state.total}`
-              : (state.departures.length >= DEPARTURES_LIMIT
-                  ? ` of more (the server caps this board at ${DEPARTURES_LIMIT})`
-                  : '')}
-          </div>
-          {state.departures.map((d) => {
-            const color = d.route_color || '#888';
-            return (
-              <div key={`${d.trip_id}-${d.departure_sec}`} className="flex items-center gap-2 text-xs">
-                <span
-                  className="px-1.5 py-0.5 rounded font-mono text-[10px]"
-                  style={{
-                    background: `${color}33`,
-                    color,
-                    border: `1px solid ${color}`,
-                  }}
-                >
-                  {d.route_name}
-                </span>
-                <span className="text-gray-300 flex-1 truncate">
-                  {d.headsign || ''}
-                </span>
-                <span className="text-gray-400 font-mono">
-                  {d.seconds_until < 60
-                    ? 'now'
-                    : `${Math.round(d.seconds_until / 60)}m`}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      )}
-      <PropertyTable properties={properties} exclude={highlighted} />
-    </div>
-  );
-}
-
 const DETAIL_RENDERERS = {
   earthquakes: EarthquakeDetail,
   cameras: CameraDetail,
@@ -1181,7 +1071,6 @@ export default function MapPopup({ feature, layerType, layerDef: catalogDef, onC
   // The catalogue entry (server name/colour merged with the client table)
   // wins; the static table is the fallback for callers that pass none.
   const layerDef = catalogDef || (layerType ? LAYER_DEFINITIONS[layerType] : null);
-  const LayerIcon = layerType ? getLayerIcon(layerType) : null;
   const iconColor = layerDef?.color || '#22d3ee';
   // Identity for Save / Pin-to-case: the record's own id when it has one,
   // else its layer + coordinates (stable for a static feature, honest for a
@@ -1209,8 +1098,8 @@ export default function MapPopup({ feature, layerType, layerDef: catalogDef, onC
     >
       <div className="flex items-center justify-between mb-2">
         <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-neon-cyan font-medium">
-          {LayerIcon && (
-            <LayerIcon size={16} color={iconColor} aria-hidden="true" />
+          {layerType && (
+            <LayerIcon layerId={layerType} size={16} color={iconColor} aria-hidden="true" />
           )}
           {layerLabel}
         </span>

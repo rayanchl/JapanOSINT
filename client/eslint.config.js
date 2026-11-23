@@ -27,21 +27,21 @@ export default [
       ...reactHooks.configs.recommended.rules,
       "react/react-in-jsx-scope": "off",   // automatic JSX runtime
       "react/prop-types": "off",           // the client does not use PropTypes
-      // Downgraded: pre-existing, widespread, not behaviour bugs.
-      "no-unused-vars": ["warn", { args: "none", ignoreRestSiblings: true, varsIgnorePattern: "^_", caughtErrors: "none" }],
-      "no-empty": ["warn", { allowEmptyCatch: true }],
-      "react/no-unescaped-entities": "warn",
-      "react/display-name": "warn",
-      "react-hooks/exhaustive-deps": "warn",
-      // eslint-plugin-react-hooks v7 ships React-Compiler rules; they report
-      // existing patterns (setState in effects, ref reads in render) that work
-      // today. Warn, do not block, until each is reviewed.
+      // Rules at zero findings are errors so they cannot regress.
+      "no-unused-vars": ["error", { args: "none", ignoreRestSiblings: true, varsIgnorePattern: "^_", caughtErrors: "none" }],
+      "no-empty": ["error", { allowEmptyCatch: true }],
+      "react/no-unescaped-entities": "error",
+      "react/display-name": "error",
+      "react-hooks/exhaustive-deps": "error",
+      // eslint-plugin-react-hooks v7 ships React-Compiler rules. set-state-in-effect
+      // still reports the fetch-then-setState / reset-on-prop-change pattern in
+      // ~58 places; it stays "warn" until those are restructured.
       "react-hooks/set-state-in-effect": "warn",
-      "react-hooks/refs": "warn",
-      "react-hooks/use-memo": "warn",
-      "react-hooks/static-components": "warn",
-      "react-hooks/purity": "warn",
-      "react/jsx-key": "warn",             // 10 existing missing-key sites: worth fixing, not a gate yet
+      "react-hooks/refs": "error",
+      "react-hooks/use-memo": "error",
+      "react-hooks/static-components": "error",
+      "react-hooks/purity": "error",
+      "react/jsx-key": "error",
     },
   },
   {
