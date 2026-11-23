@@ -35304,28 +35304,6 @@ static const hp_source HP3B63_EUODS[] = {
       "federated). Records API Explore v2.1, paged by offset. Fields "
       "vary per dataset." },
 
-  { .id = "JO63_EUODS_0CD8D5FDA9", .name = "public.opendatasoft.com — Geonames - All Cities with a "
-      "population > 1000",
-    .name_ja = "public.opendatasoft.com — Geonames - All Cities with a population > 1000",
-    .category = "open-data", .portal = "https://public.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records?limit=100&offset=0&order_by=geoname_id",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label",
-    .id_keys = "geoname_id",
-    .description = "OpenDataSoft dataset "
-      "'geonames-all-cities-with-a-population-1000' ('Geonames - All "
-      "Cities with a population > 1000') published on the European "
-      "open-data portal public.opendatasoft.com (the portal's own "
-      "dataset, not federated). Records API Explore v2.1, paged by "
-      "offset. Fields vary per dataset." },
-
   { .id = "JO63_EUODS_63A56D18D9", .name = "public.opendatasoft.com — Open CCAM",
     .name_ja = "public.opendatasoft.com — Open CCAM",
     .category = "open-data", .portal = "https://public.opendatasoft.com/",

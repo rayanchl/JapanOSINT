@@ -283,26 +283,6 @@ static const hp_source HP3B65_ODS[] = {
       "discovered via the data.opendatasoft.com federation facet (tier "
       "2, beyond the top-100)." },
 
-  { .id = "JO65_EUODS_32A9BF7751", .name = "northernpowergrid.opendatasoft.com - Northern Gas Networks "
-      "Distribution Mains",
-    .name_ja = "northernpowergrid.opendatasoft.com - Northern Gas Networks Distribution Mains",
-    .category = "open-data", .portal = "https://northernpowergrid.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://northernpowergrid.opendatasoft.com/api/explore/v2.1/catalog/datasets/ngn-north/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset ngn-north (Northern Gas Networks "
-      "Distribution Mains) on northernpowergrid.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "Portal discovered via the data.opendatasoft.com federation facet "
-      "(tier 2, beyond the top-100)." },
-
   { .id = "JO65_EUODS_93582A5CA0", .name = "opendata.liege.be - Les maisons intergénérationnelles",
     .name_ja = "opendata.liege.be - Les maisons intergénérationnelles",
     .category = "open-data", .portal = "https://opendata.liege.be/",
@@ -693,27 +673,6 @@ static const hp_source HP3B65_ODS[] = {
       "e-redes.opendatasoft.com (portal's own dataset). Records API "
       "Explore v2.1, offset paging. Portal discovered via the "
       "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
-  { .id = "JO65_EUODS_A98D02748C", .name = "ssentransmission.opendatasoft.com - SSEN Transmission Ground "
-      "Investigation Location Points",
-    .name_ja = "ssentransmission.opendatasoft.com - SSEN Transmission Ground Investigation Location Points",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/ssen-transmission-gi-location-points/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset ssen-transmission-gi-location-points (SSEN "
-      "Transmission Ground Investigation Location Points) on "
-      "ssentransmission.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
   { .id = "JO65_EUODS_9C51D67A21", .name = "dati.arpae.it - Energia - Impianti geotermici 2022",
@@ -2408,26 +2367,6 @@ static const hp_source HP3B65_ODS[] = {
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_1BF40359D4", .name = "nienetworks.opendatasoft.com - NIE Networks - Dataset of "
-      "Datasets",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Dataset of Datasets",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/dataset-of-datasets/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset dataset-of-datasets (NIE Networks - Dataset "
-      "of Datasets) on nienetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. Portal "
-      "discovered via the data.opendatasoft.com federation facet (tier "
-      "2, beyond the top-100)." },
-
   { .id = "JO65_EUODS_70FF8FBD0E", .name = "www.journal-officiel.gouv.fr - "
       "Prefecture_and_SousPrefectures_by_dpt_for_DN",
     .name_ja = "www.journal-officiel.gouv.fr - Prefecture_and_SousPrefectures_by_dpt_for_DN",
@@ -3461,25 +3400,6 @@ static const hp_source HP3B65_ODS[] = {
       "discovered via the data.opendatasoft.com federation facet (tier "
       "2, beyond the top-100)." },
 
-  { .id = "JO65_EUODS_53C029F048", .name = "opendata.datainfogreffe.fr - Formes Juridiques",
-    .name_ja = "opendata.datainfogreffe.fr - Formes Juridiques",
-    .category = "open-data", .portal = "https://opendata.datainfogreffe.fr/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.datainfogreffe.fr/api/explore/v2.1/catalog/datasets/forme-juridique/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset forme-juridique (Formes Juridiques) on "
-      "opendata.datainfogreffe.fr (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_390642C0D9", .name = "opendata.tpg.ch - Kilomètres produits journaliers par ligne",
     .name_ja = "opendata.tpg.ch - Kilomètres produits journaliers par ligne",
     .category = "open-data", .portal = "https://opendata.tpg.ch/",
@@ -3853,25 +3773,6 @@ static const hp_source HP3B65_ODS[] = {
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "Portal discovered via the data.opendatasoft.com federation facet "
       "(tier 2, beyond the top-100)." },
-
-  { .id = "JO65_EUODS_0AD105F710", .name = "dev-hydroquebec.opendatasoft.com - Publique - connecte",
-    .name_ja = "dev-hydroquebec.opendatasoft.com - Publique - connecte",
-    .category = "open-data", .portal = "https://dev-hydroquebec.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dev-hydroquebec.opendatasoft.com/api/explore/v2.1/catalog/datasets/publique-connecte/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset publique-connecte (Publique - connecte) on "
-      "dev-hydroquebec.opendatasoft.com (portal's own dataset). Records "
-      "API Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
 
   { .id = "JO65_EUODS_3FF68E0CC7", .name = "foundation-s-mychildmatters.opendatasoft.com - Publications "
       "Library",
@@ -4940,25 +4841,6 @@ static const hp_source HP3B65_ODS[] = {
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_73A59DFE34", .name = "northernpowergrid.opendatasoft.com - LV Underground Cables",
-    .name_ja = "northernpowergrid.opendatasoft.com - LV Underground Cables",
-    .category = "open-data", .portal = "https://northernpowergrid.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://northernpowergrid.opendatasoft.com/api/explore/v2.1/catalog/datasets/lv-underground-cables/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset lv-underground-cables (LV Underground "
-      "Cables) on northernpowergrid.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. Portal "
-      "discovered via the data.opendatasoft.com federation facet (tier "
-      "2, beyond the top-100)." },
-
   { .id = "JO65_EUODS_C4AD92EBD8", .name = "opendata.liege.be - Micromobilité - Zone de déploiement",
     .name_ja = "opendata.liege.be - Micromobilité - Zone de déploiement",
     .category = "open-data", .portal = "https://opendata.liege.be/",
@@ -5359,27 +5241,6 @@ static const hp_source HP3B65_ODS[] = {
       "e-redes.opendatasoft.com (portal's own dataset). Records API "
       "Explore v2.1, offset paging. Portal discovered via the "
       "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
-  { .id = "JO65_EUODS_29262B0916", .name = "ssentransmission.opendatasoft.com - SSEN Transmission "
-      "Interconnector Register",
-    .name_ja = "ssentransmission.opendatasoft.com - SSEN Transmission Interconnector Register",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/ssen-transmission-interconnector-register/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset ssen-transmission-interconnector-register "
-      "(SSEN Transmission Interconnector Register) on "
-      "ssentransmission.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
   { .id = "JO65_EUODS_5E5D73961A", .name = "dati.arpae.it - Clima – precipitazioni estreme giornaliere "
@@ -7021,27 +6882,6 @@ static const hp_source HP3B65_ODS[] = {
       "discovered via the data.opendatasoft.com federation facet (tier "
       "2, beyond the top-100)." },
 
-  { .id = "JO65_EUODS_BA8BF4CD52", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - Power "
-      "Flow Controllers",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Power Flow Controllers",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-power-flow-controllers/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset nie-networks-assets-power-flow-controllers "
-      "(NIE Networks - Assets - Power Flow Controllers) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_D99201E947", .name = "www.journal-officiel.gouv.fr - OSOP-COMPTES-DE-RESULTATS - "
       "Qualification",
     .name_ja = "www.journal-officiel.gouv.fr - OSOP-COMPTES-DE-RESULTATS - Qualification",
@@ -8070,25 +7910,6 @@ static const hp_source HP3B65_ODS[] = {
       "Poles) on data.endeavourenergy.com.au (portal's own dataset). "
       "Records API Explore v2.1, offset paging. Portal discovered via "
       "the data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
-  { .id = "JO65_EUODS_BE1038BE52", .name = "opendata.datainfogreffe.fr - Liste des greffes",
-    .name_ja = "opendata.datainfogreffe.fr - Liste des greffes",
-    .category = "open-data", .portal = "https://opendata.datainfogreffe.fr/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.datainfogreffe.fr/api/explore/v2.1/catalog/datasets/liste-des-greffes/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset liste-des-greffes (Liste des greffes) on "
-      "opendata.datainfogreffe.fr (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
   { .id = "JO65_EUODS_6613060A53", .name = "qualif-nouvelle-caledonie.opendatasoft.com - BD LOC centres de "
@@ -9218,25 +9039,6 @@ static const hp_source HP3B65_ODS[] = {
       "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_9E8F817E51", .name = "northernpowergrid.opendatasoft.com - HV Underground Cables",
-    .name_ja = "northernpowergrid.opendatasoft.com - HV Underground Cables",
-    .category = "open-data", .portal = "https://northernpowergrid.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://northernpowergrid.opendatasoft.com/api/explore/v2.1/catalog/datasets/npg-hv-underground-cables/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset npg-hv-underground-cables (HV Underground "
-      "Cables) on northernpowergrid.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. Portal "
-      "discovered via the data.opendatasoft.com federation facet (tier "
-      "2, beyond the top-100)." },
-
   { .id = "JO65_EUODS_7B3D11F644", .name = "opendata.liege.be - Les nichoirs pour les oiseaux",
     .name_ja = "opendata.liege.be - Les nichoirs pour les oiseaux",
     .category = "open-data", .portal = "https://opendata.liege.be/",
@@ -9633,28 +9435,6 @@ static const hp_source HP3B65_ODS[] = {
     .description = "OpenDataSoft dataset clientes-por-escalao-de-potencia (Customers "
       "by Power Capacity Bands) on e-redes.opendatasoft.com (portal's "
       "own dataset). Records API Explore v2.1, offset paging. Portal "
-      "discovered via the data.opendatasoft.com federation facet (tier "
-      "2, beyond the top-100)." },
-
-  { .id = "JO65_EUODS_8AE887E515", .name = "ssentransmission.opendatasoft.com - ETYS 24 Year 09 (2032/33) – "
-      "SSEN Transmission – Fault Levels (Winter)",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 24 Year 09 (2032/33) – SSEN Transmission – Fault Levels (Winter)",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-23-year-09-she-transmission-fault-levels-ka-winter-2032-33/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-23-year-09-she-transmission-fault-levels-ka-winter-2032-33 "
-      "(ETYS 24 Year 09 (2032/33) – SSEN Transmission – Fault Levels "
-      "(Winter)) on ssentransmission.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. Portal "
       "discovered via the data.opendatasoft.com federation facet (tier "
       "2, beyond the top-100)." },
 
@@ -11255,28 +11035,6 @@ static const hp_source HP3B65_ODS[] = {
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_53138B1280", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - Sites - "
-      "Bulk Supply Points",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Sites - Bulk Supply Points",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-sites-bulk-supply-points/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "nie-networks-assets-sites-bulk-supply-points (NIE Networks - "
-      "Assets - Sites - Bulk Supply Points) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_0AE89D11D8", .name = "www.journal-officiel.gouv.fr - OSOP-mapping_niveau_organisation",
     .name_ja = "www.journal-officiel.gouv.fr - OSOP-mapping_niveau_organisation",
     .category = "open-data", .portal = "https://www.journal-officiel.gouv.fr/",
@@ -12281,25 +12039,6 @@ static const hp_source HP3B65_ODS[] = {
       "discovered via the data.opendatasoft.com federation facet (tier "
       "2, beyond the top-100)." },
 
-  { .id = "JO65_EUODS_336969F75D", .name = "opendata.datainfogreffe.fr - Référentiel Communes - Greffes",
-    .name_ja = "opendata.datainfogreffe.fr - Référentiel Communes - Greffes",
-    .category = "open-data", .portal = "https://opendata.datainfogreffe.fr/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.datainfogreffe.fr/api/explore/v2.1/catalog/datasets/referentiel-communes-greffes/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset referentiel-communes-greffes (Référentiel "
-      "Communes - Greffes) on opendata.datainfogreffe.fr (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. Portal "
-      "discovered via the data.opendatasoft.com federation facet (tier "
-      "2, beyond the top-100)." },
-
   { .id = "JO65_EUODS_61A3EDA1D0", .name = "opendata.tpg.ch - Collisions TPG avec tiers",
     .name_ja = "opendata.tpg.ch - Collisions TPG avec tiers",
     .category = "open-data", .portal = "https://opendata.tpg.ch/",
@@ -12672,27 +12411,6 @@ static const hp_source HP3B65_ODS[] = {
       "dataset). Records API Explore v2.1, offset paging. Portal "
       "discovered via the data.opendatasoft.com federation facet (tier "
       "2, beyond the top-100)." },
-
-  { .id = "JO65_EUODS_93E7136721", .name = "dev-hydroquebec.opendatasoft.com - Événements de pointe – Saison "
-      "hivernale (pour développement)",
-    .name_ja = "dev-hydroquebec.opendatasoft.com - Événements de pointe – Saison hivernale (pour développement)",
-    .category = "open-data", .portal = "https://dev-hydroquebec.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dev-hydroquebec.opendatasoft.com/api/explore/v2.1/catalog/datasets/pointes-hivernales-dev/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset pointes-hivernales-dev (Événements de "
-      "pointe – Saison hivernale (pour développement)) on "
-      "dev-hydroquebec.opendatasoft.com (portal's own dataset). Records "
-      "API Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
 
   { .id = "JO65_EUODS_C3CC5333CA", .name = "foundation-s-mychildmatters.opendatasoft.com - My Child Matters "
       "20y anniversary",
@@ -13282,27 +13000,6 @@ static const hp_source HP3B65_ODS[] = {
       "offset paging. Portal discovered via the data.opendatasoft.com "
       "federation facet (tier 2, beyond the top-100)." },
 
-  { .id = "JO65_EUODS_53FBABF791", .name = "northernpowergrid.opendatasoft.com - Flexibility Dispatch by EHV "
-      "Zone",
-    .name_ja = "northernpowergrid.opendatasoft.com - Flexibility Dispatch by EHV Zone",
-    .category = "open-data", .portal = "https://northernpowergrid.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://northernpowergrid.opendatasoft.com/api/explore/v2.1/catalog/datasets/npg-flexibility-dispatch-ehv-zone/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset npg-flexibility-dispatch-ehv-zone "
-      "(Flexibility Dispatch by EHV Zone) on "
-      "northernpowergrid.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_1BBD0DFC52", .name = "opendata.liege.be - La navette fluviale",
     .name_ja = "opendata.liege.be - La navette fluviale",
     .category = "open-data", .portal = "https://opendata.liege.be/",
@@ -13702,28 +13399,6 @@ static const hp_source HP3B65_ODS[] = {
       "dataset). Records API Explore v2.1, offset paging. Portal "
       "discovered via the data.opendatasoft.com federation facet (tier "
       "2, beyond the top-100)." },
-
-  { .id = "JO65_EUODS_0EA124AD30", .name = "ssentransmission.opendatasoft.com - ETYS 23 (2023/24) – SSEN "
-      "Transmission – Circuits",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 23 (2023/24) – SSEN Transmission – Circuits",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-23-b-2-1a-she-transmission-circuits-for-2023-24/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-23-b-2-1a-she-transmission-circuits-for-2023-24 (ETYS 23 "
-      "(2023/24) – SSEN Transmission – Circuits) on "
-      "ssentransmission.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
 
   { .id = "JO65_EUODS_0DD027FA98", .name = "dati.arpae.it - Acqua - Livelli rete dettaglio conoide Marecchia",
     .name_ja = "dati.arpae.it - Acqua - Livelli rete dettaglio conoide Marecchia",
@@ -15312,28 +14987,6 @@ static const hp_source HP3B65_ODS[] = {
       "annuelle de gaz par IRIS et code NAF (depuis 2018)) on "
       "opendata.grdf.fr (portal's own dataset). Records API Explore "
       "v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
-  { .id = "JO65_EUODS_D1018E2BB6", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - "
-      "Transmission Circuit Breakers",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Transmission Circuit Breakers",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-transmission-circuit-breakers/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "nie-networks-assets-transmission-circuit-breakers (NIE Networks "
-      "- Assets - Transmission Circuit Breakers) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
@@ -17164,25 +16817,6 @@ static const hp_source HP3B65_ODS[] = {
       "Portal discovered via the data.opendatasoft.com federation facet "
       "(tier 2, beyond the top-100)." },
 
-  { .id = "JO65_EUODS_A09209BEEB", .name = "northernpowergrid.opendatasoft.com - EHV Overhead Feeders",
-    .name_ja = "northernpowergrid.opendatasoft.com - EHV Overhead Feeders",
-    .category = "open-data", .portal = "https://northernpowergrid.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://northernpowergrid.opendatasoft.com/api/explore/v2.1/catalog/datasets/npg-ehv-overhead-feeders/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset npg-ehv-overhead-feeders (EHV Overhead "
-      "Feeders) on northernpowergrid.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. Portal "
-      "discovered via the data.opendatasoft.com federation facet (tier "
-      "2, beyond the top-100)." },
-
   { .id = "JO65_EUODS_62FD8CFC1E", .name = "opendata.liege.be - Vélocité - Abris vélos",
     .name_ja = "opendata.liege.be - Vélocité - Abris vélos",
     .category = "open-data", .portal = "https://opendata.liege.be/",
@@ -17590,25 +17224,6 @@ static const hp_source HP3B65_ODS[] = {
       "dataset). Records API Explore v2.1, offset paging. Portal "
       "discovered via the data.opendatasoft.com federation facet (tier "
       "2, beyond the top-100)." },
-
-  { .id = "JO65_EUODS_2065D65BAC", .name = "ssentransmission.opendatasoft.com - SSEN Transmission Pole Grid",
-    .name_ja = "ssentransmission.opendatasoft.com - SSEN Transmission Pole Grid",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/ssen-transmission-pole-grid/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset ssen-transmission-pole-grid (SSEN "
-      "Transmission Pole Grid) on ssentransmission.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "Portal discovered via the data.opendatasoft.com federation facet "
-      "(tier 2, beyond the top-100)." },
 
   { .id = "JO65_EUODS_8DA9796C8A", .name = "dati.arpae.it - Pollini – dati storici",
     .name_ja = "dati.arpae.it - Pollini – dati storici",
@@ -19153,27 +18768,6 @@ static const hp_source HP3B65_ODS[] = {
       "annuelle de gaz par EPCI et code NAF (depuis 2018)) on "
       "opendata.grdf.fr (portal's own dataset). Records API Explore "
       "v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
-  { .id = "JO65_EUODS_95806DBA99", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - Capacitor "
-      "Banks",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Capacitor Banks",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-capacitor-banks/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset nie-networks-assets-capacitor-banks (NIE "
-      "Networks - Assets - Capacitor Banks) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
@@ -21252,28 +20846,6 @@ static const hp_source HP3B65_ODS[] = {
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_CA1F5E9BBE", .name = "ssentransmission.opendatasoft.com - ETYS 22 Year 10 (2031/32) – "
-      "SSEN Transmission – Fault Levels (Winter)",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 22 Year 10 (2031/32) – SSEN Transmission – Fault Levels (Winter)",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-22-yr-10-she-transmission-fault-levels-ka-winter-2031-32/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-22-yr-10-she-transmission-fault-levels-ka-winter-2031-32 "
-      "(ETYS 22 Year 10 (2031/32) – SSEN Transmission – Fault Levels "
-      "(Winter)) on ssentransmission.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. Portal "
-      "discovered via the data.opendatasoft.com federation facet (tier "
-      "2, beyond the top-100)." },
-
   { .id = "JO65_EUODS_F2B3B7FBC6", .name = "dati.arpae.it - Meteo - Pericolosità idraulica direttiva "
       "alluvioni",
     .name_ja = "dati.arpae.it - Meteo - Pericolosità idraulica direttiva alluvioni",
@@ -22859,28 +22431,6 @@ static const hp_source HP3B65_ODS[] = {
       "(depuis 2018)) on opendata.grdf.fr (portal's own dataset). "
       "Records API Explore v2.1, offset paging. Portal discovered via "
       "the data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
-  { .id = "JO65_EUODS_154C4B588D", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - Sites - "
-      "Grid Supply Points",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Sites - Grid Supply Points",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-sites-grid-supply-points/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "nie-networks-assets-sites-grid-supply-points (NIE Networks - "
-      "Assets - Sites - Grid Supply Points) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
   { .id = "JO65_EUODS_D7346B0E6F", .name = "www.journal-officiel.gouv.fr - "
@@ -24766,28 +24316,6 @@ static const hp_source HP3B65_ODS[] = {
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_31948B381D", .name = "ssentransmission.opendatasoft.com - ETYS 24 Year 01 (2024/25) – "
-      "SSEN Transmission – Fault Levels (Summer)",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 24 Year 01 (2024/25) – SSEN Transmission – Fault Levels (Summer)",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-24-yr-01-she-transmission-fault-levels-ka-summer-2024-25/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-24-yr-01-she-transmission-fault-levels-ka-summer-2024-25 "
-      "(ETYS 24 Year 01 (2024/25) – SSEN Transmission – Fault Levels "
-      "(Summer)) on ssentransmission.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. Portal "
-      "discovered via the data.opendatasoft.com federation facet (tier "
-      "2, beyond the top-100)." },
-
   { .id = "JO65_EUODS_583CBF3556", .name = "dati.arpae.it - Aria - PM10, concentrazione media annua",
     .name_ja = "dati.arpae.it - Aria - PM10, concentrazione media annua",
     .category = "open-data", .portal = "https://dati.arpae.it/",
@@ -26331,27 +25859,6 @@ static const hp_source HP3B65_ODS[] = {
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_6EC6CDEE5A", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - LV "
-      "Switchgear",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - LV Switchgear",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-lv-switchgear/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset nie-networks-assets-lv-switchgear (NIE "
-      "Networks - Assets - LV Switchgear) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_B7DB099B70", .name = "www.journal-officiel.gouv.fr - "
       "Prefectures_sousPrefectures_combined_list",
     .name_ja = "www.journal-officiel.gouv.fr - Prefectures_sousPrefectures_combined_list",
@@ -27674,25 +27181,6 @@ static const hp_source HP3B65_ODS[] = {
       "discovered via the data.opendatasoft.com federation facet (tier "
       "2, beyond the top-100)." },
 
-  { .id = "JO65_EUODS_8FF6C0B653", .name = "northernpowergrid.opendatasoft.com - LTDS Documents",
-    .name_ja = "northernpowergrid.opendatasoft.com - LTDS Documents",
-    .category = "open-data", .portal = "https://northernpowergrid.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://northernpowergrid.opendatasoft.com/api/explore/v2.1/catalog/datasets/ltds-documents/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset ltds-documents (LTDS Documents) on "
-      "northernpowergrid.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_966C19431E", .name = "opendata.liege.be - Les parkings moto",
     .name_ja = "opendata.liege.be - Les parkings moto",
     .category = "open-data", .portal = "https://opendata.liege.be/",
@@ -28080,28 +27568,6 @@ static const hp_source HP3B65_ODS[] = {
       "Explore v2.1, offset paging. Portal discovered via the "
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
-
-  { .id = "JO65_EUODS_58F90C64FA", .name = "ssentransmission.opendatasoft.com - ETYS 23 Year 01 (2023/24) – "
-      "SSEN Transmission – Fault Levels (Winter)",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 23 Year 01 (2023/24) – SSEN Transmission – Fault Levels (Winter)",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-23-yr-01-she-transmission-fault-levels-ka-winter-2023-24/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-23-yr-01-she-transmission-fault-levels-ka-winter-2023-24 "
-      "(ETYS 23 Year 01 (2023/24) – SSEN Transmission – Fault Levels "
-      "(Winter)) on ssentransmission.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. Portal "
-      "discovered via the data.opendatasoft.com federation facet (tier "
-      "2, beyond the top-100)." },
 
   { .id = "JO65_EUODS_DCF429DF6B", .name = "dati.arpae.it - Rifiuti urbani - dati comunali 2010-2025",
     .name_ja = "dati.arpae.it - Rifiuti urbani - dati comunali 2010-2025",
@@ -29662,27 +29128,6 @@ static const hp_source HP3B65_ODS[] = {
       "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_825D819EFD", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - Secondary "
-      "Transformers",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Secondary Transformers",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-secondary-transformers/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset nie-networks-assets-secondary-transformers "
-      "(NIE Networks - Assets - Secondary Transformers) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_4DC37B5AC2", .name = "data.liverpool.nsw.gov.au - Liverpool Recycling Data",
     .name_ja = "data.liverpool.nsw.gov.au - Liverpool Recycling Data",
     .category = "open-data", .portal = "https://data.liverpool.nsw.gov.au/",
@@ -31236,28 +30681,6 @@ static const hp_source HP3B65_ODS[] = {
       "Portal discovered via the data.opendatasoft.com federation facet "
       "(tier 2, beyond the top-100)." },
 
-  { .id = "JO65_EUODS_E5F613D1A9", .name = "ssentransmission.opendatasoft.com - ETYS 22 Year 01 (2022/23) – "
-      "SSEN Transmission – Fault Levels (Winter)",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 22 Year 01 (2022/23) – SSEN Transmission – Fault Levels (Winter)",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-22-yr-01-she-transmission-fault-levels-ka-winter-2022-23/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-22-yr-01-she-transmission-fault-levels-ka-winter-2022-23 "
-      "(ETYS 22 Year 01 (2022/23) – SSEN Transmission – Fault Levels "
-      "(Winter)) on ssentransmission.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. Portal "
-      "discovered via the data.opendatasoft.com federation facet (tier "
-      "2, beyond the top-100)." },
-
   { .id = "JO65_EUODS_F4B9051022", .name = "dati.arpae.it - Acqua – chimismo acque sotterranee 2010-2025",
     .name_ja = "dati.arpae.it - Acqua – chimismo acque sotterranee 2010-2025",
     .category = "open-data", .portal = "https://dati.arpae.it/",
@@ -32796,25 +32219,6 @@ static const hp_source HP3B65_ODS[] = {
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_DA23CFF48E", .name = "nienetworks.opendatasoft.com - NIENetworksAssetsAll",
-    .name_ja = "nienetworks.opendatasoft.com - NIENetworksAssetsAll",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nienetworksassetsall/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset nienetworksassetsall (NIENetworksAssetsAll) "
-      "on nienetworks.opendatasoft.com (portal's own dataset). Records "
-      "API Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_F383C9B17E", .name = "www.journal-officiel.gouv.fr - JO_ASSOCIATIONS_qualification",
     .name_ja = "www.journal-officiel.gouv.fr - JO_ASSOCIATIONS_qualification",
     .category = "open-data", .portal = "https://www.journal-officiel.gouv.fr/",
@@ -34252,28 +33656,6 @@ static const hp_source HP3B65_ODS[] = {
     .title_keys = "con_name",
     .description = "OpenDataSoft dataset 16-pedidos-concluidos-plrs (Network "
       "connections) on e-redes.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
-  { .id = "JO65_EUODS_AD97155CC4", .name = "ssentransmission.opendatasoft.com - ETYS 23 – SSEN Transmission "
-      "– Index of Substation Codes",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 23 – SSEN Transmission – Index of Substation Codes",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-23-ssen-transmission-index-of-substation-codes/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-23-ssen-transmission-index-of-substation-codes (ETYS 23 – "
-      "SSEN Transmission – Index of Substation Codes) on "
-      "ssentransmission.opendatasoft.com (portal's own dataset). "
       "Records API Explore v2.1, offset paging. Portal discovered via "
       "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
@@ -35815,28 +35197,6 @@ static const hp_source HP3B65_ODS[] = {
       "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_2A269C702A", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - Sites - "
-      "Grid Bulk and Primary Sites",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Sites - Grid Bulk and Primary Sites",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-sites-grid-bulk-and-primary-sites/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "nie-networks-assets-sites-grid-bulk-and-primary-sites (NIE "
-      "Networks - Assets - Sites - Grid Bulk and Primary Sites) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_8305BFE71C", .name = "www.journal-officiel.gouv.fr - OSOP-ENTITES - Qualification",
     .name_ja = "www.journal-officiel.gouv.fr - OSOP-ENTITES - Qualification",
     .category = "open-data", .portal = "https://www.journal-officiel.gouv.fr/",
@@ -37187,28 +36547,6 @@ static const hp_source HP3B65_ODS[] = {
       "e-redes.opendatasoft.com (portal's own dataset). Records API "
       "Explore v2.1, offset paging. Portal discovered via the "
       "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
-  { .id = "JO65_EUODS_825E9E947B", .name = "ssentransmission.opendatasoft.com - ETYS 24 (2024/25) – SSEN "
-      "Transmission – Circuits",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 24 (2024/25) – SSEN Transmission – Circuits",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-24-b-2-1a-she-transmission-circuits-for-2024-25/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-24-b-2-1a-she-transmission-circuits-for-2024-25 (ETYS 24 "
-      "(2024/25) – SSEN Transmission – Circuits) on "
-      "ssentransmission.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
   { .id = "JO65_EUODS_7ED3B26F62", .name = "dati.arpae.it - Clima – indicatori MITE siccità",
@@ -38721,27 +38059,6 @@ static const hp_source HP3B65_ODS[] = {
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_011E2BC72B", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - Primary "
-      "Transformers",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Primary Transformers",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-primary-transformers/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset nie-networks-assets-primary-transformers "
-      "(NIE Networks - Assets - Primary Transformers) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_EB7984D1E2", .name = "www.journal-officiel.gouv.fr - OSOP-COMPTES-DE-RESULTATS",
     .name_ja = "www.journal-officiel.gouv.fr - OSOP-COMPTES-DE-RESULTATS",
     .category = "open-data", .portal = "https://www.journal-officiel.gouv.fr/",
@@ -39594,27 +38911,6 @@ static const hp_source HP3B65_ODS[] = {
       "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_64E61F1AF9", .name = "northernpowergrid.opendatasoft.com - Curtailment Events Site "
-      "Specific",
-    .name_ja = "northernpowergrid.opendatasoft.com - Curtailment Events Site Specific",
-    .category = "open-data", .portal = "https://northernpowergrid.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://northernpowergrid.opendatasoft.com/api/explore/v2.1/catalog/datasets/curtailment-events-site-specific/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset curtailment-events-site-specific "
-      "(Curtailment Events Site Specific) on "
-      "northernpowergrid.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_F01538B495", .name = "opendata.liege.be - Piétonniers",
     .name_ja = "opendata.liege.be - Piétonniers",
     .category = "open-data", .portal = "https://opendata.liege.be/",
@@ -39996,28 +39292,6 @@ static const hp_source HP3B65_ODS[] = {
       "Explore v2.1, offset paging. Portal discovered via the "
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
-
-  { .id = "JO65_EUODS_A309FB2048", .name = "ssentransmission.opendatasoft.com - ETYS 23 Year 06 (2028/29) – "
-      "SSEN Transmission – Fault Levels (Winter)",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 23 Year 06 (2028/29) – SSEN Transmission – Fault Levels (Winter)",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-23-yr-06-she-transmission-fault-levels-ka-winter-2028-29/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-23-yr-06-she-transmission-fault-levels-ka-winter-2028-29 "
-      "(ETYS 23 Year 06 (2028/29) – SSEN Transmission – Fault Levels "
-      "(Winter)) on ssentransmission.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. Portal "
-      "discovered via the data.opendatasoft.com federation facet (tier "
-      "2, beyond the top-100)." },
 
   { .id = "JO65_EUODS_10D0A7AE97", .name = "dati.arpae.it - Balneazione – classificazione acque dal 2020",
     .name_ja = "dati.arpae.it - Balneazione – classificazione acque dal 2020",
@@ -41509,28 +40783,6 @@ static const hp_source HP3B65_ODS[] = {
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_BAB2872F1C", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - Liquid "
-      "Neutral Earthing Resistors (LNERs)",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Liquid Neutral Earthing Resistors (LNERs)",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-liquid-neutral-earthing-resistors-lners/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "nie-networks-assets-liquid-neutral-earthing-resistors-lners (NIE "
-      "Networks - Assets - Liquid Neutral Earthing Resistors (LNERs)) "
-      "on nienetworks.opendatasoft.com (portal's own dataset). Records "
-      "API Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_3C562A8067", .name = "www.journal-officiel.gouv.fr - OSOP-ENTITES",
     .name_ja = "www.journal-officiel.gouv.fr - OSOP-ENTITES",
     .category = "open-data", .portal = "https://www.journal-officiel.gouv.fr/",
@@ -42717,28 +41969,6 @@ static const hp_source HP3B65_ODS[] = {
       "Explore v2.1, offset paging. Portal discovered via the "
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
-
-  { .id = "JO65_EUODS_2086170601", .name = "ssentransmission.opendatasoft.com - ETYS 24 (2024/25) – SSEN "
-      "Transmission – Reactive Compensation Equipment",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 24 (2024/25) – SSEN Transmission – Reactive Compensation Equipment",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-24-b-4-1a-she-transmission-reactive-compensation-equipment-2024-25/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-24-b-4-1a-she-transmission-reactive-compensation-equipment-2024-25 "
-      "(ETYS 24 (2024/25) – SSEN Transmission – Reactive Compensation "
-      "Equipment) on ssentransmission.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. Portal "
-      "discovered via the data.opendatasoft.com federation facet (tier "
-      "2, beyond the top-100)." },
 
   { .id = "JO65_EUODS_73DCE23E4C", .name = "dati.arpae.it - Balneazione 2026",
     .name_ja = "dati.arpae.it - Balneazione 2026",
@@ -44182,28 +43412,6 @@ static const hp_source HP3B65_ODS[] = {
       "Portal discovered via the data.opendatasoft.com federation facet "
       "(tier 2, beyond the top-100)." },
 
-  { .id = "JO65_EUODS_3FB0AB50B3", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - "
-      "Transmission Transformers",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Transmission Transformers",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-transmission-transformers/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "nie-networks-assets-transmission-transformers (NIE Networks - "
-      "Assets - Transmission Transformers) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_46E0386D78", .name = "www.journal-officiel.gouv.fr - OSOP-mapping_ressort_geographique",
     .name_ja = "www.journal-officiel.gouv.fr - OSOP-mapping_ressort_geographique",
     .category = "open-data", .portal = "https://www.journal-officiel.gouv.fr/",
@@ -44994,27 +44202,6 @@ static const hp_source HP3B65_ODS[] = {
       "Portal discovered via the data.opendatasoft.com federation facet "
       "(tier 2, beyond the top-100)." },
 
-  { .id = "JO65_EUODS_ED5787489D", .name = "northernpowergrid.opendatasoft.com - 66kV Circuit Daily "
-      "Aggregated Operational Data",
-    .name_ja = "northernpowergrid.opendatasoft.com - 66kV Circuit Daily Aggregated Operational Data",
-    .category = "open-data", .portal = "https://northernpowergrid.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://northernpowergrid.opendatasoft.com/api/explore/v2.1/catalog/datasets/npg-daily-66kv-circuit/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset npg-daily-66kv-circuit (66kV Circuit Daily "
-      "Aggregated Operational Data) on "
-      "northernpowergrid.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_7E20B13280", .name = "opendata.liege.be - canopee_stocks",
     .name_ja = "opendata.liege.be - canopee_stocks",
     .category = "open-data", .portal = "https://opendata.liege.be/",
@@ -45398,29 +44585,6 @@ static const hp_source HP3B65_ODS[] = {
       "on e-redes.opendatasoft.com (portal's own dataset). Records API "
       "Explore v2.1, offset paging. Portal discovered via the "
       "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
-  { .id = "JO65_EUODS_B5EC104A45", .name = "ssentransmission.opendatasoft.com - ETYS 22 (2023/24 to 2031/32) "
-      "– SSEN Transmission – Reactive Compensation Equipment Changes",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 22 (2023/24 to 2031/32) – SSEN Transmission – Reactive Compensation Equipment Changes",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-22-b-4-2a-she-transmission-reactive-compensation-equipment-changes-2023-24-to-2031-32/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-22-b-4-2a-she-transmission-reactive-compensation-equipment-changes-2023-24-to-2031-32 "
-      "(ETYS 22 (2023/24 to 2031/32) – SSEN Transmission – Reactive "
-      "Compensation Equipment Changes) on "
-      "ssentransmission.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
   { .id = "JO65_EUODS_E18B76402B", .name = "dati.arpae.it - Balneazione – dati Ostreopsis dal 2019",
@@ -46797,28 +45961,6 @@ static const hp_source HP3B65_ODS[] = {
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_EC8BE4895D", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - Sites - "
-      "Primary Substations",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Sites - Primary Substations",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-sites-primary-substations/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "nie-networks-assets-sites-primary-substations (NIE Networks - "
-      "Assets - Sites - Primary Substations) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_B13660F786", .name = "www.journal-officiel.gouv.fr - OSOP_mapping_type_organisation",
     .name_ja = "www.journal-officiel.gouv.fr - OSOP_mapping_type_organisation",
     .category = "open-data", .portal = "https://www.journal-officiel.gouv.fr/",
@@ -47553,27 +46695,6 @@ static const hp_source HP3B65_ODS[] = {
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_672CF96566", .name = "northernpowergrid.opendatasoft.com - 33kV Circuit Daily "
-      "Aggregated Operational Data",
-    .name_ja = "northernpowergrid.opendatasoft.com - 33kV Circuit Daily Aggregated Operational Data",
-    .category = "open-data", .portal = "https://northernpowergrid.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://northernpowergrid.opendatasoft.com/api/explore/v2.1/catalog/datasets/npg-daily-33kv-circuit/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset npg-daily-33kv-circuit (33kV Circuit Daily "
-      "Aggregated Operational Data) on "
-      "northernpowergrid.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_8DB44D517C", .name = "opendata.liege.be - Types arceaux vélos",
     .name_ja = "opendata.liege.be - Types arceaux vélos",
     .category = "open-data", .portal = "https://opendata.liege.be/",
@@ -47965,28 +47086,6 @@ static const hp_source HP3B65_ODS[] = {
       "e-redes.opendatasoft.com (portal's own dataset). Records API "
       "Explore v2.1, offset paging. Portal discovered via the "
       "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
-  { .id = "JO65_EUODS_F9E381172A", .name = "ssentransmission.opendatasoft.com - ETYS 22 (2022/23) – SSEN "
-      "Transmission – Circuits",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 22 (2022/23) – SSEN Transmission – Circuits",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-22-b-2-1a-she-transmission-circuits-for-2022-23/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-22-b-2-1a-she-transmission-circuits-for-2022-23 (ETYS 22 "
-      "(2022/23) – SSEN Transmission – Circuits) on "
-      "ssentransmission.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
   { .id = "JO65_EUODS_A8CAE7720B", .name = "dati.arpae.it - Acqua – livelli manuali acque sotterranee "
@@ -49257,27 +48356,6 @@ static const hp_source HP3B65_ODS[] = {
       "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_5B3B250532", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - Earthing "
-      "Transformers",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Earthing Transformers",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-earthing-transformers/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset nie-networks-assets-earthing-transformers "
-      "(NIE Networks - Assets - Earthing Transformers) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_D98808BDEC", .name = "www.journal-officiel.gouv.fr - joafe_rectorats_liste",
     .name_ja = "www.journal-officiel.gouv.fr - joafe_rectorats_liste",
     .category = "open-data", .portal = "https://www.journal-officiel.gouv.fr/",
@@ -49954,26 +49032,6 @@ static const hp_source HP3B65_ODS[] = {
       "discovered via the data.opendatasoft.com federation facet (tier "
       "2, beyond the top-100)." },
 
-  { .id = "JO65_EUODS_1099B59C45", .name = "northernpowergrid.opendatasoft.com - Smart Meter Penetration "
-      "Volumes",
-    .name_ja = "northernpowergrid.opendatasoft.com - Smart Meter Penetration Volumes",
-    .category = "open-data", .portal = "https://northernpowergrid.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://northernpowergrid.opendatasoft.com/api/explore/v2.1/catalog/datasets/smartmap/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset smartmap (Smart Meter Penetration Volumes) "
-      "on northernpowergrid.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_890C825D53", .name = "opendata.liege.be - Toilettes accessibles aux personnes à "
       "mobilité réduite",
     .name_ja = "opendata.liege.be - Toilettes accessibles aux personnes à mobilité réduite",
@@ -50352,29 +49410,6 @@ static const hp_source HP3B65_ODS[] = {
       "e-redes.opendatasoft.com (portal's own dataset). Records API "
       "Explore v2.1, offset paging. Portal discovered via the "
       "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
-  { .id = "JO65_EUODS_7DD77C99D8", .name = "ssentransmission.opendatasoft.com - ETYS 23 (2024/25 to 2031/32) "
-      "– SSEN Transmission – Reactive Compensation Equipment Changes",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 23 (2024/25 to 2031/32) – SSEN Transmission – Reactive Compensation Equipment Changes",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-23-b-4-2a-she-transmission-reactive-compensation-equipment-changes-2024-25-/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-23-b-4-2a-she-transmission-reactive-compensation-equipment-changes-2024-25- "
-      "(ETYS 23 (2024/25 to 2031/32) – SSEN Transmission – Reactive "
-      "Compensation Equipment Changes) on "
-      "ssentransmission.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
   { .id = "JO65_EUODS_2A5E91E916", .name = "dati.arpae.it - Pollini – anagrafica stazioni monitoraggio",
@@ -51616,28 +50651,6 @@ static const hp_source HP3B65_ODS[] = {
       "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_C601B6ED5B", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - "
-      "Distribution Tap Changers",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Distribution Tap Changers",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-distribution-tap-changers/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "nie-networks-assets-distribution-tap-changers (NIE Networks - "
-      "Assets - Distribution Tap Changers) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
   { .id = "JO65_EUODS_1DCF8EE553", .name = "www.journal-officiel.gouv.fr - regions_depts_combined_list",
     .name_ja = "www.journal-officiel.gouv.fr - regions_depts_combined_list",
     .category = "open-data", .portal = "https://www.journal-officiel.gouv.fr/",
@@ -52190,26 +51203,6 @@ static const hp_source HP3B65_ODS[] = {
       "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
-  { .id = "JO65_EUODS_D83E9A438B", .name = "northernpowergrid.opendatasoft.com - LTDS Appendix 5 - Load "
-      "Information",
-    .name_ja = "northernpowergrid.opendatasoft.com - LTDS Appendix 5 - Load Information",
-    .category = "open-data", .portal = "https://northernpowergrid.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://northernpowergrid.opendatasoft.com/api/explore/v2.1/catalog/datasets/ltds-appendix-5/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset ltds-appendix-5 (LTDS Appendix 5 - Load "
-      "Information) on northernpowergrid.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. Portal "
-      "discovered via the data.opendatasoft.com federation facet (tier "
-      "2, beyond the top-100)." },
-
   { .id = "JO65_EUODS_989A33A17C", .name = "opendata.liege.be - Toilettes publiques",
     .name_ja = "opendata.liege.be - Toilettes publiques",
     .category = "open-data", .portal = "https://opendata.liege.be/",
@@ -52588,28 +51581,6 @@ static const hp_source HP3B65_ODS[] = {
       "e-redes.opendatasoft.com (portal's own dataset). Records API "
       "Explore v2.1, offset paging. Portal discovered via the "
       "data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
-  { .id = "JO65_EUODS_B3AB2DF266", .name = "ssentransmission.opendatasoft.com - ETYS 24 – SSEN Transmission "
-      "– Index of Substation Codes",
-    .name_ja = "ssentransmission.opendatasoft.com - ETYS 24 – SSEN Transmission – Index of Substation Codes",
-    .category = "open-data", .portal = "https://ssentransmission.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ssentransmission.opendatasoft.com/api/explore/v2.1/catalog/datasets/etys-24-b-1-1a-she-transmission-index-of-substation-codes/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "etys-24-b-1-1a-she-transmission-index-of-substation-codes (ETYS "
-      "24 – SSEN Transmission – Index of Substation Codes) on "
-      "ssentransmission.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. Portal discovered via "
-      "the data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
   { .id = "JO65_EUODS_BB1D443BBD", .name = "dati.arpae.it - Clima – indicatori MITE precipitazioni intense",
@@ -53894,27 +52865,6 @@ static const hp_source HP3B65_ODS[] = {
       "ares-digitalwallonia.opendatasoft.com (portal's own dataset). "
       "Records API Explore v2.1, offset paging. Portal discovered via "
       "the data.opendatasoft.com federation facet (tier 2, beyond the "
-      "top-100)." },
-
-  { .id = "JO65_EUODS_9FC5543392", .name = "nienetworks.opendatasoft.com - NIE Networks - Assets - "
-      "Transmission Switchgear",
-    .name_ja = "nienetworks.opendatasoft.com - NIE Networks - Assets - Transmission Switchgear",
-    .category = "open-data", .portal = "https://nienetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nienetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/nie-networks-assets-transmission-switchgear/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset nie-networks-assets-transmission-switchgear "
-      "(NIE Networks - Assets - Transmission Switchgear) on "
-      "nienetworks.opendatasoft.com (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. Portal discovered via the "
-      "data.opendatasoft.com federation facet (tier 2, beyond the "
       "top-100)." },
 
   { .id = "JO65_EUODS_0173739B47", .name = "www.journal-officiel.gouv.fr - wrong_data_mapping_lieu_souspref",

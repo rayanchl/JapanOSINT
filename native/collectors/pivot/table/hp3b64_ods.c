@@ -128,27 +128,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_430D095B19", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Sefton_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Sefton_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_sefton_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_sefton_shared' "
-      "('LA_Pipe_Infrastructure_Sefton_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_C8DF7B39B6", .name = "www.data.gov.bh — Divorce Cases by Nationality, Age Groups & "
       "Duration of Marriage of Divorced Wife",
     .name_ja = "www.data.gov.bh — Divorce Cases by Nationality, Age Groups & Duration of Marriage of Divorced Wife",
@@ -555,26 +534,6 @@ static const hp_source HP3B64_ODS[] = {
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_FC048BCEA5", .name = "spenergynetworks.opendatasoft.com — SPD DG Connections Network "
-      "Info",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPD DG Connections Network Info",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spd-dg-connections-network-info/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spd-dg-connections-network-info' ('SPD DG "
-      "Connections Network Info') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_36A1CB02F3", .name = "data.82amenagement.fr — Données détaillées au logement du "
       "répertoire des logements locatifs des bailleurs sociaux (RPLS) "
       "(2023)",
@@ -701,26 +660,6 @@ static const hp_source HP3B64_ODS[] = {
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
-
-  { .id = "JO64_EUODS_68EEC6E443", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Salford",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Salford",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-salford/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-salford' ('SP ENW - "
-      "GIS - Conductor - Salford') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_FDDCFBF5BF", .name = "spi-digitalwallonia.opendatasoft.com — Provinces belges - "
       "Limites administratives",
@@ -1089,27 +1028,6 @@ static const hp_source HP3B64_ODS[] = {
       "on the European open-data portal datahub.bordeaux-metropole.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_C7E1683600", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Rossendale_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Rossendale_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_rossendale_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_rossendale_shared' "
-      "('LA_Pipe_Infrastructure_Rossendale_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_6F947F6845", .name = "www.pndb.fr — Aires de carénage dans les ports de plaisance, "
@@ -1527,27 +1445,6 @@ static const hp_source HP3B64_ODS[] = {
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_A243EC79BE", .name = "spenergynetworks.opendatasoft.com — Customer Connections Profile "
-      "- Census Area",
-    .name_ja = "spenergynetworks.opendatasoft.com — Customer Connections Profile - Census Area",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/customer_connections_profile_census_area/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'customer_connections_profile_census_area' "
-      "('Customer Connections Profile - Census Area') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_382CC6AFCD", .name = "data.82amenagement.fr — Résultats des élections départementales "
       "2021 - 2nd tour - par bureau de vote",
     .name_ja = "data.82amenagement.fr — Résultats des élections départementales 2021 - 2nd tour - par bureau de vote",
@@ -1681,28 +1578,6 @@ static const hp_source HP3B64_ODS[] = {
       "Paddle') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_85789F7F0C", .name = "electricitynorthwest.opendatasoft.com — SP ENW - External Data - "
-      "DVLA EV Registrations per LSOA",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - External Data - DVLA EV Registrations per LSOA",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/enwl-area-dvla-ev-registration-data-per-lsoa/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'enwl-area-dvla-ev-registration-data-per-lsoa' ('SP ENW - "
-      "External Data - DVLA EV Registrations per LSOA') on the European "
-      "open-data portal electricitynorthwest.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_E8D30A857B", .name = "spi-digitalwallonia.opendatasoft.com — Communes belges - Limites "
@@ -2131,28 +2006,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_2899511ECA", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_North_Northamptonshire_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_North_Northamptonshire_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_north_northamptonshire_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_north_northamptonshire_shared' "
-      "('LA_Pipe_Infrastructure_North_Northamptonshire_Shared') on the "
-      "European open-data portal cadentgas.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_6E6FB696F9", .name = "www.pndb.fr — Zones Naturelles d'Intérêt Ecologique Faunistique "
       "et Floristique de type 1 sur le département du Cher",
@@ -2583,28 +2436,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_6CBC54828F", .name = "spenergynetworks.opendatasoft.com — Distributed Generation SP "
-      "Distribution Heat Maps- SPD Primary Substations",
-    .name_ja = "spenergynetworks.opendatasoft.com — Distributed Generation SP Distribution Heat Maps- SPD Primary Substations",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/distributed-generation-sp-distribution-heat-maps-spd-primary-substations/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'distributed-generation-sp-distribution-heat-maps-spd-primary-substations' "
-      "('Distributed Generation SP Distribution Heat Maps- SPD Primary "
-      "Substations') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_2300D644B1", .name = "data.82amenagement.fr — Elus départementaux de Tarn-et-Garonne - "
       "2021",
     .name_ja = "data.82amenagement.fr — Elus départementaux de Tarn-et-Garonne - 2021",
@@ -2731,26 +2562,6 @@ static const hp_source HP3B64_ODS[] = {
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
-
-  { .id = "JO64_EUODS_22B7F63795", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Flexibility - "
-      "SLC31E - Dispatch",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Flexibility - SLC31E - Dispatch",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/slc31e-dispatch/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'slc31e-dispatch' ('SP ENW - Flexibility - "
-      "SLC31E - Dispatch') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_BBBF8B4188", .name = "spi-digitalwallonia.opendatasoft.com — Régions belges - Limites "
       "administratives",
@@ -3160,27 +2971,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_0A682887BB", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Bolsover_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Bolsover_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_bolsover_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_bolsover_shared' "
-      "('LA_Pipe_Infrastructure_Bolsover_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_043908AA37", .name = "www.data.gov.bh — Maternity Care Visits in Health Units",
     .name_ja = "www.data.gov.bh — Maternity Care Visits in Health Units",
     .category = "open-data", .portal = "https://www.data.gov.bh/",
@@ -3501,25 +3291,6 @@ static const hp_source HP3B64_ODS[] = {
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_95336206B3", .name = "openenergyhub.ornl.gov — Avangrid: EV Hosting Capacity (Phase3)",
-    .name_ja = "openenergyhub.ornl.gov — Avangrid: EV Hosting Capacity (Phase3)",
-    .category = "open-data", .portal = "https://openenergyhub.ornl.gov/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://openenergyhub.ornl.gov/api/explore/v2.1/catalog/datasets/ui_ev_hc_phase3_prod/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'ui_ev_hc_phase3_prod' ('Avangrid: EV "
-      "Hosting Capacity (Phase3)') on the European open-data portal "
-      "openenergyhub.ornl.gov (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. ODS portal discovered via the "
-      "data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_8E7D0143F0", .name = "opendata.wuerzburg.de — Schulportrait - Kategorie A _ "
       "Allgemeines - Eckdaten",
     .name_ja = "opendata.wuerzburg.de — Schulportrait - Kategorie A _ Allgemeines - Eckdaten",
@@ -3565,28 +3336,6 @@ static const hp_source HP3B64_ODS[] = {
       "open-data portal data.dunkerque-agglo.fr (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_D14288BAB6", .name = "spenergynetworks.opendatasoft.com — Customer Connections Profile "
-      "- Primary Substations",
-    .name_ja = "spenergynetworks.opendatasoft.com — Customer Connections Profile - Primary Substations",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/customer_connections_profile_primary_substations/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'customer_connections_profile_primary_substations' ('Customer "
-      "Connections Profile - Primary Substations') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_857566A4F1", .name = "data.82amenagement.fr — Elections régionale 2021 par bureau de "
       "vote 2e tour - Tarn-et-Garonne",
@@ -3721,26 +3470,6 @@ static const hp_source HP3B64_ODS[] = {
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
-
-  { .id = "JO64_EUODS_FF11F86EA6", .name = "electricitynorthwest.opendatasoft.com — SP ENW - External Data - "
-      "LSOA Polygons",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - External Data - LSOA Polygons",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/enwl-lsoa-polygons/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'enwl-lsoa-polygons' ('SP ENW - External "
-      "Data - LSOA Polygons') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_3DD766EA9A", .name = "spi-digitalwallonia.opendatasoft.com — Etablissements pour ainés",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — Etablissements pour ainés",
@@ -4150,27 +3879,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_19AB78F29A", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Solihull_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Solihull_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_solihull_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_solihull_shared' "
-      "('LA_Pipe_Infrastructure_Solihull_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_78BDE38A8F", .name = "www.data.gov.bh — Number of GCC Citizens Covered in Retirement",
     .name_ja = "www.data.gov.bh — Number of GCC Citizens Covered in Retirement",
     .category = "open-data", .portal = "https://www.data.gov.bh/",
@@ -4570,27 +4278,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_9218E0555F", .name = "spenergynetworks.opendatasoft.com — SPM DFES Local Authorities "
-      "Polygons",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPM DFES Local Authorities Polygons",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/dfes_ods_spm_localauthority_polygons/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'dfes_ods_spm_localauthority_polygons' "
-      "('SPM DFES Local Authorities Polygons') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_2B8B8EED32", .name = "data.82amenagement.fr — Indice quotidien de qualité de l’air "
       "pour les collectivités territoriales",
     .name_ja = "data.82amenagement.fr — Indice quotidien de qualité de l’air pour les collectivités territoriales",
@@ -4720,26 +4407,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_9A783983C3", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Boundary Flow - "
-      "Merge",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Boundary Flow - Merge",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/enwl-boundary-flow-merge/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'enwl-boundary-flow-merge' ('SP ENW - "
-      "Boundary Flow - Merge') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_60F6B447A2", .name = "spi-digitalwallonia.opendatasoft.com — Belgique - Limites "
       "administratives",
@@ -5140,27 +4807,6 @@ static const hp_source HP3B64_ODS[] = {
       "portal datahub.bordeaux-metropole.fr (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_9BB940CACD", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Boston_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Boston_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_boston_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_boston_shared' "
-      "('LA_Pipe_Infrastructure_Boston_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_BC8EFED2A6", .name = "www.data.gov.bh — Egg Production – Million Eggs",
     .name_ja = "www.data.gov.bh — Egg Production – Million Eggs",
@@ -5570,27 +5216,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_4632AC1F7D", .name = "spenergynetworks.opendatasoft.com — SPD DG Connections Network "
-      "Info (SPEN_016) Data Quality Checks",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPD DG Connections Network Info (SPEN_016) Data Quality Checks",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spen_data_quality_spd_dg_connections/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spen_data_quality_spd_dg_connections' "
-      "('SPD DG Connections Network Info (SPEN_016) Data Quality "
-      "Checks') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_B3DD17AA31", .name = "data.82amenagement.fr — Points d'eau potable",
     .name_ja = "data.82amenagement.fr — Points d'eau potable",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -5716,27 +5341,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_8C08F9935C", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Substation - "
-      "DSO GSP Polygons",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Substation - DSO GSP Polygons",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/enwl-substation-dso-gsp-polygons/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'enwl-substation-dso-gsp-polygons' ('SP ENW "
-      "- Substation - DSO GSP Polygons') on the European open-data "
-      "portal electricitynorthwest.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_7BF42CFC98", .name = "spi-digitalwallonia.opendatasoft.com — Boites à livres",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — Boites à livres",
@@ -6094,28 +5698,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_54061BE3E8", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Amber_Valley_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Amber_Valley_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_amber_valley_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_amber_valley_shared' "
-      "('LA_Pipe_Infrastructure_Amber_Valley_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_2821D434C3", .name = "www.data.gov.bh — Number of Students of GCC Citizens Registered "
       "in Governmental Schools - Secondary",
@@ -6527,27 +6109,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_FF994C7510", .name = "spenergynetworks.opendatasoft.com — SPD LTDS Appendix 1 Circuit "
-      "Data (Table 1)",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPD LTDS Appendix 1 Circuit Data (Table 1)",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spd-ltds-appendix-1-circuit-data-table-1/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spd-ltds-appendix-1-circuit-data-table-1' "
-      "('SPD LTDS Appendix 1 Circuit Data (Table 1)') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_EE9E77BA59", .name = "data.82amenagement.fr — Nombre d'établissements employeurs, "
       "effectifs salariés et masse salariale du secteur privé hors "
       "intérimaires, par EPCI et par",
@@ -6681,27 +6242,6 @@ static const hp_source HP3B64_ODS[] = {
       "European open-data portal data.cannes.com (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
       "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_FC35D6DF25", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Flexibility - "
-      "Primacy - Risk of Conflict Report",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Flexibility - Primacy - Risk of Conflict Report",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/primacy-risk-of-conflict-report/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'primacy-risk-of-conflict-report' ('SP ENW "
-      "- Flexibility - Primacy - Risk of Conflict Report') on the "
-      "European open-data portal electricitynorthwest.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_21B98B600A", .name = "spi-digitalwallonia.opendatasoft.com — Supracommunalités",
@@ -7108,27 +6648,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_9785FCE3BF", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Barnsley_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Barnsley_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_barnsley_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_barnsley_shared' "
-      "('LA_Pipe_Infrastructure_Barnsley_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_BC33466564", .name = "www.data.gov.bh — Number of Governmental Schools by Type of "
       "School",
     .name_ja = "www.data.gov.bh — Number of Governmental Schools by Type of School",
@@ -7489,28 +7008,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_55A786CDDA", .name = "spenergynetworks.opendatasoft.com — Flexibility Market Research "
-      "(SPEN_025) Data Quality Checks",
-    .name_ja = "spenergynetworks.opendatasoft.com — Flexibility Market Research (SPEN_025) Data Quality Checks",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spen_data_quality_flexibility_market_research/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'spen_data_quality_flexibility_market_research' ('Flexibility "
-      "Market Research (SPEN_025) Data Quality Checks') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_E13979E08B", .name = "data.82amenagement.fr — Temps de parole et d'antenne des "
       "candidats à l'élection présidentielle 2022 - Première période - "
       "du 1er janvier au 7 mars 2022",
@@ -7641,27 +7138,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_5514833F04", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Biodiversity - "
-      "Exclusion Management - Habitat Data",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Biodiversity - Exclusion Management - Habitat Data",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/biodiversity-habitat-exclusions/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'biodiversity-habitat-exclusions' ('SP ENW "
-      "- Biodiversity - Exclusion Management - Habitat Data') on the "
-      "European open-data portal electricitynorthwest.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_4DCACC3AFE", .name = "spi-digitalwallonia.opendatasoft.com — Gestionnaire de Réseau "
       "(GRD) pour le gaz",
@@ -8068,27 +7544,6 @@ static const hp_source HP3B64_ODS[] = {
       "European open-data portal datahub.bordeaux-metropole.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_D057A3AFCC", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Tamworth_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Tamworth_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_tamworth_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_tamworth_shared' "
-      "('LA_Pipe_Infrastructure_Tamworth_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_CF83BA1A1E", .name = "www.data.gov.bh — Pension Salaries Paid for Pensioners and "
@@ -8647,27 +8102,6 @@ static const hp_source HP3B64_ODS[] = {
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_BA4AF96363", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Cheshire East",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Cheshire East",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-cheshire-east/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-cheshire-east' ('SP "
-      "ENW - GIS - Conductor - Cheshire East') on the European "
-      "open-data portal electricitynorthwest.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_036AEBE956", .name = "spi-digitalwallonia.opendatasoft.com — Quartiers statistiques "
       "wallons - Limites administratives",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — Quartiers statistiques wallons - Limites administratives",
@@ -9061,27 +8495,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_C891178C28", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Basildon_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Basildon_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_basildon_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_basildon_shared' "
-      "('LA_Pipe_Infrastructure_Basildon_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_7C2890E362", .name = "www.data.gov.bh — Management of Hazardous Waste",
     .name_ja = "www.data.gov.bh — Management of Hazardous Waste",
     .category = "open-data", .portal = "https://www.data.gov.bh/",
@@ -9466,28 +8879,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_502D65B999", .name = "spenergynetworks.opendatasoft.com — Historic Substation Demand "
-      "Curve (SPEN_033) Data Quality Checks",
-    .name_ja = "spenergynetworks.opendatasoft.com — Historic Substation Demand Curve (SPEN_033) Data Quality Checks",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/historic-substation-demand-curve-spen_032-data-quality-checks/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'historic-substation-demand-curve-spen_032-data-quality-checks' "
-      "('Historic Substation Demand Curve (SPEN_033) Data Quality "
-      "Checks') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_CDB2B5E60C", .name = "data.82amenagement.fr — DONNÉES TARN-ET-GARONNE DE LA BASE "
       "ADRESSE NATIONALE",
     .name_ja = "data.82amenagement.fr — DONNÉES TARN-ET-GARONNE DE LA BASE ADRESSE NATIONALE",
@@ -9614,26 +9005,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_8C7C272C60", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Fylde",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Fylde",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-fylde/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-fylde' ('SP ENW - "
-      "GIS - Conductor - Fylde') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_17E9A45633", .name = "spi-digitalwallonia.opendatasoft.com — Population par secteur "
       "statistique (2020)",
@@ -10035,27 +9406,6 @@ static const hp_source HP3B64_ODS[] = {
       "portal datahub.bordeaux-metropole.fr (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_83E84AFA21", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Wandsworth_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Wandsworth_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_wandsworth_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_wandsworth_shared' "
-      "('LA_Pipe_Infrastructure_Wandsworth_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_D8FF3B9A4F", .name = "www.data.gov.bh — Number of GCC Citizens Working in the Private "
       "Sector in Kingdom of Bahrain",
@@ -10459,27 +9809,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_E051645BF5", .name = "spenergynetworks.opendatasoft.com — Embedded Capacity Register "
-      "(SPEN_006) Data Quality Checks",
-    .name_ja = "spenergynetworks.opendatasoft.com — Embedded Capacity Register (SPEN_006) Data Quality Checks",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spen_data_quality_ecr/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spen_data_quality_ecr' ('Embedded Capacity "
-      "Register (SPEN_006) Data Quality Checks') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_2D46DEA9F9", .name = "data.82amenagement.fr — Liste des boîtes aux lettres de rue avec "
       "heure limite de dépôt",
     .name_ja = "data.82amenagement.fr — Liste des boîtes aux lettres de rue avec heure limite de dépôt",
@@ -10611,26 +9940,6 @@ static const hp_source HP3B64_ODS[] = {
       "portal data.cannes.com (portal's own dataset). Records API "
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_DF5B4EB24F", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Carlisle",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Carlisle",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-carlisle/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-carlisle' ('SP ENW - "
-      "GIS - Conductor - Carlisle') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_4E9BA9E31A", .name = "spi-digitalwallonia.opendatasoft.com — Nombre de voitures par "
       "secteur statistique (2017 à 2021)",
@@ -11045,25 +10354,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_0D6A1DE075", .name = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Wyre_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Wyre_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_wyre_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_wyre_shared' "
-      "('LA_Pipe_Infrastructure_Wyre_Shared') on the European open-data "
-      "portal cadentgas.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_D8C97CC67B", .name = "www.data.gov.bh — Marriage Cases by Nationality, Number of Wives "
       "& Highest Education Attainment of Husband",
@@ -11598,27 +10888,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_0557C9E3DF", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Portal "
-      "Analytics - Monthly User API",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Portal Analytics - Monthly User API",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-portal-analytics-monthly-user-api/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-portal-analytics-monthly-user-api' "
-      "('SP ENW - Portal Analytics - Monthly User API') on the European "
-      "open-data portal electricitynorthwest.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_33CD8ED17E", .name = "spi-digitalwallonia.opendatasoft.com — MR/MRS en communauté "
       "germanophone",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — MR/MRS en communauté germanophone",
@@ -12022,27 +11291,6 @@ static const hp_source HP3B64_ODS[] = {
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_A26A581E82", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Oldham_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Oldham_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_oldham_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_oldham_shared' "
-      "('LA_Pipe_Infrastructure_Oldham_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_090370C4AC", .name = "www.data.gov.bh — Natural Increase Rate",
     .name_ja = "www.data.gov.bh — Natural Increase Rate",
     .category = "open-data", .portal = "https://www.data.gov.bh/",
@@ -12430,27 +11678,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_AC2D357D1D", .name = "spenergynetworks.opendatasoft.com — SPD DFES Local Authorities "
-      "Polygons",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPD DFES Local Authorities Polygons",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/dfes_ods_spd_localauthority_polygons/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'dfes_ods_spd_localauthority_polygons' "
-      "('SPD DFES Local Authorities Polygons') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_2418541AE7", .name = "data.82amenagement.fr — Zones d'emploi - Département de "
       "Tarn-et-Garonne",
     .name_ja = "data.82amenagement.fr — Zones d'emploi - Département de Tarn-et-Garonne",
@@ -12577,27 +11804,6 @@ static const hp_source HP3B64_ODS[] = {
       "open-data portal data.cannes.com (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_EB6802B137", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Embedded "
-      "Capacity Register 3 - DSR",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Embedded Capacity Register 3 - DSR",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/enwl-embedded-capacity-register-3-dsr/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'enwl-embedded-capacity-register-3-dsr' "
-      "('SP ENW - Embedded Capacity Register 3 - DSR') on the European "
-      "open-data portal electricitynorthwest.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_8CA4C29E70", .name = "spi-digitalwallonia.opendatasoft.com — Infrastructures sportives",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — Infrastructures sportives",
@@ -13006,28 +12212,6 @@ static const hp_source HP3B64_ODS[] = {
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_AF478CA283", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Milton_Keynes_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Milton_Keynes_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_milton_keynes_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_milton_keynes_shared' "
-      "('LA_Pipe_Infrastructure_Milton_Keynes_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_33BC04213C", .name = "www.data.gov.bh — Number of Students in Holy Quran Learning "
       "Centers",
     .name_ja = "www.data.gov.bh — Number of Students in Holy Quran Learning Centers",
@@ -13368,25 +12552,6 @@ static const hp_source HP3B64_ODS[] = {
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_1DB87183DE", .name = "openenergyhub.ornl.gov — DTE Electric: Hosting Capacity",
-    .name_ja = "openenergyhub.ornl.gov — DTE Electric: Hosting Capacity",
-    .category = "open-data", .portal = "https://openenergyhub.ornl.gov/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://openenergyhub.ornl.gov/api/explore/v2.1/catalog/datasets/dte-hosting-capacity/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'dte-hosting-capacity' ('DTE Electric: "
-      "Hosting Capacity') on the European open-data portal "
-      "openenergyhub.ornl.gov (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. ODS portal discovered via the "
-      "data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_6B3811DDC3", .name = "opendata.wuerzburg.de — Grenzwanderungen Würzburg",
     .name_ja = "opendata.wuerzburg.de — Grenzwanderungen Würzburg",
     .category = "open-data", .portal = "https://opendata.wuerzburg.de/",
@@ -13428,28 +12593,6 @@ static const hp_source HP3B64_ODS[] = {
       "portal data.dunkerque-agglo.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_69A98E22ED", .name = "spenergynetworks.opendatasoft.com — Distributed Generation SP "
-      "Distribution Heat Maps-SPD Grid Substations",
-    .name_ja = "spenergynetworks.opendatasoft.com — Distributed Generation SP Distribution Heat Maps-SPD Grid Substations",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/distributed-generation-sp-distribution-heat-maps-spd-grid-substations/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'distributed-generation-sp-distribution-heat-maps-spd-grid-substations' "
-      "('Distributed Generation SP Distribution Heat Maps-SPD Grid "
-      "Substations') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_6D99250749", .name = "data.82amenagement.fr — Cimetières",
     .name_ja = "data.82amenagement.fr — Cimetières",
@@ -13574,27 +12717,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_CEFA79AC79", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Biodiversity - "
-      "Enhancement Opportunity - Wetland Data",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Biodiversity - Enhancement Opportunity - Wetland Data",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/biodiversity-wetland-opportunity-data/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'biodiversity-wetland-opportunity-data' "
-      "('SP ENW - Biodiversity - Enhancement Opportunity - Wetland "
-      "Data') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_891B5F23F5", .name = "spi-digitalwallonia.opendatasoft.com — Maisons Médicales & "
       "Centres de Santé Intégrés",
@@ -14004,28 +13126,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_B39F215943", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_King's_Lynn_And_West_Norfolk_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_King's_Lynn_And_West_Norfolk_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_kings_lynn_and_west_norfolk_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_kings_lynn_and_west_norfolk_shared' "
-      "('LA_Pipe_Infrastructure_King's_Lynn_And_West_Norfolk_Shared') "
-      "on the European open-data portal cadentgas.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_72CD8B67D2", .name = "www.data.gov.bh — Marriage Cases by Classification of "
       "Nationality of the Spouses",
     .name_ja = "www.data.gov.bh — Marriage Cases by Classification of Nationality of the Spouses",
@@ -14414,27 +13514,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_9E84010859", .name = "spenergynetworks.opendatasoft.com — Historic Substation "
-      "Utilisation SPM",
-    .name_ja = "spenergynetworks.opendatasoft.com — Historic Substation Utilisation SPM",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/historic_substation_utilisation_spm/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'historic_substation_utilisation_spm' "
-      "('Historic Substation Utilisation SPM') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_6092102F55", .name = "data.82amenagement.fr — Liste des automates en bureaux de poste",
     .name_ja = "data.82amenagement.fr — Liste des automates en bureaux de poste",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -14562,26 +13641,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_7F7DC8EF92", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Trafford",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Trafford",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-trafford/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-trafford' ('SP ENW - "
-      "GIS - Conductor - Trafford') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_77E990D515", .name = "spi-digitalwallonia.opendatasoft.com — Data crèches_ecetia",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — Data crèches_ecetia",
@@ -14987,28 +14046,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_801F827FB2", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Nuneaton_And_Bedworth_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Nuneaton_And_Bedworth_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_nuneaton_and_bedworth_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_nuneaton_and_bedworth_shared' "
-      "('LA_Pipe_Infrastructure_Nuneaton_And_Bedworth_Shared') on the "
-      "European open-data portal cadentgas.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_B80913B743", .name = "www.data.gov.bh — Number of Students in Nursery & Kindergarten "
       "Levels by Sex",
     .name_ja = "www.data.gov.bh — Number of Students in Nursery & Kindergarten Levels by Sex",
@@ -15410,27 +14447,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_FF38EE7497", .name = "spenergynetworks.opendatasoft.com — Historic Substation "
-      "Utilisation SPD",
-    .name_ja = "spenergynetworks.opendatasoft.com — Historic Substation Utilisation SPD",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/historic_substation_utilisation_spd/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'historic_substation_utilisation_spd' "
-      "('Historic Substation Utilisation SPD') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_851198C8B8", .name = "data.82amenagement.fr — France Services et MSAP 82",
     .name_ja = "data.82amenagement.fr — France Services et MSAP 82",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -15561,26 +14577,6 @@ static const hp_source HP3B64_ODS[] = {
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
-
-  { .id = "JO64_EUODS_E7ECBAC3A6", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Wyre",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Wyre",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-wyre/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-wyre' ('SP ENW - GIS "
-      "- Conductor - Wyre') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_2002DD86D2", .name = "spi-digitalwallonia.opendatasoft.com — Taux de chômage "
       "administratif par catégories d'âges (2019)",
@@ -15988,28 +14984,6 @@ static const hp_source HP3B64_ODS[] = {
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_FBFA141E7C", .name = "cadentgas.opendatasoft.com — Hydrogen Forecasts - East Coast "
-      "Hydrogen Program - Shared",
-    .name_ja = "cadentgas.opendatasoft.com — Hydrogen Forecasts - East Coast Hydrogen Program - Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/hydrogen_forecasts-east_coast_hydrogen_program-shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'hydrogen_forecasts-east_coast_hydrogen_program-shared' "
-      "('Hydrogen Forecasts - East Coast Hydrogen Program - Shared') on "
-      "the European open-data portal cadentgas.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_B85D3F6839", .name = "www.data.gov.bh — Mean Wind Speed by Month",
     .name_ja = "www.data.gov.bh — Mean Wind Speed by Month",
     .category = "open-data", .portal = "https://www.data.gov.bh/",
@@ -16411,27 +15385,6 @@ static const hp_source HP3B64_ODS[] = {
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_5024EE7A93", .name = "spenergynetworks.opendatasoft.com — Historic Faults (SPEN_019) "
-      "Data Quality Checks",
-    .name_ja = "spenergynetworks.opendatasoft.com — Historic Faults (SPEN_019) Data Quality Checks",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spen_data_quality_historic_faults/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spen_data_quality_historic_faults' "
-      "('Historic Faults (SPEN_019) Data Quality Checks') on the "
-      "European open-data portal spenergynetworks.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_BBF51AD0C9", .name = "data.82amenagement.fr — Cantons de Tarn-et-Garonne",
     .name_ja = "data.82amenagement.fr — Cantons de Tarn-et-Garonne",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -16558,26 +15511,6 @@ static const hp_source HP3B64_ODS[] = {
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
-
-  { .id = "JO64_EUODS_405A390B60", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Allerdale",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Allerdale",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductor-allerdale/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductor-allerdale' ('SP ENW - "
-      "GIS - Conductor - Allerdale') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_B4A0A68985", .name = "spi-digitalwallonia.opendatasoft.com — Zones de police",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — Zones de police",
@@ -16974,28 +15907,6 @@ static const hp_source HP3B64_ODS[] = {
       "European open-data portal datahub.bordeaux-metropole.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_C0EA735B2E", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Waltham_Forest_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Waltham_Forest_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_waltham_forest_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_waltham_forest_shared' "
-      "('LA_Pipe_Infrastructure_Waltham_Forest_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_A2A74BE715", .name = "www.data.gov.bh — End Service Gratuity Payments",
@@ -17408,26 +16319,6 @@ static const hp_source HP3B64_ODS[] = {
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_E05112B53D", .name = "spenergynetworks.opendatasoft.com — Embedded Generation by Type",
-    .name_ja = "spenergynetworks.opendatasoft.com — Embedded Generation by Type",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/network-dataset-embedded-generation-by-type/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'network-dataset-embedded-generation-by-type' ('Embedded "
-      "Generation by Type') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_291DCE8C4B", .name = "data.82amenagement.fr — Budget TGN CA 2019",
     .name_ja = "data.82amenagement.fr — Budget TGN CA 2019",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -17554,26 +16445,6 @@ static const hp_source HP3B64_ODS[] = {
       "open-data portal data.cannes.com (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_7B4FAE028F", .name = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - Bulk "
-      "Supply Point Polygons",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - Bulk Supply Point Polygons",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/dfes-bsp-polygons/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'dfes-bsp-polygons' ('SP ENW - DFES - Bulk "
-      "Supply Point Polygons') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_F7FF78FF3E", .name = "spi-digitalwallonia.opendatasoft.com — Secteurs statistiques "
       "belges - Limites administratives",
@@ -17987,27 +16858,6 @@ static const hp_source HP3B64_ODS[] = {
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_D1B7F22E28", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Dacorum_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Dacorum_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_dacorum_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_dacorum_shared' "
-      "('LA_Pipe_Infrastructure_Dacorum_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_8D0B01010D", .name = "www.data.gov.bh — Inward Foreign Other Investments Stocks "
       "classified by Countries in Million Bahraini Dinars",
     .name_ja = "www.data.gov.bh — Inward Foreign Other Investments Stocks classified by Countries in Million Bahraini Dinars",
@@ -18414,25 +17264,6 @@ static const hp_source HP3B64_ODS[] = {
       "portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_52BF9294C3", .name = "spenergynetworks.opendatasoft.com — Curtailment: Generator Type",
-    .name_ja = "spenergynetworks.opendatasoft.com — Curtailment: Generator Type",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/generator-type/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'generator-type' ('Curtailment: Generator "
-      "Type') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_3FED96B626", .name = "data.82amenagement.fr — Liste des services disponibles en "
       "bureaux de poste, agences postales et relais poste",
     .name_ja = "data.82amenagement.fr — Liste des services disponibles en bureaux de poste, agences postales et relais poste",
@@ -18559,27 +17390,6 @@ static const hp_source HP3B64_ODS[] = {
       "2020') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_E442C76954", .name = "electricitynorthwest.opendatasoft.com — SP ENW - UVA - "
-      "Commissioned Underground Cable",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - UVA - Commissioned Underground Cable",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/uva_cable_installed/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'uva_cable_installed' ('SP ENW - UVA - "
-      "Commissioned Underground Cable') on the European open-data "
-      "portal electricitynorthwest.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_A13121BBE9", .name = "spi-digitalwallonia.opendatasoft.com — Structures psychologiques",
@@ -18980,27 +17790,6 @@ static const hp_source HP3B64_ODS[] = {
     .description = "OpenDataSoft dataset 'bor_budget_primitif_2022' ('Budget "
       "primitif 2022 de la ville de Bordeaux') on the European "
       "open-data portal datahub.bordeaux-metropole.fr (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_76186BF2CB", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Fenland_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Fenland_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_fenland_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_fenland_shared' "
-      "('LA_Pipe_Infrastructure_Fenland_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
@@ -19408,25 +18197,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_87427C8284", .name = "spenergynetworks.opendatasoft.com — Curtailment: GSP",
-    .name_ja = "spenergynetworks.opendatasoft.com — Curtailment: GSP",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/gsp/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'gsp' ('Curtailment: GSP') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_83675AD2CD", .name = "data.82amenagement.fr — Cadastre - limites communales",
     .name_ja = "data.82amenagement.fr — Cadastre - limites communales",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -19548,27 +18318,6 @@ static const hp_source HP3B64_ODS[] = {
     .id_keys = "nature_code+chapitre_code+type_de_mouvement",
     .description = "OpenDataSoft dataset 'budget-primitif-2019' ('Budget primitif "
       "2019') on the European open-data portal data.cannes.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_69D3812652", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Biodiversity - "
-      "Existing Baseline - Habitat Data",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Biodiversity - Existing Baseline - Habitat Data",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/biodiversity-baseline-habitat/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'biodiversity-baseline-habitat' ('SP ENW - "
-      "Biodiversity - Existing Baseline - Habitat Data') on the "
-      "European open-data portal electricitynorthwest.opendatasoft.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
@@ -19981,28 +18730,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_17F0FCD71D", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Newcastle_Under_Lyme_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Newcastle_Under_Lyme_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_newcastle_under_lyme_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_newcastle_under_lyme_shared' "
-      "('LA_Pipe_Infrastructure_Newcastle_Under_Lyme_Shared') on the "
-      "European open-data portal cadentgas.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_D167AB6767", .name = "www.data.gov.bh — Fisheries Indicators – Number of Fishers",
     .name_ja = "www.data.gov.bh — Fisheries Indicators – Number of Fishers",
     .category = "open-data", .portal = "https://www.data.gov.bh/",
@@ -20409,26 +19136,6 @@ static const hp_source HP3B64_ODS[] = {
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_DC39C1D678", .name = "spenergynetworks.opendatasoft.com — Capacity Management System "
-      "Data",
-    .name_ja = "spenergynetworks.opendatasoft.com — Capacity Management System Data",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/capacity-management-system/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'capacity-management-system' ('Capacity "
-      "Management System Data') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_B48B56002F", .name = "data.82amenagement.fr — Collectivités membres de Tarn et Garonne "
       "Numérique",
     .name_ja = "data.82amenagement.fr — Collectivités membres de Tarn et Garonne Numérique",
@@ -20552,28 +19259,6 @@ static const hp_source HP3B64_ODS[] = {
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
-
-  { .id = "JO64_EUODS_2571165969", .name = "electricitynorthwest.opendatasoft.com — SP ENW - External Data - "
-      "Sites of Special Scientific Interest (SSSI)",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - External Data - Sites of Special Scientific Interest (SSSI)",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-external-data-sites-of-special-scientific-interest-sssi/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'sp-enw-external-data-sites-of-special-scientific-interest-sssi' "
-      "('SP ENW - External Data - Sites of Special Scientific Interest "
-      "(SSSI)') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_117E31B525", .name = "spi-digitalwallonia.opendatasoft.com — "
       "Nbr_vehicules_2010_2023_par_entites",
@@ -20973,28 +19658,6 @@ static const hp_source HP3B64_ODS[] = {
     .description = "OpenDataSoft dataset 'met_budgetsupp_2020' ('Budget "
       "supplémentaire 2020 de Bordeaux Métropole') on the European "
       "open-data portal datahub.bordeaux-metropole.fr (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_8D6C8334DA", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_North_Yorkshire_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_North_Yorkshire_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_north_yorkshire_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_north_yorkshire_open' "
-      "('LA_Pipe_Infrastructure_North_Yorkshire_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
@@ -21414,28 +20077,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_DC9D23DDBC", .name = "spenergynetworks.opendatasoft.com — SPD LTDS Appendix 5 Embedded "
-      "Generation (Table 5)",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPD LTDS Appendix 5 Embedded Generation (Table 5)",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spd-ltds-appendix-5-embedded-generation-table-5/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'spd-ltds-appendix-5-embedded-generation-table-5' ('SPD LTDS "
-      "Appendix 5 Embedded Generation (Table 5)') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_9221E79274", .name = "data.82amenagement.fr — Effectifs salariés et masse salariale "
       "trimestriels du secteur privé, par zone d'emploi",
     .name_ja = "data.82amenagement.fr — Effectifs salariés et masse salariale trimestriels du secteur privé, par zone d'emploi",
@@ -21563,28 +20204,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_9784F3C842", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Staffordshire Moorlands",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Staffordshire Moorlands",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-staffordshire-moorlands/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'sp-enw-gis-conductors-staffordshire-moorlands' ('SP ENW - GIS - "
-      "Conductor - Staffordshire Moorlands') on the European open-data "
-      "portal electricitynorthwest.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_739C997B53", .name = "spi-digitalwallonia.opendatasoft.com — "
       "Accidents_circulation_2017-2024_Liege",
@@ -21984,27 +20603,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_6F17CE93B2", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Castle_Point_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Castle_Point_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_castle_point_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_castle_point_open' "
-      "('LA_Pipe_Infrastructure_Castle_Point_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_76CAF573B8", .name = "www.data.gov.bh — Expenditure per Visitor",
     .name_ja = "www.data.gov.bh — Expenditure per Visitor",
@@ -22570,27 +21168,6 @@ static const hp_source HP3B64_ODS[] = {
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_7DCB1D7B28", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Northumberland",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Northumberland",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-northumberland/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-northumberland' ('SP "
-      "ENW - GIS - Conductor - Northumberland') on the European "
-      "open-data portal electricitynorthwest.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_9D0A15F2B7", .name = "spi-digitalwallonia.opendatasoft.com — Zone CityPass Liège - "
       "Périmètre",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — Zone CityPass Liège - Périmètre",
@@ -22992,25 +21569,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_F528B695CA", .name = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Maldon_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Maldon_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_maldon_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_maldon_open' "
-      "('LA_Pipe_Infrastructure_Maldon_Open') on the European open-data "
-      "portal cadentgas.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_FFD466B3CF", .name = "www.data.gov.bh — Working Population (15 Years & Above) by "
       "Employment Status, Nationality and Sex - Census 2020",
@@ -23415,28 +21973,6 @@ static const hp_source HP3B64_ODS[] = {
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_C56BA0526C", .name = "spenergynetworks.opendatasoft.com — SPM LTDS Appendix 5 Embedded "
-      "Generation (Table 5)",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPM LTDS Appendix 5 Embedded Generation (Table 5)",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spm-ltds-appendix-5-embedded-generation-table-5/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'spm-ltds-appendix-5-embedded-generation-table-5' ('SPM LTDS "
-      "Appendix 5 Embedded Generation (Table 5)') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_F6D81F8627", .name = "data.82amenagement.fr — Bureaux de vote (2017) - Tarn-et-Garonne",
     .name_ja = "data.82amenagement.fr — Bureaux de vote (2017) - Tarn-et-Garonne",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -23564,26 +22100,6 @@ static const hp_source HP3B64_ODS[] = {
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
-
-  { .id = "JO64_EUODS_B6E1FBEA01", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Preston",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Preston",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-preston/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-preston' ('SP ENW - "
-      "GIS - Conductor - Preston') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_D443E6CCE8", .name = "spi-digitalwallonia.opendatasoft.com — Gestionnaire de Réseau "
       "(GRD) pour l'électricité",
@@ -23965,26 +22481,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_8A98E3FD75", .name = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Babergh_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Babergh_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_babergh_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_babergh_open' "
-      "('LA_Pipe_Infrastructure_Babergh_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_13B87B20EB", .name = "www.data.gov.bh — Number of Private Pharmacies.",
     .name_ja = "www.data.gov.bh — Number of Private Pharmacies.",
@@ -24551,26 +23047,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_4087FC4457", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Blackpool",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Blackpool",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-blackpool/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-blackpool' ('SP ENW "
-      "- GIS - Conductor - Blackpool') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_3051F8512C", .name = "spi-digitalwallonia.opendatasoft.com — Indice de dépendance",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — Indice de dépendance",
     .category = "open-data", .portal = "https://spi-digitalwallonia.opendatasoft.com/",
@@ -24981,27 +23457,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_6DA99665B1", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Runnymede_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Runnymede_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_runnymede_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_runnymede_shared' "
-      "('LA_Pipe_Infrastructure_Runnymede_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_75C27A6B57", .name = "www.data.gov.bh — Total Number of Sponsored Bahraini Orphans by "
       "Gender and Year",
     .name_ja = "www.data.gov.bh — Total Number of Sponsored Bahraini Orphans by Gender and Year",
@@ -25410,27 +23865,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_CE115423E8", .name = "spenergynetworks.opendatasoft.com — SPM LTDS Appendix 4 Fault "
-      "Levels (Table 4) HV",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPM LTDS Appendix 4 Fault Levels (Table 4) HV",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spm-ltds-appendix-4-fault-levels-table-4-hv/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'spm-ltds-appendix-4-fault-levels-table-4-hv' ('SPM LTDS "
-      "Appendix 4 Fault Levels (Table 4) HV') on the European open-data "
-      "portal spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_1E110C869E", .name = "data.82amenagement.fr — Simul'Aid€s - Coût des travaux",
     .name_ja = "data.82amenagement.fr — Simul'Aid€s - Coût des travaux",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -25555,27 +23989,6 @@ static const hp_source HP3B64_ODS[] = {
       "dette') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_AF371E5E41", .name = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - LV Peak "
-      "Demand (Unmonitored)",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - LV Peak Demand (Unmonitored)",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/dfes-lv-peak-demand-unmonitored/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'dfes-lv-peak-demand-unmonitored' ('SP ENW "
-      "- DFES - LV Peak Demand (Unmonitored)') on the European "
-      "open-data portal electricitynorthwest.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_F38FB0CB0F", .name = "spi-digitalwallonia.opendatasoft.com — Parking et aires de "
@@ -25987,28 +24400,6 @@ static const hp_source HP3B64_ODS[] = {
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_B4EF4E2ACE", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_South_Kesteven_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_South_Kesteven_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_south_kesteven_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_south_kesteven_shared' "
-      "('LA_Pipe_Infrastructure_South_Kesteven_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_C62B75E5B9", .name = "www.data.gov.bh — Population Connected to Wastewater Treatment",
     .name_ja = "www.data.gov.bh — Population Connected to Wastewater Treatment",
     .category = "open-data", .portal = "https://www.data.gov.bh/",
@@ -26390,26 +24781,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_99F3D604CC", .name = "spenergynetworks.opendatasoft.com — SP Energy Networks Data "
-      "Roadmap - 2025",
-    .name_ja = "spenergynetworks.opendatasoft.com — SP Energy Networks Data Roadmap - 2025",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/roadmap/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'roadmap' ('SP Energy Networks Data Roadmap "
-      "- 2025') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_93A0325266", .name = "data.82amenagement.fr — BD Topo Adresse",
     .name_ja = "data.82amenagement.fr — BD Topo Adresse",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -26533,27 +24904,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_CC6FDEF142", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Biodiversity - "
-      "Enhancement Opportunity - Grassland Data",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Biodiversity - Enhancement Opportunity - Grassland Data",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/biodiversity-grassland-opportunity-data/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'biodiversity-grassland-opportunity-data' "
-      "('SP ENW - Biodiversity - Enhancement Opportunity - Grassland "
-      "Data') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_8628B42108", .name = "spi-digitalwallonia.opendatasoft.com — Arrondissements belges - "
       "Limites administratives",
@@ -26959,27 +25309,6 @@ static const hp_source HP3B64_ODS[] = {
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_9E4B60E4CE", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_High_Peak_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_High_Peak_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_high_peak_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_high_peak_shared' "
-      "('LA_Pipe_Infrastructure_High_Peak_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_BF9F8B59EA", .name = "www.data.gov.bh — General Fertility Rate",
     .name_ja = "www.data.gov.bh — General Fertility Rate",
     .category = "open-data", .portal = "https://www.data.gov.bh/",
@@ -27322,27 +25651,6 @@ static const hp_source HP3B64_ODS[] = {
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_A21D93BEC3", .name = "openenergyhub.ornl.gov — Pacific Power Distribution Generation "
-      "Readiness",
-    .name_ja = "openenergyhub.ornl.gov — Pacific Power Distribution Generation Readiness",
-    .category = "open-data", .portal = "https://openenergyhub.ornl.gov/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://openenergyhub.ornl.gov/api/explore/v2.1/catalog/datasets/pacific-power-distribution-generation-readiness/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'pacific-power-distribution-generation-readiness' ('Pacific "
-      "Power Distribution Generation Readiness') on the European "
-      "open-data portal openenergyhub.ornl.gov (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_506C0D7309", .name = "opendata.wuerzburg.de — Stadtbezirke Ausländer "
       "Staatsangehörigkeit",
     .name_ja = "opendata.wuerzburg.de — Stadtbezirke Ausländer Staatsangehörigkeit",
@@ -27387,28 +25695,6 @@ static const hp_source HP3B64_ODS[] = {
       "portal data.dunkerque-agglo.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_CF909392CD", .name = "spenergynetworks.opendatasoft.com — SPM LTDS Appendix 6 "
-      "Connection Activity (Table 6) 132kV - Mid-Year Update",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPM LTDS Appendix 6 Connection Activity (Table 6) 132kV - Mid-Year Update",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spm-ltds-appendix-6-connection-activity-table-6-132kv-6-montly-update/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'spm-ltds-appendix-6-connection-activity-table-6-132kv-6-montly-update' "
-      "('SPM LTDS Appendix 6 Connection Activity (Table 6) 132kV - "
-      "Mid-Year Update') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_1B5E98B15B", .name = "data.82amenagement.fr — Zone NRA-MeD",
     .name_ja = "data.82amenagement.fr — Zone NRA-MeD",
@@ -27535,26 +25821,6 @@ static const hp_source HP3B64_ODS[] = {
       "open-data portal data.cannes.com (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_54B1C3AEDC", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Boundary Flow - "
-      "BSP XY",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Boundary Flow - BSP XY",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/enwl-boundary-flow-bsp-xy/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'enwl-boundary-flow-bsp-xy' ('SP ENW - "
-      "Boundary Flow - BSP XY') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_751A832F54", .name = "spi-digitalwallonia.opendatasoft.com — "
       "Entreprises_structurantes_communes",
@@ -27957,28 +26223,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_0F112EDAE1", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Malvern_Hills_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Malvern_Hills_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_malvern_hills_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_malvern_hills_shared' "
-      "('LA_Pipe_Infrastructure_Malvern_Hills_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_241DA852C5", .name = "www.data.gov.bh — Intermediate Consumption at Current Prices by "
       "Type of Economic Activity",
     .name_ja = "www.data.gov.bh — Intermediate Consumption at Current Prices by Type of Economic Activity",
@@ -28325,25 +26569,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_F8628C9667", .name = "openenergyhub.ornl.gov — SCE Hosting Capacity Map",
-    .name_ja = "openenergyhub.ornl.gov — SCE Hosting Capacity Map",
-    .category = "open-data", .portal = "https://openenergyhub.ornl.gov/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://openenergyhub.ornl.gov/api/explore/v2.1/catalog/datasets/sce-hosting-capacity-map/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sce-hosting-capacity-map' ('SCE Hosting "
-      "Capacity Map') on the European open-data portal "
-      "openenergyhub.ornl.gov (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. ODS portal discovered via the "
-      "data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_870EED49D6", .name = "opendata.wuerzburg.de — Schulportrait - Kategorie F _ "
       "Digitalisierung - Räume",
     .name_ja = "opendata.wuerzburg.de — Schulportrait - Kategorie F _ Digitalisierung - Räume",
@@ -28386,28 +26611,6 @@ static const hp_source HP3B64_ODS[] = {
       "'fusion-de-communes-avec-la-commune-de-dunkerque' ('Fusion de "
       "communes avec la commune de Dunkerque') on the European "
       "open-data portal data.dunkerque-agglo.fr (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_FC73ADDA7C", .name = "spenergynetworks.opendatasoft.com — Distributed Generation SP "
-      "Manweb Heat Maps-SPM Super Grid Substations",
-    .name_ja = "spenergynetworks.opendatasoft.com — Distributed Generation SP Manweb Heat Maps-SPM Super Grid Substations",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/distributed-generation-sp-manweb-heat-maps-spm-super-grid-substations/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'distributed-generation-sp-manweb-heat-maps-spm-super-grid-substations' "
-      "('Distributed Generation SP Manweb Heat Maps-SPM Super Grid "
-      "Substations') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
@@ -28541,28 +26744,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_9D8024B9DA", .name = "electricitynorthwest.opendatasoft.com — SP ENW - External Data - "
-      "Areas of Outstanding Natural Beauty (AONB)",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - External Data - Areas of Outstanding Natural Beauty (AONB)",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-external-data-areas-of-outstanding-natural-beauty-aonb/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'sp-enw-external-data-areas-of-outstanding-natural-beauty-aonb' "
-      "('SP ENW - External Data - Areas of Outstanding Natural Beauty "
-      "(AONB)') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_C1506F2AF3", .name = "spi-digitalwallonia.opendatasoft.com — Zones de Secours",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — Zones de Secours",
@@ -28968,27 +27149,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_835981851A", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Thurrock_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Thurrock_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_thurrock_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_thurrock_shared' "
-      "('LA_Pipe_Infrastructure_Thurrock_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_989244A713", .name = "www.data.gov.bh — Refinery Production (Thousands of US Barrels)",
     .name_ja = "www.data.gov.bh — Refinery Production (Thousands of US Barrels)",
     .category = "open-data", .portal = "https://www.data.gov.bh/",
@@ -29310,25 +27470,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_DF32CE72F4", .name = "openenergyhub.ornl.gov — Con Edison: Hosting Capacity",
-    .name_ja = "openenergyhub.ornl.gov — Con Edison: Hosting Capacity",
-    .category = "open-data", .portal = "https://openenergyhub.ornl.gov/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://openenergyhub.ornl.gov/api/explore/v2.1/catalog/datasets/con-edison-hosting-capacity/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'con-edison-hosting-capacity' ('Con Edison: "
-      "Hosting Capacity') on the European open-data portal "
-      "openenergyhub.ornl.gov (portal's own dataset). Records API "
-      "Explore v2.1, offset paging. ODS portal discovered via the "
-      "data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_01F722BAFA", .name = "opendata.wuerzburg.de — Schulportrait - Kategorie C _ Ganztag - "
       "Weitere_Sonstige",
     .name_ja = "opendata.wuerzburg.de — Schulportrait - Kategorie C _ Ganztag - Weitere_Sonstige",
@@ -29374,28 +27515,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.dunkerque-agglo.fr (portal's own dataset). Records API "
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_C776645FB4", .name = "spenergynetworks.opendatasoft.com — Distributed Generation SP "
-      "Manweb Heat Maps-SPM Grid Substations",
-    .name_ja = "spenergynetworks.opendatasoft.com — Distributed Generation SP Manweb Heat Maps-SPM Grid Substations",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/distributed-generation-sp-manweb-heat-maps-spm-grid-substations/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'distributed-generation-sp-manweb-heat-maps-spm-grid-substations' "
-      "('Distributed Generation SP Manweb Heat Maps-SPM Grid "
-      "Substations') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_08290FD791", .name = "data.82amenagement.fr — DPE Logements existants (juillet "
       "2021-2023)",
@@ -29524,27 +27643,6 @@ static const hp_source HP3B64_ODS[] = {
       "proximité') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_53F9E9CD34", .name = "electricitynorthwest.opendatasoft.com — SP ENW - External Data - "
-      "National Parks",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - External Data - National Parks",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-external-data-national-parks/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-external-data-national-parks' ('SP "
-      "ENW - External Data - National Parks') on the European open-data "
-      "portal electricitynorthwest.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_1966243757", .name = "spi-digitalwallonia.opendatasoft.com — Sous régions définies par "
@@ -29944,27 +28042,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_7ED2DB60C2", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Chelmsford_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Chelmsford_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_chelmsford_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_chelmsford_shared' "
-      "('LA_Pipe_Infrastructure_Chelmsford_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_75FE8EDE05", .name = "www.data.gov.bh — IPA - Bahraini Administrative Research "
       "Supported by the Institute (Ebhath Research Service)",
@@ -30511,26 +28588,6 @@ static const hp_source HP3B64_ODS[] = {
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_1E5315B870", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Craven",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Craven",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-craven/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-craven' ('SP ENW - "
-      "GIS - Conductor - Craven') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_56BEC576D4", .name = "spi-digitalwallonia.opendatasoft.com — Centres de plannings "
       "familiaux",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — Centres de plannings familiaux",
@@ -30937,26 +28994,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_C2F2F32F5E", .name = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Preston_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Preston_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_preston_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_preston_open' "
-      "('LA_Pipe_Infrastructure_Preston_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_2BB5DE040E", .name = "www.data.gov.bh — Average Daily Water Consumption - Million "
       "Gallons",
     .name_ja = "www.data.gov.bh — Average Daily Water Consumption - Million Gallons",
@@ -31356,28 +29393,6 @@ static const hp_source HP3B64_ODS[] = {
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_EE8DDEF27B", .name = "spenergynetworks.opendatasoft.com — SPM LTDS Appendix 7 "
-      "Substation Abbreviation Codes (Table 7)",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPM LTDS Appendix 7 Substation Abbreviation Codes (Table 7)",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spm-ltds-appendix-7-substation-abbreviation-codes-table-7/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'spm-ltds-appendix-7-substation-abbreviation-codes-table-7' "
-      "('SPM LTDS Appendix 7 Substation Abbreviation Codes (Table 7)') "
-      "on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_D4D910092B", .name = "data.82amenagement.fr — Effectifs d’élèves en collège",
     .name_ja = "data.82amenagement.fr — Effectifs d’élèves en collège",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -31499,26 +29514,6 @@ static const hp_source HP3B64_ODS[] = {
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
-
-  { .id = "JO64_EUODS_F4B3FEECD9", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Copeland",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Copeland",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-copeland/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-copeland' ('SP ENW - "
-      "GIS - Conductor - Copeland') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_7BDD0EFBFC", .name = "spi-digitalwallonia.opendatasoft.com — Revenus médians/moyens "
       "par déclaration par secteur stat",
@@ -31923,28 +29918,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_E616A3A7FB", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_North_Kesteven_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_North_Kesteven_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_north_kesteven_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_north_kesteven_open' "
-      "('LA_Pipe_Infrastructure_North_Kesteven_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_FEEB99A4E2", .name = "www.data.gov.bh — Total Fertility Rate",
     .name_ja = "www.data.gov.bh — Total Fertility Rate",
@@ -32360,26 +30333,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_C17574E96E", .name = "spenergynetworks.opendatasoft.com — SPM DFES Totals by "
-      "Substation",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPM DFES Totals by Substation",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spm-dfes-site-forecasts/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spm-dfes-site-forecasts' ('SPM DFES Totals "
-      "by Substation') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_C07CDE2B1D", .name = "data.82amenagement.fr — Chalandise Espaces Conseil FAIRE",
     .name_ja = "data.82amenagement.fr — Chalandise Espaces Conseil FAIRE",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -32504,26 +30457,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_F7008B1EFE", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Bolton",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Bolton",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-bolton/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-bolton' ('SP ENW - "
-      "GIS - Conductor - Bolton') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_0BD66948A1", .name = "spi-digitalwallonia.opendatasoft.com — Centres de Rééducation "
       "Ambulatoire",
@@ -32921,28 +30854,6 @@ static const hp_source HP3B64_ODS[] = {
       "the European open-data portal datahub.bordeaux-metropole.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_AFB99C4D35", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_North_East_Lincolnshire_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_North_East_Lincolnshire_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_north_east_lincolnshire_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_north_east_lincolnshire_open' "
-      "('LA_Pipe_Infrastructure_North_East_Lincolnshire_Open') on the "
-      "European open-data portal cadentgas.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_1C015B0502", .name = "www.data.gov.bh — Applications for Minors",
@@ -33346,26 +31257,6 @@ static const hp_source HP3B64_ODS[] = {
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_01EC5CC414", .name = "spenergynetworks.opendatasoft.com — SPD DFES Breakdown by "
-      "Licence",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPD DFES Breakdown by Licence",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spd-dfes-licence-breakdown/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spd-dfes-licence-breakdown' ('SPD DFES "
-      "Breakdown by Licence') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_1D34C1383C", .name = "data.82amenagement.fr — Unité urbaine selon l'INSEE - "
       "Département de Tarn-et-Garonne",
     .name_ja = "data.82amenagement.fr — Unité urbaine selon l'INSEE - Département de Tarn-et-Garonne",
@@ -33493,28 +31384,6 @@ static const hp_source HP3B64_ODS[] = {
       "Lieux') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_7DE3E1FBB1", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Portal "
-      "Analytics - Monthly User Registration",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Portal Analytics - Monthly User Registration",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-portal-analytics-monthly-user-registration/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'sp-enw-portal-analytics-monthly-user-registration' ('SP ENW - "
-      "Portal Analytics - Monthly User Registration') on the European "
-      "open-data portal electricitynorthwest.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_83496628B8", .name = "spi-digitalwallonia.opendatasoft.com — Lieux de rencontre "
@@ -33894,27 +31763,6 @@ static const hp_source HP3B64_ODS[] = {
       "portal datahub.bordeaux-metropole.fr (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_DA9FBE2598", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_South_Holland_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_South_Holland_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_south_holland_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_south_holland_open' "
-      "('LA_Pipe_Infrastructure_South_Holland_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_5504415592", .name = "www.data.gov.bh — Aluminum Primary Materials Produced Locally "
       "Used in Aluminium Industry by Type of Materials - in Metric Ton",
@@ -34322,27 +32170,6 @@ static const hp_source HP3B64_ODS[] = {
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_7EECBF7416", .name = "spenergynetworks.opendatasoft.com — Single Digital View "
-      "(SPEN_020) Data Quality Checks",
-    .name_ja = "spenergynetworks.opendatasoft.com — Single Digital View (SPEN_020) Data Quality Checks",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spen_data_quality_single_digital_view/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spen_data_quality_single_digital_view' "
-      "('Single Digital View (SPEN_020) Data Quality Checks') on the "
-      "European open-data portal spenergynetworks.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_40337FADE2", .name = "data.82amenagement.fr — Consommation d'espace naturels agricoles "
       "et forestiers du 1er janvier 2009 au 1er janvier 2024",
     .name_ja = "data.82amenagement.fr — Consommation d'espace naturels agricoles et forestiers du 1er janvier 2009 au 1er janvier 2024",
@@ -34474,27 +32301,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_651B3FCCEF", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Flexibility - "
-      "SLC31E - Procurement Locational",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Flexibility - SLC31E - Procurement Locational",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/slc31e-procurement-locational/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'slc31e-procurement-locational' ('SP ENW - "
-      "Flexibility - SLC31E - Procurement Locational') on the European "
-      "open-data portal electricitynorthwest.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_95F868B538", .name = "spi-digitalwallonia.opendatasoft.com — Centres "
       "médicaux/polycliniques privé(e)s",
@@ -34906,28 +32712,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_1909A79109", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Southend-on-Sea_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Southend-on-Sea_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_southend-on-sea_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_southend-on-sea_open' "
-      "('LA_Pipe_Infrastructure_Southend-on-Sea_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_4366B93997", .name = "www.data.gov.bh — Crude Divorce Rate",
     .name_ja = "www.data.gov.bh — Crude Divorce Rate",
     .category = "open-data", .portal = "https://www.data.gov.bh/",
@@ -35327,26 +33111,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_10B920FE97", .name = "spenergynetworks.opendatasoft.com — SPD Primary Substation "
-      "Polygons",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPD Primary Substation Polygons",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/polygon_spd/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'polygon_spd' ('SPD Primary Substation "
-      "Polygons') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_45C4232427", .name = "data.82amenagement.fr — Gares de voyageurs",
     .name_ja = "data.82amenagement.fr — Gares de voyageurs",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -35472,27 +33236,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_8D3E5B836C", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Biodiversity - "
-      "Enhancement Opportunity - Tree Planting Data",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Biodiversity - Enhancement Opportunity - Tree Planting Data",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/biodiversity-tree-opportunity/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'biodiversity-tree-opportunity' ('SP ENW - "
-      "Biodiversity - Enhancement Opportunity - Tree Planting Data') on "
-      "the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_6B65ED2F78", .name = "spi-digitalwallonia.opendatasoft.com — Centres psycho médico "
       "sociaux (CPMS)",
@@ -35879,27 +33622,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_8D9AAF5C1B", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Hyndburn_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Hyndburn_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_hyndburn_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_hyndburn_open' "
-      "('LA_Pipe_Infrastructure_Hyndburn_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_A024B4B7D0", .name = "www.data.gov.bh — Live Births by Nationality Groups and Sex",
     .name_ja = "www.data.gov.bh — Live Births by Nationality Groups and Sex",
@@ -36309,26 +34031,6 @@ static const hp_source HP3B64_ODS[] = {
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_6BB49320F3", .name = "spenergynetworks.opendatasoft.com — Single Digital View Project "
-      "Pipeline",
-    .name_ja = "spenergynetworks.opendatasoft.com — Single Digital View Project Pipeline",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/gsp-queue-position/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'gsp-queue-position' ('Single Digital View "
-      "Project Pipeline') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_FFBE1D8D67", .name = "data.82amenagement.fr — Code officiel géographique au 1er "
       "janvier 2023",
     .name_ja = "data.82amenagement.fr — Code officiel géographique au 1er janvier 2023",
@@ -36457,27 +34159,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_511CC9223A", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Biodiversity - "
-      "Exclusion Management - Wetland Data",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Biodiversity - Exclusion Management - Wetland Data",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/biodiversity-wetland-exclusions-data/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'biodiversity-wetland-exclusions-data' ('SP "
-      "ENW - Biodiversity - Exclusion Management - Wetland Data') on "
-      "the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_D294D81B2B", .name = "spi-digitalwallonia.opendatasoft.com — Gestionnaire de la "
       "production et la distribution de l'eau par commune",
@@ -36880,27 +34561,6 @@ static const hp_source HP3B64_ODS[] = {
       "European open-data portal datahub.bordeaux-metropole.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_FDC35970BF", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Flintshire_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Flintshire_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_flintshire_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_flintshire_open' "
-      "('LA_Pipe_Infrastructure_Flintshire_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_8928841F40", .name = "www.data.gov.bh — Number of Arrivals from GCC Countries to the "
@@ -37312,27 +34972,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_AA5FFCB715", .name = "spenergynetworks.opendatasoft.com — SPD LTDS Appendix 3 System "
-      "Loads (Table 3)",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPD LTDS Appendix 3 System Loads (Table 3)",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spd-ltds-appendix-3-system-loads-table-3/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spd-ltds-appendix-3-system-loads-table-3' "
-      "('SPD LTDS Appendix 3 System Loads (Table 3)') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_56A9943094", .name = "data.82amenagement.fr — Population départementale 2009 - 2020",
     .name_ja = "data.82amenagement.fr — Population départementale 2009 - 2020",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -37459,26 +35098,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_B368005FDC", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- High Peak",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - High Peak",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-high-peak/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-high-peak' ('SP ENW "
-      "- GIS - Conductor - High Peak') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_8ADB43CBA2", .name = "spi-digitalwallonia.opendatasoft.com — Consultations ONE",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — Consultations ONE",
@@ -37887,28 +35506,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_9E44964C0E", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Richmond_Upon_Thames_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Richmond_Upon_Thames_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_richmond_upon_thames_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_richmond_upon_thames_shared' "
-      "('LA_Pipe_Infrastructure_Richmond_Upon_Thames_Shared') on the "
-      "European open-data portal cadentgas.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_EA51AD7D86", .name = "www.data.gov.bh — Gross Domestic Product Current Prices - Income "
       "Approach",
     .name_ja = "www.data.gov.bh — Gross Domestic Product Current Prices - Income Approach",
@@ -38298,27 +35895,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_0D0D45E08D", .name = "spenergynetworks.opendatasoft.com — Network Development Plan "
-      "(SPEN_003) Data Quality Checks",
-    .name_ja = "spenergynetworks.opendatasoft.com — Network Development Plan (SPEN_003) Data Quality Checks",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spen_data_quality_ndp/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spen_data_quality_ndp' ('Network "
-      "Development Plan (SPEN_003) Data Quality Checks') on the "
-      "European open-data portal spenergynetworks.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_B3E9C604A5", .name = "data.82amenagement.fr — Police municipale : Effectifs par "
       "commune",
     .name_ja = "data.82amenagement.fr — Police municipale : Effectifs par commune",
@@ -38444,26 +36020,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_673FFDC10F", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Bury",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Bury",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-bury/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-bury' ('SP ENW - GIS "
-      "- Conductor - Bury') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_0BC2DF6DFC", .name = "spi-digitalwallonia.opendatasoft.com — Centres de prélèvements",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — Centres de prélèvements",
@@ -38863,27 +36419,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_FDFC0C76B5", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Chelmsford_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Chelmsford_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_chelmsford_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_chelmsford_open' "
-      "('LA_Pipe_Infrastructure_Chelmsford_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_00D81A03C5", .name = "www.data.gov.bh — Distribution of Households by Governorate & "
       "Nationality of Households - Census 2020",
@@ -39290,26 +36825,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_8C1A8DBFB6", .name = "spenergynetworks.opendatasoft.com — Historic Substation Demand "
-      "Curve",
-    .name_ja = "spenergynetworks.opendatasoft.com — Historic Substation Demand Curve",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/historic_substation_demand_curve/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'historic_substation_demand_curve' "
-      "('Historic Substation Demand Curve') on the European open-data "
-      "portal spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_3B13CC2BB6", .name = "data.82amenagement.fr — Point d'arrêt Bus LiO GTFS - "
       "Tarn-et-Garonne",
     .name_ja = "data.82amenagement.fr — Point d'arrêt Bus LiO GTFS - Tarn-et-Garonne",
@@ -39439,28 +36954,6 @@ static const hp_source HP3B64_ODS[] = {
       "open-data portal data.cannes.com (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_61937EC9FE", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Portal "
-      "Analytics - Dataset Engagement (API)",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Portal Analytics - Dataset Engagement (API)",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-portal-analytics-dataset-engagement/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'sp-enw-portal-analytics-dataset-engagement' ('SP ENW - Portal "
-      "Analytics - Dataset Engagement (API)') on the European open-data "
-      "portal electricitynorthwest.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_C5C2066D9B", .name = "spi-digitalwallonia.opendatasoft.com — Montant moyen des crédits "
       "octroyés au cours de l’année par personne majeure",
@@ -39867,27 +37360,6 @@ static const hp_source HP3B64_ODS[] = {
       "European open-data portal datahub.bordeaux-metropole.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_E978E5BBDE", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_High_Peak_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_High_Peak_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_high_peak_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_high_peak_open' "
-      "('LA_Pipe_Infrastructure_High_Peak_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_6CB5058C0E", .name = "www.data.gov.bh — Number of Cancer Cases among Bahrainis by Sex "
@@ -40459,26 +37931,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_B50FD5A5CC", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Oldham",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Oldham",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-oldham/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-oldham' ('SP ENW - "
-      "GIS - Conductor - Oldham') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_39D488C035", .name = "spi-digitalwallonia.opendatasoft.com — code-postaux-belge",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — code-postaux-belge",
     .category = "open-data", .portal = "https://spi-digitalwallonia.opendatasoft.com/",
@@ -40878,27 +38330,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_86D637C5C7", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_St_Helens_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_St_Helens_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_st_helens_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_st_helens_open' "
-      "('LA_Pipe_Infrastructure_St_Helens_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_61586A4CEC", .name = "www.data.gov.bh — Bahraini Administrative Research that "
       "Participated in Local and International Forums & Conferences by "
       "the Institute's Support",
@@ -41286,27 +38717,6 @@ static const hp_source HP3B64_ODS[] = {
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_B72D909ED1", .name = "spenergynetworks.opendatasoft.com — Operational Forecasting "
-      "(SPEN_011) Data Quality Checks",
-    .name_ja = "spenergynetworks.opendatasoft.com — Operational Forecasting (SPEN_011) Data Quality Checks",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spen_data_quality_operational_forecasting/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spen_data_quality_operational_forecasting' "
-      "('Operational Forecasting (SPEN_011) Data Quality Checks') on "
-      "the European open-data portal spenergynetworks.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_6A3B1B22FC", .name = "data.82amenagement.fr — Prix des carburants J-7",
     .name_ja = "data.82amenagement.fr — Prix des carburants J-7",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -41428,26 +38838,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_FC2412CB35", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Burnley",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Burnley",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-burnley/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-burnley' ('SP ENW - "
-      "GIS - Conductor - Burnley') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_FBDED8C73D", .name = "spi-digitalwallonia.opendatasoft.com — Postes de garde",
     .name_ja = "spi-digitalwallonia.opendatasoft.com — Postes de garde",
@@ -41831,27 +39221,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_C119750F7D", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Knowsley_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Knowsley_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_knowsley_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_knowsley_open' "
-      "('LA_Pipe_Infrastructure_Knowsley_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_19DE2BE25A", .name = "www.data.gov.bh — Travel and Cargo Services",
     .name_ja = "www.data.gov.bh — Travel and Cargo Services",
@@ -42253,25 +39622,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_5A811B2F41", .name = "spenergynetworks.opendatasoft.com — Competition, Bids & Dispatch",
-    .name_ja = "spenergynetworks.opendatasoft.com — Competition, Bids & Dispatch",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/competition_bids_dispatch_data/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'competition_bids_dispatch_data' "
-      "('Competition, Bids & Dispatch') on the European open-data "
-      "portal spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_4EFD58EAC5", .name = "data.82amenagement.fr — Logements et logements sociaux dans les "
       "départements",
     .name_ja = "data.82amenagement.fr — Logements et logements sociaux dans les départements",
@@ -42402,26 +39752,6 @@ static const hp_source HP3B64_ODS[] = {
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
-
-  { .id = "JO64_EUODS_5B97240C37", .name = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor "
-      "- Pendle",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - GIS - Conductor - Pendle",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-gis-conductors-pendle/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-gis-conductors-pendle' ('SP ENW - "
-      "GIS - Conductor - Pendle') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_4DF716778E", .name = "spi-digitalwallonia.opendatasoft.com — Réseau P+R - "
       "Arrondissement de Liège",
@@ -42807,26 +40137,6 @@ static const hp_source HP3B64_ODS[] = {
       "on the European open-data portal datahub.bordeaux-metropole.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_5B912B7EE7", .name = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Burnley_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Burnley_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_burnley_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_burnley_open' "
-      "('LA_Pipe_Infrastructure_Burnley_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_473FF134ED", .name = "www.data.gov.bh — Marriage Cases by Nationality, Age Groups & "
@@ -43239,28 +40549,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_98ADE560A7", .name = "spenergynetworks.opendatasoft.com — SPM LTDS Appendix 6 "
-      "Connection Activity (Table 6) 11kV",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPM LTDS Appendix 6 Connection Activity (Table 6) 11kV",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spm-ltds-appendix-6-connection-activity-table-6-11kv/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'spm-ltds-appendix-6-connection-activity-table-6-11kv' ('SPM "
-      "LTDS Appendix 6 Connection Activity (Table 6) 11kV') on the "
-      "European open-data portal spenergynetworks.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_7F516C9C6A", .name = "data.82amenagement.fr — Indicateurs de trafic journaliers France "
       "et Régions, en situation de COVID-19",
     .name_ja = "data.82amenagement.fr — Indicateurs de trafic journaliers France et Régions, en situation de COVID-19",
@@ -43388,27 +40676,6 @@ static const hp_source HP3B64_ODS[] = {
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
-
-  { .id = "JO64_EUODS_88FD069E44", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Flexibility - "
-      "Biannual Tender - Site Requirements",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Flexibility - Biannual Tender - Site Requirements",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/enwl-flexibility-tender-site-requirements/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'enwl-flexibility-tender-site-requirements' "
-      "('SP ENW - Flexibility - Biannual Tender - Site Requirements') "
-      "on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_D7C0411673", .name = "spi-digitalwallonia.opendatasoft.com — Réseau cyclable principal "
       "et secondaire - Arrondissement de Liège",
@@ -43786,28 +41053,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_7C2E74A1A5", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Newcastle-Under-Lyme_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Newcastle-Under-Lyme_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_newcastle-under-lyme_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_newcastle-under-lyme_open' "
-      "('LA_Pipe_Infrastructure_Newcastle-Under-Lyme_Open') on the "
-      "European open-data portal cadentgas.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_A30CD1DE4C", .name = "www.data.gov.bh — General Marriage Rate",
     .name_ja = "www.data.gov.bh — General Marriage Rate",
@@ -44219,27 +41464,6 @@ static const hp_source HP3B64_ODS[] = {
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_04EA6132AD", .name = "spenergynetworks.opendatasoft.com — SPD Operational Flexibility "
-      "Requirements 2024-2028",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPD Operational Flexibility Requirements 2024-2028",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/operational-flexibility-spd/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'operational-flexibility-spd' ('SPD "
-      "Operational Flexibility Requirements 2024-2028') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_14583150C7", .name = "data.82amenagement.fr — Parking à vélo - Tarn-et-Garonne",
     .name_ja = "data.82amenagement.fr — Parking à vélo - Tarn-et-Garonne",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -44362,27 +41586,6 @@ static const hp_source HP3B64_ODS[] = {
     .id_keys = "montant",
     .description = "OpenDataSoft dataset 'budgets-annexes-2021' ('Budgets annexes "
       "2021') on the European open-data portal data.cannes.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_717E82E790", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Embedded "
-      "Capacity Register - Supplementary Data",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Embedded Capacity Register - Supplementary Data",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/ecr-supplementary-data/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'ecr-supplementary-data' ('SP ENW - "
-      "Embedded Capacity Register - Supplementary Data') on the "
-      "European open-data portal electricitynorthwest.opendatasoft.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
@@ -44765,26 +41968,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_A01DD3EB8B", .name = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Bedford_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Bedford_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_bedford_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_bedford_open' "
-      "('LA_Pipe_Infrastructure_Bedford_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_2B725FDBA6", .name = "www.data.gov.bh — Marriage Cases by Nationality, Highest "
       "Educational Attainment & Age Groups of Wife",
@@ -45188,27 +42371,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_43E6E8D3D6", .name = "spenergynetworks.opendatasoft.com — Network Flow: Power, Current "
-      "and Embedded Generation (SPEN_008) Data Quality Checks",
-    .name_ja = "spenergynetworks.opendatasoft.com — Network Flow: Power, Current and Embedded Generation (SPEN_008) Data Quality Checks",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spen_data_quality_network_flow/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spen_data_quality_network_flow' ('Network "
-      "Flow: Power, Current and Embedded Generation (SPEN_008) Data "
-      "Quality Checks') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_30BA0E5A4C", .name = "data.82amenagement.fr — Cadastre - Sections",
     .name_ja = "data.82amenagement.fr — Cadastre - Sections",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -45334,26 +42496,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_95C08C0ABE", .name = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - Primary "
-      "Substation Sites",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - Primary Substation Sites",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/dfes-2024-primary-sites/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'dfes-2024-primary-sites' ('SP ENW - DFES - "
-      "Primary Substation Sites') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_68616A47D8", .name = "spi-digitalwallonia.opendatasoft.com — Hubs mobilité - "
       "Arrondissement de Liège",
@@ -45740,28 +42882,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_30AB6F11EF", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Staffordshire_Moorlands_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Staffordshire_Moorlands_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_staffordshire_moorlands_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_staffordshire_moorlands_open' "
-      "('LA_Pipe_Infrastructure_Staffordshire_Moorlands_Open') on the "
-      "European open-data portal cadentgas.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_97E08CEE83", .name = "www.data.gov.bh — Live Births by Religion, Nationality and Sex",
     .name_ja = "www.data.gov.bh — Live Births by Religion, Nationality and Sex",
     .category = "open-data", .portal = "https://www.data.gov.bh/",
@@ -46147,26 +43267,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_6863C66088", .name = "spenergynetworks.opendatasoft.com — Historic Feeder Utilisation "
-      "SPM",
-    .name_ja = "spenergynetworks.opendatasoft.com — Historic Feeder Utilisation SPM",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/historic-feeder-utilisation-spm/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'historic-feeder-utilisation-spm' "
-      "('Historic Feeder Utilisation SPM') on the European open-data "
-      "portal spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_6A5F1AFEB3", .name = "data.82amenagement.fr — Territoires labellisés Ecomobilité en "
       "Occitanie",
     .name_ja = "data.82amenagement.fr — Territoires labellisés Ecomobilité en Occitanie",
@@ -46293,27 +43393,6 @@ static const hp_source HP3B64_ODS[] = {
     .description = "OpenDataSoft dataset 'expositions-pamocc' ('Expositions "
       "organisées par le pôle d'art moderne et contemporain') on the "
       "European open-data portal data.cannes.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_CA63D22007", .name = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - LV Peak "
-      "Demand (Monitored)",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - LV Peak Demand (Monitored)",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/dfes-lv-peak-demand-monitored/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'dfes-lv-peak-demand-monitored' ('SP ENW - "
-      "DFES - LV Peak Demand (Monitored)') on the European open-data "
-      "portal electricitynorthwest.opendatasoft.com (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
@@ -46698,27 +43777,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_AD3423AABB", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Nottingham_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Nottingham_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_nottingham_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_nottingham_open' "
-      "('LA_Pipe_Infrastructure_Nottingham_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_1326D33D27", .name = "www.data.gov.bh — Land Use Monthly Statistics by Land Use "
       "Category and Governorate",
@@ -47129,27 +44187,6 @@ static const hp_source HP3B64_ODS[] = {
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_05A1DCFDA9", .name = "spenergynetworks.opendatasoft.com — Smart Meter Penetration "
-      "(SPEN_022) Data Quality Checks",
-    .name_ja = "spenergynetworks.opendatasoft.com — Smart Meter Penetration (SPEN_022) Data Quality Checks",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spen_data_quality_smart_meter_penetration/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spen_data_quality_smart_meter_penetration' "
-      "('Smart Meter Penetration (SPEN_022) Data Quality Checks') on "
-      "the European open-data portal spenergynetworks.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_2175BC086E", .name = "data.82amenagement.fr — Diagnostic d'accès aux soins urgents au "
       "31/12/2019",
     .name_ja = "data.82amenagement.fr — Diagnostic d'accès aux soins urgents au 31/12/2019",
@@ -47278,27 +44315,6 @@ static const hp_source HP3B64_ODS[] = {
       "2022') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_210A00BE91", .name = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - LV "
-      "Headroom (Unmonitored)",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - LV Headroom (Unmonitored)",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/dfes-lv-headroom-unmonitored/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'dfes-lv-headroom-unmonitored' ('SP ENW - "
-      "DFES - LV Headroom (Unmonitored)') on the European open-data "
-      "portal electricitynorthwest.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_E8DB8B1EC2", .name = "daten.stadt.sg.ch — Heizgradtage St.Galler Stadtwerke",
@@ -47659,28 +44675,6 @@ static const hp_source HP3B64_ODS[] = {
       "open-data portal datahub.bordeaux-metropole.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
       "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_83C639E312", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_West_Lancashire_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_West_Lancashire_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_west_lancashire_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'la_pipe_infrastructure_west_lancashire_shared' "
-      "('LA_Pipe_Infrastructure_West_Lancashire_Shared') on the "
-      "European open-data portal cadentgas.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
   { .id = "JO64_EUODS_45D8D9D677", .name = "www.data.gov.bh — Number of Governmental Schools by Type of "
@@ -48089,27 +45083,6 @@ static const hp_source HP3B64_ODS[] = {
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_43153BFDD7", .name = "spenergynetworks.opendatasoft.com — SPD LTDS Appendix 4 Fault "
-      "Levels (Table 4)",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPD LTDS Appendix 4 Fault Levels (Table 4)",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spd-ltds-appendix-4-fault-levels-table-4/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spd-ltds-appendix-4-fault-levels-table-4' "
-      "('SPD LTDS Appendix 4 Fault Levels (Table 4)') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_6E575D0CA5", .name = "data.82amenagement.fr — Cadastre - parcelles",
     .name_ja = "data.82amenagement.fr — Cadastre - parcelles",
     .category = "open-data", .portal = "https://data.82amenagement.fr/",
@@ -48237,25 +45210,6 @@ static const hp_source HP3B64_ODS[] = {
       "portal data.cannes.com (portal's own dataset). Records API "
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_62297F92C3", .name = "electricitynorthwest.opendatasoft.com — SP ENW - LCT - MCS Data",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - LCT - MCS Data",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/mcs-lct-per-enwl-substation/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'mcs-lct-per-enwl-substation' ('SP ENW - "
-      "LCT - MCS Data') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_F571EF4B04", .name = "daten.stadt.sg.ch — Webseitenzugriffe der Stadt St.Gallen "
       "(Siteimprove Analytics)",
@@ -48625,27 +45579,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_F90D6151F5", .name = "cadentgas.opendatasoft.com — "
-      "MRP_Pipe_Infrastructure_Norwich_Open",
-    .name_ja = "cadentgas.opendatasoft.com — MRP_Pipe_Infrastructure_Norwich_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/mrp_pipe_infrastructure_norwich_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'mrp_pipe_infrastructure_norwich_open' "
-      "('MRP_Pipe_Infrastructure_Norwich_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_C59B4A8A49", .name = "www.data.gov.bh — Annual Foreign Trade Statistics",
     .name_ja = "www.data.gov.bh — Annual Foreign Trade Statistics",
@@ -49197,28 +46130,6 @@ static const hp_source HP3B64_ODS[] = {
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_9BC1201CCA", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Embedded "
-      "Capacity Register 2 - 1MW & Above",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Embedded Capacity Register 2 - 1MW & Above",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/enwl-embedded-capacity-register-2-1mw-and-above/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'enwl-embedded-capacity-register-2-1mw-and-above' ('SP ENW - "
-      "Embedded Capacity Register 2 - 1MW & Above') on the European "
-      "open-data portal electricitynorthwest.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_05DA6E7A72", .name = "daten.stadt.sg.ch — Abfuhrdaten Stadt St.Gallen - pdf lookup",
     .name_ja = "daten.stadt.sg.ch — Abfuhrdaten Stadt St.Gallen - pdf lookup",
     .category = "open-data", .portal = "https://daten.stadt.sg.ch/",
@@ -49581,27 +46492,6 @@ static const hp_source HP3B64_ODS[] = {
     .description = "OpenDataSoft dataset 'bor_budgetsupp_2021' ('Budget "
       "supplémentaire 2021 de la ville de Bordeaux') on the European "
       "open-data portal datahub.bordeaux-metropole.fr (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
-  { .id = "JO64_EUODS_5299895808", .name = "cadentgas.opendatasoft.com — "
-      "MRP_Pipe_Infrastructure_Stevenage_Open",
-    .name_ja = "cadentgas.opendatasoft.com — MRP_Pipe_Infrastructure_Stevenage_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/mrp_pipe_infrastructure_stevenage_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'mrp_pipe_infrastructure_stevenage_open' "
-      "('MRP_Pipe_Infrastructure_Stevenage_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
       "discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
@@ -50014,27 +46904,6 @@ static const hp_source HP3B64_ODS[] = {
       "portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_E117FBB1FF", .name = "spenergynetworks.opendatasoft.com — LV Monitoring Aggregated "
-      "(SPEN_023) Data Quality Checks",
-    .name_ja = "spenergynetworks.opendatasoft.com — LV Monitoring Aggregated (SPEN_023) Data Quality Checks",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spen_data_quality_lv_monitornig/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spen_data_quality_lv_monitornig' ('LV "
-      "Monitoring Aggregated (SPEN_023) Data Quality Checks') on the "
-      "European open-data portal spenergynetworks.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_9BF264A27F", .name = "data.82amenagement.fr — Effectifs d’élèves par niveau et nombre "
       "de classes par école",
     .name_ja = "data.82amenagement.fr — Effectifs d’élèves par niveau et nombre de classes par école",
@@ -50168,26 +47037,6 @@ static const hp_source HP3B64_ODS[] = {
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
-
-  { .id = "JO64_EUODS_F255EDB1D7", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Capacity - PRY "
-      "Heatmap",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Capacity - PRY Heatmap",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/enwl-pry-heatmap/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'enwl-pry-heatmap' ('SP ENW - Capacity - "
-      "PRY Heatmap') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_4EA2C7B73F", .name = "daten.stadt.sg.ch — Parkplätze und Parkflächen der Stadt "
       "St.Gallen",
@@ -50544,25 +47393,6 @@ static const hp_source HP3B64_ODS[] = {
     .description = "OpenDataSoft dataset 'bor_decimod3_2017' ('Décision modificative "
       "n°3 2017 de la ville de Bordeaux') on the European open-data "
       "portal datahub.bordeaux-metropole.fr (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_1F889B43D4", .name = "cadentgas.opendatasoft.com — MRP_Pipe_Infrastructure_Luton_Open",
-    .name_ja = "cadentgas.opendatasoft.com — MRP_Pipe_Infrastructure_Luton_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/mrp_pipe_infrastructure_luton_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'mrp_pipe_infrastructure_luton_open' "
-      "('MRP_Pipe_Infrastructure_Luton_Open') on the European open-data "
-      "portal cadentgas.opendatasoft.com (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
 
@@ -51112,26 +47942,6 @@ static const hp_source HP3B64_ODS[] = {
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_64D440C214", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Substation - "
-      "BSP Polygons",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Substation - BSP Polygons",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/enwl-substation-bsp-polygons/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'enwl-substation-bsp-polygons' ('SP ENW - "
-      "Substation - BSP Polygons') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_C487F37BE1", .name = "daten.stadt.sg.ch — Massnahmen Energiekonzept 2050 der Stadt "
       "St.Gallen mit Status",
     .name_ja = "daten.stadt.sg.ch — Massnahmen Energiekonzept 2050 der Stadt St.Gallen mit Status",
@@ -51492,28 +48302,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_57FA78C526", .name = "cadentgas.opendatasoft.com — "
-      "MRP_Pipe_Infrastructure_South_Norfolk_Open",
-    .name_ja = "cadentgas.opendatasoft.com — MRP_Pipe_Infrastructure_South_Norfolk_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/mrp_pipe_infrastructure_south_norfolk_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'mrp_pipe_infrastructure_south_norfolk_open' "
-      "('MRP_Pipe_Infrastructure_South_Norfolk_Open') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_2D27625FD8", .name = "www.data.gov.bh — Inbound Visitors by Type of Trip - Annual",
     .name_ja = "www.data.gov.bh — Inbound Visitors by Type of Trip - Annual",
@@ -51920,28 +48708,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_A9E33DD844", .name = "spenergynetworks.opendatasoft.com — SPD LTDS Appendix 8 "
-      "Predicted Changes (Table 8)",
-    .name_ja = "spenergynetworks.opendatasoft.com — SPD LTDS Appendix 8 Predicted Changes (Table 8)",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spd-ltds-appendix-8-predicted-changes-table-8/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'spd-ltds-appendix-8-predicted-changes-table-8' ('SPD LTDS "
-      "Appendix 8 Predicted Changes (Table 8)') on the European "
-      "open-data portal spenergynetworks.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
-
   { .id = "JO64_EUODS_695930F9A2", .name = "data.82amenagement.fr — Logements vacants du parc privé par "
       "ancienneté de vacance, par commune et par EPCI",
     .name_ja = "data.82amenagement.fr — Logements vacants du parc privé par ancienneté de vacance, par commune et par EPCI",
@@ -52068,26 +48834,6 @@ static const hp_source HP3B64_ODS[] = {
       "data.cannes.com (portal's own dataset). Records API Explore "
       "v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_F964B45170", .name = "electricitynorthwest.opendatasoft.com — SP ENW - Capacity - 11kV "
-      "Network",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - Capacity - 11kV Network",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/sp-enw-capacity-11kv-network/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'sp-enw-capacity-11kv-network' ('SP ENW - "
-      "Capacity - 11kV Network') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_233A4D963A", .name = "daten.stadt.sg.ch — Übersicht Dienstleistungen gegenüber "
       "Kundinnen und Kunden der Stadt St.Gallen",
@@ -52451,27 +49197,6 @@ static const hp_source HP3B64_ODS[] = {
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_67CDF2F5BB", .name = "cadentgas.opendatasoft.com — "
-      "LA_Pipe_Infrastructure_Redditch_Shared",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Redditch_Shared",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_redditch_shared/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_redditch_shared' "
-      "('LA_Pipe_Infrastructure_Redditch_Shared') on the European "
-      "open-data portal cadentgas.opendatasoft.com (portal's own "
-      "dataset). Records API Explore v2.1, offset paging. ODS portal "
-      "discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_F68B16F5F1", .name = "www.data.gov.bh — Number of GCC Nationals Owning Real Estate in "
       "the Kingdom of Bahrain (Cumulative)",
@@ -52862,26 +49587,6 @@ static const hp_source HP3B64_ODS[] = {
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
 
-  { .id = "JO64_EUODS_C429CA09FF", .name = "spenergynetworks.opendatasoft.com — Non-Firm Connections "
-      "Insights",
-    .name_ja = "spenergynetworks.opendatasoft.com — Non-Firm Connections Insights",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/non-firm-connections-insight/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'non-firm-connections-insight' ('Non-Firm "
-      "Connections Insights') on the European open-data portal "
-      "spenergynetworks.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_54BBD6CC50", .name = "data.82amenagement.fr — Localisations des magasins dans "
       "OpenStreetMap",
     .name_ja = "data.82amenagement.fr — Localisations des magasins dans OpenStreetMap",
@@ -52987,26 +49692,6 @@ static const hp_source HP3B64_ODS[] = {
       "portal data.cannes.com (portal's own dataset). Records API "
       "Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_A81B7D4AF9", .name = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - Entire "
-      "Network Data",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - Entire Network Data",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/dfes-2023-entire-network-data/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'dfes-2023-entire-network-data' ('SP ENW - "
-      "DFES - Entire Network Data') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_8060B0661C", .name = "daten.stadt.sg.ch — Budget 2021 der Stadt St.Gallen nach "
       "Funktionaler Gliederung",
@@ -53374,28 +50059,6 @@ static const hp_source HP3B64_ODS[] = {
       "portal datahub.bordeaux-metropole.fr (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
       "via the data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_44C406009C", .name = "cadentgas.opendatasoft.com — "
-      "MRP_Pipe_Infrastructure_North_Hertfordshire_Open",
-    .name_ja = "cadentgas.opendatasoft.com — MRP_Pipe_Infrastructure_North_Hertfordshire_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/mrp_pipe_infrastructure_north_hertfordshire_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset "
-      "'mrp_pipe_infrastructure_north_hertfordshire_open' "
-      "('MRP_Pipe_Infrastructure_North_Hertfordshire_Open') on the "
-      "European open-data portal cadentgas.opendatasoft.com (portal's "
-      "own dataset). Records API Explore v2.1, offset paging. ODS "
-      "portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_3DAD3E5E24", .name = "www.data.gov.bh — Percentage number of males and females in "
       "National Leadership Development Program, Professional programs, "
@@ -53912,26 +50575,6 @@ static const hp_source HP3B64_ODS[] = {
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
 
-  { .id = "JO64_EUODS_2E21C90768", .name = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - Primary "
-      "Data",
-    .name_ja = "electricitynorthwest.opendatasoft.com — SP ENW - DFES - Primary Data",
-    .category = "open-data", .portal = "https://electricitynorthwest.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://electricitynorthwest.opendatasoft.com/api/explore/v2.1/catalog/datasets/dfes-2023-primary-data0/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'dfes-2023-primary-data0' ('SP ENW - DFES - "
-      "Primary Data') on the European open-data portal "
-      "electricitynorthwest.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
-
   { .id = "JO64_EUODS_A5B45B65A7", .name = "daten.stadt.sg.ch — Smarte Stadt St.Gallen - Projekte",
     .name_ja = "daten.stadt.sg.ch — Smarte Stadt St.Gallen - Projekte",
     .category = "open-data", .portal = "https://daten.stadt.sg.ch/",
@@ -54294,25 +50937,6 @@ static const hp_source HP3B64_ODS[] = {
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
       "ODS portal discovered via the data.opendatasoft.com federation "
       "source-domain facet." },
-
-  { .id = "JO64_EUODS_2258F68FD5", .name = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Rugby_Open",
-    .name_ja = "cadentgas.opendatasoft.com — LA_Pipe_Infrastructure_Rugby_Open",
-    .category = "open-data", .portal = "https://cadentgas.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cadentgas.opendatasoft.com/api/explore/v2.1/catalog/datasets/la_pipe_infrastructure_rugby_open/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'la_pipe_infrastructure_rugby_open' "
-      "('LA_Pipe_Infrastructure_Rugby_Open') on the European open-data "
-      "portal cadentgas.opendatasoft.com (portal's own dataset). "
-      "Records API Explore v2.1, offset paging. ODS portal discovered "
-      "via the data.opendatasoft.com federation source-domain facet." },
 
   { .id = "JO64_EUODS_0FEAABBEC7", .name = "www.data.gov.bh — Bahraini Administrative Research Issued from "
       "the Master Program",
@@ -54705,27 +51329,6 @@ static const hp_source HP3B64_ODS[] = {
       "portal data.dunkerque-agglo.fr (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
       "data.opendatasoft.com federation source-domain facet." },
-
-  { .id = "JO64_EUODS_92BA282679", .name = "spenergynetworks.opendatasoft.com — Secondary Network (SPEN_015) "
-      "Data Quality Checks",
-    .name_ja = "spenergynetworks.opendatasoft.com — Secondary Network (SPEN_015) Data Quality Checks",
-    .category = "open-data", .portal = "https://spenergynetworks.opendatasoft.com/",
-    .record_type = "dataset-record",
-    .tags = "\"ods\",\"opendatasoft\",\"europe\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spen_data_quality_secondary_substation/records?limit=100&offset=0",
-    .array_path = "results",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
-    .description = "OpenDataSoft dataset 'spen_data_quality_secondary_substation' "
-      "('Secondary Network (SPEN_015) Data Quality Checks') on the "
-      "European open-data portal spenergynetworks.opendatasoft.com "
-      "(portal's own dataset). Records API Explore v2.1, offset paging. "
-      "ODS portal discovered via the data.opendatasoft.com federation "
-      "source-domain facet." },
 
   { .id = "JO64_EUODS_27014C3699", .name = "data.82amenagement.fr — Fréquentation en gares",
     .name_ja = "data.82amenagement.fr — Fréquentation en gares",

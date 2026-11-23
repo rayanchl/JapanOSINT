@@ -157,26 +157,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "catalog.data.metro.tokyo.lg.jp. datastore_search API, offset "
       "paging, deepest pass (to 400/portal)." },
 
-  { .id = "JO66_CKANDS_D0DE8D137B", .name = "admin.opendata.az - "
-      "i_qtisadi_fealiyyet_novleri_uzre_muessise_ve_teskilatlarin_zereri_2017_ci_ilden_baslayaraq_mln_manat_i_fnt_3_cu_versiya",
-    .name_ja = "admin.opendata.az - i_qtisadi_fealiyyet_novleri_uzre_muessise_ve_teskilatlarin_zereri_2017_ci_ilden_baslayaraq_mln_manat_i_fnt_3_cu_versiya",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=c93df836-d513-44f9-8c33-4231618b782a&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource c93df836-d513-44f9-8c33-4231618b782a "
-      "(i_qtisadi_fealiyyet_novleri_uzre_muessise_ve_teskilatlarin_zereri_2017_ci_ilden_baslayaraq_mln_manat_i_fnt_3_cu_versiya) "
-      "on admin.opendata.az. datastore_search API, offset paging, "
-      "deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_E1C44983FC", .name = "acikveri.bizizmir.com - Mezbaha Kesim Adetleri",
     .name_ja = "acikveri.bizizmir.com - Mezbaha Kesim Adetleri",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -308,26 +288,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Datos ERTE solicitados 2026-09-22) on dadesobertes.gva.es. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_03F0049083", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, August 2019",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, August 2019",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=7b935d65-d41a-401d-b2bb-bd5f1d1086ac&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 7b935d65-d41a-401d-b2bb-bd5f1d1086ac "
-      "(Dispensed Items by GP and Pharmacy, August 2019) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_DFA7FEE808", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2022",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2022",
@@ -1280,26 +1240,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_32DBDE056C", .name = "admin.opendata.az - "
-      "milli_parklarin_erazisinde_turizm_fealiyyeti_2010_2025_ci_iller",
-    .name_ja = "admin.opendata.az - milli_parklarin_erazisinde_turizm_fealiyyeti_2010_2025_ci_iller",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=04b5c3c0-8980-4e6f-b13a-a62a94d220c2&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 04b5c3c0-8980-4e6f-b13a-a62a94d220c2 "
-      "(milli_parklarin_erazisinde_turizm_fealiyyeti_2010_2025_ci_iller) "
-      "on admin.opendata.az. datastore_search API, offset paging, "
-      "deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_EF924A5C99", .name = "acikveri.bizizmir.com - Mezbaha Kesim Adetleri",
     .name_ja = "acikveri.bizizmir.com - Mezbaha Kesim Adetleri",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -1432,26 +1372,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(②県・県内25市町村の年齢各歳、男女別人口及び人口動態) on ckan.pref.akita.lg.jp. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_1BE6662439", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Phamacy, July 2019",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Phamacy, July 2019",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=549390b3-539e-4d89-ac80-13c492d8e017&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 549390b3-539e-4d89-ac80-13c492d8e017 "
-      "(Dispensed Items by GP and Phamacy, July 2019) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_EE3C18F23F", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2022",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2022",
@@ -2457,25 +2377,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_C86F9CF021", .name = "admin.opendata.az - i_nternete_cixisi_olan_mekteblerin_sayi",
-    .name_ja = "admin.opendata.az - i_nternete_cixisi_olan_mekteblerin_sayi",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=8e7abe3d-adec-4032-9218-7059ce3c2f1a&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 8e7abe3d-adec-4032-9218-7059ce3c2f1a "
-      "(i_nternete_cixisi_olan_mekteblerin_sayi) on admin.opendata.az. "
-      "datastore_search API, offset paging, deepest pass (to "
-      "400/portal)." },
-
   { .id = "JO66_CKANDS_D5892D607C", .name = "acikveri.bizizmir.com - Körfez Ölçüm Değerleri",
     .name_ja = "acikveri.bizizmir.com - Körfez Ölçüm Değerleri",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -2628,26 +2529,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(③県・県内25市町村の年齢3区分、男女別人口及び人口割合) on ckan.pref.akita.lg.jp. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_06B6044543", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, June 2019",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, June 2019",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=e3e821fb-e71f-4bbb-99c8-dddfdece23da&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource e3e821fb-e71f-4bbb-99c8-dddfdece23da "
-      "(Dispensed Items by GP and Pharmacy, June 2019) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_2943575148", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2022",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2022",
@@ -3668,26 +3549,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "catalog.data.metro.tokyo.lg.jp. datastore_search API, offset "
       "paging, deepest pass (to 400/portal)." },
 
-  { .id = "JO66_CKANDS_827CE4A8E4", .name = "admin.opendata.az - "
-      "mdb_olkelerinde_issizliyin_seviyyesi_fazile_2010_2025_ci_iller",
-    .name_ja = "admin.opendata.az - mdb_olkelerinde_issizliyin_seviyyesi_fazile_2010_2025_ci_iller",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=169b3617-824e-443a-97bd-95e2a41da870&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 169b3617-824e-443a-97bd-95e2a41da870 "
-      "(mdb_olkelerinde_issizliyin_seviyyesi_fazile_2010_2025_ci_iller) "
-      "on admin.opendata.az. datastore_search API, offset paging, "
-      "deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_3D173191AB", .name = "acikveri.bizizmir.com - Sosyal Yardım Başvuruları",
     .name_ja = "acikveri.bizizmir.com - Sosyal Yardım Başvuruları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -3840,26 +3701,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(④県・県内25市町村の人口動態及び人口増減率) on ckan.pref.akita.lg.jp. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_E9F6248103", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, April 2019",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, April 2019",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=9dfa38bd-af3a-4f9b-837c-5ae681ac5d3b&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 9dfa38bd-af3a-4f9b-837c-5ae681ac5d3b "
-      "(Dispensed Items by GP and Pharmacy, April 2019) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_2B56269516", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2022",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2022",
@@ -4904,26 +4745,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_9DFEBFDF39", .name = "admin.opendata.az - "
-      "mekteblerde_internete_qosulmus_komputerlerin_sayi",
-    .name_ja = "admin.opendata.az - mekteblerde_internete_qosulmus_komputerlerin_sayi",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=b6e59128-2b80-47d5-851e-06557f68fbb3&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource b6e59128-2b80-47d5-851e-06557f68fbb3 "
-      "(mekteblerde_internete_qosulmus_komputerlerin_sayi) on "
-      "admin.opendata.az. datastore_search API, offset paging, deepest "
-      "pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_DC5571C9AA", .name = "acikveri.bizizmir.com - Sosyal Yardım Başvuruları",
     .name_ja = "acikveri.bizizmir.com - Sosyal Yardım Başvuruları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -5076,26 +4897,6 @@ static const hp_source HP3B66_CKANDS[] = {
     .description = "CKAN datastore resource 5bb6a59a-483e-4832-830c-37f26b06e72d "
       "(⑤県内25市町村間の移動状況) on ckan.pref.akita.lg.jp. datastore_search API, "
       "offset paging, deepest pass (to 400/portal)." },
-
-  { .id = "JO66_CKANDS_D09B5C3F27", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, March 2019",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, March 2019",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=c98bda99-0deb-4f38-bf1f-6d1bb4d10f31&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource c98bda99-0deb-4f38-bf1f-6d1bb4d10f31 "
-      "(Dispensed Items by GP and Pharmacy, March 2019) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_9D76932DBF", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2022",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2022",
@@ -6136,26 +5937,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_271B6766FC", .name = "admin.opendata.az - "
-      "ehalinin_psixi_xesteliklerle_xestelenmesi_2000_2025_ci_iller",
-    .name_ja = "admin.opendata.az - ehalinin_psixi_xesteliklerle_xestelenmesi_2000_2025_ci_iller",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=bb42d341-70f4-42d6-8b5f-c98afac171f2&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource bb42d341-70f4-42d6-8b5f-c98afac171f2 "
-      "(ehalinin_psixi_xesteliklerle_xestelenmesi_2000_2025_ci_iller) "
-      "on admin.opendata.az. datastore_search API, offset paging, "
-      "deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_12FF86BEB0", .name = "acikveri.bizizmir.com - Başvuruların Yaş Aralığına Göre Dağılımı",
     .name_ja = "acikveri.bizizmir.com - Başvuruların Yaş Aralığına Göre Dağılımı",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -6308,26 +6089,6 @@ static const hp_source HP3B66_CKANDS[] = {
     .description = "CKAN datastore resource ca947ee1-1c6e-42fe-897c-f78329091dca "
       "(知事所管公益法人等一覧表【csv】) on ckan.pref.akita.lg.jp. datastore_search "
       "API, offset paging, deepest pass (to 400/portal)." },
-
-  { .id = "JO66_CKANDS_0437D6DED7", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, February 2019",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, February 2019",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=f2719c2e-3772-4999-9029-a791043ea7dd&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource f2719c2e-3772-4999-9029-a791043ea7dd "
-      "(Dispensed Items by GP and Pharmacy, February 2019) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_BC064CD752", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2021",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2021",
@@ -7366,26 +7127,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_B46C3D6FAF", .name = "admin.opendata.az - "
-      "neqliyyat_sektorunda_dasinmalardan_elde_olunan_gelir_min_manat",
-    .name_ja = "admin.opendata.az - neqliyyat_sektorunda_dasinmalardan_elde_olunan_gelir_min_manat",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=24900f67-defb-4524-9fb7-026ff7fc23ea&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 24900f67-defb-4524-9fb7-026ff7fc23ea "
-      "(neqliyyat_sektorunda_dasinmalardan_elde_olunan_gelir_min_manat) "
-      "on admin.opendata.az. datastore_search API, offset paging, "
-      "deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_99F01F2ECE", .name = "acikveri.bizizmir.com - Başvuruların Yaş Aralığına Göre Dağılımı",
     .name_ja = "acikveri.bizizmir.com - Başvuruların Yaş Aralığına Göre Dağılımı",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -7538,26 +7279,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(秋田県内幼稚園・保育所・認定こども園一覧（令和8年4月1日現在）) on ckan.pref.akita.lg.jp. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_FC734679AF", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, January 2019",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, January 2019",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=979bd708-3f31-42ea-8445-400df9e5610d&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 979bd708-3f31-42ea-8445-400df9e5610d "
-      "(Dispensed Items by GP and Pharmacy, January 2019) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_29BB75E617", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2021",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2021",
@@ -8564,26 +8285,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_3157758D4F", .name = "admin.opendata.az - "
-      "elilliyi_olan_sexslerin_i_kt_den_istifadesi_faizle",
-    .name_ja = "admin.opendata.az - elilliyi_olan_sexslerin_i_kt_den_istifadesi_faizle",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=fcda4871-2a78-4491-832c-f70f967e1db8&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource fcda4871-2a78-4491-832c-f70f967e1db8 "
-      "(elilliyi_olan_sexslerin_i_kt_den_istifadesi_faizle) on "
-      "admin.opendata.az. datastore_search API, offset paging, deepest "
-      "pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_A21054AA4F", .name = "acikveri.bizizmir.com - İtfaiye Acil Müdahale İstatistiği",
     .name_ja = "acikveri.bizizmir.com - İtfaiye Acil Müdahale İstatistiği",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -8736,26 +8437,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(秋田県内幼稚園・保育所・認定こども園一覧（令和7年4月1日現在）) on ckan.pref.akita.lg.jp. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_A906D4F72A", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, December 2018",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, December 2018",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=686bce67-de43-40f5-9d81-e116cb16a949&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 686bce67-de43-40f5-9d81-e116cb16a949 "
-      "(Dispensed Items by GP and Pharmacy, December 2018) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_632B45693E", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2021",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2021",
@@ -9800,25 +9481,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_C8536727E6", .name = "admin.opendata.az - emek_ehtiyatlari_1995_2025_ci_iller",
-    .name_ja = "admin.opendata.az - emek_ehtiyatlari_1995_2025_ci_iller",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=5ec8259a-a716-4c81-ab3a-085e9bfd0a29&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 5ec8259a-a716-4c81-ab3a-085e9bfd0a29 "
-      "(emek_ehtiyatlari_1995_2025_ci_iller) on admin.opendata.az. "
-      "datastore_search API, offset paging, deepest pass (to "
-      "400/portal)." },
-
   { .id = "JO66_CKANDS_604F3E5051", .name = "acikveri.bizizmir.com - İtfaiye Acil Müdahale İstatistiği",
     .name_ja = "acikveri.bizizmir.com - İtfaiye Acil Müdahale İstatistiği",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -9952,26 +9614,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Datos ERTE resueltos 2026-08-28) on dadesobertes.gva.es. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_0E1E393554", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, November 2018",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, November 2018",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=b3c748d2-e0c6-4ab1-9a55-7d35257d6145&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource b3c748d2-e0c6-4ab1-9a55-7d35257d6145 "
-      "(Dispensed Items by GP and Pharmacy, November 2018) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_48066E1FBF", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2021",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2021",
@@ -10981,26 +10623,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_629508525C", .name = "admin.opendata.az - "
-      "ehalinin_anemiya_ile_xestelenmesi_2000_2025_ci_iller",
-    .name_ja = "admin.opendata.az - ehalinin_anemiya_ile_xestelenmesi_2000_2025_ci_iller",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=2174ebe6-d1fe-4344-ac79-4e4e62459139&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 2174ebe6-d1fe-4344-ac79-4e4e62459139 "
-      "(ehalinin_anemiya_ile_xestelenmesi_2000_2025_ci_iller) on "
-      "admin.opendata.az. datastore_search API, offset paging, deepest "
-      "pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_1BC03BBEE0", .name = "acikveri.bizizmir.com - Aşık Veysel Rekreasyon Alanı Buz Pisti "
       "Kullanıcı Verileri",
     .name_ja = "acikveri.bizizmir.com - Aşık Veysel Rekreasyon Alanı Buz Pisti Kullanıcı Verileri",
@@ -11154,26 +10776,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(屋外広告業登録業者一覧（令和8年3月27日現在）) on ckan.pref.akita.lg.jp. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_34CB3A07D7", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, October 2018",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, October 2018",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=d373386e-353c-4128-993e-20aa174f4794&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource d373386e-353c-4128-993e-20aa174f4794 "
-      "(Dispensed Items by GP and Pharmacy, October 2018) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_DF1429076F", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2021",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2021",
@@ -12199,26 +11801,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_596702AA40", .name = "admin.opendata.az - "
-      "ehalinin_alkoqolizm_narkomaniya_ve_toksikomaniya_ile_xestelenmesi_2000_2025_ci_iller",
-    .name_ja = "admin.opendata.az - ehalinin_alkoqolizm_narkomaniya_ve_toksikomaniya_ile_xestelenmesi_2000_2025_ci_iller",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=78afe817-540a-4cba-8dcb-bc413b58831d&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 78afe817-540a-4cba-8dcb-bc413b58831d "
-      "(ehalinin_alkoqolizm_narkomaniya_ve_toksikomaniya_ile_xestelenmesi_2000_2025_ci_iller) "
-      "on admin.opendata.az. datastore_search API, offset paging, "
-      "deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_22153130D2", .name = "acikveri.bizizmir.com - Aşık Veysel Rekreasyon Alanı Buz Pisti "
       "Kullanıcı Verileri",
     .name_ja = "acikveri.bizizmir.com - Aşık Veysel Rekreasyon Alanı Buz Pisti Kullanıcı Verileri",
@@ -12353,26 +11935,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Conjuntos de datos - número de visitas) on dadesobertes.gva.es. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_11583D837E", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, September 2018",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, September 2018",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=b54b26c1-e8a5-446d-8044-be38c7ad1b94&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource b54b26c1-e8a5-446d-8044-be38c7ad1b94 "
-      "(Dispensed Items by GP and Pharmacy, September 2018) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_85E8C94556", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2021",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2021",
@@ -13417,26 +12979,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_739AEA1789", .name = "admin.opendata.az - "
-      "korpelerin_ana_sudu_ile_qidalandirilmasi_2000_2025_ci_iller",
-    .name_ja = "admin.opendata.az - korpelerin_ana_sudu_ile_qidalandirilmasi_2000_2025_ci_iller",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=0c1efc45-4b1e-4856-abcb-736ff1adf2c3&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 0c1efc45-4b1e-4856-abcb-736ff1adf2c3 "
-      "(korpelerin_ana_sudu_ile_qidalandirilmasi_2000_2025_ci_iller) on "
-      "admin.opendata.az. datastore_search API, offset paging, deepest "
-      "pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_FDD21623ED", .name = "acikveri.bizizmir.com - 2007 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2007 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -13550,26 +13092,6 @@ static const hp_source HP3B66_CKANDS[] = {
     .description = "CKAN datastore resource 4c02004d-7f36-46b9-b17d-ca745d75ef67 "
       "(Recursos publicados) on dadesobertes.gva.es. datastore_search "
       "API, offset paging, deepest pass (to 400/portal)." },
-
-  { .id = "JO66_CKANDS_6055D3D5FF", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, August 2018",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, August 2018",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=0c59fe18-7d29-4213-9aa7-bd4f572d2eeb&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 0c59fe18-7d29-4213-9aa7-bd4f572d2eeb "
-      "(Dispensed Items by GP and Pharmacy, August 2018) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_D5B8884662", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2020",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2020",
@@ -14618,26 +14140,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_2C5502EB99", .name = "admin.opendata.az - "
-      "i_qtisadiyyatin_saheleri_uzre_muzdla_isleyenlerin_orta_illik_sayi_min_nefer_1990_1998_ci_iller",
-    .name_ja = "admin.opendata.az - i_qtisadiyyatin_saheleri_uzre_muzdla_isleyenlerin_orta_illik_sayi_min_nefer_1990_1998_ci_iller",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=f366db2a-f95b-42b7-8e96-b5baa82273db&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource f366db2a-f95b-42b7-8e96-b5baa82273db "
-      "(i_qtisadiyyatin_saheleri_uzre_muzdla_isleyenlerin_orta_illik_sayi_min_nefer_1990_1998_ci_iller) "
-      "on admin.opendata.az. datastore_search API, offset paging, "
-      "deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_3782F19840", .name = "acikveri.bizizmir.com - 2008 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2008 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -14750,26 +14252,6 @@ static const hp_source HP3B66_CKANDS[] = {
     .description = "CKAN datastore resource 25368c25-d320-4967-b0c5-a4f1de38f75b "
       "(Recursos - descargas) on dadesobertes.gva.es. datastore_search "
       "API, offset paging, deepest pass (to 400/portal)." },
-
-  { .id = "JO66_CKANDS_CCEAEA46C0", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, July 2018",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, July 2018",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=a51c7cc2-9062-4c73-8d75-c3ae16938c8e&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource a51c7cc2-9062-4c73-8d75-c3ae16938c8e "
-      "(Dispensed Items by GP and Pharmacy, July 2018) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_F650A44CE0", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2020",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2020",
@@ -15835,26 +15317,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_5DC6E75A47", .name = "admin.opendata.az - "
-      "su_resurslari_ve_onlardan_istifade_edilmesi_milyon_kub_metr_2010_2025_ci_iller",
-    .name_ja = "admin.opendata.az - su_resurslari_ve_onlardan_istifade_edilmesi_milyon_kub_metr_2010_2025_ci_iller",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=aa8fb33e-bbef-4099-9576-dc9fb30eabe1&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource aa8fb33e-bbef-4099-9576-dc9fb30eabe1 "
-      "(su_resurslari_ve_onlardan_istifade_edilmesi_milyon_kub_metr_2010_2025_ci_iller) "
-      "on admin.opendata.az. datastore_search API, offset paging, "
-      "deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_6D6A826994", .name = "acikveri.bizizmir.com - 2009 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2009 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -16006,26 +15468,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Conjuntos de datos - Tipos de acceso y hora) on "
       "dadesobertes.gva.es. datastore_search API, offset paging, "
       "deepest pass (to 400/portal)." },
-
-  { .id = "JO66_CKANDS_0A91D86ED3", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, June 2018",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, June 2018",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=565b7b7b-034d-478f-b8a7-1d84f8c4e6ea&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 565b7b7b-034d-478f-b8a7-1d84f8c4e6ea "
-      "(Dispensed Items by GP and Pharmacy, June 2018) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_CCA4B82CBF", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2020",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2020",
@@ -16215,25 +15657,6 @@ static const hp_source HP3B66_CKANDS[] = {
     .description = "CKAN datastore resource 647559e2-34b4-49cf-8aa0-f20d04de8e8c "
       "(MPROP 2006) on data.milwaukee.gov. datastore_search API, offset "
       "paging, deepest pass (to 400/portal)." },
-
-  { .id = "JO66_CKANDS_A6D3566B2F", .name = "data.kyivcity.gov.ua - temporaryConstruction_passportBased.csv",
-    .name_ja = "data.kyivcity.gov.ua - temporaryConstruction_passportBased.csv",
-    .category = "open-data", .portal = "https://data.kyivcity.gov.ua",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.kyivcity.gov.ua/api/3/action/datastore_search?resource_id=e6d85d9a-b6ee-411c-ae55-c2f91685a45c&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource e6d85d9a-b6ee-411c-ae55-c2f91685a45c "
-      "(temporaryConstruction_passportBased.csv) on "
-      "data.kyivcity.gov.ua. datastore_search API, offset paging, "
-      "deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_8353C14B9B", .name = "data.ok.gov - Unallowable Direct Purchase Order Lines Monthly "
       "Count",
@@ -17076,25 +16499,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_42C3B78A38", .name = "admin.opendata.az - yasayis_evlerinin_istifadeye_verilmesi",
-    .name_ja = "admin.opendata.az - yasayis_evlerinin_istifadeye_verilmesi",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=0c9fd301-1964-43f8-a43b-1c92e4b9b003&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 0c9fd301-1964-43f8-a43b-1c92e4b9b003 "
-      "(yasayis_evlerinin_istifadeye_verilmesi) on admin.opendata.az. "
-      "datastore_search API, offset paging, deepest pass (to "
-      "400/portal)." },
-
   { .id = "JO66_CKANDS_4EE0381636", .name = "acikveri.bizizmir.com - 2010 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2010 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -17246,26 +16650,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Visitas por día de la semana y tipos de acceso) on "
       "dadesobertes.gva.es. datastore_search API, offset paging, "
       "deepest pass (to 400/portal)." },
-
-  { .id = "JO66_CKANDS_C8207D90F7", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, April 2018",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, April 2018",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=7ab485b3-dd63-4f16-98d3-fd962db7ebf5&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 7ab485b3-dd63-4f16-98d3-fd962db7ebf5 "
-      "(Dispensed Items by GP and Pharmacy, April 2018) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_2C6E08E9E3", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2020",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2020",
@@ -18330,26 +17714,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_A163C82BE5", .name = "admin.opendata.az - "
-      "azerbaycanda_cinayetkarligin_esas_gostericileri_hadise",
-    .name_ja = "admin.opendata.az - azerbaycanda_cinayetkarligin_esas_gostericileri_hadise",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=e8fb6156-b074-4be5-9840-2d5611b709db&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource e8fb6156-b074-4be5-9840-2d5611b709db "
-      "(azerbaycanda_cinayetkarligin_esas_gostericileri_hadise) on "
-      "admin.opendata.az. datastore_search API, offset paging, deepest "
-      "pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_D9990A156C", .name = "acikveri.bizizmir.com - 2011 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2011 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -18502,26 +17866,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Descargas por día de la semana y tipos de acceso) on "
       "dadesobertes.gva.es. datastore_search API, offset paging, "
       "deepest pass (to 400/portal)." },
-
-  { .id = "JO66_CKANDS_C24A941FC4", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, March 2025",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, March 2025",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=1423a9aa-b551-4054-9359-7c635e6242b1&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 1423a9aa-b551-4054-9359-7c635e6242b1 (GP "
-      "Prescribing Northern Ireland, March 2025) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_3CA249F140", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2020",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2020",
@@ -19580,26 +18924,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_56B8C317D8", .name = "admin.opendata.az - "
-      "i_kt_den_istifade_eden_ehalinin_iqtisadi_fealliq_veziyyetine_gore_bolgusu_faizle",
-    .name_ja = "admin.opendata.az - i_kt_den_istifade_eden_ehalinin_iqtisadi_fealliq_veziyyetine_gore_bolgusu_faizle",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=11e5ac32-1b10-4a09-a5b2-05e8cd932687&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 11e5ac32-1b10-4a09-a5b2-05e8cd932687 "
-      "(i_kt_den_istifade_eden_ehalinin_iqtisadi_fealliq_veziyyetine_gore_bolgusu_faizle) "
-      "on admin.opendata.az. datastore_search API, offset paging, "
-      "deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_C3BB933B34", .name = "acikveri.bizizmir.com - 2012 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2012 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -19752,26 +19076,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Descargas por mes del año y tipos de acceso) on "
       "dadesobertes.gva.es. datastore_search API, offset paging, "
       "deepest pass (to 400/portal)." },
-
-  { .id = "JO66_CKANDS_90B2E8FC44", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, January 2025",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, January 2025",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=b42d273c-d1fe-4cd0-a2d0-e6c9b34e04a9&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource b42d273c-d1fe-4cd0-a2d0-e6c9b34e04a9 (GP "
-      "Prescribing Northern Ireland, January 2025) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_BBCEF3B66E", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2020",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2020",
@@ -20829,26 +20133,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_B706E8D91E", .name = "admin.opendata.az - Peşəkar teatrlar (ilin sonuna) - CSV (3–6 ay "
-      "ərzində silinəcək)",
-    .name_ja = "admin.opendata.az - Peşəkar teatrlar (ilin sonuna) - CSV (3–6 ay ərzində silinəcək)",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=52eff4c8-f88d-4591-bfa2-f1aded39ec36&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 52eff4c8-f88d-4591-bfa2-f1aded39ec36 "
-      "(Peşəkar teatrlar (ilin sonuna) - CSV (3–6 ay ərzində "
-      "silinəcək)) on admin.opendata.az. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_70ABAADB0B", .name = "acikveri.bizizmir.com - 2013 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2013 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -21000,26 +20284,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Datos ERTE solicitados 2026-08-03) on dadesobertes.gva.es. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_AEB4517AA5", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, December 2024",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, December 2024",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=76c1d3c4-dee0-4f9b-b7c0-4603d1c236e6&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 76c1d3c4-dee0-4f9b-b7c0-4603d1c236e6 (GP "
-      "Prescribing Northern Ireland, December 2024) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_B3F74F86A3", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2020",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2020",
@@ -22080,26 +21344,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_C5188610D7", .name = "admin.opendata.az - "
-      "pesekar_teatrlar_ilin_sonuna_1990_2025_ci_iller",
-    .name_ja = "admin.opendata.az - pesekar_teatrlar_ilin_sonuna_1990_2025_ci_iller",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=7e3aa8cd-d0ea-4e54-986b-1ef4fbdf944b&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 7e3aa8cd-d0ea-4e54-986b-1ef4fbdf944b "
-      "(pesekar_teatrlar_ilin_sonuna_1990_2025_ci_iller) on "
-      "admin.opendata.az. datastore_search API, offset paging, deepest "
-      "pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_0381798105", .name = "acikveri.bizizmir.com - 2014 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2014 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -22250,26 +21494,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Datos ERTE solicitados 2026-08-06) on dadesobertes.gva.es. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_D5089E7F99", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, November 2024",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, November 2024",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=629173d4-7037-4ae2-8c29-3a9f2f1519de&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 629173d4-7037-4ae2-8c29-3a9f2f1519de (GP "
-      "Prescribing Northern Ireland, November 2024) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_56FEF18857", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2020",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2020",
@@ -23353,26 +22577,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_F7DB45F248", .name = "admin.opendata.az - Elm üzrə əsas göstəricilər (ilin sonuna) - "
-      "CSV (3–6 ay ərzində silinəcək)",
-    .name_ja = "admin.opendata.az - Elm üzrə əsas göstəricilər (ilin sonuna) - CSV (3–6 ay ərzində silinəcək)",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=5d642820-0519-44da-a661-8de210d187f0&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 5d642820-0519-44da-a661-8de210d187f0 "
-      "(Elm üzrə əsas göstəricilər (ilin sonuna) - CSV (3–6 ay ərzində "
-      "silinəcək)) on admin.opendata.az. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_461616EF27", .name = "acikveri.bizizmir.com - 2015 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2015 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -23525,26 +22729,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Datos ERTE solicitados 2026-08-07) on dadesobertes.gva.es. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_E3BF83F88E", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, August 2024",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, August 2024",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=08fb6c74-fd78-453b-ac43-7361f9e64660&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 08fb6c74-fd78-453b-ac43-7361f9e64660 (GP "
-      "Prescribing Northern Ireland, August 2024) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_0265E3C78E", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2019",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2019",
@@ -24648,26 +23832,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_90DA3B5198", .name = "admin.opendata.az - "
-      "elmin_esas_gostericileri_2000_2005_2008_2025_ci_iller",
-    .name_ja = "admin.opendata.az - elmin_esas_gostericileri_2000_2005_2008_2025_ci_iller",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=84a9d6b4-b81b-42de-bd45-ddfb6f489ee6&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 84a9d6b4-b81b-42de-bd45-ddfb6f489ee6 "
-      "(elmin_esas_gostericileri_2000_2005_2008_2025_ci_iller) on "
-      "admin.opendata.az. datastore_search API, offset paging, deepest "
-      "pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_DB60E66E0E", .name = "acikveri.bizizmir.com - 2016 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2016 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -24818,26 +23982,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Datos ERTE solicitados 2026-08-13) on dadesobertes.gva.es. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_E28F73377C", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, June 2024",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, June 2024",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=74cee7a3-8fde-474a-b5d8-33d83d63d98b&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 74cee7a3-8fde-474a-b5d8-33d83d63d98b (GP "
-      "Prescribing Northern Ireland, June 2024) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_439B4C9D46", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2019",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2019",
@@ -25881,27 +25025,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_8D8CE5AD5C", .name = "admin.opendata.az - Mehmanxana (hotel) və mehmanxana tipli "
-      "obyektlərin əsas göstəriciləri - CSV (3–6 ay ərzində silinəcək)",
-    .name_ja = "admin.opendata.az - Mehmanxana (hotel) və mehmanxana tipli obyektlərin əsas göstəriciləri - CSV (3–6 ay ərzində silinəcək)",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=00f256a0-16da-40ce-81c3-045b155c78cf&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 00f256a0-16da-40ce-81c3-045b155c78cf "
-      "(Mehmanxana (hotel) və mehmanxana tipli obyektlərin əsas "
-      "göstəriciləri - CSV (3–6 ay ərzində silinəcək)) on "
-      "admin.opendata.az. datastore_search API, offset paging, deepest "
-      "pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_D38C0E5C6B", .name = "acikveri.bizizmir.com - 2017 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2017 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -26052,26 +25175,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Datos ERTE solicitados 2026-08-14) on dadesobertes.gva.es. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_599364594A", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, May 2024",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, May 2024",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=7e4eba1b-05ee-46c0-aff5-5d0fbeb94c24&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 7e4eba1b-05ee-46c0-aff5-5d0fbeb94c24 (GP "
-      "Prescribing Northern Ireland, May 2024) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_D8437AB429", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2019",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2019",
@@ -27114,26 +26217,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_28E2E2A70D", .name = "admin.opendata.az - "
-      "mehmanxana_hotel_ve_mehmanxana_tipli_obyektlerin_esas_gostericileri",
-    .name_ja = "admin.opendata.az - mehmanxana_hotel_ve_mehmanxana_tipli_obyektlerin_esas_gostericileri",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=7b6157ce-b8f1-45d3-a840-72c146f6b0bc&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 7b6157ce-b8f1-45d3-a840-72c146f6b0bc "
-      "(mehmanxana_hotel_ve_mehmanxana_tipli_obyektlerin_esas_gostericileri) "
-      "on admin.opendata.az. datastore_search API, offset paging, "
-      "deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_EDEF38EF1E", .name = "acikveri.bizizmir.com - 2018 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2018 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -27285,26 +26368,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Datos ERTE solicitados 2026-08-18) on dadesobertes.gva.es. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_9E2A331653", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, January 2024",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, January 2024",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=6e80c119-1a1a-4a8f-88ee-201fcef3daeb&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 6e80c119-1a1a-4a8f-88ee-201fcef3daeb (GP "
-      "Prescribing Northern Ireland, January 2024) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_B5DE7F40CA", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2019",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2019",
@@ -28347,27 +27410,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_6FE98933D3", .name = "admin.opendata.az - Ovçuluq təsərrüfatlarının əsas iqtisadi "
-      "göstəriciləri - CSV (3–6 ay ərzində silinəcək)",
-    .name_ja = "admin.opendata.az - Ovçuluq təsərrüfatlarının əsas iqtisadi göstəriciləri - CSV (3–6 ay ərzində silinəcək)",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=a4d64444-07c0-41d9-b75a-fa5ee322c734&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource a4d64444-07c0-41d9-b75a-fa5ee322c734 "
-      "(Ovçuluq təsərrüfatlarının əsas iqtisadi göstəriciləri - CSV "
-      "(3–6 ay ərzində silinəcək)) on admin.opendata.az. "
-      "datastore_search API, offset paging, deepest pass (to "
-      "400/portal)." },
-
   { .id = "JO66_CKANDS_644C067F39", .name = "acikveri.bizizmir.com - 2019 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2019 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -28518,26 +27560,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Datos ERTE solicitados 2026-08-28) on dadesobertes.gva.es. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_9554C77947", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, November 2023",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, November 2023",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=face1a84-acff-4ac9-80dd-a59edd056ee0&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource face1a84-acff-4ac9-80dd-a59edd056ee0 (GP "
-      "Prescribing Northern Ireland, November 2023) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_131DBB5483", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2019",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2019",
@@ -29597,26 +28619,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_7AE099312A", .name = "admin.opendata.az - "
-      "ovculuq_teserrufatlarinin_esas_iqtisadi_gostericileri",
-    .name_ja = "admin.opendata.az - ovculuq_teserrufatlarinin_esas_iqtisadi_gostericileri",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=3b5068b1-76e5-4f75-8de9-fe2316f96c61&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 3b5068b1-76e5-4f75-8de9-fe2316f96c61 "
-      "(ovculuq_teserrufatlarinin_esas_iqtisadi_gostericileri) on "
-      "admin.opendata.az. datastore_search API, offset paging, deepest "
-      "pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_70AD070E14", .name = "acikveri.bizizmir.com - 2020 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2020 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -29768,26 +28770,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Datos ERTE solicitados 2026-08-31) on dadesobertes.gva.es. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_C6D306ABEC", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, October 2023",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, October 2023",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=ca5a3c9b-cc99-4d2b-a091-ed45d5b40fbc&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource ca5a3c9b-cc99-4d2b-a091-ed45d5b40fbc (GP "
-      "Prescribing Northern Ireland, October 2023) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_028E7F2B51", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2° TRI 2019",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2° TRI 2019",
@@ -30854,26 +29836,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_37135910EF", .name = "admin.opendata.az - Əmək bazarının əsas sosial - CSV (3–6 ay "
-      "ərzində silinəcək)",
-    .name_ja = "admin.opendata.az - Əmək bazarının əsas sosial - CSV (3–6 ay ərzində silinəcək)",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=6e3b4982-34f7-4f89-9850-055d515672c5&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 6e3b4982-34f7-4f89-9850-055d515672c5 "
-      "(Əmək bazarının əsas sosial - CSV (3–6 ay ərzində silinəcək)) on "
-      "admin.opendata.az. datastore_search API, offset paging, deepest "
-      "pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_67F2960264", .name = "acikveri.bizizmir.com - 2021 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2021 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -31023,26 +29985,6 @@ static const hp_source HP3B66_CKANDS[] = {
     .description = "CKAN datastore resource 981fe78d-32d9-4ebe-81aa-6955a29c8264 "
       "(TRASPDF últimos 2000) on dadesobertes.gva.es. datastore_search "
       "API, offset paging, deepest pass (to 400/portal)." },
-
-  { .id = "JO66_CKANDS_88FFD4E4DC", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, February 2023",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, February 2023",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=124929c5-3810-42df-a548-5958af2da3d1&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 124929c5-3810-42df-a548-5958af2da3d1 (GP "
-      "Prescribing Northern Ireland, February 2023) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_7EF739DFCA", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2019",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2019",
@@ -32093,26 +31035,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_E28B270D73", .name = "admin.opendata.az - "
-      "emek_bazarinin_esas_sosial_iqtisadi_gostericileri_1990_2025_ci_iller",
-    .name_ja = "admin.opendata.az - emek_bazarinin_esas_sosial_iqtisadi_gostericileri_1990_2025_ci_iller",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=0b0f64f4-a9ab-424f-9ec5-5a1d338d6988&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 0b0f64f4-a9ab-424f-9ec5-5a1d338d6988 "
-      "(emek_bazarinin_esas_sosial_iqtisadi_gostericileri_1990_2025_ci_iller) "
-      "on admin.opendata.az. datastore_search API, offset paging, "
-      "deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_73296A9421", .name = "acikveri.bizizmir.com - 2022 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2022 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -32263,26 +31185,6 @@ static const hp_source HP3B66_CKANDS[] = {
     .description = "CKAN datastore resource 886898c3-7ea2-4afc-96f0-4844c6921916 "
       "(TRASPDF últimos 2000) on dadesobertes.gva.es. datastore_search "
       "API, offset paging, deepest pass (to 400/portal)." },
-
-  { .id = "JO66_CKANDS_2753A1DBE6", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, December 2022",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, December 2022",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=6d56613a-968b-4ebb-97f2-e19b637744a1&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 6d56613a-968b-4ebb-97f2-e19b637744a1 (GP "
-      "Prescribing Northern Ireland, December 2022) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_F1640BCD7D", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2019",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2019",
@@ -33335,26 +32237,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_458A45728E", .name = "admin.opendata.az - Təbii qazın əmtəə balansı - CSV (3–6 ay "
-      "ərzində silinəcək)",
-    .name_ja = "admin.opendata.az - Təbii qazın əmtəə balansı - CSV (3–6 ay ərzində silinəcək)",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=b97b39e1-b221-47d5-b3ee-fd7e751b2aba&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource b97b39e1-b221-47d5-b3ee-fd7e751b2aba "
-      "(Təbii qazın əmtəə balansı - CSV (3–6 ay ərzində silinəcək)) on "
-      "admin.opendata.az. datastore_search API, offset paging, deepest "
-      "pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_B7DA9353C7", .name = "acikveri.bizizmir.com - 2023 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2023 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -33504,26 +32386,6 @@ static const hp_source HP3B66_CKANDS[] = {
     .description = "CKAN datastore resource aa63f83f-e77f-4094-969c-5df5005e0415 "
       "(TRASPVH últimos 2000) on dadesobertes.gva.es. datastore_search "
       "API, offset paging, deepest pass (to 400/portal)." },
-
-  { .id = "JO66_CKANDS_055D1408F2", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, November 2022",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, November 2022",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=968d637e-073a-4b1a-a3e1-be9050c0fb36&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 968d637e-073a-4b1a-a3e1-be9050c0fb36 (GP "
-      "Prescribing Northern Ireland, November 2022) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_64B97C16C1", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2018",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2018",
@@ -34591,26 +33453,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_0023BC06D9", .name = "admin.opendata.az - "
-      "senaye_sahelerinde_1_manatliq_mehsulun_cari_qiymetlerle_istehsalina_serf_olunan_enerji_mehsullarinin_hecmi_kq_neft_ekvivalenti_man",
-    .name_ja = "admin.opendata.az - senaye_sahelerinde_1_manatliq_mehsulun_cari_qiymetlerle_istehsalina_serf_olunan_enerji_mehsullarinin_hecmi_kq_neft_ekvivalenti_man",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=24c2a302-1fd5-4b18-812f-ba4b345023cc&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 24c2a302-1fd5-4b18-812f-ba4b345023cc "
-      "(senaye_sahelerinde_1_manatliq_mehsulun_cari_qiymetlerle_istehsalina_serf_olunan_enerji_mehsullarinin_hecmi_kq_neft_ekvivalenti_manat_2010_2025_ci_iller) "
-      "on admin.opendata.az. datastore_search API, offset paging, "
-      "deepest pass (to 400/portal)." },
-
   { .id = "JO66_CKANDS_30E7EF0613", .name = "acikveri.bizizmir.com - 2024 Yılı Günlük Balık Hal Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2024 Yılı Günlük Balık Hal Fiyatları",
     .category = "open-data", .portal = "https://acikveri.bizizmir.com",
@@ -34761,26 +33603,6 @@ static const hp_source HP3B66_CKANDS[] = {
     .description = "CKAN datastore resource 79fe5ad6-e968-48b5-ae1f-8160138480aa "
       "(TRASPVH últimos 2000) on dadesobertes.gva.es. datastore_search "
       "API, offset paging, deepest pass (to 400/portal)." },
-
-  { .id = "JO66_CKANDS_6EB5135F1F", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, October 2022",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, October 2022",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=6b2b80a6-ea5d-419b-a7a3-89267c37c5c3&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 6b2b80a6-ea5d-419b-a7a3-89267c37c5c3 (GP "
-      "Prescribing Northern Ireland, October 2022) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_A1A095DC79", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2018",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2018",
@@ -35845,27 +34667,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
 
-  { .id = "JO66_CKANDS_CBF562CF74", .name = "admin.opendata.az - Ümumi Daxili Məhsulun istifadəsinin "
-      "strukturu (faizlə) - CSV (3–6 ay ərzində silinəcək)",
-    .name_ja = "admin.opendata.az - Ümumi Daxili Məhsulun istifadəsinin strukturu (faizlə) - CSV (3–6 ay ərzində silinəcək)",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=02b344b4-2148-4778-b8dc-99063afbe8aa&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 02b344b4-2148-4778-b8dc-99063afbe8aa "
-      "(Ümumi Daxili Məhsulun istifadəsinin strukturu (faizlə) - CSV "
-      "(3–6 ay ərzində silinəcək)) on admin.opendata.az. "
-      "datastore_search API, offset paging, deepest pass (to "
-      "400/portal)." },
-
   { .id = "JO66_CKANDS_B61E53CD96", .name = "acikveri.bizizmir.com - 2006 Yılı Günlük Sebze ve Meyve Hal "
       "Fiyatları",
     .name_ja = "acikveri.bizizmir.com - 2006 Yılı Günlük Sebze ve Meyve Hal Fiyatları",
@@ -36017,26 +34818,6 @@ static const hp_source HP3B66_CKANDS[] = {
       "(Datos ERTE resueltos 2026-07-06) on dadesobertes.gva.es. "
       "datastore_search API, offset paging, deepest pass (to "
       "400/portal)." },
-
-  { .id = "JO66_CKANDS_A8D3ABD96B", .name = "ckan.publishing.service.gov.uk - GP Prescribing Northern "
-      "Ireland, September 2022",
-    .name_ja = "ckan.publishing.service.gov.uk - GP Prescribing Northern Ireland, September 2022",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=fb419ac5-21aa-4daf-b1a5-3f08d1339a09&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource fb419ac5-21aa-4daf-b1a5-3f08d1339a09 (GP "
-      "Prescribing Northern Ireland, September 2022) on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deepest pass (to 400/portal)." },
 
   { .id = "JO66_CKANDS_FBC6456778", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2018",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2018",

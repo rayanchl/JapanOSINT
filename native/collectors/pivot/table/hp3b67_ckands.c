@@ -2180,90 +2180,6 @@ static const hp_source HP3B67_CKANDS[] = {
       "Data & Pivot Tables on data.chhs.ca.gov, a portal new to the "
       "tree in batch 67. datastore_search, offset paging." },
 
-  { .id = "JO67_CKANDS_D03D810160", .name = "data.chhs.ca.gov - 2024-2025 FY Hospital Annual Selected File "
-      "(April 2026 Extract)",
-    .name_ja = "data.chhs.ca.gov - 2024-2025 FY Hospital Annual Selected File (April 2026 Extract)",
-    .category = "open-data", .portal = "https://data.chhs.ca.gov",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.chhs.ca.gov/api/3/action/datastore_search?resource_id=105ab534-3735-4595-aa23-a1810a0cfc78&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "FAC_NAME,CEO_TITLE,ORG_NAME,_id",
-    .description = "CKAN datastore resource 105ab534-3735-4595-aa23-a1810a0cfc78 "
-      "(2024-2025 FY Hospital Annual Selected File (April 2026 "
-      "Extract)) of dataset Hospital Annual Financial Data - Selected "
-      "Data & Pivot Tables on data.chhs.ca.gov, a portal new to the "
-      "tree in batch 67. datastore_search, offset paging." },
-
-  { .id = "JO67_CKANDS_5EFA5854CF", .name = "data.chhs.ca.gov - 2024 CY Hospital Annual Selected File (April "
-      "2026 Extract)",
-    .name_ja = "data.chhs.ca.gov - 2024 CY Hospital Annual Selected File (April 2026 Extract)",
-    .category = "open-data", .portal = "https://data.chhs.ca.gov",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.chhs.ca.gov/api/3/action/datastore_search?resource_id=3969a3b0-ec23-4962-b09d-89840a326b44&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "FAC_NAME,CEO_TITLE,ORG_NAME,_id",
-    .description = "CKAN datastore resource 3969a3b0-ec23-4962-b09d-89840a326b44 "
-      "(2024 CY Hospital Annual Selected File (April 2026 Extract)) of "
-      "dataset Hospital Annual Financial Data - Selected Data & Pivot "
-      "Tables on data.chhs.ca.gov, a portal new to the tree in batch "
-      "67. datastore_search, offset paging." },
-
-  { .id = "JO67_CKANDS_C951288CD0", .name = "data.chhs.ca.gov - 2024 Pivot Table - Hospital Annual Selected "
-      "File (April 2026 Extract)",
-    .name_ja = "data.chhs.ca.gov - 2024 Pivot Table - Hospital Annual Selected File (April 2026 Extract)",
-    .category = "open-data", .portal = "https://data.chhs.ca.gov",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.chhs.ca.gov/api/3/action/datastore_search?resource_id=bd8a9580-0d34-4f70-bb9e-7feb56a43eff&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource bd8a9580-0d34-4f70-bb9e-7feb56a43eff "
-      "(2024 Pivot Table - Hospital Annual Selected File (April 2026 "
-      "Extract)) of dataset Hospital Annual Financial Data - Selected "
-      "Data & Pivot Tables on data.chhs.ca.gov, a portal new to the "
-      "tree in batch 67. datastore_search, offset paging." },
-
-  { .id = "JO67_CKANDS_6BDD3EE102", .name = "data.chhs.ca.gov - 2023-2024 FY Hospital Annual Selected File "
-      "(April 2026 Extract)",
-    .name_ja = "data.chhs.ca.gov - 2023-2024 FY Hospital Annual Selected File (April 2026 Extract)",
-    .category = "open-data", .portal = "https://data.chhs.ca.gov",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.chhs.ca.gov/api/3/action/datastore_search?resource_id=304eec12-4282-407c-8db7-6b780cceaadf&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "FAC_NAME,CEO_TITLE,ORG_NAME,_id",
-    .description = "CKAN datastore resource 304eec12-4282-407c-8db7-6b780cceaadf "
-      "(2023-2024 FY Hospital Annual Selected File (April 2026 "
-      "Extract)) of dataset Hospital Annual Financial Data - Selected "
-      "Data & Pivot Tables on data.chhs.ca.gov, a portal new to the "
-      "tree in batch 67. datastore_search, offset paging." },
-
   { .id = "JO67_CKANDS_C30A2234FB", .name = "data.chhs.ca.gov - 2023 CY Hospital Annual Selected File "
       "(October 2025 Extract)",
     .name_ja = "data.chhs.ca.gov - 2023 CY Hospital Annual Selected File (October 2025 Extract)",
@@ -4426,26 +4342,6 @@ static const hp_source HP3B67_CKANDS[] = {
       "Hospital Performance Ratings for Coronary Artery Bypass Graft "
       "(CABG) Surgery on data.chhs.ca.gov, a portal new to the tree in "
       "batch 67. datastore_search, offset paging." },
-
-  { .id = "JO67_CKANDS_7409DEE7BF", .name = "data.chhs.ca.gov - 2011-2018 Data Dictionary",
-    .name_ja = "data.chhs.ca.gov - 2011-2018 Data Dictionary",
-    .category = "open-data", .portal = "https://data.chhs.ca.gov",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.chhs.ca.gov/api/3/action/datastore_search?resource_id=f9588337-dd46-45cb-9218-32faede8c220&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource f9588337-dd46-45cb-9218-32faede8c220 "
-      "(2011-2018 Data Dictionary) of dataset California Hospital "
-      "Performance Ratings for Coronary Artery Bypass Graft (CABG) "
-      "Surgery on data.chhs.ca.gov, a portal new to the tree in batch "
-      "67. datastore_search, offset paging." },
 
   { .id = "JO67_CKANDS_4178FB35CE", .name = "data.chhs.ca.gov - IZB Cases by County Year 2025",
     .name_ja = "data.chhs.ca.gov - IZB Cases by County Year 2025",

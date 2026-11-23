@@ -101,28 +101,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_7A3D86FAE9", .name = "admin.opendata.az - Zərdab Rayon İcra Hakimiyyəti Başçısı "
-      "Aparatında vətəndaşların qəbulu cədvəli",
-    .name_ja = "admin.opendata.az - Zərdab Rayon İcra Hakimiyyəti Başçısı Aparatında vətəndaşların qəbulu cədvəli",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=1c5d5176-8ead-43d7-af57-f9d90d46fc09&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 1c5d5176-8ead-43d7-af57-f9d90d46fc09 "
-      "(Zərdab Rayon İcra Hakimiyyəti Başçısı Aparatında vətəndaşların "
-      "qəbulu cədvəli) from dataset Zərdab Rayon İcra Hakimiyyəti "
-      "Başçısı Aparatında vətəndaşların qəbulu cədvəli on "
-      "admin.opendata.az. datastore_search API, offset paging, deeper "
-      "pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_9654C4245C", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和6年9月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和6年9月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -223,32 +201,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "(2015 ve 2019 Yılları Arası Radyoloji Başvuru Bilgileri) from "
       "dataset Eşrefpaşa Hastanesi Radyoloji Birimi Başvuru Bilgileri "
       "on acikveri.bizizmir.com. datastore_search API, offset paging, "
-      "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_5D75718A34", .name = "ckan.opendata.swiss - {'de': 'full-world-traffic-point.csv', "
-      "'en': 'full-world-traffic-point.csv', 'fr': "
-      "'full-world-traffic-point.csv', 'it': 'full-w",
-    .name_ja = "ckan.opendata.swiss - {'de': 'full-world-traffic-point.csv', 'en': 'full-world-traffic-point.csv', 'fr': 'full-world-traffic-point.csv', 'it': 'full-w",
-    .category = "open-data", .portal = "https://ckan.opendata.swiss",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.opendata.swiss/api/3/action/datastore_search?resource_id=3b1043cf-b3f7-454d-babf-dedf991941b8&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 3b1043cf-b3f7-454d-babf-dedf991941b8 "
-      "({'de': 'full-world-traffic-point.csv', 'en': "
-      "'full-world-traffic-point.csv', 'fr': "
-      "'full-world-traffic-point.csv', 'it': "
-      "'full-world-traffic-point.csv'}) from dataset {'de': 'Bereiche "
-      "und Haltekanten', 'en': 'Zones and stop places', 'fr': "
-      "\"Bordures et zones d'arrêt\", 'it': 'Zoni e bordi di fermata'} "
-      "on ckan.opendata.swiss. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
   { .id = "JO65_CKANDS_1080973732", .name = "ckan.pbh.gov.br - MCO 02-2024",
@@ -352,27 +304,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-10 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_C2E6C37514", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, May 2022",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, May 2022",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=f2e2b629-1f15-4fee-9094-e650ac29893b&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource f2e2b629-1f15-4fee-9094-e650ac29893b "
-      "(Dispensed Items by GP and Pharmacy, May 2022) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_E6FFC14482", .name = "dados.prefeitura.sp.gov.br - Denúncia (2020) - Planilha Geral",
     .name_ja = "dados.prefeitura.sp.gov.br - Denúncia (2020) - Planilha Geral",
@@ -912,27 +843,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "datastore_search API, offset paging, deeper pass beyond batch "
       "64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_A66A3F02B8", .name = "datos.transporte.gob.ar - Empresas de transporte que operan "
-      "Jurisdicción Nacional",
-    .name_ja = "datos.transporte.gob.ar - Empresas de transporte que operan Jurisdicción Nacional",
-    .category = "open-data", .portal = "https://datos.transporte.gob.ar",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datos.transporte.gob.ar/api/3/action/datastore_search?resource_id=cb4ef948-7a47-47b7-8469-bdfd667b7d56&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource cb4ef948-7a47-47b7-8469-bdfd667b7d56 "
-      "(Empresas de transporte que operan Jurisdicción Nacional) from "
-      "dataset Empresas de transporte de RMBA on "
-      "datos.transporte.gob.ar. datastore_search API, offset paging, "
-      "deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_424996031E", .name = "datosretc.mma.gob.cl - Generación de residuos peligrosos 2008",
     .name_ja = "datosretc.mma.gob.cl - Generación de residuos peligrosos 2008",
     .category = "open-data", .portal = "https://datosretc.mma.gob.cl",
@@ -1425,27 +1335,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_7039E22A5A", .name = "admin.opendata.az - Zərdab Rayon İcra Hakimiyyəti Başçısı "
-      "Aparatının strukturu",
-    .name_ja = "admin.opendata.az - Zərdab Rayon İcra Hakimiyyəti Başçısı Aparatının strukturu",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=75394019-17bf-4ebf-a97b-968dead0ec20&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 75394019-17bf-4ebf-a97b-968dead0ec20 "
-      "(Zərdab Rayon İcra Hakimiyyəti Başçısı Aparatının strukturu) "
-      "from dataset Zərdab Rayon İcra Hakimiyyəti Başçısı Aparatının "
-      "strukturu on admin.opendata.az. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_56F45687FD", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和6年10月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和6年10月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -1546,33 +1435,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "(2020 ve 2022 Yılları Arası Radyoloji Başvuru Bilgileri) from "
       "dataset Eşrefpaşa Hastanesi Radyoloji Birimi Başvuru Bilgileri "
       "on acikveri.bizizmir.com. datastore_search API, offset paging, "
-      "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_0B3340D22F", .name = "ckan.opendata.swiss - {'de': "
-      "'timetable-years-world-traffic-point.csv', 'en': "
-      "'timetable-years-world-traffic-point.csv', 'fr': "
-      "'timetable-years-world-",
-    .name_ja = "ckan.opendata.swiss - {'de': 'timetable-years-world-traffic-point.csv', 'en': 'timetable-years-world-traffic-point.csv', 'fr': 'timetable-years-world-",
-    .category = "open-data", .portal = "https://ckan.opendata.swiss",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.opendata.swiss/api/3/action/datastore_search?resource_id=632c08c5-0003-47af-a4b4-803a03398270&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 632c08c5-0003-47af-a4b4-803a03398270 "
-      "({'de': 'timetable-years-world-traffic-point.csv', 'en': "
-      "'timetable-years-world-traffic-point.csv', 'fr': "
-      "'timetable-years-world-traffic-point.csv', 'it': "
-      "'timetable-years-world-traffic-point.csv'}) from dataset {'de': "
-      "'Bereiche und Haltekanten', 'en': 'Zones and stop places', 'fr': "
-      "\"Bordures et zones d'arrêt\", 'it': 'Zoni e bordi di fermata'} "
-      "on ckan.opendata.swiss. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
   { .id = "JO65_CKANDS_FD4FCC4309", .name = "ckan.pbh.gov.br - MCO 03-2024",
@@ -1694,27 +1556,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-10 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_FBF30FD783", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, April 2022",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, April 2022",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=08889b5e-4571-4ef8-875e-be1b49ba2c75&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 08889b5e-4571-4ef8-875e-be1b49ba2c75 "
-      "(Dispensed Items by GP and Pharmacy, April 2022) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_95287F55AD", .name = "dados.prefeitura.sp.gov.br - Base de Reclamações - 2019",
     .name_ja = "dados.prefeitura.sp.gov.br - Base de Reclamações - 2019",
@@ -2850,28 +2691,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_62F137358C", .name = "admin.opendata.az - Bakı şəhərinin elektrik təchizatının "
-      "etibarlılığı və dayanıqlığı barədə məlumat",
-    .name_ja = "admin.opendata.az - Bakı şəhərinin elektrik təchizatının etibarlılığı və dayanıqlığı barədə məlumat",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=ba7aff32-3852-4c67-ae18-76dfe1d514fc&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource ba7aff32-3852-4c67-ae18-76dfe1d514fc "
-      "(Bakı şəhərinin elektrik təchizatının etibarlılığı və "
-      "dayanıqlığı barədə məlumat) from dataset Bakı şəhərinin elektrik "
-      "təchizatının etibarlılığı və dayanıqlığı barədə məlumat on "
-      "admin.opendata.az. datastore_search API, offset paging, deeper "
-      "pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_8A04DA2E71", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年4月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年4月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -3092,27 +2911,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-10 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_536DAA09CA", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, February 2022",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, February 2022",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=902cdefa-a818-48f3-83e9-377e2008c25e&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 902cdefa-a818-48f3-83e9-377e2008c25e "
-      "(Dispensed Items by GP and Pharmacy, February 2022) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_78EA45FEA0", .name = "dados.prefeitura.sp.gov.br - Base de Reclamações - 2018",
     .name_ja = "dados.prefeitura.sp.gov.br - Base de Reclamações - 2018",
@@ -4265,28 +4063,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_4B111FEB7B", .name = "admin.opendata.az - Bakı şəhərinin elektrik təchizatının "
-      "etibarlılığı və dayanıqlığı barədə məlumat",
-    .name_ja = "admin.opendata.az - Bakı şəhərinin elektrik təchizatının etibarlılığı və dayanıqlığı barədə məlumat",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=21344539-f018-4c65-814d-a6c26b5cc2ef&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 21344539-f018-4c65-814d-a6c26b5cc2ef "
-      "(Bakı şəhərinin elektrik təchizatının etibarlılığı və "
-      "dayanıqlığı barədə məlumat) from dataset Bakı şəhərinin elektrik "
-      "təchizatının etibarlılığı və dayanıqlığı barədə məlumat on "
-      "admin.opendata.az. datastore_search API, offset paging, deeper "
-      "pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_36C78BA212", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年5月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年5月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -4387,32 +4163,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "Hastanesi Radyoloji Birimi Başvuru Bilgileri on "
       "acikveri.bizizmir.com. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_F107BE5FE3", .name = "ckan.opendata.swiss - {'de': 'full-timetable-field-number.csv', "
-      "'en': 'full-timetable-field-number.csv', 'fr': "
-      "'full-timetable-field-number.csv', 'it'",
-    .name_ja = "ckan.opendata.swiss - {'de': 'full-timetable-field-number.csv', 'en': 'full-timetable-field-number.csv', 'fr': 'full-timetable-field-number.csv', 'it'",
-    .category = "open-data", .portal = "https://ckan.opendata.swiss",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.opendata.swiss/api/3/action/datastore_search?resource_id=61752631-c4b1-4c8d-8d00-300ff3a9a436&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 61752631-c4b1-4c8d-8d00-300ff3a9a436 "
-      "({'de': 'full-timetable-field-number.csv', 'en': "
-      "'full-timetable-field-number.csv', 'fr': "
-      "'full-timetable-field-number.csv', 'it': "
-      "'full-timetable-field-number.csv'}) from dataset {'de': "
-      "'Fahrplanfeldnummern', 'en': 'Timetable Field Numbers', 'fr': "
-      "'Numéros de lignes et tableaux-horaires', 'it': 'Numeri di "
-      "quadri d’orario'} on ckan.opendata.swiss. datastore_search API, "
-      "offset paging, deeper pass beyond batch 64's first 60/portal." },
 
   { .id = "JO65_CKANDS_7D6592199A", .name = "catalogue.data.wa.gov.au - SLWA Commonwealth Games minimal "
       "metadata",
@@ -4554,27 +4304,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-10 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_CE4A152A62", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, January 2022",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, January 2022",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=b2030038-f1cc-4c53-85db-ed7b5e91bbff&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource b2030038-f1cc-4c53-85db-ed7b5e91bbff "
-      "(Dispensed Items by GP and Pharmacy, January 2022) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_4315D2433F", .name = "dados.prefeitura.sp.gov.br - Base de Reclamações - 2017",
     .name_ja = "dados.prefeitura.sp.gov.br - Base de Reclamações - 2017",
@@ -5732,28 +5461,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_F8EB60F92D", .name = "admin.opendata.az - Qəbələ rayonunda istismarına icazə verilmiş "
-      "obyektlər",
-    .name_ja = "admin.opendata.az - Qəbələ rayonunda istismarına icazə verilmiş obyektlər",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=97c172a5-31ef-4a80-952c-09e2e88a4ccd&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 97c172a5-31ef-4a80-952c-09e2e88a4ccd "
-      "(Qəbələ rayonunda istismarına icazə verilmiş obyektlər) from "
-      "dataset Qəbələ rayonunda istismarına icazə verilmiş "
-      "qeyri-yaşayış binalarının siyahısı.obyektlər on "
-      "admin.opendata.az. datastore_search API, offset paging, deeper "
-      "pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_F906CE3594", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年6月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年6月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -5974,27 +5681,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-10 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_D6613E57A3", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, December 2021",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, December 2021",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=aad43984-2910-4344-9ef2-a21956b39c9f&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource aad43984-2910-4344-9ef2-a21956b39c9f "
-      "(Dispensed Items by GP and Pharmacy, December 2021) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_EE0F5DFB3F", .name = "dados.prefeitura.sp.gov.br - Base de Reclamações - 2017",
     .name_ja = "dados.prefeitura.sp.gov.br - Base de Reclamações - 2017",
@@ -7124,26 +6810,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_F87879072D", .name = "admin.opendata.az - Vətəndaşların qəbul qrafiki",
-    .name_ja = "admin.opendata.az - Vətəndaşların qəbul qrafiki",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=44b2c8fb-8c8a-4fb6-ae78-faa5aa0f7501&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 44b2c8fb-8c8a-4fb6-ae78-faa5aa0f7501 "
-      "(Vətəndaşların qəbul qrafiki) from dataset Azərbaycan "
-      "Respublikasının Maliyyə Monitorinqi Xidmətində vətəndaşların "
-      "qəbulu qrafiki on admin.opendata.az. datastore_search API, "
-      "offset paging, deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_9CF371B21C", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年7月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年7月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -7244,34 +6910,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "Hastanesi Branş Bazlı Başvuru Bilgileri on "
       "acikveri.bizizmir.com. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_924D381DEA", .name = "ckan.opendata.swiss - {'de': "
-      "'actual-date-sectors-and-sector-groups.csv', 'en': "
-      "'actual-date-sectors-and-sector-groups.csv', 'fr': "
-      "'actual-date-sector",
-    .name_ja = "ckan.opendata.swiss - {'de': 'actual-date-sectors-and-sector-groups.csv', 'en': 'actual-date-sectors-and-sector-groups.csv', 'fr': 'actual-date-sector",
-    .category = "open-data", .portal = "https://ckan.opendata.swiss",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.opendata.swiss/api/3/action/datastore_search?resource_id=8975354c-02d7-411a-a56b-244f8f40012d&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 8975354c-02d7-411a-a56b-244f8f40012d "
-      "({'de': 'actual-date-sectors-and-sector-groups.csv', 'en': "
-      "'actual-date-sectors-and-sector-groups.csv', 'fr': "
-      "'actual-date-sectors-and-sector-groups.csv', 'it': "
-      "'actual-date-sectors-and-sector-groups.csv'}) from dataset "
-      "{'de': 'Sektoren und Sektorengruppen', 'en': 'Sectors and sector "
-      "groups', 'fr': 'Secteurs et groupes de secteurs', 'it': 'Settori "
-      "e gruppi di settori'} on ckan.opendata.swiss. datastore_search "
-      "API, offset paging, deeper pass beyond batch 64's first "
-      "60/portal." },
 
   { .id = "JO65_CKANDS_539A943200", .name = "catalogue.data.wa.gov.au - Eastern Goldfields",
     .name_ja = "catalogue.data.wa.gov.au - Eastern Goldfields",
@@ -7411,27 +7049,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-10 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_C102F245D3", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, November 2021",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, November 2021",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=86211c28-53bb-477b-9f3f-b3c549c3d1c6&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 86211c28-53bb-477b-9f3f-b3c549c3d1c6 "
-      "(Dispensed Items by GP and Pharmacy, November 2021) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_ECBE532359", .name = "dados.prefeitura.sp.gov.br - Base de Reclamações - 2016",
     .name_ja = "dados.prefeitura.sp.gov.br - Base de Reclamações - 2016",
@@ -8585,28 +8202,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_C36AC2222A", .name = "admin.opendata.az - \"AzerGold\" QSC-nin İdarə heyəti, müşavir "
-      "və şöbə müdirlərinin əlaqə məlumatları",
-    .name_ja = "admin.opendata.az - \"AzerGold\" QSC-nin İdarə heyəti, müşavir və şöbə müdirlərinin əlaqə məlumatları",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=cdaad9e2-d9da-4963-9842-a506089a3383&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource cdaad9e2-d9da-4963-9842-a506089a3383 "
-      "(\"AzerGold\" QSC-nin İdarə heyəti, müşavir və şöbə müdirlərinin "
-      "əlaqə məlumatları) from dataset \"AzerGold\" QSC-nin rəsmi "
-      "şəxslərinin əlaqə məlumatları on admin.opendata.az. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
-
   { .id = "JO65_CKANDS_209CAF714C", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年8月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年8月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -8708,34 +8303,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "dataset Eşrefpaşa Hastanesi Branş Bazlı Başvuru Bilgileri on "
       "acikveri.bizizmir.com. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_CB27A2C3E4", .name = "ckan.opendata.swiss - {'de': "
-      "'full-sectors-and-sector-groups.csv', 'en': "
-      "'full-sectors-and-sector-groups.csv', 'fr': "
-      "'full-sectors-and-sector-groups.c",
-    .name_ja = "ckan.opendata.swiss - {'de': 'full-sectors-and-sector-groups.csv', 'en': 'full-sectors-and-sector-groups.csv', 'fr': 'full-sectors-and-sector-groups.c",
-    .category = "open-data", .portal = "https://ckan.opendata.swiss",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.opendata.swiss/api/3/action/datastore_search?resource_id=78a91ac4-ee86-4fee-8ba3-5061fe5be5e8&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 78a91ac4-ee86-4fee-8ba3-5061fe5be5e8 "
-      "({'de': 'full-sectors-and-sector-groups.csv', 'en': "
-      "'full-sectors-and-sector-groups.csv', 'fr': "
-      "'full-sectors-and-sector-groups.csv', 'it': "
-      "'full-sectors-and-sector-groups.csv'}) from dataset {'de': "
-      "'Sektoren und Sektorengruppen', 'en': 'Sectors and sector "
-      "groups', 'fr': 'Secteurs et groupes de secteurs', 'it': 'Settori "
-      "e gruppi di settori'} on ckan.opendata.swiss. datastore_search "
-      "API, offset paging, deeper pass beyond batch 64's first "
-      "60/portal." },
 
   { .id = "JO65_CKANDS_BD3FE24683", .name = "catalogue.data.wa.gov.au - SLWA Centenary WWI",
     .name_ja = "catalogue.data.wa.gov.au - SLWA Centenary WWI",
@@ -8855,27 +8422,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-10 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_159A70AB15", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, October 2021",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, October 2021",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=f28166a3-f034-4dad-87ae-bfd9fbb84bde&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource f28166a3-f034-4dad-87ae-bfd9fbb84bde "
-      "(Dispensed Items by GP and Pharmacy, October 2021) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_1DFFEE3E2A", .name = "dados.prefeitura.sp.gov.br - Base de Reclamações - 2016",
     .name_ja = "dados.prefeitura.sp.gov.br - Base de Reclamações - 2016",
@@ -10041,29 +9587,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_92115052EC", .name = "admin.opendata.az - Daşkəsən Rayon İcra Hakimiyyəti başçısı "
-      "yanında “Uşaq Hüquqlarının Müdafiəsi üzrə Komissiya”",
-    .name_ja = "admin.opendata.az - Daşkəsən Rayon İcra Hakimiyyəti başçısı yanında “Uşaq Hüquqlarının Müdafiəsi üzrə Komissiya”",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=c52abbe9-ae1f-4500-95e1-8a42d392e93e&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource c52abbe9-ae1f-4500-95e1-8a42d392e93e "
-      "(Daşkəsən Rayon İcra Hakimiyyəti başçısı yanında “Uşaq "
-      "Hüquqlarının Müdafiəsi üzrə Komissiya”) from dataset Daşkəsən "
-      "Rayon İcra Hakimiyyəti başçısı yanında “Uşaq Hüquqlarının "
-      "Müdafiəsi üzrə Komissiya” on admin.opendata.az. datastore_search "
-      "API, offset paging, deeper pass beyond batch 64's first "
-      "60/portal." },
-
   { .id = "JO65_CKANDS_1A4B27CDDA", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年9月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年9月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -10163,34 +9686,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "dataset Eşrefpaşa Hastanesi Branş Bazlı Başvuru Bilgileri on "
       "acikveri.bizizmir.com. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_122F55AB5B", .name = "ckan.opendata.swiss - {'de': "
-      "'timetable-years-sectors-and-sector-groups.csv', 'en': "
-      "'timetable-years-sectors-and-sector-groups.csv', 'fr': "
-      "'timetable-",
-    .name_ja = "ckan.opendata.swiss - {'de': 'timetable-years-sectors-and-sector-groups.csv', 'en': 'timetable-years-sectors-and-sector-groups.csv', 'fr': 'timetable-",
-    .category = "open-data", .portal = "https://ckan.opendata.swiss",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.opendata.swiss/api/3/action/datastore_search?resource_id=cb7312c3-fa3a-4c87-9982-2cfb122e40b2&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource cb7312c3-fa3a-4c87-9982-2cfb122e40b2 "
-      "({'de': 'timetable-years-sectors-and-sector-groups.csv', 'en': "
-      "'timetable-years-sectors-and-sector-groups.csv', 'fr': "
-      "'timetable-years-sectors-and-sector-groups.csv', 'it': "
-      "'timetable-years-sectors-and-sector-groups.csv'}) from dataset "
-      "{'de': 'Sektoren und Sektorengruppen', 'en': 'Sectors and sector "
-      "groups', 'fr': 'Secteurs et groupes de secteurs', 'it': 'Settori "
-      "e gruppi di settori'} on ckan.opendata.swiss. datastore_search "
-      "API, offset paging, deeper pass beyond batch 64's first "
-      "60/portal." },
 
   { .id = "JO65_CKANDS_82176E75DB", .name = "catalogue.data.wa.gov.au - Pictorial collection_csv",
     .name_ja = "catalogue.data.wa.gov.au - Pictorial collection_csv",
@@ -10310,27 +9805,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-10 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_602E618E0A", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, September 2021",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, September 2021",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=f6488e0b-c86a-4a5c-a16c-16260b084357&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource f6488e0b-c86a-4a5c-a16c-16260b084357 "
-      "(Dispensed Items by GP and Pharmacy, September 2021) from "
-      "dataset Dispensing by Contractor on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
 
   { .id = "JO65_CKANDS_44D1E9C77A", .name = "dados.prefeitura.sp.gov.br - Dicionário de Variáveis Programa "
       "Bolsa Família por Etapa",
@@ -11475,27 +10949,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_AD93399A80", .name = "admin.opendata.az - Ucar Rayon İcra Hakimiyyəti başcısı "
-      "aparatının strukturu",
-    .name_ja = "admin.opendata.az - Ucar Rayon İcra Hakimiyyəti başcısı aparatının strukturu",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=5eadc0fa-9427-41d6-9f18-2d5c4ee3e5c7&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 5eadc0fa-9427-41d6-9f18-2d5c4ee3e5c7 "
-      "(Ucar Rayon İcra Hakimiyyəti başcısı aparatının strukturu) from "
-      "dataset Ucar Rayon İcra Hakimiyyəti başcı aparatının strukturu "
-      "on admin.opendata.az. datastore_search API, offset paging, "
-      "deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_A950C8E395", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年10月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年10月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -11717,27 +11170,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-10 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_7474490DB1", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, July 2021",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, July 2021",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=ff2f87ad-f0b4-41e0-935e-87848fe22cd3&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource ff2f87ad-f0b4-41e0-935e-87848fe22cd3 "
-      "(Dispensed Items by GP and Pharmacy, July 2021) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_A7FAD08C55", .name = "dados.prefeitura.sp.gov.br - Programa Bolsa Família por Etapa - "
       "Jul24",
@@ -12887,27 +12319,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_999ACE5872", .name = "admin.opendata.az - "
-      "qida_mehsullarinin_istehsali_illik_melumatlar",
-    .name_ja = "admin.opendata.az - qida_mehsullarinin_istehsali_illik_melumatlar",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=2766779b-4fd5-4986-b4ab-34a3e32f0d2c&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 2766779b-4fd5-4986-b4ab-34a3e32f0d2c "
-      "(qida_mehsullarinin_istehsali_illik_melumatlar) from dataset "
-      "Qida məhsullarının istehsalı (illik məlumatlar) on "
-      "admin.opendata.az. datastore_search API, offset paging, deeper "
-      "pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_3D9AEC47CC", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年11月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年11月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -13148,27 +12559,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-10 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_1335694CCE", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, June 2021",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, June 2021",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=77b24fc4-9d79-42a0-85b3-703c0bb403ee&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 77b24fc4-9d79-42a0-85b3-703c0bb403ee "
-      "(Dispensed Items by GP and Pharmacy, June 2021) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_CF9F3AEF06", .name = "dados.prefeitura.sp.gov.br - Programa Bolsa Família por Etapa - "
       "Jul24",
@@ -14303,27 +13693,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_2BDDA52D4F", .name = "admin.opendata.az - "
-      "qida_mehsullarinin_istehsali_ilkin_melumat_artan_yekunla",
-    .name_ja = "admin.opendata.az - qida_mehsullarinin_istehsali_ilkin_melumat_artan_yekunla",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=58bce0e0-e8ea-4d26-8005-be5f6f371800&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 58bce0e0-e8ea-4d26-8005-be5f6f371800 "
-      "(qida_mehsullarinin_istehsali_ilkin_melumat_artan_yekunla) from "
-      "dataset Qida məhsullarının istehsalı (ilkin məlumat, artan "
-      "yekunla) on admin.opendata.az. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_51C801E58E", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年12月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和7年12月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -14564,27 +13933,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-10 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_39E6418D57", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, May 2021",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, May 2021",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=2492780f-bf63-41a5-be9a-e2e7d47e8e4a&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 2492780f-bf63-41a5-be9a-e2e7d47e8e4a "
-      "(Dispensed Items by GP and Pharmacy, May 2021) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_DEDE456679", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2025",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2025",
@@ -15760,30 +15108,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_02ED02C929", .name = "admin.opendata.az - Daşksən Rayon İcra Hakimiyyəti başçısı "
-      "aparatında Sənədlərin Ekspertizası və Arxiv işi üzrə Ekspert "
-      "Komissiyasının tərkibi",
-    .name_ja = "admin.opendata.az - Daşksən Rayon İcra Hakimiyyəti başçısı aparatında Sənədlərin Ekspertizası və Arxiv işi üzrə Ekspert Komissiyasının tərkibi",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=5724c43c-a887-4516-bff9-fc5a0e60eaf8&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 5724c43c-a887-4516-bff9-fc5a0e60eaf8 "
-      "(Daşksən Rayon İcra Hakimiyyəti başçısı aparatında Sənədlərin "
-      "Ekspertizası və Arxiv işi üzrə Ekspert Komissiyasının tərkibi) "
-      "from dataset Daşkəsən Rayon İcra Hakimiyyəti başçısı aparatında "
-      "Sənədlərin Ekspertizası və Arxiv işi üzrə Ekspert Komissiyasının "
-      "tərkibi on admin.opendata.az. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_E25CC185E0", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年1月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年1月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -16022,27 +15346,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-10 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_3256B54B32", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, April 2021",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, April 2021",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=91f2d5fe-ff86-4192-88fb-2552eaaf1662&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 91f2d5fe-ff86-4192-88fb-2552eaaf1662 "
-      "(Dispensed Items by GP and Pharmacy, April 2021) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_D3729AC2DA", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2025",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2025",
@@ -17206,29 +16509,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_5AD49BB992", .name = "admin.opendata.az - Azərbaycan Respublikasının işğaldan azad "
-      "olunmuş ərazilərində təmizləməyə dair statistik məlumatlar",
-    .name_ja = "admin.opendata.az - Azərbaycan Respublikasının işğaldan azad olunmuş ərazilərində təmizləməyə dair statistik məlumatlar",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=30bd871d-d264-4dfc-9661-695b49248023&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 30bd871d-d264-4dfc-9661-695b49248023 "
-      "(Azərbaycan Respublikasının işğaldan azad olunmuş ərazilərində "
-      "təmizləməyə dair statistik məlumatlar) from dataset Azərbaycan "
-      "Respublikasının işğaldan azad olunmuş ərazilərində təmizləməyə "
-      "dair statistik məlumatlar on admin.opendata.az. datastore_search "
-      "API, offset paging, deeper pass beyond batch 64's first "
-      "60/portal." },
-
   { .id = "JO65_CKANDS_5E4BEA66EA", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年2月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年2月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -17447,27 +16727,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "tratamiento renal sustitutivo (TRS) en la Comunitat Valenciana "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_AF5A345045", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, March 2021",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, March 2021",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=5159c7ab-e07f-43e8-9eca-11132cf01b8d&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 5159c7ab-e07f-43e8-9eca-11132cf01b8d "
-      "(Dispensed Items by GP and Pharmacy, March 2021) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_7CBC63169D", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2024",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2024",
@@ -18061,26 +17320,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "datos.mininterior.gob.ar. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_33A8793059", .name = "datos.transporte.gob.ar - Empresas de Transporte",
-    .name_ja = "datos.transporte.gob.ar - Empresas de Transporte",
-    .category = "open-data", .portal = "https://datos.transporte.gob.ar",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datos.transporte.gob.ar/api/3/action/datastore_search?resource_id=86fd247e-f90a-4628-8679-8ae98cfaa839&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 86fd247e-f90a-4628-8679-8ae98cfaa839 "
-      "(Empresas de Transporte) from dataset Empresas de transporte "
-      "urbano de pasajeros de Región Metropolitana de Buenos Aires - "
-      "SUBE on datos.transporte.gob.ar. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_77DE19AD6E", .name = "datosretc.mma.gob.cl - Emisiones al aire de fuentes puntuales "
       "2019",
     .name_ja = "datosretc.mma.gob.cl - Emisiones al aire de fuentes puntuales 2019",
@@ -18620,28 +17859,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_DB03D41A97", .name = "admin.opendata.az - Ərazilər üzrə elektrik təchizatında "
-      "planlaşdırılan fasilə tarixləri (Noyabr 2026)",
-    .name_ja = "admin.opendata.az - Ərazilər üzrə elektrik təchizatında planlaşdırılan fasilə tarixləri (Noyabr 2026)",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=24d595c9-fae8-4f70-9651-ac82772505f1&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 24d595c9-fae8-4f70-9651-ac82772505f1 "
-      "(Ərazilər üzrə elektrik təchizatında planlaşdırılan fasilə "
-      "tarixləri (Noyabr 2026)) from dataset Ərazilər üzrə elektrik "
-      "təchizatında planlaşdırılan fasilə tarixləri (aylıq) on "
-      "admin.opendata.az. datastore_search API, offset paging, deeper "
-      "pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_7A5F9953E0", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年3月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年3月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -18862,27 +18079,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "inscritos en el Registro Oficial de Contratos de la Generalitat "
       "Valenciana 2026 on dadesobertes.gva.es. datastore_search API, "
       "offset paging, deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_80A0550791", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, February 2021",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, February 2021",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=99fe4414-4382-4677-99a4-540d38ca0616&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 99fe4414-4382-4677-99a4-540d38ca0616 "
-      "(Dispensed Items by GP and Pharmacy, February 2021) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_3431BBAA37", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2024",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2024",
@@ -19991,28 +19187,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_6BF30729F0", .name = "admin.opendata.az - Ərazilər üzrə elektrik təchizatında "
-      "planlaşdırılan fasilə tarixləri (Noyabr 2026)",
-    .name_ja = "admin.opendata.az - Ərazilər üzrə elektrik təchizatında planlaşdırılan fasilə tarixləri (Noyabr 2026)",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=ded3ab90-a15e-4747-a79d-f805955a202b&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource ded3ab90-a15e-4747-a79d-f805955a202b "
-      "(Ərazilər üzrə elektrik təchizatında planlaşdırılan fasilə "
-      "tarixləri (Noyabr 2026)) from dataset Ərazilər üzrə elektrik "
-      "təchizatında planlaşdırılan fasilə tarixləri (aylıq) on "
-      "admin.opendata.az. datastore_search API, offset paging, deeper "
-      "pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_FC87369856", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年4月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年4月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -20277,27 +19451,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "dataset Indicadores de comercio exterior: empresas exportadoras "
       "de mercancías on dadesobertes.gva.es. datastore_search API, "
       "offset paging, deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_551922041A", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, January 2021",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, January 2021",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=075f3387-f05e-423a-bd04-4d506c6e9a8d&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 075f3387-f05e-423a-bd04-4d506c6e9a8d "
-      "(Dispensed Items by GP and Pharmacy, January 2021) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_3E71233C52", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2024",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2024",
@@ -21452,30 +20605,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_101305CF51", .name = "admin.opendata.az - \"Azərişıq\" ASC-nin struktur bölmə "
-      "rəhbərləri tərəfindən vətəndaşların qəbulu tarixləri (Noyabr "
-      "2026)",
-    .name_ja = "admin.opendata.az - \"Azərişıq\" ASC-nin struktur bölmə rəhbərləri tərəfindən vətəndaşların qəbulu tarixləri (Noyabr 2026)",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=df8e28e6-9679-4ab8-837d-f83a5475e0f5&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource df8e28e6-9679-4ab8-837d-f83a5475e0f5 "
-      "(\"Azərişıq\" ASC-nin struktur bölmə rəhbərləri tərəfindən "
-      "vətəndaşların qəbulu tarixləri (Noyabr 2026)) from dataset "
-      "\"Azərişıq\" ASC-nin struktur bölmə rəhbərləri tərəfindən "
-      "vətəndaşların qəbulu tarixləri (Aylıq) on admin.opendata.az. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
-
   { .id = "JO65_CKANDS_02817654D5", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年5月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年5月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -21739,27 +20868,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "(Cifras medias de exportación de las empresas por comunidad "
       "autónoma) from dataset Indicadores de comercio exterior: "
       "empresas exportadoras de mercancías on dadesobertes.gva.es. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_F2094FB8F9", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, December 2020",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, December 2020",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=e17bdb59-a9bd-4a30-ba3d-33aae2c229a2&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource e17bdb59-a9bd-4a30-ba3d-33aae2c229a2 "
-      "(Dispensed Items by GP and Pharmacy, December 2020) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
       "datastore_search API, offset paging, deeper pass beyond batch "
       "64's first 60/portal." },
 
@@ -22920,30 +22028,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_A9D58D4333", .name = "admin.opendata.az - \"Azərişıq\" ASC-nin struktur bölmə "
-      "rəhbərləri tərəfindən vətəndaşların qəbulu tarixləri (Noyabr "
-      "2026)",
-    .name_ja = "admin.opendata.az - \"Azərişıq\" ASC-nin struktur bölmə rəhbərləri tərəfindən vətəndaşların qəbulu tarixləri (Noyabr 2026)",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=4b21b49d-f625-45a6-8a44-a52f24d121f9&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 4b21b49d-f625-45a6-8a44-a52f24d121f9 "
-      "(\"Azərişıq\" ASC-nin struktur bölmə rəhbərləri tərəfindən "
-      "vətəndaşların qəbulu tarixləri (Noyabr 2026)) from dataset "
-      "\"Azərişıq\" ASC-nin struktur bölmə rəhbərləri tərəfindən "
-      "vətəndaşların qəbulu tarixləri (Aylıq) on admin.opendata.az. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
-
   { .id = "JO65_CKANDS_F57DBB0EA8", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年6月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年6月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -23044,33 +22128,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "Hastanesi Acil Başvuru Bilgileri on acikveri.bizizmir.com. "
       "datastore_search API, offset paging, deeper pass beyond batch "
       "64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_17D31413B5", .name = "ckan.opendata.swiss - {'de': 'BfR_Kombinationslogik.csv', 'en': "
-      "'BfR_Kombinationslogik.csv', 'fr': 'BfR_Kombinationslogik.csv', "
-      "'it': 'BfR_Kombination",
-    .name_ja = "ckan.opendata.swiss - {'de': 'BfR_Kombinationslogik.csv', 'en': 'BfR_Kombinationslogik.csv', 'fr': 'BfR_Kombinationslogik.csv', 'it': 'BfR_Kombination",
-    .category = "open-data", .portal = "https://ckan.opendata.swiss",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.opendata.swiss/api/3/action/datastore_search?resource_id=376fd91f-7c93-4e26-8d00-36baed97ed1e&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 376fd91f-7c93-4e26-8d00-36baed97ed1e "
-      "({'de': 'BfR_Kombinationslogik.csv', 'en': "
-      "'BfR_Kombinationslogik.csv', 'fr': 'BfR_Kombinationslogik.csv', "
-      "'it': 'BfR_Kombinationslogik.csv'}) from dataset {'de': "
-      "'Barrierefreies Reisen - Rollstuhlzugänglichkeit', 'en': "
-      "'Accessible travel - Wheelchair accessibility', 'fr': 'En route "
-      "sans barrières - Accessibilité des fauteuils roulants', 'it': "
-      "'In viaggio senza barriere - Accessibilità alle sedie a "
-      "rotelle'} on ckan.opendata.swiss. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
 
   { .id = "JO65_CKANDS_C1114B7AA5", .name = "catalogue.data.wa.gov.au - Feedlot Waste Estimates",
     .name_ja = "catalogue.data.wa.gov.au - Feedlot Waste Estimates",
@@ -23209,27 +22266,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "(UsuariosCiclorutas_GVAOberta 2026) from dataset Usuarios "
       "ciclorutas 2026 on dadesobertes.gva.es. datastore_search API, "
       "offset paging, deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_55B37CA79B", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, November 2020",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, November 2020",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=fc7b38ca-679b-4c28-891e-2dae77661721&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource fc7b38ca-679b-4c28-891e-2dae77661721 "
-      "(Dispensed Items by GP and Pharmacy, November 2020) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_D92DB3C278", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2024",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2024",
@@ -24366,28 +23402,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_053CAAC4D8", .name = "admin.opendata.az - Daşkəsən Rayon İcra Hakimiyyəti başçısının "
-      "noyabr ayı üçün yerlərdə keçirəcəyi səyyar qəbulu",
-    .name_ja = "admin.opendata.az - Daşkəsən Rayon İcra Hakimiyyəti başçısının noyabr ayı üçün yerlərdə keçirəcəyi səyyar qəbulu",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=37cd8796-0d3b-4069-9443-b014df0917f3&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 37cd8796-0d3b-4069-9443-b014df0917f3 "
-      "(Daşkəsən Rayon İcra Hakimiyyəti başçısının noyabr ayı üçün "
-      "yerlərdə keçirəcəyi səyyar qəbulu) from dataset Daşkəsən Rayon "
-      "İcra Hakimiyyəti başçısının 2026-cı ilin noyabr ayında səyyar "
-      "qəbulu on admin.opendata.az. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_335A403504", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年7月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年7月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -24508,33 +23522,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "Eşrefpaşa Hastanesi Acil Başvuru Bilgileri on "
       "acikveri.bizizmir.com. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_9D22579363", .name = "ckan.opendata.swiss - {'de': 'BfR_Haltestellendaten.csv', 'en': "
-      "'BfR_Haltestellendaten.csv', 'fr': 'BfR_Haltestellendaten.csv', "
-      "'it': 'BfR_Haltestelle",
-    .name_ja = "ckan.opendata.swiss - {'de': 'BfR_Haltestellendaten.csv', 'en': 'BfR_Haltestellendaten.csv', 'fr': 'BfR_Haltestellendaten.csv', 'it': 'BfR_Haltestelle",
-    .category = "open-data", .portal = "https://ckan.opendata.swiss",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.opendata.swiss/api/3/action/datastore_search?resource_id=71985649-b283-4ada-8819-1e894e2f81ca&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 71985649-b283-4ada-8819-1e894e2f81ca "
-      "({'de': 'BfR_Haltestellendaten.csv', 'en': "
-      "'BfR_Haltestellendaten.csv', 'fr': 'BfR_Haltestellendaten.csv', "
-      "'it': 'BfR_Haltestellendaten.csv'}) from dataset {'de': "
-      "'Barrierefreies Reisen - Rollstuhlzugänglichkeit', 'en': "
-      "'Accessible travel - Wheelchair accessibility', 'fr': 'En route "
-      "sans barrières - Accessibilité des fauteuils roulants', 'it': "
-      "'In viaggio senza barriere - Accessibilità alle sedie a "
-      "rotelle'} on ckan.opendata.swiss. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
 
   { .id = "JO65_CKANDS_F0E44A8CB0", .name = "catalogue.data.wa.gov.au - Hand Harvested Vegetable Residue",
     .name_ja = "catalogue.data.wa.gov.au - Hand Harvested Vegetable Residue",
@@ -24693,27 +23680,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "(Exportaciones, importaciones y tasas de cobertura por área "
       "geográfica) from dataset Indicadores de comercio exterior: "
       "exportación e importación de servicios on dadesobertes.gva.es. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_F70E51C1EB", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, October 2020",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, October 2020",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=0535a599-2fdc-456b-969f-7aa0fc56a6ab&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 0535a599-2fdc-456b-969f-7aa0fc56a6ab "
-      "(Dispensed Items by GP and Pharmacy, October 2020) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
       "datastore_search API, offset paging, deeper pass beyond batch "
       "64's first 60/portal." },
 
@@ -25875,28 +24841,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_CEB32606E8", .name = "admin.opendata.az - Elektrik enerjisinin 2021-2025-ci illər üzrə "
-      "istehsal göstəriciləri",
-    .name_ja = "admin.opendata.az - Elektrik enerjisinin 2021-2025-ci illər üzrə istehsal göstəriciləri",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=b43180f9-329b-444b-99b3-487860dd8938&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource b43180f9-329b-444b-99b3-487860dd8938 "
-      "(Elektrik enerjisinin 2021-2025-ci illər üzrə istehsal "
-      "göstəriciləri) from dataset Elektrik enerjisinin aylıq və illik "
-      "istehsal göstəriciləri on admin.opendata.az. datastore_search "
-      "API, offset paging, deeper pass beyond batch 64's first "
-      "60/portal." },
-
   { .id = "JO65_CKANDS_4D7E390ADD", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年8月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年8月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -26016,33 +24960,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "Eşrefpaşa Hastanesi Acil Başvuru Bilgileri on "
       "acikveri.bizizmir.com. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_DDF73E9474", .name = "ckan.opendata.swiss - {'de': 'BfR_Fahrzeugmapping.csv', 'en': "
-      "'BfR_Fahrzeugmapping.csv', 'fr': 'BfR_Fahrzeugmapping.csv', "
-      "'it': 'BfR_Fahrzeugmapping.c",
-    .name_ja = "ckan.opendata.swiss - {'de': 'BfR_Fahrzeugmapping.csv', 'en': 'BfR_Fahrzeugmapping.csv', 'fr': 'BfR_Fahrzeugmapping.csv', 'it': 'BfR_Fahrzeugmapping.c",
-    .category = "open-data", .portal = "https://ckan.opendata.swiss",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.opendata.swiss/api/3/action/datastore_search?resource_id=791b8b7e-0cd7-444b-abcb-835a75ef4c84&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 791b8b7e-0cd7-444b-abcb-835a75ef4c84 "
-      "({'de': 'BfR_Fahrzeugmapping.csv', 'en': "
-      "'BfR_Fahrzeugmapping.csv', 'fr': 'BfR_Fahrzeugmapping.csv', "
-      "'it': 'BfR_Fahrzeugmapping.csv'}) from dataset {'de': "
-      "'Barrierefreies Reisen - Rollstuhlzugänglichkeit', 'en': "
-      "'Accessible travel - Wheelchair accessibility', 'fr': 'En route "
-      "sans barrières - Accessibilité des fauteuils roulants', 'it': "
-      "'In viaggio senza barriere - Accessibilità alle sedie a "
-      "rotelle'} on ckan.opendata.swiss. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
 
   { .id = "JO65_CKANDS_B4ECD47447", .name = "catalogue.data.wa.gov.au - "
       "commercial-and-industrial-waste-2014-15",
@@ -26205,27 +25122,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "exportación e importación de servicios on dadesobertes.gva.es. "
       "datastore_search API, offset paging, deeper pass beyond batch "
       "64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_930611ED5A", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, September 2020",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, September 2020",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=5a813233-6e97-4d90-8117-8a3409e34f36&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 5a813233-6e97-4d90-8117-8a3409e34f36 "
-      "(Dispensed Items by GP and Pharmacy, September 2020) from "
-      "dataset Dispensing by Contractor on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
 
   { .id = "JO65_CKANDS_5575B3BE74", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2023",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2023",
@@ -27332,27 +26228,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_0E3CFAFEDA", .name = "admin.opendata.az - 2026-cı ilin ayları üzrə elektrik "
-      "enerjisinin istehsalı",
-    .name_ja = "admin.opendata.az - 2026-cı ilin ayları üzrə elektrik enerjisinin istehsalı",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=2a3466b8-72b4-4806-8f2d-19fdfe5c509e&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 2a3466b8-72b4-4806-8f2d-19fdfe5c509e "
-      "(2026-cı ilin ayları üzrə elektrik enerjisinin istehsalı) from "
-      "dataset Elektrik enerjisinin aylıq və illik istehsal "
-      "göstəriciləri on admin.opendata.az. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_64D271CDE3", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年9月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年9月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -27659,27 +26534,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "resoluciones de Expedientes Regulación Temporal de "
       "Empleo-2026-09 on dadesobertes.gva.es. datastore_search API, "
       "offset paging, deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_52BBA81B4D", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, August 2020",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, August 2020",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=1f97c2be-a58b-4889-9901-30ff68361252&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 1f97c2be-a58b-4889-9901-30ff68361252 "
-      "(Dispensed Items by GP and Pharmacy, August 2020) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_0C445BAED9", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2023",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2023",
@@ -28792,28 +27646,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_47361DF5DD", .name = "admin.opendata.az - Elektrik enerjisinin 2021-2025-ci illər üzrə "
-      "son istehlak göstəriciləri (mln.kVt·saat)",
-    .name_ja = "admin.opendata.az - Elektrik enerjisinin 2021-2025-ci illər üzrə son istehlak göstəriciləri (mln.kVt·saat)",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=a52b9057-c683-4871-916f-6d56e1789ad8&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource a52b9057-c683-4871-916f-6d56e1789ad8 "
-      "(Elektrik enerjisinin 2021-2025-ci illər üzrə son istehlak "
-      "göstəriciləri (mln.kVt·saat)) from dataset Elektrik enerjisinin "
-      "aylar və illər üzrə son istehlak göstəriciləri on "
-      "admin.opendata.az. datastore_search API, offset paging, deeper "
-      "pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_EEEB9F890D", .name = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年10月末）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 町丁別人口（令和8年10月末）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -29094,27 +27926,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "resoluciones de Expedientes Regulación Temporal de "
       "Empleo-2026-09 on dadesobertes.gva.es. datastore_search API, "
       "offset paging, deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_56811DE0AF", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, July 2020",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, July 2020",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=83cdf70a-a47e-4ad7-afc6-66215f3a77f5&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 83cdf70a-a47e-4ad7-afc6-66215f3a77f5 "
-      "(Dispensed Items by GP and Pharmacy, July 2020) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_7DC7F7F640", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2023",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2023",
@@ -29666,28 +28477,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "datos.mininterior.gob.ar. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_2C59DB4CEF", .name = "datos.transporte.gob.ar - Detalle de entrada y salida de buques "
-      "y pasajeros transportados en 2020",
-    .name_ja = "datos.transporte.gob.ar - Detalle de entrada y salida de buques y pasajeros transportados en 2020",
-    .category = "open-data", .portal = "https://datos.transporte.gob.ar",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datos.transporte.gob.ar/api/3/action/datastore_search?resource_id=d984e9dc-486c-48e7-a03c-79cc4d3aff45&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource d984e9dc-486c-48e7-a03c-79cc4d3aff45 "
-      "(Detalle de entrada y salida de buques y pasajeros transportados "
-      "en 2020) from dataset Detalle de entrada y salida de buques y "
-      "pasajeros transportados on datos.transporte.gob.ar. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
-
   { .id = "JO65_CKANDS_4B14CE69F6", .name = "datosretc.mma.gob.cl - Emisiones al aire de fuentes puntuales "
       "2011",
     .name_ja = "datosretc.mma.gob.cl - Emisiones al aire de fuentes puntuales 2011",
@@ -30229,28 +29018,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_F8CF022EE7", .name = "admin.opendata.az - Elektrik enerjisinin 2026-cı ilin ayları "
-      "üzrə son istehlak göstəriciləri",
-    .name_ja = "admin.opendata.az - Elektrik enerjisinin 2026-cı ilin ayları üzrə son istehlak göstəriciləri",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=146c1ed5-953d-4dff-a628-cf2a070f3f6f&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 146c1ed5-953d-4dff-a628-cf2a070f3f6f "
-      "(Elektrik enerjisinin 2026-cı ilin ayları üzrə son istehlak "
-      "göstəriciləri) from dataset Elektrik enerjisinin aylar və illər "
-      "üzrə son istehlak göstəriciləri on admin.opendata.az. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
-
   { .id = "JO65_CKANDS_6DE5113D38", .name = "catalog.city.utsunomiya.tochigi.jp - 住民基本台帳人口（外国人）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 住民基本台帳人口（外国人）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -30528,27 +29295,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "resoluciones de Expedientes Regulación Temporal de "
       "Empleo-2026-09 on dadesobertes.gva.es. datastore_search API, "
       "offset paging, deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_40CA1D70CE", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, June 2020",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, June 2020",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=b7d9a13f-de44-483d-9e9a-bea86897e683&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource b7d9a13f-de44-483d-9e9a-bea86897e683 "
-      "(Dispensed Items by GP and Pharmacy, June 2020) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_14C26DC645", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2023",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2023",
@@ -31689,27 +30435,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_8F2C5194DA", .name = "admin.opendata.az - Qəbələ rayonunda fəaliyyət göstərən idman "
-      "obyektləri",
-    .name_ja = "admin.opendata.az - Qəbələ rayonunda fəaliyyət göstərən idman obyektləri",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=7d0eb34c-bcb1-4fff-94d5-d1d113e97635&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 7d0eb34c-bcb1-4fff-94d5-d1d113e97635 "
-      "(Qəbələ rayonunda fəaliyyət göstərən idman obyektləri) from "
-      "dataset Qəbələ rayonunda fəaliyyət göstərən idman obyektləri on "
-      "admin.opendata.az. datastore_search API, offset paging, deeper "
-      "pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_56CD794CD2", .name = "catalog.city.utsunomiya.tochigi.jp - 住民基本台帳人口",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 住民基本台帳人口",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -31988,27 +30713,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "resoluciones de Expedientes Regulación Temporal de "
       "Empleo-2026-09 on dadesobertes.gva.es. datastore_search API, "
       "offset paging, deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_304A09CCCD", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, May 2020",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, May 2020",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=4b072005-823f-490a-8a9c-01ebd5c9d2e5&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 4b072005-823f-490a-8a9c-01ebd5c9d2e5 "
-      "(Dispensed Items by GP and Pharmacy, May 2020) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_54B71943F2", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2023",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2023",
@@ -32580,28 +31284,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "datos.mininterior.gob.ar. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_99969EECAC", .name = "datos.transporte.gob.ar - Detalle de entrada y salida de buques "
-      "y pasajeros transportados en el año 2016",
-    .name_ja = "datos.transporte.gob.ar - Detalle de entrada y salida de buques y pasajeros transportados en el año 2016",
-    .category = "open-data", .portal = "https://datos.transporte.gob.ar",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datos.transporte.gob.ar/api/3/action/datastore_search?resource_id=4e08de32-e8e1-43ca-9ea2-351026df3afb&limit=100&offset=0&sort=_id%20asc",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 4e08de32-e8e1-43ca-9ea2-351026df3afb "
-      "(Detalle de entrada y salida de buques y pasajeros transportados "
-      "en el año 2016) from dataset Detalle de entrada y salida de "
-      "buques y pasajeros transportados on datos.transporte.gob.ar. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
-
   { .id = "JO65_CKANDS_630B5E5578", .name = "datosretc.mma.gob.cl - Emisiones al aire de fuentes puntuales "
       "2009",
     .name_ja = "datosretc.mma.gob.cl - Emisiones al aire de fuentes puntuales 2009",
@@ -33125,27 +31807,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_FF8C3A7F7B", .name = "admin.opendata.az - Qəbələ rayonunda fəaliyyət göstərən "
-      "bələdiyyələri",
-    .name_ja = "admin.opendata.az - Qəbələ rayonunda fəaliyyət göstərən bələdiyyələri",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=650ea9ec-30e3-4b34-b498-fb036750c060&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 650ea9ec-30e3-4b34-b498-fb036750c060 "
-      "(Qəbələ rayonunda fəaliyyət göstərən bələdiyyələri) from dataset "
-      "Qəbələ rayonunda fəaliyyət göstərən bələdiyyələr on "
-      "admin.opendata.az. datastore_search API, offset paging, deeper "
-      "pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_964EEC6E11", .name = "catalog.city.utsunomiya.tochigi.jp - 推計人口",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 推計人口",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -33425,27 +32086,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "resoluciones de Expedientes Regulación Temporal de "
       "Empleo-2026-09 on dadesobertes.gva.es. datastore_search API, "
       "offset paging, deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_6E456E9E0F", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, April 2020",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, April 2020",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=ce114881-9ff2-41d7-bed4-bd0ed7046ee3&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource ce114881-9ff2-41d7-bed4-bd0ed7046ee3 "
-      "(Dispensed Items by GP and Pharmacy, April 2020) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_606131F366", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2023",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 2º TRI 2023",
@@ -34568,29 +33208,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_8693815F20", .name = "admin.opendata.az - Energetika Nazirliyinin \"Çağrı Mərkəzi\" və "
-      "\"Qaynar xətti\"nə daxil olan zənglərin 2025-ci il üzrə "
-      "statistikası",
-    .name_ja = "admin.opendata.az - Energetika Nazirliyinin \"Çağrı Mərkəzi\" və \"Qaynar xətti\"nə daxil olan zənglərin 2025-ci il üzrə statistikası",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=a041c7d3-1ef0-4195-9cf3-613542bf2217&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource a041c7d3-1ef0-4195-9cf3-613542bf2217 "
-      "(Energetika Nazirliyinin \"Çağrı Mərkəzi\" və \"Qaynar xətti\"nə "
-      "daxil olan zənglərin 2025-ci il üzrə statistikası) from dataset "
-      "Energetika Nazirliyinin \"Çağrı Mərkəzi\"nə daxil olan zənglərin "
-      "statistikası on admin.opendata.az. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_5DD9869317", .name = "catalog.city.utsunomiya.tochigi.jp - 一般廃棄物収集運搬業者一覧（令和8年11月1日現在）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 一般廃棄物収集運搬業者一覧（令和8年11月1日現在）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -34870,27 +33487,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-09 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_B52737AA41", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, March 2020",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, March 2020",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=2cc5238f-493d-4af2-926f-0d696a48d6d8&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 2cc5238f-493d-4af2-926f-0d696a48d6d8 "
-      "(Dispensed Items by GP and Pharmacy, March 2020) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_97D232B438", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2023",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2023",
@@ -35986,27 +34582,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_44862E0F36", .name = "admin.opendata.az - Yevlax Şəhər İcra Hakimiyyəti Başçısı "
-      "Aparatının strukturu",
-    .name_ja = "admin.opendata.az - Yevlax Şəhər İcra Hakimiyyəti Başçısı Aparatının strukturu",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=c5966b5e-7230-4efa-84d5-8672adeb0514&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource c5966b5e-7230-4efa-84d5-8672adeb0514 "
-      "(Yevlax Şəhər İcra Hakimiyyəti Başçısı Aparatının strukturu) "
-      "from dataset Yevlax Şəhər İcra Hakimiyyəti Başçısı Aparatının "
-      "strukturu on admin.opendata.az. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_D8DECED255", .name = "catalog.city.utsunomiya.tochigi.jp - 食品営業許可施設一覧（令和８年９月現在）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 食品営業許可施設一覧（令和８年９月現在）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -36285,27 +34860,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-09 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_890422E17F", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, February 2020",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, February 2020",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=1a314e18-d6a3-43dd-abb6-8295b718fc12&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 1a314e18-d6a3-43dd-abb6-8295b718fc12 "
-      "(Dispensed Items by GP and Pharmacy, February 2020) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_502437CC08", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2023",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 1º TRI 2023",
@@ -37424,27 +35978,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_2780DCA3F2", .name = "admin.opendata.az - Yevlax Şəhər İcra Hakimiyyəti Başçısı "
-      "Aparatının strukturu",
-    .name_ja = "admin.opendata.az - Yevlax Şəhər İcra Hakimiyyəti Başçısı Aparatının strukturu",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=0d07b120-6336-4bd6-a451-00b774a6b874&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 0d07b120-6336-4bd6-a451-00b774a6b874 "
-      "(Yevlax Şəhər İcra Hakimiyyəti Başçısı Aparatının strukturu) "
-      "from dataset Yevlax Şəhər İcra Hakimiyyəti Başçısı Aparatının "
-      "strukturu on admin.opendata.az. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_6812EEB0C0", .name = "catalog.city.utsunomiya.tochigi.jp - 理容所一覧（令和８年９月現在）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 理容所一覧（令和８年９月現在）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -37726,27 +36259,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-09 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_78070EA4D0", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, December 2019",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, December 2019",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=55a26094-483f-4ec5-bc1a-2e8178f2122a&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 55a26094-483f-4ec5-bc1a-2e8178f2122a "
-      "(Dispensed Items by GP and Pharmacy, December 2019) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_A8E722B219", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2022",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2022",
@@ -38841,28 +37353,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_D723E537AA", .name = "admin.opendata.az - 2025-ci il ərzində Müdafiə Nazirliyinə daxil "
-      "olan vətəndaş müraciətləri barədə illik məlumat",
-    .name_ja = "admin.opendata.az - 2025-ci il ərzində Müdafiə Nazirliyinə daxil olan vətəndaş müraciətləri barədə illik məlumat",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=86ee0923-2a6b-4e41-8580-56ef57a1b53c&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 86ee0923-2a6b-4e41-8580-56ef57a1b53c "
-      "(2025-ci il ərzində Müdafiə Nazirliyinə daxil olan vətəndaş "
-      "müraciətləri barədə illik məlumat) from dataset 2025-ci il "
-      "ərzində Müdafiə Nazirliyinə daxil olan vətəndaş müraciətləri "
-      "barədə illik məlumat on admin.opendata.az. datastore_search API, "
-      "offset paging, deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_7809E547B8", .name = "catalog.city.utsunomiya.tochigi.jp - 興行場施設一覧（令和８年９月現在）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - 興行場施設一覧（令和８年９月現在）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -39106,27 +37596,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-09 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_AAAAAD6E16", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, November 2019",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, November 2019",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=37c00ada-8ce9-4c57-8736-3294e6db7ab0&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 37c00ada-8ce9-4c57-8736-3294e6db7ab0 "
-      "(Dispensed Items by GP and Pharmacy, November 2019) from dataset "
-      "Dispensing by Contractor on ckan.publishing.service.gov.uk. "
-      "datastore_search API, offset paging, deeper pass beyond batch "
-      "64's first 60/portal." },
 
   { .id = "JO65_CKANDS_5657C8E6B5", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2022",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 4º TRI 2022",
@@ -40226,28 +38695,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "catalog.city.kobe.lg.jp. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
 
-  { .id = "JO65_CKANDS_9AB932CF4B", .name = "admin.opendata.az - Ədliyyə Akademiyası tərəfindən göstərilən "
-      "pulsuz hüquqi yardımlar barədə yarımillik məlumat",
-    .name_ja = "admin.opendata.az - Ədliyyə Akademiyası tərəfindən göstərilən pulsuz hüquqi yardımlar barədə yarımillik məlumat",
-    .category = "open-data", .portal = "https://admin.opendata.az",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://admin.opendata.az/api/3/action/datastore_search?resource_id=e2165351-b468-4dac-b1f1-ce6160fa6dd7&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource e2165351-b468-4dac-b1f1-ce6160fa6dd7 "
-      "(Ədliyyə Akademiyası tərəfindən göstərilən pulsuz hüquqi "
-      "yardımlar barədə yarımillik məlumat) from dataset Ədliyyə "
-      "Akademiyası tərəfindən göstərilən pulsuz hüquqi yardımlar barədə "
-      "yarımillik məlumat on admin.opendata.az. datastore_search API, "
-      "offset paging, deeper pass beyond batch 64's first 60/portal." },
-
   { .id = "JO65_CKANDS_D66DB22C67", .name = "catalog.city.utsunomiya.tochigi.jp - クリ－ニング一覧(取次)（令和８年９月現在）",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp - クリ－ニング一覧(取次)（令和８年９月現在）",
     .category = "open-data", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
@@ -40487,27 +38934,6 @@ static const hp_source HP3B65_CKANDS[] = {
       "solicitudes de Expedientes Regulación temporal de Empleo-2026-09 "
       "on dadesobertes.gva.es. datastore_search API, offset paging, "
       "deeper pass beyond batch 64's first 60/portal." },
-
-  { .id = "JO65_CKANDS_D41B114744", .name = "ckan.publishing.service.gov.uk - Dispensed Items by GP and "
-      "Pharmacy, September 2019",
-    .name_ja = "ckan.publishing.service.gov.uk - Dispensed Items by GP and Pharmacy, September 2019",
-    .category = "open-data", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-record",
-    .tags = "\"ckan\",\"datastore\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/datastore_search?resource_id=5ec81ccf-ef37-4563-9fd0-37aa8ae49e84&limit=100&offset=0",
-    .array_path = "result.records",
-    .id_keys = "_id",
-    .interval = 604800,
-    .page_param = "offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nom,nombre,nome,bezeichnung,libelle,label,_id",
-    .description = "CKAN datastore resource 5ec81ccf-ef37-4563-9fd0-37aa8ae49e84 "
-      "(Dispensed Items by GP and Pharmacy, September 2019) from "
-      "dataset Dispensing by Contractor on "
-      "ckan.publishing.service.gov.uk. datastore_search API, offset "
-      "paging, deeper pass beyond batch 64's first 60/portal." },
 
   { .id = "JO65_CKANDS_83A65472C9", .name = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2022",
     .name_ja = "dados.prefeitura.sp.gov.br - Dados do SP156 - 3º TRI 2022",

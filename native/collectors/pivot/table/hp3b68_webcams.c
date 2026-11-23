@@ -1633,7 +1633,7 @@ static const hp_source HP3B68_WEBCAMS[] = {
     .record_type = "camera-location",
     .tags = "\"webcam\",\"camera\",\"traffic\",\"lyon\",\"grandlyon\",\"open-data\",\"france\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.grandlyon.com/geoserver/metropole-de-lyon/ows?SERVICE=WFS&VERSION=2.0.0&request=GetFeature&typename=metropole-de-lyon:pvo_patrimoine_voirie.pvocameracriter&outputFormat=application/json&SRSNAME=EPSG:4171&sortBy=gid&startIndex=0&count=1000",
+    .url = "https://data.grandlyon.com/geoserver/metropole-de-lyon/ows?SERVICE=WFS&VERSION=2.0.0&request=GetFeature&typename=metropole-de-lyon:pvo_patrimoine_voirie.pvocameracriter&outputFormat=application/json&SRSNAME=EPSG:4171&sortBy=gid&startIndex=0&count=1000",  /* exhaustive-ok: 15 features, the whole layer in one response (probe 2026-11-16) */
     .array_path = "features",
     .id_keys = "properties.gid",
     .interval = 86400,
