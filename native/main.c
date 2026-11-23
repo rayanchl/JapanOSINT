@@ -351,8 +351,9 @@ int main(int argc, char **argv) {
     if (!strcmp(argv[i], "--list-sources")) {
       const source_def **a = registry_all();
       for (int k = 0; k < registry_count(); k++)
-        printf("%-22s collector=%-12s interval=%d\n",
-               a[k]->id, a[k]->collector, a[k]->update_interval_sec);
+        printf("%-22s collector=%-12s interval=%d kind=%s\n",
+               a[k]->id, a[k]->collector, a[k]->update_interval_sec,
+               source_def_kind_name(source_def_kind_of(a[k])));
       db_close(&db);
       return 0;
     }
@@ -365,7 +366,7 @@ int main(int argc, char **argv) {
       const source_def **a = registry_all();
       sched_policy pol; sched_policy_load(&pol);
       time_t now = time(NULL);
-      printf("id\tcollector\tkind\tdeclared\tadaptive\tmeasured\toverride\t"
+      printf("id\tcollector\tsource_kind\tkind\tdeclared\tadaptive\tmeasured\toverride\t"
              "runs_every\tbasis\tfailures\tlast_run\tnext_due_in\n");
       for (int k = 0; k < registry_count(); k++) {
         const source_def *d = a[k];
@@ -383,8 +384,8 @@ int main(int argc, char **argv) {
                           ? cadence_mode_for_row(d->update_interval_sec, base)
                           : base != d->update_interval_sec ? "measured" : "declared";
         time_t due = sched_next_due(&st, &pol, d, st.last_run);
-        printf("%s\t%s\t%s\t%d\t%d\t%ld\t%ld\t%ld\t%s\t%d\t%ld\t",
-               d->id, d->collector, !sched ? "pivot" : pod ? "pod" : "scheduled",
+        printf("%s\t%s\t%s\t%s\t%d\t%d\t%ld\t%ld\t%ld\t%s\t%d\t%ld\t",
+               d->id, d->collector, source_def_kind_name(source_def_kind_of(d)), pod ? "pod" : !sched ? "pivot" : "scheduled",
                d->update_interval_sec, d->adaptive_interval, st.freshness_interval,
                ov, sched_next_delay(&st, &pol, d), basis,
                st.consecutive_failures, (long)st.last_run);

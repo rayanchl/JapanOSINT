@@ -28,7 +28,10 @@ import sys
 import tempfile
 
 # `--list-sources` line, as audit_registry_emit always parsed it.
-LIST = re.compile(r"^(\S+)\s+collector=(\S+)\s+interval=(-?\d+)\s*$")
+# `kind=` is the source's DECLARED kind (feed|pivot|pod|probe, source.h
+# source_def_kind). Older binaries print no kind, so it is optional.
+LIST = re.compile(r"^(\S+)\s+collector=(\S+)\s+interval=(-?\d+)(?:\s+kind=(\w+))?\s*$")
+KIND = {}                      # id -> declared kind, filled by parse_list_sources()
 
 
 def unlink_db(path):
@@ -76,6 +79,8 @@ def parse_list_sources(text):
         m = LIST.match(line.rstrip())
         if m:
             out.append((m.group(1), m.group(2), int(m.group(3))))
+            if m.group(4):
+                KIND[m.group(1)] = m.group(4)
     return out
 
 

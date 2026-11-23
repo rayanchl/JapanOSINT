@@ -41,7 +41,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def breach_corpus_def = {
-  .id = "breach-corpus", .collector = "_breach",
+  .id = "breach-corpus", .collector = "_breach", .kind = SOURCE_KIND_POD,
   .name = "Breach corpus catalog",
   .name_ja = "漏洩カタログ",
   .update_interval_sec = 86400, .run = run,

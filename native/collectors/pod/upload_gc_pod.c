@@ -18,7 +18,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def upload_gc_def = {
-  .id = "upload-gc", .collector = "_maint",
+  .id = "upload-gc", .collector = "_maint", .kind = SOURCE_KIND_POD,
   .name = "Abandoned Upload Reaper",
   .name_ja = "未完了アップロード回収",
   .update_interval_sec = 900, .run = run,

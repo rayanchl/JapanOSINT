@@ -79,7 +79,7 @@ import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from jo_registry import list_sources, checkpoint, warm_template, LIST  # noqa: E402  (one registry/binary helper, OPS-13)
+from jo_registry import list_sources, checkpoint, warm_template, LIST, KIND  # noqa: E402  (one registry/binary helper, OPS-13)
 
 # `[sched] <id> run rc=<rc> records=<n> <ms>ms stored=<s>` — `stored=` is
 # appended after the duration (core/scheduler.c explains why it is not next to
@@ -102,7 +102,15 @@ RUN_NOTICES = re.compile(r"\bnotices=(\d+)")
 # The byte count is already on the run line; printing it turns an opaque
 # class into a ranked list.
 RUN_BYTES = re.compile(r"\bbytes=(\d+) requests=(\d+)")
-# LIST (the --list-sources line) lives in jo_registry now.
+# LIST (the --list-sources line) and KIND (id -> declared kind) live in
+# jo_registry now.
+
+
+def is_pod(src):
+    """A maintenance pod or probe: by declared kind when the binary printed
+    one, else by the legacy '_' collector spelling."""
+    k = KIND.get(src[0])
+    return k in ("pod", "probe") if k else src[1].startswith("_")
 # hpengine's own line, kept because it separates "the upstream had nothing"
 # from "we threw away what it gave us" — a distinction `records=0` cannot make.
 HP_EMIT = re.compile(r"\[hp:[^\]]+\] emitted (\d+) of (\d+) available")
@@ -759,11 +767,11 @@ def main():
         # confusion the EMITS_NOTHING verdict exists to expose. They are
         # reported as POD and not run — listed, so nothing registered hides,
         # and never counted as a finding.
-        pods = [s for s in srcs if s[1].startswith("_")]
-        srcs = [s for s in srcs if not s[1].startswith("_")]
+        pods = [s for s in srcs if is_pod(s)]
+        srcs = [s for s in srcs if not is_pod(s)]
         if pods:
             sys.stderr.write("pods: %d maintenance lane(s) reported POD, not "
-                             "run (collector name starts with '_')\n" % len(pods))
+                             "run (declared kind pod/probe)\n" % len(pods))
         ids = [s[0] for s in srcs]
         if a.resume and a.out:
             done = already_done(a.out)

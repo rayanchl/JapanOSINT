@@ -39,7 +39,7 @@ static size_t sc_app(char *buf, size_t cap, size_t len, const char *fmt, ...) {
 
 source_kind source_kind_of(const source_def *d) {
   if (!d) return SC_KIND_MANUAL;
-  if (d->collector && d->collector[0] == '_') return SC_KIND_POD;
+  if (source_def_is_internal(d)) return SC_KIND_POD;
   /* The ONE pivot rule (source.h), the same one dispatch and the catalogue
    * apply — an index that disagreed with them about what a pivot is would
    * route to services the prompt never lists. */

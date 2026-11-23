@@ -121,6 +121,38 @@ typedef struct source_ctx {
   size_t body_ceiling;
 } source_ctx;
 
+/* WHAT A SOURCE IS, declared instead of encoded in a string prefix.
+ *
+ * A leading '_' in `collector` used to be the only thing that said "this is a
+ * pipeline pod": it picked the scheduler's maintenance lane, exempted the row
+ * from the cadence policy, hid it from the LLM's routing menu, exempted it
+ * from the NEVER-RUNS check and the pivot rule, made the API run routes refuse
+ * it, and made the tools report POD. Behaviour hung off a spelling, and the
+ * cadence policy once forgot the spelling and retimed every pod to six hours.
+ * `kind` is now the declaration; the collector string is a label and a
+ * grouping key and carries no behaviour. Read it ONLY through
+ * source_def_kind_of() (registry.c).
+ *
+ *   FEED   (0, the default) scheduled collection: interval > 0
+ *   PIVOT  an on-demand entity lookup: interval 0 and an entity token
+ *   POD    internal pipeline/maintenance/enrichment/test work: the
+ *          maintenance lane, exempt from the cadence policy, never offered to
+ *          the LLM, never a data source
+ *   PROBE  an on-demand operator tool that touches the network in ways a
+ *          request path must not reach (PORT_SCANNER's raw sockets). Distinct
+ *          from POD because it has no schedule and no lane at all — it is not
+ *          pipeline work — but it shares every POD exemption.
+ *
+ * The enum is named source_def_kind because core/source_card.h already owns
+ * `source_kind` (the index's pivot/scheduled/pod/manual vocabulary, which is
+ * DERIVED from this and from the interval). */
+typedef enum {
+  SOURCE_KIND_FEED = 0,
+  SOURCE_KIND_PIVOT,
+  SOURCE_KIND_POD,
+  SOURCE_KIND_PROBE
+} source_def_kind;
+
 typedef struct source_def {
   const char *id;
   const char *collector;
@@ -170,6 +202,11 @@ typedef struct source_def {
    * cadence. Set from hp_source.adaptive_interval by hp_register; a
    * hand-written source may set it too. */
   int  adaptive_interval;
+  /* See source_def_kind. Left at the default (FEED), the accessor derives
+   * PIVOT or FEED from the interval and entity rule; a POD or PROBE must be
+   * declared. A '_' collector with a kind that is not POD/PROBE (and the
+   * reverse) is a registry KIND-MISMATCH, which `make registry-floor` fails. */
+  source_def_kind kind;
 } source_def;
 
 /* The `category` vocabulary — ONE list, for both registries.
@@ -219,6 +256,17 @@ const source_def  *registry_get(const char *id);
  * hpengine rows took their table's name as collector, and it had always left
  * out the 15 interval-0 {q} rows that named another collector. */
 int                registry_is_entity_pivot(const source_def *d);
+/* THE one accessor for what a source is. The declared kind when it is not the
+ * default; otherwise PIVOT when registry_is_entity_pivot(), else FEED. Every
+ * behavioural decision that used to test collector[0] == '_' reads this. */
+source_def_kind    source_def_kind_of(const source_def *d);
+/* POD or PROBE: internal, not a data source. */
+int                source_def_is_internal(const source_def *d);
+const char        *source_def_kind_name(source_def_kind k);
+/* >0 means a source's `collector` spelling ('_' prefix) and its declared kind
+ * disagree. Reported as "[registry] KIND-MISMATCH id '…'"; registry-floor
+ * fails on it. */
+int                registry_kind_mismatch_count(void);
 /* Index of `id` in registry_all(), or -1. O(1): a hash built once after the
  * constructors (registry.c). */
 int                registry_index(const char *id);

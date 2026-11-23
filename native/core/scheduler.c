@@ -293,7 +293,7 @@ long sched_state_base(const sched_state *st, long declared, int adaptive) {
  * The health backoff (sched_state_apply / sched_state_interval) then works
  * from this figure. An entity pivot (interval 0) passes through untouched. */
 int sched_is_pod(const source_def *d) {
-  return d && d->collector && d->collector[0] == '_';
+  return source_def_is_internal(d);   /* kind POD or PROBE, never the spelling */
 }
 
 long sched_row_interval(const sched_state *st, const source_def *d) {
@@ -891,7 +891,7 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   int requests = http_client_request_count(http);
   /* The host this source really talks to, learned for host-aware dispatch
    * (sched_host_learn): the registry cannot know it for a bespoke collector. */
-  if (!entity && hosts > 0 && d->collector && d->collector[0] != '_') {
+  if (!entity && hosts > 0 && d->collector && !source_def_is_internal(d)) {
     const char *h0 = http_client_host_at(http, 0, NULL, NULL);
     if (h0) sched_host_learn(d, h0);
   }
@@ -921,7 +921,7 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   }
   const char *run_why = NULL;
   const char *run_st = run_status(rc, cs.n, hosts, hosts_ok, &run_why);
-  int real_collector = d->collector && d->collector[0] != '_';
+  int real_collector = d->collector && !source_def_is_internal(d);
   /* `cs.n == 0 && cs.notices == 0` is "the run left NOTHING behind", which is
    * also what excludes every hpengine row without naming one: the engine's own
    * collector-fetch-failure is emitted through this same sink and counts into
@@ -1115,7 +1115,7 @@ static int sched_row_benched(db_handle *db, const char *id) {
  * queue; N workers run them. A slow source now occupies one of N slots
  * instead of the whole fleet.
  *
- * TWO LANES. The internal pods (collector id starting with '_': _maint,
+ * TWO LANES. The internal pods (kind POD or PROBE; collectors _maint,
  * _enrich, _breach, …) used to share those N workers and the one priority set
  * with the collectors. So the WAL checkpoint — the pod that exists BECAUSE
  * writes are heavy — waited behind collectors exactly when writes were

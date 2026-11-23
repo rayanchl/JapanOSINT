@@ -81,7 +81,7 @@ static int reg_key_cmp(const void *k, const void *e) {
   return strcmp((const char *)k, ((const reg_ent *)e)->d->id);
 }
 static const char *derive_kind(const source_def *d) {
-  if (d->collector && d->collector[0] == '_') return "internal";
+  if (source_def_is_internal(d)) return "internal";
   int hp = d->engine && !strcmp(d->engine, "hpengine");
   int uses = hp ? hp_source_uses_entity(d->id) : (d->update_interval_sec == 0);
   if (d->update_interval_sec > 0) return uses ? "scheduled-pivot" : "scheduled";
@@ -1455,6 +1455,8 @@ char *sourceapi_detail(db_handle *db, const char *id) {
   add_str_or_null(reg, "type", (m && m->type) ? m->type : d->type);
   cJSON_AddStringToObject(reg, "engine", engine_of(d));
   cJSON_AddStringToObject(reg, "kind", e ? e->kind : derive_kind(d));
+  /* the DECLARED source kind (feed|pivot|pod|probe, source.h); additive */
+  cJSON_AddStringToObject(reg, "sourceKind", source_def_kind_name(source_def_kind_of(d)));
   cJSON_AddNumberToObject(reg, "interval", d->update_interval_sec);
   add_str_or_null(reg, "url", (m && m->url) ? m->url : d->url);
   add_str_or_null(reg, "host", e ? e->host : NULL);

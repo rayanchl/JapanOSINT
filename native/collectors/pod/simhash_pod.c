@@ -20,7 +20,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def simhash_def = {
-  .id = "simhash-backfill", .collector = "_maint",
+  .id = "simhash-backfill", .collector = "_maint", .kind = SOURCE_KIND_POD,
   .name = "Near-Duplicate Fingerprint Backfill",
   .name_ja = "近似重複フィンガープリント補完",
   .update_interval_sec = 300, .run = run,

@@ -252,7 +252,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def entity_vec_pod_def = {
-  .id = EVEC_SID, .collector = "_maint",
+  .id = EVEC_SID, .collector = "_maint", .kind = SOURCE_KIND_POD,
   .name = "Entity Name Index",
   .name_ja = "エンティティ名ベクトル索引",
   .description = "Embeds each entity's canonical name and romaji reading so the "

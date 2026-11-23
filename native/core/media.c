@@ -2335,7 +2335,7 @@ static int pod_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def media_def = {
-  .id = "media-analyze", .collector = "_enrich",
+  .id = "media-analyze", .collector = "_enrich", .kind = SOURCE_KIND_POD,
   .name = "Media Analysis (EXIF / pHash / OCR)",
   .name_ja = "メディア解析（EXIF・知覚ハッシュ・OCR）",
   .update_interval_sec = 900, .run = pod_run,

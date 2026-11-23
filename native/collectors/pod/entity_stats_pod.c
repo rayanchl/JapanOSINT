@@ -22,7 +22,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def entity_stats_def = {
-  .id = "entity-stats", .collector = "_maint",
+  .id = "entity-stats", .collector = "_maint", .kind = SOURCE_KIND_POD,
   .name = "Entity Correlation Scoring",
   .name_ja = "エンティティ相関スコア",
   .update_interval_sec = 900, .run = run,

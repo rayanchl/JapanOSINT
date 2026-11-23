@@ -49,7 +49,7 @@ History: `docs/history/rule2-exhaustiveness-and-paging.md`.
 `hp_run` reaches a row two ways: an entity token (`{q}`, `{qd}`, `{qh}`, ...) in URL/body (entity pivot), or `interval > 0` (scheduled). A static URL with interval 0 never runs.
 
 - Converting a scheduled row to a pivot needs `interval = 0` plus a `{q` token; no collector relabel. `registry_is_entity_pivot()` in `native/registry.c` is the one rule (dispatcher and `service_vec` share it).
-- `make registry-floor` fails on `NEVER-RUNS` rows; maintenance lanes use a `_` collector name (`PORT_SCANNER` is `_probe` deliberately).
+- `make registry-floor` fails on `NEVER-RUNS` and `KIND-MISMATCH` rows. What a source IS is the explicit `.kind` (`SOURCE_KIND_FEED|PIVOT|POD|PROBE`, read only via `source_def_kind_of()`); never test the collector's `_` prefix for behaviour (pods and `PORT_SCANNER` declare POD/PROBE; a `_` collector must match).
 - Check: `python3 native/tools/audit_batch_reachable.py docs/candidate-sources-batch*.txt`.
 - `osint_lookup()` resolves a unique case-fold match; an ambiguous fold is refused. Dispatch resolves a misspelling to the nearest entity pivot only.
 - Every source self-registers (`REGISTER_SOURCE` or `HP_REGISTER_TABLE`); there is no separate "service" type. A row with no `.url` is rejected at registration (named on stderr); `index_url` rows still need one.
@@ -183,7 +183,7 @@ Every source declares `update_interval_sec`; one operator policy (`core/cadence.
 
 - `sched_row_interval()` is the one composition: per-source override (`core/source_interval.{c,h}`, `/api/sources/:id/interval`, settings key `interval_sec`) > `cadence_apply(sched_state_base(...))` (measured freshness inside, policy outside). Entity pivots (interval 0) are never touched.
 - Rows with `adaptive_interval=1` are re-bucketed from the newest `published_at` after a run that worked; a refused fetch changes nothing.
-- `sched_next_due()` is the one next-due function; `./bin/japanosint --schedule` prints it. Maintenance pods (`_` collector) are exempt from the policy. A row the queue has no room for stays due. Real-time feeds (`wolfx-eew`, `jma-tsunami`) are held at the policy until given their own interval.
+- `sched_next_due()` is the one next-due function; `./bin/japanosint --schedule` prints it. Maintenance pods (kind POD) are exempt from the policy. A row the queue has no room for stays due. Real-time feeds (`wolfx-eew`, `jma-tsunami`) are held at the policy until given their own interval.
 
 History: `docs/history/cadence-and-scheduling.md`.
 

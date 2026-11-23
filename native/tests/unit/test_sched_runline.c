@@ -143,7 +143,7 @@ static const source_def D_ANSEMPTY = { .id = "UNIT_RL_ANSEMPTY", .collector = "u
   .name = "unit", .update_interval_sec = 3600, .run = run_answered_then_empty };
 /* A maintenance pod writes its own tables and nothing to intel_items by
  * design, so it must never be told it failed to fetch. */
-static const source_def D_POD = { .id = "UNIT_RL_POD", .collector = "_maint",
+static const source_def D_POD = { .id = "UNIT_RL_POD", .collector = "_maint", .kind = SOURCE_KIND_POD,
   .name = "unit", .update_interval_sec = 3600, .run = run_silent_fail };
 
 static const source_def D_COLLIDE = { .id = "UNIT_RL_COLLIDE", .collector = "unit",

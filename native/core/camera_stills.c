@@ -2196,7 +2196,7 @@ static int pod_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def camera_stills_def = {
-  .id = CAM_STILLS_SID, .collector = "_maint",
+  .id = CAM_STILLS_SID, .collector = "_maint", .kind = SOURCE_KIND_POD,
   .name = "Camera Stills (scheduled snapshots)",
   .name_ja = "カメラ静止画（定期取得）",
   .update_interval_sec = 300, .run = pod_run,

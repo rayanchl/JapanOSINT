@@ -332,7 +332,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 static const source_def camera_refframe_def = {
   .id = "_camera_refframe",           /* = CAM_REFFRAME_SID; a literal so
                                        * tools/lint_sources.py can count it */
-  .collector = "_maint",
+  .collector = "_maint", .kind = SOURCE_KIND_POD,
   .name = "Camera Reference Frames",
   .name_ja = "カメラ参照フレーム",
   .description = "Fetches ONE reference image per public-infrastructure camera "

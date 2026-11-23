@@ -1016,9 +1016,9 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
   /* Stage 0+1, exactly as scheduler_run_source() does it: log the run and let
    * the breaker see it. Without this a pivot source could fail every time and
    * never be benched, because the only code path that writes fetch_log was the
-   * scheduler's. Same '_' guard — internal pods emit nothing and would trip
+   * scheduler's. Same internal-kind guard — internal pods emit nothing and would trip
    * duration_outlier on their own LLM calls. */
-  if (db && def->collector && def->collector[0] != '_') {
+  if (db && def->collector && !source_def_is_internal(def)) {
     const char *why = NULL;
     const char *status = dispatch_run_status(rc, ds.n_emit, hosts, hosts_ok, &why);
     long flid = fetch_log_write(db, def->id, status, ds.n_emit, duration_ms, why);

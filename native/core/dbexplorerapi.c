@@ -191,7 +191,7 @@ char *dbexplorer_scheduler(db_handle *db) {
   const source_def **all=registry_all();
   for (int i=0,n=registry_count();i<n;i++){
     const source_def *d=all[i];
-    if (!d||!d->collector||d->collector[0]!='_'||d->update_interval_sec<=0) continue;
+    if (!d||source_def_kind_of(d)!=SOURCE_KIND_POD||d->update_interval_sec<=0) continue;
     cJSON *j=cJSON_CreateObject();
     char every[48]; snprintf(every,sizeof every,"every %ld s",(long)d->update_interval_sec);
     cJSON_AddStringToObject(j,"id",d->id);

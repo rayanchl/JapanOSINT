@@ -275,7 +275,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def retention_def = {
-  .id = "log-retention", .collector = "_maint",
+  .id = "log-retention", .collector = "_maint", .kind = SOURCE_KIND_POD,
   .name = "Operational Log Retention (fetch_log, anomalies, alert deliveries)",
   .name_ja = "運用ログの保持期間管理",
   .update_interval_sec = 3600, .run = run,

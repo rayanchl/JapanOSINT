@@ -4,7 +4,7 @@
 
 Every variable the native tree reads, found by a static scan of `core/`, `lib/`, `collectors/`, `main.c` and `registry.c` for `getenv("NAME")` and the `env_int`/`env_long`/`env_ll`/`env_double`/`env_days`/`env_pos`/`env_nonempty`/`env_truthy`/`env_str`/`jo_env`/`sanc_env_int` helpers. **Default** is shown only where the call site spells a literal (a blank means the default is computed, handled by the caller, or the variable is optional). Names assembled at runtime are not seen by a text scan.
 
-467 variables. A first-boot subset, with example values, is in `.env.example`.
+474 variables. A first-boot subset, with example values, is in `.env.example`.
 
 | Variable | Default | Read in |
 | --- | --- | --- |
@@ -192,7 +192,6 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_FIRST_MAX_PAGES` |  | `collectors/sources/cert_first_teams.c` |
 | `JO_FLEET_CACHE_SEC` |  | `core/httpd.c` |
 | `JO_FTS_REBUILD` |  | `core/fts_schema.c` |
-| `JO_GEOJSON_PAGE_MAX` |  | `lib/geojson.c` |
 | `JO_GIOS_STATIONS` |  | `collectors/sources/eni_gios_poland_air.c` |
 | `JO_GOVINFO_PAGE_MAX` |  | `collectors/sources/sanc_govinfo_uscourts.c` |
 | `JO_HEXPM_PAGE_MAX` |  | `collectors/sources/soc_package_search.c` |
@@ -268,7 +267,10 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_SANC_OS_MB` | `12` | `collectors/sources/sanc_common.inc` |
 | `JO_SANC_SDN_TAIL_MB` | `48` | `collectors/sources/sanc_ofac_sdn_advanced.c` |
 | `JO_SCHED_BACKOFF_CAP_SEC` | `86400` | `core/scheduler.c` |
+| `JO_SCHED_CANCEL_MAX_SEC` | `900` | `core/scheduler.c` |
 | `JO_SCHED_DEADLINE_SEC` | `300` | `core/scheduler.c` |
+| `JO_SCHED_HOST_INFLIGHT` | `2` | `core/scheduler.c` |
+| `JO_SCHED_HOST_SKIP_MAX` | `1000` | `core/scheduler.c` |
 | `JO_SCHED_INTERVAL_SEC` |  | `core/cadence.c` |
 | `JO_SCHED_MAINT_WORKERS` | `2` | `core/scheduler.c` |
 | `JO_SCHED_MAX_INTERVAL_SEC` |  | `core/cadence.c` |
@@ -276,11 +278,16 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_SCHED_QUARANTINE_AFTER` | `12` | `core/scheduler.c` |
 | `JO_SCHED_QUARANTINE_PROBE_SEC` |  | `core/scheduler.c` |
 | `JO_SCHED_RAMP_SEC` | `900` | `core/scheduler.c` |
+| `JO_SCHED_REALTIME_MAX_SEC` |  | `core/cadence.c` |
 | `JO_SCHED_STAGGER_SEC` | `3` | `core/scheduler.c` |
-| `JO_SCHED_WORKERS` | `8` | `core/scheduler.c` |
+| `JO_SCHED_WORKERS` | `24` | `core/scheduler.c` |
 | `JO_SCHEMA` |  | `core/db.c` |
 | `JO_SENSORCOMMUNITY_MAX` |  | `collectors/sources/eni_sensor_community_air.c` |
 | `JO_SHAPE_NOTICES` |  | `lib/osintemit.h` |
+| `JO_SINK_BATCH` | `200` | `core/intel.c` |
+| `JO_SINK_BATCH_BYTES` |  | `core/intel.c` |
+| `JO_SINK_BATCH_MS` | `500` | `core/intel.c` |
+| `JO_SINK_TRACE` |  | `core/intel.c` |
 | `JO_SMTP_FROM` |  | `core/alert_deliver.c` |
 | `JO_SMTP_PASS` |  | `core/alert_deliver.c` |
 | `JO_SMTP_URL` |  | `core/alert_deliver.c` |
