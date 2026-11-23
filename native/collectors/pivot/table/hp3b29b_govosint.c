@@ -260,7 +260,8 @@ static const hp_source HP3B29B_GOVOSINT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://datahub.austintexas.gov/resource/58ix-34ma.json?$select=:*,*&$order=:id&$limit=5000",
     .date_keys = "registration_date",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 329 of 329; the dataset's own rowIdentifier column, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "registrant_id",
     .interval = 604800,
     .page_max = 3,
     .page_param = "$offset",
@@ -329,7 +330,8 @@ static const hp_source HP3B29B_GOVOSINT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.edmonton.ca/resource/3dkh-9hnu.json?$select=:*,*&$order=:id&$limit=5000",
     .date_keys = "date_of_meeting",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 758 of 758; the dataset has no id column, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "organization+date_of_meeting+who_was_met_with",
     .interval = 604800,
     .page_max = 3,
     .page_param = "$offset",
@@ -438,7 +440,8 @@ static const hp_source HP3B29B_GOVOSINT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://hicscdata.hawaii.gov/resource/yf4f-x3r4.json?$select=:*,*&$order=:id&$limit=5000",
     .date_keys = "date",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 6,664 of 6,664; loan_id alone 3,812, one row per loan event, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "loan_id+date",
     .interval = 604800,
     .page_max = 4,
     .page_param = "$offset",
@@ -491,7 +494,8 @@ static const hp_source HP3B29B_GOVOSINT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://datahub.austintexas.gov/resource/b2pc-2s8n.json?$select=:*,*&$order=:id&$limit=5000",
     .date_keys = "date_filed",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 900 of 900, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "report_id",
     .interval = 604800,
     .page_max = 3,
     .page_param = "$offset",
@@ -508,7 +512,8 @@ static const hp_source HP3B29B_GOVOSINT[] = {
     .tags = "\"us\",\"dallas\",\"texas\",\"campaign-finance\",\"socrata\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.dallasopendata.com/resource/ndxz-gccx.json?$select=:*,*&$order=:id&$limit=5000",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 10,588 of 10,588; the dataset's own rowIdentifier column, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "id",
     .interval = 604800,
     .page_max = 4,
     .page_param = "$offset",
@@ -601,7 +606,8 @@ static const hp_source HP3B29B_GOVOSINT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.oaklandca.gov/resource/ub5g-m92u.json?$select=:*,*&$order=:id&$limit=5000",
     .date_keys = "expn_date",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 548 = the distinct whole records of 550; tran_id+filer_id only 538, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "tran_id+filer_naml",
     .interval = 604800,
     .page_max = 3,
     .page_param = "$offset",
@@ -620,7 +626,8 @@ static const hp_source HP3B29B_GOVOSINT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.oaklandca.gov/resource/ba44-jqtm.json?$select=:*,*&$order=:id&$limit=5000",
     .date_keys = "tran_date",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 875 = the distinct whole records of 911, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "filer_id+tran_id+rpt_date",
     .interval = 604800,
     .page_max = 3,
     .page_param = "$offset",
@@ -924,7 +931,8 @@ static const hp_source HP3B29B_GOVOSINT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.winnipeg.ca/resource/pfbi-rm6v.json?$select=:*,*&$order=:id&$limit=5000",
     .date_keys = "received",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 16,188 = the distinct whole records of 16,191, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "fippa_number",
     .interval = 604800,
     .page_max = 5,
     .page_param = "$offset",

@@ -48,7 +48,8 @@ static const hp_source HP3B22_BREACHCAT[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.wa.gov/resource/padd-mby7.json?$select=:*,*&$limit=50000&$order=:id",
     .date_keys = "dateaware",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 7,595 = the distinct whole records of 7,628; id alone is the breach, 1,689, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "id+informationtype",
     .interval = 604800,
     .title_keys = "name",
     .description = "The Washington AG breach register keyed to the type of personal "

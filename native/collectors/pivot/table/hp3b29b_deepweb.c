@@ -137,7 +137,8 @@ static const hp_source HP3B29B_DEEPWEB[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.data.act.gov.au/resource/de4w-gbt3.json?$select=:*,*&$order=:id&$limit=5000",
     .date_keys = "expiry_date",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 32,111 of 32,111; the licence number alone 23,362, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "cola_licence_number+class+occupation",
     .interval = 604800,
     .page_max = 9,
     .page_param = "$offset",
@@ -156,7 +157,8 @@ static const hp_source HP3B29B_DEEPWEB[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.data.act.gov.au/resource/piuu-cqvu.json?$select=:*,*&$order=:id&$limit=5000",
     .date_keys = "periodstart",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 1,046 of 1,046, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "identifier",
     .interval = 604800,
     .page_max = 3,
     .page_param = "$offset",
@@ -194,7 +196,8 @@ static const hp_source HP3B29B_DEEPWEB[] = {
     .tags = "\"us\",\"newyork\",\"tobacco\",\"vapor\",\"retail\",\"registry\",\"socrata\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.ny.gov/resource/55xf-9jat.json?$select=:*,*&$order=:id&$limit=5000",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 22,587 of 22,587, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "cor_id+cor_seq_nmbr+cig_vape",
     .interval = 604800,
     .page_max = 7,
     .page_param = "$offset",
@@ -212,7 +215,8 @@ static const hp_source HP3B29B_DEEPWEB[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.ny.gov/resource/i4jv-zkey.json?$select=:*,*&$order=:id&$limit=5000",
     .date_keys = "issued_date",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 15,241 of 15,241, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "certificate_number",
     .interval = 604800,
     .page_max = 5,
     .page_param = "$offset",
@@ -231,7 +235,8 @@ static const hp_source HP3B29B_DEEPWEB[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.ny.gov/resource/f8i8-k2gm.json?$select=:*,*&$order=:id&$limit=5000",
     .date_keys = "received_date",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 3,064 of 3,064, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "application_id",
     .interval = 86400,
     .page_max = 3,
     .page_param = "$offset",
@@ -381,7 +386,8 @@ static const hp_source HP3B29B_DEEPWEB[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.texas.gov/resource/inib-aewu.json?$select=:*,*&$order=:id&$limit=5000",
     .date_keys = "signed_date",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 1,606 of 1,606; order_number_str alone 927, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "order_name+order_number_str",
     .interval = 604800,
     .page_max = 3,
     .page_param = "$offset",

@@ -14,3 +14,4 @@ JO57_Q387136_2	hp3b57_jpmuni.c	https://www.city.kawaguchi.lg.jp/cgi-bin/feed.php
 JO48_NEWS_Q18712763_5	hp3b48_news.c	https://www.archdaily.com/br/feed	same global feed as JO48_NEWS_Q18712763 (all three 301 to feeds.feedburner.com/Archdaily; 200/29015 bytes/24 items for cl, br and an impossible zz)
 JO48_NEWS_Q18712763_7	hp3b48_news.c	https://www.archdaily.com/cn/feed	same global feed as JO48_NEWS_Q18712763 (all three 301 to feeds.feedburner.com/Archdaily; 200/29015 bytes/24 items for cl, br and an impossible zz)
 JPOD_DATAGOJP_INDEX	hp3b24_jpbulk.c	https://www.data.go.jp/data/api/3/action/package_list	301s to data.e-gov.go.jp package_list, the read JP25_JPNATGOV_EGOV_CKAN_LIST already makes (same array_path, same id_keys); 18,836 ids either way
+cyb-wa-breaches-pi	vsrc_threat_intel_2.c	https://data.wa.gov/resource/padd-mby7.json	same dataset as WA_DATA_BREACH_PERSONAL_INFO, which reads all 7,628 rows; this row read the first 2,000

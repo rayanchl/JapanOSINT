@@ -348,7 +348,8 @@ static const hp_source HP3B19_USSTATE[] = {
     .tags = "\"us\",\"newyork\",\"oil\",\"gas\",\"drilling\",\"wells\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.ny.gov/resource/szye-wmt3.json?$limit=1000&$select=*,:id&$order=:id",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 47,499 of 47,499, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "api_well_number",
     .interval = 86400,
     .lat_key = "surface_latitude",
     .lon_key = "surface_longitude",
@@ -1737,7 +1738,8 @@ static const hp_source HP3B19_USSTATE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.oregon.gov/resource/g77e-6bhs.json?$limit=1000&$select=*,:id&$order=:id",
     .date_keys = "orig_regis_date",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 56,688 of 56,688; license_number alone 45,853, one row per endorsement, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "license_number+endorsement_text",
     .interval = 86400,
     .page_param = "$offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */

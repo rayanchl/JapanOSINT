@@ -934,7 +934,8 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .tags = "\"rail\",\"usa\",\"fra\",\"crossing\",\"accident\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.transportation.gov/resource/uwah-u9bn.json?$limit=1000&$select=*,:id&$order=:id",
-    .id_keys = ":id",
+    /* id_keys MEASURED 2026-11-16 over the WHOLE dataset: 12,537 of 12,537; reportkey alone 12,536, no row missing a field. Was ":id": this dataset is replaced wholesale and a replace mints a new :id for every row (observed 500 of 500 on WA contractor insurance, 2026-11-15), so the row re-stored its whole dataset at each refresh. docs/socrata-semantic-keys-2026-11-16.tsv */
+    .id_keys = "reportkey+gradecrossingid",
     .interval = 86400,
     .page_param = "$offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
