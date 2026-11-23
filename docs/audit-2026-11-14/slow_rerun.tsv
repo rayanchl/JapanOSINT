@@ -1,0 +1,93 @@
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+jp-peeringdb-fac-country-depth1	OK	0	0	114	116	114	114	123.1	
+uk-tfl-line-route-all	OK	0	0	725	726	725	725	128.9	
+eu-eib-projects-list	OK	0	0	2000	2002	2000	2000	134.9	
+pl-bzp-board-search	OK	0	0	192	193	192	192	45.6	
+cordis-search-results-query	OK	0	0	7845	7846	7845	7845	211.0	
+global-peeringdb-org-list	OK	0	0	200	202	200	200	121.6	
+global-peeringdb-netfac-by-fac	OK	0	0	100	102	100	100	131.0	
+us-legistar-seattle-events	OK	0	0	1000	1002	1000	1000	126.2	
+uk-govuk-search-raib-reports	OK	0	0	605	606	605	605	123.6	
+dportal-iati-bf	COLLISION	0	0	9854	9853	9852	9854	136.5	2 of 9854 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+bh-national-exports-2025	OK	0	0	19901	19902	19901	19901	150.0	
+dportal-iati-bj	COLLISION	0	0	5930	5930	5929	5930	129.9	1 of 5930 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dportal-act-bw	OK	0	0	2882	2883	2882	2882	123.2	
+undp-projects-cd	OK	0	0	311	311	311	311	92.4	
+dportal-iati-cd	COLLISION	0	0	16586	16584	16583	16586	156.6	3 of 16586 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+dportal-iati-ci	COLLISION	0	0	6006	6006	6005	6006	131.1	1 of 6006 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+dportal-iati-cm	COLLISION	0	0	7212	7212	7211	7212	133.3	1 of 7212 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+dportal-iati-dz	OK	0	0	2279	2280	2279	2279	123.7	
+af-dportal-trans-bw	SLOW	-25	0	-1	-1	85548	-1	318.5	no [sched] line — the process was killed before the run returned, but the database holds 85548 rows for it, so it was working: unmeasured, not failed
+dportal-iati-eg	OK	0	0	8207	8208	8207	8207	128.6	
+af-dportal-act-et	COLLISION	0	0	22733	22732	22731	22733	143.3	2 of 22733 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dportal-act-gh	COLLISION	0	0	10589	10583	10582	10589	129.3	7 of 10589 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+il-knesset-agenda	OK	0	0	200	201	200	200	41.4	
+il-knesset-committee-session	FETCH_FAILED	0	0	1	1	0	-1	1.1	HTTP 481 | remedy: re-run; if the status persists the endpoint has moved or retired
+il-knesset-law	OK	0	0	500	501	500	500	96.0	
+af-dportal-trans-et	SLOW	-25	0	-1	-1	91505	-1	229.5	no [sched] line — the process was killed before the run returned, but the database holds 91505 rows for it, so it was working: unmeasured, not failed
+af-dportal-trans-gh	SLOW	-25	0	-1	-1	83449	-1	231.8	no [sched] line — the process was killed before the run returned, but the database holds 83449 rows for it, so it was working: unmeasured, not failed
+af-dportal-act-ke	COLLISION	0	0	26805	26797	26796	26805	142.9	9 of 26805 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-gleif-lei-ke	OK	0	0	311	312	311	311	122.2	
+dportal-iati-ma	OK	0	0	7709	7710	7709	7709	127.7	
+af-dportal-trans-ke	SLOW	-25	0	-1	-1	86786	-1	244.6	no [sched] line — the process was killed before the run returned, but the database holds 86786 rows for it, so it was working: unmeasured, not failed
+dportal-iati-mg	COLLISION	0	0	5918	5916	5915	5918	125.9	3 of 5918 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+dportal-iati-ml	COLLISION	0	0	10935	10935	10934	10935	130.4	1 of 10935 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+dportal-iati-mu	COLLISION	0	0	1277	1277	1276	1277	122.2	1 of 1277 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dportal-act-na	OK	0	0	4494	4495	4494	4494	124.1	
+af-dportal-act-ng	COLLISION	0	0	17434	17428	17427	17434	148.8	7 of 17434 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-gleif-lei-ng	OK	0	0	1020	1021	1020	1020	137.4	
+np-bipad-resource	OK	0	0	1000	1002	1000	1000	127.5	
+af-dportal-trans-na	SLOW	-25	0	-1	-1	83650	-1	327.9	no [sched] line — the process was killed before the run returned, but the database holds 83650 rows for it, so it was working: unmeasured, not failed
+af-dportal-trans-ng	SLOW	-25	0	-1	-1	81936	-1	315.1	no [sched] line — the process was killed before the run returned, but the database holds 81936 rows for it, so it was working: unmeasured, not failed
+af-dportal-act-rw	COLLISION	0	0	9279	9279	9278	9279	127.3	1 of 9279 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+dportal-iati-sn	OK	0	0	8860	8861	8860	8860	128.6	
+dportal-iati-tn	COLLISION	0	0	6679	6679	6678	6679	125.8	1 of 6679 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dportal-act-tz	COLLISION	0	0	18398	18387	18386	18398	133.2	12 of 18398 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dportal-trans-rw	SLOW	-25	0	-1	-1	79836	-1	222.6	no [sched] line — the process was killed before the run returned, but the database holds 79836 rows for it, so it was working: unmeasured, not failed
+af-dportal-act-ug	COLLISION	0	0	20981	20972	20971	20981	137.2	10 of 20981 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dportal-act-za	COLLISION	0	0	13265	13256	13255	13265	130.9	10 of 13265 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dportal-trans-tz	SLOW	-25	0	-1	-1	90133	-1	234.8	no [sched] line — the process was killed before the run returned, but the database holds 90133 rows for it, so it was working: unmeasured, not failed
+af-dportal-trans-ug	SLOW	-25	0	-1	-1	84999	-1	213.7	no [sched] line — the process was killed before the run returned, but the database holds 84999 rows for it, so it was working: unmeasured, not failed
+af-gleif-lei-za	OK	0	0	2000	2002	2000	2000	130.9	
+af-pmg-gazettes	COLLISION	0	0	411	411	410	411	121.9	1 of 411 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dportal-trans-za	SLOW	-25	0	-1	-1	88417	-1	211.8	no [sched] line — the process was killed before the run returned, but the database holds 88417 rows for it, so it was working: unmeasured, not failed
+af-pmg-policy-documents	COLLISION	0	0	1270	1257	1256	1270	128.0	14 of 1270 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sci-stac-dlr-s5p-tropomi-l3-p1d-cot	OK	0	0	3552	3552	3552	-1	56.8	
+af-dportal-act-zm	COLLISION	0	0	11686	11686	11685	11686	128.3	1 of 11686 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+hr-data-zagreb-hr-org-grad-zagreb	OK	0	0	200	200	200	-1	31.9	
+fi-digitraffic-road-maintenance-tracking	OK	0	0	94010	94010	94010	-1	25.7	
+sec-ntad-ferry-routes	OK	0	0	964	964	964	-1	6.7	
+sg-acra-corp-c	OK	0	0	20000	20001	20000	-1	119.9	
+WORLDBANK_INDICATOR_CATALOGUE	OK	0	0	4500	4501	4500	4500	11.8	
+af-dportal-trans-zm	SLOW	-25	0	-1	-1	90552	-1	262.4	no [sched] line — the process was killed before the run returned, but the database holds 90552 rows for it, so it was working: unmeasured, not failed
+lat-wp-dpi-gy	OK	0	0	1000	1001	1000	-1	338.5	
+HOT_TASKING_MANAGER_PROJECTS	OK	0	0	863	864	863	863	127.4	
+CW_VACATURES	OK	0	0	407	408	407	407	153.0	
+OCEANOPS_OCEANGLIDERS	OK	0	0	4059	4060	4059	4059	122.7	
+SCIELO_ISSUES_BR	OK	0	0	2000	2002	2000	2000	126.5	
+P2PQUAKE_JMA_QUAKE	OK	0	0	2000	2001	2000	2000	116.4	
+CAIDA_ASRANK_ORG	SLOW	-1	0	-1	-1	36000	-1	400.1	hit --timeout 400.1s; 36000 rows already stored
+JO32_ARC_HYOGO_ACC	SLOW	-25	0	-1	-1	145117	-1	112.7	no [sched] line — the process was killed before the run returned, but the database holds 145117 rows for it, so it was working: unmeasured, not failed
+EU_EP_OPENDATA_DOCUMENTS	OK	0	0	100	101	100	100	146.3	
+PACKAGIST_ALL_PACKAGE_NAMES	SLOW	-25	0	-1	-1	206335	-1	44.0	no [sched] line — the process was killed before the run returned, but the database holds 206335 rows for it, so it was working: unmeasured, not failed
+CH_OPENDATASWISS	OK	0	0	10000	10001	10000	10000	160.0	
+CA_ALBERTA	OK	0	0	32900	32901	32900	32900	188.3	
+JP25_JPARCH_KURENAI_OAI	SLOW	-1	0	-1	-1	54000	-1	400.1	hit --timeout 400.1s; 54000 rows already stored
+JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU	SLOW	-1	0	-1	-1	32000	-1	400.1	hit --timeout 400.1s; 32000 rows already stored
+JO40_JPNAT_TEIKOKU_GIKAI_REPRESENTATIVES	OK	0	0	1100	1101	1100	1100	49.3	
+JO40_JPNAT_TEIKOKU_GIKAI_PEERS	OK	0	0	8915	8915	8915	8915	220.5	
+JO41_WP_CITY_473014	OK	0	0	2956	2956	2956	2956	166.4	
+JO40_CNMKT_CSRC_LICENSING_RESULTS	SLOW	-1	0	-1	-1	8040	-1	400.1	hit --timeout 400.1s; 8040 rows already stored
+JO45_WP_JCER_POSTS	OK	0	0	5202	5202	5202	5202	279.7	
+hk-legco-voting-results	OK	0	0	20000	20001	20000	20000	186.1	
+data-centers	FETCH_FAILED	1	-1	1	1	0	-1	133.6	transport timeout; 0 of 4 hosts answered; silent: overpass-api.de, overpass.kumi.systems, overpass.openstreetmap.ru, overpass.priv; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+socrata-sf-business-registrations	SLOW	-25	0	-1	-1	135097	-1	218.6	no [sched] line — the process was killed before the run returned, but the database holds 135097 rows for it, so it was working: unmeasured, not failed
+hk-legco-hansard-speeches	SLOW	-1	0	-1	-1	9400	-1	400.1	hit --timeout 400.1s; 9400 rows already stored
+cam-worldcam_eu	OK	0	0	494	494	494	-1	270.9	
+fish-markets	FETCH_FAILED	1	-1	1	1	0	-1	133.7	transport timeout; 0 of 4 hosts answered; silent: overpass-api.de, overpass.kumi.systems, overpass.openstreetmap.ru, overpass.priv; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+museums	FETCH_FAILED	1	-1	1	1	0	-1	133.3	transport timeout; 0 of 4 hosts answered; silent: overpass-api.de, overpass.kumi.systems, overpass.openstreetmap.ru, overpass.priv; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+google-my-maps	FETCH_FAILED	1	-1	1	1	0	-1	294.3	TLS handshake; the TLS handshake was refused before any certificate was jud; transport other; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours); 0 of 4 hosts answered; silent: overpass-api.de, overpass.kumi.systems, overpass.openstreetmap.ru, overpass.priv; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+hazard-map-portal	FETCH_FAILED	1	-1	1	1	0	-1	267.0	transport none recorded; 0 of 4 hosts answered; silent: overpass-api.de, overpass.kumi.systems, overpass.openstreetmap.ru, overpass.priv; 695 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+public-cameras	FETCH_FAILED	1	-1	1	1	0	-1	133.6	transport timeout; 0 of 4 hosts answered; silent: overpass-api.de, overpass.kumi.systems, overpass.openstreetmap.ru, overpass.priv; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+npa-traffic-accidents	OK	0	0	167657	167657	167657	-1	227.9	
+wineries-craftbeer	FETCH_FAILED	1	-1	1	1	0	-1	133.2	transport timeout; 0 of 4 hosts answered; silent: overpass-api.de, overpass.kumi.systems, overpass.openstreetmap.ru, overpass.priv; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h

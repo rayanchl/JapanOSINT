@@ -1,0 +1,24 @@
+group	group_label	collectors	sources
+grp_opendata	Open data portals & statistics	88	25896
+grp_government	Government & public administration	157	24219
+grp_geo	Geospatial & mapping	37	8376
+grp_media	News & media	28	7589
+grp_environment	Environment, climate & hazards	40	6033
+grp_corporate	Companies, finance & markets	82	5428
+grp_health	Health, food & agriculture	36	4464
+grp_science	Science, research & academia	28	3902
+grp_education	Education & schools	7	2967
+grp_transport	Transport, aviation & maritime	21	2752
+grp_infrastructure	Infrastructure, energy & utilities	31	2731
+grp_culture	Culture, heritage, libraries & archives	15	2590
+grp_safety	Crime, policing, defense & conflict	24	2400
+grp_legal	Law, courts, legislation & IP	34	2107
+grp_cyber	Cyber threat intelligence & hacking	20	1230
+grp_social	Social, web & communities	11	1152
+grp_osint	Investigation pivots & reference	10	322
+grp_surveillance	Cameras, sensors & exposure	8	313
+grp_telecom	Telecom, networks & signals	9	270
+grp_space	Space & satellites	4	208
+grp_procurement	Procurement, aid & public spending	48	187
+grp_sanctions	Sanctions & compliance	4	73
+grp_internal	Internal pods & tools	3	19
