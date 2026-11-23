@@ -21,7 +21,11 @@ static const double J3OJ2 = -0.00000253881 / 0.001082616;
 double sgp4_jday_epoch(int year, double days) {
   /* Jan 0.0 of `year` (jday of year-1 Dec 31 12h) + days. */
   int y = year - 1;
-  long jd = 1461L * (y + 4800) / 4 + 367L * 1 / 12      /* month=1 */
+  /* Fliegel-Van Flandern for 1 January: the month term is 367*(M-2+12)/12 =
+   * 367*11/12 = 336. It read 367*1/12 = 30 until 2026-11-16, which put every
+   * TLE epoch 306 days early, so every satellite was propagated 306 days too
+   * far (tests/unit/test_sgp4.c, Vallado's reference vectors). */
+  long jd = 1461L * (y + 4800) / 4 + 367L * 11 / 12     /* month=1 */
           - 3L * ((y + 4900) / 100) / 4 + 1 - 32075;    /* day=1 */
   return (double)jd - 0.5 + (days - 1.0);
 }
@@ -307,7 +311,12 @@ void sgp4_geodetic(const double pos[3], double gmst,
     C = 1.0 / sqrt(1.0 - e2 * sin(lat) * sin(lat));
     lat = atan2(pos[2] + a * C * e2 * sin(lat), r);
   }
-  double alt = r / cos(lat) - a * C;
+  /* r/cos(lat) - aC is 0/0 over a pole (it returned -6399 km there). Poleward
+   * of 45 degrees use the equivalent z/sin(lat) - aC(1-e2), which is exact on
+   * the ellipsoid and well conditioned where sin(lat) is large. */
+  double alt = (fabs(lat) > PI / 4)
+             ? pos[2] / sin(lat) - a * C * (1.0 - e2)
+             : r / cos(lat) - a * C;
   *lon_deg = lon / DEG2RAD;
   *lat_deg = lat / DEG2RAD;
   *alt_km = alt;

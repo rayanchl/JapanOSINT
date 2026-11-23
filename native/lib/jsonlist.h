@@ -71,13 +71,12 @@ int jsonlist_emit_ex(intel_sink *sink, const char *source_id, cJSON *doc,
  * `api.dane.gov.pl/1.4/datasets?page=1&per_page=100` answers with
  * `meta.count: 26536` and a `links.next`, and the collector kept 100 of them.
  *
- * This is the JSON-list-shaped ENTRY POINT to lib/pagewalk.c, not a second
- * implementation of it. There is one walk loop in this tree and this is a
- * ~20-line adapter onto it: the continuation rules, the repeat-page guards,
- * the seen-vs-emitted accounting and the truncation disclosure all live in
- * pw_walk(), so a caller that says `jsonlist_emit_paged` and a caller that
- * says `pw_walk` cannot drift apart. Two engines answering the same question
- * differently is how a disclosure becomes a lie.
+ * This is the JSON-list-shaped ENTRY POINT to the paging core in
+ * lib/pagewalk.c (pw_walk_list): the declared total, the next-page decision,
+ * the repeat-page guards, the ceiling, the failed-page ruling and the
+ * truncation notice are decided there, once, for this walk, the GeoJSON walk,
+ * pw_walk and hpengine alike. The jsonlist_* names below are thin aliases of
+ * pw_* functions, kept so no caller changes.
  *
  * Pass the whole document's timeout in `timeout_ms`; every page uses it.
  *

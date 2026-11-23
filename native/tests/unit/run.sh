@@ -78,7 +78,7 @@ prune_orphans() {                       # stdin: object paths, stdout: the live 
 }
 
 under_of() {                            # a test's #included .c, as an object path
-  grep -oE '#include "\.\./\.\./[a-z_/]+\.c"' "$1" |
+  grep -oE '#include "\.\./\.\./[a-z0-9_/]+\.c"' "$1" |
     head -1 | sed 's|#include "../../||; s|"$||; s|\.c$|.o|'
 }
 
