@@ -100,7 +100,18 @@ RUN_NOTICES = re.compile(r"\bnotices=(\d+)")
 # The byte count is already on the run line; printing it turns an opaque
 # class into a ranked list.
 RUN_BYTES = re.compile(r"\bbytes=(\d+) requests=(\d+)")
-LIST = re.compile(r"^(\S+)\s+collector=(\S+)\s+interval=(-?\d+)\s*$")
+# `kind=` is the source's DECLARED kind (feed|pivot|pod|probe, source.h
+# source_def_kind). Older binaries print no kind, so it is optional and the
+# pod test falls back to the collector's '_' spelling.
+LIST = re.compile(r"^(\S+)\s+collector=(\S+)\s+interval=(-?\d+)(?:\s+kind=(\w+))?\s*$")
+KIND = {}                      # id -> declared kind, filled by list_sources()
+
+
+def is_pod(src):
+    """A maintenance pod or probe: by declared kind when the binary printed
+    one, else by the legacy '_' collector spelling."""
+    k = KIND.get(src[0])
+    return k in ("pod", "probe") if k else src[1].startswith("_")
 # hpengine's own line, kept because it separates "the upstream had nothing"
 # from "we threw away what it gave us" — a distinction `records=0` cannot make.
 HP_EMIT = re.compile(r"\[hp:[^\]]+\] emitted (\d+) of (\d+) available")
@@ -146,6 +157,8 @@ def list_sources(binpath, db):
         m = LIST.match(line.rstrip())
         if m:
             out.append((m.group(1), m.group(2), int(m.group(3))))
+            if m.group(4):
+                KIND[m.group(1)] = m.group(4)
     if not out:
         raise SystemExit("--list-sources produced no parseable rows; refusing "
                          "to report on a source list this tool did not get.\n"
@@ -806,11 +819,11 @@ def main():
         # confusion the EMITS_NOTHING verdict exists to expose. They are
         # reported as POD and not run — listed, so nothing registered hides,
         # and never counted as a finding.
-        pods = [s for s in srcs if s[1].startswith("_")]
-        srcs = [s for s in srcs if not s[1].startswith("_")]
+        pods = [s for s in srcs if is_pod(s)]
+        srcs = [s for s in srcs if not is_pod(s)]
         if pods:
             sys.stderr.write("pods: %d maintenance lane(s) reported POD, not "
-                             "run (collector name starts with '_')\n" % len(pods))
+                             "run (declared kind pod/probe)\n" % len(pods))
         ids = [s[0] for s in srcs]
         if a.resume and a.out:
             done = already_done(a.out)

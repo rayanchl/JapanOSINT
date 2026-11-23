@@ -81,7 +81,7 @@ static int reg_key_cmp(const void *k, const void *e) {
   return strcmp((const char *)k, ((const reg_ent *)e)->d->id);
 }
 static const char *derive_kind(const source_def *d) {
-  if (d->collector && d->collector[0] == '_') return "internal";
+  if (source_def_is_internal(d)) return "internal";
   int hp = d->engine && !strcmp(d->engine, "hpengine");
   int uses = hp ? hp_source_uses_entity(d->id) : (d->update_interval_sec == 0);
   if (d->update_interval_sec > 0) return uses ? "scheduled-pivot" : "scheduled";

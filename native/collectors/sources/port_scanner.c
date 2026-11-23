@@ -203,7 +203,7 @@ static int run_ports(const source_ctx *ctx, intel_sink *sink) {
  * certificate is genuine, high-value OSINT, and with hostgate in front of it the
  * residual risk does not justify losing the capability. */
 static const source_def port_scanner_def = {
-  .id = "PORT_SCANNER", .collector = "_probe",
+  .id = "PORT_SCANNER", .collector = "_probe", .kind = SOURCE_KIND_PROBE,
   .name = "Port Scanner", .name_ja = "ポートスキャナ",
   .update_interval_sec = 0, .run = run_ports,
   .category = "cyber", .type = "api",

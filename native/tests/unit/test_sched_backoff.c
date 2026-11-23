@@ -276,7 +276,7 @@ static void test_row_interval_composition(db_handle *db) {
   assert(sched_row_interval(&st, &pivot) == 0);             /* an entity pivot passes through */
   /* a maintenance pod asks no upstream: the collection policy does not
    * stretch the WAL checkpoint or the embedding backfill to the fleet's 6 h */
-  source_def pod = { .id = "UNIT_POD", .collector = "_maint", .update_interval_sec = 120 };
+  source_def pod = { .id = "UNIT_POD", .collector = "_maint", .kind = SOURCE_KIND_POD, .update_interval_sec = 120 };
   assert(sched_is_pod(&pod) && !sched_is_pod(&d));
   assert(sched_row_interval(&st, &pod) == 120);
   assert(cadence_set(db, &none, "test", &err) == 0);        /* leave no policy behind */

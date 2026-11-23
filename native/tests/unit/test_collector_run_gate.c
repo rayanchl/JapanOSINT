@@ -22,7 +22,7 @@ static int fake_run(const source_ctx *ctx, intel_sink *sink) {
   return 0;                                       /* ran, emitted nothing */
 }
 static const source_def k_src = {
-  .id = "test_collector_run_gate_src", .collector = "_test",
+  .id = "test_collector_run_gate_src", .collector = "_test", .kind = SOURCE_KIND_POD,
   .name = "run-gate test source", .run = fake_run, .category = "test",
 };
 

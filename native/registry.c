@@ -82,12 +82,12 @@ static int g_n = 0;
  * Program record lookup, MITRE CWE lookup, two elevation lookups, NASA POWER,
  * Diavgeia by issuing body, and MLIT Kawabou observatory detail.
  *
- * The internal lanes are exempt by the convention source.h documents: a
- * collector beginning with '_' is a pipeline pod or test fixture ("_maint",
- * "_enrich", "_test", "_probe", "_breach"), not a data source, and
- * core/scheduler.c already routes on that prefix. PORT_SCANNER is deliberately
- * "_probe": it opens raw sockets, so keeping it out of the LLM's schema enum is
- * a security decision, not an oversight. */
+ * The internal lanes (pods and probes) are exempt by their declared
+ * `kind` (source.h source_def_kind), not by the spelling of their collector:
+ * the '_' prefix is a label, and index_build() below reports any source whose
+ * spelling and kind disagree as KIND-MISMATCH. PORT_SCANNER is a PROBE: it
+ * opens raw sockets, so keeping it out of the LLM's schema enum is a security
+ * decision, not an oversight. */
 /* The complement of registry_is_entity_pivot() under ONE definition: a row
  * with no interval that is not an internal lane and that no entity can reach
  * — for an hpengine row, a URL/body without an entity token (house rule 3's
@@ -96,13 +96,14 @@ static int g_n = 0;
  * `collector != "osint"` would call 1,864 live pivots dead. */
 static int source_never_runs(const source_def *d) {
   if (!d || d->update_interval_sec > 0) return 0;
+  if (source_def_is_internal(d)) return 0;
   if (!d->collector || !d->collector[0]) return 1;
-  if (d->collector[0] == '_') return 0;
   return !registry_is_entity_pivot(d);
 }
 
 static int g_dupes;
 static int g_dead;
+static int g_kindmm;
 static int     *g_slot;          /* index+1 into g_srcs, 0 = empty          */
 static unsigned g_mask;          /* capacity-1 (capacity is a power of two) */
 static int      g_built;
@@ -154,6 +155,22 @@ static void index_build(void) {
             g_srcs[i]->collector ? g_srcs[i]->collector : "");
     g_dead++;
   }
+  /* The collector's '_' spelling is a LABEL; the kind is the declaration. The
+   * two must agree, so the spelling cannot drift back into carrying
+   * behaviour unseen. This is the one place the prefix is read. */
+  for (int i = 0; i < g_n; i++) {
+    const source_def *d = g_srcs[i];
+    if (!d) continue;
+    int under = d->collector && d->collector[0] == '_';
+    int internal = d->kind == SOURCE_KIND_POD || d->kind == SOURCE_KIND_PROBE;
+    if (under == internal) continue;
+    fprintf(stderr, "[registry] KIND-MISMATCH id '%s' (collector '%s', kind %s)"
+                    " — a '_' collector must declare kind POD or PROBE, and a"
+                    " POD or PROBE must use a '_' collector\n",
+            d->id ? d->id : "?", d->collector ? d->collector : "",
+            source_def_kind_name(d->kind));
+    g_kindmm++;
+  }
   g_built = 1;
 }
 
@@ -172,6 +189,7 @@ void registry_add(const source_def *def) {
 
 int registry_duplicate_count(void) { registry_freeze(); return g_dupes; }
 int registry_never_runs_count(void) { registry_freeze(); return g_dead; }
+int registry_kind_mismatch_count(void) { registry_freeze(); return g_kindmm; }
 int registry_count(void) { return g_n; }
 const source_def **registry_all(void) { return g_srcs; }
 
@@ -196,9 +214,30 @@ const source_def *registry_get(const char *id) {
 }
 
 #include "lib/hpengine.h"
+int source_def_is_internal(const source_def *d) {
+  return d && (d->kind == SOURCE_KIND_POD || d->kind == SOURCE_KIND_PROBE);
+}
+
+const char *source_def_kind_name(source_def_kind k) {
+  switch (k) {
+    case SOURCE_KIND_FEED:  return "feed";
+    case SOURCE_KIND_PIVOT: return "pivot";
+    case SOURCE_KIND_POD:   return "pod";
+    case SOURCE_KIND_PROBE: return "probe";
+  }
+  return "feed";
+}
+
+source_def_kind source_def_kind_of(const source_def *d) {
+  if (!d) return SOURCE_KIND_FEED;
+  if (d->kind != SOURCE_KIND_FEED) return d->kind;
+  return registry_is_entity_pivot(d) ? SOURCE_KIND_PIVOT : SOURCE_KIND_FEED;
+}
+
 int registry_is_entity_pivot(const source_def *d) {
   if (!d || d->update_interval_sec != 0) return 0;
-  if (!d->collector || d->collector[0] == '_') return 0;
+  if (source_def_is_internal(d)) return 0;
+  if (!d->collector) return 0;
   if (d->engine && !strcmp(d->engine, "hpengine"))
     return hp_source_uses_entity(d->id);
   return 1;

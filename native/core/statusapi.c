@@ -374,7 +374,7 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
       add_str_or_null(o,"collectorGroupLabel", gm ? gm->label : NULL);
     }
     add_str_or_null(o,"engine", d ? (d->engine && d->engine[0] ? d->engine : "native") : NULL);
-    add_str_or_null(o,"kind", d ? (d->collector && d->collector[0] == '_' ? "internal"
+    add_str_or_null(o,"kind", d ? (source_def_is_internal(d) ? "internal"
                                  : d->update_interval_sec > 0 ? "scheduled"
                                  : registry_is_entity_pivot(d) ? "pivot" : "unreachable") : NULL);
   }

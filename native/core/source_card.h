@@ -36,7 +36,7 @@
  *              (house rule 3's first way to be reachable; the same rule
  *              osint_dispatch.c's is_entity_pivot applies)
  *   scheduled  interval > 0 — the scheduler runs it
- *   pod        collector starting with '_' (_maint, _enrich, _test):
+ *   pod        kind POD or PROBE (source.h source_def_kind; collectors _maint, _enrich, _test, _probe):
  *              pipeline machinery, not a data source
  *   manual     anything else: interval 0 under a non-osint collector, run
  *              only on an explicit --run / POST …/run. Named rather than

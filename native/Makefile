@@ -507,6 +507,7 @@ registry-floor: $(BIN)
 	 dup=$$(grep -c DUPLICATE tools/.reg.log || true); \
 	 ovf=$$(grep -c OVERFLOW tools/.reg.log || true); \
 	 dead=$$(grep -c NEVER-RUNS tools/.reg.log || true); \
+	 kmm=$$(grep -c KIND-MISMATCH tools/.reg.log || true); \
 	 rm -f tools/.reg.log tools/.reg.count; \
 	 if [ "$$now" -lt "$$floor" ]; then \
 	   echo "REGISTRY REGRESSED: $$now < $$floor (floor in tools/registry-floor.txt)"; \
@@ -523,7 +524,11 @@ registry-floor: $(BIN)
 	   echo "  \"osint\" and not an internal \"_\" lane, so neither the scheduler"; \
 	   echo "  nor is_entity_pivot() reaches them (house rule 3)"; exit 1; \
 	 fi; \
-	 echo "registry ok: $$now >= $$floor, 0 duplicates, 0 dropped, 0 never-runs"
+	 if [ "$$kmm" -ne 0 ]; then \
+	   echo "$$kmm row(s) KIND-MISMATCH — a collector starting with \"_\" must declare"; \
+	   echo "  .kind = SOURCE_KIND_POD or _PROBE, and a POD/PROBE must use a \"_\" collector"; exit 1; \
+	 fi; \
+	 echo "registry ok: $$now >= $$floor, 0 duplicates, 0 dropped, 0 never-runs, 0 kind-mismatches"
 
 # The floor is committed (tools/source-floor.txt) so CI and a reviewer see the
 # same number the author did.

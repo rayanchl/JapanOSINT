@@ -1037,7 +1037,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def image_vec_pod_def = {
-  .id = IVEC_SID, .collector = "_maint",
+  .id = IVEC_SID, .collector = "_maint", .kind = SOURCE_KIND_POD,
   .name = "Camera Image Index",
   .name_ja = "カメラ画像ベクトル索引",
   .description = "Embeds preserved camera stills and camera media frames with "

@@ -18,7 +18,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def content_change_def = {
-  .id = "content-change-retention", .collector = "_maint",
+  .id = "content-change-retention", .collector = "_maint", .kind = SOURCE_KIND_POD,
   .name = "Content Snapshot Retention",
   .name_ja = "コンテンツ差分スナップショット保持",
   .update_interval_sec = 900, .run = run,

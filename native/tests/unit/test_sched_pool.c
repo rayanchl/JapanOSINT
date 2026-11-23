@@ -46,7 +46,7 @@ static int run_pod(const source_ctx *ctx, intel_sink *sink) {
 /* interval 5: the watchdog cancels at max(deadline, interval). */
 static const source_def D_SLOW = { .id = "UNIT_POOL_SLOW", .collector = "unit",
   .name = "unit", .update_interval_sec = 5, .run = run_slow, .category = "test" };
-static const source_def D_POD = { .id = "UNIT_POOL_POD", .collector = "_test",
+static const source_def D_POD = { .id = "UNIT_POOL_POD", .collector = "_test", .kind = SOURCE_KIND_POD,
   .name = "unit", .update_interval_sec = 3600, .run = run_pod, .category = "test" };
 REGISTER_SOURCE(D_SLOW)
 REGISTER_SOURCE(D_POD)

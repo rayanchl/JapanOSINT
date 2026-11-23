@@ -1014,7 +1014,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def embed_def = {
-  .id = EMBED_SID, .collector = "_maint",
+  .id = EMBED_SID, .collector = "_maint", .kind = SOURCE_KIND_POD,
   .name = "Semantic Embedding Backfill",
   .name_ja = "セマンティック埋め込み補完",
   .description = "Embeds intel_items title+summary into the sqlite-vec index "

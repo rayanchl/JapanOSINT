@@ -62,7 +62,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def svec_pod_def = {
-  .id = SVECPOD_SID, .collector = "_maint",
+  .id = SVECPOD_SID, .collector = "_maint", .kind = SOURCE_KIND_POD,
   .name = "Semantic Service Index",
   .name_ja = "サービス意味検索インデックス",
   .description = "Builds the sqlite-vec + fts5 index behind semantic service "

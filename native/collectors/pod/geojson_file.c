@@ -19,7 +19,7 @@ static int run(const source_ctx *c, intel_sink *s) {
   int e=geojson_emit_doc(s,c->source_id,d); cJSON_Delete(d);
   return e>=0?0:-1; }
 static const source_def geojson_file_def = {
-  .id="geojson-file", .collector="_test", .name="GeoJSON file test",
+  .id="geojson-file", .collector="_test", .kind = SOURCE_KIND_POD, .name="GeoJSON file test",
   .name_ja="",  .update_interval_sec=0, .run=run,
   .category = "test" };
 REGISTER_SOURCE(geojson_file_def)
