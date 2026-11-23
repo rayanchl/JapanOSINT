@@ -10,6 +10,7 @@
 #include <strings.h>
 #include <time.h>
 #include "lib/joenv.h"
+#include "../lib/jocore.h"
 
 #define EVEC_SID "_entity_vec"
 /* Model input bound. Entity names are short; a 2 KB "address" is a parse
@@ -47,13 +48,6 @@ char *entity_vec_text(const char *canonical, const char *romaji) {
   char *b = vecindex_bound_text(t, EVEC_MAX_BYTES);
   free(t);
   return b;
-}
-
-static void iso_now(char *buf, size_t n) {
-  time_t t = time(NULL);
-  struct tm tm;
-  gmtime_r(&t, &tm);
-  strftime(buf, n, "%Y-%m-%dT%H:%M:%S.000Z", &tm);
 }
 
 int entity_vec_ready(db_handle *db) {
@@ -117,7 +111,7 @@ int entity_vec_tick(db_handle *db, struct http_client *http, int max_walk) {
   vecindex_ensure_meta(db, s);
   vecindex_ensure_side_tables(db, s);
   char now[40];
-  iso_now(now, sizeof now);
+  jo_iso_now_ms0(now, sizeof now);
 
   char model[256];
   if (vecindex_detect_model(http, base, model, sizeof model) != 0) {

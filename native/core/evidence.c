@@ -17,6 +17,7 @@
 #include <time.h>
 #include <unistd.h>
 #include "lib/joenv.h"
+#include "../lib/jocore.h"
 
 #ifndef JO_REPO_ROOT
 #define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
@@ -115,14 +116,9 @@ static cJSON *safe_json(const char *s, int as_array) {
   if (s && *s) { cJSON *j = cJSON_Parse(s); if (j) return j; }
   return as_array ? cJSON_CreateArray() : cJSON_CreateObject();
 }
-/* datetime('now') format, produced in C so the value we hash is byte-identical
- * to the value we store (a DEFAULT would be applied after we hashed). */
-static void now_utc(char out[20]) {
-  time_t t = time(NULL);
-  struct tm g;
-  gmtime_r(&t, &g);
-  strftime(out, 20, "%Y-%m-%d %H:%M:%S", &g);
-}
+/* datetime('now') format (jo_sql_now), produced in C so the value we hash is
+ * byte-identical to the value we store (a DEFAULT would be applied after we
+ * hashed). */
 static int table_exists(db_handle *db, const char *name) {
   sqlite3_stmt *s; int ok = 0;
   if (sqlite3_prepare_v2(db->h,
@@ -550,7 +546,7 @@ int evidence_capture(db_handle *db, const char *item_uid, const char *source_id,
   }
 
   char rel[80];  blob_rel(sha, rel, sizeof rel);
-  char ts[20];   now_utc(ts);
+  char ts[20];   jo_sql_now(ts, sizeof ts);
   char id[37];   uuid4(id);
   char *rurl = redact_url(url);
   char *rhj  = headers_json(req_headers);

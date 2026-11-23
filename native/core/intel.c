@@ -13,6 +13,7 @@
 #include <time.h>
 #include "../lib/jocore.h"   /* jo_iso_now */
 #include "lib/joenv.h"
+#include "../lib/seenset.h"  /* seen_hset: the distinct-uid set of rule 4b */
 
 /* ── `stored`: how many DISTINCT rows a run actually left behind ──────────
  *
@@ -60,7 +61,6 @@
  * and SAYS SO (`stored>=N`) rather than quietly becoming wrong — the same
  * discipline as the rest of this tree: never report a number you did not
  * measure. */
-#define SEEN_INIT 1024u
 #define SEEN_MAX  (1u << 22)
 
 /* `magic` exists so intel_sink_rebind() can prove the sink it was handed is
@@ -89,11 +89,9 @@ typedef struct {
 typedef struct {
   unsigned magic;
   db_handle *db; char source_id[128]; char tenant_id[64];
-  unsigned long long *seen;   /* open-addressed set of uid hashes, 0 = empty  */
-  size_t seen_cap;            /* slots, always a power of two                 */
-  size_t seen_n;              /* distinct uids stored this run                */
+  seen_hset seen;             /* distinct uids stored this run (lib/seenset); n is a
+                               * floor once .inexact is set                    */
   size_t seen_notice_n;       /* ...of which collector-*-notice records       */
-  int    seen_exact;          /* 0 once the ceiling or an ENOMEM made it a floor */
   sqlite3      *stmt_db;      /* the connection the statements below belong to */
   sqlite3_stmt *q_probe, *q_upsert, *q_touch;
   fts_stmts     fts;
@@ -145,50 +143,13 @@ int intel_item_is_notice(const intel_item *it) {
          strcmp(rt + n - 7, "-notice") == 0;
 }
 
-static unsigned long long uid_hash(const char *s) {
-  unsigned long long h = 1469598103934665603ULL;      /* FNV-1a 64 offset */
-  for (; *s; s++) { h ^= (unsigned char)*s; h *= 1099511628211ULL; }
-  return h ? h : 1ULL;        /* 0 is the empty-slot marker, never a key */
+/* Record `uid` in the run's distinct set (lib/seenset hset). Returns 1 when
+ * `uid` was new to this run, 0 when it was already there or could not be
+ * recorded; in the latter case the set's `inexact` flag is raised and the
+ * caller reports a floor instead of a wrong number. */
+static int seen_note(sink_state *st, const char *uid) {
+  return seen_hset_add(&st->seen, uid);
 }
-
-static void seen_put(unsigned long long *tab, size_t cap, unsigned long long h) {
-  size_t i = (size_t)(h & (cap - 1));
-  while (tab[i]) {
-    if (tab[i] == h) return;
-    i = (i + 1) & (cap - 1);
-  }
-  tab[i] = h;
-}
-
-/* Record `uid` in the run's distinct set. Silent about everything except the
- * one thing that matters: if it cannot grow, seen_exact drops to 0 and the
- * caller reports a floor instead of a wrong number. Returns 1 when `uid` was
- * new to this run, 0 when it was already there (or could not be recorded). */
-static int seen_add(sink_state *st, const char *uid) {
-  unsigned long long h = uid_hash(uid);
-  if (st->seen && st->seen_n * 10 >= st->seen_cap * 7) {
-    size_t ncap = st->seen_cap * 2;
-    if (ncap > SEEN_MAX) { st->seen_exact = 0; return 0; }
-    unsigned long long *nt = calloc(ncap, sizeof *nt);
-    if (!nt) { st->seen_exact = 0; return 0; }
-    for (size_t i = 0; i < st->seen_cap; i++)
-      if (st->seen[i]) seen_put(nt, ncap, st->seen[i]);
-    free(st->seen); st->seen = nt; st->seen_cap = ncap;
-  } else if (!st->seen) {
-    st->seen = calloc(SEEN_INIT, sizeof *st->seen);
-    if (!st->seen) { st->seen_exact = 0; return 0; }
-    st->seen_cap = SEEN_INIT;
-  }
-  size_t i = (size_t)(h & (st->seen_cap - 1));
-  while (st->seen[i]) {
-    if (st->seen[i] == h) return 0;             /* already stored this run */
-    i = (i + 1) & (st->seen_cap - 1);
-  }
-  st->seen[i] = h;
-  st->seen_n++;
-  return 1;
-}
-
 
 /* Exact Node upsert: INSERT … ON CONFLICT(uid) DO UPDATE, preserving
  * DERIVED geometry across re-runs.
@@ -640,11 +601,6 @@ static void pend_free(pend *p) {
   free(p);
 }
 
-static long long mono_ms(void) {
-  struct timespec ts; clock_gettime(CLOCK_MONOTONIC, &ts);
-  return (long long)ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
-}
-
 /* Everything about a record that needs no database. NULL when the item has no
  * uid/remote_key (the caller reports -1, as before) or on OOM. */
 static pend *pend_make(sink_state *st, const intel_item *it, int *no_uid) {
@@ -861,7 +817,7 @@ static int flush_buf(sink_state *st, int *new_out) {
     return RW_FAIL;
   }
 
-  long long tr0 = mono_ms();
+  long long tr0 = jo_mono_ms();
   int bf = 0;
   if (!txn_write(st, h, b, 0, n, res, isnew, &bf)) {
     if (n == 1) {
@@ -883,7 +839,7 @@ static int flush_buf(sink_state *st, int *new_out) {
   }
 
   /* From here a record is either committed (res >= 0) or refused. */
-  long long tr1 = mono_ms();      /* end of the write transaction(s) */
+  long long tr1 = jo_mono_ms();      /* end of the write transaction(s) */
   int last = res[n - 1], last_new = isnew[n - 1];
   const char *ten = st->tenant_id[0] ? st->tenant_id : "legacy";
   int nsimhash = 0;
@@ -896,7 +852,7 @@ static int flush_buf(sink_state *st, int *new_out) {
     /* Rule 4b (see the block at the top of this file). Counted only once the
      * COMMIT has succeeded, so the set holds exactly the uids that are now
      * rows. */
-    if (seen_add(st, b[i]->uid) && b[i]->is_notice) st->seen_notice_n++;
+    if (seen_note(st, b[i]->uid) && b[i]->is_notice) st->seen_notice_n++;
     if (res[i] == RW_WRITTEN) nsimhash++;
   }
   /* Alert matching (roadmap P0.1) — AFTER the commit, never inside it. An
@@ -929,7 +885,7 @@ static int flush_buf(sink_state *st, int *new_out) {
 
   if (st->trace)       /* JO_SINK_TRACE=1: what a flush costs, i.e. the lock hold */
     fprintf(stderr, "[intel-trace] %s flush n=%d write_txn=%lldms post=%lldms\n",
-            st->source_id, n, tr1 - tr0, mono_ms() - tr1);
+            st->source_id, n, tr1 - tr0, jo_mono_ms() - tr1);
   for (int i = 0; i < n; i++) pend_free(b[i]);
   st->nbuf = 0; st->nbytes = 0;
   free(res); free(isnew);
@@ -978,11 +934,11 @@ static int emit(struct intel_sink *self, const intel_item *it) {
     if (!nb) { pend_free(p); return -1; }
     st->buf = nb; st->bufcap = ncap;
   }
-  if (st->nbuf == 0) st->t0_ms = mono_ms();
+  if (st->nbuf == 0) st->t0_ms = jo_mono_ms();
   st->buf[st->nbuf++] = p;
   st->nbytes += p->bytes;
   if (st->nbuf >= st->batch_max || st->nbytes >= st->batch_bytes ||
-      (st->batch_ms > 0 && mono_ms() - st->t0_ms >= st->batch_ms))
+      (st->batch_ms > 0 && jo_mono_ms() - st->t0_ms >= st->batch_ms))
     flush_buf(st, NULL);
   return owed ? -1 : 0;
 }
@@ -1030,7 +986,7 @@ intel_sink intel_sink_make(db_handle *db, const char *source_id,
   }
   st->magic = SINK_MAGIC;
   st->db = db;
-  st->seen_exact = 1;
+  st->seen.max_slots = SEEN_MAX;
   st->batch_max   = jo_env_int("JO_SINK_BATCH", 200, 1, 100000);
   st->trace       = getenv("JO_SINK_TRACE") != NULL;
   st->batch_ms    = jo_env_int("JO_SINK_BATCH_MS", 500, 0, 600000);
@@ -1052,8 +1008,8 @@ long intel_sink_stored(const intel_sink *k, int *exact) {
    * first (the scheduler reads this before it frees the sink). */
   intel_sink_flush((intel_sink *)k);
   const sink_state *st = k->ctx;
-  if (exact) *exact = st->seen_exact;
-  return (long)st->seen_n;
+  if (exact) *exact = !st->seen.inexact;
+  return (long)st->seen.n;
 }
 
 long intel_sink_stored_notices(const intel_sink *k) {
@@ -1089,7 +1045,7 @@ void intel_sink_free(intel_sink *k) {
    * connection that still has prepared statements. */
   sink_stmts_free(st);
   EVP_MD_CTX_free(st->md);
-  free(st->seen);
+  seen_hset_free(&st->seen);
   free(st);
   k->ctx = NULL;
   k->emit = NULL;

@@ -189,7 +189,13 @@ char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
   sqlite3_stmt *s = NULL;
   char *props = NULL;
   if (sqlite3_prepare_v2(db->h,
-        "SELECT properties FROM intel_items WHERE uid=?1", -1, &s, NULL)
+        /* Camera records only (API-17): the uid used to be accepted for ANY
+         * intel item, which made this an open fetcher for every image URL a
+         * feed ever reported. record_type is how the store models a camera
+         * (camera_store.c writes 'camera'; camera_refframe.c reads the pair
+         * below). Anything else answers the same 404 as an unknown uid. */
+        "SELECT properties FROM intel_items WHERE uid=?1 "
+        "AND record_type IN ('camera','camera-discovery')", -1, &s, NULL)
       == SQLITE_OK) {
     sqlite3_bind_text(s, 1, cam, -1, SQLITE_TRANSIENT);
     if (sqlite3_step(s) == SQLITE_ROW) props = dupcol(s, 0);

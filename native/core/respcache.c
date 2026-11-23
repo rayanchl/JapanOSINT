@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "../lib/jocore.h"
 
 /* Eight entries is not a guess: the routes that qualify (a body identical for
  * every caller, expensive to build) are /api/status in its two operator
@@ -41,12 +42,6 @@ static void rc_norm(const char *key, char out[RC_KEY_MAX]) {
   snprintf(out + 31, RC_KEY_MAX - 31, "~%016llx", h);
 }
 
-static long long now_ms(void) {
-  struct timespec t;
-  clock_gettime(CLOCK_MONOTONIC, &t);
-  return (long long)t.tv_sec * 1000 + t.tv_nsec / 1000000;
-}
-
 char *respcache_get(const char *key, int ttl_sec, long *age_ms) {
   if (age_ms) *age_ms = 0;
   if (!key || !*key || ttl_sec <= 0) return NULL;
@@ -55,7 +50,7 @@ char *respcache_get(const char *key, int ttl_sec, long *age_ms) {
   pthread_mutex_lock(&g_mu);
   for (int i = 0; i < RC_SLOTS; i++) {
     if (!g_e[i].body || strcmp(g_e[i].key, nk)) continue;
-    long long age = now_ms() - g_e[i].at_ms;
+    long long age = jo_mono_ms() - g_e[i].at_ms;
     if (age > (long long)ttl_sec * 1000) break;      /* stale: treat as a miss */
     copy = malloc(g_e[i].len + 1);
     if (copy) {
@@ -89,7 +84,7 @@ void respcache_put(const char *key, const char *body) {
   memcpy(g_e[slot].key, nk, sizeof nk);
   g_e[slot].body  = copy;
   g_e[slot].len   = len;
-  g_e[slot].at_ms = now_ms();
+  g_e[slot].at_ms = jo_mono_ms();
   pthread_mutex_unlock(&g_mu);
 }
 

@@ -20,8 +20,55 @@ static size_t ws_max_msg(void) {
   return (size_t)jo_env_ll_strict("JO_WS_MAX_MSG_BYTES", 16LL << 20, 1024, LLONG_MAX);
 }
 
-static __thread int g_oversize_dropped;
-int ws_last_oversize_dropped(void) { return g_oversize_dropped; }
+size_t ws_message_ceiling(void) { return ws_max_msg(); }
+
+static __thread int    g_oversize_dropped;
+static __thread size_t g_oversize_bytes;
+int    ws_last_oversize_dropped(void)       { return g_oversize_dropped; }
+size_t ws_last_oversize_dropped_bytes(void) { return g_oversize_bytes; }
+
+void ws_asm_init(ws_asm *a, size_t max_msg) {
+  memset(a, 0, sizeof *a);
+  a->max = max_msg;
+}
+void ws_asm_free(ws_asm *a) { free(a->msg); a->msg = NULL; a->mlen = a->mcap = 0; }
+
+/* One received frame chunk. `complete` is "the message ends with this chunk".
+ * Returns 1 if the callback asked to stop, -1 on allocation failure, else 0.
+ * *delivered is incremented once per message handed to `cb`. */
+int ws_asm_feed(ws_asm *a, const char *data, size_t got, int complete,
+                ws_on_msg cb, void *ud, int *delivered) {
+  if (got && !a->discarding && a->mlen + got > a->max) {
+    a->discarding = 1;                       /* drop it whole, count it */
+    a->dropped++;
+    a->dropped_bytes += a->mlen;             /* what was already buffered */
+    a->mlen = 0;
+    fprintf(stderr, "[ws] message exceeds JO_WS_MAX_MSG_BYTES (%zu) - dropped\n", a->max);
+  }
+  if (got && a->discarding) a->dropped_bytes += got;
+  if (got && !a->discarding) {
+    if (a->mlen + got + 1 > a->mcap) {
+      size_t nc = (a->mlen + got + 1) * 2;
+      char *nm = realloc(a->msg, nc);
+      if (!nm) return -1;
+      a->msg = nm; a->mcap = nc;
+    }
+    memcpy(a->msg + a->mlen, data, got);
+    a->mlen += got;
+  }
+  if (complete && a->discarding) {
+    a->discarding = 0; a->mlen = 0;
+  } else if (complete && a->mlen) {
+    a->msg[a->mlen] = 0;
+    int stop = cb(a->msg, a->mlen, ud);
+    if (delivered) (*delivered)++;
+    a->mlen = 0;
+    if (stop) return 1;
+  } else if (complete) {
+    a->mlen = 0;                             /* empty frame */
+  }
+  return 0;
+}
 
 /* "wss://h/p" -> "https://h/p": hostgate and the agent table judge http(s)
  * URLs, and a WebSocket upgrade is an HTTP request to the same host. */
@@ -46,6 +93,7 @@ int ws_collect(const char *url, const char *const *headers,
   if (!url || !cb) return -1;
   if (window_ms <= 0) window_ms = 8000;
   g_oversize_dropped = 0;
+  g_oversize_bytes = 0;
 
   /* The same destination floor every http_request() clears: a blocked or
    * unresolvable target is an explicit failure, never a connect. (Before this
@@ -96,10 +144,9 @@ int ws_collect(const char *url, const char *const *headers,
 
   long deadline = now_ms() + window_ms;
   int delivered = 0;
-  char *msg = NULL; size_t mlen = 0, mcap = 0;            /* reassembly buf */
+  ws_asm as;
+  ws_asm_init(&as, ws_max_msg());
   char buf[16384];
-  const size_t max_msg = ws_max_msg();
-  int discarding = 0;                                     /* inside an over-size message */
 
   while (delivered < (max_msgs > 0 ? max_msgs : 0x7fffffff)) {
     long remain = deadline - now_ms();
@@ -117,40 +164,17 @@ int ws_collect(const char *url, const char *const *headers,
     if (r != CURLE_OK) break;                              /* closed / error */
     if (meta && (meta->flags & CURLWS_CLOSE)) break;
 
-    if (got && !discarding && mlen + got > max_msg) {
-      discarding = 1;                                      /* drop it whole, count it */
-      g_oversize_dropped++;
-      mlen = 0;
-      fprintf(stderr, "[ws] message exceeds JO_WS_MAX_MSG_BYTES (%zu) — dropped\n", max_msg);
-    }
-    if (got && !discarding) {                              /* accumulate */
-      if (mlen + got + 1 > mcap) {
-        size_t nc = (mlen + got + 1) * 2;
-        char *nm = realloc(msg, nc);
-        if (!nm) break;
-        msg = nm; mcap = nc;
-      }
-      memcpy(msg + mlen, buf, got);
-      mlen += got;
-    }
     /* message complete: nothing more pending in this frame and not a
      * fragmented-continuation that expects further frames. */
     int complete = meta && meta->bytesleft == 0 &&
                    !(meta->flags & CURLWS_CONT);
-    if (complete && discarding) {
-      discarding = 0; mlen = 0;
-    } else if (complete && mlen) {
-      msg[mlen] = 0;
-      int stop = cb(msg, mlen, ud);
-      delivered++;
-      mlen = 0;
-      if (stop) break;
-    } else if (complete) {
-      mlen = 0;                                            /* empty frame */
-    }
+    int fr = ws_asm_feed(&as, buf, got, complete, cb, ud, &delivered);
+    if (fr != 0) break;                                    /* stop / OOM */
   }
 
-  free(msg);
+  g_oversize_dropped = as.dropped;
+  g_oversize_bytes   = as.dropped_bytes;
+  ws_asm_free(&as);
   if (hl) curl_slist_free_all(hl);
   curl_easy_cleanup(c);
   return delivered;

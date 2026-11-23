@@ -82,3 +82,55 @@ void seen_free(seen_set *s) {
   s->v = NULL; s->n = s->cap = 0;
   s->h = NULL; s->hcap = 0;
 }
+
+/* ---- hash-only set (see seenset.h) --------------------------------------- */
+
+static unsigned long long hset_hash(const char *s) {
+  unsigned long long h = 1469598103934665603ULL;      /* FNV-1a 64 offset */
+  for (; *s; s++) { h ^= (unsigned char)*s; h *= 1099511628211ULL; }
+  return h ? h : 1ULL;        /* 0 is the empty-slot marker, never a key */
+}
+
+static void hset_put(unsigned long long *tab, size_t cap, unsigned long long h) {
+  size_t i = (size_t)(h & (cap - 1));
+  while (tab[i]) {
+    if (tab[i] == h) return;
+    i = (i + 1) & (cap - 1);
+  }
+  tab[i] = h;
+}
+
+int seen_hset_add(seen_hset *s, const char *key) {
+  if (!s || !key) return 0;
+  unsigned long long h = hset_hash(key);
+  const size_t ceiling = s->max_slots ? s->max_slots : SEEN_HASH_MAX_DEFAULT;
+  if (s->tab && s->n * 10 >= s->cap * 7) {
+    size_t ncap = s->cap * 2;
+    if (ncap > ceiling) { s->inexact = 1; return 0; }
+    unsigned long long *nt = (unsigned long long *)calloc(ncap, sizeof *nt);
+    if (!nt) { s->inexact = 1; return 0; }
+    for (size_t i = 0; i < s->cap; i++)
+      if (s->tab[i]) hset_put(nt, ncap, s->tab[i]);
+    free(s->tab); s->tab = nt; s->cap = ncap;
+  } else if (!s->tab) {
+    size_t icap = SEEN_HASH_INIT;
+    if (icap > ceiling) icap = ceiling;           /* a tiny ceiling: start there */
+    s->tab = (unsigned long long *)calloc(icap, sizeof *s->tab);
+    if (!s->tab) { s->inexact = 1; return 0; }
+    s->cap = icap;
+  }
+  size_t i = (size_t)(h & (s->cap - 1));
+  while (s->tab[i]) {
+    if (s->tab[i] == h) return 0;                 /* already recorded */
+    i = (i + 1) & (s->cap - 1);
+  }
+  s->tab[i] = h;
+  s->n++;
+  return 1;
+}
+
+void seen_hset_free(seen_hset *s) {
+  if (!s) return;
+  free(s->tab);
+  s->tab = NULL; s->cap = s->n = 0; s->inexact = 0;
+}

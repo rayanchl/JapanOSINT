@@ -37,6 +37,7 @@
 #include <net/if.h>
 #include <sched.h>
 #include <sys/ioctl.h>
+#include "../lib/jocore.h"
 #endif
 
 extern char **environ;
@@ -104,12 +105,6 @@ struct netjail {
   int live;
   int refused;
 };
-
-static long long nj_now_ms(void) {
-  struct timespec ts;
-  clock_gettime(CLOCK_MONOTONIC, &ts);
-  return (long long)ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
-}
 
 static void nj_set(char *why, size_t cap, const char *msg) {
   if (why && cap) snprintf(why, cap, "%s", msg);
@@ -312,7 +307,7 @@ static void nj_nonblock(int fd) {
  * 1 ready, 0 stopped / timed out. */
 static int nj_wait(netjail *j, int fd, short ev) {
   for (;;) {
-    long long left = j->deadline_ms - nj_now_ms();
+    long long left = j->deadline_ms - jo_mono_ms();
     if (left <= 0) return 0;
     struct pollfd pf[2] = { { fd, ev, 0 }, { j->stop[0], POLLIN, 0 } };
     int r = poll(pf, 2, (int)(left > 1000 ? 1000 : left));
@@ -357,7 +352,7 @@ static void nj_pump(netjail *j, int a, int b) {
   char buf[16384];
   int a_open = 1, b_open = 1;
   while (a_open || b_open) {
-    long long left = j->deadline_ms - nj_now_ms();
+    long long left = j->deadline_ms - jo_mono_ms();
     if (left <= 0) return;
     struct pollfd pf[3];
     int n = 0, ia = -1, ib = -1;
@@ -688,7 +683,7 @@ netjail *netjail_new(const char *input, int plan, int timeout_ms,
   j->lfd = j->sp[0] = j->sp[1] = j->stop[0] = j->stop[1] = -1;
   pthread_mutex_init(&j->mu, NULL);
   if (timeout_ms <= 0) timeout_ms = 30000;
-  j->deadline_ms = nj_now_ms() + timeout_ms + 2000;
+  j->deadline_ms = jo_mono_ms() + timeout_ms + 2000;
   j->ns = nj_ns_available();
 
   if (pipe(j->stop) != 0) goto fail_sys;

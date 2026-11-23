@@ -114,6 +114,7 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
+#include "../lib/jocore.h"
 
 /* Resolved tool paths. 512 is media.c's MEDIA_TOOLPATH_MAX and find_on_path()
  * below uses a scratch buffer of exactly this size, so the copy back out cannot
@@ -133,12 +134,6 @@
 /* ══════════════════════════════════════════════════════════════════════════
  * Small helpers
  * ══════════════════════════════════════════════════════════════════════════ */
-
-static long long ff_now_ms(void) {
-  struct timespec ts;
-  clock_gettime(CLOCK_MONOTONIC, &ts);
-  return (long long)ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
-}
 
 
 /* JO_NO_FFMPEG is the modern spelling; CAM_STILLS_NO_FFMPEG is honoured as an
@@ -517,12 +512,12 @@ static int ff_spawn_net(const char *const argv_in[], int plan, int in_idx,
   int live = 2;
   unsigned char *buf = NULL;
   size_t len = 0, cap = 0, elen = 0;
-  long long deadline = ff_now_ms() + timeout_ms;
+  long long deadline = jo_mono_ms() + timeout_ms;
   int killed = 0, capped = 0, oom = 0;
   unsigned char chunk[65536];
 
   while (live > 0) {
-    long long left = deadline - ff_now_ms();
+    long long left = deadline - jo_mono_ms();
     if (left <= 0) { kill(pid, SIGKILL); killed = 1; break; }
 
     struct pollfd pf[2];
@@ -587,7 +582,7 @@ static int ff_spawn_net(const char *const argv_in[], int plan, int in_idx,
     pid_t w = waitpid(pid, &st, killed ? 0 : WNOHANG);
     if (w == pid) { reaped = 1; break; }
     if (w < 0) { if (errno == EINTR) continue; break; }
-    if (ff_now_ms() >= deadline) { kill(pid, SIGKILL); killed = 1; continue; }
+    if (jo_mono_ms() >= deadline) { kill(pid, SIGKILL); killed = 1; continue; }
     struct timespec ts = { 0, 2 * 1000 * 1000 };
     nanosleep(&ts, NULL);
   }
@@ -794,10 +789,10 @@ static long long       g_probed_at;
 static void probe_snapshot(int *ff_ok, int *fp_ok) {
   pthread_mutex_lock(&g_probe_mu);
   if (!g_probed ||
-      (!g_ff_ok && !g_fp_ok && ff_now_ms() - g_probed_at >= FF_PROBE_RETRY_MS)) {
+      (!g_ff_ok && !g_fp_ok && jo_mono_ms() - g_probed_at >= FF_PROBE_RETRY_MS)) {
     probe_tools();
     g_probed = 1;
-    g_probed_at = ff_now_ms();
+    g_probed_at = jo_mono_ms();
   }
   if (ff_ok) *ff_ok = g_ff_ok;
   if (fp_ok) *fp_ok = g_fp_ok;
@@ -942,7 +937,7 @@ int ffmpeg_extract_series(const char *input, int count, int max_width,
   if (rc != FFMPEG_OK) { ff_seterr(err, errcap, rc, input); return rc; }
   if (timeout_ms <= 0) timeout_ms = cfg_timeout_ms();
 
-  long long deadline = ff_now_ms() + timeout_ms;
+  long long deadline = jo_mono_ms() + timeout_ms;
 
   /* The probe is charged to the same budget — a quarter of it, capped at 10s.
    * "Evenly spaced" is meaningless without a duration, so this is not optional
@@ -961,7 +956,7 @@ int ffmpeg_extract_series(const char *input, int count, int max_width,
 
   int delivered = 0, last_rc = FFMPEG_OK;
   for (int i = 0; i < count; i++) {
-    long long left = deadline - ff_now_ms();
+    long long left = deadline - jo_mono_ms();
     if (left <= 0) break;
     int remaining = count - i;
     int per = (int)(left / remaining);

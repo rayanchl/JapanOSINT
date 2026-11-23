@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "../lib/jocore.h"
 
 
 /* 256: the width every other per-source table in core/ gives an id; at 160 a
@@ -28,11 +29,6 @@ static int cmp_entry(const void *a, const void *b) {
 }
 static int cmp_key(const void *k, const void *e) {
   return strcmp((const char *)k, ((const si_entry *)e)->id);
-}
-
-static void iso_now(char *out, size_t n) {
-  time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
 }
 
 static int ensure_table(db_handle *db) {
@@ -149,7 +145,7 @@ int source_interval_set(db_handle *db, const char *id, long interval_sec,
   else if (interval_sec > SI_MAX_SEC)   e = "an interval longer than a year is a typo";
   if (e) { if (err) *err = e; return -1; }
   if (ensure_table(db) != 0) { if (err) *err = "could not create source_interval_override"; return -1; }
-  char at[32]; iso_now(at, sizeof at);
+  char at[32]; jo_iso_now_s(at, sizeof at);
   sqlite3_stmt *s = NULL;
   if (sqlite3_prepare_v2(db->h,
         "INSERT INTO source_interval_override(source_id,interval_sec,enabled,updated_at,updated_by) "

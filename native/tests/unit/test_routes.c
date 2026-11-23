@@ -187,7 +187,42 @@ static void test_matching(void) {
   free(js);
 }
 
+/* API-07: every /api/uploads verb (begin, part, commit, status, abort) is a
+ * worker row, and httpd.c no longer calls uploadapi() on the shared handle from
+ * the event loop: the only call left is upl_thread's, on its own connection. */
+static void test_uploads_off_loop(void) {
+  static const char *M[] = { "GET", "POST", "DELETE" };
+  static const char *U[] = { "/api/uploads", "/api/uploads/begin",
+                             "/api/uploads/u1", "/api/uploads/u1/part",
+                             "/api/uploads/u1/commit" };
+  for (size_t i = 0; i < 3; i++)
+    for (size_t j = 0; j < 5; j++) {
+      const route_row *r = look(M[i], U[j], NULL);
+      assert(r && r->runs == RR_WORKER);
+    }
+  char path[512];
+  snprintf(path, sizeof path, "%s/native/core/httpd.c", JO_REPO_ROOT);
+  FILE *f = fopen(path, "rb");
+  assert(f);
+  fseek(f, 0, SEEK_END); long n = ftell(f); fseek(f, 0, SEEK_SET);
+  char *src = malloc((size_t) n + 1);
+  assert(src && fread(src, 1, (size_t) n, f) == (size_t) n);
+  src[n] = 0; fclose(f);
+  int calls = 0;
+  for (const char *p = src; (p = strstr(p, "uploadapi(")) != NULL; p++) {
+    if (p > src && (p[-1] == '_' || p[-1] == '.')) continue;
+    if (strncmp(p, "uploadapi(db,", 13) == 0) calls++;           /* worker */
+    else if (strncmp(p, "uploadapi(g_db", 14) == 0) {
+      fprintf(stderr, "httpd.c still runs uploadapi() on the shared handle\n");
+      assert(0);
+    }
+  }
+  assert(calls == 1);
+  free(src);
+}
+
 int main(void) {
+  test_uploads_off_loop();
   test_matching();
   test_gates();
   test_chain_has_rows();

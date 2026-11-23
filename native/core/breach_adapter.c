@@ -7,21 +7,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "../lib/jocore.h"
 
 static void add_sn(cJSON *o, const char *k, const char *v) {
   if (v) cJSON_AddStringToObject(o, k, v);
   else   cJSON_AddNullToObject(o, k);
-}
-
-static void iso_now(char *out, size_t n) {
-  time_t t = time(NULL);
-  struct tm g;
-#if defined(_WIN32)
-  gmtime_s(&g, &t);
-#else
-  gmtime_r(&t, &g);
-#endif
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &g);
 }
 
 /* Wrap a user term as a single quoted FTS5 phrase (doubles embedded quotes) so
@@ -208,7 +198,7 @@ char *breach_adapter_list(db_handle *db, const char *source_id,
   cJSON_AddNullToObject(filters, "sub_source_id");
   cJSON_AddNullToObject(filters, "has_geom");
 
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_s(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddItemToObject(meta, "filters", filters);

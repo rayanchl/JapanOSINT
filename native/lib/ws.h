@@ -25,5 +25,24 @@ int ws_collect(const char *url, const char *const *headers,
  * caller that wants to disclose a shortfall (rule 2) reads this after the
  * call. */
 int ws_last_oversize_dropped(void);
+/* ... and the bytes of those messages (what was buffered plus what followed
+ * until the message ended or the window did). Rule 2: the notice a collector
+ * files says how much was dropped, not only that something was. */
+size_t ws_last_oversize_dropped_bytes(void);
+/* The per-message ceiling in force ($JO_WS_MAX_MSG_BYTES, default 16 MB). */
+size_t ws_message_ceiling(void);
+
+/* The reassembly step ws_collect() runs per received chunk, exposed so the
+ * bound and its accounting can be tested without a socket. */
+typedef struct {
+  char *msg; size_t mlen, mcap, max;
+  int discarding;
+  int dropped;                 /* messages dropped for exceeding `max`      */
+  size_t dropped_bytes;        /* their bytes, as far as they were received */
+} ws_asm;
+void ws_asm_init(ws_asm *a, size_t max_msg);
+void ws_asm_free(ws_asm *a);
+int  ws_asm_feed(ws_asm *a, const char *data, size_t got, int complete,
+                 ws_on_msg cb, void *ud, int *delivered);
 
 #endif

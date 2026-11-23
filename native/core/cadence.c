@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "lib/joenv.h"
+#include "../lib/jocore.h"
 
 #define CAD_MAX_SEC (366L * 86400L)   /* a year: anything slower is a typo */
 /* The compiled default when the database holds no policy and the environment
@@ -46,11 +47,6 @@ static const char *K_RT     = "sched.realtime_max_sec";
  * exemption switched off. */
 static long env_realtime(void) {
   return jo_env_long_strict("JO_SCHED_REALTIME_MAX_SEC", CAD_DEFAULT_REALTIME_SEC, 0, LONG_MAX);
-}
-
-static void iso_now(char *out, size_t n) {
-  time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
 }
 
 static int ensure_table(db_handle *db) {
@@ -208,7 +204,7 @@ int cadence_set(db_handle *db, const cadence_policy *p, const char *who, const c
   const char *e = validate(p);
   if (e) { if (err) *err = e; return -1; }
   if (!db || ensure_table(db) != 0) { if (err) *err = "settings table unavailable"; return -1; }
-  char at[32]; iso_now(at, sizeof at);
+  char at[32]; jo_iso_now_s(at, sizeof at);
   if (db_exec(db, "BEGIN", NULL) != 0) { if (err) *err = "database busy"; return -1; }
   if (write_key(db, K_GLOBAL, p->global_sec, at, who) || write_key(db, K_MIN, p->min_sec, at, who) ||
       write_key(db, K_MAX, p->max_sec, at, who) || write_key(db, K_RT, p->realtime_max_sec, at, who) || db_exec(db, "COMMIT", NULL) != 0) {

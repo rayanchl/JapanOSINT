@@ -2676,7 +2676,12 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * cheap; the denial is deliberately indistinguishable from a wrong code
      * apart from the status. */
     { int retry = 0;
-      if (!ratelimit_allow(RL_BREAKGLASS, ip, 5, 60, &retry)) {
+      /* Keyed on the real client (X-Forwarded-For only from a configured
+       * trusted proxy, IPv6 by /64) with a global ceiling: API-11. */
+      char xffv[512] = {0};
+      struct mg_str *xh = mg_http_get_header(hm, "X-Forwarded-For");
+      if (xh && xh->len < sizeof xffv) { memcpy(xffv, xh->buf, xh->len); xffv[xh->len] = 0; }
+      if (!ratelimit_breakglass_allow(ip, xffv[0] ? xffv : NULL, &retry)) {
         char rb[96];
         snprintf(rb, sizeof rb,
           "{\"error\":\"too_many_attempts\",\"retry_after_sec\":%d}", retry);
@@ -4894,45 +4899,37 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       memcpy(meth, hm->method.buf, ml);
       char qsb[256] = {0};
       if (qs_copy_or_414(c, hm, qsb, sizeof qsb)) { return; }
-      /* begin, part and commit run off-loop on their own connection (API-07).
+      /* Every /api/uploads verb runs off-loop on its own connection (API-07).
        * A part is up to 2 MiB written to disk with an fsync and a rename, then
-       * a BEGIN IMMEDIATE that waits on the shared database's busy timeout —
+       * a BEGIN IMMEDIATE that waits on the shared database's busy timeout --
        * seconds on a loaded box, on the only thread that answers /api/health.
-       * The worker takes its own handle (db_worker_open, see upl_thread), so
-       * its transaction cannot be left open on the shared one, and the part
-       * body is copied for it exactly as the commit's is. status and abort
-       * are single point queries and stay inline. */
-      const int upl_begin = !*act && (!*uid2 || !strcmp(uid2, "begin"));
-      if (!strcmp(meth, "POST") &&
-          (!strcmp(act, "commit") || !strcmp(act, "part") || upl_begin)) {
-        if (!worker_admit()) { reply_busy(c); return; }
-        upl_arg *ua = calloc(1, sizeof *ua);
-        if (ua) ua->body = hm->body.len ? malloc(hm->body.len) : NULL;
-        if (ua && (ua->body || !hm->body.len)) {
-          if (hm->body.len) memcpy(ua->body, hm->body.buf, hm->body.len);
-          ua->len = hm->body.len; ua->mgr = c->mgr; ua->cid = c->id;
-          ua->tc = tc;
-          snprintf(ua->meth, sizeof ua->meth, "%s", meth);
-          snprintf(ua->uid, sizeof ua->uid, "%s", uid2);
-          snprintf(ua->act, sizeof ua->act, "%s", act);
-          snprintf(ua->qs, sizeof ua->qs, "%s", qsb);
-          pthread_t th;
-          if (worker_spawn(&th, upl_thread, ua) == 0) {
-            pthread_detach(th);
-            return;    /* reply deferred to MG_EV_WAKEUP — loop stays free */
-          }
+       * status walks every part row of the upload and abort purges the part
+       * directory and deletes the part rows: bounded by the part count, but
+       * file and write-lock work all the same, and routes.c declares the whole
+       * prefix RR_WORKER. The worker takes its own handle (db_worker_open, see
+       * upl_thread), so its transaction cannot be left open on the shared one,
+       * and the body is copied for it. */
+      if (!worker_admit()) { reply_busy(c); return; }
+      upl_arg *ua = calloc(1, sizeof *ua);
+      if (ua) ua->body = hm->body.len ? malloc(hm->body.len) : NULL;
+      if (ua && (ua->body || !hm->body.len)) {
+        if (hm->body.len) memcpy(ua->body, hm->body.buf, hm->body.len);
+        ua->len = hm->body.len; ua->mgr = c->mgr; ua->cid = c->id;
+        ua->tc = tc;
+        snprintf(ua->meth, sizeof ua->meth, "%s", meth);
+        snprintf(ua->uid, sizeof ua->uid, "%s", uid2);
+        snprintf(ua->act, sizeof ua->act, "%s", act);
+        snprintf(ua->qs, sizeof ua->qs, "%s", qsb);
+        pthread_t th;
+        if (worker_spawn(&th, upl_thread, ua) == 0) {
+          pthread_detach(th);
+          return;    /* reply deferred to MG_EV_WAKEUP -- loop stays free */
         }
-        if (ua) { free(ua->body); free(ua); }
-        worker_release();
-        reply_busy(c);
-        return;
       }
-      int status = 200;
-      char *body = uploadapi(g_db, &tc, meth, uid2, act, qsb,
-                             hm->body.buf, hm->body.len, &status);
-      if (!body && status == 204) { mg_http_reply(c, 204, cors_h(c), ""); return; }
-      if (!body) { reply_json(c, status, "{\"error\":\"server_error\"}"); return; }
-      reply_json(c, status, body); free(body); return;
+      if (ua) { free(ua->body); free(ua); }
+      worker_release();
+      reply_busy(c);
+      return;
     }
 
     /* ---- Roadmap 24: /api/breach-monitors — standing breach exposure
