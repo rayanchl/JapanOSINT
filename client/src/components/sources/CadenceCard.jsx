@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { Card, Pill, Button, Input, KV, ErrorNotice } from '../ui/kit.jsx';
-import { fmtInterval, fmtCount } from '../../utils/sourceFormat.js';
+import { fmtInterval, fmtCount, policyLabel } from '../../utils/sourceFormat.js';
 
 /* The system-wide cadence policy (GET/PUT /api/sources/cadence): one global
  * interval for every scheduled source, or a floor and a ceiling the declared
@@ -12,7 +12,11 @@ import { fmtInterval, fmtCount } from '../../utils/sourceFormat.js';
 
 export function describePolicy(p) {
   if (!p) return 'not reported';
-  if (p.global_interval_sec > 0) return `every scheduled source runs every ${fmtInterval(p.global_interval_sec)}`;
+  if (p.global_interval_sec > 0) {
+    // rows declared at or below realtime_max_sec are exempt from the global interval
+    const rt = p.realtime_max_sec > 0 ? `, except sources declared at ${fmtInterval(p.realtime_max_sec)} or faster (real-time, left as declared)` : '';
+    return `every scheduled source runs every ${fmtInterval(p.global_interval_sec)}${rt}`;
+  }
   const parts = [];
   if (p.min_interval_sec > 0) parts.push(`never more often than every ${fmtInterval(p.min_interval_sec)}`);
   if (p.max_interval_sec > 0) parts.push(`never less often than every ${fmtInterval(p.max_interval_sec)}`);
@@ -22,11 +26,11 @@ export function describePolicy(p) {
 export default function CadenceCard({ canEdit = false }) {
   const { data, error, loading, reload } = useApi('/api/sources/cadence');
   const [edit, setEdit] = useState(false);
-  const [form, setForm] = useState({ global_interval_sec: '', min_interval_sec: '', max_interval_sec: '' });
+  const [form, setForm] = useState({ global_interval_sec: '', min_interval_sec: '', max_interval_sec: '', realtime_max_sec: '' });
   const [saving, setSaving] = useState({ busy: false, error: null });
   useEffect(() => {
     const p = data?.policy;
-    if (p) setForm({ global_interval_sec: String(p.global_interval_sec || ''), min_interval_sec: String(p.min_interval_sec || ''), max_interval_sec: String(p.max_interval_sec || '') });
+    if (p) setForm({ global_interval_sec: String(p.global_interval_sec || ''), min_interval_sec: String(p.min_interval_sec || ''), max_interval_sec: String(p.max_interval_sec || ''), realtime_max_sec: String(p.realtime_max_sec || '') });
   }, [data]);
   if (error) return <ErrorNotice error={error} title="Could not load the cadence policy" onRetry={reload} />;
   if (loading && !data) return null;
@@ -36,7 +40,7 @@ export default function CadenceCard({ canEdit = false }) {
     setSaving({ busy: true, error: null });
     const num = (v) => (v === '' ? 0 : Number(v));
     try {
-      await api.put('/api/sources/cadence', { global_interval_sec: num(form.global_interval_sec), min_interval_sec: num(form.min_interval_sec), max_interval_sec: num(form.max_interval_sec) });
+      await api.put('/api/sources/cadence', { global_interval_sec: num(form.global_interval_sec), min_interval_sec: num(form.min_interval_sec), max_interval_sec: num(form.max_interval_sec), realtime_max_sec: num(form.realtime_max_sec) });
       setSaving({ busy: false, error: null }); setEdit(false); reload();
     } catch (err) { setSaving({ busy: false, error: err }); }
   };
@@ -54,13 +58,14 @@ export default function CadenceCard({ canEdit = false }) {
         {canEdit && !edit && <Button size="sm" onClick={() => setEdit(true)}>Change</Button>}
       </div>
       {edit && (
-        <form onSubmit={save} className="mt-3 grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
+        <form onSubmit={save} className="mt-3 grid grid-cols-1 md:grid-cols-5 gap-2 items-end">
           <label className="text-[11px] text-osint-muted">global interval (s)<Input value={form.global_interval_sec} onChange={(e) => setForm({ ...form, global_interval_sec: e.target.value })} placeholder="0 = off" /></label>
           <label className="text-[11px] text-osint-muted">floor (s)<Input value={form.min_interval_sec} onChange={(e) => setForm({ ...form, min_interval_sec: e.target.value })} placeholder="0 = off" /></label>
           <label className="text-[11px] text-osint-muted">ceiling (s)<Input value={form.max_interval_sec} onChange={(e) => setForm({ ...form, max_interval_sec: e.target.value })} placeholder="0 = off" /></label>
+          <label className="text-[11px] text-osint-muted" title={policyLabel('realtime')}>real-time limit (s)<Input value={form.realtime_max_sec} onChange={(e) => setForm({ ...form, realtime_max_sec: e.target.value })} placeholder="0 = off" /></label>
           <div className="flex gap-2"><Button type="submit" disabled={saving.busy}>{saving.busy ? 'Saving…' : 'Save'}</Button><Button type="button" onClick={() => setEdit(false)}>Cancel</Button></div>
-          <div className="md:col-span-4 text-[11px] text-osint-muted">A global interval overrides every declared interval (pivots excepted); a floor/ceiling clamps them instead. Takes effect in the running scheduler within one interval. Platform-operator only.</div>
-          {saving.error && <div className="md:col-span-4"><ErrorNotice error={saving.error} title="The server refused the policy" /></div>}
+          <div className="md:col-span-5 text-[11px] text-osint-muted">A global interval overrides every declared interval (pivots excepted), except sources declared at or below the real-time limit, which keep their own; a floor/ceiling clamps them instead. Takes effect in the running scheduler within one interval. Platform-operator only.</div>
+          {saving.error && <div className="md:col-span-5"><ErrorNotice error={saving.error} title="The server refused the policy" /></div>}
         </form>
       )}
     </Card>

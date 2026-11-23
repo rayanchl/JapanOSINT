@@ -17,6 +17,8 @@ struct SourceSearchQuery: Equatable {
     var kind: String? = nil
     var status: String? = nil
     var health: String? = nil
+    /// A credential NAME (/api/keys): only the sources that need it.
+    var key: String? = nil
     var hasItems: Bool = false
     var sort: String? = nil
     var desc: Bool = false
@@ -26,7 +28,7 @@ struct SourceSearchQuery: Equatable {
         !q.trimmingCharacters(in: .whitespaces).isEmpty
             || group != nil || collector != nil || category != nil
             || engine != nil || kind != nil || status != nil
-            || health != nil || hasItems
+            || health != nil || key != nil || hasItems
     }
 }
 
@@ -48,6 +50,7 @@ extension API {
         if let v = query.kind { qs.append(URLQueryItem(name: "kind", value: v)) }
         if let v = query.status { qs.append(URLQueryItem(name: "status", value: v)) }
         if let v = query.health { qs.append(URLQueryItem(name: "health", value: v)) }
+        if let v = query.key { qs.append(URLQueryItem(name: "key", value: v)) }
         if query.hasItems { qs.append(URLQueryItem(name: "has_items", value: "1")) }
         if let v = query.sort { qs.append(URLQueryItem(name: "sort", value: v)) }
         if query.desc { qs.append(URLQueryItem(name: "desc", value: "1")) }

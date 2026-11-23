@@ -21,9 +21,13 @@ import {
  *              GET/PUT /api/tenant-keys/policy {policy,memberId,members[]}
  *   platform   GET /api/keys                   [{name,role,set,hasOverlay}]   (platform operator + admin role)
  *              GET/PUT /api/keys/:name
- * "Used by" comes from the paged search of sources that are waiting on a
- * credential (GET /api/sources/search?health=gated → health.credentials_required).
- * The whole /api/status registry dump is no longer downloaded for it.
+ * "Used by" in the key sheet is the server's own answer: GET
+ * /api/sources/search?key=<NAME> returns every source that needs the
+ * credential (an hpengine key_env, the credential table, a recorded gated
+ * notice), paged, with page.total stating how many exist. The per-key
+ * "waiting" tag in the list still comes from the paged search of sources that
+ * are gated right now (health=gated → health.credentials_required).
+ * The whole /api/status registry dump is no longer downloaded for either.
  */
 
 const ROLE_TONE = { required: 'accent', anyOf: 'warning', optional: 'neutral' };
@@ -209,6 +213,9 @@ function KeyDetailSheet({ row, scope, canManage, statusRows, gatedPaging, onClos
   const [saved, setSaved] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
   const rowName = row?.name;
+  // Every source that needs this key, whether or not it is waiting on it now.
+  const needs = usePagedList(rowName ? `/api/sources/search?key=${encodeURIComponent(rowName)}&sort=id` : '',
+    { pageSize: 25, enabled: Boolean(rowName), deps: [rowName] });
 
   React.useEffect(() => { setWorking(row); setRevealed(null); setNewValue(''); setError(null); setSaved(false); }, [rowName, row]);
 
@@ -298,6 +305,31 @@ function KeyDetailSheet({ row, scope, canManage, statusRows, gatedPaging, onClos
 
         {error && <ErrorNotice error={error} title={error instanceof ApiError && error.status === 403 ? 'The server refused this account' : 'Request failed'} />}
         {saved && !error && <div className="text-xs text-neon-green">Saved.</div>}
+
+        <Section label={`Used by · ${needs.total != null ? needs.total : needs.rows.length} source${needs.total === 1 ? '' : 's'}`}>
+          <div className="text-[11px] text-osint-muted mb-1" data-testid="key-used-by">
+            {needs.error ? 'The source list for this key could not be loaded.'
+              : needs.loading && !needs.loaded ? 'Loading…'
+              : `${needs.total != null ? needs.total : needs.rows.length} source${needs.total === 1 ? '' : 's'} need this key (declared by the source or recorded when it was refused), showing ${needs.rows.length}.`}
+            {' '}<Link className="text-accent hover:underline" to={`/console/sources?key=${encodeURIComponent(row.name)}`} onClick={onClose}>Open in Sources</Link>
+          </div>
+          {needs.error && <ErrorNotice error={needs.error} title="Could not list the sources that use this key" onRetry={needs.reload} />}
+          {needs.loaded && needs.rows.length === 0 && <div className="text-xs text-osint-muted">No registered source declares or reports a need for this key.</div>}
+          <ul className="divide-y divide-osint-border -my-1">
+            {needs.rows.map((s) => (
+              <li key={s.id} className="py-1.5">
+                <button type="button" onClick={() => { onClose(); navigate(`/console/sources?source=${encodeURIComponent(s.id)}`); }} className="w-full flex items-center gap-2 text-left hover:text-accent">
+                  <span className={cx('w-2 h-2 rounded-full flex-shrink-0', `status-${s.status || 'pending'}`)} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-xs text-osint-text truncate">{s.name || s.id}</span>
+                    <span className="block text-[10px] text-osint-muted">{s.category}{s.health?.state && s.health.state !== 'ok' ? ` · ${s.health.state}` : ''}</span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+          <PagedFooter className="mt-2" shown={needs.rows.length} total={needs.total} hasMore={needs.hasMore} busy={needs.loadingMore} onMore={needs.loadMore} error={needs.moreError} noun="sources" />
+        </Section>
 
         <Section label={`Waiting on this key · ${usedBy.length}`}>
           <div className="text-[11px] text-osint-muted mb-1">Sources the server reports as waiting on a credential. Sources whose key is already set are healthy and are not listed here.</div>

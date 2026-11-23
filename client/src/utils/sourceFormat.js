@@ -52,6 +52,20 @@ export function fmtPct(x) {
 }
 
 /** The server's `kind` word → a sentence an analyst can act on. */
+/** The scheduler's cadence policy mode for a row (sourceapi `schedule.policy`,
+ *  /api/sources/cadence `policy.mode`). "realtime" is a row declared at or below
+ *  sched.realtime_max_sec: a global interval does not apply to it. */
+export const POLICY_LABELS = {
+  declared: 'declared: runs at its own interval',
+  global: 'global: the system-wide interval applies',
+  clamped: 'clamped: floor/ceiling applied',
+  realtime: 'real-time: exempt from the global interval',
+};
+export function policyLabel(mode) {
+  if (mode === null || mode === undefined || mode === '') return 'declared';
+  return POLICY_LABELS[mode] || String(mode);
+}
+
 export const KIND_LABELS = {
   pivot: 'Entity pivot — runs when a search names an entity',
   scheduled: 'Scheduled feed — fetched on its interval',
@@ -113,7 +127,8 @@ export function splitTemplate(tmpl) {
 // gated | degraded | pending, plus `broken` for every state that is not
 // ok). It is a SEARCH_KEY so a filtered list stays shareable as a URL,
 // which is the whole reason these live here rather than in component state.
-export const SEARCH_KEYS = ['q', 'group', 'collector', 'category', 'engine', 'kind', 'status', 'health', 'grade', 'has_items', 'sort', 'desc'];
+// `key` is a credential NAME (/api/keys): only the sources that need it.
+export const SEARCH_KEYS = ['q', 'group', 'collector', 'category', 'engine', 'kind', 'status', 'health', 'grade', 'key', 'has_items', 'sort', 'desc'];
 export function searchPath(params, { limit } = {}) {
   const sp = new URLSearchParams();
   for (const k of SEARCH_KEYS) {

@@ -11,7 +11,7 @@ import { isSafeUrl } from '../../utils/safeUrl.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import {
   measured, fmtInterval, fmtBytes, fmtCount, fmtPct, kindLabel, engineLabel,
-  statusTone, gradeTone, splitTemplate, NOT_MEASURED,
+  statusTone, gradeTone, splitTemplate, policyLabel, NOT_MEASURED,
 } from '../../utils/sourceFormat.js';
 
 /* /console/sources/:id — one source, in the order the audit asked for: what
@@ -387,7 +387,7 @@ export default function SourceDetailPage() {
           <KV pairs={[
             ['declared interval', fmtInterval(sch.declaredInterval)],
             ['measured interval', sch.adaptive ? (sch.measuredInterval != null ? `${fmtInterval(sch.measuredInterval)} (from the newest stored item)` : 'adaptive — no dated item yet') : 'not adaptive'],
-            ['policy interval', sch.policyInterval != null ? `${fmtInterval(sch.policyInterval)} (${sch.policy || 'declared'})` : 'not reported'],
+            ['policy interval', sch.policyInterval != null ? `${fmtInterval(sch.policyInterval)} (${policyLabel(sch.policy)})` : 'not reported'],
             ['set for this source', sch.overrideInterval != null ? `${fmtInterval(sch.overrideInterval)} (outranks the policy)` : 'no'],
             ['effective interval', sch.effectiveInterval != null ? `${fmtInterval(sch.effectiveInterval)}${sch.cadenceBasis ? ` (${sch.cadenceBasis})` : ''}` : 'as declared'],
             ['next due', sch.next_due ? `${when(sch.next_due)}${sch.overdue ? ' — overdue' : ''}` : (sch.declaredInterval > 0 ? 'not yet run' : 'on demand')],

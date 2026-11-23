@@ -32,12 +32,15 @@ PAGER_KEYS = ['"per_page"', '"page_size"', '"pageSize"', '"perPage"', '"itemsPer
 LINK_KEYS = ['"next_url"', '"nextUrl"', '"nextPageUrl"', '"@odata.nextLink"',
              '"next_page"', '"nextLink"', '"next_page_url"', '"nextRecordsUrl"',
              '"meta.pagination.next"', '"pagination.next_page"']
-# KNOWN, NOT YET UNIFIED. core/pagination_probe.c proposes pager parameters to an
-# operator from its own candidate list. It sits in core/, which the 2026-11-16
-# unification did not touch; it is recorded here so the exception is a line in a
-# test and not a surprise. Remove the entry when the probe reads PW_PAGERS.
-EXEMPT = {os.path.join('core', 'pagination_probe.c'): 'pager table'}
+# core/pagination_probe.c used to keep its own size/offset name lists; it now
+# reads lib/pagewalk.c (pw_declared_size_param, pw_url_has_cursor). No exemptions.
+EXEMPT = {}
+# The probe's retired SIZE_PARAMS / OFF_PARAMS, plus any array under those names.
+PROBE_SIZE_KEYS = ['"limit"', '"rows"', '"$limit"', '"resultRecordCount"', '"page_size"',
+                   '"per_page"', '"pageSize"', '"$top"', '"size"', '"maxRecords"',
+                   '"count"', '"retmax"', '"itemsPerPage"']
 LISTS = [('declared-total list', TOTAL_KEYS, 3),
+         ('probe size list', PROBE_SIZE_KEYS, 6),
          ('pager table', PAGER_KEYS, 4),
          ('next-link list', LINK_KEYS, 3)]
 
@@ -63,6 +66,9 @@ def selftest():
     # ... as is a second pager table ...
     t = '{"per_page","page"},{"$limit","$offset"},{"resultRecordCount","resultOffset"}'
     assert scan([('x.c', t)]), 'second pager table not detected'
+    # ... the probe's old inline size array is seen ...
+    t = 'static const char *const SIZE_PARAMS[] = {"limit", "rows", "$limit", "resultRecordCount", "page_size", "per_page", NULL};'
+    assert scan([('x.c', t)]), 'second size list not detected'
     # ... and one mention is not a list.
     t = 'cJSON *v = get(doc, "totalResults"); /* per_page */'
     assert not scan([('x.c', t)]), 'a single mention flagged'

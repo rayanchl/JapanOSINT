@@ -640,6 +640,19 @@ long pw_declared_size_below(const char *url, unsigned uses, long below) {
   }
   return -1;
 }
+const char *pw_declared_size_param(const char *url, long *size) {
+  for (int i = 0; PW_PAGERS[i].size; i++) {
+    if (!(PW_PAGERS[i].uses & PWP_DECL)) continue;
+    long v = pw_url_int(url, PW_PAGERS[i].size);
+    if (v > 0) { if (size) *size = v; return PW_PAGERS[i].size; }
+  }
+  return NULL;
+}
+int pw_url_has_cursor(const char *url) {
+  for (int i = 0; PW_CURSORS[i].name; i++)
+    if ((PW_CURSORS[i].uses & PWC_SEED) && pw_url_int(url, PW_CURSORS[i].name) >= 0) return 1;
+  return 0;
+}
 long pw_declared_size(const char *url, unsigned uses) {
   return pw_declared_size_below(url, uses, LONG_MAX);
 }

@@ -173,6 +173,7 @@ export default function SourcesListPage() {
         <FacetSelect label="all statuses" value={filters.status} onChange={(v) => set({ status: v })} facet={facets?.statuses} />
         {/* "broken" is every state that is not ok — one query, so a state added
             later cannot be missed by adding four counts together. */}
+        {filters.key && <Button size="sm" type="button" className="border-accent/40 text-accent font-mono" title="Only sources that need this credential (click to clear)" onClick={() => set({ key: '' })}>needs {filters.key} ✕</Button>}
         <FacetSelect label="all health" value={filters.health} onChange={(v) => set({ health: v })} facet={facets?.healths} />
         <Button size="sm" type="button" aria-pressed={filters.kind === 'pivot'} className={cx(filters.kind === 'pivot' && 'border-accent/40 text-accent')} title="Entity pivots: sources you run with an entity" onClick={() => set({ kind: filters.kind === 'pivot' ? '' : 'pivot' })}>pivots only</Button>
         <Toggle on={Boolean(filters.has_items)} onChange={(v) => set({ has_items: v })} label="with items only" />

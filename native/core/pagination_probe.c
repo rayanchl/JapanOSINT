@@ -1,6 +1,7 @@
 /* core/pagination_probe.c — see pagination_probe.h for why this exists. */
 #include "pagination_probe.h"
 #include "httpclient.h"
+#include "../lib/pagewalk.h"
 #include "url_override.h"
 #include "../source.h"
 #include "../third_party/cJSON.h"
@@ -20,15 +21,8 @@
  * us no way to ask for the next page. Everything else is either uncapped or
  * already walkable by lib/pagewalk.c. */
 
-static const char *const SIZE_PARAMS[] = {
-  "limit", "rows", "$limit", "resultRecordCount", "page_size", "per_page",
-  "pageSize", "$top", "size", "maxRecords", "count", "retmax", "itemsPerPage",
-  NULL
-};
-static const char *const OFF_PARAMS[] = {
-  "offset", "$skip", "skip", "resultOffset", "startIndex", "start", "from",
-  "page", "pageNumber", "p", NULL
-};
+/* The size and cursor spellings are lib/pagewalk.c's (PW_PAGERS, the cursor
+ * table): the probe used to keep a list of each, which drifted from the walker. */
 
 /* A candidate continuation parameter. `is_page` distinguishes a 1-based PAGE
  * NUMBER from a record OFFSET: page 2 of a 25-per-page feed is `page=2`, not
@@ -53,38 +47,17 @@ static const fam_t FAMILIES[] = {
 static const pw_cand GENERIC[]      = { {"offset",0}, {"start",0}, {"skip",0}, {"page",1}, {NULL,0} };
 static const pw_cand GENERIC_PAGED[] = { {"page",1}, {"offset",0}, {"start",0}, {NULL,0} };
 
-static int find_num_param(const char *url, const char *name, long *val) {
-  size_t nl = strlen(name);
-  const char *q = strchr(url, '?');
-  if (!q) return 0;
-  for (const char *p = q; *p; p++) {
-    if (*p != '?' && *p != '&') continue;
-    const char *k = p + 1;
-    if (strncasecmp(k, name, nl) != 0 || k[nl] != '=') continue;
-    if (!isdigit((unsigned char)k[nl + 1])) continue;
-    if (val) *val = strtol(k + nl + 1, NULL, 10);
-    return 1;
-  }
-  return 0;
-}
-
 static const char *size_param_of(const char *url, long *size) {
-  for (int i = 0; SIZE_PARAMS[i]; i++)
-    if (find_num_param(url, SIZE_PARAMS[i], size)) return SIZE_PARAMS[i];
-  return NULL;
+  return pw_declared_size_param(url, size);
 }
-static int has_off_param(const char *url) {
-  for (int i = 0; OFF_PARAMS[i]; i++)
-    if (find_num_param(url, OFF_PARAMS[i], NULL)) return 1;
-  return 0;
-}
+static int has_off_param(const char *url) { return pw_url_has_cursor(url); }
 static const pw_cand *candidates_for(const char *url, const char *sp) {
   for (int i = 0; FAMILIES[i].needle; i++)
     if (strstr(url, FAMILIES[i].needle)) return FAMILIES[i].cands;
   /* A per-page/page-size cap names a page-NUMBERED API far more often. */
-  if (sp && (!strcasecmp(sp, "per_page") || !strcasecmp(sp, "page_size") ||
-             !strcasecmp(sp, "pageSize") || !strcasecmp(sp, "itemsPerPage")))
-    return GENERIC_PAGED;
+  { const pw_pager *pg = sp ? pw_pager_find(sp) : NULL;
+    if (pg && pg->page_numbered)
+      return GENERIC_PAGED; }
   return GENERIC;
 }
 

@@ -19,6 +19,7 @@
 #include "scheduler.h"
 #include "../lib/hpengine.h"
 #include "layertab.h"
+#include "credtab.h"
 #include "../lib/jocore.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
@@ -657,6 +658,36 @@ static int hit_cmp(const void *pa, const void *pb) {
   return g_desc ? -c : c;
 }
 
+/* 1 when `d` needs the credential `key`. The registry's own declarations, not a
+ * mapping of ours: an hpengine row's key_env, and the credtab req/any rows
+ * (statusapi's getCredentialStatus reads the same table; optional vars are NOT
+ * "needs"). Plus what the run recorded: a gated notice's env_vars_required
+ * (health.env), which is how a hand-written collector that gates in code says
+ * so. Exact, case-sensitive: env var names are. */
+static int csv_has(const char *list, const char *key) {
+  size_t kl = strlen(key);
+  for (const char *p = list; p && *p; ) {
+    const char *e = strchr(p, ',');
+    size_t n = e ? (size_t)(e - p) : strlen(p);
+    if (n == kl && !strncmp(p, key, kl)) return 1;
+    if (!e) break;
+    p = e + 1;
+  }
+  return 0;
+}
+static int source_needs_key(const source_def *d, const health_t *h, const char *key) {
+  if (d->engine && !strcmp(d->engine, "hpengine")) {
+    const hp_source *hs = hp_source_get(d->id);
+    if (hs && hs->key_env && !strcmp(hs->key_env, key)) return 1;
+  }
+  const cred_def *c = cred_get(d->id);
+  if (c) {
+    for (int i = 0; c->req[i]; i++) if (!strcmp(c->req[i], key)) return 1;
+    for (int i = 0; c->any[i]; i++) if (!strcmp(c->any[i], key)) return 1;
+  }
+  return h && h->env[0] && csv_has(h->env, key);
+}
+
 static int hit_matches(const reg_ent *e, const snapshot *s, const sourceapi_query *q,
                        hit_t *out) {
   const source_def *d = e->d;
@@ -683,6 +714,7 @@ static int hit_matches(const reg_ent *e, const snapshot *s, const sourceapi_quer
     if (!strcmp(q->health, "broken")) { if (!strcmp(hs, "ok")) return 0; }
     else if (strcmp(hs, q->health)) return 0;
   }
+  if (nonempty(q->credkey) && !source_needs_key(d, snap_health(s, d->id), q->credkey)) return 0;
   const source_trust *t = snap_trust(s, d->id);
   if (nonempty(q->grade)) {
     if (!strcmp(q->grade, "unrated")) { if (t && t->rated) return 0; }
@@ -774,10 +806,22 @@ static cJSON *search_obj(db_handle *db, const sourceapi_query *q, const char *fo
   add_str_or_null(fl, "status", qq.status);
   add_str_or_null(fl, "health", qq.health);
   add_str_or_null(fl, "grade", qq.grade);
+  add_str_or_null(fl, "key", qq.credkey);
   cJSON_AddBoolToObject(fl, "has_items", qq.has_items);
   cJSON_AddStringToObject(fl, "sort", g_sort);
   cJSON_AddBoolToObject(fl, "desc", qq.desc);
   cJSON_AddItemToObject(meta, "filters", fl);
+  if (nonempty(qq.credkey)) {
+    /* In-band, rule 2: how many sources need this credential, whatever the page
+     * shows. The same figure as page.total, named for what it counts so a
+     * client does not have to know that. */
+    cJSON *ck = cJSON_CreateObject();
+    cJSON_AddStringToObject(ck, "name", qq.credkey);
+    cJSON_AddNumberToObject(ck, "sources", hits ? nh : 0);
+    cJSON_AddNumberToObject(ck, "shown", shown);
+    cJSON_AddStringToObject(ck, "basis", "hpengine key_env + credential table (required/any-of) + recorded gated notices");
+    cJSON_AddItemToObject(meta, "credential", ck);
+  }
   cJSON_AddItemToObject(o, "meta", meta);
   snap_unlock();
   free(hits);

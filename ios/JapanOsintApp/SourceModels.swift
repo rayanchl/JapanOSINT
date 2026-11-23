@@ -437,6 +437,7 @@ struct CadencePolicy: Decodable, Hashable {
     let global_interval_sec: Int?
     let min_interval_sec: Int?
     let max_interval_sec: Int?
+    let realtime_max_sec: Int?
     let mode: String?
 }
 
@@ -459,6 +460,19 @@ struct CadenceEnvelope: Decodable {
 // ── Formatting helpers shared by the source screens ────────────────────────
 
 enum SourceFormat {
+    /// The scheduler's cadence policy for a row (`schedule.policy`). "realtime"
+    /// is a row declared at or below `sched.realtime_max_sec`: a global
+    /// interval does not apply to it.
+    static func policy(_ mode: String?) -> String {
+        switch mode ?? "" {
+        case "", "declared": return "declared"
+        case "global":   return "global (system-wide interval)"
+        case "clamped":  return "clamped (floor/ceiling)"
+        case "realtime": return "real-time (exempt from the global interval)"
+        case let other: return other
+        }
+    }
+
     /// "every 6 h" / "every 90 s" / "on demand".
     static func interval(_ seconds: Double?) -> String {
         guard let s = seconds, s > 0 else { return "on demand" }
