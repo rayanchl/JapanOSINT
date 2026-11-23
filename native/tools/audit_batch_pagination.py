@@ -39,7 +39,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # post_body value and calls the row paginated -- and split `pagination_ok` out
 # with a naive `.split(";")` that ignores the `\;` escape the format defines
 # for header values. Two more ways for two tools to disagree about one line.
-from manifest import COLS, parse_opts                       # noqa: E402
+from manifest import COLS, parse_opts, iter_rows                       # noqa: E402
 
 PAGE_PARAM = re.compile(
     r"[?&](page|pageNum|pageNumber|offset|start|startIndex|startAt|skip|from|"
@@ -57,30 +57,11 @@ SIZE_PARAM = re.compile(
     r"page%5Bsize%5D)=(\d+)", re.I)
 
 def rows(paths):
-    """-> (rows, malformed) — the lines that LOOK like rows and are not come
-    back rather than being `continue`d over. Skipping them silently meant this
-    tool reported "0 findings" about a file it had only partly read, which is
-    the same lie as a passing gate."""
-    out, bad = [], []
-    for p in paths:
-        for lno, line in enumerate(io.open(p, encoding="utf-8"), 1):
-            # rstrip \r as well as \n, matching manifest.iter_lines(): a
-            # manifest .txt is not covered by .gitattributes' `eol=lf` (that
-            # only forces *.sh/*.py), so a Windows checkout with
-            # core.autocrlf=true can hand this CRLF lines. Without the \r
-            # strip it rides along on the last column (opts) into every
-            # downstream field.
-            s = line.rstrip("\n").rstrip("\r")
-            if not s.strip() or s.lstrip().startswith("#"):
-                continue
-            at = "%s:%d" % (p.rsplit("/", 1)[-1], lno)
-            if s.count("|") != len(COLS) - 1:
-                bad.append((at, s.count("|") + 1))
-                continue
-            r = dict(zip(COLS, s.split("|")))
-            r["_at"] = at
-            out.append(r)
-    return out, bad
+    """-> (rows, malformed) via manifest.iter_rows (THE manifest reader): the
+    lines that LOOK like rows and are not come back rather than being
+    `continue`d over, so this tool never reports "0 findings" about a file it
+    had only partly read."""
+    return iter_rows(paths)
 
 
 def declares_paging(o, r=None):

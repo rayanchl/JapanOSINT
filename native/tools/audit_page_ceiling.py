@@ -70,30 +70,13 @@ import tempfile
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from jo_registry import warm_template  # noqa: E402  (one registry/binary helper, OPS-13)
 
 SCHED = re.compile(r"\[sched\] (\S+) run rc=(-?\d+) records=(-?\d+) (\d+)ms")
 NOTICE = "collector-truncation-notice"
 FAILURE = "collector-fetch-failure"
 _lock = threading.Lock()
-
-
-def checkpoint(db):
-    try:
-        con = sqlite3.connect(db)
-        con.execute("PRAGMA wal_checkpoint(TRUNCATE)")
-        con.close()
-    except Exception:
-        pass
-
-
-def warm_template(binpath, path):
-    """One boot pays for the schema, the migrations and the registry seed."""
-    env = dict(os.environ, JO_DB=path, JO_FTS_REBUILD="0")
-    p = subprocess.run([binpath, "--list-sources"], capture_output=True,
-                       env=env, stdin=subprocess.DEVNULL)
-    if p.returncode != 0:
-        raise SystemExit("could not build a warm template DB at %s" % path)
-    checkpoint(path)
 
 
 def read_back(db, sid):

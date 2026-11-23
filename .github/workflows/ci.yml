@@ -171,6 +171,8 @@ jobs:
           python3 tools/audit_page_two.py --self-test
           # OPS-13: the consolidated audit CLI; checks every subcommand's --help.
           python3 tools/jo_audit.py --self-test
+          # Shared jo_registry/manifest code driven through the tools, fake binary.
+          python3 tools/test_audit_tools.py
 
       # docs/ENVIRONMENT.md is generated from the getenv() calls (OPS-06): a new
       # variable without a regenerated table fails here.

@@ -74,6 +74,8 @@ from concurrent.futures import ThreadPoolExecutor
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from manifest import COLS, iter_lines                       # noqa: E402
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from jo_registry import unlink_db, warm_template  # noqa: E402  (one registry/binary helper, OPS-13)
 
 # Every entity token hp_uses_entity() recognises starts "{q" EXCEPT the raw
 # POST form "{Q}" -- see lib/hpengine.c. Without it, entity_of() cannot find
@@ -170,30 +172,6 @@ def partial_of(blob):
     return (int(last.group(2)), int(last.group(3))) if last else (0, 0)
 
 
-def _unlink_db(path):
-    for suf in ("", "-wal", "-shm"):
-        try:
-            os.unlink(path + suf)
-        except OSError:
-            pass
-
-
-def warm_template(binpath, path):
-    """Boot the binary once against an empty file so every run starts from the
-    same migrated, seeded database instead of paying for that per row."""
-    _unlink_db(path)
-    env = dict(os.environ, JO_DB=path, JO_FTS_REBUILD="0")
-    p = subprocess.run([binpath, "--list-sources"], capture_output=True,
-                       text=True, env=env, timeout=900)
-    if not os.path.exists(path):
-        raise SystemExit("could not build a warm template DB at %s\n%s"
-                         % (path, (p.stderr or "")[-800:]))
-    con = sqlite3.connect(path)        # fold the WAL in before it is copied
-    con.execute("PRAGMA wal_checkpoint(TRUNCATE)")
-    con.close()
-    return path
-
-
 def run_one(args):
     binpath, r, timeout, tmpl, workdir, slot = args
     ent = entity_of(r)
@@ -201,7 +179,7 @@ def run_one(args):
     # The slot is the row's index, never index % jobs: the pool does not hand
     # work out in queue order, and two runs sharing a file corrupt both.
     db = os.path.join(workdir, "r%d.db" % slot)
-    _unlink_db(db)
+    unlink_db(db)
     shutil.copyfile(tmpl, db)
     try:
         # JO_SHAPE_NOTICES=0: a collector-shape-notice is itself one emitted
@@ -219,7 +197,7 @@ def run_one(args):
         em, av = partial_of(s(e.stdout) + s(e.stderr))
         return (r["id"], "SLOW", em, av, ent or "")
     finally:
-        _unlink_db(db)
+        unlink_db(db)
     blob = (p.stdout or "") + (p.stderr or "")
     if "unknown source" in blob:
         return (r["id"], "UNREGISTERED", 0, 0, ent or "")

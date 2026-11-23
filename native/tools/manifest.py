@@ -126,6 +126,29 @@ def iter_lines(path):
         yield lno, s, "row", dict(zip(COLS, s.split("|")))
 
 
+
+def iter_rows(paths):
+    """-> (rows, malformed) for auditors that report per file:line.
+
+    Each row dict carries `_at` = "basename:lno"; `malformed` is
+    [(at, field_count)]. A line that looks like a row and is not comes back
+    here instead of being skipped, so a tool cannot report "0 findings" about a
+    file it only partly read. The two batch auditors (audit_batch_pagination,
+    audit_batch_reachable) each used to re-implement this loop."""
+    out, bad = [], []
+    for p in paths:
+        for lno, raw, kind, r in iter_lines(p):
+            if kind == "skip":
+                continue
+            at = "%s:%d" % (os.path.basename(p), lno)
+            if kind == "bad":
+                bad.append((at, raw.count("|") + 1))
+                continue
+            r["_at"] = at
+            out.append(r)
+    return out, bad
+
+
 def load(paths, strict=True):
     """Every row across `paths`, with `_src` = "file:line".
 
