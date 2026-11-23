@@ -4,7 +4,7 @@
 
 Every variable the native tree reads, found by a static scan of `core/`, `lib/`, `collectors/`, `main.c` and `registry.c` for `getenv("NAME")` and the `env_int`/`env_long`/`env_ll`/`env_double`/`env_days`/`env_pos`/`env_nonempty`/`env_truthy`/`env_str`/`jo_env`/`sanc_env_int` helpers. **Default** is shown only where the call site spells a literal (a blank means the default is computed, handled by the caller, or the variable is optional). Names assembled at runtime are not seen by a text scan.
 
-464 variables. A first-boot subset, with example values, is in `.env.example`.
+467 variables. A first-boot subset, with example values, is in `.env.example`.
 
 | Variable | Default | Read in |
 | --- | --- | --- |
@@ -136,6 +136,7 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_ALERT_DELIVER_LOOKBACK_SEC` |  | `core/alert_deliver.c` |
 | `JO_ALERT_SWEEP_SEC` |  | `core/alert_eval.c` |
 | `JO_ALOS_MAX_RESULTS` |  | `collectors/sources/alos_palsar.c` |
+| `JO_API_KEYS_FILE` |  | `core/keysapi.c` |
 | `JO_ATLAS_MAX_PAGES` |  | `collectors/sources/cyi_atlas_anchors.c` |
 | `JO_BIND` |  | `core/httpd.c` |
 | `JO_BREACH_CORPUS` |  | `core/breach_meta.c` |
@@ -203,6 +204,7 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_HTTP_BLOCK_PRIVATE` |  | `core/hostgate.c` |
 | `JO_HTTP_MAX_BODY` |  | `core/httpclient.c` |
 | `JO_HTTP_MAX_WORKERS` |  | `core/httpd.c` |
+| `JO_HTTP_USER_WORKERS` |  | `core/httpd.c` |
 | `JO_HUDOC_PAGE_MAX` |  | `collectors/sources/sanc_echr_hudoc.c` |
 | `JO_IMAGE_EMBED_MAX_WALK` | `512` | `core/image_vec.c` |
 | `JO_ISED_MAX_PAGES` |  | `collectors/sources/tsp_ised_spectrum_sites.c` |
@@ -414,6 +416,7 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `SATELLITE_OBSERVER` |  | `collectors/sources/satellite_tracker.c` |
 | `SECRETS_MASTER_KEY` |  | `core/breach_index.c`, `core/keysapi.c` |
 | `SECURITYTRAILS_API_KEY` |  | `collectors/sources/reverse_whois.c` |
+| `SEC_CONTACT` |  | `core/httpclient.c` |
 | `SEC_CONTACT_UA` |  | `core/httpclient.c` |
 | `SENTINELHUB_CLIENT_ID` |  | `collectors/sources/sentinel_japan.c` |
 | `SENTINELHUB_CLIENT_SECRET` |  | `collectors/sources/sentinel_japan.c` |

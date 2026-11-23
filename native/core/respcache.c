@@ -26,6 +26,21 @@ static struct {
 } g_e[RC_SLOTS];
 static long long g_hits, g_misses;
 
+/* Keys longer than RC_KEY_MAX-1 are stored as a fixed-size form: the first 31
+ * chars plus a 64-bit FNV-1a of the WHOLE key in hex. put/get/drop all compare
+ * that same form, so an over-long key hits, and two long keys that differ
+ * anywhere (even past the 63rd char) get different forms (barring a 64-bit
+ * collision in keys that also share their first 31 chars). Short keys are
+ * stored verbatim, exactly as before. */
+static void rc_norm(const char *key, char out[RC_KEY_MAX]) {
+  size_t n = strlen(key);
+  if (n < RC_KEY_MAX) { memcpy(out, key, n + 1); return; }
+  unsigned long long h = 1469598103934665603ULL;
+  for (size_t i = 0; i < n; i++) { h ^= (unsigned char)key[i]; h *= 1099511628211ULL; }
+  memcpy(out, key, 31);
+  snprintf(out + 31, RC_KEY_MAX - 31, "~%016llx", h);
+}
+
 static long long now_ms(void) {
   struct timespec t;
   clock_gettime(CLOCK_MONOTONIC, &t);
@@ -36,9 +51,10 @@ char *respcache_get(const char *key, int ttl_sec, long *age_ms) {
   if (age_ms) *age_ms = 0;
   if (!key || !*key || ttl_sec <= 0) return NULL;
   char *copy = NULL;
+  char nk[RC_KEY_MAX]; rc_norm(key, nk);
   pthread_mutex_lock(&g_mu);
   for (int i = 0; i < RC_SLOTS; i++) {
-    if (!g_e[i].body || strcmp(g_e[i].key, key)) continue;
+    if (!g_e[i].body || strcmp(g_e[i].key, nk)) continue;
     long long age = now_ms() - g_e[i].at_ms;
     if (age > (long long)ttl_sec * 1000) break;      /* stale: treat as a miss */
     copy = malloc(g_e[i].len + 1);
@@ -60,16 +76,17 @@ void respcache_put(const char *key, const char *body) {
   if (!copy) return;
   memcpy(copy, body, len + 1);
 
+  char nk[RC_KEY_MAX]; rc_norm(key, nk);
   pthread_mutex_lock(&g_mu);
   int slot = -1, oldest = 0;
   for (int i = 0; i < RC_SLOTS; i++) {
-    if (g_e[i].body && !strcmp(g_e[i].key, key)) { slot = i; break; }
+    if (g_e[i].body && !strcmp(g_e[i].key, nk)) { slot = i; break; }
     if (!g_e[i].body) { if (slot < 0) slot = i; }
     if (g_e[i].at_ms < g_e[oldest].at_ms) oldest = i;
   }
   if (slot < 0) slot = oldest;
   free(g_e[slot].body);
-  snprintf(g_e[slot].key, sizeof g_e[slot].key, "%s", key);
+  memcpy(g_e[slot].key, nk, sizeof nk);
   g_e[slot].body  = copy;
   g_e[slot].len   = len;
   g_e[slot].at_ms = now_ms();
@@ -77,10 +94,11 @@ void respcache_put(const char *key, const char *body) {
 }
 
 void respcache_drop(const char *key) {
+  char nk[RC_KEY_MAX]; if (key) rc_norm(key, nk);
   pthread_mutex_lock(&g_mu);
   for (int i = 0; i < RC_SLOTS; i++) {
     if (!g_e[i].body) continue;
-    if (key && strcmp(g_e[i].key, key)) continue;
+    if (key && strcmp(g_e[i].key, nk)) continue;
     free(g_e[i].body);
     g_e[i].body = NULL;
     g_e[i].len = 0;

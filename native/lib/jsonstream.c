@@ -169,6 +169,12 @@ static void js_scan(js_ctx *c) {
       }
       if (d == '"') { c->instr = 1; continue; }
       if (d == '{' || d == '[') { c->depth++; continue; }
+      if (d == ']' && c->depth == 0) {
+        /* the enclosing array's own ']' ends a trailing scalar element; it is
+         * NOT a nested close, so it must not take depth to -1. The ']' stays in
+         * the buffer for the separator pass to see as the end of the array. */
+        closed = 1; end = i; break;
+      }
       if (d == '}' || d == ']') {
         c->depth--;
         if (c->depth == 0) { closed = 1; end = i + 1; break; }

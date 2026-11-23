@@ -22,6 +22,12 @@
  * outranks this; an operator who wants "declared" back saves zeros from the
  * Sources page, which stores a policy and so wins over this default. */
 #define CAD_DEFAULT_GLOBAL_SEC 21600L
+/* A scheduled row whose DECLARED interval is at or below this is a real-time
+ * feed (wolfx-eew 10 s, jma-tsunami 60 s, odpt-train 30 s, ...) and the GLOBAL
+ * interval does not apply to it: under the compiled global 6 h those 22 rows
+ * ran every six hours. 0 disables the exemption. A min/max clamp and a
+ * per-source override still apply (audit ENG-17). */
+#define CAD_DEFAULT_REALTIME_SEC 300L
 
 static pthread_mutex_t g_mu = PTHREAD_MUTEX_INITIALIZER;
 static cadence_policy  g_pol;                 /* zeros = declared */
@@ -33,12 +39,22 @@ static atomic_uint     g_gen;
 static const char *K_GLOBAL = "sched.global_interval_sec";
 static const char *K_MIN    = "sched.min_interval_sec";
 static const char *K_MAX    = "sched.max_interval_sec";
+static const char *K_RT     = "sched.realtime_max_sec";
 
 static long env_long(const char *name) {
   const char *v = getenv(name);
   if (!v || !*v) return 0;
   char *end = NULL; long n = strtol(v, &end, 10);
   return (end && *end == 0 && n > 0) ? n : 0;
+}
+
+/* JO_SCHED_REALTIME_MAX_SEC: unset/unparsable = the compiled default, 0 = the
+ * exemption switched off. */
+static long env_realtime(void) {
+  const char *v = getenv("JO_SCHED_REALTIME_MAX_SEC");
+  if (!v || !*v) return CAD_DEFAULT_REALTIME_SEC;
+  char *end = NULL; long n = strtol(v, &end, 10);
+  return (end && *end == 0 && n >= 0) ? n : CAD_DEFAULT_REALTIME_SEC;
 }
 
 static void iso_now(char *out, size_t n) {
@@ -73,30 +89,37 @@ static int read_key(db_handle *db, const char *key, long *out, char *at, size_t 
 static const char *validate(const cadence_policy *p);
 
 void cadence_init(db_handle *db) {
-  cadence_policy p = {0, 0, 0}; const char *src = "default";
+  cadence_policy p = {0, 0, 0, 0}; const char *src = "default";
   char at[32] = {0}, by[128] = {0};
   if (db && ensure_table(db) == 0) {
     int n = 0;
     n += read_key(db, K_GLOBAL, &p.global_sec, at, sizeof at, by, sizeof by);
     n += read_key(db, K_MIN,    &p.min_sec,    at, sizeof at, by, sizeof by);
     n += read_key(db, K_MAX,    &p.max_sec,    at, sizeof at, by, sizeof by);
+    /* A policy saved before this key existed has no row for it: that reads as
+     * the compiled default (exempt), not as 0 (switched off), because an
+     * operator never chose "off" - 0 is only what a PUT of zeros stores. */
+    if (!read_key(db, K_RT, &p.realtime_max_sec, at, sizeof at, by, sizeof by))
+      p.realtime_max_sec = CAD_DEFAULT_REALTIME_SEC;
+    else n++;
     if (n) src = "db";
     /* A row written by an older build or by hand gets the same check a PUT
      * gets: an invalid stored policy is not honoured, the next source is. */
     const char *e = n ? validate(&p) : NULL;
     if (e) {
       fprintf(stderr, "[cadence] ignoring the stored policy (global=%ld min=%ld max=%ld): %s\n", p.global_sec, p.min_sec, p.max_sec, e);
-      p = (cadence_policy){0, 0, 0}; src = "default"; at[0] = 0; by[0] = 0;
+      p = (cadence_policy){0, 0, 0, 0}; src = "default"; at[0] = 0; by[0] = 0;
     }
   }
   if (!strcmp(src, "default")) {
+    p.realtime_max_sec = env_realtime();
     p.global_sec = env_long("JO_SCHED_INTERVAL_SEC");
     p.min_sec    = env_long("JO_SCHED_MIN_INTERVAL_SEC");
     p.max_sec    = env_long("JO_SCHED_MAX_INTERVAL_SEC");
     const char *e = validate(&p);
     if (e) {
       fprintf(stderr, "[cadence] ignoring JO_SCHED_*INTERVAL_SEC (global=%ld min=%ld max=%ld): %s\n", p.global_sec, p.min_sec, p.max_sec, e);
-      p = (cadence_policy){0, 0, 0};
+      p = (cadence_policy){0, 0, 0, env_realtime()};
     }
     if (p.global_sec || p.min_sec || p.max_sec) src = "env";
     else p.global_sec = CAD_DEFAULT_GLOBAL_SEC;   /* the compiled default: global 6 h */
@@ -107,7 +130,7 @@ void cadence_init(db_handle *db) {
   snprintf(g_updated_by, sizeof g_updated_by, "%s", by);
   pthread_mutex_unlock(&g_mu);
   if (p.global_sec || p.min_sec || p.max_sec)
-    fprintf(stderr, "[cadence] policy from %s: global=%ld min=%ld max=%ld\n", src, p.global_sec, p.min_sec, p.max_sec);
+    fprintf(stderr, "[cadence] policy from %s: global=%ld min=%ld max=%ld realtime_max=%ld\n", src, p.global_sec, p.min_sec, p.max_sec, p.realtime_max_sec);
 }
 
 cadence_policy cadence_get(void) {
@@ -120,29 +143,53 @@ const char *cadence_source(void) {
 }
 unsigned cadence_generation(void) { return atomic_load(&g_gen); }
 
-static long apply(const cadence_policy *p, long declared) {
-  if (declared <= 0) return declared;
-  if (p->global_sec > 0) return p->global_sec;
-  long v = declared;
+/* A real-time row: scheduled, and DECLARED at or below the policy's limit. The
+ * test is on the declared interval, never on the adaptive measurement, so a
+ * feed that merely went quiet is not mistaken for one that must stay fresh. */
+static int is_realtime(const cadence_policy *p, long declared) {
+  return p->realtime_max_sec > 0 && declared > 0 && declared <= p->realtime_max_sec;
+}
+
+/* `base` is the interval the row would run at before the policy (its declared
+ * value, or the adaptive measurement); `declared` is what it was authored
+ * with. A global interval replaces base unless the row is real-time; the
+ * min/max clamps apply to every row, real-time included. */
+static long apply_row(const cadence_policy *p, long declared, long base) {
+  if (base <= 0) return base;
+  if (p->global_sec > 0 && !is_realtime(p, declared)) return p->global_sec;
+  long v = base;
   if (p->min_sec > 0 && v < p->min_sec) v = p->min_sec;
   if (p->max_sec > 0 && v > p->max_sec) v = p->max_sec;
   return v;
 }
+static long apply(const cadence_policy *p, long declared) { return apply_row(p, declared, declared); }
 
 long cadence_apply(long declared) {
   cadence_policy p = cadence_get();
   return apply(&p, declared);
 }
-
-const char *cadence_mode_for(long declared) {
-  if (declared <= 0) return "declared";
+long cadence_apply_row(long declared, long base) {
   cadence_policy p = cadence_get();
-  if (p.global_sec > 0) return "global";
-  return apply(&p, declared) != declared ? "clamped" : "declared";
+  return apply_row(&p, declared, base);
+}
+
+static const char *mode_row(const cadence_policy *p, long declared, long base) {
+  if (base <= 0) return "declared";
+  if (p->global_sec > 0) return is_realtime(p, declared) ? "realtime" : "global";
+  return apply_row(p, declared, base) != base ? "clamped" : "declared";
+}
+const char *cadence_mode_for(long declared) {
+  cadence_policy p = cadence_get();
+  return mode_row(&p, declared, declared);
+}
+const char *cadence_mode_for_row(long declared, long base) {
+  cadence_policy p = cadence_get();
+  return mode_row(&p, declared, base);
 }
 
 static const char *validate(const cadence_policy *p) {
-  if (p->global_sec < 0 || p->min_sec < 0 || p->max_sec < 0) return "an interval cannot be negative";
+  if (p->global_sec < 0 || p->min_sec < 0 || p->max_sec < 0 || p->realtime_max_sec < 0) return "an interval cannot be negative";
+  if (p->realtime_max_sec > CAD_MAX_SEC) return "realtime_max_sec longer than a year is a typo";
   if (p->global_sec > CAD_MAX_SEC || p->min_sec > CAD_MAX_SEC || p->max_sec > CAD_MAX_SEC) return "an interval longer than a year is a typo";
   if (p->global_sec > 0 && p->global_sec < 10) return "global_interval_sec under 10 s would run every scheduled row continuously";
   if (p->max_sec > 0 && p->max_sec < 10) return "max_interval_sec under 10 s would run every scheduled row continuously";
@@ -173,7 +220,7 @@ int cadence_set(db_handle *db, const cadence_policy *p, const char *who, const c
   char at[32]; iso_now(at, sizeof at);
   if (db_exec(db, "BEGIN", NULL) != 0) { if (err) *err = "database busy"; return -1; }
   if (write_key(db, K_GLOBAL, p->global_sec, at, who) || write_key(db, K_MIN, p->min_sec, at, who) ||
-      write_key(db, K_MAX, p->max_sec, at, who) || db_exec(db, "COMMIT", NULL) != 0) {
+      write_key(db, K_MAX, p->max_sec, at, who) || write_key(db, K_RT, p->realtime_max_sec, at, who) || db_exec(db, "COMMIT", NULL) != 0) {
     db_exec(db, "ROLLBACK", NULL);
     if (err) *err = "could not persist the policy";
     return -1;
@@ -184,7 +231,7 @@ int cadence_set(db_handle *db, const cadence_policy *p, const char *who, const c
   snprintf(g_updated_by, sizeof g_updated_by, "%s", who ? who : "");
   pthread_mutex_unlock(&g_mu);
   atomic_fetch_add(&g_gen, 1);
-  fprintf(stderr, "[cadence] policy set by %s: global=%ld min=%ld max=%ld\n", who && *who ? who : "?", p->global_sec, p->min_sec, p->max_sec);
+  fprintf(stderr, "[cadence] policy set by %s: global=%ld min=%ld max=%ld realtime_max=%ld\n", who && *who ? who : "?", p->global_sec, p->min_sec, p->max_sec, p->realtime_max_sec);
   return 0;
 }
 
@@ -204,9 +251,9 @@ static int take(cJSON *j, const char *k, long *out, const char **err) {
 int cadence_parse(const char *json, const cadence_policy *base, cadence_policy *out, const char **err) {
   cJSON *j = json ? cJSON_Parse(json) : NULL;
   if (!j || !cJSON_IsObject(j)) { cJSON_Delete(j); if (err) *err = "body must be a JSON object"; return -1; }
-  cadence_policy p = base ? *base : (cadence_policy){0, 0, 0};
+  cadence_policy p = base ? *base : (cadence_policy){0, 0, 0, CAD_DEFAULT_REALTIME_SEC};
   int rc = take(j, "global_interval_sec", &p.global_sec, err) | take(j, "min_interval_sec", &p.min_sec, err) |
-           take(j, "max_interval_sec", &p.max_sec, err);
+           take(j, "max_interval_sec", &p.max_sec, err) | take(j, "realtime_max_sec", &p.realtime_max_sec, err);
   cJSON_Delete(j);
   if (rc) return -1;
   *out = p;
@@ -221,6 +268,7 @@ char *cadence_json(db_handle *db) {
   cJSON_AddNumberToObject(pj, "global_interval_sec", (double)p.global_sec);
   cJSON_AddNumberToObject(pj, "min_interval_sec", (double)p.min_sec);
   cJSON_AddNumberToObject(pj, "max_interval_sec", (double)p.max_sec);
+  cJSON_AddNumberToObject(pj, "realtime_max_sec", (double)p.realtime_max_sec);
   cJSON_AddStringToObject(pj, "mode", p.global_sec > 0 ? "global" : (p.min_sec > 0 || p.max_sec > 0) ? "clamped" : "declared");
   cJSON_AddItemToObject(o, "policy", pj);
   pthread_mutex_lock(&g_mu);
@@ -230,7 +278,7 @@ char *cadence_json(db_handle *db) {
   pthread_mutex_unlock(&g_mu);
   /* what it costs, measured over the registry */
   const source_def **a = registry_all(); int n = registry_count();
-  long rows = 0; double decl = 0, eff = 0; long fastest = 0, slowest = 0;
+  long rows = 0, rt_rows = 0; double decl = 0, eff = 0; long fastest = 0, slowest = 0;
   for (int i = 0; i < n; i++) {
     long d = a[i]->update_interval_sec;
     if (d <= 0) continue;
@@ -238,17 +286,19 @@ char *cadence_json(db_handle *db) {
      * per-row DB read (the adaptive measurement) */
     long ov = source_interval_for(a[i]->id);
     long e = ov > 0 ? ov : sched_is_pod(a[i]) ? d : apply(&p, d);
+    if (ov <= 0 && !sched_is_pod(a[i]) && p.global_sec > 0 && is_realtime(&p, d)) rt_rows++;
     rows++; decl += 86400.0 / (double)d; eff += 86400.0 / (double)e;
     if (!fastest || e < fastest) fastest = e;
     if (e > slowest) slowest = e;
   }
   cJSON *est = cJSON_CreateObject();
   cJSON_AddNumberToObject(est, "scheduled_rows", (double)rows);
+  cJSON_AddNumberToObject(est, "realtime_exempt_rows", (double)rt_rows);
   cJSON_AddNumberToObject(est, "runs_per_day_declared", (double)(long)(decl + 0.5));
   cJSON_AddNumberToObject(est, "runs_per_day_effective", (double)(long)(eff + 0.5));
   cJSON_AddNumberToObject(est, "fastest_effective_sec", (double)fastest);
   cJSON_AddNumberToObject(est, "slowest_effective_sec", (double)slowest);
-  cJSON_AddStringToObject(est, "basis", "every scheduled row's declared interval with the policy applied, except rows with a per-source interval (that interval) and maintenance pods (exempt: as declared); pivots excluded; adaptive re-measurement, backoff and quarantine not counted");
+  cJSON_AddStringToObject(est, "basis", "every scheduled row's declared interval with the policy applied, except rows with a per-source interval (that interval), real-time rows (declared at or below realtime_max_sec: exempt from the global interval, as declared) and maintenance pods (exempt: as declared); pivots excluded; adaptive re-measurement, backoff and quarantine not counted");
   cJSON_AddItemToObject(o, "estimate", est);
   char *js = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);

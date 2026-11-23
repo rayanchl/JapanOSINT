@@ -170,6 +170,28 @@ static int prop_str_eq(const char *props, const char *key, const char *want) {
   return r;
 }
 
+/* a scripted list upstream for pw_walk_list: page 1 and page 2 of two records
+ * each, page 1 carrying a next link and a declared total of 10; `same` serves
+ * page 1 again for every request; `fail_page` fails that page (1-based). */
+typedef struct { int calls; int same; int fail_page; } lw_t;
+static cJSON *lw_fetch(void *ud, const char *url) {
+  lw_t *l = ud; (void)url;
+  l->calls++;
+  if (l->fail_page && l->calls == l->fail_page) { g_fake_status = 503; return NULL; }
+  int pg = l->same ? 1 : l->calls;
+  char b[200];
+  snprintf(b, sizeof b, "{\"total_count\":%d,\"items\":[{\"id\":%d},{\"id\":%d}]%s}", l->same ? 10 : 4,
+           pg * 10, pg * 10 + 1, pg == 1 ? ",\"next\":\"https://x/a?limit=3&page=2\"" : "");
+  return cJSON_Parse(b);
+}
+static cJSON *lw_records(void *ud, cJSON *doc) { (void)ud; return cJSON_GetObjectItem(doc, "items"); }
+static int lw_emit(void *ud, cJSON *doc, const unsigned long long *skip, int nskip) {
+  (void)ud; (void)skip; (void)nskip;
+  cJSON *a = cJSON_GetObjectItem(doc, "items");
+  int n = cJSON_GetArraySize(a);
+  return n;
+}
+
 int main(void) {
   setenv("JO_PAGE_MAX", "5", 1);
   setenv("JO_PAGE_WALK", "1", 1);
@@ -564,6 +586,149 @@ int main(void) {
     ok(jo_page_max(NULL) == 20, "nor is garbage");
     setenv("JO_PAGE_MAX", "5", 1);          /* as the walks above expect */
     unsetenv("JO_JSONLIST_PAGE_MAX");
+  }
+
+  /* ── the paging CORE (2026-11-16): the one copy of each shared decision ── */
+  printf("one declared-total list: every key any of the old three accepted\n");
+  {
+    struct { const char *json; long want_plain; long want_count; const char *what; } T[] = {
+      { "{\"total_count\":7}", 7, 7, "total_count" },
+      { "{\"count\":5}", -1, 5, "bare `count` only when the caller opts in (DRF yes, pw_walk no)" },
+      { "{\"meta\":{\"count\":6}}", -1, 6, "meta.count is gated the same way" },
+      { "{\"meta\":{\"total\":9}}", 9, 9, "meta.total (pagewalk's)" },
+      { "{\"result\":{\"count\":9079}}", 9079, 9079, "result.count (CKAN, data.europa.eu)" },
+      { "{\"result\":{\"totalResults\":71323}}", 71323, 71323, "result.totalResults (Linked Data API)" },
+      { "{\"hit\":5409}", 5409, 5409, "hit (Japan Search)" },
+      { "{\"response\":{\"numFound\":12}}", 12, 12, "response.numFound (Solr, jsonlist's)" },
+      { "{\"numFound\":13}", 13, 13, "numFound (pagewalk's)" },
+      { "{\"totalRecords\":14}", 14, 14, "totalRecords (pagewalk-only key, kept)" },
+      { "{\"total_rows\":15}", 15, 15, "total_rows (pagewalk-only key, kept)" },
+      { "{\"totalFeatures\":16}", 16, 16, "totalFeatures (pagewalk's and geojson's)" },
+      { "{\"matchedCount\":17}", 17, 17, "matchedCount (geojson-only key, kept)" },
+      { "{\"@odata.count\":18}", 18, 18, "@odata.count (a key containing a dot)" },
+      { "{\"odata.count\":19}", 19, 19, "odata.count" },
+      { "{\"d\":{\"__count\":\"46144\"}}", 46144, 46144, "OData v2's string total" },
+      { "{\"resultcount\":20}", 20, 20, "resultcount, case-insensitively (pagewalk spelling)" },
+      { "{\"nhits\":21}", 21, 21, "nhits (OpenDataSoft)" },
+      { "{\"totalItems\":22}", 22, 22, "totalItems" },
+      { "{\"total\":\"many\"}", -1, -1, "a non-number is no total" },
+      { "{}", -1, -1, "nothing declared is -1, never a guess" },
+    };
+    for (size_t i = 0; i < sizeof T / sizeof T[0]; i++) {
+      cJSON *d = cJSON_Parse(T[i].json);
+      ok(pw_declared_total(d, 0) == T[i].want_plain &&
+         pw_declared_total(d, PW_TOT_COUNT) == T[i].want_count, T[i].what);
+      cJSON_Delete(d);
+    }
+    ok(pw_declared_total_xml("<r><SearchHits>50530</SearchHits><SearchResult/></r>", "<SearchResult") == 50530,
+       "the XML list lives in the same module");
+    ok(pw_declared_total_xml("<r><SearchResult><TotalCount>9</TotalCount></SearchResult></r>", "<SearchResult") == -1,
+       "and only reads before the first record");
+  }
+
+  printf("one next-link reader, one resolver, one cross-host rule\n");
+  {
+    cJSON *d = cJSON_Parse("{\"next\":\"?page=2&format=json\"}");
+    char *u = pw_next_link(d, "https://h.test/api?page=1&format=json");
+    ok(u && !strcmp(u, "https://h.test/api?page=2&format=json"), "a relative link resolves against the page it came from");
+    free(u);
+    ok(pw_next_link(d, NULL) == NULL, "an absolute-only caller refuses a relative link");
+    cJSON_Delete(d);
+    d = cJSON_Parse("{\"next\":\"\",\"links\":{\"next\":{\"href\":\"https://h.test/p3\"}}}");
+    u = pw_next_link(d, NULL);
+    ok(u && !strcmp(u, "https://h.test/p3"), "an empty `next` does not shadow a usable links.next");
+    free(u); cJSON_Delete(d);
+    d = cJSON_Parse("{\"nextLink\":\"https://h.test/odata?$skip=5\"}");
+    u = pw_next_link(d, NULL);
+    ok(u != NULL, "nextLink (pagewalk's spelling) is read by the one list");
+    free(u); cJSON_Delete(d);
+    d = cJSON_Parse("{\"next\":\"eyJvZmZzZXQiOjV9\"}");
+    ok(pw_next_link(d, "https://h.test/a") == NULL, "a bare cursor token is not glued onto the base");
+    cJSON_Delete(d);
+    u = pw_resolve_url("https://h.test/a/b?x=1", "../c?y=2", PW_RESOLVE_PATHS);
+    ok(u && !strcmp(u, "https://h.test/c?y=2"), "a relative path resolves when the caller asks for paths");
+    free(u);
+    u = pw_resolve_url("https://h.test/a/b", "//other.test/z", 0);
+    ok(u && !strcmp(u, "https://other.test/z"), "a protocol-relative link keeps the scheme");
+    free(u);
+    ok(pw_same_host("https://H.test/a", "https://h.TEST:8443/b") == 1 &&
+       pw_same_host("https://h.test/a", "https://evil.test/x?e=a@h.test") == 0 &&
+       pw_same_host(NULL, NULL) == 0, "same host is case-insensitive, ignores userinfo tricks, and NULLs are not the same host");
+  }
+
+  printf("one ceiling, one failed-page ruling\n");
+  {
+    unsetenv("JO_PAGE_MAX"); unsetenv("JO_GEOJSON_PAGE_MAX");
+    ok(pw_page_ceiling("JO_GEOJSON_PAGE_MAX", 0) == 20, "the default");
+    setenv("JO_GEOJSON_PAGE_MAX", "4", 1);
+    ok(pw_page_ceiling("JO_GEOJSON_PAGE_MAX", 0) == 4, "a legacy knob is honoured");
+    setenv("JO_PAGE_MAX", "2", 1);
+    ok(pw_page_ceiling("JO_GEOJSON_PAGE_MAX", 0) == 2 && pw_page_ceiling(NULL, 200) == 2,
+       "JO_PAGE_MAX brakes the legacy knob and a declared ceiling alike");
+    ok(!strcmp(pw_ceiling_name("JO_GEOJSON_PAGE_MAX", 200), "JO_PAGE_MAX"), "and is named as the knob that bit");
+    setenv("JO_PAGE_MAX", "5", 1);
+    unsetenv("JO_GEOJSON_PAGE_MAX");
+    ok(pw_later_page_cut(-1, 0, 0, 0, -1, 0) && pw_later_page_cut(429, 0, 0, 0, -1, 0) &&
+       pw_later_page_cut(200, 0, 0, 0, -1, 0), "transport, 429 and an unreadable 200 are a cut");
+    ok(!pw_later_page_cut(500, 1, 0, 0, -1, 0), "after a short page anything is the end of data");
+    ok(!pw_later_page_cut(404, 0, 0, 0, -1, 0) && pw_later_page_cut(404, 0, 1, 0, -1, 0),
+       "a 404 is a cut only on evidence of more");
+  }
+
+  printf("one pager table\n");
+  {
+    ok(pw_pager_find("$limit") && !strcmp(pw_pager_find("$limit")->cursor, "$offset"), "Socrata's pair");
+    ok(pw_pager_find("rpp") && !(pw_pager_find("rpp")->uses & PWP_JSON), "a declared-size-only spelling is not moved by the paired walk");
+    ok(pw_declared_size("https://x/a?rows=5&start=0", PWP_JSON) == 5, "the size a URL declares");
+    char *seed = pw_seed_cursor("https://x/a?limit=100");
+    ok(seed && strstr(seed, "offset=0"), "an offset family is seeded at 0");
+    free(seed);
+    ok(pw_seed_cursor("https://x/a?size=100") == NULL, "a page-number family is never seeded");
+  }
+
+  printf("one notice builder\n");
+  {
+    cap_t cap = {0};
+    intel_sink sink = { .emit = cap_emit, .ctx = &cap };
+    pw_notice n = PW_NOTICE_INIT;
+    n.source_id = "X"; n.url_prop = "endpoint"; n.url = "https://x"; n.used = 3; n.available = 9;
+    n.basis = "upstream declared this total"; n.pages_read = 1; n.page_ceiling = 20;
+    n.more_pages_pending = 1; n.failed_page = 2; n.failed_status = 429; n.failed_url = "https://x/2";
+    n.reason = "r"; n.remedy = "m";
+    pw_notice_emit(&sink, &n);
+    ok(cap.notices == 1 && prop_num(cap.last_notice_props, "failed_page") == 2 &&
+       prop_num(cap.last_notice_props, "records_available") == 9 &&
+       prop_str_eq(cap.last_notice_props, "records_available_basis", "upstream declared this total") &&
+       prop_has(cap.last_notice_props, "page_ceiling"),
+       "every field name the tools parse is present");
+  }
+
+  printf("the list walk (jsonlist / geojson drivers) over the core\n");
+  {
+    lw_t lw = { .same = 0 };
+    cap_t cap = {0};
+    intel_sink sink = { .emit = cap_emit, .ctx = &cap };
+    pw_list_ops ops = { &lw, lw_fetch, lw_records, lw_emit };
+    int n = pw_walk_list(PW_FLAVOR_JSON, &sink, "L", "https://x/a?limit=3", "https://x/a?limit=3", NULL, &ops);
+    ok(n == 4 && lw.calls == 2 && cap.notices == 0, "a link-followed list walk collects every page and says nothing");
+    lw = (lw_t){ .same = 1 };
+    memset(&cap, 0, sizeof cap);
+    n = pw_walk_list(PW_FLAVOR_JSON, &sink, "L", "https://x/a?limit=3", "https://x/a?limit=3", NULL, &ops);
+    ok(n == 2 && cap.notices == 1 && prop_num(cap.last_notice_props, "records_available") == 10,
+       "a re-served page stops the walk, is not emitted twice, and the declared remainder is disclosed");
+    ok(prop_str_eq(cap.last_notice_props, "records_available_basis", "upstream declared this total"),
+       "with the basis stated");
+    lw = (lw_t){ .same = 0 };
+    memset(&cap, 0, sizeof cap);
+    setenv("JO_PAGE_MAX", "1", 1);
+    n = pw_walk_list(PW_FLAVOR_JSON, &sink, "L", "https://x/a?limit=3", "https://x/a?limit=3", NULL, &ops);
+    ok(n == 2 && cap.notices == 1 && prop_str_eq(cap.last_notice_props, "reason", "page ceiling"),
+       "the ceiling is the operator's brake and the notice says the ceiling bit");
+    setenv("JO_PAGE_MAX", "5", 1);
+    lw = (lw_t){ .same = 0, .fail_page = 2 };
+    memset(&cap, 0, sizeof cap);
+    n = pw_walk_list(PW_FLAVOR_JSON, &sink, "L", "https://x/a?limit=3", "https://x/a?limit=3", NULL, &ops);
+    ok(n == 2 && prop_num(cap.last_notice_props, "failed_page") == 2, "a failed later page is named");
   }
 
   printf(failures ? "\n%d FAILED\n" : "\nall passed\n", failures);

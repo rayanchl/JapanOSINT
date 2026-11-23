@@ -1183,823 +1183,82 @@ int jsonlist_emit_ex(intel_sink *sink, const char *source_id, cJSON *doc,
  * has the upstream told us there is more? We answer it from what the upstream
  * actually said, and never from an assumption. */
 
-/* Dotted lookup that tolerates a missing level, for probing candidate keys. */
-/* A KEY MAY CONTAIN A LITERAL DOT, and splitting every path unconditionally
- * made such a key unreachable. OData spells its envelope fields `odata.count`
- * and `@odata.nextLink` — single keys, dots and all — so the split looked for
- * `doc["odata"]["count"]` and `doc["@odata"]["nextLink"]`, which no OData
- * server has ever published. `"@odata.nextLink"` therefore sat in
- * next_link()'s key list, under a comment naming OData as a supported
- * dialect, matching nothing: every OData v4 row in the tree stopped at page 1
- * with the capability claimed two lines above the code that could not deliver
- * it, and the same split hid the declared total.
- *
- * The literal is tried only AFTER the split fails, and only for a path that
- * has a dot to split. That makes it strictly additive: a path that resolves
- * today resolves to the same node, so nothing that works can change. */
-static cJSON *dotted(cJSON *doc, const char *path) {
-  char buf[128];
-  snprintf(buf, sizeof buf, "%s", path);
-  cJSON *cur = doc;
-  char *save = NULL;
-  for (char *tok = strtok_r(buf, ".", &save); tok && cur;
-       tok = strtok_r(NULL, ".", &save))
-    cur = cJSON_GetObjectItem(cur, tok);
-  if (!cur && strchr(path, '.')) cur = cJSON_GetObjectItem(doc, path);
-  return cur;
-}
-
-/* The server's own "next page" link, if it published one. Ordered most- to
- * least-specific: `links.next` is the JSON:API/CKAN spelling, `@odata.nextLink`
- * is OData, the rest are common house styles. A next link that is present but
- * null/false/empty means "this is the last page" in every one of these
- * dialects, so it is treated as absent rather than followed. */
-/* Resolve a next-link against the page it came from. An absolute URL passes
- * through; "?page=2" and "/api/x?page=2" are the two relative spellings that
- * actually occur (bio.tools answers `"next": "?page=2&format=json"`, and that
- * one string was the whole reason 30,000 bio.tools rows stopped at page 1 —
- * the link WAS published, we just refused to read it). Anything else — a
- * scheme we do not speak, a bare token — is not a URL and is refused rather
- * than glued onto the base and hoped for. */
-static char *resolve_link(const char *base, const char *href) {
-  if (!href || !href[0]) return NULL;
-  if (!strncmp(href, "http://", 7) || !strncmp(href, "https://", 8))
-    return strdup(href);
-  size_t cap = strlen(base) + strlen(href) + 2;
-  char *out = malloc(cap);
-  if (!out) return NULL;
-  if (href[0] == '?') {                       /* same path, new query */
-    const char *q = strchr(base, '?');
-    size_t head = q ? (size_t)(q - base) : strlen(base);
-    memcpy(out, base, head);
-    snprintf(out + head, cap - head, "%s", href);
-    return out;
-  }
-  if (href[0] == '/' && href[1] == '/') {     /* protocol-relative: "//host/p" */
-    const char *p = strstr(base, "://");
-    if (!p) { free(out); return NULL; }
-    snprintf(out, cap, "%.*s%s", (int)(p - base) + 1, base, href);
-    return out;
-  }
-  if (href[0] == '/') {                       /* same origin, new path */
-    const char *p = strstr(base, "://");
-    const char *slash = p ? strchr(p + 3, '/') : NULL;
-    size_t head = slash ? (size_t)(slash - base) : strlen(base);
-    memcpy(out, base, head);
-    snprintf(out + head, cap - head, "%s", href);
-    return out;
-  }
-  free(out);
-  return NULL;
-}
-
-/* The server's own "next page" link, if it published one. Ordered most- to
- * least-specific: `links.next` is the JSON:API/CKAN spelling, `@odata.nextLink`
- * is OData, the rest are common house styles. A next link that is present but
- * null/false/empty means "this is the last page" in every one of these
- * dialects, so it is treated as absent rather than followed. */
-static char *next_link(cJSON *doc, const char *base) {
-  static const char *const KEYS[] = {
-    "links.next", "next", "next_url", "nextUrl", "nextPageUrl",
-    "meta.next", "paging.next", "@odata.nextLink", "next_page",
-    "meta.pagination.next", "pagination.next", "pagination.next_page",
-    "meta.pagination.next_page", "links.next_url",
-    /* OCHA FTS (api.hpc.tools) puts it at meta.nextLink: ocha-fts-flow-2026
-     * stopped after its first 200 of 20,161 flows (measured 2026-09-15). */
-    "meta.nextLink", NULL };
-  for (int i = 0; KEYS[i]; i++) {
-    cJSON *v = dotted(doc, KEYS[i]);
-    if (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0]) {
-      char *u = resolve_link(base, v->valuestring);
-      if (u) return u;
-    }
-    /* CKAN and some JSON:API servers nest it as {next: {href: "..."}}. */
-    if (v && cJSON_IsObject(v)) {
-      cJSON *h = cJSON_GetObjectItem(v, "href");
-      if (h && cJSON_IsString(h) && h->valuestring) {
-        char *u = resolve_link(base, h->valuestring);
-        if (u) return u;
-      }
-    }
-  }
-  /* The ARRAY form, {"links":[{"rel":"next","href":…},…]} — Oracle ORDS, HAL
-   * and OGC API. The same gap existed in lib/pagewalk.c's pw_next_link and was
-   * fixed there at the same time; this is the other copy. Selected by rel,
-   * never by position. */
-  cJSON *arr = cJSON_GetObjectItem(doc, "links");
-  if (arr && cJSON_IsArray(arr)) {
-    cJSON *l;
-    cJSON_ArrayForEach(l, arr) {
-      cJSON *rel = cJSON_GetObjectItem(l, "rel");
-      cJSON *h   = cJSON_GetObjectItem(l, "href");
-      if (rel && cJSON_IsString(rel) && rel->valuestring &&
-          strcasecmp(rel->valuestring, "next") == 0 &&
-          h && cJSON_IsString(h) && h->valuestring) {
-        char *u = resolve_link(base, h->valuestring);
-        if (u) return u;
-      }
-    }
-  }
-  return NULL;
-}
-
-/* Fingerprint of a page's records, used only to notice that the upstream is
- * handing back the SAME page again. That happens whenever a cursor guess is
- * wrong — the server ignores the parameter it does not know and re-serves
- * page 1 — and without this the walk would spend the whole ceiling refetching
- * one page and then file a truncation notice claiming pages were pending.
- * Stopping on no-progress makes a wrong guess cost one wasted request and
- * tell no lies. */
-unsigned long long jsonlist_page_fp(cJSON *arr) {
-  unsigned long long h = 1469598103934665603ULL;   /* FNV-1a 64 */
-  if (!arr) return h;
-  int i = 0;
-  cJSON *rec;
-  cJSON_ArrayForEach(rec, arr) {
-    char *s = cJSON_PrintUnformatted(rec);
-    if (s) {
-      for (const unsigned char *p = (const unsigned char *)s; *p; p++)
-        h = (h ^ *p) * 1099511628211ULL;
-      free(s);
-    }
-    if (++i >= 8) break;   /* exhaustive-ok: identity probe, not a record read */
-  }
-  return h;
-}
-
-/* ── the page-1 probe's identity set ──────────────────────────────────────
- * The probe asks ONE question: this response came back for `page=1` after a
- * first request that named no page — is it the page we already have (a 1-based
- * API) or the second page (a 0-based one)? It used to be answered by comparing
- * jsonlist_page_fp() above, and that hash answers it only while the collection
- * holds still between the two requests.
- *
- * In hpengine it does not have to. hp_emit_record spends the detail budget per
- * record INSIDE the page loop, so a row with a detail_url puts every hop of
- * page 1 between the two requests of the probe. Measured on
- * us-sf-311-open311-requests (2026-10-24): ~70 s apart, 58 hops at that host's
- * 1200 ms gap, against an Open311 collection with no ORDER BY that reorders on
- * any write. The first eight records were no longer the first eight, the hash
- * missed, the probe read as new data, and the WHOLE first page was emitted a
- * second time — one page_size of collapse per run, every run, on the very
- * metric this tree reads to find rule 4b loss. hptest 28c/28d and 31e are that
- * server; they fail on the hash and pass on identity.
- *
- * So: each record's own content fingerprint, sorted, compared as a set. A
- * reorder cannot move a set, and a record whose CONTENT changed between the
- * two reads is correctly seen as new — re-emitting it updates its row, which
- * is what an update is.
- *
- * And the page is not skipped wholesale. A record that ARRIVED between the two
- * requests is on that response and on nothing we have read, so dropping the
- * page would discard it (house rule 2). The callers emit what the previous
- * page did not carry and skip what it did. Cost: one content hash per record
- * of at most two pages a run — the page a probe may follow, and the probe. */
-static unsigned long long fnv_str(unsigned long long h, const char *s) {
-  for (const unsigned char *p = (const unsigned char *)s; *p; p++)
-    h = (h ^ *p) * 1099511628211ULL;
-  return h;
-}
-
-static unsigned long long rec_fp(cJSON *rec) {
-  unsigned long long h = 1469598103934665603ULL;   /* FNV-1a 64 */
-  char *s = cJSON_PrintUnformatted(rec);
-  if (!s) return h;
-  h = fnv_str(h, s);
-  free(s);
-  return h;
-}
-
-static int fp_cmp(const void *a, const void *b) {
-  unsigned long long x = *(const unsigned long long *)a;
-  unsigned long long y = *(const unsigned long long *)b;
-  return x < y ? -1 : x > y ? 1 : 0;
-}
-
-unsigned long long *jsonlist_page_fps(cJSON *arr, int *n_out) {
-  if (n_out) *n_out = 0;
-  int n = arr ? cJSON_GetArraySize(arr) : 0;
-  if (n <= 0) return NULL;
-  unsigned long long *fps = malloc((size_t)n * sizeof *fps);
-  if (!fps) return NULL;
-  int i = 0;
-  cJSON *rec;
-  cJSON_ArrayForEach(rec, arr) {
-    if (i >= n) break;
-    fps[i++] = rec_fp(rec);
-  }
-  qsort(fps, (size_t)i, sizeof *fps, fp_cmp);
-  if (n_out) *n_out = i;
-  return fps;
-}
-
-int jsonlist_fps_has(const unsigned long long *fps, int n, cJSON *rec) {
-  if (!fps || n <= 0 || !rec) return 0;
-  unsigned long long want = rec_fp(rec);
-  int lo = 0, hi = n - 1;
-  while (lo <= hi) {
-    int mid = lo + (hi - lo) / 2;
-    if (fps[mid] == want) return 1;
-    if (fps[mid] < want) lo = mid + 1;
-    else                 hi = mid - 1;
-  }
-  return 0;
-}
-
-/* The upstream's own count of what exists, for the in-band disclosure. -1 when
- * it did not say, which is itself worth recording: "unknown" is honest, a
- * guessed total is not. */
-static long declared_total(cJSON *doc) {
-  static const char *const KEYS[] = {
-    "total_count", "totalCount", "total", "count", "meta.count",
-    "numberMatched", "totalResults", "result.count", "meta.total",
-    "totalElements", "recordsTotal",
-    /* The families whose totals the walk was blind to. ROR answers
-     * `number_of_results: 108000` next to 20 items, Solr `response.numFound`,
-     * OpenDataSoft `nhits`, CORDIS `payload.totalHits`; each of those is the
-     * upstream telling us, in its own words, how much it is holding back. */
-    "number_of_results", "numFound", "response.numFound", "nhits",
-    "totalHits", "payload.totalHits", "totalResultCount", "total_results",
-    "resultCount", "hits.total", "meta.pagination.total", "pagination.total",
-    /* Cabo Verde's statistics office answers `totalItems: 2425` beside 50
-     * items, with a `currentPage` it echoes back as 0 whatever you send, so
-     * the row read 50 of 2,425 and nothing could say so. Added because a live
-     * row needed it, not on the chance that something might. */
-    "totalItems",
-    /* OData's own spelling of the same number, v4 and v3: single keys whose
-     * name contains a dot, which is why dotted() tries the literal first.
-     * LegCo Hong Kong answers `odata.count: 551619` beside 200 rows when the
-     * request carries `$inlinecount=allpages`. */
-    "@odata.count", "odata.count",
-    /* The Linked Data API's envelope puts it one level down, at
-     * `result.totalResults`, and `totalResults` at the root could not reach
-     * it: every lda.data.parliament.uk row in the tree read "the upstream
-     * declares no total" while the number sat beside the items it was holding
-     * back (71,323 Commons oral questions against the 10,000 a run reaches).
-     * Here rather than in the row, because it is the API family's envelope and
-     * not one row's quirk — the same reason `response.numFound` is here for
-     * Solr. Measured 2026-10-23. */
-    "result.totalResults",
-    /* Japan Search's `jps-cross` item API answers `hit: 5409` beside the 500
-     * records on a page, and 130 hp rows in this tree read that API — every one
-     * of them reading 2,000 of its collection (the API's own `from + size <=
-     * 2000` bound) and saying nothing, because no list here could reach the
-     * number. Singular `hit` is safe where bare `count` is not: "records in
-     * THIS page" is spelled `count`, `size` or `hits`, never `hit`. Added
-     * because a live family needed it, and measured on it. */
-    "hit",
-    NULL };
-  for (int i = 0; KEYS[i]; i++) {
-    cJSON *v = dotted(doc, KEYS[i]);
-    if (v && cJSON_IsNumber(v) && v->valuedouble >= 0)
-      return (long)v->valuedouble;
-  }
-  /* OData v2 verbose writes its total as a STRING, `d.__count: "46144"`, so no
-   * entry above can match it: every OData v2 row read "the upstream declares
-   * no total" while the number sat in the envelope. pagewalk.c's reader, so
-   * the two lists cannot disagree about it. */
-  return pw_odata_v2_count(doc);
-}
-
-/* Read `name=<int>` out of a query string. Returns -1 if absent/unparseable. */
-/* declared_total(), exported for hpengine's page_walk rows (jsonlist.h). */
-long jsonlist_declared_total(cJSON *doc) { return declared_total(doc); }
-
-long jsonlist_query_int(const char *url, const char *name) {
-  const char *q = strchr(url, '?');
-  if (!q) return -1;
-  size_t nlen = strlen(name);
-  for (const char *p = q + 1; p && *p; ) {
-    if (!strncmp(p, name, nlen) && p[nlen] == '=') {
-      char *end = NULL;
-      long v = strtol(p + nlen + 1, &end, 10);
-      if (!end || end == p + nlen + 1) return -1;
-      /* The WHOLE value must be the integer. `start` and `from` are date
-       * parameters at least as often as they are record offsets, and a leading
-       * digit run is not enough to tell them apart: `start=2026-08-01` parses
-       * as 2026 and would be "advanced" into a different time window — a
-       * fabricated request whose records then get attributed to this source.
-       * Requiring the value to end at the parameter boundary rejects every
-       * date, timestamp and composite value while accepting every genuine
-       * `offset=120` / `limit=20`. */
-      if (*end != '&' && *end != 0) return -1;
-      return v;
-    }
-    p = strchr(p, '&');
-    if (p) p++;
-  }
-  return -1;
-}
-
-/* Replace `name=<old>` with `name=<new>`, or append it. Caller frees. */
+/* ── the page walk ────────────────────────────────────────────────────────
+ * lib/pagewalk.c owns every decision a page walk makes (the declared total, the
+ * next page, the repeat guards, the ceiling, the failed-page ruling, the
+ * disclosure) and the loop itself (pw_walk_list). What is left here is what is
+ * peculiar to a list of JSON records: where the array is, how a page becomes
+ * rows, and the shape tally. The historic jsonlist_* names below are aliases —
+ * hpengine's `page_walk` rows and the tests call them — and stay so that a row
+ * moved from VJSON onto hpengine pages exactly as it did. */
+long jsonlist_declared_total(cJSON *doc) { return pw_declared_total(doc, PW_TOT_COUNT); }
+long jsonlist_query_int(const char *url, const char *name) { return pw_url_int(url, name); }
 char *jsonlist_query_set(const char *url, const char *name, long value) {
-  size_t cap = strlen(url) + strlen(name) + 48;
-  char *out = malloc(cap);
-  if (!out) return NULL;
-  const char *q = strchr(url, '?');
-  size_t nlen = strlen(name);
-  const char *hit = NULL;
-  if (q) {
-    for (const char *p = q + 1; p && *p; ) {
-      if (!strncmp(p, name, nlen) && p[nlen] == '=') { hit = p; break; }
-      p = strchr(p, '&');
-      if (p) p++;
-    }
-  }
-  if (!hit) {
-    snprintf(out, cap, "%s%c%s=%ld", url, q ? '&' : '?', name, value);
-    return out;
-  }
-  const char *tail = strchr(hit, '&');
-  size_t head = (size_t)(hit - url);
-  memcpy(out, url, head);
-  int w = snprintf(out + head, cap - head, "%s=%ld", name, value);
-  if (tail) snprintf(out + head + w, cap - head - w, "%s", tail);
-  return out;
+  return pw_url_set(url, name, value);
 }
-
-/* A page-size parameter the URL already declares, paired with the cursor
- * parameter that upstream family uses to advance. The pairing is what makes
- * the arithmetic safe: we only ever move a cursor whose page-size sibling is
- * present, so a URL with no declared page size is never paginated by guess.
- *
- * `alt_cursor` is the same family's other spelling. It is used only when the
- * URL ALREADY carries it, which is how openFDA (`limit` + `skip`) is told
- * apart from Socrata (`limit` + `offset`): both declare `limit`, and moving
- * the wrong one would re-serve page 1 forever. */
-struct pager { const char *size_param, *cursor_param, *alt_cursor; int page_numbered; };
-static const struct pager PAGERS[] = {
-  { "per_page",  "page",   NULL,     1 },   /* CKAN/dane.gov.pl, GitHub, uData */
-  { "page_size", "page",   NULL,     1 },   /* DRF                             */
-  { "pageSize",  "page",   NULL,     1 },   /* ArcGIS Hub, many .NET APIs      */
-  { "perPage",   "page",   NULL,     1 },   /* house style                     */
-  { "rp",        "page",   NULL,     1 },   /* flexigrid — taginfo (OSM)       */
-  { "itemsPerPage", "page",NULL,     1 },   /* ERDDAP index.json               */
-  { "size",      "page",   NULL,     1 },   /* Spring Data / Apollo (RESF)     */
-  { "num",       "p",      NULL,     1 },   /* CORDIS search API               */
-  { "rows",      "start",  NULL,     0 },   /* Solr / CKAN package_search      */
-  { "length",    "start",  NULL,     0 },   /* DataTables — HUDOC (ECHR)       */
-  /* GOV.UK Search API (`count` + `start`), J-STAGE and CiNii (the same two
-   * names); WFS 2.0 spells the cursor `startIndex`, used when the URL already
-   * carries it. Missing until 2026-10-20: 48 `www.gov.uk/api/search.json?
-   * ...&count=3` rows declared page_walk and read ONE page of three records
-   * a run — the ceiling audit's `pages_read 1` against `pages_needed 44,885`
-   * for the employment-tribunal row was that, and page_resume on them cycled
-   * nothing because a one-page walk "completes". */
-  { "count",     "start",  "startIndex", 0 },
-  { "limit",     "offset", "skip",   0 },   /* Socrata, ODS, most REST; openFDA*/
-  /* Socrata SODA's OWN spelling. `$limit` sat in jl_declared_size()'s EXTRA
-   * list — removed 2026-10-25 once its last two members became families here,
-   * so there is no longer a list "below" to point at — for
-   * "recognise a full page, but we cannot ask for the next one", and that cost
-   * the whole fleet every page after the first: measured 2026-09-19, 571
-   * distinct `$limit=` URLs in this tree, 277 of them on this path (the other
-   * 294 are hpengine table rows that already declare page_param="$offset").
-   *
-   * `$offset` is not a guess. It is the cursor SODA documents for `$limit`, it
-   * is the one the 294 hpengine rows next door already advance, and it was
-   * confirmed live before this entry was added: one URL per distinct host, 14
-   * hosts, `$limit=2&$offset=0` vs `$limit=2&$offset=2` returned different
-   * bodies on all 14. The datasets behind them are not small — Calgary air
-   * quality answers `$select=count(*)` with 3,752,809 rows and was storing 400.
-   *
-   * Appending a cursor to a URL that declares only a page size is exactly what
-   * the `limit`/`offset` row above has always done; this is the same move for
-   * the same API family, spelled the way SODA spells it. */
-  { "$limit",    "$offset", NULL,    0 },   /* Socrata SODA                    */
-  { "$top",      "$skip",  NULL,     0 },   /* OData                           */
-  { "maxRecords","offset", NULL,     0 },   /* Airtable-style                  */
-  /* ArcGIS REST and WFS 1.x. Both spellings lived on jl_declared_size()'s
-   * EXTRA list — "a size we can disclose but cannot move", and the reason
-   * that list is gone, since these were its last two members — until
-   * 2026-10-25, when the population behind them was counted and it turned out
-   * nearly all of it pages by another route: of 659 scheduled rows declaring
-   * one of these sizes, 351 are hpengine rows that declare
-   * `page_param=resultOffset` themselves, and 300 are VGEO rows walked by
-   * geojson_emit_paged(), whose mechanism 1 already advances `resultOffset`
-   * on ArcGIS's own `exceededTransferLimit`. Only THREE rows reach this
-   * table, and all three were reading a single page: two VJSON rows asking
-   * for `resultRecordCount=1` of 6,072 and of 29,208 records, and the one
-   * `page_walk=1` row, Austin's crime layer, asking for 2.
-   *
-   * Measured before adding, one URL per host, `resultOffset=0` against
-   * `resultOffset=2` with the bodies and then the feature ids compared:
-   * disjoint on 47 hosts, overlapping on 4, ignored on 4, refused on 5
-   * (docs/arcgis-resultoffset-probe-2026-10-24.tsv). The 4 that overlap
-   * advance the cursor and re-serve records, so an ordering clause belongs in
-   * the ROW's URL — `orderByFields` for ArcGIS, `sortBy` for WFS — and a row
-   * given one of these sizes without a sort is CLAUDE.md's "collision that is
-   * really a skip". `maxFeatures` reaches no row through this table today; it
-   * is here because the WFS rows that need paging are the ones that already
-   * declare `startIndex`, and the pair belongs with its family rather than in
-   * a second list that cannot move it. */
-  { "resultRecordCount", "resultOffset", NULL, 0 },  /* ArcGIS REST query     */
-  { "maxFeatures", "startIndex", NULL,   0 },   /* WFS 1.x; 2.0 spelling      */
-  { NULL, NULL, NULL, 0 }
-};
-
-/* The page size this URL declares, or -1 — the PAGERS families, and nothing
- * else.
- *
- * It used to consult a second list as well, EXTRA, holding the size spellings
- * "that have no cursor sibling this walk can move, because 'the page came back
- * exactly full' is evidence of more data whether or not we know how to ask for
- * it." That list held `$limit`, then `resultRecordCount` and `maxFeatures`,
- * and each of the three graduated to PAGERS once its cursor was measured —
- * `$limit`/`$offset` on 2026-09-15 and the other two on 2026-10-25 — so it is
- * now empty and gone.
- *
- * Worth keeping the shape of the mistake it enabled, because it was a function
- * of the SPLIT and not of either list: a size on EXTRA made a row disclose a
- * full page as truncation forever while jsonlist_next_page(), which iterates
- * PAGERS alone, had nothing to advance. The two lists read as one mechanism
- * from the call site and were two. If a size spelling ever needs to be
- * declarable-but-unmovable again, the way to do it is ONE table that says so:
- * a pager entry with a NULL cursor_param, plus the skip for it in
- * jsonlist_next_page(), which does not exist today and would dereference it —
- * not a second list that only this function reads. */
-static long jl_declared_size(const char *url) {
-  for (int i = 0; PAGERS[i].size_param; i++) {
-    long v = jsonlist_query_int(url, PAGERS[i].size_param);
-    if (v > 0) return v;
-  }
-  return -1;
-}
-
-/* One ceiling for the whole tree (jo_page_max, lib/pagewalk.c). $JO_PAGE_MAX is
- * the knob; $JO_JSONLIST_PAGE_MAX still works, so an operator who set the older
- * name is honoured rather than silently ignored. */
+/* $JO_PAGE_MAX is the knob; $JO_JSONLIST_PAGE_MAX still works, so an operator
+ * who set the older name is honoured rather than silently ignored. */
 int jsonlist_page_max(void) {
-  return jo_page_max("JO_JSONLIST_PAGE_MAX");   /* exhaustive-ok: page-walk ceiling, disclosed as a collector-truncation-notice */
+  return pw_page_ceiling("JO_JSONLIST_PAGE_MAX", 0);   /* exhaustive-ok: page-walk ceiling, disclosed as a collector-truncation-notice */
 }
-
-/* The continuation decision this walk makes after every page, exported so
- * lib/hpengine.c's `page_walk` rows make exactly the same one. Those rows are
- * VJSON collectors moved onto hpengine to walk their detail hop, and the move
- * must not change how far they page: two copies of this decision is how a row
- * silently loses every page after the first while both engines report success.
- *
- *   doc        the page just read (not consumed)
- *   page_url   the URL it was read from — the OVERRIDDEN one, see below
- *   got        records the page's array held
- *   available  the upstream's declared total, or -1
- *   total      records FETCHED so far across the walk, this page included —
- *              not emitted: it is compared with `available`, the upstream's
- *              count of what it holds, and a record filtered out or dropped
- *              as noise was still handed over
- *
- * Returns the next URL (caller frees) or NULL, and reports through
- * `full_unadvanced` whether the walk is stopping at a page that looked full —
- * the condition the truncation notice discloses. */
 char *jsonlist_next_page(cJSON *doc, const char *page_url, int got,
                          long available, int total, int *full_unadvanced) {
-  char *next = next_link(doc, page_url);
-  if (!next && got > 0) {
-    /* No server link. Advance a cursor only when the URL declares a page
-     * size AND this page came back exactly full — a short page is the
-     * upstream saying it is finished, and following it would be us
-     * inventing a page that was never offered. */
-    for (int i = 0; PAGERS[i].size_param && !next; i++) {
-      long size = jsonlist_query_int(page_url, PAGERS[i].size_param);
-      if (size <= 0 || got < size) continue;
-      /* Move the cursor this URL already names, when the family has two
-       * spellings; otherwise the canonical one. */
-      const char *cursor = PAGERS[i].cursor_param;
-      if (PAGERS[i].alt_cursor && jsonlist_query_int(page_url, PAGERS[i].alt_cursor) >= 0)
-        cursor = PAGERS[i].alt_cursor;
-      long cur = jsonlist_query_int(page_url, cursor);
-      /* A page NUMBER the URL does not state (or states as 0) is followed by
-       * page 1, not 2. This used to be `cur > 0 ? cur + 1 : 2`, which is right
-       * for a 1-based API and silently skips page 1 of a 0-based one (Spring
-       * Data's `size`+`page`, Diavgeia): the walk read 0, 2, 3 … and
-       * gr-diavgeia-decision-search lost records 101-200 on every run. Which
-       * base the API uses is not knowable from the URL, so it is asked: page 1
-       * is requested, and a 1-based server answers it with the page already
-       * read. The walk recognises that repeat (jsonlist_page_one_retry) and
-       * continues at page 2 — one extra request, never a lost page. */
-      long nextval = PAGERS[i].page_numbered
-                       ? (cur > 0 ? cur + 1 : 1)
-                       : (cur >= 0 ? cur + size : size);
-      next = jsonlist_query_set(page_url, cursor, nextval);
-    }
-  }
-  /* Last resort, and the only one that needs no page-size sibling: the
-   * upstream published a total BIGGER than what it has handed us, and the
-   * URL already carries a page number. ROR says `number_of_results: 108000`
-   * and hands over 20; retsinformation.dk says `totalResultCount` and hands
-   * over a screenful. There is no guessing here — the remainder is the
-   * upstream's own arithmetic — and the cursor is one this URL already
-   * declares, so we are turning a dial the caller wrote, not inventing one.
-   * A server that ignores it re-serves page 1 and the no-progress guard
-   * ends the walk on the next turn. */
-  if (!next && got > 0 && available > (long)(total)) {
-    static const char *const PAGE_CURSORS[] = { "page", "p", "pageNumber",
-                                                "pagina", "pageNum", NULL };
-    for (int i = 0; PAGE_CURSORS[i] && !next; i++) {
-      long cur = jsonlist_query_int(page_url, PAGE_CURSORS[i]);
-      if (cur < 1) continue;               /* must already be declared */
-      next = jsonlist_query_set(page_url, PAGE_CURSORS[i], cur + 1);
-    }
-  }
-  /* A FULL page with no link and no cursor this walk can move is not the end
-   * of the data; it is the end of what this URL lets us ask for. That was
-   * never disclosed: Socrata's `$limit` has no sibling in PAGERS, so 472 such
-   * URLs read one page, filed no notice and reported success — measured
-   * 2026-09-15, 28 of 38 sampled hold more than one page (up to 17.6 M rows).
-   * Say so. Guessing a cursor is not done here: it would change what these
-   * rows fetch, which is a data-volume decision, not a disclosure. */
-  if (full_unadvanced) {
-    long ds = jl_declared_size(page_url);
-    *full_unadvanced = (!next && got > 0 &&
-                        ((ds > 0 && got >= ds) || available > (long)total));
-  }
-  return next;
+  return pw_next_page(doc, page_url, got, available, total, full_unadvanced);
+}
+char *jsonlist_page_one_retry(const char *prev_url, const char *page_url) {
+  return pw_page_one_retry(prev_url, page_url);
+}
+unsigned long long jsonlist_page_fp(cJSON *arr) { return pw_page_fp(arr); }
+unsigned long long *jsonlist_page_fps(cJSON *arr, int *n_out) { return pw_page_fps(arr, n_out); }
+int jsonlist_fps_has(const unsigned long long *fps, int n, cJSON *rec) {
+  return pw_fps_has(fps, n, rec);
 }
 
-/* The page-1 probe's other half. jsonlist_next_page() follows a first page
- * that carried no page number (or page=0) with page=1, because on a 0-based
- * API that is the next page. On a 1-based API it is the page just read, so it
- * comes back as a repeat. Given the URL read before (`prev_url`) and the one
- * that repeated it (`page_url`), return the URL to continue at — page 2 — when
- * the repeat is exactly that probe, else NULL (a real repeat: stop). Caller
- * frees. Only the page-numbered families jsonlist_next_page() advances are
- * recognised, and only when page_url still declares the family's page size. */
-char *jsonlist_page_one_retry(const char *prev_url, const char *page_url) {
-  if (!prev_url || !page_url) return NULL;
-  for (int i = 0; PAGERS[i].size_param; i++) {
-    if (!PAGERS[i].page_numbered) continue;
-    if (jsonlist_query_int(page_url, PAGERS[i].size_param) <= 0) continue;
-    const char *cursor = PAGERS[i].cursor_param;
-    if (jsonlist_query_int(page_url, cursor) != 1) continue;
-    if (jsonlist_query_int(prev_url, cursor) > 0) continue;   /* absent or 0 */
-    return jsonlist_query_set(page_url, cursor, 2);
-  }
-  return NULL;
+typedef struct {
+  intel_sink *sink; const char *id;
+  http_client *http; int timeout_ms;
+  const char *path, *record_type, *lang, *tags_json;
+} jl_paged;
+
+static cJSON *jl_paged_fetch(void *ud, const char *url) {
+  jl_paged *x = ud;
+  return feed_get_json(x->http, url, x->timeout_ms);
+}
+static cJSON *jl_paged_records(void *ud, cJSON *doc) {
+  jl_paged *x = ud;
+  return jsonlist_find_array(doc, x->path);
+}
+static int jl_paged_emit(void *ud, cJSON *doc, const unsigned long long *skip, int nskip) {
+  jl_paged *x = ud;
+  return jl_emit_doc(x->sink, x->id, doc, x->path, x->record_type, x->lang,
+                     x->tags_json, NULL, skip, nskip);
 }
 
 int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
                         http_client *http, const char *url, int timeout_ms,
                         const char *path, const char *record_type,
                         const char *lang, const char *tags_json) {
-  int page_max = jsonlist_page_max();
-
   /* Plan against the URL that will ACTUALLY be fetched. http_request applies
    * url_override_apply() on the way out, so a source whose offset parameter an
    * operator approved (core/pagination_probe.c proposes them, the repair
    * approval route installs them) carries that parameter only in its
    * OVERRIDDEN url. Reading the compile-time one here would mean the walk
-   * plans a single page while the fetch goes somewhere paginable — the swap
-   * would land and change nothing. Applying it twice is a no-op: the override
-   * table is keyed on the original url. */
-  char *page_url = strdup(url_override_apply(url));
-  if (!page_url) return -1;
+   * plans a single page while the fetch goes somewhere paginable. Applying it
+   * twice is a no-op: the override table is keyed on the original url. */
+  const char *eff = url_override_apply(url);
   /* One shape tally for the WHOLE walk: jsonlist_emit() accumulates per page
    * and the flush below files one notice per condition per run. */
   jl_shape_reset();
   g_jl_shape.paged = 1;
-
-  int total = 0, pages = 0, truncated = 0;
-  int fetched = 0;           /* records the upstream handed over, emitted or not */
-  int full_unadvanced = 0;   /* last page full, and nothing lets us ask for more */
-  long available = -1;
-  unsigned long long prev_fp = 0;
-  int repeated = 0;
-  char *prev_url = NULL;      /* the page read before this one, for the probe */
-  int probed = 0;             /* the page-1 probe is tried at most once        */
-  /* Page 1's record identities, for the probe's set test (jsonlist_page_fps). */
-  unsigned long long *probe_fps = NULL;
-  int probe_nfps = 0;
-
-  /* A later page that failed: the walk only asks for one on the upstream's
-   * evidence that more exists (jsonlist_next_page), so a failure there is a
-   * walk cut short. Its page, status and URL go into the notice — it used to
-   * be filed as "the page ceiling stopped the walk", which sent the reader
-   * to raise a ceiling that had not been reached. */
-  int failed = 0, failed_page = 0;
-  long failed_status = FEED_ST_UNKNOWN;
-  char *failed_url = NULL;
-
-  for (; pages < page_max && page_url; pages++) {
-    feed_last_json_status_reset();
-    cJSON *doc = feed_get_json(http, page_url, timeout_ms);
-    if (!doc) {
-      /* A failed FIRST fetch is a dead endpoint and belongs to the caller as
-       * an error. A failure mid-walk is different: we already have real
-       * records, so we keep them and stop — but the walk ended early, which is
-       * a shortfall and gets disclosed below. */
-      if (pages == 0) { free(page_url); g_jl_shape.paged = 0; return -1; }
-      truncated = 1;
-      failed = 1;
-      failed_page = pages + 1;
-      failed_status = feed_last_json_status();
-      failed_url = strdup(page_url);
-      break;
-    }
-    if (available < 0) available = declared_total(doc);
-
-    cJSON *arr = jsonlist_find_array(doc, path);
-    int got = arr ? cJSON_GetArraySize(arr) : 0;
-
-    /* Did the upstream actually move? An ignored cursor parameter re-serves
-     * the page we already have; that is the end of the data as far as this
-     * URL is concerned, not a page we are owed.
-     *
-     * This check MUST run before the emit below. It used to run after, so a
-     * re-served page was emitted — every record of it colliding onto a uid
-     * written one page earlier — and only then recognised as a repeat. Nothing
-     * was lost (the sink already held those rows) but `emitted` double-counted
-     * the page, which is exactly what the registry sweep reads as a uid
-     * COLLISION. Measured 2026-09-05: 129 of 882 flagged sources sat at an
-     * exact 1/2, 1/3 or 2/3 stored/emitted ratio, in whole families sharing
-     * one pager (ua-prozorro-*, global-peeringdb-*, us-usaspending-*,
-     * us-cms-*; eur-geoapi-communes: limit=200, 400 emitted, 200 stored). A
-     * page the engine itself has decided is a re-serve is not a page of
-     * records and is not counted as one. */
-    unsigned long long fp = jsonlist_page_fp(arr);
-    /* Is THIS response the 0-vs-1-based probe? Asked of the URL PAIR, which a
-     * reorder cannot change, and not of the records — the hash below could not
-     * answer it over a collection that moves between the two requests
-     * (jsonlist_page_fps). On a 1-based API this response is page 1 again, so
-     * it is emitted MINUS what page 1 already carried: anything left arrived
-     * in between and is here and nowhere else. The probe is not a page read,
-     * so it does not count toward the ceiling or `pages`. */
-    char *p2 = (pages > 0 && got > 0 && !probed)
-                 ? jsonlist_page_one_retry(prev_url, page_url) : NULL;
-    if (p2) {
-      probed = 1;
-      int added = jl_emit_doc(sink, source_id, doc, path, record_type, lang,
-                              tags_json, NULL, probe_fps, probe_nfps);
-      total += added;
-      fetched += added;
-      cJSON_Delete(doc);
-      free(prev_url);
-      prev_url = page_url;
-      page_url = p2;
-      pages--;                               /* the loop's pages++ restores it */
-      continue;
-    }
-    if (pages > 0 && got > 0 && fp == prev_fp) repeated = 1;
-    prev_fp = fp;
-    /* A probe can only follow the first page; keep that page's identities. */
-    if (pages == 0 && got > 0) {
-      free(probe_fps);
-      probe_fps = jsonlist_page_fps(arr, &probe_nfps);
-    }
-
-    int n = repeated ? 0
-                     : jsonlist_emit(sink, source_id, doc, path, record_type,
-                                     lang, tags_json);
-    total += n;
-    if (!repeated) fetched += got;
-
-    /* Compared with the upstream's declared total on what was FETCHED: a
-     * record dropped as shape noise was still handed over, and counting only
-     * the emitted ones read as "the upstream holds more". */
-    int fu = 0;
-    char *next = repeated ? NULL
-                          : jsonlist_next_page(doc, page_url, got, available,
-                                               fetched, &fu);
-    cJSON_Delete(doc);
-    full_unadvanced = fu;
-
-    if (got <= 0 || repeated) { free(next); break; }   /* upstream is exhausted */
-    free(prev_url);
-    prev_url = page_url;
-    page_url = next;
-    if (pages + 1 >= page_max && page_url) truncated = 1;   /* ceiling bit */
-  }
-  free(prev_url);
-  free(page_url);
-  free(probe_fps);
-
-  /* A THIRD trigger: the upstream's own total exceeds what this walk fetched,
-   * and nothing above noticed.
-   *
-   * `truncated` is our ceiling and `full_unadvanced` is a full last page with
-   * no cursor; neither fires when the walk ENDS for another reason — and the
-   * commonest other reason is the repeat-page guard, which `break`s out of the
-   * loop above before `truncated` can be set. So a row whose upstream says it
-   * holds 9,079 records and which read 100 of them disclosed NOTHING.
-   *
-   * This is the same gap hpengine closed on 2026-10-20, in the other engine,
-   * and CLAUDE.md's "when you fix something, look for the other copies" names
-   * precisely this file. Measured on `gov-dataeuropa-search`: data.europa.eu's
-   * search answers `result.count: 9079` beside the 100 records it hands over,
-   * its deeper pages are not stable between reads, and every sort spelling it
-   * accepts is ignored — so one page is all that can be read SAFELY, and the
-   * remainder is a fact about the source that belongs in the database.
-   *
-   * It cannot cry wolf: a walk that read everything has `available == fetched`
-   * and files nothing, which is the property that makes a notice worth
-   * reading at all. */
-  int declared_short = !failed && !truncated && !full_unadvanced &&
-                       available >= 0 && available > fetched;
-
-  if (truncated || full_unadvanced || declared_short) {
-    /* Same disclosure hpengine makes, same record_type, so a partial result is
-     * mechanically detectable from either engine. A ceiling stop leaves an
-     * UNKNOWN remainder — we never fetched those pages — so records_available
-     * may be -1 here, and saying "unknown" is the honest answer. */
-    cJSON *p = cJSON_CreateObject();
-    cJSON_AddStringToObject(p, "source_id", source_id);
-    cJSON_AddStringToObject(p, "endpoint", url);
-    cJSON_AddNumberToObject(p, "records_used", total);
-    if (available >= 0) {
-      cJSON_AddNumberToObject(p, "records_available", available);
-      /* Where that number came from, because a reader cannot otherwise tell
-       * the upstream's own count from our floor — the same field, and the same
-       * reason for it, as hpengine's notice. */
-      cJSON_AddStringToObject(p, "records_available_basis",
-                              "upstream declared this total");
-    }
-    else cJSON_AddStringToObject(p, "records_available", "unknown — upstream declared no total");
-    cJSON_AddNumberToObject(p, "records_fetched", fetched);
-    cJSON_AddNumberToObject(p, "pages_read", pages);
-    cJSON_AddNumberToObject(p, "page_ceiling", page_max);
-    /* FALSE on the declared-short path, and that is the point: the walk held
-     * no next-page URL when it stopped, so a checker keyed on this flag must
-     * not read it as "more is coming". The authoritative signal is the pair
-     * records_available / records_fetched above. */
-    cJSON_AddBoolToObject(p, "more_pages_pending", declared_short ? 0 : 1);
-    char fdesc[64] = "", freason[256] = "";
-    if (failed) {
-      feed_status_describe(failed_status, fdesc, sizeof fdesc);
-      cJSON_AddNumberToObject(p, "failed_page", failed_page);
-      cJSON_AddNumberToObject(p, "failed_page_status", (double)failed_status);
-      cJSON_AddStringToObject(p, "failed_page_url", failed_url ? failed_url : "");
-      snprintf(freason, sizeof freason, "page %d answered %s, so the walk stopped "
-               "before the upstream ran out", failed_page, fdesc);
-    }
-    cJSON_AddStringToObject(p, "reason", failed ? freason : truncated
-      ? "the page ceiling stopped the walk while the upstream still had pages"
-      : declared_short
-      ? "the walk ended without reaching the upstream's own declared total — "
-        "either it re-served a page it had already given (the repeat guard) or "
-        "it ran out of pages to offer, so the remainder was never requested"
-      : "the last page came back full (or the upstream declared more than was "
-        "read) and neither the response nor this URL offers a way to ask for "
-        "the next page, so records may remain unread");
-    cJSON_AddStringToObject(p, "remedy", failed
-      ? "re-run; a host that refuses or rate-limits later pages needs a "
-        "per-host minimum gap (core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
-      : truncated
-      ? "raise $JO_JSONLIST_PAGE_MAX — see docs/SOURCE_EXHAUSTIVENESS.md"
-      : declared_short
-      ? "ask the endpoint what ordering it HONOURS before paging it, with a "
-        "control (an unknown field in a well-typed sort value): where a sort "
-        "is only type-checked and then ignored, a page walk re-reads and skips, "
-        "and one stable page plus this notice is the honest read. Where a sort "
-        "does work, give the row an ascending one on its own id and a cursor — "
-        "see docs/SOURCE_EXHAUSTIVENESS.md"
-      : "give this source a cursor the walk can advance (for Socrata: $offset "
-        "with a stable $order=:id) — see docs/SOURCE_EXHAUSTIVENESS.md");
-    char *pj = cJSON_PrintUnformatted(p);
-    cJSON_Delete(p);
-    char title[256];
-    /* remote_key is just "truncation": the sink derives the uid as
-     * "<source_id>|<remote_key>", so prefixing the id here would stutter it
-     * into "<id>|<id>|truncation". One notice per source, upsert-keyed, so a
-     * re-run updates the disclosure rather than piling up duplicates. */
-    const char *key = "truncation";
-    if (failed && available >= 0)
-      snprintf(title, sizeof title, "%s used %d of %ld available records — "
-               "page %d answered %s", source_id, total, available, failed_page, fdesc);
-    else if (failed)
-      snprintf(title, sizeof title, "%s used %d records — page %d answered %s",
-               source_id, total, failed_page, fdesc);
-    else if (available >= 0)
-      snprintf(title, sizeof title, "%s used %d of %ld available records",
-               source_id, total, available);
-    else if (truncated)
-      snprintf(title, sizeof title, "%s used %d records and stopped at the page ceiling",
-               source_id, total);
-    else
-      snprintf(title, sizeof title, "%s used %d records; the last page was full "
-               "and this URL has no cursor to ask for more", source_id, total);
-    intel_item note = {0};
-    note.remote_key      = key;
-    note.title           = title;
-    note.lang            = "en";
-    note.record_type     = "collector-truncation-notice";
-    note.properties_json = pj ? pj : "{}";
-    note.tags_json       = "[\"truncation-notice\"]";
-    sink->emit(sink, &note);
-    free(pj);
-  }
-
-  /* Schema drift measured during the walk, one record per condition, in
-   * addition to the records above. Clears `paged` for the next caller. */
-  jl_shape_flush(sink, source_id, path, total);
+  jl_paged x = { sink, source_id, http, timeout_ms, path, record_type, lang, tags_json };
+  pw_list_ops ops = { &x, jl_paged_fetch, jl_paged_records, jl_paged_emit };
+  int n = pw_walk_list(PW_FLAVOR_JSON, sink, source_id, eff, url,
+                       "JO_JSONLIST_PAGE_MAX", &ops);
+  /* A failed FIRST fetch is a dead endpoint and belongs to the caller as an
+   * error; nothing was emitted, so there is no tally to flush. */
+  if (n >= 0) jl_shape_flush(sink, source_id, path, n);
   g_jl_shape.paged = 0;
-
-  if (pages > 1 || truncated || full_unadvanced)
-    fprintf(stderr, "[%s] emitted %d across %d page(s)%s\n",
-            source_id, total, pages,
-            failed ? " (TRUNCATED: a later page failed)"
-            : truncated ? " (TRUNCATED)"
-                      : full_unadvanced ? " (TRUNCATED: full last page, no cursor)" : "");
-  free(failed_url);
-  return total;
+  return n;
 }
 
 /* ── keyed paged emit: an explicit id field for sources the fixed
@@ -2040,7 +1299,7 @@ static int jl_emit_page_keyed(const source_ctx *c, intel_sink *s,
    * seen=0 makes pw_walk treat it as a short page and stop, so a wrong cursor
    * costs one request and re-emits nothing. Fingerprinted BEFORE the relabel
    * below, on both pages, so the comparison is like with like. */
-  unsigned long long fp = jsonlist_page_fp(arr);
+  unsigned long long fp = pw_page_fp(arr);
   if (o->pages++ > 0 && arr && cJSON_GetArraySize(arr) > 0 && fp == o->prev_fp) {
     if (seen) *seen = 0;
     return 0;
@@ -2100,34 +1359,6 @@ static int jl_emit_page_keyed(const source_ctx *c, intel_sink *s,
                           o->tags_json, seen);
 }
 
-/* The URL with its page-size family's cursor written in at its starting value,
- * or NULL when nothing needs seeding: no declared size, or the URL already
- * carries a cursor of any spelling pw_walk can advance. Uses the same PAGERS
- * table jsonlist_emit_paged() walks by, so the two paths agree on what a size
- * parameter implies. Caller frees. */
-static char *jl_seed_cursor(const char *url) {
-  static const char *const CURSORS[] = {
-    "offset", "$offset", "$skip", "skip", "start", "startIndex", "resultOffset",
-    "page", "p", "pageNumber", NULL };
-  if (!url) return NULL;
-  for (int i = 0; CURSORS[i]; i++)
-    if (jsonlist_query_int(url, CURSORS[i]) >= 0) return NULL;
-  for (int i = 0; PAGERS[i].size_param; i++) {
-    if (jsonlist_query_int(url, PAGERS[i].size_param) <= 0) continue;
-    /* OFFSET families only. A record offset starts at 0 on every API that
-     * speaks one, so writing `offset=0` restates what the server already
-     * served. A PAGE NUMBER does not have that property: Spring Data (`size` +
-     * `page`) is 0-based, most others are 1-based. Seeding `page=1` made
-     * eur-brreg-enheter start on Spring's SECOND page and never read the 100
-     * newest entities — the records that source exists for (measured
-     * 2026-09-15). A page-numbered row that wants a walk states its own first
-     * page in the URL. */
-    if (PAGERS[i].page_numbered) return NULL;
-    return jsonlist_query_set(url, PAGERS[i].cursor_param, 0);
-  }
-  return NULL;
-}
-
 /* Paged JSON-array emit with an explicit id field. `id_field` is a single
  * top-level field name on each record — not a dotted path or a candidate
  * list, the relabel above only reads one field — whose value becomes the
@@ -2149,7 +1380,7 @@ int jsonlist_emit_paged_keyed(const source_ctx *c, intel_sink *s,
    * the URL (offset=0, page=1: exactly what the server already served) gives
    * both paths the same reach, and the repeat guard above stops a server that
    * ignores it. */
-  char *seeded = jl_seed_cursor(eff);
+  char *seeded = pw_seed_cursor(eff);
   int n = pw_walk(c, s, source_id, seeded ? seeded : eff, pw_fetch_json,
                   jl_emit_page_keyed, &o);
   /* A seeded cursor the server REJECTS must not turn a working row into a dead

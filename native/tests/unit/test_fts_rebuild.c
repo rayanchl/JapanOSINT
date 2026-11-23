@@ -64,6 +64,8 @@ int main(void) {
   if (!dbp || !*dbp) { fprintf(stderr, "set JO_DB to a scratch path\n"); return 2; }
   assert(db_open(&db, NULL, NULL) == 0);
 
+  /* emit()'s per-record answer (1 = new) is the JO_SINK_BATCH=1 contract. */
+  setenv("JO_SINK_BATCH", "1", 1);
   intel_sink k = intel_sink_make(&db, "rb", NULL);
   for (int i = 0; i < 50; i++) {
     char key[16], title[64];

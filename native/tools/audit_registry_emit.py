@@ -541,7 +541,10 @@ def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0, gated=None,
     # A refused fetch, judged BEFORE the mismatch test: its one stored row is a
     # notice, so stored_records is 0 and rows is 0 — they agree, and what
     # matters is saying WHY nothing came back rather than calling it empty.
-    if rows == 0 and notices > 0 and FETCH_FAILURE.search(blob):
+    # `not gated`: a host-level credential refusal (SEC_CONTACT) still prints
+    # the engine's `[hp:…] transport failure` line, but the row stored a
+    # needs_credential status notice - GATED, below, not a refused fetch.
+    if rows == 0 and notices > 0 and not gated and FETCH_FAILURE.search(blob):
         return (sid, "FETCH_FAILED", rc, sched_rc, emitted, stored, rows,
                 available, secs,
                 failcause or

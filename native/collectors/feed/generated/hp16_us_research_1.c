@@ -170,9 +170,10 @@ static const hp_source T[] = {
     .collector = "us_research", .category = "research",
     .description = "For any Crossref DOI: best_oa_location and first_oa_location with host_type (publisher vs repository), licence, OA date, landing page and PDF url, plus the full oa_locations array listing every repository copy found. Requires an email query param, not a key.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"us\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.unpaywall.org/v2/10.7717/peerj.4375?email=rayanchouialkessal@gmail.com",
+    .url = "https://api.unpaywall.org/v2/10.7717/peerj.4375?email={key}",
+    .key_env = "UNPAYWALL_EMAIL",
     .array_path = "z_authors",
-    .detail_url = "https://api.unpaywall.org/v2/{v}?email=rayanchouialkessal@gmail.com", .detail_key = "doi",
+    .detail_url = "https://api.unpaywall.org/v2/{v}?email={key}", .detail_key = "doi",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
