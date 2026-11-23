@@ -10,6 +10,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include "lib/joenv.h"
 
 /* Capacity. This was 1,024 open-addressed slots with no eviction, and the
  * collectors name ~6,500 distinct hosts: once 1,024 had been seen, slot_for()
@@ -72,12 +73,8 @@ static int g_max_conc, g_min_gap_ms;
 static pthread_once_t g_cfg_once = PTHREAD_ONCE_INIT;
 
 static void cfg_init(void) {
-  const char *mc = getenv("JO_HOST_MAX_CONC");
-  const char *mg = getenv("JO_HOST_MIN_GAP_MS");
-  g_max_conc   = mc ? atoi(mc) : 2;
-  g_min_gap_ms = mg ? atoi(mg) : 150;
-  if (g_max_conc   < 0) g_max_conc   = 0;
-  if (g_min_gap_ms < 0) g_min_gap_ms = 0;
+  g_max_conc   = jo_env_int("JO_HOST_MAX_CONC", 2, 0, INT_MAX);
+  g_min_gap_ms = jo_env_int("JO_HOST_MIN_GAP_MS", 150, 0, INT_MAX);
 }
 /* ── per-host minimum-gap overrides ───────────────────────────────────────
  * Some upstreams rate-limit per client IP far above the global 150 ms gap.

@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 /* ── small shared helpers (same idioms as core/alertsapi.c) ─────────────── */
 
@@ -51,14 +52,6 @@ static char *err_env(int *st, int code, const char *msg) {
   return j;
 }
 
-static int env_int(const char *k, int dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  char *end = NULL;
-  long n = strtol(v, &end, 10);
-  if (end == v) return dflt;
-  return (int)n;
-}
 
 /* Engine label written into the response so the UI can say WHAT translated
  * this, not merely that a machine did. */
@@ -133,12 +126,12 @@ int translate_is_japanese(const char *language, const char *title,
   /* An explicit `ja` tag is a positive signal only — it lowers the floor to a
    * single CJK codepoint but does not bypass the ratio, and its absence (or a
    * contradictory "en") never vetoes a plainly-Japanese row. */
-  int min_cjk = env_int("TRANSLATE_JP_MIN_CJK", 4);
+  int min_cjk = jo_env_int("TRANSLATE_JP_MIN_CJK", 4, INT_MIN, INT_MAX);
   if (min_cjk < 1) min_cjk = 1;
   if (lang_says_ja(language)) min_cjk = 1;
   if (cjk < min_cjk) return 0;
 
-  int pct = env_int("TRANSLATE_JP_RATIO_PCT", 20);
+  int pct = jo_env_int("TRANSLATE_JP_RATIO_PCT", 20, INT_MIN, INT_MAX);
   if (pct < 1) pct = 1;
   if (pct > 100) pct = 100;
   return cjk * 100 >= (cjk + latin) * (long)pct;
@@ -298,7 +291,7 @@ int translate_fts_resync(db_handle *db, int limit, volatile int *cancel) {
   if (!db || !db->h) return 0;
   translate_migrate(db);
   sqlite3 *h = db->h;
-  if (limit <= 0) limit = env_int("TRANSLATE_RESYNC_BATCH", 2000);
+  if (limit <= 0) limit = jo_env_int("TRANSLATE_RESYNC_BATCH", 2000, INT_MIN, INT_MAX);
   if (limit <= 0) limit = 2000;
 
   /* Seed on first ever run: nothing is translated yet, so no FTS row can be
@@ -572,18 +565,18 @@ int translate_run_ex(db_handle *db, llm_client *llm, int limit,
     return 0;
   }
 
-  if (limit <= 0) limit = env_int("TRANSLATE_BATCH", 25);
+  if (limit <= 0) limit = jo_env_int("TRANSLATE_BATCH", 25, INT_MIN, INT_MAX);
   if (limit <= 0) limit = 25;
-  int body_max = env_int("TRANSLATE_BODY_MAX", 4000);
+  int body_max = jo_env_int("TRANSLATE_BODY_MAX", 4000, INT_MIN, INT_MAX);
   if (body_max < 200) body_max = 200;
-  int max_tokens = env_int("TRANSLATE_MAX_TOKENS", 3072);
-  int timeout = env_int("TRANSLATE_TIMEOUT_MS", 120000);
+  int max_tokens = jo_env_int("TRANSLATE_MAX_TOKENS", 3072, INT_MIN, INT_MAX);
+  int timeout = jo_env_int("TRANSLATE_TIMEOUT_MS", 120000, INT_MIN, INT_MAX);
 
   /* Read the batch and finalize BEFORE any generation — a read cursor held
    * across a two-minute LLM call is a two-minute read lock. */
   char *nsrc = NULL, why[160] = "";
   int narrowed = narrow && narrow_plan(db, &nsrc, why, sizeof why);
-  int view_days = env_int("JO_TRANSLATE_VIEW_DAYS", 7);
+  int view_days = jo_env_int("JO_TRANSLATE_VIEW_DAYS", 7, INT_MIN, INT_MAX);
   if (narrow) {
     /* What this tick translated is DATA (translate_backfill_status). */
     cJSON *nl = cJSON_CreateObject();
@@ -783,7 +776,7 @@ static void *bf_thread(void *vp) {
   progress_set_phase(rp, "agents_working", 5);
   progress_assign_services(rp, (const char *[]){"translate"}, 1);
 
-  int batch = env_int("TRANSLATE_BATCH", 25);
+  int batch = jo_env_int("TRANSLATE_BATCH", 25, INT_MIN, INT_MAX);
   if (batch <= 0) batch = 25;
   long done = 0, last_left = -1;
   const char *final_phase = "completed";

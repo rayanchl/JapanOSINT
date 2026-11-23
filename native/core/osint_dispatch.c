@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "lib/joenv.h"
 
 void osint_result_free(osint_result *r) {
   if (!r) return;
@@ -368,8 +369,7 @@ void osint_set_catalogue_budget(int chars) {
 }
 
 static int catalogue_budget_chars(void) {
-  const char *e = getenv("JO_PROMPT_SERVICE_CATALOGUE_CHARS");
-  int v = (e && *e) ? atoi(e) : 0;
+  int v = jo_env_int_strict("JO_PROMPT_SERVICE_CATALOGUE_CHARS", 0, 1, INT_MAX);
   if (v > 0) {
     /* AN OPERATOR'S NUMBER IS RESPECTED UP TO WHAT THE SERVER CAN ACTUALLY
      * ACCEPT, AND THE CLAMP IS ANNOUNCED.

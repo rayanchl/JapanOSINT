@@ -27,15 +27,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 #define BODY_CAP 2000
 
-static int env_int(const char *k, int dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  int n = atoi(v);
-  return n > 0 ? n : dflt;
-}
 
 /* first balanced {...} -> cJSON (== llmClient completeJSON tolerance). */
 static cJSON *extract_json(const char *raw) {
@@ -345,8 +340,8 @@ static void park_untriaged(sqlite3 *h, const anomaly_row *an) {
 static int triage_one(db_handle *db, llm_client *llm, http_client *http,
                       const anomaly_row *an) {
   sqlite3 *h = db->h;
-  int timeout = env_int("LLM_TRIAGE_TIMEOUT_MS", 30000);
-  int refetch_to = env_int("TRIAGE_REFETCH_TIMEOUT_MS", 10000);
+  int timeout = jo_env_int_strict("LLM_TRIAGE_TIMEOUT_MS", 30000, 1, INT_MAX);
+  int refetch_to = jo_env_int_strict("TRIAGE_REFETCH_TIMEOUT_MS", 10000, 1, INT_MAX);
 
   /* source row */
   char *name=NULL,*type=NULL,*cat=NULL,*status=NULL,*last_ok=NULL,*errmsg=NULL;
@@ -477,7 +472,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[triage] skipped (LLM_ENABLED != true)\n");
     return 0;
   }
-  int batch = env_int("TRIAGE_BATCH", 5);
+  int batch = jo_env_int_strict("TRIAGE_BATCH", 5, 1, INT_MAX);
   ensure_column(ctx->db, "collector_anomaly", "triage_attempts",
                 "INTEGER NOT NULL DEFAULT 0");
   ensure_column(ctx->db, "collector_anomaly", "triage_next_at", "TEXT");

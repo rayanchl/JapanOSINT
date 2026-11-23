@@ -50,7 +50,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!doc) return -1;
 
   cJSON *results = cJSON_GetObjectItem(doc, "results");
-  int max_rows = sanc_env_int("JO_SANC_MAX_ROWS", 5000);
+  int max_rows = jo_env_int_strict("JO_SANC_MAX_ROWS", 5000, 1, INT_MAX);
   int n = 0, rest = 0;
   const cJSON *rec;
   cJSON_ArrayForEach(rec, results) {

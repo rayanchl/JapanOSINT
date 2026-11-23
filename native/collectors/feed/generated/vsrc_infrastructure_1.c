@@ -39,12 +39,12 @@ VJSON(cyb_bgpkit_broker, "cyb-bgpkit-broker", "BGPKIT Broker Latest MRT Files", 
  * at the shared page ceiling and discloses the remainder. Keyed on asn. */
 #include "_vjson_shapes.inc"
 #include "lib/jocore.h"
+#include "lib/joenv.h"
 static int run_cyb_caida_asrank(const source_ctx *c, intel_sink *s) {
   static const char *const ID = "cyb-caida-asrank";
   const int first = 1000;
   int page_max = 20; /* exhaustive-ok: page-walk ceiling shared with lib/jsonlist.c; a stop is disclosed below and $JO_JSONLIST_PAGE_MAX raises it */
-  const char *env = getenv("JO_JSONLIST_PAGE_MAX");
-  if (env && *env && atoi(env) > 0) page_max = atoi(env);
+  page_max = jo_env_int_strict("JO_JSONLIST_PAGE_MAX", page_max, 1, INT_MAX);
   vidk_ctx kc = { s, ID, "asn" };
   intel_sink ks = { &kc, vidk_emit };
 

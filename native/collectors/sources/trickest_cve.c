@@ -15,6 +15,7 @@
 #include <string.h>
 #include <time.h>
 #include "_timefmt.inc"
+#include "lib/joenv.h"
 
 #define REPO_API "https://api.github.com/repos/trickest/cve/contents"
 #define RAW_BASE "https://raw.githubusercontent.com/trickest/cve/main"
@@ -43,8 +44,7 @@ static int contains(const char *h, const char *n) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   /* SAMPLE_LIMIT = Number(process.env.TRICKEST_CVE_LIMIT || 50) */
   long limit = 50;
-  const char *lenv = getenv("TRICKEST_CVE_LIMIT");
-  if (lenv && lenv[0]) { long v = strtol(lenv, NULL, 10); if (v > 0) limit = v; }
+  limit = jo_env_long_strict("TRICKEST_CVE_LIMIT", limit, 1, LONG_MAX);
 
   /* year = new Date().getUTCFullYear(); try [year, year-1] */
   time_t now = time(NULL);

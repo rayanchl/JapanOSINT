@@ -12,6 +12,7 @@
 #include <string.h>
 #include <sqlite3.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 /* One embedding request per this many cards. Same default as the intel pod:
  * large enough that ~18,900 cards is ~590 requests, small enough that a
@@ -85,15 +86,11 @@ static int svec_enabled(void) {
 }
 
 static int svec_topk(void) {
-  const char *e = getenv("JO_ROUTE_TOPK");
-  int v = (e && *e) ? atoi(e) : 0;
-  return v > 0 ? v : SVEC_TOPK_DEF;
+  return jo_env_int_strict("JO_ROUTE_TOPK", SVEC_TOPK_DEF, 1, INT_MAX);
 }
 
 static long svec_max_per_run(void) {
-  const char *e = getenv("JO_SVEC_MAX_PER_RUN");
-  if (e && *e) { long v = atol(e); return v > 0 ? v : 0; }
-  return SVEC_MAX_PER_RUN_DEF;
+  return jo_env_long("JO_SVEC_MAX_PER_RUN", SVEC_MAX_PER_RUN_DEF, 0, LONG_MAX);
 }
 
 /* ASYMMETRIC-RETRIEVAL PREFIXES.

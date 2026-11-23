@@ -44,6 +44,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "lib/joenv.h"
 
 /* The RPVS OData service pages at TWENTY records and says so with an
  * `@odata.nextLink`; `$top` is rejected outright (HTTP 400), so the link is
@@ -61,9 +62,7 @@
 #define RPVS_PAGE_MAX 60      /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice carrying @odata.count */
 
 static int rpvs_page_max(void) {
-  const char *e = getenv("JO_RPVS_PAGE_MAX");
-  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
-  return RPVS_PAGE_MAX;
+  return jo_env_int_strict("JO_RPVS_PAGE_MAX", RPVS_PAGE_MAX, 1, INT_MAX);
 }
 
 /* The upstream's own total for this filter, or -1 when it declined to say.

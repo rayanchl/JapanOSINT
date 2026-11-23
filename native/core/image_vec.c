@@ -15,6 +15,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 #define IVEC_SID "_image_embed"
 /* Images per POST, and raw bytes per POST before base64 (×4/3 on the wire).
@@ -49,13 +50,6 @@ const char *image_vec_base_url(void) {
   return (e && *e) ? e : NULL;
 }
 
-static long env_long(const char *k, long dflt) {
-  const char *e = getenv(k);
-  if (!e || !*e) return dflt;
-  char *end = NULL;
-  long v = strtol(e, &end, 10);
-  return (end && end != e && v > 0) ? v : dflt;
-}
 
 static void iso_now(char *buf, size_t n) {
   time_t t = time(NULL);
@@ -355,7 +349,7 @@ int image_vec_embed_text(http_client *http, const char *text, float **out,
   if (!body) { snprintf(err, ecap, "out of memory"); return -1; }
   long st = 0;
   cJSON *j = sidecar_post(http, "/embed/text", body, strlen(body),
-                          (int)env_long("JO_VISION_QUERY_TIMEOUT_MS", 15000),
+                          (int)jo_env_long_strict("JO_VISION_QUERY_TIMEOUT_MS", 15000, 1, LONG_MAX),
                           &st, err, ecap);
   free(body);
   if (!j) return -1;
@@ -391,7 +385,7 @@ int image_vec_embed_image(http_client *http, const unsigned char *bytes,
   bl += 3;
   long st = 0;
   cJSON *j = sidecar_post(http, "/embed/image", body, bl,
-                          (int)env_long("JO_VISION_QUERY_TIMEOUT_MS", 15000),
+                          (int)jo_env_long_strict("JO_VISION_QUERY_TIMEOUT_MS", 15000, 1, LONG_MAX),
                           &st, err, ecap);
   free(body);
   if (!j) return -1;
@@ -778,7 +772,7 @@ static int embed_batch(db_handle *db, http_client *http, const char *model,
   long status = 0;
   char err[400];
   cJSON *j = sidecar_post(http, "/embed/image", body, len,
-                          (int)env_long("JO_VISION_EMBED_TIMEOUT_MS", 120000),
+                          (int)jo_env_long_strict("JO_VISION_EMBED_TIMEOUT_MS", 120000, 1, LONG_MAX),
                           &status, err, sizeof err);
   free(body);
   if (!j) {
@@ -877,7 +871,7 @@ static int flush_batch(db_handle *db, http_client *http, const char *model,
 int image_vec_tick(db_handle *db, http_client *http, int max_walk) {
   const vecindex_spec *s = &image_vec_spec;
   if (!image_vec_base_url()) return 0;
-  if (max_walk <= 0) max_walk = (int)env_long("JO_IMAGE_EMBED_MAX_WALK", 512);
+  if (max_walk <= 0) max_walk = (int)jo_env_long_strict("JO_IMAGE_EMBED_MAX_WALK", 512, 1, LONG_MAX);
   camera_stills_migrate(db);
   image_vec_migrate(db);
   char now[40];

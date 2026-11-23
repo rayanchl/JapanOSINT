@@ -94,6 +94,7 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
+#include "lib/joenv.h"
 
 #ifndef JO_REPO_ROOT
 #define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
@@ -131,14 +132,6 @@ static char *dupcol(sqlite3_stmt *s, int i) {
   return c ? strdup(c) : NULL;
 }
 
-static int env_int(const char *k, int dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  char *end = NULL;
-  long n = strtol(v, &end, 10);
-  if (end == v) return dflt;
-  return (int)n;
-}
 
 static void sha256_hex(const void *b, size_t n, char out[65]) {
   unsigned char d[SHA256_DIGEST_LENGTH];
@@ -227,19 +220,19 @@ static char *b64url_decode(const char *in) {
  * ══════════════════════════════════════════════════════════════════════════ */
 
 static int cfg_interval(void) {
-  int v = env_int("CAM_STILLS_INTERVAL_SEC", 900);
+  int v = jo_env_int("CAM_STILLS_INTERVAL_SEC", 900, INT_MIN, INT_MAX);
   if (v < 60) v = 60;                  /* a camera is never polled faster    */
   if (v > 86400) v = 86400;
   return v;
 }
 static int cfg_retain_days(void) {
-  int v = env_int("CAM_STILLS_RETAIN_DAYS", 3);
+  int v = jo_env_int("CAM_STILLS_RETAIN_DAYS", 3, INT_MIN, INT_MAX);
   if (v < 1) v = 1;
   if (v > 365) v = 365;
   return v;
 }
 static int cfg_max_per_cam(void) {
-  int v = env_int("CAM_STILLS_MAX_PER_CAM", 48);
+  int v = jo_env_int("CAM_STILLS_MAX_PER_CAM", 48, INT_MIN, INT_MAX);
   if (v < 1) v = 1;
   if (v > 10000) v = 10000;
   return v;
@@ -252,7 +245,7 @@ static int cfg_max_per_cam(void) {
  * operator who opted in a 100-camera list fell further behind on every tick,
  * silently, with every camera permanently "due". */
 static int cfg_batch(void) {
-  int v = env_int("CAM_STILLS_BATCH", 48);
+  int v = jo_env_int("CAM_STILLS_BATCH", 48, INT_MIN, INT_MAX);
   if (v < 1) v = 1;
   if (v > 500) v = 500;
   return v;
@@ -263,18 +256,18 @@ static int cfg_batch(void) {
  * rest stay due and lead the next tick (the due list is oldest-first). 40 per
  * tick x 3 ticks per interval = 120 targets per host at the default cadence. */
 static int cfg_host_per_tick(void) {
-  int v = env_int("CAM_STILLS_HOST_PER_TICK", 40);
+  int v = jo_env_int("CAM_STILLS_HOST_PER_TICK", 40, INT_MIN, INT_MAX);
   if (v < 1) v = 1;
   if (v > 500) v = 500;
   return v;
 }
 static long cfg_max_bytes(void) {
-  int v = env_int("CAM_STILLS_MAX_BYTES", 2 * 1024 * 1024);
+  int v = jo_env_int("CAM_STILLS_MAX_BYTES", 2 * 1024 * 1024, INT_MIN, INT_MAX);
   if (v < 4096) v = 4096;
   return (long)v;
 }
 static int cfg_timeout_ms(void) {
-  int v = env_int("CAM_STILLS_TIMEOUT_MS", 8000);
+  int v = jo_env_int("CAM_STILLS_TIMEOUT_MS", 8000, INT_MIN, INT_MAX);
   if (v < 1000) v = 1000;
   if (v > 60000) v = 60000;
   return v;
@@ -283,18 +276,18 @@ static int cfg_tick_budget_ms(void) {
   /* 240 s of a 300 s tick: a full batch of healthy snapshots (~1 s each)
    * fits, a batch of dead cameras (8 s timeouts) is cut off before it can run
    * into the next tick, and the targets it did not reach stay due. */
-  int v = env_int("CAM_STILLS_TICK_BUDGET_MS", 240000);
+  int v = jo_env_int("CAM_STILLS_TICK_BUDGET_MS", 240000, INT_MIN, INT_MAX);
   if (v < 5000) v = 5000;
   return v;
 }
 static int cfg_phash_threshold(void) {
-  int v = env_int("CAM_STILLS_PHASH_THRESHOLD", 6);
+  int v = jo_env_int("CAM_STILLS_PHASH_THRESHOLD", 6, INT_MIN, INT_MAX);
   if (v < 0) v = 0;
   if (v > 64) v = 64;
   return v;
 }
 static int cfg_max_backoff(void) {
-  int v = env_int("CAM_STILLS_MAX_BACKOFF_SEC", 6 * 3600);
+  int v = jo_env_int("CAM_STILLS_MAX_BACKOFF_SEC", 6 * 3600, INT_MIN, INT_MAX);
   if (v < 60) v = 60;
   return v;
 }

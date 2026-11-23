@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 #define CAD_MAX_SEC (366L * 86400L)   /* a year: anything slower is a typo */
 /* The compiled default when the database holds no policy and the environment
@@ -41,20 +42,10 @@ static const char *K_MIN    = "sched.min_interval_sec";
 static const char *K_MAX    = "sched.max_interval_sec";
 static const char *K_RT     = "sched.realtime_max_sec";
 
-static long env_long(const char *name) {
-  const char *v = getenv(name);
-  if (!v || !*v) return 0;
-  char *end = NULL; long n = strtol(v, &end, 10);
-  return (end && *end == 0 && n > 0) ? n : 0;
-}
-
 /* JO_SCHED_REALTIME_MAX_SEC: unset/unparsable = the compiled default, 0 = the
  * exemption switched off. */
 static long env_realtime(void) {
-  const char *v = getenv("JO_SCHED_REALTIME_MAX_SEC");
-  if (!v || !*v) return CAD_DEFAULT_REALTIME_SEC;
-  char *end = NULL; long n = strtol(v, &end, 10);
-  return (end && *end == 0 && n >= 0) ? n : CAD_DEFAULT_REALTIME_SEC;
+  return jo_env_long_strict("JO_SCHED_REALTIME_MAX_SEC", CAD_DEFAULT_REALTIME_SEC, 0, LONG_MAX);
 }
 
 static void iso_now(char *out, size_t n) {
@@ -113,9 +104,9 @@ void cadence_init(db_handle *db) {
   }
   if (!strcmp(src, "default")) {
     p.realtime_max_sec = env_realtime();
-    p.global_sec = env_long("JO_SCHED_INTERVAL_SEC");
-    p.min_sec    = env_long("JO_SCHED_MIN_INTERVAL_SEC");
-    p.max_sec    = env_long("JO_SCHED_MAX_INTERVAL_SEC");
+    p.global_sec = jo_env_long_strict("JO_SCHED_INTERVAL_SEC", 0, 1, LONG_MAX) /* 0 = knob off */;
+    p.min_sec    = jo_env_long_strict("JO_SCHED_MIN_INTERVAL_SEC", 0, 1, LONG_MAX) /* 0 = knob off */;
+    p.max_sec    = jo_env_long_strict("JO_SCHED_MAX_INTERVAL_SEC", 0, 1, LONG_MAX) /* 0 = knob off */;
     const char *e = validate(&p);
     if (e) {
       fprintf(stderr, "[cadence] ignoring JO_SCHED_*INTERVAL_SEC (global=%ld min=%ld max=%ld): %s\n", p.global_sec, p.min_sec, p.max_sec, e);

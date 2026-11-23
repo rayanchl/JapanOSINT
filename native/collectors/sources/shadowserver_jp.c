@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 #define SS_BASE "https://dashboard.shadowserver.org/api/"
 
@@ -38,9 +39,7 @@ static cJSON *coalesce2(cJSON *last, const char *ka, const char *kb) {
 
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
   (void)key; (void)ud;
-  const char *de = getenv("SHADOWSERVER_DAYS");
-  long days = (de && *de) ? strtol(de, NULL, 10) : 14;
-  if (days <= 0) days = 14;
+  long days = jo_env_long_strict("SHADOWSERVER_DAYS", 14, 1, LONG_MAX);
 
   cJSON *features = cJSON_CreateArray();
   for (int d = 0; d < N_DATASETS; d++) {

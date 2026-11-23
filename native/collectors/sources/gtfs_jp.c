@@ -57,6 +57,7 @@
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+#include "lib/joenv.h"
 
 #define CATALOG_URL "https://api.gtfs-data.jp/v2/files"
 #define MAXCOL 64
@@ -896,10 +897,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   long feed_limit = 0;                /* 0 = every feed in the catalogue */
   long stop_cap = 50000;              /* map-layer feature budget */
-  const char *e1 = getenv("GTFS_JP_FEED_LIMIT");
-  if (e1 && e1[0]) feed_limit = strtol(e1, NULL, 10);
-  const char *e2 = getenv("GTFS_JP_STOP_CAP");
-  if (e2 && e2[0]) stop_cap = strtol(e2, NULL, 10);
+  feed_limit = jo_env_long("GTFS_JP_FEED_LIMIT", feed_limit, LONG_MIN, LONG_MAX);
+  stop_cap = jo_env_long("GTFS_JP_STOP_CAP", stop_cap, LONG_MIN, LONG_MAX);
 
   cJSON *wrap = feed_get_json(ctx->http, CATALOG_URL, 30000);
   cJSON *body = wrap ? cJSON_GetObjectItem(wrap, "body") : NULL;

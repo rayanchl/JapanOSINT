@@ -62,6 +62,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 static const char *TARGETS[] = {
   "kantei.go.jp", "mod.go.jp", "mofa.go.jp", "meti.go.jp", "soumu.go.jp",
@@ -298,8 +299,7 @@ static void wb_notice(intel_sink *sink, const wb_host *h, int budget) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { "accept: application/json", NULL };
   int budget = WB_PAGES_DEF;
-  const char *be = getenv("JO_WAYBACK_PAGES");
-  if (be && *be) { int v = atoi(be); if (v > 0) budget = v; }
+  budget = jo_env_int_strict("JO_WAYBACK_PAGES", budget, 1, INT_MAX);
 
   int n = 0, hosts_ok = 0, halted = 0;
   for (int ti = 0; ti < NT; ti++) {

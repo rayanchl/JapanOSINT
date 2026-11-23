@@ -36,6 +36,7 @@
 #include <time.h>
 #include "_jp_osint.inc"
 #include "cyi_common.inc"
+#include "lib/joenv.h"
 
 /* The endpoint's own page size, not an editorial bound: `limit` caps a page
  * and `count` is the total the server will serve. This collector used to send
@@ -242,8 +243,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
 
   int max_pages = PDNS_MAX_PAGES;
-  const char *penv = getenv("JO_PDNS_MAX_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  max_pages = jo_env_int_strict("JO_PDNS_MAX_PAGES", max_pages, 1, INT_MAX);
 
   /* Optional Argus API key: lifts the anonymous quota. Never logged. */
   const char *key = getenv("MNEMONIC_API_KEY");

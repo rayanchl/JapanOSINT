@@ -28,6 +28,7 @@
 #include "lib/feedlib.h"
 #include "lib/jocore.h"          /* jo_trunc_notice — the shared R7 disclosure */
 #include "geoeo_common.inc"
+#include "lib/joenv.h"
 
 #define COOPS_CATALOG                                                         \
   "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json"      \
@@ -67,8 +68,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const int nstations = cJSON_GetArraySize(stations);
   int budget = COOPS_MAX_STATIONS;
-  const char *benv = getenv("JO_COOPS_MAX_STATIONS");
-  if (benv && *benv) { int b = atoi(benv); if (b > 0) budget = b; }
+  budget = jo_env_int_strict("JO_COOPS_MAX_STATIONS", budget, 1, INT_MAX);
   if (budget > nstations) budget = nstations;
 
   /* Where this run's window starts. Stepping by the run cadence rather than by

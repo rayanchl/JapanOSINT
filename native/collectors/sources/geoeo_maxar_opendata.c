@@ -30,6 +30,7 @@
 #include "lib/feedlib.h"
 #include "lib/jocore.h"          /* jo_trunc_notice — the shared R7 disclosure */
 #include "geoeo_common.inc"
+#include "lib/joenv.h"
 
 #define MAXAR_ROOT "https://maxar-opendata.s3.amazonaws.com/events/catalog.json"
 #define MAXAR_BASE "https://maxar-opendata.s3.amazonaws.com/events/"
@@ -82,8 +83,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *root_license = geoeo_str(root, "license");
 
   int max_events = MAXAR_MAX_EVENTS;
-  const char *eenv = getenv("JO_MAXAR_MAX_EVENTS");
-  if (eenv && *eenv) { int v = atoi(eenv); if (v > 0) max_events = v; }
+  max_events = jo_env_int_strict("JO_MAXAR_MAX_EVENTS", max_events, 1, INT_MAX);
 
   int n = 0, fetched = 0, candidates = 0, skipped = 0;
   cJSON *l;

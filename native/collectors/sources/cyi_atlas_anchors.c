@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 #define FIRST_URL "https://atlas.ripe.net/api/v2/anchors/?format=json&page_size=500"
 /* The `next` link decides where the walk ends; this is only a runaway guard
@@ -32,8 +33,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(url, sizeof url, "%s", FIRST_URL);
 
   int max_pages = MAX_PAGES;
-  const char *penv = getenv("JO_ATLAS_MAX_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  max_pages = jo_env_int_strict("JO_ATLAS_MAX_PAGES", max_pages, 1, INT_MAX);
 
   int n = 0, pages = 0, fetched_any = 0, count = -1, stopped_early = 0;
   while (url[0] && pages < max_pages) {

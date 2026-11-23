@@ -18,6 +18,7 @@
 #include <strings.h>
 #include <time.h>
 #include <sys/time.h>
+#include "lib/joenv.h"
 
 #define WS_URL "wss://certstream.calidog.io/"
 #define MAX_EVENTS 500
@@ -95,9 +96,7 @@ static int on_msg(const char *data, size_t len, void *udp) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   (void)ctx;
-  const char *we = getenv("CERTSTREAM_WINDOW_MS");
-  int window = we ? atoi(we) : 10000;
-  if (window <= 0) window = 10000;
+  int window = jo_env_int_strict("CERTSTREAM_WINDOW_MS", 10000, 1, INT_MAX);
   const char *hdrs[] = { "User-Agent: JapanOSINT/1.0", NULL };
 
   cs_ud u = { cJSON_CreateArray() };

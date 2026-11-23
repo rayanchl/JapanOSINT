@@ -30,6 +30,7 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 static void iso_epoch(long long t, char *buf, size_t n) {
   time_t tt = (time_t)t; struct tm tm; gmtime_r(&tt, &tm);
@@ -385,9 +386,8 @@ static void snap_load(db_handle *db, snapshot *s) {
  * Callers hold the lock for the duration of their read: the arrays are
  * replaced wholesale on refresh, so a reader must not outlive the lock. */
 static int snap_ttl_ms(void) {
-  const char *e = getenv("JO_SOURCEAPI_SNAP_SEC");
-  int v = (e && *e) ? atoi(e) : 10;
-  return (v < 0 ? 0 : v) * 1000;
+  /* upper bound keeps the *1000 inside int (about 24 days) */
+  return jo_env_int("JO_SOURCEAPI_SNAP_SEC", 10, 0, INT_MAX / 1000) * 1000;
 }
 static snapshot *snap_lock(db_handle *db) {
   pthread_mutex_lock(&g_snap_mu);

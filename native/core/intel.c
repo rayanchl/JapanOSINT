@@ -12,6 +12,7 @@
 #include <sys/time.h>
 #include <time.h>
 #include "../lib/jocore.h"   /* jo_iso_now */
+#include "lib/joenv.h"
 
 /* ── `stored`: how many DISTINCT rows a run actually left behind ──────────
  *
@@ -936,14 +937,6 @@ static int flush_buf(sink_state *st, int *new_out) {
   return last;
 }
 
-static int env_int(const char *name, int dflt, int lo, int hi) {
-  const char *v = getenv(name);
-  if (!v || !*v) return dflt;
-  char *e = NULL;
-  long x = strtol(v, &e, 10);
-  if (e == v) return dflt;
-  return x < lo ? lo : x > hi ? hi : (int)x;
-}
 
 static int emit(struct intel_sink *self, const intel_item *it) {
   sink_state *st = self->ctx;
@@ -1038,10 +1031,10 @@ intel_sink intel_sink_make(db_handle *db, const char *source_id,
   st->magic = SINK_MAGIC;
   st->db = db;
   st->seen_exact = 1;
-  st->batch_max   = env_int("JO_SINK_BATCH", 200, 1, 100000);
+  st->batch_max   = jo_env_int("JO_SINK_BATCH", 200, 1, 100000);
   st->trace       = getenv("JO_SINK_TRACE") != NULL;
-  st->batch_ms    = env_int("JO_SINK_BATCH_MS", 500, 0, 600000);
-  st->batch_bytes = (size_t)env_int("JO_SINK_BATCH_BYTES", 8 << 20, 1 << 16, 1 << 30);
+  st->batch_ms    = jo_env_int("JO_SINK_BATCH_MS", 500, 0, 600000);
+  st->batch_bytes = (size_t)jo_env_int("JO_SINK_BATCH_BYTES", 8 << 20, 1 << 16, 1 << 30);
   snprintf(st->source_id, sizeof st->source_id, "%s", source_id ? source_id : "unknown");
   if (tenant_id) snprintf(st->tenant_id, sizeof st->tenant_id, "%s", tenant_id);
   intel_sink k; k.ctx = st; k.emit = emit;

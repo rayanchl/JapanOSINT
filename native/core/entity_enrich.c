@@ -10,13 +10,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
-static int env_int(const char *k, int dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  int n = atoi(v);
-  return n > 0 ? n : dflt;
-}
 
 /* first balanced {...} -> cJSON (== llmClient completeJSON tolerance). */
 static cJSON *extract_json(const char *raw) {
@@ -52,8 +47,8 @@ typedef struct { char *uid,*src,*title,*body,*summary,*lang; } prow;
 
 int entity_enrich_extract(db_handle *db, llm_client *llm, int batch) {
   sqlite3 *h = db->h;
-  int TIMEOUT = env_int("LLM_TIMEOUT_MS", 30000);
-  if (batch <= 0) batch = env_int("ENTITY_BACKFILL_BATCH", 50);
+  int TIMEOUT = jo_env_int_strict("LLM_TIMEOUT_MS", 30000, 1, INT_MAX);
+  if (batch <= 0) batch = jo_env_int_strict("ENTITY_BACKFILL_BATCH", 50, 1, INT_MAX);
 
   /* fetch the pending batch first (== JS stmtPending.all), then close it
    * before doing the per-item writes. */
@@ -519,8 +514,8 @@ static int collect_vector_pairs(db_handle *db, int want, pairs *out,
 
 int entity_enrich_resolve(db_handle *db, llm_client *llm, int batch) {
   sqlite3 *h = db->h;
-  int TIMEOUT = env_int("LLM_TIMEOUT_MS", 30000);
-  if (batch <= 0) batch = env_int("ENTITY_RESOLVE_BATCH", 40);
+  int TIMEOUT = jo_env_int_strict("LLM_TIMEOUT_MS", 30000, 1, INT_MAX);
+  if (batch <= 0) batch = jo_env_int_strict("ENTITY_RESOLVE_BATCH", 40, 1, INT_MAX);
   resolve_state_ensure(h);
 
   pairs ps = {0};

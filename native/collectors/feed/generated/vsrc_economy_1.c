@@ -31,6 +31,7 @@ VJSON(eco_ar_series_cpi, "eco-ar-series-cpi", "Argentina national CPI series", "
  * path, which serves 10,000 rows per page and honours $top/$skip (skip=10000
  * returned IDs from 10000 on) — the URL declares both for the page walk. */
 #include "_vjson_shapes.inc"
+#include "lib/joenv.h"
 
 VJSON_PREP(eco_cbs_nl_catalog, "eco-cbs-nl-catalog", "Statistics Netherlands producer confidence", "オランダ統計局 生産者景況感",
   "economy", "statistics",
@@ -276,8 +277,7 @@ static int run_eco_worldbank_projects(const source_ctx *c, intel_sink *s) {
   static const char *const ID = "eco-worldbank-projects";
   const int rows = 1000;
   int page_max = 20; /* exhaustive-ok: page-walk ceiling shared with lib/jsonlist.c; a stop is disclosed below and $JO_JSONLIST_PAGE_MAX raises it */
-  const char *env = getenv("JO_JSONLIST_PAGE_MAX");
-  if (env && *env && atoi(env) > 0) page_max = atoi(env);
+  page_max = jo_env_int_strict("JO_JSONLIST_PAGE_MAX", page_max, 1, INT_MAX);
 
   long total = 0, available = -1;
   int pages = 0, more = 0;

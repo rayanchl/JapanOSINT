@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 #define WS_URL "wss://jetstream2.us-west.bsky.network/subscribe?wantedCollections=app.bsky.feed.post"
 
@@ -88,12 +89,8 @@ static int on_msg(const char *data, size_t len, void *udp) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *we = getenv("BLUESKY_JETSTREAM_WINDOW_MS");
-  const char *me = getenv("BLUESKY_JETSTREAM_MAX");
-  int window = we ? atoi(we) : 8000;
-  int max    = me ? atoi(me) : 200;
-  if (window <= 0) window = 8000;
-  if (max <= 0) max = 200;
+  int window = jo_env_int_strict("BLUESKY_JETSTREAM_WINDOW_MS", 8000, 1, INT_MAX);
+  int max    = jo_env_int_strict("BLUESKY_JETSTREAM_MAX", 200, 1, INT_MAX);
 
   bsky_ud u = { cJSON_CreateArray(), max };
   ws_collect(WS_URL, NULL, window, max, on_msg, &u);       /* err → 0 rows */

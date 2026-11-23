@@ -9,6 +9,7 @@
 #include <string.h>
 #include <strings.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 #define EVEC_SID "_entity_vec"
 /* Model input bound. Entity names are short; a 2 KB "address" is a parse
@@ -111,8 +112,7 @@ int entity_vec_tick(db_handle *db, struct http_client *http, int max_walk) {
   const char *base = vecindex_base_url();
   if (!base) return 0;
   if (max_walk <= 0) {
-    const char *e = getenv("JO_ENTITY_VEC_MAX_PER_RUN");
-    max_walk = (e && atoi(e) > 0) ? atoi(e) : 2000;
+    max_walk = jo_env_int_strict("JO_ENTITY_VEC_MAX_PER_RUN", 2000, 1, INT_MAX);
   }
   vecindex_ensure_meta(db, s);
   vecindex_ensure_side_tables(db, s);

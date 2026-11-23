@@ -9,12 +9,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 /* _satelliteSeeds TOKYO (== feodo_tracker_jp.c). */
 
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
-  const char *lim = getenv("ABUSEIPDB_LIMIT");
-  long limit = (lim && *lim) ? strtol(lim, NULL, 10) : 10000;
+  long limit = jo_env_long_strict("ABUSEIPDB_LIMIT", 10000, 1, LONG_MAX);
   char url[256];
   snprintf(url, sizeof url,
     "https://api.abuseipdb.com/api/v2/blacklist?confidenceMinimum=90&limit=%ld",

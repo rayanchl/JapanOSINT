@@ -96,6 +96,7 @@
 #include "ffmpeg.h"
 #include "hostgate.h"        /* the destination policy for network inputs     */
 #include "hls_check.h"       /* ...and for every URL an HLS playlist names     */
+#include "lib/joenv.h"
 #include "netjail.h"         /* ...and everything ffmpeg dials after that      */
 #include "../third_party/cJSON.h"
 #include <ctype.h>
@@ -139,10 +140,6 @@ static long long ff_now_ms(void) {
   return (long long)ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
 }
 
-static const char *env_nonempty(const char *k) {
-  const char *v = getenv(k);
-  return (v && *v) ? v : NULL;
-}
 
 /* JO_NO_FFMPEG is the modern spelling; CAM_STILLS_NO_FFMPEG is honoured as an
  * exact synonym because it is documented in camera_stills.h and may already be
@@ -155,21 +152,12 @@ static int ff_disabled(void) {
 }
 
 static size_t cfg_max_bytes(void) {
-  const char *v = env_nonempty("JO_FFMPEG_MAX_BYTES");
-  if (!v) return (size_t)FFMPEG_MAX_BYTES;
-  long long n = strtoll(v, NULL, 10);
-  if (n < 4096) n = 4096;
-  if (n > 512LL * 1024 * 1024) n = 512LL * 1024 * 1024;
-  return (size_t)n;
+  return (size_t)jo_env_ll("JO_FFMPEG_MAX_BYTES", FFMPEG_MAX_BYTES, 4096,
+                           512LL * 1024 * 1024);
 }
 
 static int cfg_timeout_ms(void) {
-  const char *v = env_nonempty("JO_FFMPEG_TIMEOUT_MS");
-  if (!v) return FFMPEG_TIMEOUT_MS;
-  long n = strtol(v, NULL, 10);
-  if (n < 500) n = 500;
-  if (n > 600000) n = 600000;
-  return (int)n;
+  return jo_env_int("JO_FFMPEG_TIMEOUT_MS", FFMPEG_TIMEOUT_MS, 500, 600000);
 }
 
 const char *ffmpeg_strerror(int rc) {
@@ -731,8 +719,8 @@ static void probe_tools(void) {
   g_ff_ok = g_fp_ok = 0;
   g_ff_path[0] = g_fp_path[0] = '\0';
 
-  const char *ov = env_nonempty("JO_FFMPEG");
-  if (!ov) ov = env_nonempty("CAM_STILLS_FFMPEG");
+  const char *ov = jo_env_str("JO_FFMPEG", NULL);
+  if (!ov) ov = jo_env_str("CAM_STILLS_FFMPEG", NULL);
   if (ov) {
     if (strlen(ov) + 1 <= FF_PATH_MAX && access(ov, X_OK) == 0)
       memcpy(g_ff_path, ov, strlen(ov) + 1);
@@ -744,7 +732,7 @@ static void probe_tools(void) {
   else
     g_ff_path[0] = '\0';
 
-  const char *po = env_nonempty("JO_FFPROBE");
+  const char *po = jo_env_str("JO_FFPROBE", NULL);
   if (po) {
     if (strlen(po) + 1 <= FF_PATH_MAX && access(po, X_OK) == 0)
       memcpy(g_fp_path, po, strlen(po) + 1);

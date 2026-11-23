@@ -7,6 +7,7 @@
 #include <math.h>
 #include <time.h>
 #include <pthread.h>
+#include "lib/joenv.h"
 
 /* Parse "YYYY-MM-DD HH:MM:SS" or ISO-8601 "YYYY-MM-DDTHH:MM:SS[.mmm][Z]" into
  * epoch seconds (UTC). Both spellings occur: SQLite datetime('now') writes the
@@ -264,9 +265,7 @@ static void trust_rebuild_async(db_handle *db) {
 
 double source_trust_score(db_handle *db, const char *source_id) {
   if (!source_id) return -1.0;
-  long ttl = 300;
-  const char *e = getenv("JO_TRUST_CACHE_SEC");
-  if (e && *e) { ttl = atol(e); if (ttl < 1) ttl = 1; }
+  long ttl = jo_env_long("JO_TRUST_CACHE_SEC", 300, 1, LONG_MAX);
   time_t now = time(NULL);
   int kick = 0;
   pthread_mutex_lock(&g_score_mu);

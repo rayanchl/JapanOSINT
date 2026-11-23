@@ -4,15 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 int qembed_enabled(void) {
   return vecindex_query_url() != NULL;
 }
 
 static int qembed_timeout_ms(void) {
-  const char *e = getenv("JO_EMBED_QUERY_TIMEOUT_MS");
-  int v = (e && *e) ? atoi(e) : 0;
-  return v > 0 ? v : 15000;
+  return jo_env_int_strict("JO_EMBED_QUERY_TIMEOUT_MS", 15000, 1, INT_MAX);
 }
 
 int qembed_texts(const char *const *texts, int n, float **out, int *dim,

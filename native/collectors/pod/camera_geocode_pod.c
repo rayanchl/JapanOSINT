@@ -37,6 +37,7 @@
 #include <string.h>
 #include <time.h>
 #include "_timefmt.inc"
+#include "lib/joenv.h"
 
 /* Node's JP_BBOX from cameraGeocode.js — a hit outside it is a wrong match on a
  * same-named place abroad, which is the common failure for short venue names. */
@@ -45,12 +46,6 @@
 #define JP_MIN_LON 120.0
 #define JP_MAX_LON 155.0
 
-static int env_int(const char *k, int dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  int n = atoi(v);
-  return n > 0 ? n : dflt;
-}
 
 /* Node cleanName(): drop framing words that describe the shot rather than the
  * place, then prefer the longest dash-separated segment (aggregator titles are
@@ -226,7 +221,7 @@ static int apply_result(db_handle *db, const char *uid, const char *props_json,
 static int pod_run(const source_ctx *ctx, intel_sink *sink) {
   (void)sink;
   if (!ctx || !ctx->db || !ctx->db->h) return 0;
-  int budget = env_int("JO_CAM_GEOCODE_BUDGET", 25);
+  int budget = jo_env_int_strict("JO_CAM_GEOCODE_BUDGET", 25, 1, INT_MAX);
 
   /* Candidates: camera rows whose position is an administrative approximation
    * and that we have not already tried. Ordered oldest-first so a large backlog
@@ -234,7 +229,7 @@ static int pod_run(const source_ctx *ctx, intel_sink *sink) {
   /* How far a geocode may move a pin from the centroid we already matched.
    * A prefecture is ~100 km across, so 150 km accepts a genuine refinement
    * anywhere in the matched prefecture and rejects a cross-country mismatch. */
-  int max_km = env_int("JO_CAM_GEOCODE_MAX_KM", 150);
+  int max_km = jo_env_int_strict("JO_CAM_GEOCODE_MAX_KM", 150, 1, INT_MAX);
 
   static const char *Q =
     "SELECT uid, title, properties, lat, lon FROM intel_items"

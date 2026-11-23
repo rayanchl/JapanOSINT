@@ -40,6 +40,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include "../lib/jocore.h"   /* jo_iso_now */
+#include "lib/joenv.h"
 
 /* ── output stream: bounded batches through the caller's writer ─────────── */
 
@@ -222,9 +223,7 @@ static const char *fmt_ctype(efmt f) {
 static long plan_row_cap(const char *plan) {
   if (!plan || !*plan)              return 1000;
   if (!strcmp(plan, "enterprise")) {
-    const char *e = getenv("JO_EXPORT_MAX_ROWS");
-    long v = (e && *e) ? atol(e) : 0;
-    return v > 0 ? v : EXPORT_ENTERPRISE_CAP;
+    return jo_env_long_strict("JO_EXPORT_MAX_ROWS", EXPORT_ENTERPRISE_CAP, 1, LONG_MAX);
   }
   if (!strcmp(plan, "team"))        return 250000;
   if (!strcmp(plan, "pro"))         return 50000;

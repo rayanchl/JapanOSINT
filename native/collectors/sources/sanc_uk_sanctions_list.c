@@ -95,7 +95,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
    * 2026-10-02, 1,370 dropped every run (disclosed, but dropped), for a parse
    * that takes six seconds. An explicit setting still applies and is still
    * disclosed below. */
-  int max_rows = sanc_env_int("JO_SANC_MAX_ROWS", INT_MAX);
+  int max_rows = jo_env_int_strict("JO_SANC_MAX_ROWS", INT_MAX, 1, INT_MAX);
   int n = 0;
   const char *cur = xml;
   sanc_el d;

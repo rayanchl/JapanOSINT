@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "lib/joenv.h"
 
 VJSON(gov_opensanctions_eu_fsf, "gov-opensanctions-eu-fsf", "OpenSanctions — EU Consolidated Sanctions", "OpenSanctions EU統合制裁リスト",
   "government", "sanctions",
@@ -301,8 +302,7 @@ static int run_gov_worldbank_procnotices(const source_ctx *c, intel_sink *s) {
   static const char *const ID = "gov-worldbank-procnotices";
   const int rows = 1000;
   int page_max = 20; /* exhaustive-ok: page-walk ceiling shared with lib/jsonlist.c; a stop is disclosed below and $JO_JSONLIST_PAGE_MAX raises it */
-  const char *env = getenv("JO_JSONLIST_PAGE_MAX");
-  if (env && *env && atoi(env) > 0) page_max = atoi(env);
+  page_max = jo_env_int_strict("JO_JSONLIST_PAGE_MAX", page_max, 1, INT_MAX);
 
   long total = 0, available = -1;
   int pages = 0, more = 0;

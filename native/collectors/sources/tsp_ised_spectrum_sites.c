@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 #define ISED_BASE \
   "https://services.arcgis.com/wjcPoefzjpzCgffS/ArcGIS/rest/services/" \
@@ -199,9 +200,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
    * stays a BOUNDED walk on a daily cadence, and the bound is DISCLOSED as a
    * record carrying the real total rather than left in a log line. Raise
    * $JO_ISED_MAX_PAGES to take more per run. */
-  const char *e = getenv("JO_ISED_MAX_PAGES");
-  int max_pages = (e && *e) ? atoi(e) : PAGES;
-  if (max_pages < 1) max_pages = 1;
+  int max_pages = jo_env_int("JO_ISED_MAX_PAGES", PAGES, 1, INT_MAX);
 
   int total = 0, pages = 0, more = 0;
   long offset = 0;

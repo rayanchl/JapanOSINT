@@ -6,6 +6,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/joenv.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,13 +39,6 @@ static void urlenc(const char *s, char *out, size_t n) {
   out[o] = '\0';
 }
 
-static long env_int(const char *k, long def) {
-  const char *v = getenv(k);
-  if (!v || !*v) return def;
-  long x = strtol(v, NULL, 10);
-  return x;
-}
-
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *token = getenv("GITHUB_TOKEN");
   if (!token || !*token) {
@@ -54,7 +48,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[github-leaks-jp] gated (no GITHUB_TOKEN)\n");
     return 0;                                      /* live=false, 0 rows */
   }
-  long per = env_int("GITHUB_LEAK_PER_QUERY", 20);
+  long per = jo_env_long("GITHUB_LEAK_PER_QUERY", 20, 1, 100);
 
   char authh[512];
   snprintf(authh, sizeof authh, "Authorization: Bearer %s", token);

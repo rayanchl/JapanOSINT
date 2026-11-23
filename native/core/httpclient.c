@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <time.h>
 #include <pthread.h>
+#include "lib/joenv.h"
 
 typedef struct { char *host; int requests; int ok; } host_log;
 
@@ -98,8 +99,7 @@ static size_t g_max_body;
  * through it — see body_ceiling(). */
 static int g_max_body_explicit;
 static void max_body_probe(void) {
-  const char *e = getenv("JO_HTTP_MAX_BODY");
-  long long v = (e && *e) ? atoll(e) : -1;
+  long long v = jo_env_ll_strict("JO_HTTP_MAX_BODY", -1, 0, LLONG_MAX);
   g_max_body_explicit = (v >= 0);
   g_max_body = (v >= 0) ? (size_t)v : (size_t)HTTP_MAX_BODY_DEFAULT;
 }

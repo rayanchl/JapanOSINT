@@ -59,12 +59,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 #define RETAIN_PAUSE_MS 20       /* writers queued behind a batch run here */
 
 static int env_days(const char *k, int dflt, int floor_days) {
-  const char *v = getenv(k);
-  int n = (v && *v) ? atoi(v) : dflt;
+  int n = jo_env_int(k, dflt, INT_MIN, INT_MAX);
   if (n <= 0) return 0;                        /* 0 (or nonsense): keep forever */
   if (n < floor_days) {
     fprintf(stderr, "[retention] %s=%d is below the %d-day floor; using %d\n",
@@ -74,11 +74,6 @@ static int env_days(const char *k, int dflt, int floor_days) {
   return n;
 }
 
-static int env_pos(const char *k, int dflt) {
-  const char *v = getenv(k);
-  int n = (v && *v) ? atoi(v) : dflt;
-  return n > 0 ? n : dflt;
-}
 
 static int cancelled(const volatile int *c) {
   return c && __atomic_load_n((const int *)c, __ATOMIC_ACQUIRE);
@@ -213,9 +208,9 @@ typedef struct {
 
 static void retain_all(sqlite3 *h, const volatile int *cancel, retain_counts *c) {
   memset(c, 0, sizeof *c);
-  int batch = env_pos("JO_RETAIN_BATCH", 5000);
+  int batch = jo_env_int_strict("JO_RETAIN_BATCH", 5000, 1, INT_MAX);
   int fl_days = env_days("JO_RETAIN_FETCH_LOG_DAYS", 35, 31);
-  int fl_keep = env_pos("JO_RETAIN_FETCH_LOG_KEEP", 20);
+  int fl_keep = jo_env_int_strict("JO_RETAIN_FETCH_LOG_KEEP", 20, 1, INT_MAX);
   int an_days = env_days("JO_RETAIN_ANOMALY_DAYS", 90, 31);
   int dl_days = env_days("JO_RETAIN_ALERT_DELIVERY_DAYS", 30, 1);
   int ev_days = env_days("JO_RETAIN_ALERT_EVENT_DAYS", 365, 1);

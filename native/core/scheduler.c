@@ -24,6 +24,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <pthread.h>
+#include "lib/joenv.h"
 
 /* Counting sink: wraps the real intel_sink and tallies emit() calls so the
  * scheduler knows records_fetched for fetch_log/detection. Both a NEW row
@@ -172,19 +173,11 @@ static void fetch_log_set_stored(db_handle *db, long flid, long stored,
  * is the default (atol used to read "abc" as 0, which for
  * JO_SCHED_DEADLINE_SEC silently switched the watchdog off); a number is
  * clamped into [lo, hi]. */
-static long env_long(const char *name, long dflt, long lo, long hi) {
-  const char *v = getenv(name);
-  if (!v || !*v) return dflt;
-  char *end = NULL;
-  long x = strtol(v, &end, 10);
-  if (end == v) return dflt;
-  return x < lo ? lo : (x > hi ? hi : x);
-}
 
 void sched_policy_load(sched_policy *p) {
-  p->backoff_cap_sec      = env_long("JO_SCHED_BACKOFF_CAP_SEC", 86400, 1, LONG_MAX / 4);
-  p->quarantine_after     = (int)env_long("JO_SCHED_QUARANTINE_AFTER", 12, 1, INT_MAX);
-  p->quarantine_probe_sec = env_long("JO_SCHED_QUARANTINE_PROBE_SEC",
+  p->backoff_cap_sec      = jo_env_long("JO_SCHED_BACKOFF_CAP_SEC", 86400, 1, LONG_MAX / 4);
+  p->quarantine_after     = (int)jo_env_long("JO_SCHED_QUARANTINE_AFTER", 12, 1, INT_MAX);
+  p->quarantine_probe_sec = jo_env_long("JO_SCHED_QUARANTINE_PROBE_SEC",
                                      7L * 86400L, 1, LONG_MAX / 4);
 }
 
@@ -1270,8 +1263,8 @@ static int sched_pool_init(const source_def **all, int n) {
   g_hinfl     = calloc((size_t)SCHED_HOSTS_MAX + 1, sizeof(int));
   g_hcap      = calloc((size_t)SCHED_HOSTS_MAX + 1, sizeof(int));
   g_nh        = 0;
-  g_host_cap_default = (int)env_long("JO_SCHED_HOST_INFLIGHT", 2, 1, 64);
-  g_skip_max  = (unsigned)env_long("JO_SCHED_HOST_SKIP_MAX", 1000, 1, 1000000);
+  g_host_cap_default = (int)jo_env_long("JO_SCHED_HOST_INFLIGHT", 2, 1, 64);
+  g_skip_max  = (unsigned)jo_env_long("JO_SCHED_HOST_SKIP_MAX", 1000, 1, 1000000);
   if (!g_q.running || !g_q.claimed || !g_q.started || !g_q.warned ||
       !g_q.next || !g_q.due || !g_q.cancel || !g_state || !g_q.dflag ||
       !g_q.act || !g_q.actpos || !g_q.held || !g_hid || !g_htab || !g_hname ||
@@ -1994,17 +1987,17 @@ void scheduler_loop(db_handle *db) {
    * (0.72/s), 24 workers 363 runs (1.21/s), and at 24 zero failed= emits and
    * zero SQLITE_BUSY lines. The 1.7x (not 3x) gain is the boot ramp, hostgate
    * pacing and shared egress, not the database. The clamp stays 1-32. */
-  int workers = (int)env_long("JO_SCHED_WORKERS", 24, 1, 32);
+  int workers = (int)jo_env_long("JO_SCHED_WORKERS", 24, 1, 32);
   /* The pods are few, mostly short, and must never wait on the fleet. Two, so
    * one long LLM-bound pod (repair, enrichment) cannot hold the WAL
    * checkpoint or retention behind it. */
-  int mworkers = (int)env_long("JO_SCHED_MAINT_WORKERS", 2, 1, 8);
+  int mworkers = (int)jo_env_long("JO_SCHED_MAINT_WORKERS", 2, 1, 8);
   g_q.lane[LANE_COLLECT].workers = workers;
   g_q.lane[LANE_MAINT].workers   = mworkers;
-  g_deadline_sec = (int)env_long("JO_SCHED_DEADLINE_SEC", 300, 0, INT_MAX);   /* 0 = watchdog off */
+  g_deadline_sec = (int)jo_env_long("JO_SCHED_DEADLINE_SEC", 300, 0, INT_MAX);   /* 0 = watchdog off */
   /* The ceiling on the interval-based part of a run's cancel window, whatever
    * the cadence policy makes a row's interval - see cancel_after(). */
-  g_cancel_cap_sec = env_long("JO_SCHED_CANCEL_MAX_SEC", 900, 1, INT_MAX);
+  g_cancel_cap_sec = jo_env_long("JO_SCHED_CANCEL_MAX_SEC", 900, 1, INT_MAX);
 
   time_t now0 = time(NULL);
   /* Stagger first runs so the fleet doesn't storm upstreams at boot (many do
@@ -2012,8 +2005,8 @@ void scheduler_loop(db_handle *db) {
    * (3 s), compressed into JO_SCHED_RAMP_SEC (900 s) and into each source's
    * own interval — see sched_boot_offset(). JO_SCHED_STAGGER_SEC=0 disables
    * the ramp. */
-  long stag = env_long("JO_SCHED_STAGGER_SEC", 3, 0, 86400);
-  long ramp = env_long("JO_SCHED_RAMP_SEC", 900, 0, 7L * 86400L);
+  long stag = jo_env_long("JO_SCHED_STAGGER_SEC", 3, 0, 86400);
+  long ramp = jo_env_long("JO_SCHED_RAMP_SEC", 900, 0, 7L * 86400L);
   char *skip = calloc((size_t)(n > 0 ? n : 1), 1);
   if (skip) boot_skip_set(db, skip, n);
   /* Pass 1: which sources start on the ramp, per lane. A source that is not

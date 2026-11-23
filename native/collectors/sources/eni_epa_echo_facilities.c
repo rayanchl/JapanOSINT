@@ -35,6 +35,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 #define SRC "epa-echo-facilities"
 
@@ -48,9 +49,7 @@ static void addstr(cJSON *p, const cJSON *o, const char *k, const char *out) {
 #define ECHO_PAGE 1000                  /* get_qid's maximum responseset */
 
 static int echo_page_max(void) {
-  const char *e = getenv("JO_ECHO_PAGE_MAX");
-  int v = e ? atoi(e) : 0;
-  return v > 0 ? v : 100;
+  return jo_env_int_strict("JO_ECHO_PAGE_MAX", 100, 1, INT_MAX);
 }
 
 /* Emit every facility on one get_qid page; returns rows emitted. */

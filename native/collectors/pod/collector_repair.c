@@ -44,26 +44,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include "lib/joenv.h"
 
 #define BODY_CAP 2000
 #define SAMPLE_CAP 1500
 
-static int env_int(const char *k, int dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  int n = atoi(v);
-  return n > 0 ? n : dflt;
-}
-static double env_double(const char *k, double dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  double d = atof(v);
-  return d >= 0.0 ? d : dflt;
-}
-static int env_truthy(const char *k) {
-  const char *v = getenv(k);
-  return v && *v && strcmp(v, "0") && strcasecmp(v, "false");
-}
 
 /* first balanced {...} -> cJSON (== llmClient completeJSON tolerance). */
 static cJSON *extract_json(const char *raw) {
@@ -270,9 +255,9 @@ static int count_recent_failed(sqlite3 *h, const char *id, int window_h) {
 static void maybe_quarantine(db_handle *db, const char *id) {
   sqlite3 *h = db->h;
   if (is_quarantined(h, id)) return;
-  int thr = env_int("REPAIR_BREAKER_THRESHOLD", 3);
-  int win = env_int("REPAIR_BREAKER_WINDOW_HOURS", 24);
-  int qh  = env_int("REPAIR_QUARANTINE_HOURS", 24);
+  int thr = jo_env_int_strict("REPAIR_BREAKER_THRESHOLD", 3, 1, INT_MAX);
+  int win = jo_env_int_strict("REPAIR_BREAKER_WINDOW_HOURS", 24, 1, INT_MAX);
+  int qh  = jo_env_int_strict("REPAIR_QUARANTINE_HOURS", 24, 1, INT_MAX);
   int fails = count_recent_failed(h, id, win);
   if (fails < thr) return;
   char reason[160], mod[40];
@@ -527,7 +512,7 @@ static int sanity_ok_llm(llm_client *llm, const char *name, const char *category
     type ? type : "?", records, fenced);
   free(fenced);
   free(sample);
-  int timeout = env_int("LLM_REPAIR_SANITY_TIMEOUT_MS", 8000);
+  int timeout = jo_env_int_strict("LLM_REPAIR_SANITY_TIMEOUT_MS", 8000, 1, INT_MAX);
   const char *grammar = grammar_load("repair_sanity");
   char *raw = llm_complete(llm, prompt, grammar && *grammar ? grammar : NULL,
                            256, 0.1, timeout);
@@ -610,8 +595,8 @@ static int attempt_repair(db_handle *db, llm_client *llm, http_client *http,
   if (has_staged_repair(h, a->id)) return 0;
 
   /* Give-up rails. */
-  int max_esc = env_int("REPAIR_MAX_ESCALATION", 3);
-  int max_att = env_int("REPAIR_MAX_ATTEMPTS", 4);
+  int max_esc = jo_env_int_strict("REPAIR_MAX_ESCALATION", 3, 1, INT_MAX);
+  int max_att = jo_env_int_strict("REPAIR_MAX_ATTEMPTS", 4, 1, INT_MAX);
   int attempts = repair_attempt_count(h, a->id);
   if (a->escalation >= max_esc || attempts >= max_att) {
     cJSON *g = cJSON_CreateObject();
@@ -678,14 +663,14 @@ static int attempt_repair(db_handle *db, llm_client *llm, http_client *http,
 
   /* ── URL-swap flow ───────────────────────────────────────────────────── */
   int rc = 0;
-  int escalate_at = env_int("REPAIR_ESCALATE_AT", 1);
+  int escalate_at = jo_env_int_strict("REPAIR_ESCALATE_AT", 1, 1, INT_MAX);
   int escalated = a->escalation >= escalate_at;
   const char *fast = getenv("LLM_REPAIR_MODEL");
   const char *hard = getenv("LLM_REPAIR_MODEL_HARD");
   const char *model = escalated ? (hard && *hard ? hard : fast) : fast;
   if (!model) model = "default";
-  int timeout = env_int("LLM_REPAIR_TIMEOUT_MS", 60000);
-  int refetch_to = env_int("REPAIR_REFETCH_TIMEOUT_MS", 15000);
+  int timeout = jo_env_int_strict("LLM_REPAIR_TIMEOUT_MS", 60000, 1, INT_MAX);
+  int refetch_to = jo_env_int_strict("REPAIR_REFETCH_TIMEOUT_MS", 15000, 1, INT_MAX);
 
   char *old_url = source_url(h, a->source_id);
   int matchable = is_clean_url(old_url, NULL);  /* override can rewrite it */
@@ -807,7 +792,7 @@ static int attempt_repair(db_handle *db, llm_client *llm, http_client *http,
     goto cleanup_prop;
   }
   int got = count_records(vr.body);
-  double tol = env_double("REPAIR_RECORDS_TOLERANCE", 0.5);
+  double tol = jo_env_double_strict("REPAIR_RECORDS_TOLERANCE", 0.5, 0.0, DBL_MAX);
   double mean = 0.0; int have_base = records_baseline(h, a->source_id, &mean);
   if (have_base) {
     double lo = mean * (1.0 - tol), hi = mean * (1.0 + tol);
@@ -854,7 +839,7 @@ static int attempt_repair(db_handle *db, llm_client *llm, http_client *http,
   cJSON_AddStringToObject(gp, "sanity", sreason);
   cJSON_AddStringToObject(gp, "new_url", new_url);
 
-  int dry = env_truthy("REPAIR_DRY");
+  int dry = jo_env_bool("REPAIR_DRY", 0);
   /* Honesty rule: merged only when old_url is matchable AND not dry. */
   /* A swap onto a DIFFERENT host is never applied without a human: the model's
    * URL is influenced by upstream bytes, and a live override would attribute
@@ -923,7 +908,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[repair] skipped (LLM_ENABLED != true)\n");
     return 0;
   }
-  int batch = env_int("REPAIR_BATCH", 3);
+  int batch = jo_env_int_strict("REPAIR_BATCH", 3, 1, INT_MAX);
   ensure_column(ctx->db, "collector_anomaly", "repair_attempts",
                 "INTEGER NOT NULL DEFAULT 0");
   ensure_column(ctx->db, "collector_anomaly", "repair_next_at", "TEXT");

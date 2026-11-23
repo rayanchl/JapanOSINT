@@ -30,6 +30,7 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
+#include "lib/joenv.h"
 
 #ifndef JO_REPO_ROOT
 #define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
@@ -59,16 +60,9 @@ static const char *up_root(void) {
   const char *e = getenv("JO_UPLOAD_DIR");
   return (e && *e) ? e : JO_REPO_ROOT "/data/uploads";
 }
-static long long env_ll(const char *name, long long dflt, long long lo,
-                        long long hi) {
-  const char *e = getenv(name);
-  if (!e || !*e) return dflt;
-  long long v = strtoll(e, NULL, 10);
-  return (v >= lo && v <= hi) ? v : dflt;
-}
 static long long up_max_bytes(void) {
   static long long v = -1;
-  if (v < 0) v = env_ll("JO_UPLOAD_MAX_BYTES", UP_DEF_MAX_BYTES,
+  if (v < 0) v = jo_env_ll_strict("JO_UPLOAD_MAX_BYTES", UP_DEF_MAX_BYTES,
                         65536LL, 268435456LL);
   return v;
 }
@@ -76,18 +70,18 @@ static long long up_part_max(void) {
   static long long v = -1;
   /* Upper clamp 2 MiB, not 3: the request line, the headers and mongoose's own
    * IO buffer growth share MG_MAX_RECV_SIZE with the body. */
-  if (v < 0) v = env_ll("JO_UPLOAD_PART_MAX_BYTES", UP_DEF_PART_MAX,
+  if (v < 0) v = jo_env_ll_strict("JO_UPLOAD_PART_MAX_BYTES", UP_DEF_PART_MAX,
                         65536LL, 2097152LL);
   return v;
 }
 static long long up_ttl_sec(void) {
   static long long v = -1;
-  if (v < 0) v = env_ll("JO_UPLOAD_TTL_SEC", UP_DEF_TTL_SEC, 60LL, 2592000LL);
+  if (v < 0) v = jo_env_ll_strict("JO_UPLOAD_TTL_SEC", UP_DEF_TTL_SEC, 60LL, 2592000LL);
   return v;
 }
 static long long up_row_ttl_sec(void) {
   static long long v = -1;
-  if (v < 0) v = env_ll("JO_UPLOAD_ROW_TTL_SEC", UP_DEF_ROW_TTL_SEC,
+  if (v < 0) v = jo_env_ll_strict("JO_UPLOAD_ROW_TTL_SEC", UP_DEF_ROW_TTL_SEC,
                         3600LL, 31536000LL);
   return v;
 }
@@ -1280,7 +1274,7 @@ void uploadapi_migrate(db_handle *db) {
   /* An honest warning beats a mystery. evidence's per-blob ceiling defaults to
    * 8 MiB while ours defaults to 64 MiB; in that configuration a 20 MiB
    * attachment commits, gets a sha256 and an audit row, and stores NO BYTES. */
-  long long evmax = env_ll("JO_EVIDENCE_MAX_BLOB_BYTES", 8388608LL, 1024LL,
+  long long evmax = jo_env_ll_strict("JO_EVIDENCE_MAX_BLOB_BYTES", 8388608LL, 1024LL,
                            1099511627776LL);
   if (up_max_bytes() > evmax)
     fprintf(stderr, "[upload] JO_UPLOAD_MAX_BYTES (%lld) exceeds "

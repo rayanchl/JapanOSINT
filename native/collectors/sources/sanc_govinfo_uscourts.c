@@ -34,14 +34,13 @@
  *            appellate courts without scraping PACER.
  */
 #include "sanc_common.inc"
+#include "lib/joenv.h"
 
 #define GOVINFO_PAGE_SIZE 1000
 #define GOVINFO_PAGE_MAX  25   /* exhaustive-ok: disclosed page ceiling; an early stop emits a collector-truncation-notice against the API's own count, and $JO_GOVINFO_PAGE_MAX raises it */
 
 static int govinfo_page_max(void) {
-  const char *e = getenv("JO_GOVINFO_PAGE_MAX");
-  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
-  return GOVINFO_PAGE_MAX;
+  return jo_env_int_strict("JO_GOVINFO_PAGE_MAX", GOVINFO_PAGE_MAX, 1, INT_MAX);
 }
 
 /* `nextPage` is an absolute URL built by GPO but stripped of the api_key, so

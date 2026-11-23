@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <zlib.h>
+#include "joenv.h"
 
 static unsigned rd16(const unsigned char *p) { return p[0] | (p[1] << 8); }
 static unsigned long rd32(const unsigned char *p) {
@@ -26,13 +27,8 @@ static unsigned long long rd64(const unsigned char *p) {
  * parser. Override with JO_ZIP_MAX_OUT if a legitimate feed needs more. */
 #define ZIP_DEFAULT_MAX_OUT (256UL * 1024UL * 1024UL)
 static size_t zip_max_out(void) {
-  const char *e = getenv("JO_ZIP_MAX_OUT");
-  if (e && *e) {
-    long long v = atoll(e);
-    if (v >= 1024 && (unsigned long long)v <= 4096ULL * 1024 * 1024)
-      return (size_t)v;
-  }
-  return ZIP_DEFAULT_MAX_OUT;
+  return (size_t)jo_env_ll_strict("JO_ZIP_MAX_OUT", (long long)ZIP_DEFAULT_MAX_OUT, 1024,
+                                  4096LL * 1024 * 1024);
 }
 
 /* Raw-inflate `comp` bytes at `data` into a fresh buffer. `uncomp` is the

@@ -1,6 +1,7 @@
 /* lib/overpass.c — port of _liveHelpers.js Overpass helpers. See overpass.h. */
 #include "overpass.h"
 #include "geojson.h"
+#include "joenv.h"
 #include "../core/httpclient.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -236,12 +237,9 @@ static cJSON *collect_fetch(const source_ctx *ctx, const char *body,
    * a long per-attempt timeout is an unbounded serial walk, which is what blew
    * whole scheduler slots. Keep a generous per-attempt timeout AND an overall
    * budget across all endpoints. Both overridable for slow/fast hosts. */
-  const char *penv = getenv("JO_OVERPASS_ATTEMPT_MS");
-  const char *tenv = getenv("JO_OVERPASS_TOTAL_MS");
-  int attempt_ms = timeout_ms > 0 ? timeout_ms : (penv ? atoi(penv) : 180000);
-  int total_ms   = tenv ? atoi(tenv) : 300000;
-  if (attempt_ms <= 0) attempt_ms = 180000;
-  if (total_ms   <= 0) total_ms   = 300000;
+  int attempt_ms = timeout_ms > 0 ? timeout_ms
+                   : jo_env_int_strict("JO_OVERPASS_ATTEMPT_MS", 180000, 1, INT_MAX);
+  int total_ms   = jo_env_int_strict("JO_OVERPASS_TOTAL_MS", 300000, 1, INT_MAX);
 
   struct timespec t0;
   clock_gettime(CLOCK_MONOTONIC, &t0);
@@ -330,9 +328,7 @@ static cJSON *tiled_fetch(const source_ctx *ctx, overpass_bodyfn bodyfn,
    * endpoints at 60-120 s each is 48-96 minutes inside one scheduler slot if
    * every mirror is slow. The single-query path was given a deadline first;
    * this one was missed, which left the worst case unbounded. */
-  const char *tenv = getenv("JO_OVERPASS_TOTAL_MS");
-  int total_ms = tenv ? atoi(tenv) : 300000;
-  if (total_ms <= 0) total_ms = 300000;
+  int total_ms = jo_env_int_strict("JO_OVERPASS_TOTAL_MS", 300000, 1, INT_MAX);
   struct timespec t0;
   clock_gettime(CLOCK_MONOTONIC, &t0);
   cJSON *all = cJSON_CreateArray();

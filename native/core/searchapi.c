@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 static void gen_id(char *out33) {
   unsigned char b[16];
@@ -48,12 +49,7 @@ static pthread_mutex_t g_run_lock = PTHREAD_MUTEX_INITIALIZER;
 static int             g_runs_live = 0;
 
 static int max_concurrent_runs(void) {
-  const char *e = getenv("JO_MAX_CONCURRENT_SEARCHES");
-  if (e && *e) {
-    int n = atoi(e);
-    if (n > 0) return n;
-  }
-  return 4;
+  return jo_env_int_strict("JO_MAX_CONCURRENT_SEARCHES", 4, 1, INT_MAX);
 }
 
 /* Returns 1 if a slot was taken. */
