@@ -6489,6 +6489,23 @@ void hp_register(const hp_source *specs, int n, source_def *defs,
               !s->id ? "id" : "url");
       continue;
     }
+    /* A key list is copied into hp_pick_s's 512-byte scratch before it is
+     * split, so a longer one is CUT mid-token and the row keys on whatever
+     * the cut left — no error, no notice. Found 2026-11-23 with a 553-byte
+     * FPDS composite. Said once per row at registration; the row still
+     * registers, because refusing it would be a bigger change than the
+     * finding licenses. */
+    {
+      const char *const kl[] = { s->id_keys, s->title_keys, s->date_keys,
+                                 s->link_keys };
+      static const char *const kn[] = { "id_keys", "title_keys", "date_keys",
+                                        "link_keys" };
+      for (int k = 0; k < 4; k++)
+        if (kl[k] && strlen(kl[k]) >= 512)
+          fprintf(stderr, "[hp] KEY LIST TOO LONG %s '%s': %s is %zu bytes and "
+                  "is cut at 511 — shorten it\n",
+                  table ? table : "(table)", s->id, kn[k], strlen(kl[k]));
+    }
     if (g_nspecs >= g_cspecs) {
       int nc = g_cspecs ? g_cspecs * 2 : 2048;
       const hp_source **ns = realloc((void *)g_specs, (size_t)nc * sizeof *ns);

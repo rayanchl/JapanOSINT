@@ -29,6 +29,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+THE+NAVY%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -54,6 +68,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+THE+ARMY%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -78,6 +106,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+THE+AIR+FORCE%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -102,6 +144,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEFENSE+LOGISTICS+AGENCY%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -125,6 +181,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+DEFENSE%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -147,6 +217,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221510%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -170,6 +254,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221520%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -192,6 +290,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221550%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -214,6 +326,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221005%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -236,6 +362,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221410%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     /* An FPDS ATOM entry has no <id>; its <link> is one generic search URL for
      * every entry, and agency+PIID+mod+transaction repeats across delivery
@@ -244,7 +384,6 @@ static const hp_source HP3B19_DEFENCE[] = {
      * different award (100 emitted, 99 stored). The entry's own title (action,
      * order number, vendor, amount) plus its modified timestamp was unique on
      * all 100 entries of the 10-page walk, live 2026-09-15. */
-    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -267,6 +406,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221420%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -289,6 +442,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221810%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -312,6 +479,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221905%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -334,6 +515,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%225840%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -356,6 +551,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%225865%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -380,6 +589,20 @@ static const hp_source HP3B19_DEFENCE[] = {
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%226665%22",
     .array_path = "entry",
+    /* id_keys MEASURED 2026-11-16 over six pages (60 entries) of each of the 16
+       FPDS feeds, 960 entries: 60 distinct of 60 distinct whole entries on every
+       feed, none unresolved. An entry is an AWARD or an IDV, so `,` chooses the
+       contract-id tuple of whichever it is (an award — a part that is absent joins as "", so an
+       award with no referenced IDV still resolves — or an IDV). The spec is
+       kept under hp_pick_s's 512-byte buffer on purpose: a 553-byte spelling
+       was silently cut mid-token. The engine keeps the feed's `ns1:`
+       prefix in every flattened segment and a dotted token is matched
+       EXACTLY, so the prefix is part of the key: the first spelling, without
+       it, matched 0 of 200 records and the engine's own id-keys-unmatched
+       notice said so. The entry <link> is NOT an identity
+       (1 distinct of 60 on three feeds), and dropping the referenced-IDV part
+       collapses AIRFORCE to 3 of 60. Undeclared, the uid was the entry title. */
+    .id_keys = "content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:PIID+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:modNumber+content.ns1:award.ns1:awardID.ns1:awardContractID.ns1:transactionNumber+content.ns1:award.ns1:awardID.ns1:referencedIDVID.ns1:PIID,content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:PIID+content.ns1:IDV.ns1:contractID.ns1:IDVID.ns1:modNumber",
     .date_keys = "modified",
     .interval = 21600,
     .page_param = "start",
@@ -1331,7 +1554,18 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "monitoring-station",
     .tags = "\"ctbto\",\"ims\",\"seismic\",\"monitoring\",\"nuclear\",\"channel\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://service.iris.edu/fdsnws/station/1/query?net=IM&level=channel&format=xml&nodata=404",
+    /* MEASURED 2026-11-16. Host: service.iris.edu now 301s to
+       service.earthscope.org, asked directly here. Identity: a Channel element
+       does not carry its Station or Network (they are its PARENTS), so no key
+       this row can declare is a record identity. The same query with
+       format=text returns one pipe-delimited line per channel epoch WITH those
+       codes (985 lines; Network+Station+Location+Channel+StartTime is 985 of
+       985, and 584 without StartTime) but loses the XML-only fields (Sensor
+       and DataLogger descriptions, ClockDrift, CalibrationUnits, Comment), so
+       the XML is kept and the gap stays recorded: re-reading as text is the
+       route if identity comes to matter more than those fields. date_keys
+       CreationDate is a Station field and matches no Channel record. */
+    .url = "https://service.earthscope.org/fdsnws/station/1/query?net=IM&level=channel&format=xml&nodata=404",
     .array_path = "Channel",
     .date_keys = "CreationDate",
     .interval = 86400,

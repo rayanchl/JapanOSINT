@@ -1606,7 +1606,70 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 60,619** (2026-11-14, `make source-count`, the
+**The registered count is 60,603** (2026-11-23, `make source-count`, the
+binary's registry agreeing, both floors re-recorded): 60,619 less sixteen rows,
+every one a second reading of something the tree already reads — fourteen from
+the scheduled-filter sweep (rule 4d), `JPOD_DATAGOJP_INDEX`, and
+`cyb-wa-breaches-pi`, which read the first 2,000 rows of a dataset
+`WA_DATA_BREACH_PERSONAL_INFO` reads whole. Evidence:
+`docs/removed-sources-2026-11-16-ignored-filter.tsv`. The same pass closed the
+fourteen items left open on 2026-11-15; what each came to:
+
+* **Detail hops, measured** (`docs/detail-hop-measured-2026-11-16.tsv`,
+  `docs/detail-hop-unkeyed-2026-11-16.tsv`): one list record against its own
+  hop for the 78 query-filter candidates and the 286 detail rows with no
+  `id_keys`. **84 hops returned no field the list record lacks** and are
+  removed, with the key each uid already resolved to declared first so no uid
+  moves; 33 candidates DO add fields and stay. Five rows took their uid from
+  the merged detail body and four keyed on a title or first scalar (NHTSA
+  manufacturers: 17 distinct of 100); eight are keyed on the measured list-side
+  identifier. Left recorded, not fixed: eight `uk-govuk-search-*` hops that 404
+  because `link` starts with `/` and the engine percent-encodes it, four
+  ProZorro hops asking the tender endpoint for a child id, sixteen NO_KEY rows.
+* **Socrata `:id` on replaced datasets, measured over whole datasets**
+  (`docs/socrata-semantic-keys-2026-11-16.tsv`, 53 of 63 read whole): 33 have a
+  key reaching the distinct-whole-record ceiling, 31 do not. **Eighteen are
+  re-keyed** — publisher identifiers, whole dataset, no row missing a field,
+  each then run whole in the engine. Not applied: keys that reach only by
+  including an amount, a timestamp or most of the record, and anything measured
+  on a 150k sample. **A name that looks like the id is not one, five more
+  times**: FRA `reportkey` 12,052 of 14,210, TX well `api` 118,874 of 149,976,
+  WA breach `id` 1,689 of 7,595.
+* **FPDS (16 feeds)** key on the contract-id tuple, `,` choosing between an
+  award and an IDV: 200 of 200 on all sixteen. **It took three spellings, and
+  both failures were silent in a different way.** The engine keeps the feed's
+  `ns1:` prefix in every flattened segment and matches a dotted token exactly,
+  so the measured spelling matched 0 of 200 — and
+  `tools/audit_distinctness.py` cannot see that, because its XML reader
+  resolves prefixes away (noted in the tool). Then the prefixed spelling was 553
+  bytes and **`hp_pick_s` copies a key list into a 512-byte buffer**, cutting it
+  mid-token with no error. Registration now prints `KEY LIST TOO LONG`; the
+  registry holds none.
+* **Wikidata**: three rows return one row per ITEM now (`GROUP BY ?item`;
+  496, 6,721 and 15,457, each the upstream's own distinct count) where two had
+  been cut by a LIMIT counted in rows. `WD_SEMICONDUCTOR_FABS` is NOT changed
+  and is wrong in a way no count shows: its class `Q1058914` is labelled
+  "software company". The right class is unmeasured.
+* `LOC_BOOKS_LATEST` reads `sb=timestamp_desc` (the default order's first
+  dates were 1976, 1917, 1974); `br-tcu-inabilitados` and
+  `eur-soc-cat-jsgs-5iiu` have keys measured over their whole datasets; Mali
+  and Senegal DHS read whole at `perpage=5000` (21,021 and 38,088).
+* **The text fetch path records its status** (`feed_last_json_status()` after
+  `feed_get_text`, and `feed_last_failed_body()` for a refused body), so a
+  bespoke collector can tell a maintenance 503 from a moved endpoint;
+  `geothermal_springs.c` is the first reader. `$OPENALEX_API_KEY`, when set,
+  is appended on the wire for `api.openalex.org` only.
+  `cleanup_stale_uids.py --delete-misattributed` removes d-portal rows whose
+  own record does not name the source's country; it only reports by default.
+* **Still open, and why**: Overpass `remark` (every mirror timed out from this
+  container on 2026-11-16, so the wording is still unmeasured);
+  `IRIS_IMS_CHANNELS` (a Channel does not carry its Station; `format=text` has
+  the codes and loses the sensor fields — recorded in the row);
+  three datasets with no identity at four fields or fewer; and the VRSS/VCSV
+  rows whose engine takes no key (six PACER feeds whose guid is the docket, two
+  Tokyo facility files, the Fed enforcement CSV).
+
+**The registered count was 60,619** (2026-11-14, `make source-count`, the
 binary's registry agreeing, both floors re-recorded): 60,620 less ONE row, a
 feed on a lapsed official domain. `www.portesessonne.fr` belonged to an
 agglomeration that no longer exists and now serves roller-shutter repair spam
@@ -4553,6 +4616,44 @@ python3 native/tools/probe_hp_batch.py docs/candidate-sources-batch<N>.*.txt --c
 Opt-in because it doubles the request count for pivot rows. Run it at least once
 per batch, and treat `FILTER_IGNORED` as fatal — the row must be dropped or
 re-pointed at a parameter the upstream actually honours.
+
+**SCHEDULED ROWS HAVE THE SAME CHECK NOW: `tools/audit_scheduled_filter.py`**
+(2026-11-16, `docs/scheduled-filter-2026-11-16.tsv`). `--check-filter` only
+asks rows with an entity token; a filter VALUE frozen into a scheduled URL was
+checked by nothing, which is how eleven d-portal rows stored one global slice
+under eleven country names. The tool groups scheduled rows whose URLs differ in
+ONE query parameter (family of 3+), and asks one member for its real value, a
+sibling's and an impossible one. 2,224 families; 407 measured in ~1,460
+requests: **393 honoured, 8 ignored (38 rows), 78 unmeasured.** It does not
+cover path-slug families, bespoke collectors, VRSS/VCSV or POST rows, and says
+so as rows (`NOT_RUN`), not as silence. Three shapes it found:
+
+* **A REDIRECT THAT DROPS THE QUERY STRING.** `www.data.go.jp` 301s to
+  `data.e-gov.go.jp` with a `Location` that carries the path and nothing after
+  it. Fourteen `eas-datagojp-topic-*` rows therefore each stored the same first
+  10 of 18,829 datasets under their own topic (200 / 66,140 bytes / 10 records
+  for `AED`, `バス` and an impossible word). Asked of the target host they read
+  967 to 2,000 each. **And a note in the tree had blamed the API**:
+  `JPOD_DATAGOJP_INDEX`'s description said `package_search` "ignores rows,
+  start and every filter alike", and the per-organisation and free-text forms
+  were "rejected outright" on that reading. The API was fine; the hop ate the
+  parameters. That row is removed — through the redirect it was the read
+  `JP25_JPNATGOV_EGOV_CKAN_LIST` already makes, hidden from `dup-endpoint` by
+  the host name. **When every parameter is ignored, look at the redirect chain
+  before concluding anything about the endpoint.**
+* **The `&amp;` population again, in a batch the October pass predates.** Six
+  municipal feed families sent a literal `&amp;type=` / `&amp;dirId=`, so every
+  value drew the default feed. Eight rows are decoded (each its own feed, 1 to
+  123 records, engine-measured); twelve are removed because their decoded URL
+  is ALREADY registered by batch 43 — batch 57 had re-found the same feeds and
+  the `&amp;` was the only thing keeping `dup-endpoint` from saying so.
+* Three ArchDaily "editions" redirect to one global feed; two removed.
+
+Two things the tool cost. Its first impossible value, `zzqq9`, returned 100
+records on about twenty CKAN searches (the search splits at the digit), so an
+ambiguous result is retried once with a letters-only value. And "same count,
+bytes within 1%" flagged 16 pairs of FULL pages holding different records as
+identical; the verdict needs matching record hashes now. Both are fixtures.
 
 ### 4c. Two tools reading one manifest must read it the same way
 

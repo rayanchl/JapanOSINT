@@ -2220,7 +2220,12 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "library-catalogue-record",
     .tags = "\"loc\",\"library-of-congress\",\"catalogue\",\"latest\",\"books\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.loc.gov/books/?fo=json&c=100",
+    /* sb=timestamp_desc, MEASURED 2026-11-16: the default order is not newest
+       anything (first dates 1976, 1917, 1974, 1973, 2012), so "latest" read an
+       arbitrary slice. `sb=` is honoured (date / date_desc / timestamp_desc each
+       differ; the control sb=frobnicate equals the default) and `sort=` is not.
+       timestamp_desc is newest-indexed first (2026-11-15 on the reading). */
+    .url = "https://www.loc.gov/books/?fo=json&c=100&sb=timestamp_desc",
     .array_path = "content.results",
     .date_keys = "date",
     .id_keys = "id",

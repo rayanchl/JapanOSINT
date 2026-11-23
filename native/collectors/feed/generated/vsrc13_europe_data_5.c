@@ -287,12 +287,17 @@ VJSON(eur_soc_cat_ijf5_uiur, "eur-soc-cat-ijf5-uiur", "Generalitat de Catalunya 
   "ca", "[\"esp\",\"opendata\"]", 86400,
   "Rows of the 'Estabilitat i sostenibilitat de les finances públiques: regla de despesa de les comunitats autònomes' dataset published by Generalitat de Catalunya transparency portal.");
 
-VJSON(eur_soc_cat_jsgs_5iiu, "eur-soc-cat-jsgs-5iiu", "Generalitat de Catalunya transparency portal — Informes d’inspecció ambiental integrada", "Generalitat de Catalunya transparency portal — Informes d’inspecció ambiental integrada",
+/* id_keys MEASURED 2026-11-16 over the whole dataset (4,229 rows, 4,199 distinct
+   whole): the report's own URL, enllac.url, is 4,199 with none missing, and no
+   top-level field reaches that (best 4,194). It is nested, so $select lifts it
+   to a top-level enllac_url. Not :id: every row was created 2026-11-12. */
+VJSON_IDKEYS(eur_soc_cat_jsgs_5iiu, "eur-soc-cat-jsgs-5iiu", "Generalitat de Catalunya transparency portal — Informes d’inspecció ambiental integrada", "Generalitat de Catalunya transparency portal — Informes d’inspecció ambiental integrada",
   "europe_data", "opendata",
-  "https://analisi.transparenciacatalunya.cat/resource/jsgs-5iiu.json?$limit=1000&$order=:id",
+  "https://analisi.transparenciacatalunya.cat/resource/jsgs-5iiu.json?$limit=1000&$order=:id&$select=*,enllac.url%20as%20enllac_url",
   "",
   "ca", "[\"esp\",\"opendata\"]", 86400,
-  "Rows of the 'Informes d’inspecció ambiental integrada' dataset published by Generalitat de Catalunya transparency portal.");
+  "Rows of the 'Informes d’inspecció ambiental integrada' dataset published by Generalitat de Catalunya transparency portal.",
+  "enllac_url");
 
 VJSON(eur_soc_cat_jshe_z7mt, "eur-soc-cat-jshe-z7mt", "Generalitat de Catalunya transparency portal — Estabilitat i sostenibilitat de les finances públiques: Capacitat (+) o necessitat (-) de finançament per nivell d’administració", "Generalitat de Catalunya transparency portal — Estabilitat i sostenibilitat de les finances públiques: Capacitat (+) o necessitat (-) de finançament per nivell d’administració",
   "europe_data", "opendata",

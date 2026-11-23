@@ -607,7 +607,15 @@ def parse_xml(raw, row):
 
 
 def xml_spec(spec):
-    """An id_keys token may name a prefixed element (`dc:identifier`). This
+    """KNOWN LIMIT, found 2026-11-23 on FPDS: the ENGINE keeps a namespace
+    prefix in every flattened segment (`content.ns1:award.ns1:awardID…`) and
+    matches a dotted token exactly, while this reader cannot see prefixes at
+    all (ElementTree resolves them away). So a dotted spec written WITHOUT the
+    prefix reads as resolving here and matches 0 records in the engine. On a
+    prefixed feed, confirm any key in the engine and read its
+    id-keys-unmatched notice before believing this tool.
+
+    An id_keys token may name a prefixed element (`dc:identifier`). This
     reader drops prefixes, so the token loses its own the same way — otherwise
     every such row would read KEY_UNMATCHED for a reason that is this tool's."""
     return re.sub(r'(^|[+,.])\s*[A-Za-z_][\w-]*:(?=[A-Za-z_])', r'\1', spec or '')

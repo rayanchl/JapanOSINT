@@ -187,7 +187,13 @@ static const hp_source HP3B19_REFERENCE[] = {
     .record_type = "port",
     .tags = "\"maritime\",\"port\",\"wikidata\",\"geo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://query.wikidata.org/sparql?query=SELECT%20%3Fitem%20%3FitemLabel%20%3FcountryLabel%20%3Flat%20%3Flon%20%3FoperatorLabel%20%3Finception%20WHERE%20%7B%0A%20%20%3Fitem%20wdt%3AP31%20wd%3AQ44782%20.%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP17%20%3Fcountry%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20p%3AP625/psv%3AP625%20%3Fc%20.%20%3Fc%20wikibase%3AgeoLatitude%20%3Flat%20%3B%20wikibase%3AgeoLongitude%20%3Flon%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP137%20%3Foperator%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP571%20%3Finception%20%7D%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%2Cmul%22%20%7D%0A%7D%20LIMIT%205000&format=json",
+    /* GROUP BY ?item, MEASURED 2026-11-16: the old query returned one row per
+       VALUE of a multi-valued property (5000 rows for 4870 items), and for ports and
+       research institutes its LIMIT cut rows, not items. This one returns
+       6711 rows = 6711 distinct items, the upstream's own COUNT(DISTINCT). Label by
+       SAMPLE, country/operator by GROUP_CONCAT, coordinate from ONE sampled
+       point so lat and lon stay paired; every output variable name is unchanged. */
+    .url = "https://query.wikidata.org/sparql?query=SELECT%20%3Fitem%20%28%3Fil%20AS%20%3FitemLabel%29%20%28%3Fcl%20AS%20%3FcountryLabel%29%20%28geof%3Alatitude%28%3Fc%29%20AS%20%3Flat%29%20%28geof%3Alongitude%28%3Fc%29%20AS%20%3Flon%29%20%28%3Fol%20AS%20%3FoperatorLabel%29%20%3Finception%20WHERE%20%7B%0A%20%20%7B%20SELECT%20%3Fitem%20%28SAMPLE%28%3FitemLabel%29%20AS%20%3Fil%29%20%28GROUP_CONCAT%28DISTINCT%20%3FcountryLabel%3B%20separator%3D%22%3B%20%22%29%20AS%20%3Fcl%29%20%28GROUP_CONCAT%28DISTINCT%20%3FoperatorLabel%3B%20separator%3D%22%3B%20%22%29%20AS%20%3Fol%29%20%28MIN%28%3Finc%29%20AS%20%3Finception%29%20%28MIN%28%3Fcn%29%20AS%20%3Fc%29%20WHERE%20%7B%0A%20%20%20%20%7B%20SELECT%20%3Fitem%20%3FitemLabel%20%3FcountryLabel%20%3FoperatorLabel%20%3Finc%20%3Fcn%20WHERE%20%7B%0A%20%20%20%20%20%20%3Fitem%20wdt%3AP31%20wd%3AQ44782%20.%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP17%20%3Fcountry%20%7D%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP625%20%3Fcn%20%7D%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP137%20%3Foperator%20%7D%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP571%20%3Finc%20%7D%0A%20%20%20%20%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%2Cmul%22%20%7D%0A%20%20%20%20%7D%20%7D%0A%20%20%7D%20GROUP%20BY%20%3Fitem%20LIMIT%2020000%20%7D%0A%7D&format=json",
     .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
     .array_path = "results.bindings",
     .id_keys = "item.value",
@@ -275,7 +281,13 @@ static const hp_source HP3B19_REFERENCE[] = {
     .record_type = "armed-group",
     .tags = "\"conflict\",\"militant\",\"wikidata\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://query.wikidata.org/sparql?query=SELECT%20%3Fitem%20%3FitemLabel%20%3FcountryLabel%20%3Flat%20%3Flon%20%3FoperatorLabel%20%3Finception%20WHERE%20%7B%0A%20%20%3Fitem%20wdt%3AP31%20wd%3AQ17149090%20.%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP17%20%3Fcountry%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20p%3AP625/psv%3AP625%20%3Fc%20.%20%3Fc%20wikibase%3AgeoLatitude%20%3Flat%20%3B%20wikibase%3AgeoLongitude%20%3Flon%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP137%20%3Foperator%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP571%20%3Finception%20%7D%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%2Cmul%22%20%7D%0A%7D%20LIMIT%203000&format=json",
+    /* GROUP BY ?item, MEASURED 2026-11-16: the old query returned one row per
+       VALUE of a multi-valued property (528 rows for 496 items), and for ports and
+       research institutes its LIMIT cut rows, not items. This one returns
+       496 rows = 496 distinct items, the upstream's own COUNT(DISTINCT). Label by
+       SAMPLE, country/operator by GROUP_CONCAT, coordinate from ONE sampled
+       point so lat and lon stay paired; every output variable name is unchanged. */
+    .url = "https://query.wikidata.org/sparql?query=SELECT%20%3Fitem%20%28%3Fil%20AS%20%3FitemLabel%29%20%28%3Fcl%20AS%20%3FcountryLabel%29%20%28geof%3Alatitude%28%3Fc%29%20AS%20%3Flat%29%20%28geof%3Alongitude%28%3Fc%29%20AS%20%3Flon%29%20%28%3Fol%20AS%20%3FoperatorLabel%29%20%3Finception%20WHERE%20%7B%0A%20%20%7B%20SELECT%20%3Fitem%20%28SAMPLE%28%3FitemLabel%29%20AS%20%3Fil%29%20%28GROUP_CONCAT%28DISTINCT%20%3FcountryLabel%3B%20separator%3D%22%3B%20%22%29%20AS%20%3Fcl%29%20%28GROUP_CONCAT%28DISTINCT%20%3FoperatorLabel%3B%20separator%3D%22%3B%20%22%29%20AS%20%3Fol%29%20%28MIN%28%3Finc%29%20AS%20%3Finception%29%20%28MIN%28%3Fcn%29%20AS%20%3Fc%29%20WHERE%20%7B%0A%20%20%20%20%7B%20SELECT%20%3Fitem%20%3FitemLabel%20%3FcountryLabel%20%3FoperatorLabel%20%3Finc%20%3Fcn%20WHERE%20%7B%0A%20%20%20%20%20%20%3Fitem%20wdt%3AP31%20wd%3AQ17149090%20.%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP17%20%3Fcountry%20%7D%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP625%20%3Fcn%20%7D%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP137%20%3Foperator%20%7D%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP571%20%3Finc%20%7D%0A%20%20%20%20%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%2Cmul%22%20%7D%0A%20%20%20%20%7D%20%7D%0A%20%20%7D%20GROUP%20BY%20%3Fitem%20ORDER%20BY%20%3Fitem%20LIMIT%203000%20%7D%0A%7D&format=json",
     .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
     .array_path = "results.bindings",
     .id_keys = "item.value",
@@ -426,7 +438,13 @@ static const hp_source HP3B19_REFERENCE[] = {
     .record_type = "research-institution",
     .tags = "\"research\",\"science\",\"wikidata\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://query.wikidata.org/sparql?query=SELECT%20%3Fitem%20%3FitemLabel%20%3FcountryLabel%20%3Flat%20%3Flon%20%3FoperatorLabel%20%3Finception%20WHERE%20%7B%0A%20%20%3Fitem%20wdt%3AP31%20wd%3AQ31855%20.%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP17%20%3Fcountry%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20p%3AP625/psv%3AP625%20%3Fc%20.%20%3Fc%20wikibase%3AgeoLatitude%20%3Flat%20%3B%20wikibase%3AgeoLongitude%20%3Flon%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP137%20%3Foperator%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP571%20%3Finception%20%7D%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%2Cmul%22%20%7D%0A%7D%20LIMIT%205000&format=json",
+    /* GROUP BY ?item, MEASURED 2026-11-16: the old query returned one row per
+       VALUE of a multi-valued property (5000 rows for 4671 items), and for ports and
+       research institutes its LIMIT cut rows, not items. This one returns
+       15399 rows = 15399 distinct items, the upstream's own COUNT(DISTINCT). Label by
+       SAMPLE, country/operator by GROUP_CONCAT, coordinate from ONE sampled
+       point so lat and lon stay paired; every output variable name is unchanged. */
+    .url = "https://query.wikidata.org/sparql?query=SELECT%20%3Fitem%20%28%3Fil%20AS%20%3FitemLabel%29%20%28%3Fcl%20AS%20%3FcountryLabel%29%20%28geof%3Alatitude%28%3Fc%29%20AS%20%3Flat%29%20%28geof%3Alongitude%28%3Fc%29%20AS%20%3Flon%29%20%28%3Fol%20AS%20%3FoperatorLabel%29%20%3Finception%20WHERE%20%7B%0A%20%20%7B%20SELECT%20%3Fitem%20%28SAMPLE%28%3FitemLabel%29%20AS%20%3Fil%29%20%28GROUP_CONCAT%28DISTINCT%20%3FcountryLabel%3B%20separator%3D%22%3B%20%22%29%20AS%20%3Fcl%29%20%28GROUP_CONCAT%28DISTINCT%20%3FoperatorLabel%3B%20separator%3D%22%3B%20%22%29%20AS%20%3Fol%29%20%28MIN%28%3Finc%29%20AS%20%3Finception%29%20%28MIN%28%3Fcn%29%20AS%20%3Fc%29%20WHERE%20%7B%0A%20%20%20%20%7B%20SELECT%20%3Fitem%20%3FitemLabel%20%3FcountryLabel%20%3FoperatorLabel%20%3Finc%20%3Fcn%20WHERE%20%7B%0A%20%20%20%20%20%20%3Fitem%20wdt%3AP31%20wd%3AQ31855%20.%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP17%20%3Fcountry%20%7D%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP625%20%3Fcn%20%7D%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP137%20%3Foperator%20%7D%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP571%20%3Finc%20%7D%0A%20%20%20%20%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%2Cmul%22%20%7D%0A%20%20%20%20%7D%20%7D%0A%20%20%7D%20GROUP%20BY%20%3Fitem%20LIMIT%2020000%20%7D%0A%7D&format=json",
     .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
     .array_path = "results.bindings",
     .id_keys = "item.value",
