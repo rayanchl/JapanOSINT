@@ -377,6 +377,7 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
     add_str_or_null(o,"kind", d ? (source_def_is_internal(d) ? "internal"
                                  : d->update_interval_sec > 0 ? "scheduled"
                                  : registry_is_entity_pivot(d) ? "pivot" : "unreachable") : NULL);
+    add_str_or_null(o,"sourceKind", d ? source_def_kind_name(source_def_kind_of(d)) : NULL);
   }
   cJSON_AddItemToObject(o,"updateInterval",
     (m && m->update_interval > 0) ? cJSON_CreateNumber((double)m->update_interval)

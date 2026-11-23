@@ -1455,6 +1455,8 @@ char *sourceapi_detail(db_handle *db, const char *id) {
   add_str_or_null(reg, "type", (m && m->type) ? m->type : d->type);
   cJSON_AddStringToObject(reg, "engine", engine_of(d));
   cJSON_AddStringToObject(reg, "kind", e ? e->kind : derive_kind(d));
+  /* the DECLARED source kind (feed|pivot|pod|probe, source.h); additive */
+  cJSON_AddStringToObject(reg, "sourceKind", source_def_kind_name(source_def_kind_of(d)));
   cJSON_AddNumberToObject(reg, "interval", d->update_interval_sec);
   add_str_or_null(reg, "url", (m && m->url) ? m->url : d->url);
   add_str_or_null(reg, "host", e ? e->host : NULL);
