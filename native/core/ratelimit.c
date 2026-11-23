@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <arpa/inet.h>
 #include "../lib/jocore.h"
+#include "../lib/joenv.h"
 
 #define RL_SLOTS  512            /* open-addressed; recycled, never grown */
 #define RL_KEYLEN 64             /* an IPv6 text form is 45 bytes worst case */
@@ -191,9 +192,7 @@ int ratelimit_breakglass_allow(const char *peer, const char *xff,
   char key[RL_KEYLEN];
   ratelimit_client_key(peer, xff, key, sizeof key);
   if (!ratelimit_allow(RL_BREAKGLASS, key, 5, 60, retry_after_sec)) return 0;
-  long g = 60;
-  const char *ge = getenv("JO_BREAKGLASS_GLOBAL_PER_MIN");
-  if (ge && *ge) { char *end; long v = strtol(ge, &end, 10); if (end != ge && v >= 0) g = v; }
+  long g = jo_env_long("JO_BREAKGLASS_GLOBAL_PER_MIN", 60, 0, 1000000);
   if (g == 0) return 1;
   return ratelimit_allow(RL_BREAKGLASS, "*global*", (int)g, 60, retry_after_sec);
 }

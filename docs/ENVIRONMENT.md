@@ -4,7 +4,7 @@
 
 Every variable the native tree reads, found by a static scan of `core/`, `lib/`, `collectors/`, `main.c` and `registry.c` for `getenv("NAME")` and the typed reader `lib/joenv.h` (`jo_env_ll`/`jo_env_long`/`jo_env_int`/`jo_env_double`, their `_strict` forms, `jo_env_bool`, `jo_env_str`) and `jo_env`. **Default** is shown only where the call site spells a literal (a blank means the default is computed, handled by the caller, or the variable is optional). **Range** is the reader's min..max as spelled at the call site: unset/empty gives the default, garbage gives the default with one stderr line, and out of range is clamped (or, for `_strict` readers, gives the default). Names assembled at runtime are not seen by a text scan.
 
-475 variables. A first-boot subset, with example values, is in `.env.example`.
+477 variables. A first-boot subset, with example values, is in `.env.example`.
 
 | Variable | Default | Range | Read in |
 | --- | --- | --- | --- |
@@ -143,6 +143,7 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_BREACH_DIR` |  |  | `core/breach_index.c` |
 | `JO_BREACH_MONITOR_MAX_HITS` |  | `1..100000` | `core/breach_monitor.c` |
 | `JO_BREACH_SEED` |  |  | `core/breach_meta.c` |
+| `JO_BREAKGLASS_GLOBAL_PER_MIN` | `60` | `0..1000000` | `core/ratelimit.c` |
 | `JO_CAMERA_INDEX_CHANNELS` |  |  | `core/camera_privacy.c` |
 | `JO_CAM_GEOCODE_BUDGET` | `25` | `1..INT_MAX` | `collectors/pod/camera_geocode_pod.c` |
 | `JO_CAM_GEOCODE_MAX_KM` | `150` | `1..INT_MAX` | `collectors/pod/camera_geocode_pod.c` |
@@ -303,6 +304,7 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_TRADINGECON_PAGES` |  | `1..INT_MAX` | `collectors/sources/finance_markets_crypto.c` |
 | `JO_TRANSLATE_NARROW` |  |  | `core/translate.c` |
 | `JO_TRANSLATE_VIEW_DAYS` | `7` | `INT_MIN..INT_MAX` | `core/translate.c` |
+| `JO_TRUSTED_PROXIES` |  |  | `core/ratelimit.c` |
 | `JO_TRUST_CACHE_SEC` | `300` | `1..LONG_MAX` | `core/source_trust.c` |
 | `JO_UPLOAD_DIR` |  |  | `core/uploadapi.c` |
 | `JO_UPLOAD_MAX_BYTES` |  | `65536LL..268435456LL` | `core/uploadapi.c` |
