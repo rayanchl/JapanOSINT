@@ -144,7 +144,7 @@ static int reiwa_date(const char *s, const char *end, char *out, size_t cap) {
   return 1;
 }
 
-#define MAX_CASES 512
+#define MAX_CASES 512   /* exhaustive-ok: bounds the dedupe memory only; a case past it is still emitted and the sink upserts on its uid */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char *idx = feed_get_text(ctx->http, MAFF_URL, 15000);
