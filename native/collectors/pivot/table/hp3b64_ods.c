@@ -35,6 +35,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'resources-for-business' ('Supplier "
       "Resource Directory') on the European open-data portal "
       "data.jerseycitynj.gov (portal's own dataset). Records API "
@@ -55,6 +56,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "westminster_parliamentary_constituencies_code+tenure_of_household_5_categories_code",
     .description = "OpenDataSoft dataset 'census-2021-tenure-constituencies' "
       "('Census 2021 Tenure - Constituencies') on the European "
       "open-data portal cityobservatory.birmingham.gov.uk (portal's own "
@@ -76,6 +78,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "quellstadtbezirk",
+    .id_keys = "stadtbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'hauptwohnbevolkerung-umzuge-zwischen-den-dortmunder-stadtbezirken-2025' "
       "('Hauptwohnbevölkerung - Umzüge zwischen den Dortmunder "
@@ -97,6 +100,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "subcat,localizzazione,via",
+    .id_keys = "subcat",
     .description = "OpenDataSoft dataset 'parcheggi-a-servizio-consolati' "
       "('Parcheggi a servizio dei consolati') on the European open-data "
       "portal opendata.comune.bologna.it (portal's own dataset). "
@@ -117,6 +121,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_de_la_taxe,type_d_ouvrage",
+    .id_keys = "montant_taxe",
     .description = "OpenDataSoft dataset 'bor_voiriedroitouvrage' ('Droits de voirie "
       "par ouvrage à Bordeaux') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -158,6 +163,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "duration_of_marriage+age_group+ljnsy",
     .description = "OpenDataSoft dataset "
       "'divorce-cases-by-nationality-age-groups-and-duration-of-marriage-of-divorced-wif' "
       "('Divorce Cases by Nationality, Age Groups & Duration of "
@@ -201,6 +207,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "post_title,type",
+    .id_keys = "row",
     .description = "OpenDataSoft dataset 'chief-officer-salaries-fy20252026' ('Chief "
       "Officer Salaries - FY2025/2026') on the European open-data "
       "portal data.leicester.gov.uk (portal's own dataset). Records API "
@@ -243,6 +250,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gebiet_name",
+    .id_keys = "gebiet_nr",
     .description = "OpenDataSoft dataset "
       "'dormagen-burgermeisterwahl-2020-stimmbezirke' ('Dormagen: "
       "Bürgermeisterwahl-2020-Stimmbezirke') on the European open-data "
@@ -263,6 +271,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'zeroemissiezonedenhaag' ('Zero-emissiezone "
       "Den Haag') on the European open-data portal "
       "den-haag-opendata.opendatasoft.com (portal's own dataset). "
@@ -282,6 +291,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "created",
     .description = "OpenDataSoft dataset 'ces' ('Customer Effort Score') on the "
       "European open-data portal opendata.umea.se (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -324,6 +334,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_commune,nom_officiel_bassin_vie_2012,nom_officiel_epci,nom_canton",
+    .id_keys = "siren",
     .description = "OpenDataSoft dataset 'communes-haute-garonne' ('Communes du "
       "département de la Haute-Garonne : données Haute-Garonne Open "
       "Data') on the European open-data portal data.haute-garonne.fr "
@@ -368,6 +379,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "familles_d_organismes",
+    .id_keys = "taille_de_la_population_totale_organismes+taille_de_l_echantillon",
     .description = "OpenDataSoft dataset "
       "'datastory-oc-7-1-taux-de-sondage-et-taux-de-reponse' "
       "('Datastory OC 7.2 Taux de sondage et taux de réponse') on the "
@@ -390,6 +402,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,type,implantation,nature",
+    .id_keys = "implantation",
     .description = "OpenDataSoft dataset "
       "'implantations-des-etablissements-denseignement-superieur-publics-tours-mertropol' "
       "('Etablissements d'enseignement supérieur publics - Tours "
@@ -432,6 +445,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "area_in_ajman+year",
     .description = "OpenDataSoft dataset 'ajman-area-waste' ('Ajman area waste') on "
       "the European open-data portal data.ajman.ae (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -451,6 +465,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'espaces-de-coworking' ('Espaces de "
       "CoWorking - Tiers lieux') on the European open-data portal "
       "data.seineouest.fr (portal's own dataset). Records API Explore "
@@ -470,6 +485,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_composteurs",
+    .id_keys = "type_de_composteurs",
     .description = "OpenDataSoft dataset '2023-tarifs-composteurs-ccam' "
       "('2023-Tarifs des composteurs CCAM') on the European open-data "
       "portal opendata.ha-py.fr (portal's own dataset). Records API "
@@ -512,6 +528,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "schule",
+    .id_keys = "schule",
     .description = "OpenDataSoft dataset "
       "'schulportrait-kategorie-d-schulfamilie-weitere' ('Schulportrait "
       "- Kategorie D _ Schulfamilie - Weitere') on the European "
@@ -594,6 +611,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_la_commune",
+    .id_keys = "nom_de_la_commune",
     .description = "OpenDataSoft dataset 'synopsis-des-43-communes-dagglopolys' "
       "('Synopsis des 43 communes d'Agglopolys') on the European "
       "open-data portal data.blois.agglopolys.fr (portal's own "
@@ -615,6 +633,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "secteur",
+    .id_keys = "covnm_kg_an",
     .description = "OpenDataSoft dataset "
       "'244400610_inventaire-des-emissions-ges-polluants' ('Inventaire "
       "des émissions de GES et de polluants atmosphériques sur Cap "
@@ -656,6 +675,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "title",
     .description = "OpenDataSoft dataset "
       "'budget-participatif-2eme-edition-projets-retenus' ('Budget "
       "participatif 2ème édition - projets retenus') on the European "
@@ -716,6 +736,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nameger,namefre,namedut",
+    .id_keys = "tgid",
     .description = "OpenDataSoft dataset 'provinces-belges-limites-administratives' "
       "('Provinces belges - Limites administratives') on the European "
       "open-data portal spi-digitalwallonia.opendatasoft.com (portal's "
@@ -736,6 +757,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lga+period",
     .description = "OpenDataSoft dataset 'intentional-self-harm-hospitalisation' "
       "('Intentional self-harm hospitalisation') on the European "
       "open-data portal data.peclet.com.au (portal's own dataset). "
@@ -777,6 +799,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,parcelle",
+    .id_keys = "identifiant",
     .description = "OpenDataSoft dataset 'ope_portage_epfl_anglet' ('Périmètre "
       "d'intervention EPFL sur la commune d'Anglet') on the European "
       "open-data portal anglet-opendatapaysbasque.opendatasoft.com "
@@ -797,6 +820,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_entite",
+    .id_keys = "ins+periode",
     .description = "OpenDataSoft dataset 'nombre-dindependants-total' ('Nombre "
       "d'indépendants : total') on the European open-data portal "
       "data.bep.be (portal's own dataset). Records API Explore v2.1, "
@@ -838,6 +862,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "codeme_eu,nomme",
+    .id_keys = "codeme_eu",
     .description = "OpenDataSoft dataset '837810944_me_prioritaires_paot' ('Masses "
       "d'eau prioritaires des PAOT des Pays de la Loire') on the "
       "European open-data portal data.teo-paysdelaloire.fr (portal's "
@@ -859,6 +884,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "acheteur_nom,lieuexecution_nom,marche_objet,lieuexecution_type",
+    .id_keys = "marche_objet",
     .description = "OpenDataSoft dataset '214400525_marches_publics-liste' ('Données "
       "essentielles de la commande publique à Donges') on the European "
       "open-data portal data.saintnazaireagglo.fr (portal's own "
@@ -921,6 +947,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "obj_emission_ges+annee",
     .description = "OpenDataSoft dataset "
       "'opendata_pcaet_cadredepot_ges_consoenergie' ('PCAET - Cadre de "
       "Dépôt Emissions GES - Consommation Energie') on the European "
@@ -986,6 +1013,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,area_type",
+    .id_keys = "denominator",
     .description = "OpenDataSoft dataset "
       "'deaths-in-alcohol-treatment-icp-outcomes-framework-birmingham-and-solihull' "
       "('Mortality amongst adults treated for alcohol misuse - ICP "
@@ -1009,6 +1037,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stadtbezirk",
+    .id_keys = "stadtbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'haushalte-nach-haushaltstypen-in-den-stadtbezirken-2025' "
       "('Haushalte nach Haushaltstypen in den Stadtbezirken 2025') on "
@@ -1031,6 +1060,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nome_lista",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-2021-preferenze-lista-potere-al-popolo' "
       "('Elezioni amministrative 2021 - Preferenze lista POTERE AL "
@@ -1053,6 +1083,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_poll,nom_zone",
+    .id_keys = "valeur_kg",
     .description = "OpenDataSoft dataset 'bor_inventaire-polluants-atmo' "
       "('Inventaire des émissions de polluants sur Bordeaux Métropole') "
       "on the European open-data portal datahub.bordeaux-metropole.fr "
@@ -1119,6 +1150,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset '36-admission-in-hospital-by-sector' "
       "('Admission in Hospital by Sector (Government / Private)') on "
       "the European open-data portal www.data.gov.bh (portal's own "
@@ -1162,6 +1194,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gender",
+    .id_keys = "gender",
     .description = "OpenDataSoft dataset "
       "'covid-19-test-and-trace-support-applications-gender' ('Covid-19 "
       "- Test and Trace Support applications (gender)') on the European "
@@ -1183,6 +1216,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libgeo",
+    .id_keys = "population+legio",
     .description = "OpenDataSoft dataset "
       "'legionellose-donnees-declaration-obligatoire' ('Légionellose : "
       "Données de la déclaration obligatoire (Département)') on the "
@@ -1205,6 +1239,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "column_1",
+    .id_keys = "column_1",
     .description = "OpenDataSoft dataset 'landratswahl' ('Rhein-Kreis Neuss: 2015 "
       "Landratswahl') on the European open-data portal "
       "opendata.rhein-kreis-neuss.de (portal's own dataset). Records "
@@ -1225,6 +1260,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "report_date",
     .description = "OpenDataSoft dataset 'getteamsuseractivitycounts' ('Microsoft "
       "Teams-aktiviteter efter aktivitetstyp') on the European "
       "open-data portal opendata.umea.se (portal's own dataset). "
@@ -1375,6 +1411,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "group_name",
+    .id_keys = "group_name",
     .description = "OpenDataSoft dataset 'number-of-the-visitors-for-every-museum' "
       "('Number of the Visitors for every Museum') on the European "
       "open-data portal data.ajman.ae (portal's own dataset). Records "
@@ -1394,6 +1431,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee+conservatoire",
     .description = "OpenDataSoft dataset 'conservatoires-subventions-de-la-drac' "
       "('Conservatoires - Subventions de la DRAC') on the European "
       "open-data portal data.seineouest.fr (portal's own dataset). "
@@ -1414,6 +1452,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_commune,libelle_departement,libelle_abrege_de_liste_1,libelle_de_liste_1",
+    .id_keys = "code_commune",
     .description = "OpenDataSoft dataset "
       "'departementdeshautespyrenees_europeennes-resultats-definitifs-departement-hp65' "
       "('Résultats définitifs des élections européennes 2024 par "
@@ -1455,6 +1494,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "altersgruppe",
+    .id_keys = "altersgruppe",
     .description = "OpenDataSoft dataset "
       "'hauptwohnsitz_deutsche_mit_migrationshintergrund_altersgruppen' "
       "('Hauptwohnsitz Deutsche mit Migrationshintergrund "
@@ -1478,6 +1518,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code",
     .description = "OpenDataSoft dataset "
       "'reseau-de-fibre-chez-lhabitant-du-syndicat-intercommunal-a-vocation-unique-pour-' "
       "('Réseau de fibre chez l'habitant du Syndicat Intercommunal à "
@@ -1544,6 +1585,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "categorie",
+    .id_keys = "dont_entreprises_individuelles",
     .description = "OpenDataSoft dataset "
       "'agglopolys-creations-dentreprises-par-secteur-dactivite-en-2020-activites-marcha' "
       "('Agglopolys - créations d'entreprises par secteur d'activité en "
@@ -1588,6 +1630,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "aom+pdm",
     .description = "OpenDataSoft dataset '202501_mdd_suivi-pdm-employeur' "
       "('Employeurs assujettis à la prise en compte de la mobilité de "
       "leurs salariés dans leurs accords annuels sur la qualité de vie "
@@ -1611,6 +1654,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bv",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-municpales-1995-t2-par-bureau-de-vote' "
       "('Résultats des élections municipales 1995 T2 par bureau de "
@@ -1632,6 +1676,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "categorie,parcours",
+    .id_keys = "parcours",
     .description = "OpenDataSoft dataset 'parcours-paddle' ('Parcours sportifs - "
       "Paddle') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -1674,6 +1719,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nameger,namefre,namedut",
+    .id_keys = "tgid",
     .description = "OpenDataSoft dataset 'communes-belges-limites-administratives' "
       "('Communes belges - Limites administratives') on the European "
       "open-data portal spi-digitalwallonia.opendatasoft.com (portal's "
@@ -1694,6 +1740,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "beschreibung",
+    .id_keys = "nr",
     .description = "OpenDataSoft dataset 'legislaturziele-stadt-st-gallen' "
       "('Legislaturziele Stadt St.Gallen') on the European open-data "
       "portal daten.stadt.sg.ch (portal's own dataset). Records API "
@@ -1713,6 +1760,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lga+period",
     .description = "OpenDataSoft dataset 'motor-vehicle-crash-hospitalisation' "
       "('Motor vehicle crash hospitalisation') on the European "
       "open-data portal data.peclet.com.au (portal's own dataset). "
@@ -1733,6 +1781,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "instituicao_de_formacao",
+    .id_keys = "no_registo",
     .description = "OpenDataSoft dataset "
       "'formacao-medica-medicos-recem-especialistas' ('Formação Médica "
       "/ Médicos Recém-Especialistas') on the European open-data portal "
@@ -1775,6 +1824,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'nombre-de-formations' ('Nombre de "
       "formations') on the European open-data portal data.bep.be "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -1813,6 +1863,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "image",
     .description = "OpenDataSoft dataset 'capital-works-performance' ('Capital Works "
       "Performance') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -1876,6 +1927,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "date",
     .description = "OpenDataSoft dataset '224900019_rqth-en-maine-et-loire' "
       "('Bénéficiaires d'une Reconnaissance de la qualité de "
       "travailleur handicapé (RQTH) en Maine-et-Loire') on the European "
@@ -1896,6 +1948,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,enfant_prenom",
+    .id_keys = "enfant_prenom",
     .description = "OpenDataSoft dataset 'rubelles_prenoms_nouveaux_nes' ('Prénoms "
       "des nouveau-nés sur Rubelles') on the European open-data portal "
       "data.melunvaldeseine.fr (portal's own dataset). Records API "
@@ -1916,6 +1969,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,nom_election",
+    .id_keys = "nb_voix",
     .description = "OpenDataSoft dataset "
       "'resultats-election-presidentielle-2e-tour-2022-communaute-agglomeration-bourges-' "
       "('Resultats Election Presidentielle 2e Tour - 2022 - Communes de "
@@ -1937,6 +1991,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "comptes_rendus_des_analyses",
     .description = "OpenDataSoft dataset 'qualite-de-leau' ('Qualité de l'eau') on "
       "the European open-data portal data.fleurysurorne.fr (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -1957,6 +2012,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "sld_name,proj_name,localname,direction",
+    .id_keys = "sld_name",
     .description = "OpenDataSoft dataset "
       "'engineering-project-grand-street-street-redesign' ('Engineering "
       "Project - Grand Street – Street Redesign') on the European "
@@ -2023,6 +2079,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stadtbezirk",
+    .id_keys = "stadtbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'hauptwohnbevolkerung-der-stadtbezirke-altersgruppen-2024' "
       "('Hauptwohnbevölkerung der Stadtbezirke - Altersgruppen 2024') "
@@ -2045,6 +2102,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-politiche-2008-voti-liste-camera-dei-deputati' "
       "('Elezioni politiche 2008 - Voti liste Camera dei Deputati') on "
@@ -2067,6 +2125,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_voie,ident",
+    .id_keys = "ident",
     .description = "OpenDataSoft dataset 'comptage_trafic_2019' ('Comptage du trafic "
       "2019 Bordeaux Métropole') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -2130,6 +2189,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "indicator",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset '02b-average-length-of-stay' ('Average "
       "Length of Stay - Annual') on the European open-data portal "
       "www.data.gov.bh (portal's own dataset). Records API Explore "
@@ -2150,6 +2210,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "dosis_administradas_2023",
     .description = "OpenDataSoft dataset 'dosis-vacunas-covid-19-campana-23-24' "
       "('Dosis vacunas COVID-19 Campaña 23/24') on the European "
       "open-data portal analisis.datosabiertos.jcyl.es (portal's own "
@@ -2170,6 +2231,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "post_title,type",
+    .id_keys = "row",
     .description = "OpenDataSoft dataset 'chief-officer-salaries-fy20242025' ('Chief "
       "Officer Salaries - FY2024/2025') on the European open-data "
       "portal data.leicester.gov.uk (portal's own dataset). Records API "
@@ -2190,6 +2252,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nbtest_vhc",
     .description = "OpenDataSoft dataset "
       "'hepatites-b-et-c-depistages-et-diagnostics-france' ('Hépatites "
       "B et C : Dépistages et Diagnostics (France)') on the European "
@@ -2212,6 +2275,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "geburtsjahrgang",
     .description = "OpenDataSoft dataset "
       "'bevoelkerung-nach-geburtsjahrgaengen-31-12-2024' "
       "('Grevenbroich: Bevölkerung nach Geburtsjahrgängen 31.12.2024') "
@@ -2234,6 +2298,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code",
     .description = "OpenDataSoft dataset 'ruimtelijke-kengetallen-2020-den-haag' "
       "('Ruimtelijke kengetallen 2020 Den Haag') on the European "
       "open-data portal den-haag-opendata.opendatasoft.com (portal's "
@@ -2254,6 +2319,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "namn,anlaggn_id",
+    .id_keys = "anlaggn_id+namn",
     .description = "OpenDataSoft dataset 'infotavlor' ('Informationstavlor') on the "
       "European open-data portal opendata.umea.se (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -2274,6 +2340,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "rue,type_de_bureau,adresse_bdv,commune",
+    .id_keys = "rue",
     .description = "OpenDataSoft dataset "
       "'sectorisation-des-bureaux-de-vote-nissan-lez-enserune' "
       "('Sectorisation des bureaux de vote Nissan lez enserune') on the "
@@ -2335,6 +2402,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone",
+    .id_keys = "code_dep",
     .description = "OpenDataSoft dataset 'mh_tab_2018_morbidite_hospitaliere_cartes' "
       "('mh_tab_2018_morbidite_hospitaliere_cartes') on the European "
       "open-data portal data.drees.solidarites-sante.gouv.fr (portal's "
@@ -2356,6 +2424,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau,nom_lieu_bureaux_de_vote,nom_canton,nom_circonscription",
+    .id_keys = "num_bureau",
     .description = "OpenDataSoft dataset "
       "'resultats-du-2eme-tour-des-elections-departementales-2015-ville-de-tours' "
       "('Résultats du 2ème tour des élections Départementales 2015 - "
@@ -2377,6 +2446,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "dfrefenr",
     .description = "OpenDataSoft dataset 'vfdas_nat' ('Dépenses d'action sociale "
       "[National]') on the European open-data portal data.caf.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -2398,6 +2468,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "criminal_report+month",
     .description = "OpenDataSoft dataset "
       "'number-of-reports-security-certificates-and-initiatives-of-al-hamidiya-comprehen' "
       "('Number of reports, security certificates and initiatives of Al "
@@ -2420,6 +2491,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune",
+    .id_keys = "kg_de_dechets",
     .description = "OpenDataSoft dataset 'collecte-des-bio-dechets-experimentation' "
       "('Collecte des bio-déchets dans 2 communes (expérimentation "
       "terminée)') on the European open-data portal data.seineouest.fr "
@@ -2440,6 +2512,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_l_elu,libelle_de_la_commune_de_rattachement,libelle_de_la_categorie_socio_professionnelle,libelle_de_la_fonction",
+    .id_keys = "date_de_naissance",
     .description = "OpenDataSoft dataset 'liste-des-elus-cchb' ('Liste des Elus "
       "CCHB') on the European open-data portal opendata.ha-py.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -2479,6 +2552,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "schule",
+    .id_keys = "schule",
     .description = "OpenDataSoft dataset "
       "'schulportrait-kategorie-g-inklusion-unterricht' ('Schulportrait "
       "- Kategorie G _ Inklusion - Unterricht') on the European "
@@ -2500,6 +2574,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset "
       "'decheterie-du-perimetre-de-la-communaute-urbaine-de-dunkerque' "
       "('Déchetteries de la Communauté urbaine de Dunkerque') on the "
@@ -2544,6 +2619,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "canton",
     .description = "OpenDataSoft dataset "
       "'elus-departementaux-de-tarn-et-garonne-2021' ('Elus "
       "départementaux de Tarn-et-Garonne - 2021') on the European "
@@ -2565,6 +2641,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet_du_marche_256_caracteres_maxi,identification_du_titulaire_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributaires",
+    .id_keys = "objet_du_marche_256_caracteres_maxi",
     .description = "OpenDataSoft dataset "
       "'blois-marches-publics-2022-less-than-40-000-eur-ht' ('Blois - "
       "marchés publics 2022 < 40 000 € HT') on the European open-data "
@@ -2585,6 +2662,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset '21440055800018_foret_esc_secteur' ('Forêt "
       "d'Escoublac - Secteurs') on the European open-data portal "
       "data.capatlantique.fr (portal's own dataset). Records API "
@@ -2604,6 +2682,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset 'bdtopo_2019_epci' ('Liste des EPCI de "
       "Guadeloupe') on the European open-data portal www.karudata.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -2624,6 +2703,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bv",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-legislatives-2012-t1-par-bureau-de-vote' "
       "('Résultats des élections législatives 2012 T1 par bureau de "
@@ -2645,6 +2725,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "categorie,parcours",
+    .id_keys = "parcours",
     .description = "OpenDataSoft dataset 'parcours-swimrun' ('Parcours sportifs - "
       "Swimrun') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -2685,6 +2766,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nameger,namefre,namedut",
+    .id_keys = "tgid",
     .description = "OpenDataSoft dataset 'regions-belges-limites-administratives' "
       "('Régions belges - Limites administratives') on the European "
       "open-data portal spi-digitalwallonia.opendatasoft.com (portal's "
@@ -2706,6 +2788,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "shape_leng",
     .description = "OpenDataSoft dataset "
       "'erreichbarkeitsanalyse-areal-bach-stadt-stgallen' "
       "('Erreichbarkeitsanalyse Areal Bach, Stadt St.Gallen') on the "
@@ -2751,6 +2834,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "data",
     .description = "OpenDataSoft dataset 'sns24' ('Chamadas de Emergência "
       "Transferidas para o SNS24') on the European open-data portal "
       "transparencia.sns.gov.pt (portal's own dataset). Records API "
@@ -2793,6 +2877,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "date",
     .description = "OpenDataSoft dataset 'nombre-de-posts-facebook' ('Nombre de "
       "posts Facebook') on the European open-data portal data.bep.be "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -2832,6 +2917,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'public_toilet_block_pt_t1eam' ('Public "
       "Toilet Block Pt T1EAM') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -2852,6 +2938,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_acteur",
+    .id_keys = "c_acteur",
     .description = "OpenDataSoft dataset '837810944_redevance_speciale' ('Redevance "
       "spéciale du service de gestion des déchets en Pays de la Loire') "
       "on the European open-data portal data.teo-paysdelaloire.fr "
@@ -2916,6 +3003,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libcom,libcom_ateliereco",
+    .id_keys = "code_insee",
     .description = "OpenDataSoft dataset 'communes_camvs' ('Communes de la CAMVS') "
       "on the European open-data portal data.melunvaldeseine.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -2936,6 +3024,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "filiere_production+annee+famille_filiere_production",
     .description = "OpenDataSoft dataset 'pcaet_cadredepot_enr' ('PCAET - Cadre de "
       "Dépôt Energies Renouvelables') on the European open-data portal "
       "data.bourgesplus.fr (portal's own dataset). Records API Explore "
@@ -2956,6 +3045,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "voix_ins",
     .description = "OpenDataSoft dataset "
       "'election-presidentielle-2017-resultats-par-bureaux-de-vote-tour-2' "
       "('Election présidentielle 2017 Résultats par bureaux de vote – "
@@ -2977,6 +3067,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'census-ffiec_2018_jc_tract' ('Census "
       "Tracts 2018 - Block and Tract') on the European open-data portal "
       "data.jerseycitynj.gov (portal's own dataset). Records API "
@@ -3020,6 +3111,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "wahlraum_bezeichnung,wahlraum_adresse,briefwahlbezirk",
+    .id_keys = "briefwahlbezirk_nr",
     .description = "OpenDataSoft dataset 'fb33-sb-horde-20250328-briefwahlbezirke' "
       "('Seniorenbeiratswahl 2025 - Hörde') on the European open-data "
       "portal open-data.dortmund.de (portal's own dataset). Records API "
@@ -3040,6 +3132,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sezione_elettorale",
     .description = "OpenDataSoft dataset "
       "'elezioni-politiche-2018-voti-alle-liste-senato-della-repubblica' "
       "('Elezioni politiche 2018 - Voti alle liste - Senato della "
@@ -3101,6 +3194,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset '28-maternity-care-visits-in-health-units' "
       "('Maternity Care Visits in Health Units') on the European "
       "open-data portal www.data.gov.bh (portal's own dataset). Records "
@@ -3120,6 +3214,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dire_geo",
+    .id_keys = "dire_geo",
     .description = "OpenDataSoft dataset 'agregado_certificados_leon' "
       "('agregado_certificados_leon') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -3140,6 +3235,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "constituency_name,scheme_type",
+    .id_keys = "no_of_applications",
     .description = "OpenDataSoft dataset "
       "'covid-19-test-and-trace-support-applications-constituency' "
       "('Covid-19 - Test and Trace Support applications "
@@ -3162,6 +3258,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "region",
+    .id_keys = "code_region+annee",
     .description = "OpenDataSoft dataset 'tub-issues-de-traitement-region' "
       "('Tuberculose : Issues de traitement (Région)') on the European "
       "open-data portal odisse.santepubliquefrance.fr (portal's own "
@@ -3224,6 +3321,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "delomrade",
+    .id_keys = "delomrade",
     .description = "OpenDataSoft dataset 'stadsdelsomraden-i-umea' "
       "('Stadsdelsområden i Umeå') on the European open-data portal "
       "opendata.umea.se (portal's own dataset). Records API Explore "
@@ -3244,6 +3342,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,categorie,prime",
+    .id_keys = "prime",
     .description = "OpenDataSoft dataset "
       "'villes-et-villages-fleuris-2018-en-haute-garonne' ('Villes et "
       "villages fleuris en Haute-Garonne (résultats 2018)') on the "
@@ -3265,6 +3364,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "codecarto+filename",
     .description = "OpenDataSoft dataset 'patrimoine-wallon-sites' ('Patrimoine "
       "Wallon - Sites') on the European open-data portal hub.huwise.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -3308,6 +3408,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'obso-sites-des-capteurs-de-mesures-tmvl' "
       "('Observatoire des ondes – Sites des capteurs permanents de "
       "mesures électromagnétiques (CEM) - Tours Métropole "
@@ -3330,6 +3431,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ars_type",
+    .id_keys = "indmtt_ars",
     .description = "OpenDataSoft dataset 'ars_s_type_age_1_nat' ('ARS - Répartition "
       "des allocataires selon le type d'ARS et l'âge [National]') on "
       "the European open-data portal data.caf.fr (portal's own "
@@ -3371,6 +3473,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "route_short_name,route_long_name,route_type,route_color",
+    .id_keys = "route_id",
     .description = "OpenDataSoft dataset 'lignes-du-reseau-zenbus' ('Lignes du "
       "réseau Zenbus') on the European open-data portal "
       "data.seineouest.fr (portal's own dataset). Records API Explore "
@@ -3431,6 +3534,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,adresse_aussenstelle,schule",
+    .id_keys = "schule",
     .description = "OpenDataSoft dataset "
       "'schulportrait-kategorie-a-allgemeines-eckdaten' ('Schulportrait "
       "- Kategorie A _ Allgemeines - Eckdaten') on the European "
@@ -3453,6 +3557,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "types_de_location",
+    .id_keys = "mois+types_de_location+annee",
     .description = "OpenDataSoft dataset "
       "'bilan-dactivite-par-typologie-de-location-du-palais-des-congres-de-la-communaute' "
       "('Bilan d'activité par typologie de location du Palais des "
@@ -3520,6 +3625,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_budget,nom_region,nom_departement,nom_ccas_cias",
+    .id_keys = "agregat+siret_budget+exercice",
     .description = "OpenDataSoft dataset "
       "'centre-intercommunal-daction-sociale-du-blesois-principaux-agregats-des-comptes' "
       "('Centre Intercommunal d'Action Sociale du Blésois - principaux "
@@ -3565,6 +3671,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "participation,vehicules_de_l_association,association",
+    .id_keys = "nb_beneficiaires",
     .description = "OpenDataSoft dataset '20250710_bilan-des-tus' ('Bilan de "
       "l'activité des transports d'utilité social (TUS) en Guadeloupe') "
       "on the European open-data portal www.karudata.com (portal's own "
@@ -3586,6 +3693,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bv",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-presidentielles-2007-t2-par-bureau-de-vote' "
       "('​Résultats des élections présidentielles 2007 T2 par bureau de "
@@ -3607,6 +3715,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_d_acte",
+    .id_keys = "mois+type_d_acte",
     .description = "OpenDataSoft dataset 'actes-detat-civil' ('Actes d'état civil') "
       "on the European open-data portal data.cannes.com (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -3646,6 +3755,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom+code_postal",
     .description = "OpenDataSoft dataset 'etablissements-pour-aines' "
       "('Etablissements pour ainés') on the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -3665,6 +3775,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "column_2",
     .description = "OpenDataSoft dataset 'pfandungen-anzahl-stadt-stgallen' "
       "('Pfändungen Stadt St.Gallen (2005-2018)') on the European "
       "open-data portal daten.stadt.sg.ch (portal's own dataset). "
@@ -3684,6 +3795,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lga+period+cause_of_death",
     .description = "OpenDataSoft dataset 'diabetes-related-deaths' "
       "('Diabetes-related deaths') on the European open-data portal "
       "data.peclet.com.au (portal's own dataset). Records API Explore "
@@ -3704,6 +3816,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "data+pergunta",
     .description = "OpenDataSoft dataset "
       "'satisfacao-do-utente-em-atendimento-telefonico' ('Satisfação do "
       "Utente em Atendimento Telefónico (CODU)') on the European "
@@ -3748,6 +3861,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'nombre-de-stagiaires' ('Nombre de "
       "stagiaires') on the European open-data portal data.bep.be "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -3787,6 +3901,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "program",
+    .id_keys = "program",
     .description = "OpenDataSoft dataset 'impact_measurement_dashboard-construction' "
       "('Circular Casey Construction') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -3831,6 +3946,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,id_ban_adresse,id_ban_commune,cad_parcelles",
+    .id_keys = "lat",
     .description = "OpenDataSoft dataset '244400644_base-adresse-locale' ('Base "
       "adresse locale de Saint-Nazaire Agglo') on the European "
       "open-data portal data.saintnazaireagglo.fr (portal's own "
@@ -3876,6 +3992,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet,nombeneficiaire",
+    .id_keys = "nombeneficiaire+objet+anneeconvention",
     .description = "OpenDataSoft dataset "
       "'subventions-versees-aux-associations-de-lmss' ('Subventions "
       "versées aux associations de Le Mée sur Seine') on the European "
@@ -3897,6 +4014,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,nom_election,candidat",
+    .id_keys = "candidat",
     .description = "OpenDataSoft dataset "
       "'resultats-election-municipale-2eme-tour-2026-agglo-brges-plus' "
       "('Résultats Election Municipale 2eme Tour - 2026 - Communes de "
@@ -3919,6 +4037,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "designation,materiel",
+    .id_keys = "materiel",
     .description = "OpenDataSoft dataset "
       "'inventaire-materiel-de-lespace-public-numerique-epn' "
       "('Inventaire matériel de l'Espace Public Numérique (EPN)') on "
@@ -3940,6 +4059,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "address,call_code_description,description,category",
+    .id_keys = "event_number+unit_id",
     .description = "OpenDataSoft dataset 'jcpd-service-calls-2016-part-2' ('JCPD - "
       "Service Calls 2016 Part 2') on the European open-data portal "
       "data.jerseycitynj.gov (portal's own dataset). Records API "
@@ -3960,6 +4080,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lsoa21cd,lsoa21nm,wd25cd,wd25nm",
+    .id_keys = "lsoa21cd",
     .description = "OpenDataSoft dataset 'lsoa-2021-to-ward-2025-to-la-best-fit' "
       "('LSOA (2021) to Ward (2025) to LA Best Fit') on the European "
       "open-data portal cityobservatory.birmingham.gov.uk (portal's own "
@@ -3980,6 +4101,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "art",
+    .id_keys = "zeile_des_gesamt_teilplans",
     .description = "OpenDataSoft dataset 'haushaltsplan-gesamtergebnisplan-2023' "
       "('Haushaltsplan Gesamtergebnisplan 2023') on the European "
       "open-data portal open-data.dortmund.de (portal's own dataset). "
@@ -3999,6 +4121,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zona",
+    .id_keys = "zona",
     .description = "OpenDataSoft dataset 'referendum-2020-affluenza' ('Referendum "
       "2020 - Affluenza') on the European open-data portal "
       "opendata.comune.bologna.it (portal's own dataset). Records API "
@@ -4061,6 +4184,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'02-number-of-gcc-citizens-covered-by-retirement' ('Number of "
       "GCC Citizens Covered in Retirement') on the European open-data "
@@ -4081,6 +4205,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "fecha",
     .description = "OpenDataSoft dataset 'ingresos-tasas-bocyl' ('Ingresos por tasas "
       "- BOCYL') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -4101,6 +4226,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "supplier_beneficiary_name,purpose_of_grant",
+    .id_keys = "supplier_beneficiary_name+dummy_reference+payment_date",
     .description = "OpenDataSoft dataset "
       "'grants-to-voluntary-community-and-social-enterprise-organisations-2019-20' "
       "('Grants To Voluntary, community and social enterprise "
@@ -4123,6 +4249,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee+reglib",
     .description = "OpenDataSoft dataset "
       "'canicules-nombres-de-jours-de-canicule-region' ('Canicules : "
       "Nombres de jours de canicule (Région)') on the European "
@@ -4145,6 +4272,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gebiet_name,wahl",
+    .id_keys = "wahl",
     .description = "OpenDataSoft dataset 'dormagen-ratswahl-2020-gemeindeergebnis1' "
       "('Dormagen: Ratswahl-2020-Gemeindeergebnis') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -4185,6 +4313,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "windows+ios",
     .description = "OpenDataSoft dataset 'getteamsdeviceusagedistributionusercounts' "
       "('Microsoft Teams-användare per enhetstyp under en tidsperiod') "
       "on the European open-data portal opendata.umea.se (portal's own "
@@ -4225,6 +4354,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_scientifique,nom_vernaculaire,famille",
+    .id_keys = "nom_scientifique",
     .description = "OpenDataSoft dataset "
       "'ens-inventaire-de-la-faune-lac-de-bordeneuve' ('ENS - "
       "Inventaire de la faune - Lac de Bordeneuve') on the European "
@@ -4265,6 +4395,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_tarif",
+    .id_keys = "tarif",
     .description = "OpenDataSoft dataset "
       "'datastory-badiane-gr3-evolution-des-tarifs-dependances-medians-selon-le-gir' "
       "('Datastory BADIANE Gr3 - Évolution des tarifs dépendances "
@@ -4287,6 +4418,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bgt_nature_label,bgt_contnat_label,bgt_nom",
+    .id_keys = "bgt_credouv+bgt_nature+bgt_annee",
     .description = "OpenDataSoft dataset "
       "'compte-administratif-annexe-pc-budget-tours' ('Compte "
       "administratif du budget annexe du Cimetière - Tours') on the "
@@ -4329,6 +4461,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "arabicname+stream",
     .description = "OpenDataSoft dataset 'waste-composition-by-district' ('Waste "
       "composition by district') on the European open-data portal "
       "data.ajman.ae (portal's own dataset). Records API Explore v2.1, "
@@ -4348,6 +4481,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_site,commune,id,localisation",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'coins-nature' ('Coins nature') on the "
       "European open-data portal data.seineouest.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -4368,6 +4502,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,adresse,titulaire,suppleant",
+    .id_keys = "titulaire",
     .description = "OpenDataSoft dataset 'conseillers-communautaires' ('Conseillers "
       "communautaires CC Plateau de Lannemezan') on the European "
       "open-data portal opendata.ha-py.fr (portal's own dataset). "
@@ -4387,6 +4522,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dataset_title",
+    .id_keys = "id+dataset_title",
     .description = "OpenDataSoft dataset 'open-data-triage-results' ('Open Data "
       "Triage Results') on the European open-data portal "
       "openenergyhub.ornl.gov (portal's own dataset). Records API "
@@ -4406,6 +4542,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset "
       "'grenzwanderung-wurzburg-1-rottendorfestenfeld' ('Grenzwanderung "
       "Teil 1') on the European open-data portal opendata.wuerzburg.de "
@@ -4426,6 +4563,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_structure,ville,localisation,creneaux_horaires",
+    .id_keys = "nom_structure",
     .description = "OpenDataSoft dataset 'lieux-accueil-numerique-etudiants' ('lieux "
       "accueil numérique étudiants') on the European open-data portal "
       "data.dunkerque-agglo.fr (portal's own dataset). Records API "
@@ -4489,6 +4627,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet_du_marche,objet_de_la_modification_du_marche_eur_ht,lieu_principal_d_execution_des_services_ou_travaux,identification_du_titulaire",
+    .id_keys = "ndeg_marche+identification_du_titulaire",
     .description = "OpenDataSoft dataset 'blois-marches-publics-2018' ('Blois - "
       "marchés publics 2018') on the European open-data portal "
       "data.blois.agglopolys.fr (portal's own dataset). Records API "
@@ -4553,6 +4692,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bv",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-municipales-2008-t2-par-bureau-de-vote' "
       "('Résultats des élections municipales 2008 T2 par bureau de "
@@ -4574,6 +4714,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_mouvement,nature",
+    .id_keys = "nature_code+chapitre_code+type_de_mouvement",
     .description = "OpenDataSoft dataset 'compte-administratif-2015' ('Compte "
       "administratif 2015') on the European open-data portal "
       "data.cannes.com (portal's own dataset). Records API Explore "
@@ -4614,6 +4755,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nameger,namefre,namedut",
+    .id_keys = "tgid",
     .description = "OpenDataSoft dataset 'belgique-limites-administratives' "
       "('Belgique - Limites administratives') on the European open-data "
       "portal spi-digitalwallonia.opendatasoft.com (portal's own "
@@ -4674,6 +4816,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "instituicao",
+    .id_keys = "no_registo",
     .description = "OpenDataSoft dataset 'vagas-formacao-geral-internato' ('Formação "
       "Médica / Vagas para Formação Geral (Internato Médico)') on the "
       "European open-data portal transparencia.sns.gov.pt (portal's own "
@@ -4695,6 +4838,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "surface+ogc_fid",
     .description = "OpenDataSoft dataset '20240304-dpu_64024-21640024200014_anglet' "
       "('Le Droit de Préemption Urbain (DPU) sur la commune d'Anglet') "
       "on the European open-data portal "
@@ -4716,6 +4860,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "latitude",
     .description = "OpenDataSoft dataset 'communes-de-la-province-de-namur0' "
       "('Communes de la province de Namur') on the European open-data "
       "portal data.bep.be (portal's own dataset). Records API Explore "
@@ -4735,6 +4880,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "hotel_name,address",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'hotels' ('Hotels') on the European "
       "open-data portal cityofsalinas.opendatasoft.com (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -4814,6 +4960,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ra_nom,ra_structure,ra_commune,ra_adresse_structure",
+    .id_keys = "ra_finess_geo",
     .description = "OpenDataSoft dataset "
       "'224900019_residences-autonomie-en-maine-et-loire' ('Résidences "
       "autonomie en Maine-et-Loire') on the European open-data portal "
@@ -4835,6 +4982,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nombeneficiaire",
+    .id_keys = "nombeneficiaire",
     .description = "OpenDataSoft dataset 'vlp-schema_subventions' ('Subventions "
       "versées aux associations de Vaux le Pénil') on the European "
       "open-data portal data.melunvaldeseine.fr (portal's own dataset). "
@@ -4855,6 +5003,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,nom_election",
+    .id_keys = "candidat+numero_commune",
     .description = "OpenDataSoft dataset "
       "'resultats-election-legislative-1er-tour-2022-territoire-de-bourges-plus' "
       "('Resultats Election Legislative 1er Tour - 2022 - Communes de "
@@ -4876,6 +5025,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'points-dacces-wifi-public' ('Points "
       "d'accès Wifi Public') on the European open-data portal "
       "data.fleurysurorne.fr (portal's own dataset). Records API "
@@ -4918,6 +5068,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "areaidentifier+periodlabel",
     .description = "OpenDataSoft dataset "
       "'percentage-of-pupils-meeting-the-expected-standard-at-ks2-in-reading-writing-and-maths-wmca' "
       "('Percentage of pupils meeting the expected standard at KS2 in "
@@ -4940,6 +5091,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stadtbezirk",
+    .id_keys = "stadtbezirk_nr",
     .description = "OpenDataSoft dataset 'sozialindikatoren-in-den-stadtbezirken' "
       "('Sozialindikatoren in den Stadtbezirken 2022') on the European "
       "open-data portal open-data.dortmund.de (portal's own dataset). "
@@ -4960,6 +5112,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset 'referendum-2025-quesito-1-voti' "
       "('Referendum 2025 - Quesito 1 - Stop ai licenziamenti "
       "illegittimi - voti') on the European open-data portal "
@@ -5022,6 +5175,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset '01a-egg-production-million-eggs' ('Egg "
       "Production – Million Eggs') on the European open-data portal "
       "www.data.gov.bh (portal's own dataset). Records API Explore "
@@ -5042,6 +5196,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dispositivo_label,vista",
+    .id_keys = "idsite+dispositivo_label+fecha",
     .description = "OpenDataSoft dataset "
       "'estadisticas-web-dispositivos-historico-xi-legislatura' "
       "('Estadisticas web - Dispositivos - Historico XI Legislatura') "
@@ -5063,6 +5218,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "financial_year",
     .description = "OpenDataSoft dataset 'spend-agency-by-financial-year' ('Spend - "
       "Agency by financial year') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -5082,6 +5238,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "ic_inf",
     .description = "OpenDataSoft dataset 'tabagisme-prevalence-selon-le-sexe' "
       "('Tabac : Prévalence selon le sexe') on the European open-data "
       "portal odisse.santepubliquefrance.fr (portal's own dataset). "
@@ -5102,6 +5259,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nr_stimmbezirk",
     .description = "OpenDataSoft dataset "
       "'dormagen-buergermeisterwahl-2014-nach-stimmbezirk' ('Dormagen: "
       "Bürgermeisterwahl 2014 nach Stimmbezirk') on the European "
@@ -5123,6 +5281,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dossiernr,registr_oms,lokatie",
+    .id_keys = "dossiernr",
     .description = "OpenDataSoft dataset 'privatemarkten' ('Private markten Den "
       "Haag') on the European open-data portal "
       "den-haag-opendata.opendatasoft.com (portal's own dataset). "
@@ -5142,6 +5301,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "kpi",
     .description = "OpenDataSoft dataset 'kolada-foerteckning-oever-kpi-er' "
       "('Kolada, förteckning över KPI:er i Kolada') on the European "
       "open-data portal opendata.umea.se (portal's own dataset). "
@@ -5162,6 +5322,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bdgeoqualif_occupation_sol_ocso",
     .description = "OpenDataSoft dataset "
       "'representation-simplifiee-des-surfaces-urbanisees' "
       "('Représentation simplifiée des surfaces urbanisées') on the "
@@ -5253,6 +5414,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureaux_de_vote,nom_lieu_bureaux_de_vote,nom_canton,nom_circonscription",
+    .id_keys = "code_bureau_vote",
     .description = "OpenDataSoft dataset 'les-bureaux-de-vote-ville-de-tours' "
       "('Elections 2021 - Les bureaux de vote - Tours') on the European "
       "open-data portal data.tours-metropole.fr (portal's own dataset). "
@@ -5273,6 +5435,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nomregi",
+    .id_keys = "tot_offre_reg",
     .description = "OpenDataSoft dataset 'nbpla_pe_reg' ('Nombre de places offertes "
       "pour les enfants de moins de 3 ans [Région]') on the European "
       "open-data portal data.caf.fr (portal's own dataset). Records API "
@@ -5292,6 +5455,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_of_waste",
+    .id_keys = "value_t",
     .description = "OpenDataSoft dataset 'waste-generation-and-treated' ('Waste "
       "generation and treated') on the European open-data portal "
       "data.ajman.ae (portal's own dataset). Records API Explore v2.1, "
@@ -5331,6 +5495,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "flux_de_dechets,destination,localisation",
+    .id_keys = "flux_de_dechets",
     .description = "OpenDataSoft dataset '2023-repreneurs-dechets-ccam' "
       "('2023-Repreneurs déchets CCAM') on the European open-data "
       "portal opendata.ha-py.fr (portal's own dataset). Records API "
@@ -5374,6 +5539,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "schule",
+    .id_keys = "schule",
     .description = "OpenDataSoft dataset 'schulportrait-kategorie-g-inklusion-sport' "
       "('Schulportrait - Kategorie G _ Inklusion - Sport') on the "
       "European open-data portal opendata.wuerzburg.de (portal's own "
@@ -5395,6 +5561,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_ouvrage,nom_service,nom_de_l_operateur",
+    .id_keys = "id_sispea_ouvrage+annee",
     .description = "OpenDataSoft dataset "
       "'indicateurs-dactivite-des-ouvrages-dassainissement-collectif-sur-la-periode-2008' "
       "('Indicateurs d'activité des ouvrages d'assainissement collectif "
@@ -5458,6 +5625,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "empty5",
+    .id_keys = "empty5+empty2",
     .description = "OpenDataSoft dataset "
       "'blois-marches-publics-2022-greater-than-40-000-eur-ht' ('Blois "
       "- marchés publics 2022 > 40 000 € HT') on the European open-data "
@@ -5499,6 +5667,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "disposition_vp_pour_se_rendre_sur_lieu_travail_ou_etudes",
+    .id_keys = "disposition_vp_pour_se_rendre_sur_lieu_travail_ou_etudes",
     .description = "OpenDataSoft dataset 'donnees_principales_emc-vp-distances' "
       "('Données_principales_EMC²-VP-Distances') on the European "
       "open-data portal www.karudata.com (portal's own dataset). "
@@ -5519,6 +5688,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bv",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-municpales-1995-t1-par-bureau-de-vote' "
       "('Résultats des élections municipales 1995 T1 par bureau de "
@@ -5540,6 +5710,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau,nom_candidat,nom_election,lieu",
+    .id_keys = "nb_voix+lieu",
     .description = "OpenDataSoft dataset 'legi-2022-t2' ('Elections législatives "
       "2022 - 2ème tour') on the European open-data portal "
       "data.cannes.com (portal's own dataset). Records API Explore "
@@ -5580,6 +5751,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "_id",
     .description = "OpenDataSoft dataset 'boites-a-livres-chaudfontaine0' ('Boites à "
       "livres') on the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -5599,6 +5771,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gebiet",
+    .id_keys = "gebiet",
     .description = "OpenDataSoft dataset 'tempo-30-zonen' ('Tempo 30-Zonen Stadt "
       "St.Gallen') on the European open-data portal daten.stadt.sg.ch "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -5641,6 +5814,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "data",
     .description = "OpenDataSoft dataset 'chamadas-capic' ('Chamadas para o Centro "
       "de Apoio Psicológico e Intervenção em Crise') on the European "
       "open-data portal transparencia.sns.gov.pt (portal's own "
@@ -5683,6 +5857,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_entite",
+    .id_keys = "ins+periode",
     .description = "OpenDataSoft dataset 'prix-moyen-du-terrain-a-batir-eurosm2' "
       "('Prix moyen du terrain à bâtir (euros/m²)') on the European "
       "open-data portal data.bep.be (portal's own dataset). Records API "
@@ -5702,6 +5877,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lfulladdr,usngcoord,hospitalname,uniqueid",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'hospitals' ('Hospitals') on the European "
       "open-data portal cityofsalinas.opendatasoft.com (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -5721,6 +5897,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "suburbs",
+    .id_keys = "suburbs",
     .description = "OpenDataSoft dataset 'impact_measurement_dashboard-suburbs' "
       "('Circular Casey Suburbs') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -5741,6 +5918,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "epci",
+    .id_keys = "epci",
     .description = "OpenDataSoft dataset '837810944_2022_ra2020_otex_epci' ('Les "
       "OTEX du recensement agricole 2020 à l'échelle EPCI en Pays de la "
       "Loire') on the European open-data portal "
@@ -5762,6 +5940,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dec_nom,dec_commun,dec_adress",
+    .id_keys = "dec_code_p",
     .description = "OpenDataSoft dataset "
       "'224900019_conteneurs-reemploi-en-maine-et-loire' ('Conteneurs "
       "de réemploi en Maine-et-Loire') on the European open-data portal "
@@ -5783,6 +5962,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'frequentation_groupes_otmvs' "
       "('Fréquentation groupes Office de tourisme Melun Val de Seine') "
       "on the European open-data portal data.melunvaldeseine.fr "
@@ -5804,6 +5984,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_station,nom_enseigne,nom_amenageur,nom_operateur",
+    .id_keys = "id_pdc_itinerance+id_station_itinerance",
     .description = "OpenDataSoft dataset "
       "'bornes-de-recharge-pour-vehicules-electriques-sur-le-departement-du-cher-copie' "
       "('Bornes de recharge pour véhicules électriques sur le "
@@ -5867,6 +6048,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objektbezeichnung,spielgerate_anzahl,unterbezirk",
+    .id_keys = "objektbezeichnung",
     .description = "OpenDataSoft dataset 'fb63-spielplaetze-flaechen' ('Spielplätze "
       "- Flächen') on the European open-data portal "
       "open-data.dortmund.de (portal's own dataset). Records API "
@@ -5906,6 +6088,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom+fin_periode",
     .description = "OpenDataSoft dataset 'leh_indemnites_elus_2020' ('Indemnités des "
       "élus de la ville du Haillan') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -5948,6 +6131,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year+nationality+sex",
     .description = "OpenDataSoft dataset '04-gcc-students-in-gov-schools-secondary' "
       "('Number of Students of GCC Citizens Registered in Governmental "
       "Schools - Secondary') on the European open-data portal "
@@ -5989,6 +6173,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "supplier_name,title_of_agreement,contract_description,voluntary_or_community_sector_organisation",
+    .id_keys = "contract_value_excl_variations+supplier_name",
     .description = "OpenDataSoft dataset 'contracts-june-2018' ('Contracts June "
       "2018') on the European open-data portal data.leicester.gov.uk "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -6009,6 +6194,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "taux",
     .description = "OpenDataSoft dataset "
       "'tabagisme-prevalence-selon-la-situation-professionnelle' "
       "('Tabac : Prévalence selon la situation professionnelle') on the "
@@ -6030,6 +6216,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "schulname",
+    .id_keys = "schulname",
     .description = "OpenDataSoft dataset 'dormagen-schulnummern' ('Dormagen: "
       "Schulnummern') on the European open-data portal "
       "opendata.rhein-kreis-neuss.de (portal's own dataset). Records "
@@ -6071,6 +6258,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "period",
     .description = "OpenDataSoft dataset 'miljobilar-i-kommunorganisationen' "
       "('Miljöbilar i kommunorganisationen (Kolada)') on the European "
       "open-data portal opendata.umea.se (portal's own dataset). "
@@ -6091,6 +6279,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_de_la_commune,libelle_du_canton",
+    .id_keys = "abstentions+code_de_la_commune",
     .description = "OpenDataSoft dataset "
       "'resultats-departementales-2015-2nd-tour-resultats-par-communes-herault' "
       "('Résultats Départementales 2015 - 2nd tour - résultats par "
@@ -6156,6 +6345,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dep_lib",
+    .id_keys = "dep_23",
     .description = "OpenDataSoft dataset "
       "'datastory-badiane-carte-3-part-des-places-habilitees-a-l-aide-sociale-selon-la-categorie-juridique-des-ehpad' "
       "('Datastory BADIANE Carte 3 - Part des places habilitées à "
@@ -6179,6 +6369,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "identifiant+feu_sonore",
     .description = "OpenDataSoft dataset 'carrefours-feux-sonores-tmvl' ('Carrefours "
       "Feux Sonores - Tours Métropole Val de Loire') on the European "
       "open-data portal data.tours-metropole.fr (portal's own dataset). "
@@ -6217,6 +6408,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "stream+area",
     .description = "OpenDataSoft dataset 'waste-stream-by-district' ('Waste stream "
       "by district') on the European open-data portal data.ajman.ae "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -6237,6 +6429,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune",
+    .id_keys = "annee+commune",
     .description = "OpenDataSoft dataset 'aide-adaptation-vieillissement-handicap' "
       "('Aides financières pour l’adaptation des logements au "
       "vieillissement et au handicap') on the European open-data portal "
@@ -6258,6 +6451,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom+prenom",
     .description = "OpenDataSoft dataset "
       "'liste-des-elus-de-la-communaute-de-communes-adour-madiran' "
       "('Liste des Elus de la Communauté de Communes ADOUR MADIRAN') on "
@@ -6301,6 +6495,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "schule,art_spiel_sportgerate_stammgebaude",
+    .id_keys = "schule",
     .description = "OpenDataSoft dataset "
       "'schulportrait-kategorie-b-schulgebaeude-aussenflaeche' "
       "('Schulportrait - Kategorie B _ Schulgebäude - Außenfläche') on "
@@ -6368,6 +6563,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ancienne_region,region,epci",
+    .id_keys = "masse_salariale_brute",
     .description = "OpenDataSoft dataset "
       "'nombre-d-etablissements-employeurs-effectifs-salaries-et-masse-salariale-du-sect' "
       "('Nombre d'établissements employeurs, effectifs salariés et "
@@ -6391,6 +6587,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "categorie",
+    .id_keys = "categorie",
     .description = "OpenDataSoft dataset "
       "'agglopolys-nombre-et-capacite-des-hotels-au-1er-janvier-2021' "
       "('Agglopolys - Nombre et capacité des hôtels au 1er janvier "
@@ -6434,6 +6631,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nombre_de_passagers+annee",
     .description = "OpenDataSoft dataset "
       "'flux-de-transportvvoyageurs-a-l-aeroport-maryse-conde' "
       "('Mouvement de voyageurs aériens passés par l’aéroport Maryse "
@@ -6455,6 +6653,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bureau",
     .description = "OpenDataSoft dataset "
       "'fond-de-carte-des-bureaux-de-vote-jeu-2014' ('Fond de carte des "
       "bureaux de vote / jeu 2014') on the European open-data portal "
@@ -6518,6 +6717,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune",
+    .id_keys = "ins",
     .description = "OpenDataSoft dataset 'supracommunalites' ('Supracommunalités') "
       "on the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -6538,6 +6738,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "kontotitel",
+    .id_keys = "konto",
     .description = "OpenDataSoft dataset "
       "'budget-2021-stadt-stgallen-artengliederung' ('Budget 2021 der "
       "Stadt St.Gallen nach Artengliederung') on the European open-data "
@@ -6577,6 +6778,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "no_de_receitas_eletronicas_dispensadas",
     .description = "OpenDataSoft dataset 'evolucao-da-dispensa-de-medicamentos' "
       "('Dispensa de Medicamentos') on the European open-data portal "
       "transparencia.sns.gov.pt (portal's own dataset). Records API "
@@ -6617,6 +6819,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'nombre-d-objectifs-iso-9001-atteints' "
       "('Nombre d'objectifs ISO 9001 atteints') on the European "
       "open-data portal data.bep.be (portal's own dataset). Records API "
@@ -6656,6 +6859,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dashboard_name,description,type,image",
+    .id_keys = "dashboard_name",
     .description = "OpenDataSoft dataset 'casey-insights-page-list' ('Casey Insights "
       "Page list') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -6700,6 +6904,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bgt_contnat_label,bgt_fonction_label,bgt_nature_label,bgt_nom",
+    .id_keys = "bgt_contnat+bgt_fonction+bgt_operation",
     .description = "OpenDataSoft dataset "
       "'budget-primitif-bp-de-la-ville-de-saint-andre-des-eaux' "
       "('Budget primitif (BP) de la ville de Saint-André-Des-Eaux') on "
@@ -6722,6 +6927,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "date",
     .description = "OpenDataSoft dataset '224900019_aeeh-en-maine-et-loire' "
       "('Bénéficiaires de l'Allocation d'Education pour Enfant "
       "Handicapé (AEEH) en Maine-et-Loire') on the European open-data "
@@ -6743,6 +6949,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "equip_nom,adr_num_et_rue,adr_commune",
+    .id_keys = "equip_nom",
     .description = "OpenDataSoft dataset 'frequentation-equipements-sportifs' "
       "('Fréquentation des équipements sportifs sur Melun') on the "
       "European open-data portal data.melunvaldeseine.fr (portal's own "
@@ -6764,6 +6971,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,nom_election",
+    .id_keys = "pourcentage",
     .description = "OpenDataSoft dataset "
       "'resultats-election-legislative-2eme-tour-2022-communes-de-bourges-plus' "
       "('Resultats Election Legislative 2eme Tour - 2022 - Communes de "
@@ -6805,6 +7013,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "shape_leng",
     .description = "OpenDataSoft dataset 'historic-districts-in-jersey-city' "
       "('Historic Districts and Landmarks in Jersey City') on the "
       "European open-data portal data.jerseycitynj.gov (portal's own "
@@ -6850,6 +7059,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "alter",
     .description = "OpenDataSoft dataset "
       "'hauptwohnbevolkerung-aussenwanderungen-nach-altersjahren-2024' "
       "('Hauptwohnbevölkerung - Außenwanderungen nach Altersjahren "
@@ -6891,6 +7101,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_voie,ident",
+    .id_keys = "ident",
     .description = "OpenDataSoft dataset 'comptage_trafic_2022' ('Comptage du trafic "
       "2022 Bordeaux Métropole') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -6932,6 +7143,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_of_school",
+    .id_keys = "year+type_of_school",
     .description = "OpenDataSoft dataset "
       "'1a-number-of-governmental-schools-by-type-of-school' ('Number "
       "of Governmental Schools by Type of School') on the European "
@@ -6953,6 +7165,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zona_basica_de_salud_del_paciente",
+    .id_keys = "fecha_de_ingreso+zona_basica_de_salud_del_paciente",
     .description = "OpenDataSoft dataset "
       "'altas-hospitalarias-con-diagnostico-de-insuficiencia-cardiaca' "
       "('Altas hospitalarias con diagnostico de Insuficiencia "
@@ -6975,6 +7188,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "chart_label,upper_tier_local_authorities_code,proficiency_in_english_language_6_categories",
+    .id_keys = "observation",
     .description = "OpenDataSoft dataset "
       "'census-21-leicester-proficiency-in-english' ('Census 21 - "
       "Leicester Proficiency in English') on the European open-data "
@@ -6996,6 +7210,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee_de_declaration+classe_d_age",
     .description = "OpenDataSoft dataset "
       "'leptospirose-donnees-par-classe-dage-national' ('Leptospirose : "
       "Données par classe d'âge (National)') on the European open-data "
@@ -7017,6 +7232,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "haushaltsgrosse",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "'grevenbroich-haushalte-nach-haushaltsgroesse' ('Grevenbroich: "
       "Haushalte nach Haushaltsgröße') on the European open-data portal "
@@ -7037,6 +7253,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'polisstationer' ('Polisstationer i "
       "Västerbotten') on the European open-data portal opendata.umea.se "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -7079,6 +7296,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_scientifique,nom_vernaculaire",
+    .id_keys = "nom_scientifique",
     .description = "OpenDataSoft dataset "
       "'ens-inventaire-des-plantes-vasculaires-mont-calem' ('ENS - "
       "Inventaire des plantes vasculaires - Mont Calem') on the "
@@ -7121,6 +7339,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "montants_mensuels_de_prime_d_activite_par_unite_de_consommation_en_euros",
+    .id_keys = "montants_mensuels_de_prime_d_activite_par_unite_de_consommation_en_euros",
     .description = "OpenDataSoft dataset 'graphique-er-non-recours-pa' ('Graphique- "
       "ER - non recours-PA') on the European open-data portal "
       "data.drees.solidarites-sante.gouv.fr (portal's own dataset). "
@@ -7160,6 +7379,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ars_type,nomdep,lieures",
+    .id_keys = "indmtt_ars+numdep",
     .description = "OpenDataSoft dataset 'ars_s_type_dep' ('ARS - Répartition des "
       "allocataire selon type d'ARS (différentielle ou non) "
       "[Département]') on the European open-data portal data.caf.fr "
@@ -7180,6 +7400,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "arabicname+years",
     .description = "OpenDataSoft dataset 'wastecompositionbydistrict' "
       "('Wastebydistrict') on the European open-data portal "
       "data.ajman.ae (portal's own dataset). Records API Explore v2.1, "
@@ -7199,6 +7420,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "periode",
+    .id_keys = "periode",
     .description = "OpenDataSoft dataset 'collecte-des-sapins' ('Collecte des "
       "sapins') on the European open-data portal data.seineouest.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -7218,6 +7440,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_l_elu,libelle_de_la_categorie_socio_professionnelle,libelle_de_la_fonction,libelle_du_departement",
+    .id_keys = "date_de_naissance",
     .description = "OpenDataSoft dataset 'liste-des-elus' ('Liste des Elus Bagnères "
       "de Bigorre') on the European open-data portal opendata.ha-py.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -7303,6 +7526,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_temps",
+    .id_keys = "candidat+service+type_de_temps",
     .description = "OpenDataSoft dataset "
       "'temps-de-parole-et-d-antenne-des-candidats-a-l-election-presidentielle-2022-prem' "
       "('Temps de parole et d'antenne des candidats à l'élection "
@@ -7326,6 +7550,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_l_association",
+    .id_keys = "nom_de_l_association",
     .description = "OpenDataSoft dataset "
       "'vineuil-41350-subventions-aux-associations-en-2021' ('Vineuil "
       "(41350) - subventions aux associations en 2021') on the European "
@@ -7369,6 +7594,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "km",
     .description = "OpenDataSoft dataset "
       "'evolution-de-la-distance-moyenne-des-trajets-en-covoiturage' "
       "('Evolution de la distance moyenne des trajets en covoiturage') "
@@ -7390,6 +7616,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom+adresse",
     .description = "OpenDataSoft dataset 'aire-de-jeux-enfants' ('Aires de jeux pour "
       "enfants') on the European open-data portal data.montreuil.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -7471,6 +7698,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "column_2",
     .description = "OpenDataSoft dataset 'betreibungsfalle-stadt-stgallen' "
       "('Betreibungsfälle Stadt St.Gallen (2005-2018)') on the European "
       "open-data portal daten.stadt.sg.ch (portal's own dataset). "
@@ -7511,6 +7739,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "encargos_sns_hospitalar",
     .description = "OpenDataSoft dataset "
       "'despesa-com-medicamentos-nos-hospitais-do-sns' ('Despesa com "
       "Medicamentos nos Hospitais do SNS') on the European open-data "
@@ -7533,6 +7762,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lib_idpsc",
     .description = "OpenDataSoft dataset "
       "'prescriptions-surfaciques-du-plan-local-d-urbanisme-en-vigueur-modification-5-ap' "
       "('Prescriptions surfaciques du Plan Local d'Urbanisme (ABROGE) "
@@ -7681,6 +7911,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nombeneficiaire",
+    .id_keys = "nombeneficiaire+anneeconvention",
     .description = "OpenDataSoft dataset "
       "'subventions-aux-associations-sportives-de-melun' ('Subventions "
       "versées aux associations sportives de Melun') on the European "
@@ -7702,6 +7933,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,nom_election",
+    .id_keys = "candidat+numero_commune",
     .description = "OpenDataSoft dataset "
       "'resultats_elections_europennes_2024_cabourgesplus' ('Résultats "
       "Elections Européennes - 2024 - Communes de Bourges Plus') on the "
@@ -7723,6 +7955,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_l_attributaire,objet,domaine,montant",
+    .id_keys = "code_postal",
     .description = "OpenDataSoft dataset 'marches-publics' ('Marchés publics') on "
       "the European open-data portal data.fleurysurorne.fr (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -7763,6 +7996,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "area_name,area_type",
+    .id_keys = "value",
     .description = "OpenDataSoft dataset "
       "'c-difficile-infection-case-counts-and-rates-of-community-onset-healthcare-associated-by-sub-icb-location-and-year' "
       "('C. difficile infection case counts and rates of community "
@@ -7807,6 +8041,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "giorni_cig_mese_calc+sezione+mese",
     .description = "OpenDataSoft dataset 'storia-resilienza-ore-cigs' ('Storia "
       "Resilienza - Ore CIG') on the European open-data portal "
       "opendata.comune.bologna.it (portal's own dataset). Records API "
@@ -7827,6 +8062,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "rs_sv_chem_l+rs_sv_tronc_devia_l",
     .description = "OpenDataSoft dataset 'sv_tronc_devia_l_sv_chem_l' ('Relation "
       "entre tronçon de déviation et chemin d'une ligne') on the "
       "European open-data portal datahub.bordeaux-metropole.fr "
@@ -7869,6 +8105,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'06-pension-salaries-paid-for-pensioners-and-beneficiaries' "
       "('Pension Salaries Paid for Pensioners and Beneficiaries') on "
@@ -7930,6 +8167,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "reglib",
+    .id_keys = "reg",
     .description = "OpenDataSoft dataset "
       "'pollution-de-l-air-impact-sur-la-survenue-de-maladie-du-no2-et-des-pm2-5-scenario-vi_oms_region' "
       "('Pollution de l'air : impact sur la survenue de maladie du NO2 "
@@ -7992,6 +8230,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "antal_lagenheter+ar",
     .description = "OpenDataSoft dataset 'specialbostaeder-2013' ('Specialbostäder "
       "2013-') on the European open-data portal opendata.umea.se "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -8012,6 +8251,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "structure,identifian",
+    .id_keys = "identifian",
     .description = "OpenDataSoft dataset "
       "'ouvrages-de-protection-de-falaise-lineaires' ('Ouvrages de "
       "protection de falaise (linéaires et ponctuels)') on the European "
@@ -8033,6 +8273,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_scientifique,nom_vernaculaire,famille",
+    .id_keys = "nom_scientifique",
     .description = "OpenDataSoft dataset "
       "'ens-inventaire-de-la-faune-zone-naturelle-du-chateau-de-lareole' "
       "('ENS - Inventaire de la faune - Zone naturelle du château de "
@@ -8121,6 +8362,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "indfoy_rsa_ppa+indnbp_rsa_ppa",
     .description = "OpenDataSoft dataset 'rsa_ppa_s_agg_sitfam_d_nat' ('RSA et PA - "
       "Répartition des allocataires selon la situation familiale "
       "[National]') on the European open-data portal data.caf.fr "
@@ -8141,6 +8383,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category_ar,category_en",
+    .id_keys = "year+month_ar+category_ar",
     .description = "OpenDataSoft dataset 'laboratory-samples' ('Laboratory Samples') "
       "on the European open-data portal data.ajman.ae (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -8160,6 +8403,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_station,type",
+    .id_keys = "nombre_de_places+code_insee+id_station",
     .description = "OpenDataSoft dataset 'stationnements-velo-securises' "
       "('Stationnements vélo sécurisés') on the European open-data "
       "portal data.seineouest.fr (portal's own dataset). Records API "
@@ -8180,6 +8424,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "rang",
     .description = "OpenDataSoft dataset 'elus-catlp' ('Liste des élus de la "
       "Communauté d'Agglomération Tarbes Lourdes Pyrénées') on the "
       "European open-data portal opendata.ha-py.fr (portal's own "
@@ -8266,6 +8511,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "substation,picloname",
+    .id_keys = "substation",
     .description = "OpenDataSoft dataset 'flexibility_substation_polygons_spm-piclo' "
       "('SPM Deferred Reinforcement Flexibility Substation Polygons - "
       "piclo version') on the European open-data portal "
@@ -8287,6 +8533,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,departement",
+    .id_keys = "insee_commune",
     .description = "OpenDataSoft dataset "
       "'inventaire-de-gaz-a-effet-de-serre-territorialise0' "
       "('Inventaire de gaz à effet de serre territorialisé') on the "
@@ -8308,6 +8555,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "prenoms",
+    .id_keys = "prenoms+sexe",
     .description = "OpenDataSoft dataset 'blois-2022-premiers-prenoms' ('Blois - "
       "2022 - premiers prénoms') on the European open-data portal "
       "data.blois.agglopolys.fr (portal's own dataset). Records API "
@@ -8328,6 +8576,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bgt_contnat_label,bgt_nature_label,bgt_nom",
+    .id_keys = "bgt_contnat_label+bgt_annee+bgt_codrd",
     .description = "OpenDataSoft dataset '214400699_budget_cfu_pompes_funebres' "
       "('Comptes financiers uniques de la Ville de Guérande - Budget "
       "annexe pompes funèbres') on the European open-data portal "
@@ -8349,6 +8598,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_de_residence",
+    .id_keys = "zone_de_residence",
     .description = "OpenDataSoft dataset "
       "'emc2-caracteristiques-socio-demographiques-des-menages-par-epci' "
       "('EMC² : Caractéristiques Socio-Démographiques des ménages par "
@@ -8370,6 +8620,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'lieux-daccueil-enfants-parents-laep' "
       "('Lieux d'Accueil Enfants-Parents (LAEP)') on the European "
       "open-data portal data.montreuil.fr (portal's own dataset). "
@@ -8431,6 +8682,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nis5_nom,quartier_n",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "'quartiers-statistiques-wallons-limites-administratives' "
       "('Quartiers statistiques wallons - Limites administratives') on "
@@ -8452,6 +8704,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "council_name,region",
+    .id_keys = "lga_code",
     .description = "OpenDataSoft dataset 'bin-size-and-collection-frequency-nsw-epa' "
       "('Bin Size and Collection Frequency - NSW EPA') on the European "
       "open-data portal data.peclet.com.au (portal's own dataset). "
@@ -8472,6 +8725,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodo+instituicao",
     .description = "OpenDataSoft dataset 'cartao-da-pessoa-com-doenca-rara' "
       "('Evolução Mensal do Cartão de Pessoa com Doença Rara (CPDR)') "
       "on the European open-data portal transparencia.sns.gov.pt "
@@ -8517,6 +8771,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ana_1_description_fr",
+    .id_keys = "ana_1_description_fr+movement_exercise_year",
     .description = "OpenDataSoft dataset "
       "'carte-des-communes-le-bep-investit-de-maniere-importante-chaque-annee-dans-ses-z' "
       "('Carte - Montants investis par le BEP dans ses zones "
@@ -8559,6 +8814,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "definition",
+    .id_keys = "ref_number+quarter",
     .description = "OpenDataSoft dataset 'financial-information-variance-report' "
       "('Financial information - Variance Report') on the European "
       "open-data portal data.casey.vic.gov.au (portal's own dataset). "
@@ -8602,6 +8858,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom,delib_objet",
+    .id_keys = "delib_objet+delib_date",
     .description = "OpenDataSoft dataset "
       "'214400525_deliberations-de-la-commune-de-donges' "
       "('Délibérations de la commune de Donges') on the European "
@@ -8667,6 +8924,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,nom_election,candidat",
+    .id_keys = "candidat",
     .description = "OpenDataSoft dataset "
       "'resultats-election-municipale-1er-tour-2026-agglo-brges-plus' "
       "('Résultats Election Municipale 1er Tour - 2026 - Communes de "
@@ -8688,6 +8946,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau_vote,ville,adresse_substitution,bureau_de_vote",
+    .id_keys = "code_bureau_vote",
     .description = "OpenDataSoft dataset 'bureaux-de-vote' ('Bureaux de vote') on "
       "the European open-data portal data.fleurysurorne.fr (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -8708,6 +8967,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "address,call_code_description,description,category",
+    .id_keys = "event_number+unit_id",
     .description = "OpenDataSoft dataset "
       "'jersey-city-police-department-service-calls-zip' ('Jersey City "
       "Police Department - Service Calls - ZIP') on the European "
@@ -8729,6 +8989,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodlabel+areaidentifier",
     .description = "OpenDataSoft dataset "
       "'percentage-qualified-to-nvq3-and-above-aged-16-64-wmca' "
       "('Percentage qualified to NVQ3 and above (aged 16-64) - WMCA') "
@@ -8751,6 +9012,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr",
     .description = "OpenDataSoft dataset "
       "'hauptwohnbevolkerung-umzuge-innerhalb-dortmunds-binnenumzuege' "
       "('Hauptwohnbevölkerung - Umzüge innerhalb Dortmunds seit 1990') "
@@ -8773,6 +9035,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "partecipanti_alle_attivita+anno",
     .description = "OpenDataSoft dataset 'presenze-musei' ('Performance dei Musei "
       "Civici di Bologna') on the European open-data portal "
       "opendata.comune.bologna.it (portal's own dataset). Records API "
@@ -8832,6 +9095,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "sub_indicator,indicator",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset '05c-management-of-hazardous-waste' "
       "('Management of Hazardous Waste') on the European open-data "
       "portal www.data.gov.bh (portal's own dataset). Records API "
@@ -8851,6 +9115,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "edad+zona_basica_de_salud_codigo+sexo",
     .description = "OpenDataSoft dataset 'poblacion-de-referencia-2020' ('Población "
       "de referencia - 2020') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -8871,6 +9136,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "interest_whether_or_not_claimed_liable_to_be_paid_to_suppliers",
+    .id_keys = "financial_year",
     .description = "OpenDataSoft dataset "
       "'accounts-payable-supplier-payments-summary' ('Accounts Payable "
       "- Supplier payments summary') on the European open-data portal "
@@ -8892,6 +9158,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "prop_explt_4cult",
     .description = "OpenDataSoft dataset "
       "'pesticides-exposition-professionnelle-aux-insecticides-region' "
       "('Pesticides : exposition professionnelle aux insecticides "
@@ -8914,6 +9181,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bevolkerung",
     .description = "OpenDataSoft dataset "
       "'stadt-neuss-statistischer-bezirk-12-reuschenberg' ('Stadt "
       "Neuss: Statistischer Bezirk 12 - Reuschenberg') on the European "
@@ -8956,6 +9224,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-123001-mariehem-hyresbostader' "
       "('Energiförbrukning i Geografiska området 123001 (Mariehem "
@@ -8978,6 +9247,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type,commune,gestion,gestionnai",
+    .id_keys = "code_insee",
     .description = "OpenDataSoft dataset "
       "'hotel-d-entreprises-communaute-de-communes-du-grand-pic-saint-loup' "
       "('Hôtel d’entreprises - Communauté de Communes du Grand Pic "
@@ -9043,6 +9313,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_contrat",
+    .id_keys = "ages+annee",
     .description = "OpenDataSoft dataset 'datastory-oc-graphique-2-primes' "
       "('Datastory OC - graphique 2.5 primes') on the European "
       "open-data portal data.drees.solidarites-sante.gouv.fr (portal's "
@@ -9106,6 +9377,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "period_covered",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset 'filled-public-transport-trips' ('Public "
       "transport Trips') on the European open-data portal data.ajman.ae "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -9125,6 +9397,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lieu,adresse,sous_type,ville",
+    .id_keys = "lieu+adresse",
     .description = "OpenDataSoft dataset 'espaces-evenementiel-professionnel' "
       "('Espaces pour évènementiel professionnel') on the European "
       "open-data portal data.seineouest.fr (portal's own dataset). "
@@ -9145,6 +9418,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom,mds",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'departementdeshautespyrenees_mds_secteur' "
       "('Secteur des Maisons Départementales de la Solidarité (MDS) des "
       "Hautes-Pyrénées') on the European open-data portal "
@@ -9185,6 +9459,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "titel,titel_person,strabe_hausnummer,e_mail",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'adressverzeichnis_stadt_wue' "
       "('Adressverzeichnis Stadt Wuerzburg') on the European open-data "
       "portal opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -9248,6 +9523,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet_du_marche_256_caracteres_maxi,identification_du_titulaire_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributaires",
+    .id_keys = "ndegmarche+code_postal",
     .description = "OpenDataSoft dataset 'blois-marches-publics-2021-40-000-eur-ht0' "
       "('Blois - marchés publics 2021 < 40 000 € HT') on the European "
       "open-data portal data.blois.agglopolys.fr (portal's own "
@@ -9289,6 +9565,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_de_residence",
+    .id_keys = "zone_de_residence",
     .description = "OpenDataSoft dataset 'caracteristiques_socio-demographiques' "
       "('EMC² : Caractéristiques Socio-Démographiques des ménages par "
       "secteur de tirage') on the European open-data portal "
@@ -9310,6 +9587,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bv",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-municipales-2008-t1-par-bureau-de-vote' "
       "('Résultats des élections municipales 2008 T1 par bureau de "
@@ -9392,6 +9670,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "statistisc",
+    .id_keys = "nummer",
     .description = "OpenDataSoft dataset 'wohnviertel' ('Wohnviertel der Stadt "
       "St.Gallen (Statistische Quartiere)') on the European open-data "
       "portal daten.stadt.sg.ch (portal's own dataset). Records API "
@@ -9431,6 +9710,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nome_hospital",
+    .id_keys = "unidades_antibioticos+unidades_totais",
     .description = "OpenDataSoft dataset 'antibioticos' ('Antibióticos') on the "
       "European open-data portal transparencia.sns.gov.pt (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -9474,6 +9754,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'statistiques-a-propos-des-manifestations' "
       "('Statistiques à propos des manifestations') on the European "
       "open-data portal data.bep.be (portal's own dataset). Records API "
@@ -9493,6 +9774,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "watercompany,phonenumber",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'water-company-boundaries' ('Water Company "
       "Boundaries') on the European open-data portal "
       "cityofsalinas.opendatasoft.com (portal's own dataset). Records "
@@ -9512,6 +9794,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "reserve_name,bbqlocation,propertyaddress,melwayref",
+    .id_keys = "latitude",
     .description = "OpenDataSoft dataset 'barbecue_pt_t1eam' ('Public "
       "Barbecue_Pt_T1EAM') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -9600,6 +9883,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libgeo",
+    .id_keys = "codgeo",
     .description = "OpenDataSoft dataset 'insee_source_rp_caract_emploi' ('Données "
       "sources INSEE - Caractéristiques emploi sur Melun Val de Seine') "
       "on the European open-data portal data.melunvaldeseine.fr "
@@ -9620,6 +9904,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,enfant_prenom",
+    .id_keys = "enfant_prenom+annee+enfant_sexe",
     .description = "OpenDataSoft dataset '18008_arcay_prenoms' ('18008_ARCAY liste "
       "des prénoms') on the European open-data portal "
       "data.bourgesplus.fr (portal's own dataset). Records API Explore "
@@ -9639,6 +9924,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "id,section",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'feuilles' ('Feuilles') on the European "
       "open-data portal data.fleurysurorne.fr (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
@@ -9657,6 +9943,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "language",
+    .id_keys = "language",
     .description = "OpenDataSoft dataset 'languages-spoken-in-jc' ('Languages Spoken "
       "in JC as of 2019') on the European open-data portal "
       "data.jerseycitynj.gov (portal's own dataset). Records API "
@@ -9677,6 +9964,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodlabel+areaidentifier",
     .description = "OpenDataSoft dataset '4g-premises-signal-from-3-operators-wmca' "
       "('4G premises: signal from 3 operators - WMCA') on the European "
       "open-data portal cityobservatory.birmingham.gov.uk (portal's own "
@@ -9698,6 +9986,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "projektnummer",
     .description = "OpenDataSoft dataset "
       "'baumassnahmen-arbeitsprogramm-des-tiefbauamtes-2026-gesamtubersicht' "
       "('Baumaßnahmen - Arbeitsprogramm des Tiefbauamtes - 2026 "
@@ -9719,6 +10008,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "altitudemode,testo",
+    .id_keys = "altitudemode",
     .description = "OpenDataSoft dataset 'percorso_tour_de_france' ('Tour de France "
       "- Percorso') on the European open-data portal "
       "opendata.comune.bologna.it (portal's own dataset). Records API "
@@ -9739,6 +10029,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "partitionkey",
     .description = "OpenDataSoft dataset 'bor_capc' ('Collections du CAPC, musée "
       "d'art contemporain de Bordeaux 2015') on the European open-data "
       "portal datahub.bordeaux-metropole.fr (portal's own dataset). "
@@ -9780,6 +10071,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'01-number-of-gcc-citizens-working-in-the-private-sector' "
       "('Number of GCC Citizens Working in the Private Sector in "
@@ -9801,6 +10093,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "titulo",
+    .id_keys = "identificador",
     .description = "OpenDataSoft dataset 'huellanormativa' ('Huella Normativa') on "
       "the European open-data portal analisis.datosabiertos.jcyl.es "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -9821,6 +10114,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "area_name,area_type,area_code",
+    .id_keys = "life_expectancy+area_code",
     .description = "OpenDataSoft dataset 'life_expectancy' ('Life Expectancy and "
       "Healthy Life Expectancy in Leicester 2019-23') on the European "
       "open-data portal data.leicester.gov.uk (portal's own dataset). "
@@ -9841,6 +10135,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "indicateur",
+    .id_keys = "nombre",
     .description = "OpenDataSoft dataset "
       "'chutes-hospitalisations-et-deces-pour-les-plus-de-65-ans-region-copie' "
       "('Chutes : Hospitalisations et Décès pour les plus de 65 ans "
@@ -9863,6 +10158,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "kommune",
+    .id_keys = "kommune",
     .description = "OpenDataSoft dataset 'rhein-kreis-neuss-2016-katasterflache' "
       "('Rhein-Kreis Neuss: 2016 Katasterfläche') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -9903,6 +10199,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt+forbrukningstyp",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-030403-brinkvagen' "
       "('Energiförbrukning i Geografiska området 030403 (Brinkvägen)') "
@@ -9925,6 +10222,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_de_la_commune,libelle_du_canton",
+    .id_keys = "code_de_la_commune+inscrits",
     .description = "OpenDataSoft dataset "
       "'resultats-departementales-2015-1er-tour-resultats-par-communes-herault' "
       "('Résultats Départementales 2015 - 1er tour - résultats par "
@@ -9990,6 +10288,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "data_name",
+    .id_keys = "data_fill_id",
     .description = "OpenDataSoft dataset 'formes-geographiques-des-regions-en-svg' "
       "('[Pour visualisation] Formes géographiques des régions en SVG') "
       "on the European open-data portal "
@@ -10011,6 +10310,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "burvote04",
     .description = "OpenDataSoft dataset "
       "'elections-2004-decoupage-des-bureaux-de-vote-tours' ('Elections "
       "2004 - Découpage des bureaux de vote - Tours') on the European "
@@ -10070,6 +10370,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'cityscoot-zonage' ('Free floating Yego- "
       "zonage') on the European open-data portal data.seineouest.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -10089,6 +10390,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,type_d_erp,ville,emplacement_exact",
+    .id_keys = "nom_du_site",
     .description = "OpenDataSoft dataset 'liste-des-dae-cchb' ('Liste des DAE CCHB') "
       "on the European open-data portal opendata.ha-py.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -10148,6 +10450,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_la_commune_nouvelle,communes",
+    .id_keys = "communes",
     .description = "OpenDataSoft dataset "
       "'creation-de-nouvelles-communes-sur-le-perimetre-de-la-communaute-urbaine-de-dunk' "
       "('Création de nouvelles communes sur le périmètre de la "
@@ -10191,6 +10494,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lb_voie_ext,co_mup,lb_com",
+    .id_keys = "co_mup",
     .description = "OpenDataSoft dataset "
       "'liste-des-boites-aux-lettres-de-rue-avec-heure-limite-de-depot' "
       "('Liste des boîtes aux lettres de rue avec heure limite de "
@@ -10213,6 +10517,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "empty",
+    .id_keys = "empty",
     .description = "OpenDataSoft dataset "
       "'le-chato-do-nombre-de-spectateurs-et-de-spectacles-depuis-2016' "
       "('Le Chato’do - Nombre de spectateurs et de spectacles depuis "
@@ -10256,6 +10561,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type",
+    .id_keys = "tonnage+type",
     .description = "OpenDataSoft dataset "
       "'flux-de-fret-aerien-de-l-aeroport-maryse-conde-departs-et-arrivees' "
       "('Mouvements de marchandises, courriers et envois postaux passés "
@@ -10278,6 +10584,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bv",
     .description = "OpenDataSoft dataset 'resultats-des-elections-legislatives-t1' "
       "('Résultats des élections législatives 2017 T1 par bureau de "
       "vote') on the European open-data portal data.montreuil.fr "
@@ -10339,6 +10646,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "code_secteur_statistique,commune",
+    .id_keys = "code_secteur_statistique",
     .description = "OpenDataSoft dataset "
       "'nombre-de-voitures-par-secteur-statistique-2017-a-2021' "
       "('Nombre de voitures par secteur statistique (2017 à 2021)') on "
@@ -10384,6 +10692,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lga_name_2023,state_name_2021,aus_name_2021",
+    .id_keys = "lga_code_2023",
     .description = "OpenDataSoft dataset 'local-government-areas-australia-abs' "
       "('Local Government Areas - Australia - ABS Data (2023)') on the "
       "European open-data portal data.peclet.com.au (portal's own "
@@ -10405,6 +10714,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodo+item",
     .description = "OpenDataSoft dataset "
       "'stock-da-reserva-estrategica-de-medicamentos-existentes-a-nivel-central' "
       "('Evolução Mensal do Stock da Reserva Estratégica de "
@@ -10448,6 +10758,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee+com92_nombre_de_visiteurs_sur_nos_sites_internet",
     .description = "OpenDataSoft dataset 'indicateurs-communication-du-bep' "
       "('Indicateurs communication du BEP') on the European open-data "
       "portal data.bep.be (portal's own dataset). Records API Explore "
@@ -10487,6 +10798,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category",
+    .id_keys = "annual_budget+quarter",
     .description = "OpenDataSoft dataset 'financial-information-balance-sheet' "
       "('Financial information - Balance sheet') on the European "
       "open-data portal data.casey.vic.gov.au (portal's own dataset). "
@@ -10507,6 +10819,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_service",
     .description = "OpenDataSoft dataset '837810944_centres-de-tri-pdl' ('Centres de "
       "tri des déchets en Pays de la Loire') on the European open-data "
       "portal data.teo-paysdelaloire.fr (portal's own dataset). Records "
@@ -10527,6 +10840,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom,delib_objet,del_20251126_987",
+    .id_keys = "del_20251126_987+delib_matiere_code+coll_siret",
     .description = "OpenDataSoft dataset '214402109_deliberations_liste' "
       "('Délibérations de la commune de Trignac') on the European "
       "open-data portal data.saintnazaireagglo.fr (portal's own "
@@ -10548,6 +10862,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_commune",
+    .id_keys = "nom_commune",
     .description = "OpenDataSoft dataset "
       "'224900019_maison-departementale-des-solidarites-par-commune-en-maine-et-loire' "
       "('Maison départementale des solidarités par commune en "
@@ -10570,6 +10885,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "age+sexe+annee",
     .description = "OpenDataSoft dataset 'rsu_effectifs_par_tranche_age' ('Rapport "
       "Social Unique : Répartition par âge des agents de la CA Melun "
       "Val de Seine') on the European open-data portal "
@@ -10591,6 +10907,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,nom_election",
+    .id_keys = "candidat+numero_commune",
     .description = "OpenDataSoft dataset "
       "'resultats-election-presidentielle-1er-tour-2022-communaute-agglomeration-bourges' "
       "('Resultats Election Presidentielle 1er Tour - 2022 - Communes "
@@ -10612,6 +10929,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'liste-des-defibrillateurs' "
       "('Défibrillateurs') on the European open-data portal "
       "data.fleurysurorne.fr (portal's own dataset). Records API "
@@ -10631,6 +10949,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description_of_event,sister_cities,countries",
+    .id_keys = "sister_cities",
     .description = "OpenDataSoft dataset 'sister-city-agreements' ('Sister City "
       "Agreements') on the European open-data portal "
       "data.jerseycitynj.gov (portal's own dataset). Records API "
@@ -10651,6 +10970,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "areaidentifier+periodlabel",
     .description = "OpenDataSoft dataset 'percentage-gigabit-availability-wmca' "
       "('Percentage Gigabit availability - WMCA') on the European "
       "open-data portal cityobservatory.birmingham.gov.uk (portal's own "
@@ -10672,6 +10992,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr",
     .description = "OpenDataSoft dataset "
       "'hauptwohnbevoelkerung-zu-und-wegzuege-seit-2006' "
       "('Hauptwohnbevölkerung - Zu- und Wegzüge seit 1990') on the "
@@ -10694,6 +11015,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "indirizzo,plesso",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-2021-seggi-elettorali' ('Elezioni "
       "amministrative 2021 - Seggi elettorali') on the European "
@@ -10757,6 +11079,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "l_thsyl_lmy_llzwj+number_of_wives+ljnsy",
     .description = "OpenDataSoft dataset "
       "'marriage-cases-by-nationality-number-of-wives-and-highest-education-attainment-o' "
       "('Marriage Cases by Nationality, Number of Wives & Highest "
@@ -10778,6 +11101,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "titulo,empresa,localidad",
+    .id_keys = "identificador",
     .description = "OpenDataSoft dataset 'inspecciones-ambientales' ('Inspecciones "
       "Ambientales') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -10797,6 +11121,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "title_of_agreement_contract_description,supplier_name,contract_number",
+    .id_keys = "contract_number+title_of_agreement_contract_description",
     .description = "OpenDataSoft dataset 'contracts-december-2024' ('Contracts - "
       "December 2024') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -10817,6 +11142,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periode",
     .description = "OpenDataSoft dataset "
       "'diabete-incidence-du-diabete-type-1-chez-lenfant-france' "
       "('Diabète : Incidence du diabète type 1 chez l'enfant (France)') "
@@ -10859,6 +11185,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "wetenschappelijke_naam,straatnaam",
+    .id_keys = "locatie_id+straatnaam+soortnaam",
     .description = "OpenDataSoft dataset 'muurplanten' ('Muurplanten Den Haag') on "
       "the European open-data portal den-haag-opendata.opendatasoft.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -10941,6 +11268,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_contrats",
+    .id_keys = "deciles_de_garanties+type_de_contrats+annee",
     .description = "OpenDataSoft dataset "
       "'datastory-oc-9-3-deciles-garanties-chambre' ('Datastory OC - "
       "3.2 Garanties pour une nuitée en chambre particulière à "
@@ -11046,6 +11374,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_du_canton,libelle_du_departement,binome,binome0",
+    .id_keys = "code_du_canton",
     .description = "OpenDataSoft dataset "
       "'elections-departementales-2021-resultats-du-1er-tour-dans-les-hautes-pyrenees' "
       "('Elections départementales 2021 - résultats du 1er tour dans "
@@ -11111,6 +11440,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "'etablissements-enseignement-superieur-perimetre-de-la-cud-parcoursup' "
       "('établissements-enseignement-superieur-perimetre-de-la-cud-parcoursup') "
@@ -11133,6 +11463,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "description+field",
     .description = "OpenDataSoft dataset "
       "'spen_data_quality_capacity_management_systems' ('Capacity "
       "Management Systems (SPEN_031) Data Quality Checks') on the "
@@ -11236,6 +11567,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_candidat,nom_commune",
+    .id_keys = "numero_bureau+numero_depot",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-europeennes-2014-par-bureau-de-vote' "
       "('Résultats des élections européennes 2014 par bureau de vote') "
@@ -11301,6 +11633,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,adresse",
+    .id_keys = "nom_du_site",
     .description = "OpenDataSoft dataset 'mr-mrs-en-communaute-germanophone' "
       "('MR/MRS en communauté germanophone') on the European open-data "
       "portal spi-digitalwallonia.opendatasoft.com (portal's own "
@@ -11361,6 +11694,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "entidade+tempo",
     .description = "OpenDataSoft dataset 'agregados-economico-financeiros' "
       "('Agregados Económico Financeiros') on the European open-data "
       "portal transparencia.sns.gov.pt (portal's own dataset). Records "
@@ -11403,6 +11737,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'nombre-de-decisions-invalidees-par-la-tutelle' ('Nombre de "
       "décisions invalidées par la tutelle') on the European open-data "
@@ -11444,6 +11779,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "route_short_name,route_long_name,trip_headsign",
+    .id_keys = "trip_headsign",
     .description = "OpenDataSoft dataset 'metro-train-routes' ('Metro Train Routes "
       "(PTV)') on the European open-data portal data.casey.vic.gov.au "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -11508,6 +11844,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,communes,communes_nouvelles",
+    .id_keys = "adresse",
     .description = "OpenDataSoft dataset '224900019_accueil-familial-social-49' "
       "('Accueil familial social en Maine-et-Loire') on the European "
       "open-data portal data.maine-et-loire.fr (portal's own dataset). "
@@ -11528,6 +11865,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "adresse_num_et_rue",
     .description = "OpenDataSoft dataset "
       "'defibrillateurs-dans-les-equipements-de-blr' ('Défibrillateurs "
       "dans les équipements de Boissise le Roi') on the European "
@@ -11549,6 +11887,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'pcaet_cadredepot_enr_txcouverture' ('PCAET "
       "- Cadre de Dépôt Taux Couverture Energies Renouvelables') on the "
       "European open-data portal data.bourgesplus.fr (portal's own "
@@ -11569,6 +11908,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "reseaux_sociaux",
+    .id_keys = "reseaux_sociaux",
     .description = "OpenDataSoft dataset 'reseaux-sociaux' ('Réseaux sociaux') on "
       "the European open-data portal data.fleurysurorne.fr (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -11609,6 +11949,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "constituency_name,constituency_code",
+    .id_keys = "constituency_code",
     .description = "OpenDataSoft dataset "
       "'imd-2019-modelled-rank-and-decile-for-constituencies' ('IMD "
       "2019 - Modelled Rank and Decile for Constituencies') on the "
@@ -11631,6 +11972,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stadtbezirk",
+    .id_keys = "stadtbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'hauptwohnbevolkerung-der-stadtbezirke-geburten-und-sterbefalle-2024' "
       "('Hauptwohnbevölkerung der Stadtbezirke - Geburten und "
@@ -11714,6 +12056,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset '42-natural-increase-rate' ('Natural "
       "Increase Rate') on the European open-data portal www.data.gov.bh "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -11733,6 +12076,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dire_geo",
+    .id_keys = "dire_geo",
     .description = "OpenDataSoft dataset 'agregado_certificados_8' "
       "('agregado_certificados_8') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -11774,6 +12118,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "part_activite",
     .description = "OpenDataSoft dataset "
       "'gestes-auto-infliges-passages-aux-urgences-france' ('Gestes "
       "auto-infligés : Passages aux urgences (France)') on the European "
@@ -11796,6 +12141,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "schule",
+    .id_keys = "schule",
     .description = "OpenDataSoft dataset 'entwicklung_offener_ganztag_bis_2022-23' "
       "('Dormagen: Entwicklung Offener Ganztag') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -11838,6 +12184,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-050813-godsbangarden' "
       "('Energiförbrukning i Geografiska området 050813 "
@@ -11880,6 +12227,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_commune,nom_departement,nom_region",
+    .id_keys = "code_insee_commune+annee",
     .description = "OpenDataSoft dataset 'deces-communes-haute-garonne-2009-2018' "
       "('Décès par commune en Haute-Garonne de 2009 à 2018 (source "
       "Insee)') on the European open-data portal data.haute-garonne.fr "
@@ -11921,6 +12269,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type,poste,poste_lib",
+    .id_keys = "poste+type+annee",
     .description = "OpenDataSoft dataset 'comptes_de_la_sante_partage_volume_prix' "
       "('Les comptes de la santé - Partage volume/prix') on the "
       "European open-data portal data.drees.solidarites-sante.gouv.fr "
@@ -11964,6 +12313,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "rsa_type",
+    .id_keys = "indfoy_rsa+dtreffre+rsa_mtt_100",
     .description = "OpenDataSoft dataset 'rsa_s_type_mtt_100_nat' ('RSA - "
       "Répartition des allocataires selon le type de RSA et le montant "
       "de droit [National]') on the European open-data portal "
@@ -11984,6 +12334,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nationality",
+    .id_keys = "nationality",
     .description = "OpenDataSoft dataset 'top-20-nationality0' ('Top 20 "
       "Nationality') on the European open-data portal data.ajman.ae "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -12049,6 +12400,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "schule",
+    .id_keys = "schule",
     .description = "OpenDataSoft dataset "
       "'schulportrait-kategorie-d-schulfamilie-schueler-und-klassen' "
       "('Schulportrait - Kategorie D _ Schulfamilie - Schüler und "
@@ -12113,6 +12465,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_zemploi",
+    .id_keys = "code_zemploi",
     .description = "OpenDataSoft dataset "
       "'zones-demploi-departement-de-tarn-et-garonne' ('Zones d'emploi "
       "- Département de Tarn-et-Garonne') on the European open-data "
@@ -12133,6 +12486,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "comparateur_de_territoire,column_2",
+    .id_keys = "comparateur_de_territoire+column_2",
     .description = "OpenDataSoft dataset 'agglopolys-en-quelques-chiffres-insee' "
       "('Agglopolys en quelques chiffres INSEE') on the European "
       "open-data portal data.blois.agglopolys.fr (portal's own "
@@ -12154,6 +12508,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "adresse",
     .description = "OpenDataSoft dataset '214402117_campingcar' ('Aire de "
       "camping-car sur la Commune de La Turballe') on the European "
       "open-data portal data.capatlantique.fr (portal's own dataset). "
@@ -12174,6 +12529,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_de_residence",
+    .id_keys = "zone_de_residence",
     .description = "OpenDataSoft dataset "
       "'analyse-des-modes-de-transport-et-motifs-de-deplacement-secteur' "
       "('EMC² : Analyse des modes de transport et motifs de déplacement "
@@ -12195,6 +12551,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "children_title,children_address",
+    .id_keys = "children_title",
     .description = "OpenDataSoft dataset 'lieux-logement-habitat' ('Organismes "
       "logement / habitat') on the European open-data portal "
       "data.montreuil.fr (portal's own dataset). Records API Explore "
@@ -12214,6 +12571,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_document,domaine_couvert",
+    .id_keys = "domaine_couvert+nombre_de_documents",
     .description = "OpenDataSoft dataset 'biblio-musicale-conservatoire-2018' "
       "('Bibliothèque musicale du conservatoire') on the European "
       "open-data portal data.cannes.com (portal's own dataset). Records "
@@ -12254,6 +12612,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,adresse,type",
+    .id_keys = "nom_du_site+adresse+type",
     .description = "OpenDataSoft dataset 'infrastructures-sportives' "
       "('Infrastructures sportives') on the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -12273,6 +12632,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "handlungsfeld,verantwortliche_direktion,mitwirkende_direktion",
+    .id_keys = "handlungsfeld",
     .description = "OpenDataSoft dataset 'handlungsfelder-stadt-st-gallen' "
       "('Handlungsfelder Stadt St.Gallen') on the European open-data "
       "portal daten.stadt.sg.ch (portal's own dataset). Records API "
@@ -12293,6 +12653,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lga_name_2023,state_name_2021",
+    .id_keys = "used_one_method_car_as_driver_no+total_persons_employed_aged_15_years_and_over_no",
     .description = "OpenDataSoft dataset 'family-and-community-by-lga-abs' ('Family "
       "and Community by LGA - ABS Data (2011, 2016, 2021)') on the "
       "European open-data portal data.peclet.com.au (portal's own "
@@ -12314,6 +12675,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tipologia+data+regiao",
     .description = "OpenDataSoft dataset 'dados-financeiros' ('Síntese do Movimento "
       "Assistencial da RNCCI') on the European open-data portal "
       "transparencia.sns.gov.pt (portal's own dataset). Records API "
@@ -12358,6 +12720,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ana_1_description_fr",
+    .id_keys = "ana_1_description_fr+movement_exercise_year",
     .description = "OpenDataSoft dataset "
       "'le-bep-investit-de-maniere-importante-chaque-annee-dans-ses-zones-dactivites' "
       "('Investissements dans les zones d'activité économique') on the "
@@ -12483,6 +12846,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libgeo",
+    .id_keys = "codgeo_lieu_trav",
     .description = "OpenDataSoft dataset 't_lieu_travail_hab_camvs_parcom' ('Lieu de "
       "travail des habitants de Melun Val de Seine') on the European "
       "open-data portal data.melunvaldeseine.fr (portal's own dataset). "
@@ -12544,6 +12908,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "race+ward+year",
     .description = "OpenDataSoft dataset 'race-distribution-by-wards' ('Race "
       "Distribution by Wards') on the European open-data portal "
       "data.jerseycitynj.gov (portal's own dataset). Records API "
@@ -12587,6 +12952,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stadtbezirk",
+    .id_keys = "stadtbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'hauptwohnbevolkerung-aussenwanderungen-zu-und-wegzuge-nach-stadtbezirken-2025' "
       "('Hauptwohnbevölkerung - Aussenwanderungen - Zu- und Wegzüge "
@@ -12609,6 +12975,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-2021-consigli-circoscrizionali-quartiere-porto-saragozza' "
       "('Elezioni amministrative 2021. Consigli Circoscrizionali - "
@@ -12631,6 +12998,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_d_ouvrage",
+    .id_keys = "surface_taxee",
     .description = "OpenDataSoft dataset 'bor_tlpetranchetarifaire' ('Taxe locale "
       "sur la publicité extérieure, par tranche tarifaire à Bordeaux') "
       "on the European open-data portal datahub.bordeaux-metropole.fr "
@@ -12674,6 +13042,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset "
       "'08-number-of-students-in-holy-quran-learning-centers' ('Number "
       "of Students in Holy Quran Learning Centers') on the European "
@@ -12695,6 +13064,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "fecha+provincia",
     .description = "OpenDataSoft dataset 'personas-vacunadas-covid-19-campana-23-24' "
       "('Personas vacunadas COVID-19 campaña 23/24') on the European "
       "open-data portal analisis.datosabiertos.jcyl.es (portal's own "
@@ -12735,6 +13105,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "groupe_d_anomalies",
+    .id_keys = "groupe_d_anomalies",
     .description = "OpenDataSoft dataset 'anomalies-congenitales_diag_group_rapport' "
       "('Anomalies congénitales : Diagnostic prénatal ou postnatal par "
       "groupe d’anomalie (Registres)') on the European open-data portal "
@@ -12755,6 +13126,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gemeinde",
+    .id_keys = "gemeinde",
     .description = "OpenDataSoft dataset 'rhein-kreis-neuss-kommunen' ('Rhein-Kreis "
       "Neuss: Kommunen') on the European open-data portal "
       "opendata.rhein-kreis-neuss.de (portal's own dataset). Records "
@@ -12774,6 +13146,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "namen_betrokkenen,beheergebied,bwt_nummer",
+    .id_keys = "volgnummer",
     .description = "OpenDataSoft dataset 'stolpersteine' ('Stolpersteine Den Haag') "
       "on the European open-data portal "
       "den-haag-opendata.opendatasoft.com (portal's own dataset). "
@@ -12794,6 +13167,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt+forbrukningstyp",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-020209-sandbacka-o-o-kyrkog-sodra' "
       "('Energiförbrukning i Geografiska området 020209 (Sandbacka Ö, "
@@ -12815,6 +13189,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'perimetre-npnru-ville-agde' ('Périmètre "
       "NPNRU - Ville d'Agde') on the European open-data portal "
       "www.herault-data.fr (portal's own dataset). Records API Explore "
@@ -12901,6 +13276,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom+assemblee",
     .description = "OpenDataSoft dataset 'alsh-ville-de-tours' ('Accueil de Loisirs "
       "- Ville de Tours') on the European open-data portal "
       "data.tours-metropole.fr (portal's own dataset). Records API "
@@ -12921,6 +13297,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "al_type_log",
+    .id_keys = "indmtt_ndural",
     .description = "OpenDataSoft dataset 'al_s_type_log_nat' ('AL - Répartition des "
       "allocataires selon le type de logement (accession, location, "
       "foyer) [National]') on the European open-data portal data.caf.fr "
@@ -12941,6 +13318,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "quantity_of_collected_1000_ton_waste+month_ar",
     .description = "OpenDataSoft dataset 'quantity-of-liquid-and-solid-wastes' "
       "('Quantity of Liquid & Solid Wastes') on the European open-data "
       "portal data.ajman.ae (portal's own dataset). Records API Explore "
@@ -12981,6 +13359,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_l_entreprise,adresse,adresse_mail,reconditionnement_sur_place",
+    .id_keys = "nom_de_l_entreprise",
     .description = "OpenDataSoft dataset "
       "'les-entreprises-de-reconditionnement-de-materiel-numerique-en-hautes-pyrenees' "
       "('Les entreprises de reconditionnement de matériel numérique en "
@@ -13021,6 +13400,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'grenzwanderung-wuerzburg' "
       "('Grenzwanderungen Würzburg') on the European open-data portal "
       "opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -13041,6 +13421,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,ville",
+    .id_keys = "lien_modif",
     .description = "OpenDataSoft dataset 'points-d-apport-textile-et-vetements' "
       "('Points d'apport textile et vêtements sur le périmètre de la "
       "Communauté urbaine de Dunkerque') on the European open-data "
@@ -13144,6 +13525,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type",
+    .id_keys = "nombre_de_passagers",
     .description = "OpenDataSoft dataset 'gpmg_trafic_passagers' ('Mouvements de "
       "voyageurs passés par une infrastructure du GPMG') on the "
       "European open-data portal www.karudata.com (portal's own "
@@ -13165,6 +13547,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bv",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-legislatives-2012-t2-par-bureau-de-vote' "
       "('Résultats des élections législatives 2012 T2 par bureau de "
@@ -13227,6 +13610,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,adresse",
+    .id_keys = "nom_du_site",
     .description = "OpenDataSoft dataset "
       "'maisons-medicales-and-centres-de-sante-integres' ('Maisons "
       "Médicales & Centres de Santé Intégrés') on the European "
@@ -13271,6 +13655,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_period,period,gasoline_emission_factor,diesel_emission_factor",
+    .id_keys = "period",
     .description = "OpenDataSoft dataset "
       "'australian-petroleum-statistics-yearly-2010-to-present' "
       "('Australian Petroleum Statistics - Yearly - 2010 to Present') "
@@ -13292,6 +13677,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "entidade+tipologia_de_ausencia+tempo",
     .description = "OpenDataSoft dataset "
       "'contagem-dos-dias-de-ausencia-ao-trabalho-segundo-o-motivo-de-ausencia' "
       "('Ausência ao Trabalho por Tipologia') on the European open-data "
@@ -13314,6 +13700,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lib_idpsc",
     .description = "OpenDataSoft dataset "
       "'prescriptions-surfaciques-du-plan-local-d-urbanisme-en-vigueur-modification-6-ap' "
       "('Prescriptions surfaciques du Plan Local d'Urbanisme (EN "
@@ -13337,6 +13724,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee+nb_de_stands_prets_mises_a_disposition_d_outils_de_sensibilisation_animations_de_prevention_tri_sens",
     .description = "OpenDataSoft dataset "
       "'statistiques-au-sujet-des-manifestations-locales' "
       "('Statistiques au sujet des manifestations locales') on the "
@@ -13378,6 +13766,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "station_name,rail_route_name,property_address,feature_type",
+    .id_keys = "station_id",
     .description = "OpenDataSoft dataset 'railway-station-metro-ptv' ('Railway "
       "Station Metro (PTV)') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -13398,6 +13787,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_usuel_cours_d_eau,commune,structure,id",
+    .id_keys = "id+date",
     .description = "OpenDataSoft dataset "
       "'837810944_suivi_completementaire_etiage_sem53' ('SEM - Suivi "
       "complémentaire des étiages en Mayenne') on the European "
@@ -13463,6 +13853,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "titre",
     .description = "OpenDataSoft dataset 'cartes' ('Cartothèque') on the European "
       "open-data portal data.melunvaldeseine.fr (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
@@ -13481,6 +13872,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,enfant_prenom",
+    .id_keys = "enfant_prenom+annee",
     .description = "OpenDataSoft dataset '18255_le_subdray_prenoms' ('18255 Le "
       "Subdray Prénoms') on the European open-data portal "
       "data.bourgesplus.fr (portal's own dataset). Records API Explore "
@@ -13501,6 +13893,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "mois+annee",
     .description = "OpenDataSoft dataset 'statistiques-de-lespace-public-numerique' "
       "('Fréquentation de l'Espace Public Numérique (EPN) - Usagers "
       "uniques en accès libre de 2015 à 2018') on the European "
@@ -13521,6 +13914,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "right_zone,right_path",
+    .id_keys = "right_path",
     .description = "OpenDataSoft dataset 'parking-zone-11' ('Parking Zone 11') on "
       "the European open-data portal data.jerseycitynj.gov (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -13541,6 +13935,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "area_name,area_type",
+    .id_keys = "count",
     .description = "OpenDataSoft dataset 'vaccination-coverage-menb-1-year-wmca' "
       "('Vaccination coverage: MenB (1 year) - WMCA') on the European "
       "open-data portal cityobservatory.birmingham.gov.uk (portal's own "
@@ -13561,6 +13956,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "wahlraum_bezeichnung,wahlraum_adresse,briefwahlbezirk",
+    .id_keys = "briefwahlbezirk_nr",
     .description = "OpenDataSoft dataset 'fb33-sb-brackel-20250328-briefwahlbezirke' "
       "('Seniorenbeiratswahl 2025 - Brackel') on the European open-data "
       "portal open-data.dortmund.de (portal's own dataset). Records API "
@@ -13580,6 +13976,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "negozio,via",
+    .id_keys = "negozio",
     .description = "OpenDataSoft dataset 'navile-solidale' ('Navile Solidale') on "
       "the European open-data portal opendata.comune.bologna.it "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -13643,6 +14040,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'19a-marriage-cases-by-classification-of-nationality-of-the-spouses' "
       "('Marriage Cases by Classification of Nationality of the "
@@ -13665,6 +14063,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "total_personas+trabajadores_ertes_etop+fecha",
     .description = "OpenDataSoft dataset "
       "'situacion-de-solicitudes-de-ertes-coronavirus-febrero' "
       "('Situación de solicitudes de ERTEs coronavirus (Febrero "
@@ -13686,6 +14085,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "division",
+    .id_keys = "row",
     .description = "OpenDataSoft dataset 'departmental-budget-pay' ('Departmental "
       "Budget - FY2023/2024') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -13706,6 +14106,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tx_part_insee_std",
     .description = "OpenDataSoft dataset "
       "'cancer-participation-au-depistage-organise-du-cancer-du-sein_reg' "
       "('Cancer : Participation au dépistage organisé du cancer du sein "
@@ -13770,6 +14171,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-081811-tavelsjo-omland-ostra' "
       "('Energiförbrukning i Geografiska området 081811 (Tavelsjö "
@@ -13792,6 +14194,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "n_eau_1",
+    .id_keys = "n_eau_1",
     .description = "OpenDataSoft dataset "
       "'points-deau-defense-des-forets-contre-les-incendies-dfci-herault' "
       "('Points d'eau - Défense des forêts contre les incendies (DFCI) "
@@ -13814,6 +14217,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_min,adresse,commune,sous_type",
+    .id_keys = "code_pmi",
     .description = "OpenDataSoft dataset 'sites-de-consultation-et-daccueil-pmi' "
       "('Sites de consultation et d'accueil Protection Maternelle et "
       "Infantile en Haute-Garonne') on the European open-data portal "
@@ -13834,6 +14238,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "epci_name,dep_name,reg_name,lib_commune",
+    .id_keys = "cod_commune+cod_nat_azi",
     .description = "OpenDataSoft dataset 'azi_gaspar' ('Atlas des zones inondables "
       "(AZI) - France') on the European open-data portal hub.huwise.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -13878,6 +14283,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'panneau_conseil_quartier-ville-de-tours' "
       "('Panneaux des Conseils de Quartier - Tours') on the European "
       "open-data portal data.tours-metropole.fr (portal's own dataset). "
@@ -13916,6 +14322,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "month_ar+year",
     .description = "OpenDataSoft dataset 'auditing-the-external-gate-level' "
       "('Auditing the external gate level') on the European open-data "
       "portal data.ajman.ae (portal's own dataset). Records API Explore "
@@ -13936,6 +14343,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "titulaire_denomination,acheteur_nom,modification_objet",
+    .id_keys = "modification_numero",
     .description = "OpenDataSoft dataset "
       "'donnees-essentielles-concessions-gpso-modifications' ('Marchés "
       "2017-2023 (Archive) - Données essentielles des concessions de "
@@ -13958,6 +14366,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "denomination_employeur",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'top-10-des-remunerations' ('Masse "
       "salariale brute annuelle cumulée des 10 plus hautes "
       "rémunérations du Conseil Départemental') on the European "
@@ -13978,6 +14387,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "counter_street_name,city",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'passantenzahlung-zahlstellen-kopieren' "
       "('Passantenzählung Zählstellen - kopieren') on the European "
       "open-data portal opendata.wuerzburg.de (portal's own dataset). "
@@ -14038,6 +14448,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_du_site,libelle_du_type_d_automate,adresse,type_de_distributeur_dab",
+    .id_keys = "identifiant_a+libelle_du_type_d_automate+type_de_distributeur_dab",
     .description = "OpenDataSoft dataset 'laposte_autompre' ('Liste des automates en "
       "bureaux de poste') on the European open-data portal "
       "data.82amenagement.fr (portal's own dataset). Records API "
@@ -14058,6 +14469,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "empty",
+    .id_keys = "empty",
     .description = "OpenDataSoft dataset "
       "'blois-nombre-d-autres-hebergements-collectifs-que-camping-au-1er-janvier-2022' "
       "('Blois - Nombre d'autres hébergements collectifs que camping au "
@@ -14101,6 +14513,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nature_lib",
+    .id_keys = "nature_code+sous_fonction_code",
     .description = "OpenDataSoft dataset "
       "'budget-principal-2024-de-la-region-guadeloupe' ('Budget "
       "principal 2024 de la Région Guadeloupe') on the European "
@@ -14122,6 +14535,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bv",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-presidentielles-1995-t1' ('Résultats "
       "des élections présidentielles 1995 T1 par bureau de vote') on "
@@ -14182,6 +14596,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune",
+    .id_keys = "code_ins",
     .description = "OpenDataSoft dataset 'data-creches_ecetia' ('Data "
       "crèches_ecetia') on the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -14221,6 +14636,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "shapeuuid,lotidstrin,planlabel",
+    .id_keys = "itslotid",
     .description = "OpenDataSoft dataset 'land-parcel' ('Land Parcel') on the "
       "European open-data portal data.peclet.com.au (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -14262,6 +14678,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ec_mat,ecole",
+    .id_keys = "ec_mat",
     .description = "OpenDataSoft dataset "
       "'sectorisation-scolaire-maternelles-et-elementaires-anglet' "
       "('Sectorisation scolaire - maternelles et élémentaires Anglet') "
@@ -14284,6 +14701,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_entite",
+    .id_keys = "periode+ins",
     .description = "OpenDataSoft dataset 'taux-de-croissance' ('Taux de croissance') "
       "on the European open-data portal data.bep.be (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -14303,6 +14721,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "streetname",
+    .id_keys = "geo_shape",
     .description = "OpenDataSoft dataset 'trafficcountsatsignalizedintersections' "
       "('Signalized Intersections') on the European open-data portal "
       "cityofsalinas.opendatasoft.com (portal's own dataset). Records "
@@ -14322,6 +14741,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "station_name,rail_route_name,property_address,feature_type",
+    .id_keys = "station_id",
     .description = "OpenDataSoft dataset 'railway-station-regional-ptv' ('Railway "
       "Station Regional (PTV)') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -14342,6 +14762,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_installation,nom_commune,libepci",
+    .id_keys = "nom_installation",
     .description = "OpenDataSoft dataset "
       "'installations-de-valorisation-du-biogaz-en-fonctionnement-en-pays-de-la-loire-co' "
       "('Installations de valorisation du biogaz en projet en Pays de "
@@ -14387,6 +14808,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "finess",
     .description = "OpenDataSoft dataset "
       "'224900019_unites-personnes-handicapees-vieillissantes-en-maine-et-loire' "
       "('Unités pour personnes handicapées vieillissantes en "
@@ -14409,6 +14831,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adr_commune,adr_numero_nomvoie",
+    .id_keys = "adr_numero_nomvoie+nbre_stationnements",
     .description = "OpenDataSoft dataset 'stationnements-velos-lmss' "
       "('Stationnements vélos sur la commune de Le Mée sur Seine') on "
       "the European open-data portal data.melunvaldeseine.fr (portal's "
@@ -14430,6 +14853,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,nom_election",
+    .id_keys = "candidat+numero_commune",
     .description = "OpenDataSoft dataset "
       "'resultats_election_legislative_2024_ca_bourges_plus_1er_tour' "
       "('Résultats Election législative 1er Tour - 2024 - Communes de "
@@ -14515,6 +14939,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stadtbezirk",
+    .id_keys = "stadtbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'hauptwohnbevolkerung-der-stadtbezirke-masse-der-altersstruktur-2025' "
       "('Hauptwohnbevölkerung der Stadtbezirke Maße der Altersstruktur "
@@ -14555,6 +14980,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset 'se_region_s' ('Région') on the European "
       "open-data portal datahub.bordeaux-metropole.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -14597,6 +15023,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_of_school",
+    .id_keys = "value",
     .description = "OpenDataSoft dataset "
       "'06-number-of-students-in-nursery-and-kindergarten-levels-by-sex' "
       "('Number of Students in Nursery & Kindergarten Levels by Sex') "
@@ -14618,6 +15045,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "municipio,nombre_de_la_presa_balsa,municipios_afectados_por_la_transformacion,titular_de_la_presa_balsa",
+    .id_keys = "nombre_de_la_presa_balsa",
     .description = "OpenDataSoft dataset 'datospresas' ('Inventario de presas y "
       "balsas') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -14638,6 +15066,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "details,trade_unions",
+    .id_keys = "details+trade_unions",
     .description = "OpenDataSoft dataset "
       "'transparency-code-trade-union-facility-time-202223' "
       "('Transparency Code - Trade Union Facility Time 2022/2023') on "
@@ -14660,6 +15089,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "taux_brut",
     .description = "OpenDataSoft dataset 'asthme-hospitalisations-region' ('Asthme : "
       "Hospitalisations (Région)') on the European open-data portal "
       "odisse.santepubliquefrance.fr (portal's own dataset). Records "
@@ -14680,6 +15110,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gebiet_name",
+    .id_keys = "gebiet_nr",
     .description = "OpenDataSoft dataset 'dormagen-landratswahl-2020-stimmbezirke' "
       "('Dormagen: Landratswahl-2020-Stimmbezirke') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -14701,6 +15132,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'archeologischewaarden' ('Archeologische "
       "waarden en verwachtingen Den Haag') on the European open-data "
       "portal den-haag-opendata.opendatasoft.com (portal's own "
@@ -14721,6 +15153,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "latitud",
     .description = "OpenDataSoft dataset 'gop_lekparker' ('Lekplatser som förvaltas "
       "av Gator och parker') on the European open-data portal "
       "opendata.umea.se (portal's own dataset). Records API Explore "
@@ -14762,6 +15195,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_antenne",
     .description = "OpenDataSoft dataset "
       "'sites-de-consultation-du-centre-de-sante-sexuelle-en-haute-garonne' "
       "('Sites de consultation du Centre de santé sexuelle en "
@@ -14806,6 +15240,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "famille_d_oc+contrats+annee",
     .description = "OpenDataSoft dataset 'contrats-responsables' ('Datastory OC - "
       "1.2 Part des bénéficiaires couverts par un contrat responsable') "
       "on the European open-data portal "
@@ -14827,6 +15262,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset "
       "'aire-de-camping-car-tours-metropole-val-de-loire' ('Aire de "
       "Camping-car - Tours Métropole Val de Loire') on the European "
@@ -14868,6 +15304,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "center_name_english,center_name_arabic,average_turnaround_time_for_inspection_services,average_waiting_time_for_licensing_services",
+    .id_keys = "average_turnaround_time_for_inspection_services",
     .description = "OpenDataSoft dataset 'speed-center-indicators' ('Speed center "
       "indicators') on the European open-data portal data.ajman.ae "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -14887,6 +15324,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune",
+    .id_keys = "nombre_de_demandeurs_d_emplois+mois_annee",
     .description = "OpenDataSoft dataset 'chomage' ('Chômage') on the European "
       "open-data portal data.seineouest.fr (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
@@ -14945,6 +15383,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+stadtbezirk",
     .description = "OpenDataSoft dataset 'stadtbezirke_hauptwohnsitz_weiblich' "
       "('Stadtbezirke Hauptwohnsitz weiblich') on the European "
       "open-data portal opendata.wuerzburg.de (portal's own dataset). "
@@ -15005,6 +15444,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,adresse,type,mail",
+    .id_keys = "code_insee",
     .description = "OpenDataSoft dataset 'france-services-et-msap-82' ('France "
       "Services et MSAP 82') on the European open-data portal "
       "data.82amenagement.fr (portal's own dataset). Records API "
@@ -15026,6 +15466,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "aggloplys",
+    .id_keys = "aggloplys",
     .description = "OpenDataSoft dataset "
       "'donnees-essentielles-de-la-commande-publique-des-collectivites-par-numero-de-sir' "
       "('Données essentielles 2020 - 2021- 2022 de la commande publique "
@@ -15049,6 +15490,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site",
+    .id_keys = "id+flux",
     .description = "OpenDataSoft dataset '244400610_tonnage_dechetterie' ('Tonnage "
       "des déchetteries du territoire par flux') on the European "
       "open-data portal data.capatlantique.fr (portal's own dataset). "
@@ -15089,6 +15531,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bv",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-municipales-2020-t1-par-bureau-de-vote' "
       "('Résultats des élections municipales 2020 T1 par bureau de "
@@ -15111,6 +15554,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nbvp",
     .description = "OpenDataSoft dataset 'vfe_public_210600292' ('Véhicules à "
       "faibles émissions dans le renouvellement du parc') on the "
       "European open-data portal data.cannes.com (portal's own "
@@ -15152,6 +15596,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_d_entite,entite_administrative",
+    .id_keys = "code_ins",
     .description = "OpenDataSoft dataset "
       "'taux-de-chomage-administratif-par-categories-d-ages-2019' "
       "('Taux de chômage administratif par catégories d'âges (2019)') "
@@ -15173,6 +15618,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "links",
     .description = "OpenDataSoft dataset 'stadtarchiv-stgallen' ('Stadtarchiv "
       "St.Gallen') on the European open-data portal daten.stadt.sg.ch "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -15257,6 +15703,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'informatique-taux-moyen-de-disponibilite-en' ('Informatique - "
       "Taux moyen de disponibilité (en %)') on the European open-data "
@@ -15277,6 +15724,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'parcels' ('Parcels') on the European "
       "open-data portal cityofsalinas.opendatasoft.com (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -15296,6 +15744,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "northing",
     .description = "OpenDataSoft dataset 'railway-centreline-ptv' ('Railway Track "
       "Centreline (PTV)') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -15337,6 +15786,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_troncon",
     .description = "OpenDataSoft dataset "
       "'244400644_troncons_voies_saintnazaireagglo' ('Tronçons des "
       "voies de Saint-Nazaire Agglo') on the European open-data portal "
@@ -15380,6 +15830,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libgeo",
+    .id_keys = "codgeo",
     .description = "OpenDataSoft dataset 'insee_source_rp_logements' ('Données "
       "sources INSEE - Logements sur Melun Val de Seine') on the "
       "European open-data portal data.melunvaldeseine.fr (portal's own "
@@ -15422,6 +15873,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "date_du_conseil_municipal",
     .description = "OpenDataSoft dataset 'comptes-rendus-du-conseil-municipal' "
       "('Comptes-rendus du conseil municipal') on the European "
       "open-data portal data.fleurysurorne.fr (portal's own dataset). "
@@ -15484,6 +15936,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "quellstadtbezirk",
+    .id_keys = "stadtbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'hauptwohnbevolkerung-umzuge-zwischen-den-dortmunder-stadtbezirken-2024' "
       "('Hauptwohnbevölkerung - Umzüge zwischen den Dortmunder "
@@ -15506,6 +15959,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "descrizione_zona,descrizione_quartiere",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset 'referendum-2005-affluenza-quesito-02' "
       "('Referendum 2005 - affluenza - Quesito 02') on the European "
       "open-data portal opendata.comune.bologna.it (portal's own "
@@ -15569,6 +16023,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "sub_indicator,indicator",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset '05-mean-wind-speed-by-month' ('Mean Wind "
       "Speed by Month') on the European open-data portal "
       "www.data.gov.bh (portal's own dataset). Records API Explore "
@@ -15588,6 +16043,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "indice",
     .description = "OpenDataSoft dataset 'subvenciones-covid19' ('Subvenciones "
       "COVID-19') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -15608,6 +16064,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "details,trade_unions",
+    .id_keys = "details+trade_unions",
     .description = "OpenDataSoft dataset "
       "'transparency-code-trade-union-facility-time-20242025' "
       "('Transparency Code - Trade Union Facility Time 2024/2025') on "
@@ -15630,6 +16087,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_expo",
+    .id_keys = "eff_exp+eff_tot_nuit+reglib",
     .description = "OpenDataSoft dataset "
       "'exposition-professionnelle-travail-de-nuit' ('Exposition "
       "professionnelle : Travail de nuit') on the European open-data "
@@ -15651,6 +16109,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "stichtag",
     .description = "OpenDataSoft dataset "
       "'stadt-neuss-statistischer-bezirk-05-augustinusviertel' ('Stadt "
       "Neuss: Statistischer Bezirk 05 - Augustinusviertel') on the "
@@ -15672,6 +16131,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "naam",
+    .id_keys = "locatienummer",
     .description = "OpenDataSoft dataset 'denhaagluchtkwaliteit' ('Luchtkwaliteit "
       "Den Haag') on the European open-data portal "
       "den-haag-opendata.opendatasoft.com (portal's own dataset). "
@@ -15692,6 +16152,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-193611-bergsboda' "
       "('Energiförbrukning i Geografiska området 193611 (Bergsboda)') "
@@ -15713,6 +16174,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_officiel_commune,code_iso_3166_3_zone,cle_unique_bureau_de_vote",
+    .id_keys = "cle_unique_bureau_de_vote+code_b_vote",
     .description = "OpenDataSoft dataset 'bureaux-de-vote-herault-2020' ('Bureaux de "
       "vote Hérault 2020') on the European open-data portal "
       "www.herault-data.fr (portal's own dataset). Records API Explore "
@@ -15754,6 +16216,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_standard,nom_unite_urbaine,dep_nom,academie_nom",
+    .id_keys = "nom_standard+code_postal",
     .description = "OpenDataSoft dataset 'communes-stats-france-millesime' "
       "('Communes et statistiques - France - millésimé') on the "
       "European open-data portal hub.huwise.com (portal's own dataset). "
@@ -15774,6 +16237,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone",
+    .id_keys = "sejours_ambulatoire+pathologies",
     .description = "OpenDataSoft dataset 'mh_tableau_nb_sejours_duree_vf' "
       "('mh_tableau_nb_sejours_duree_vf') on the European open-data "
       "portal data.drees.solidarites-sante.gouv.fr (portal's own "
@@ -15794,6 +16258,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "numero",
     .description = "OpenDataSoft dataset 'circonscription-tours' ('Circonscription - "
       "Tours') on the European open-data portal data.tours-metropole.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -15851,6 +16316,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'bricotheques' ('Bricothèques') on the "
       "European open-data portal data.seineouest.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -15871,6 +16337,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_commune,nom_candidat_1,nom_candidat_2,nom_candidat_3",
+    .id_keys = "code_commune",
     .description = "OpenDataSoft dataset "
       "'departementdeshautespyrenees_leg2024-r-definitifs-1ertour-par-commune-hp65' "
       "('Résultats définitifs du premier tour des élections "
@@ -15893,6 +16360,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "sub_class",
+    .id_keys = "sub_class+class",
     .description = "OpenDataSoft dataset 'grid-event-signature-library-summary' "
       "('Grid Event Signature Library - Summary') on the European "
       "open-data portal openenergyhub.ornl.gov (portal's own dataset). "
@@ -15913,6 +16381,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+stadtbezirk",
     .description = "OpenDataSoft dataset "
       "'stadtbezirke_deutsche_mit_migrationshintergrund_durchschnittsalter' "
       "('Stadtbezirke Deutsche mit Migrationshintergrund "
@@ -15976,6 +16445,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_officiel_canton_majuscule,nom_officiel_canton,nom_officiel_canton_minuscule,nom_officiel_region",
+    .id_keys = "code_officiel_canton+annee",
     .description = "OpenDataSoft dataset 'cantons-de-tarn-et-garonne' ('Cantons de "
       "Tarn-et-Garonne') on the European open-data portal "
       "data.82amenagement.fr (portal's own dataset). Records API "
@@ -15996,6 +16466,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet_du_marche_256_caracteres_maxi,identification_du_titulaire_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributaires",
+    .id_keys = "ndegmarche+code_postal",
     .description = "OpenDataSoft dataset 'blois-marches-publics-2020-40-000-eur' "
       "('Blois - marchés publics 2020 < 40 000 € HT') on the European "
       "open-data portal data.blois.agglopolys.fr (portal's own "
@@ -16058,6 +16529,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "counts",
     .description = "OpenDataSoft dataset "
       "'comptage-mensuel-55-bd-paul-vaillant-couturier-out' ('Comptage "
       "Mensuel 55 bd Paul Vaillant Couturier OUT') on the European "
@@ -16079,6 +16551,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "etablissement,mediation",
+    .id_keys = "mediation+id",
     .description = "OpenDataSoft dataset 'eac-sup' ('Projets d’éducation artistique "
       "et culturelle dans les établissements supérieurs') on the "
       "European open-data portal data.cannes.com (portal's own "
@@ -16119,6 +16592,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "namedut,namefre,nameger",
+    .id_keys = "localid",
     .description = "OpenDataSoft dataset 'zones-de-police' ('Zones de police') on "
       "the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -16138,6 +16612,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "einheit_name,kand_nachname,kand_vorname",
+    .id_keys = "list_kandid",
     .description = "OpenDataSoft dataset "
       "'wahlen-stadtparlament-st-gallen-22-09-2024' ('Wahlen "
       "Stadtparlament St.Gallen 22.09.2024') on the European open-data "
@@ -16199,6 +16674,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee+cimetiere",
     .description = "OpenDataSoft dataset 'inhumation-anglet' ('Historique des "
       "inhumations par cimetière à Anglet') on the European open-data "
       "portal anglet-opendatapaysbasque.opendatasoft.com (portal's own "
@@ -16219,6 +16695,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'nombre-d-heures-de-formations' ('Nombre "
       "d'heures de formations') on the European open-data portal "
       "data.bep.be (portal's own dataset). Records API Explore v2.1, "
@@ -16238,6 +16715,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "elementary,bld_fee_di,uniqueid",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'salinas-school-districts' ('Salinas School "
       "Districts') on the European open-data portal "
       "cityofsalinas.opendatasoft.com (portal's own dataset). Records "
@@ -16278,6 +16756,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_structure_collecte,departement",
+    .id_keys = "code_sinoe_epci_collecte+annee",
     .description = "OpenDataSoft dataset '837810944_prod_amiante_menages_decheterie' "
       "('Production de déchets amiantés collectés en déchèteries "
       "publiques') on the European open-data portal "
@@ -16321,6 +16800,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "sage_nom",
+    .id_keys = "sage_nom",
     .description = "OpenDataSoft dataset "
       "'224900019_schemas-damenagement-et-de-gestion-des-eaux-en-maine-et-loire' "
       "('Schémas d'aménagement et de gestion des eaux en "
@@ -16343,6 +16823,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_pole,adresse_rue,adresse_tel_mails,adresse_ville",
+    .id_keys = "nom_du_pole",
     .description = "OpenDataSoft dataset 'informations-du-service-jeunesse-de-melun' "
       "('Informations du Service Jeunesse de Melun') on the European "
       "open-data portal data.melunvaldeseine.fr (portal's own dataset). "
@@ -16420,6 +16901,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,area_type,locality",
+    .id_keys = "locality",
     .description = "OpenDataSoft dataset "
       "'prevalence-of-overweight-year-6-icp-outcomes-framework-resident-locality' "
       "('Prevalence of overweight - Year 6 - ICP Outcomes Framework - "
@@ -16442,6 +16924,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stadtbezirk",
+    .id_keys = "stadtbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'haushalte-nach-haushaltstypen-in-den-stadtbezirken-2024' "
       "('Haushalte nach Haushaltstypen in den Stadtbezirken 2024') on "
@@ -16464,6 +16947,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "mese_e_anno_di_riferimento",
     .description = "OpenDataSoft dataset 'srm_sosta' ('Sosta autoveicoli - "
       "transazioni effettuate') on the European open-data portal "
       "opendata.comune.bologna.it (portal's own dataset). Records API "
@@ -16484,6 +16968,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet,nombeneficiaire",
+    .id_keys = "nombeneficiaire+datesperiodeversement",
     .description = "OpenDataSoft dataset 'leh_subventions_associations' "
       "('Subventions aux associations de la ville du Haillan') on the "
       "European open-data portal datahub.bordeaux-metropole.fr "
@@ -16526,6 +17011,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "month+year",
     .description = "OpenDataSoft dataset "
       "'end-service-gratuity-payments-in-thousands-bahraini-dinar' "
       "('End Service Gratuity Payments') on the European open-data "
@@ -16546,6 +17032,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zona_basica_salud",
+    .id_keys = "codigo_zbs",
     .description = "OpenDataSoft dataset 'info-polinica-con-zbs' ('info polinica con "
       "zbs') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -16566,6 +17053,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "week_ending_friday",
     .description = "OpenDataSoft dataset "
       "'covid-19-hospital-admissions-for-broad-age-bands-by-week-in-leicester' "
       "('Covid-19 - Hospital admissions for broad age bands by week in "
@@ -16589,6 +17077,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "reglib",
+    .id_keys = "reg",
     .description = "OpenDataSoft dataset "
       "'pollution-de-l-air-impact-sur-la-survenue-de-maladie-du-no2-et-des-pm2-5-scenario-vg_oms' "
       "('Pollution de l'air : impact sur la survenue de maladie du NO2 "
@@ -16612,6 +17101,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gebiet_name",
+    .id_keys = "gebiet_nr",
     .description = "OpenDataSoft dataset 'dormagen-europawahl-2019-wahlbezirke' "
       "('Dormagen: Europawahl-2019-Wahlbezirke') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -16633,6 +17123,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_winkelcentrum,winkelgebied_2013,verzorgingsgebied_2009,arbeidsplaatsen_2013",
+    .id_keys = "nr",
     .description = "OpenDataSoft dataset 'detailhandelsmonitor-den-haag-2013' "
       "('Detailhandelsmonitor Den Haag 2013') on the European open-data "
       "portal den-haag-opendata.opendatasoft.com (portal's own "
@@ -16653,6 +17144,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'farligt_avfall' ('Farligt avfall') on the "
       "European open-data portal opendata.umea.se (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -16673,6 +17165,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lien3_titre,lien1_titre,lien2_titre,quartier",
+    .id_keys = "cdperimetre",
     .description = "OpenDataSoft dataset "
       "'opah-operation-programmee-damelioration-de-lhabitat-agglopole-de-sete' "
       "('OPAH - Opération programmée d'amélioration de l'habitat - Sète "
@@ -16737,6 +17230,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "intitule+champ+sexe",
     .description = "OpenDataSoft dataset 'rec06' ('Caractéristiques des retraités - "
       "Quintiles') on the European open-data portal "
       "data.drees.solidarites-sante.gouv.fr (portal's own dataset). "
@@ -16778,6 +17272,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "al_type_parc",
+    .id_keys = "indmtt_ndural",
     .description = "OpenDataSoft dataset 'al_s_statuetu_type_parc_nat' ('AL - "
       "Répartition des allocataires étudiants ou non selon le type de "
       "parc [National]') on the European open-data portal data.caf.fr "
@@ -16798,6 +17293,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "geographical_location_of_public_transport_stations_english,geographical_location_of_public_transport_stations_arabic",
+    .id_keys = "year+geographical_location_of_public_transport_stations_english",
     .description = "OpenDataSoft dataset 'public-transport-stations' ('Public "
       "Transport Stations') on the European open-data portal "
       "data.ajman.ae (portal's own dataset). Records API Explore v2.1, "
@@ -16818,6 +17314,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_l_initiative,adresse,description_de_l_initiative,commune",
+    .id_keys = "nom_de_l_initiative",
     .description = "OpenDataSoft dataset 'reseaux-circuits-courts-alimentaires' "
       "('Réseaux de circuits courts alimentaires (AMAP, Ruche qui dit "
       "oui)') on the European open-data portal data.seineouest.fr "
@@ -16839,6 +17336,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune",
+    .id_keys = "commune+annee",
     .description = "OpenDataSoft dataset "
       "'population-annuelle-des-communes-adherentes-a-la-communaute-de-communes-pyrenees-vallees-des-gaves' "
       "('Population annuelle des communes adhérentes à la Communauté de "
@@ -16860,6 +17358,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "zip_code+month+customer_class",
     .description = "OpenDataSoft dataset 'sce-energy-data' ('SCE: Energy Data') on "
       "the European open-data portal openenergyhub.ornl.gov (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -16880,6 +17379,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+stadtbezirk",
     .description = "OpenDataSoft dataset "
       "'stadtbezirke_deutsche_mit_migrationshintergrund' ('Stadtbezirke "
       "Deutsche mit Migrationshintergrund') on the European open-data "
@@ -16901,6 +17401,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,commune,nature_du_lieu",
+    .id_keys = "code_postal",
     .description = "OpenDataSoft dataset 'points-dechets-verts' ('Points déchets "
       "verts de la Communauté urbaine de Dunkerque') on the European "
       "open-data portal data.dunkerque-agglo.fr (portal's own dataset). "
@@ -16940,6 +17441,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_chapitre",
+    .id_keys = "realise+libelle_chapitre+section",
     .description = "OpenDataSoft dataset 'budget-tgn-ca-2019' ('Budget TGN CA 2019') "
       "on the European open-data portal data.82amenagement.fr (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -16960,6 +17462,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet_du_marche_256_caracteres_maxi,identification_du_titulaire_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributaires",
+    .id_keys = "montant_du_marche_eur_ht_duree_globales_ttes_tranches_et_phases_cumulees_toutes_reconductions_modifi",
     .description = "OpenDataSoft dataset '2023_1_vdb_inf40k_rdjanv-fev' ('Blois - "
       "marchés publics 2023 < 40 000 € HT') on the European open-data "
       "portal data.blois.agglopolys.fr (portal's own dataset). Records "
@@ -16980,6 +17483,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bgt_contnat_label,bgt_nature_label,bgt_fonction_label,bgt_nom",
+    .id_keys = "bgt_mtreal+bgt_annee",
     .description = "OpenDataSoft dataset '244400610-ca-gemapi' ('Compte Financier "
       "Unique (CFU) de Cap Atlantique - budget annexe GEMAPI') on the "
       "European open-data portal data.capatlantique.fr (portal's own "
@@ -17001,6 +17505,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_de_residence",
+    .id_keys = "zone_de_residence",
     .description = "OpenDataSoft dataset "
       "'pratiques_des_menages_vis-a-vis_de_lenergie_et_du_stationnement_secteur' "
       "('EMC² : Pratiques des ménages vis-à-vis de l'énergie et du "
@@ -17042,6 +17547,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "valeur+mois",
     .description = "OpenDataSoft dataset "
       "'demandeurs-demploi-en-paca-dep06-et-cannes' ('Demandeurs "
       "d'emploi en PACA, Département 06 et Cannes') on the European "
@@ -17083,6 +17589,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "niscode",
+    .id_keys = "tgid",
     .description = "OpenDataSoft dataset "
       "'secteurs-statistiques-belges-limites-administratives' "
       "('Secteurs statistiques belges - Limites administratives') on "
@@ -17105,6 +17612,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+energietrager+bereiche",
     .description = "OpenDataSoft dataset "
       "'endenergiebedarf-pro-person-nach-bereich-und-energietraeger' "
       "('​Endenergiebedarf pro Person nach Bereich und Energieträger, "
@@ -17147,6 +17655,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tempo+regiao",
     .description = "OpenDataSoft dataset "
       "'evolucao-mensal-distribuicao-novo-coronavirus-2019-n-cov-para-extracao-de-rna-e-' "
       "('Evolução Mensal da Distribuição de reagentes para diagnóstico "
@@ -17191,6 +17700,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'nombre-d-actions-environnementales' "
       "('Nombre d'actions environnementales') on the European open-data "
       "portal data.bep.be (portal's own dataset). Records API Explore "
@@ -17233,6 +17743,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "sa2_name21",
+    .id_keys = "sa2_code21",
     .description = "OpenDataSoft dataset 'seifa21_coc_sa2_educationoccupation_index' "
       "('SEIFA21 Education and Occupation Index (SA2) ABS 2021') on the "
       "European open-data portal data.casey.vic.gov.au (portal's own "
@@ -17254,6 +17765,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "idcomtxt",
+    .id_keys = "idcom",
     .description = "OpenDataSoft dataset '837810944_consommation_espaces_naf' "
       "('Consommation annuelle d'espaces Naturels, Agricoles et "
       "Forestiers') on the European open-data portal "
@@ -17297,6 +17809,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_postal",
     .description = "OpenDataSoft dataset "
       "'224900019_missions-locales-en-maine-et-loire' ('Missions "
       "locales en Maine-et-Loire') on the European open-data portal "
@@ -17318,6 +17831,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "equip_nom,adr_num_et_rue,equip_type,adr_commune",
+    .id_keys = "adr_num_et_rue+equip_nom",
     .description = "OpenDataSoft dataset 'equipements-sportifs' ('Equipements "
       "sportifs sur la commune de Melun') on the European open-data "
       "portal data.melunvaldeseine.fr (portal's own dataset). Records "
@@ -17338,6 +17852,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau,commune_nom,nom_election,nom_circonscription",
+    .id_keys = "candidat+code_bureau",
     .description = "OpenDataSoft dataset "
       "'resultatslegislatives_2022_1ertour_bourges_circonscription2' "
       "('Resultats Election Législative 1er Tour - 2022 - Ville de "
@@ -17400,6 +17915,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,area_type",
+    .id_keys = "denominator",
     .description = "OpenDataSoft dataset "
       "'low-birth-weight-of-babies-icp-outcomes-framework-birmingham-and-solihull' "
       "('Low birth weight of babies - ICP Outcomes Framework - "
@@ -17421,6 +17937,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "geburtsort",
+    .id_keys = "geburtsort+schlussel",
     .description = "OpenDataSoft dataset 'geburtsorte-2025' ('Geburtsorte 2025') on "
       "the European open-data portal open-data.dortmund.de (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -17441,6 +17958,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset 'referendum-2025-quesito-4-affluenza' "
       "('Referendum 2025 - Quesito 4 - Più sicurezza sul lavoro - "
       "affluenza') on the European open-data portal "
@@ -17462,6 +17980,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "intitule_chapitre,intitule_budget,partitionkey,rowkey",
+    .id_keys = "partitionkey",
     .description = "OpenDataSoft dataset 'bor_budgetnomenc_2008' ('Budget 2008 par "
       "nomenclature de la ville de Bordeaux') on the European open-data "
       "portal datahub.bordeaux-metropole.fr (portal's own dataset). "
@@ -17503,6 +18022,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "country,geographical_region,lbld",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'04-inward-foreign-other-investments-stocks-classified-by-countries-in-million-b0' "
       "('Inward Foreign Other Investments Stocks classified by "
@@ -17525,6 +18045,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "titulo,compromiso0",
+    .id_keys = "identificador",
     .description = "OpenDataSoft dataset "
       "'actuaciones-del-pacto-para-la-recuperacion-economica-el-empleo-y-la-cohesion-soc' "
       "('Actuaciones del Pacto para la Recuperación Económica, el "
@@ -17546,6 +18067,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category",
+    .id_keys = "subcategory+year",
     .description = "OpenDataSoft dataset 'it-service-expenditure' ('IT Service - "
       "Expenditure') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -17566,6 +18088,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "txprestaj01",
     .description = "OpenDataSoft dataset 'antibiotiques-consommation-en-ehpad_reg' "
       "('Antibiotiques : Consommation en EHPAD sans pharmacie à usage "
       "intérieur (Région)') on the European open-data portal "
@@ -17587,6 +18110,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "stichtag",
     .description = "OpenDataSoft dataset "
       "'stadt-neuss-statistischer-bezirk-15-westfeld' ('Stadt Neuss: "
       "Statistischer Bezirk 15 - Westfeld') on the European open-data "
@@ -17628,6 +18152,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bibliotek",
+    .id_keys = "bibliotek",
     .description = "OpenDataSoft dataset "
       "'utlaningsstatistik-fran-biblioteken-i-umea-kommun' "
       "('Utlåningsstatistik från biblioteken i Umeå kommun') on the "
@@ -17649,6 +18174,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,syndicobjectname,adresses_adresse1",
+    .id_keys = "syndicobjectname+labelss_theslibelle+types_theslibelle",
     .description = "OpenDataSoft dataset 'hebergements-collectifs-de-lherault' "
       "('Hébergements collectifs de l'Hérault') on the European "
       "open-data portal www.herault-data.fr (portal's own dataset). "
@@ -17669,6 +18195,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_scientifique,nom_vernaculaire",
+    .id_keys = "nom_scientifique",
     .description = "OpenDataSoft dataset "
       "'ens-inventaire-des-plantes-vasculaires-lacs-de-valette' ('ENS - "
       "Inventaire des plantes vasculaires - Lacs de Valette') on the "
@@ -17711,6 +18238,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_contrats",
+    .id_keys = "en_+annee",
     .description = "OpenDataSoft dataset "
       "'datastory-oc-7-3-taux-de-couverture-de-l-enquete' ('Datastory "
       "OC - 7.3 Taux de couverture de l'enquête') on the European "
@@ -17733,6 +18261,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset "
       "'haltes-cyclables-tours-metropole-val-de-loire' ('Haltes "
       "cyclables - Tours Métropole Val de Loire') on the European "
@@ -17791,6 +18320,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'acteurs-reparation' ('Acteurs de la "
       "réparation') on the European open-data portal data.seineouest.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -17854,6 +18384,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "wert+stadtbezirk+jahr",
     .description = "OpenDataSoft dataset 'stadtbezirke_haushalte_personen_2019' "
       "('Stadtbezirke Haushalte Personen') on the European open-data "
       "portal opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -17874,6 +18405,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "communes",
+    .id_keys = "communes",
     .description = "OpenDataSoft dataset "
       "'communes-membres-de-la-communaute-urbaine-de-dunkerque' "
       "('Communes membres de la Communauté urbaine de Dunkerque') on "
@@ -17938,6 +18470,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "empty",
+    .id_keys = "empty",
     .description = "OpenDataSoft dataset "
       "'agglopolys-nombre-et-capacite-des-hotels-au-1er-janvier-2022' "
       "('Agglopolys - Nombre et capacité des hôtels au 1er janvier "
@@ -17980,6 +18513,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'consommation-d-energie-finale-guadeloupe' "
       "('Consommation d’energie finale') on the European open-data "
       "portal www.karudata.com (portal's own dataset). Records API "
@@ -18061,6 +18595,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,adresse",
+    .id_keys = "nom_du_site",
     .description = "OpenDataSoft dataset 'structures-psychologiques' ('Structures "
       "psychologiques') on the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -18081,6 +18616,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "datum+id",
     .description = "OpenDataSoft dataset 'waldeggtrail' ('Mountainbikezählungen "
       "Waldeggtrail Stadt St.Gallen') on the European open-data portal "
       "daten.stadt.sg.ch (portal's own dataset). Records API Explore "
@@ -18100,6 +18636,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "refid",
     .description = "OpenDataSoft dataset 'record-of-australian-schools' ('Record of "
       "Schools in Australia') on the European open-data portal "
       "data.peclet.com.au (portal's own dataset). Records API Explore "
@@ -18142,6 +18679,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'chemin_forme-216400242_anglet' ('Les "
       "Chemins de la Forme sur Anglet') on the European open-data "
       "portal anglet-opendatapaysbasque.opendatasoft.com (portal's own "
@@ -18162,6 +18700,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'taux-de-presence-aux-formations' ('Taux de "
       "présence aux formations') on the European open-data portal "
       "data.bep.be (portal's own dataset). Records API Explore v2.1, "
@@ -18221,6 +18760,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "raison_sociale,adresse,numero_d_agrement,libellevoieetablissement",
+    .id_keys = "numero_d_agrement+siren",
     .description = "OpenDataSoft dataset "
       "'837810944_centres-de-traitement-vhu-et-broyeurs-agrees-en-pays-de-la-loire' "
       "('Centres de traitement véhicules hors d’usage et broyeurs "
@@ -18266,6 +18806,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,commune_clic,communes_au_1er_janvier_2019",
+    .id_keys = "communes_au_1er_janvier_2019+clic_2019",
     .description = "OpenDataSoft dataset "
       "'224900019_clic-par-commune-en-maine-et-loire' ('Centres locaux "
       "d'information et de coordination par commune en Maine-et-Loire') "
@@ -18287,6 +18828,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_ecole,nom_commune,adresse",
+    .id_keys = "nom_ecole",
     .description = "OpenDataSoft dataset 'ets_etudes_sup' ('Etablissements formation "
       "supérieures') on the European open-data portal "
       "data.melunvaldeseine.fr (portal's own dataset). Records API "
@@ -18307,6 +18849,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet",
+    .id_keys = "montant+datesperiodesversement",
     .description = "OpenDataSoft dataset 'subventions-2018-2020-vdb' ('Subventions "
       "de la Ville de Bourges de 2018 à 2020') on the European "
       "open-data portal data.bourgesplus.fr (portal's own dataset). "
@@ -18368,6 +18911,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "westminster_parliamentary_constituencies_code+occupancy_rating_for_bedrooms_3_categories_code",
     .description = "OpenDataSoft dataset "
       "'census-2021-overcrowding-bedrooms-constituencies' ('Census 2021 "
       "Overcrowding (Bedrooms) - Constituencies') on the European "
@@ -18390,6 +18934,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "wahlraum_bezeichnung,wahlraum_adresse,briefwahlbezirk",
+    .id_keys = "briefwahlbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'fb33-sb-innenstadt-ost-20250328-briefwahlbezirke' "
       "('Seniorenbeiratswahl 2025 - Innenstadt-Ost') on the European "
@@ -18410,6 +18955,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n_e_anno_prot_domanda",
     .description = "OpenDataSoft dataset 'istanze-agricoltura' ('Istanze "
       "agricoltura') on the European open-data portal "
       "opendata.comune.bologna.it (portal's own dataset). Records API "
@@ -18474,6 +19020,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "l_thsyl_lmy_llzwj+mjmw_t_ljnsy_lry_ysy_llzwj+ljnsy",
     .description = "OpenDataSoft dataset "
       "'marriage-cases-by-nationality-and-higher-education-attainment-of-husband-and-maj' "
       "('Marriage Cases by Nationality and Higher Education Attainment "
@@ -18496,6 +19043,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "denominacion",
+    .id_keys = "codigo+denominacion",
     .description = "OpenDataSoft dataset "
       "'convenios-colectivos-registrados-historico-2019' ('Convenios "
       "colectivos registrados histórico hasta 2019') on the European "
@@ -18517,6 +19065,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "fund",
+    .id_keys = "fund",
     .description = "OpenDataSoft dataset 'lsg-data' ('Local Supprt Grant Data') on "
       "the European open-data portal data.leicester.gov.uk (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -18537,6 +19086,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'diabete-complications-et-suivi-france' "
       "('Diabète : Complications et suivi (France)') on the European "
       "open-data portal odisse.santepubliquefrance.fr (portal's own "
@@ -18597,6 +19147,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt+forbrukningstyp",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-061002-grubbe-norra-exkl-kv-eken-mfl' "
       "('Energiförbrukning i Geografiska området 061002 (Grubbe, norra "
@@ -18618,6 +19169,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,commune,equipement,courriel",
+    .id_keys = "adresse+equipement",
     .description = "OpenDataSoft dataset 'bd20240806equipementscdcmcfamilles' ('Les "
       "services Familles de la CdCMC') on the European open-data portal "
       "www.herault-data.fr (portal's own dataset). Records API Explore "
@@ -18660,6 +19212,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_maladie,geo_name",
+    .id_keys = "inc",
     .description = "OpenDataSoft dataset 'healthref-france-sentinelles-yearly' "
       "('Surveillance épidémiologique du réseau Sentinelles - Annuel') "
       "on the European open-data portal hub.huwise.com (portal's own "
@@ -18680,6 +19233,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'graphique_ecole_sante' "
       "('Graphique_Ecole_Santé') on the European open-data portal "
       "data.drees.solidarites-sante.gouv.fr (portal's own dataset). "
@@ -18739,6 +19293,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sub_service_in_arabic+month_in_arabic+year",
     .description = "OpenDataSoft dataset 'transactions-services' ('Transactions "
       "services') on the European open-data portal data.ajman.ae "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -18758,6 +19313,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'espaces-publics-numeriques' ('Espaces "
       "publics numériques') on the European open-data portal "
       "data.seineouest.fr (portal's own dataset). Records API Explore "
@@ -18778,6 +19334,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "siret",
     .description = "OpenDataSoft dataset "
       "'phamarcies-au-sein-de-la-communaute-de-communes-pyrenees-vallees-des-gaves' "
       "('Pharmacies au sein de la Communauté de communes Pyrénées "
@@ -18819,6 +19376,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "herkunfts_bezugslaender",
+    .id_keys = "herkunfts_bezugslaender",
     .description = "OpenDataSoft dataset 'hauptwohnsitz-migranten-laender' "
       "('Hauptwohnsitz Migranten Länder') on the European open-data "
       "portal opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -18840,6 +19398,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "structure,rue,ville,adresse",
+    .id_keys = "frequentation",
     .description = "OpenDataSoft dataset "
       "'horaires_et_frequentation_maisons_medicales_de_garde' "
       "('Horaires et fréquentation des maisons médicales de garde sur "
@@ -18902,6 +19461,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet_du_marche_256_caracteres_maxi,identification_du_titulaire_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributaires,code_postal",
+    .id_keys = "code_postal",
     .description = "OpenDataSoft dataset "
       "'agglopolys-marches-publics-2024-inf-40keur' ('Agglopolys - "
       "marches publics 2024 < 40 000 € HT') on the European open-data "
@@ -18922,6 +19482,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau_vote,coll_nom",
+    .id_keys = "code_bureau_vote",
     .description = "OpenDataSoft dataset 'quartiers-electoraux-de-saint-lyphard' "
       "('Quartiers électoraux de Saint-Lyphard') on the European "
       "open-data portal data.capatlantique.fr (portal's own dataset). "
@@ -18962,6 +19523,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bv",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-municipales-2001-t1-par-bureau-de-vote' "
       "('Résultats des élections municipales 2001 T1 par bureau de "
@@ -18983,6 +19545,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_mouvement,nature",
+    .id_keys = "nature_code+chapitre_code+type_de_mouvement",
     .description = "OpenDataSoft dataset 'budget-primitif-2019' ('Budget primitif "
       "2019') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -19024,6 +19587,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,adresse",
+    .id_keys = "nom_du_site",
     .description = "OpenDataSoft dataset "
       "'etablissements-formant-dans-le-domaine-du-medical' ('Hautes "
       "écoles formant dans le domaine du (para)médical') on the "
@@ -19068,6 +19632,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lga+period",
     .description = "OpenDataSoft dataset "
       "'overweight-and-obesity-attributable-deaths' ('Overweight and "
       "obesity attributable deaths') on the European open-data portal "
@@ -19110,6 +19675,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lib_idpsc",
     .description = "OpenDataSoft dataset "
       "'prescriptions-ponctuelles-du-plan-local-d-urbanisme-en-vigueur-modification-5-ap' "
       "('Prescriptions ponctuelles du Plan Local d'Urbanisme (ABROGE) "
@@ -19133,6 +19699,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ana_1_description_fr",
+    .id_keys = "produits",
     .description = "OpenDataSoft dataset 'couts-de-la-gestion-des-dechets' "
       "('Financement de la gestion des déchets') on the European "
       "open-data portal data.bep.be (portal's own dataset). Records API "
@@ -19172,6 +19739,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "station_name",
+    .id_keys = "easting",
     .description = "OpenDataSoft dataset 'railway-station-carparks-ptv' ('Railway "
       "Station Carparks (PTV)') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -19235,6 +19803,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "adresse",
     .description = "OpenDataSoft dataset '224900019_foyers-de-vie-en-maine-et-loire' "
       "('Foyers de vie en Maine-et-Loire') on the European open-data "
       "portal data.maine-et-loire.fr (portal's own dataset). Records "
@@ -19255,6 +19824,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'logements-jeunes-camvs' ('Logements jeunes "
       "sur Melun Val de Seine') on the European open-data portal "
       "data.melunvaldeseine.fr (portal's own dataset). Records API "
@@ -19275,6 +19845,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,nom_election,nom_bureau,nom_circonscription",
+    .id_keys = "candidat+code_bureau",
     .description = "OpenDataSoft dataset "
       "'resultats_elections_europennes_2024_bourges' ('Résultats "
       "Elections Européennes - 2024 - Ville de Bourges') on the "
@@ -19296,6 +19867,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "associations",
+    .id_keys = "associations",
     .description = "OpenDataSoft dataset 'subventions-aux-associations' "
       "('Subventions aux associations') on the European open-data "
       "portal data.fleurysurorne.fr (portal's own dataset). Records API "
@@ -19337,6 +19909,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodlabel+areaidentifier",
     .description = "OpenDataSoft dataset "
       "'fixed-period-exclusions-primary-pupils-wmca' ('Fixed period "
       "exclusions - primary (pupils) - WMCA') on the European open-data "
@@ -19358,6 +19931,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stadtbezirk",
+    .id_keys = "stadtbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'hauptwohnbevolkerung-der-stadtbezirke-masse-der-altersstruktur-2024' "
       "('Hauptwohnbevölkerung der Stadtbezirke Maße der Altersstruktur "
@@ -19442,6 +20016,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset '12-number-of-fishers' ('Fisheries "
       "Indicators – Number of Fishers') on the European open-data "
       "portal www.data.gov.bh (portal's own dataset). Records API "
@@ -19461,6 +20036,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nombre,directorio_asociado,capacidad",
+    .id_keys = "nombre",
     .description = "OpenDataSoft dataset 'alojamientos-juveniles' ('Alojamientos "
       "Juveniles') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -19480,6 +20056,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site_name,primary_address,city,postcode",
+    .id_keys = "site_uprn",
     .description = "OpenDataSoft dataset 'assets-of-community-value' ('Community "
       "Asset Transfers') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -19522,6 +20099,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gebiet_name,wahlraum_bezeichnung,gemeinde,anschrift",
+    .id_keys = "gebiet_name+b+wahlraum_bezeichnung",
     .description = "OpenDataSoft dataset "
       "'rhein-kreis-neuss-2024-europawahl-nach-wahlbezirken' "
       "('Rhein-Kreis Neuss: 2024 Europawahl nach Wahlbezirken') on the "
@@ -19564,6 +20142,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt+forbrukningstyp",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-112909-carlshem-ostra' "
       "('Energiförbrukning i Geografiska området 112909 (Carlshem, "
@@ -19586,6 +20165,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'les_10_remunerations_les_plus_elevees_cahm' ('Les 10 "
       "rémunérations les plus élevées des agents publics de la CAHM') "
@@ -19608,6 +20188,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_scientifique,nom_vernaculaire,famille",
+    .id_keys = "nom_scientifique",
     .description = "OpenDataSoft dataset "
       "'ens-inventaire-des-plantes-vasculaires-ramier-de-palaminy' "
       "('ENS - Inventaire des plantes vasculaires - Ramier de "
@@ -19650,6 +20231,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone",
+    .id_keys = "code_dep",
     .description = "OpenDataSoft dataset 'mh_tab_2022_morbidite_hospitaliere_cartes' "
       "('mh_tab_2022_morbidite_hospitaliere_cartes') on the European "
       "open-data portal data.drees.solidarites-sante.gouv.fr (portal's "
@@ -19671,6 +20253,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "pourcentage",
     .description = "OpenDataSoft dataset "
       "'election-presidentielle-2017-2nd-tour-tours' ('Election "
       "Présidentielle 2017 (2ème tour) - Tours') on the European "
@@ -19713,6 +20296,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "emirate,lmr",
+    .id_keys = "emirate",
     .description = "OpenDataSoft dataset "
       "'the-total-number-of-dams-supervised-by-the-ministry-of-energy-infrastructure-200' "
       "('the-total-number-of-dams-supervised-by-the-ministry-of-energy-infrastructure-2023') "
@@ -19734,6 +20318,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,localisation,comp_loc",
+    .id_keys = "localisation+num_loc",
     .description = "OpenDataSoft dataset 'anciennes-stations-autolib' ('Anciennes "
       "stations Autolib') on the European open-data portal "
       "data.seineouest.fr (portal's own dataset). Records API Explore "
@@ -19776,6 +20361,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "measurement_type",
+    .id_keys = "provider",
     .description = "OpenDataSoft dataset 'grid-event-signature-library-data-types' "
       "('Grid Event Signature Library - Data Types') on the European "
       "open-data portal openenergyhub.ornl.gov (portal's own dataset). "
@@ -19815,6 +20401,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset "
       "'etablissements-publics-du-perimetre-de-la-cud' ('annuaire des "
       "services publics du périmètre de la CUD') on the European "
@@ -19856,6 +20443,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_la_collectivite,commune,departement,type",
+    .id_keys = "code_collectivite",
     .description = "OpenDataSoft dataset "
       "'collectivites-membres-de-tarn-et-garonne-numerique' "
       "('Collectivités membres de Tarn et Garonne Numérique') on the "
@@ -19877,6 +20465,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_lieu_d_execution,objet_du_marche_256_caracteres_maxi,type_code_lieu_d_execution,identification_du_titulaire_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributaires",
+    .id_keys = "objet_du_marche_256_caracteres_maxi+date_notif_contrat",
     .description = "OpenDataSoft dataset 'blois-marches-publics-2019-maj-11122019' "
       "('Blois - marchés publics 2019') on the European open-data "
       "portal data.blois.agglopolys.fr (portal's own dataset). Records "
@@ -19896,6 +20485,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau_vote,coll_nom,adresse,adresse_bureau_vote",
+    .id_keys = "adresse",
     .description = "OpenDataSoft dataset 'bureau-de-vote-de-la-baule-pour-widget' "
       "('Bureau de vote de La Baule pour widget') on the European "
       "open-data portal data.capatlantique.fr (portal's own dataset). "
@@ -19915,6 +20505,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'quantite-de-ressources-energetiques-importees' ('Quantité de "
       "ressources énergétiques importées') on the European open-data "
@@ -19935,6 +20526,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'accueil-jeunesse' ('Accueils jeunesse') on "
       "the European open-data portal data.montreuil.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -19954,6 +20546,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_mouvement,nature",
+    .id_keys = "nature_code+chapitre_code+type_de_mouvement",
     .description = "OpenDataSoft dataset 'budget-primitif-2018' ('Budget primitif "
       "2018') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -19996,6 +20589,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_entites,entite_administrative",
+    .id_keys = "code_ins",
     .description = "OpenDataSoft dataset 'nbr_vehicules_2010_2023_par_entites' "
       "('Nbr_vehicules_2010_2023_par_entites') on the European "
       "open-data portal spi-digitalwallonia.opendatasoft.com (portal's "
@@ -20037,6 +20631,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "page_title,page_description,page_category",
+    .id_keys = "image_url",
     .description = "OpenDataSoft dataset "
       "'all-council-pages-dashboards-and-data-stories' ('All Council "
       "Dashboards, Data Stories and Pages') on the European open-data "
@@ -20139,6 +20734,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dataset_name,solution_title,solution_name,challenge_description",
+    .id_keys = "dataset_name+solution_title",
     .description = "OpenDataSoft dataset 'community-build-apps' ('Community Built "
       "Apps') on the European open-data portal data.casey.vic.gov.au "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -20201,6 +20797,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "adresse",
     .description = "OpenDataSoft dataset '224900019_savs-en-maine-et-loire' "
       "('Services d'accompagnement à la vie sociale en Maine-et-Loire') "
       "on the European open-data portal data.maine-et-loire.fr "
@@ -20221,6 +20818,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "rue,commune",
+    .id_keys = "num",
     .description = "OpenDataSoft dataset 'videoprotection_rubelles' "
       "('Videoprotection sur Rubelles') on the European open-data "
       "portal data.melunvaldeseine.fr (portal's own dataset). Records "
@@ -20261,6 +20859,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periode",
     .description = "OpenDataSoft dataset 'statistiques-restaurant-scolaire' "
       "('Statistiques restaurant scolaire') on the European open-data "
       "portal data.fleurysurorne.fr (portal's own dataset). Records API "
@@ -20303,6 +20902,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,arealabel,areaidentifier,arealonglabel",
+    .id_keys = "arealabel+periodlabel",
     .description = "OpenDataSoft dataset "
       "'travel-to-work-on-foot-percentage-of-pop-aged-16-74-wmca-wards-2025' "
       "('Travel to work on foot (Percentage of pop. aged 16-74) - WMCA "
@@ -20324,6 +20924,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "wahlraum_bezeichnung,wahlraum_adresse,briefwahlbezirk",
+    .id_keys = "briefwahlbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'fb33-sb-huckarde-20250328-briefwahlbezirke' "
       "('Seniorenbeiratswahl 2025 - Huckarde') on the European "
@@ -20345,6 +20946,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nome_lista",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-2021-preferenze-lista-psi-volt' "
       "('Elezioni amministrative 2021 - Preferenze lista PSI VOLT') on "
@@ -20411,6 +21013,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "aluminum_industry_products_by_type_and_month_in_metric_ton",
+    .id_keys = "aluminum_industry_products_by_type_and_month_in_metric_ton+month",
     .description = "OpenDataSoft dataset '01-aluminum-industry-products-by-type' "
       "('Aluminium Industry Products by Type and Month - in Metric "
       "Ton') on the European open-data portal www.data.gov.bh (portal's "
@@ -20431,6 +21034,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "edad+zona_basica_de_salud_codigo+sexo",
     .description = "OpenDataSoft dataset 'poblacion-de-referencia-2023' ('Población "
       "de referencia - 2023') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -20472,6 +21076,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "taux",
     .description = "OpenDataSoft dataset 'vih-depistages-rembourses-region' ('VIH : "
       "Dépistages remboursés (Région)') on the European open-data "
       "portal odisse.santepubliquefrance.fr (portal's own dataset). "
@@ -20514,6 +21119,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "locatienaam",
+    .id_keys = "locatienaam",
     .description = "OpenDataSoft dataset "
       "'stikstofdioxideconcentratiemetingen2019en2020' "
       "('Stikstofdioxide concentratiemetingen 2019 en 2020 Den Haag') "
@@ -20536,6 +21142,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-050811-ostra-ersboda-norra' "
       "('Energiförbrukning i Geografiska området 050811 (Östra Ersboda, "
@@ -20557,6 +21164,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_projet,nom_du_programme,nom_du_fonds_europeen,objectif",
+    .id_keys = "nom_du_projet",
     .description = "OpenDataSoft dataset 'projets-europeens' ('Projets européens "
       "(2014-2020)') on the European open-data portal "
       "www.herault-data.fr (portal's own dataset). Records API Explore "
@@ -20577,6 +21185,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_academie,description,zone",
+    .id_keys = "date_fin",
     .description = "OpenDataSoft dataset "
       "'calendrier-scolaire-2025-2026-en-zone-c-academie-de-toulouse' "
       "('Calendrier scolaire 2025-2026 en Zone C - Académie de "
@@ -20642,6 +21251,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset "
       "'bornes-escamotables-tours-metropole-val-de-loire' ('Bornes "
       "Escamotables - Tours Métropole Val de Loire') on the European "
@@ -20663,6 +21273,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ppa_type",
+    .id_keys = "indfoy_ppa+dtreffre+ppa_type",
     .description = "OpenDataSoft dataset 'ppa_s_type_mtt_100_nat' ('PA - Répartition "
       "des allocataires selon le type de PA et le montant de droit "
       "[National]') on the European open-data portal data.caf.fr "
@@ -20683,6 +21294,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category_ar,category_en",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset 'developed-crossroads' ('Developed "
       "Crossroads') on the European open-data portal data.ajman.ae "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -20703,6 +21315,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune",
+    .id_keys = "mois+commune",
     .description = "OpenDataSoft dataset 'gpso_biodechetmarchesalimentaires' "
       "('Collecte des bio-déchets sur les marchés alimentaires "
       "(expérimentation terminée)') on the European open-data portal "
@@ -20749,6 +21362,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "project_title,foa_name,city,award_type",
+    .id_keys = "cid",
     .description = "OpenDataSoft dataset 'solar-energy-research-database' ('Dataset "
       "does not exist anymore - Solar Energy Research Database') on the "
       "European open-data portal openenergyhub.ornl.gov (portal's own "
@@ -20769,6 +21383,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "wert+jahr",
     .description = "OpenDataSoft dataset 'wohnberechtigte_altersgruppen_weiblich' "
       "('Wohnberechtigte Altersgruppen weiblich') on the European "
       "open-data portal opendata.wuerzburg.de (portal's own dataset). "
@@ -20857,6 +21472,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_lieu_d_execution,objet_du_marche_256_caracteres_maxi,type_de_prix,type_de_groupement_d_oe",
+    .id_keys = "objet_du_marche_256_caracteres_maxi",
     .description = "OpenDataSoft dataset 'ville-de-blois-marches-publics-sup-40keur' "
       "('2024_Ville de Blois - marches publics sup 40Keur') on the "
       "European open-data portal data.blois.agglopolys.fr (portal's own "
@@ -20878,6 +21494,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_insee",
     .description = "OpenDataSoft dataset '244400610_secteurs_collecte_encombrants' "
       "('Secteurs de collecte des encombrants pour le territoire de Cap "
       "Atlantique') on the European open-data portal "
@@ -20898,6 +21515,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'valorisation-energetique-des-ressources-consommees-annuellement' "
       "('Valeur énergétique des ressources consommées') on the European "
@@ -20918,6 +21536,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "direction_name",
+    .id_keys = "date",
     .description = "OpenDataSoft dataset "
       "'comptage-mensuel-139-rue-etienne-marcel-out' ('Comptage Mensuel "
       "139 rue Etienne Marcel OUT') on the European open-data portal "
@@ -20938,6 +21557,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_mouvement,nature",
+    .id_keys = "nature_code+chapitre_code+type_de_mouvement",
     .description = "OpenDataSoft dataset 'compte-administratif-2016' ('​Compte "
       "administratif 2016') on the European open-data portal "
       "data.cannes.com (portal's own dataset). Records API Explore "
@@ -21000,6 +21620,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gebiet",
+    .id_keys = "nr",
     .description = "OpenDataSoft dataset 'begegnungszonen' ('Begegnungszonen Stadt "
       "St.Gallen') on the European open-data portal daten.stadt.sg.ch "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -21019,6 +21640,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lga+period",
     .description = "OpenDataSoft dataset 'cardiovascular-disease-hospitalisations' "
       "('Cardiovascular disease hospitalisations') on the European "
       "open-data portal data.peclet.com.au (portal's own dataset). "
@@ -21038,6 +21660,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodo+entidade",
     .description = "OpenDataSoft dataset 'dadores-de-sangue' ('Dadores de Sangue') "
       "on the European open-data portal transparencia.sns.gov.pt "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -21058,6 +21681,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'sites-eco_counter' ('Comptage vélo - "
       "Localisation des compteurs') on the European open-data portal "
       "anglet-opendatapaysbasque.opendatasoft.com (portal's own "
@@ -21079,6 +21703,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "participation+annee",
     .description = "OpenDataSoft dataset "
       "'idefin-investit-egalement-dans-le-developpement-du-secteur-energetique-ainsi-que' "
       "('Idefin investit également dans le développement du secteur "
@@ -21100,6 +21725,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lomr_id,case_no,source_cit",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'letter-of-map-revision-fema' ('Letter of "
       "Map Revision FEMA') on the European open-data portal "
       "cityofsalinas.opendatasoft.com (portal's own dataset). Records "
@@ -21119,6 +21745,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "route_long_name,dropoff_type,pickup_type,trip_headsign",
+    .id_keys = "trip_headsign",
     .description = "OpenDataSoft dataset 'bus-routes-regional' ('Bus Routes Regional "
       "(PTV)') on the European open-data portal data.casey.vic.gov.au "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -21160,6 +21787,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom,delib_objet,delib_num",
+    .id_keys = "delib_num",
     .description = "OpenDataSoft dataset "
       "'214401036_deliberations-de-la-commune-de-montoir-de-bretagne' "
       "('Délibérations de la commune de Montoir-de-Bretagne') on the "
@@ -21202,6 +21830,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libgeo",
+    .id_keys = "codgeo",
     .description = "OpenDataSoft dataset 't_req_camvs_menages_parcom' ('Indicateurs "
       "INSEE ménages') on the European open-data portal "
       "data.melunvaldeseine.fr (portal's own dataset). Records API "
@@ -21240,6 +21869,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'equipements-municipaux' ('Equipements "
       "municipaux') on the European open-data portal "
       "data.fleurysurorne.fr (portal's own dataset). Records API "
@@ -21281,6 +21911,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,arealabel,areaidentifier,arealonglabel",
+    .id_keys = "arealabel+periodlabel",
     .description = "OpenDataSoft dataset "
       "'overcrowded-households-percentage-wmca-wards-2025' "
       "('Overcrowded households (Percentage) - WMCA Wards (2025)') on "
@@ -21303,6 +21934,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr",
     .description = "OpenDataSoft dataset "
       "'hauptwohnbevolkerung-geburten-und-sterbefalle' "
       "('Hauptwohnbevölkerung - Geburten und Sterbefälle seit 1990') on "
@@ -21325,6 +21957,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset 'referendum-2011-affluenza-quesito-03' "
       "('Referendum 2011 - affluenza - Quesito 03') on the European "
       "open-data portal opendata.comune.bologna.it (portal's own "
@@ -21345,6 +21978,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'tal_jardinspartages' ('Jardins partagés "
       "talençais') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -21385,6 +22019,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset '03-expenditure-per-visitor' ('Expenditure "
       "per Visitor') on the European open-data portal www.data.gov.bh "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -21427,6 +22062,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "scheme_type",
+    .id_keys = "rejection_reason+scheme_type",
     .description = "OpenDataSoft dataset "
       "'covid-19-test-and-trace-support-applications-rejections' "
       "('Covid-19 - Test and Trace Support applications (rejections)') "
@@ -21449,6 +22085,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "libgeo+annee",
     .description = "OpenDataSoft dataset "
       "'hepatite-a-donnees-declaration-obligatoire' ('Hépatite A : "
       "Données du signalement obligatoire (Département)') on the "
@@ -21471,6 +22108,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset "
       "'uebersicht-einiger-kindertagespflegepersonen-in-der-stadt-grevenbroich' "
       "('Grevenbroich: Übersicht einiger Kindertagespflegepersonen') on "
@@ -21512,6 +22150,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-050812-ostra-ersboda-sodra' "
       "('Energiförbrukning i Geografiska området 050812 (Östra Ersboda, "
@@ -21555,6 +22194,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_scientifique,nom_vernaculaire",
+    .id_keys = "nom_scientifique",
     .description = "OpenDataSoft dataset "
       "'ens-inventaire-des-plantes-vasculaires-grange-de-lege' ('ENS - "
       "Inventaire des plantes vasculaires - Grange de Lège') on the "
@@ -21598,6 +22238,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'graphique-1-evolution-du-nombre-de-lits-et-de-places-au-31-decembre-depuis-fin-2013' "
       "('Graphique 1 – Évolution du nombre de lits et de places au 31 "
@@ -21620,6 +22261,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_commerce,adresse_commerce,ville,activite",
+    .id_keys = "nom_commerce",
     .description = "OpenDataSoft dataset 'liste-commerces-petitscommerces' ('Liste "
       "des commerces affiliés à petitscommerces.fr') on the European "
       "open-data portal data.tours-metropole.fr (portal's own dataset). "
@@ -21640,6 +22282,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "indfoy_af+dtreffre",
     .description = "OpenDataSoft dataset 'af_s_majo_sitfam_d_nat' ('AF - Répartition "
       "des allocataires selon la majoration d'AF ou non et la situation "
       "familiale [National]') on the European open-data portal "
@@ -21662,6 +22305,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "finiancial_report+total_of_certificates+month",
     .description = "OpenDataSoft dataset "
       "'number-of-reports-security-certificates-and-initiatives-of-al-musherif-comprehen' "
       "('Number of reports, security certificates and initiatives of Al "
@@ -21683,6 +22327,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom+num_loc",
     .description = "OpenDataSoft dataset 'jardins-cultives' ('Jardins cultivés et "
       "fermes urbaines') on the European open-data portal "
       "data.seineouest.fr (portal's own dataset). Records API Explore "
@@ -21703,6 +22348,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,departement,region",
+    .id_keys = "energieannuelleglissanteinjectee+dateraccordement",
     .description = "OpenDataSoft dataset "
       "'installation-production-stockage-electricite-agrege-311224-departement65' "
       "('Installations de production et de stockage d'électricité dans "
@@ -21745,6 +22391,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+stadtbezirk",
     .description = "OpenDataSoft dataset 'stadtbezirke_altenquotient' ('Stadtbezirke "
       "Altenquotient') on the European open-data portal "
       "opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -21765,6 +22412,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'bilan-des-actions-de-valorisation-du-centre-de-la-memoire-urbaine-dagglomeration' "
       "('Actions de valorisation du Centre de la Mémoire Urbaine "
@@ -21787,6 +22435,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gsp",
+    .id_keys = "gsp",
     .description = "OpenDataSoft dataset 'spm-dfes-substation-polygons-gsp' ('SPM "
       "DFES Substation Polygons Grid Supply Point') on the European "
       "open-data portal spenergynetworks.opendatasoft.com (portal's own "
@@ -21828,6 +22477,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "categorie",
+    .id_keys = "categorie",
     .description = "OpenDataSoft dataset "
       "'agglopolys-hebergements-collectifs-au-1er-janvier-2021' "
       "('Agglopolys - hébergements collectifs au 1er janvier 2021') on "
@@ -21871,6 +22521,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee+reseau",
     .description = "OpenDataSoft dataset "
       "'202504_transport_sco_tad_regulier-terrestre' ('Nombre d'usagers "
       "du transport terrestre régulier, transport à la demande, "
@@ -21892,6 +22543,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,objet",
+    .id_keys = "adresse",
     .description = "OpenDataSoft dataset 'brumisateurs-dete' ('Brumisateurs d'été') "
       "on the European open-data portal data.montreuil.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -21911,6 +22563,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_voie,nom_quartier,position",
+    .id_keys = "nom_voie+position",
     .description = "OpenDataSoft dataset 'places-hotel' ('Places de stationnement "
       "\"Hôtel\"') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -21952,6 +22605,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'zone-citypass-tecsncb' ('Zone CityPass "
       "Liège - Périmètre') on the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -21991,6 +22645,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name+how_to_dispose",
     .description = "OpenDataSoft dataset 'domestic-waste-a-z-list-complete' "
       "('Residential Waste A-Z List-Complete') on the European "
       "open-data portal data.peclet.com.au (portal's own dataset). "
@@ -22030,6 +22685,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "ogc_fid",
     .description = "OpenDataSoft dataset 'zones-de-circulation-50-km-h-anglet' "
       "('Zones de circulation 50 km/h - Anglet') on the European "
       "open-data portal anglet-opendatapaysbasque.opendatasoft.com "
@@ -22051,6 +22707,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'nombre-d-emplois-sur-nos-parcs-d-activite-economique' ('Nombre "
       "d'emplois sur nos Parcs d'Activité Economique') on the European "
@@ -22091,6 +22748,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "station_name,suburb",
+    .id_keys = "easting",
     .description = "OpenDataSoft dataset 'railway-station-platforms-ptv' ('Railway "
       "Station Platforms (PTV)') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -22132,6 +22790,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau,nom_lieu_v,nom_canton,nom_circon",
+    .id_keys = "cod_lieu_v",
     .description = "OpenDataSoft dataset "
       "'214401846_secteurs-electoraux-saint-nazaire-2015-2019' "
       "('Secteurs électoraux - Saint-Nazaire - 2015-2019') on the "
@@ -22154,6 +22813,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "mds_nom,mds_type",
+    .id_keys = "id_so_territoire_mds",
     .description = "OpenDataSoft dataset "
       "'224900019_territoire-des-maisons-departementales-des-solidarites-maine-et-loire' "
       "('Territoire des Maisons départementales des solidarités en "
@@ -22197,6 +22857,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "num_serie",
     .description = "OpenDataSoft dataset '18255_le_subdray_dae' ('18255 Le Subdray "
       "DAE') on the European open-data portal data.bourgesplus.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -22216,6 +22877,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'liste-des-hebergements' ('Hébergements') "
       "on the European open-data portal data.fleurysurorne.fr (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -22256,6 +22918,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,area_type",
+    .id_keys = "numerator",
     .description = "OpenDataSoft dataset "
       "'premature-births-icp-outcomes-framework-birmingham-and-solihull' "
       "('Premature births - ICP Outcomes Framework - Birmingham and "
@@ -22278,6 +22941,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stadtbezirk",
+    .id_keys = "stadtbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'hauptwohnbevolkerung-aussenwanderungen-zu-und-wegzuge-nach-stadtbezirken-2024' "
       "('Hauptwohnbevölkerung - Aussenwanderungen - Zu- und Wegzüge "
@@ -22300,6 +22964,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "vecchia_denominazione_quartiere",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-2016-consigli-circoscrizionali-quartiere-navile' "
       "('Elezioni amministrative 2016. Consigli Circoscrizionali - "
@@ -22321,6 +22986,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet,ville,reference_du_contrat,montant_initial_contractualise_ht_ou_montant_maximum_ht",
+    .id_keys = "reference_du_contrat+code_postal",
     .description = "OpenDataSoft dataset 'marches_publics_notifies_2016' ('Marchés "
       "publics notifiés en 2016') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -22360,6 +23026,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "population",
     .description = "OpenDataSoft dataset "
       "'working-population-15-years-and-above-by-employment-status-nationality-and-sex-c' "
       "('Working Population (15 Years & Above) by Employment Status, "
@@ -22381,6 +23048,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "libros+numero",
     .description = "OpenDataSoft dataset 'datos-estadisticos-bibliotecas' ('Datos "
       "estadísticos bibliotecas') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -22420,6 +23088,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "prop_explt_4cult",
     .description = "OpenDataSoft dataset "
       "'pesticides-exposition-professionnelle-aux-herbicides-region' "
       "('Pesticides : exposition professionnelle aux herbicides "
@@ -22442,6 +23111,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nr",
     .description = "OpenDataSoft dataset "
       "'dormagen-buergerentscheid-2012-11-25-stadt-dormagen' "
       "('Dormagen: Bürgerentscheid-2012-11-25-Stadt-Dormagen') on the "
@@ -22484,6 +23154,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-092021-boleang-vastra' "
       "('Energiförbrukning i Geografiska området 092021 (Böleäng, "
@@ -22505,6 +23176,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_la_zone_commune,identifiant_du_site_dans_l_arrete,numero_de_zone_dans_l_arrete,identifiant_de_la_zone",
+    .id_keys = "identifiant_du_site_dans_l_arrete+numero_de_zone_dans_l_arrete",
     .description = "OpenDataSoft dataset 'la-couverture-ciblee-telephonie-mobile' "
       "('La couverture ciblée - Téléphonie Mobile') on the European "
       "open-data portal www.herault-data.fr (portal's own dataset). "
@@ -22525,6 +23197,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_scientifique,nom_vernaculaire",
+    .id_keys = "nom_scientifique",
     .description = "OpenDataSoft dataset "
       "'ens-inventaire-des-plantes-vasculaires-foret-de-bouconne' ('ENS "
       "- Inventaire des plantes vasculaires - Forêt de Bouconne') on "
@@ -22568,6 +23241,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_x",
+    .id_keys = "taux_hommes_inf_24_ans",
     .description = "OpenDataSoft dataset "
       "'mh_tableau_taux_bruts_ages_sexe_pathologies_vf' "
       "('mh_tableau_taux_bruts_âges_sexe_pathologies_vf') on the "
@@ -22589,6 +23263,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "id_quartier",
     .description = "OpenDataSoft dataset 'conseil-de-quartier-ville-de-tours' "
       "('Conseils de quartier - Tours') on the European open-data "
       "portal data.tours-metropole.fr (portal's own dataset). Records "
@@ -22608,6 +23283,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "masfb1to",
     .description = "OpenDataSoft dataset 'vfdas_dep' ('Dépenses d'action sociale "
       "[Département]') on the European open-data portal data.caf.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -22627,6 +23303,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category_ar,category_en",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset 'area-of-public-parks' ('Area of Public "
       "Parks') on the European open-data portal data.ajman.ae (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -22646,6 +23323,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune",
+    .id_keys = "periode+commune",
     .description = "OpenDataSoft dataset 'nombre-de-demandes-aupres-de-lalec' "
       "('Nombre de demandes auprès de l'ALEC') on the European "
       "open-data portal data.seineouest.fr (portal's own dataset). "
@@ -22666,6 +23344,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_du_canton,libelle_du_departement,binome,nuance",
+    .id_keys = "code_du_canton",
     .description = "OpenDataSoft dataset "
       "'elections-departementales-2021-resultats-du-2eme-tour-dans-les-hautes-pyrenees' "
       "('Elections départementales 2021 - résultats du 2ème tour dans "
@@ -22708,6 +23387,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+stadtbezirk",
     .description = "OpenDataSoft dataset "
       "'stadtbezirke_auslaender_durchschnittsalter' ('Stadtbezirke "
       "Auslaender Durchschnittsalter') on the European open-data portal "
@@ -22770,6 +23450,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau_vote,ville,adresse_substitution,adresse",
+    .id_keys = "code_insee+code_bureau_vote",
     .description = "OpenDataSoft dataset 'bureaux-de-vote-2017-tarn-et-garonne' "
       "('Bureaux de vote (2017) - Tarn-et-Garonne') on the European "
       "open-data portal data.82amenagement.fr (portal's own dataset). "
@@ -22790,6 +23471,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom_prenom",
     .description = "OpenDataSoft dataset "
       "'centre-intercommunal-d-action-sociale-du-blaisois-administrateurs-trices-elus-es' "
       "('Centre Intercommunal d'Action Sociale du Blaisois - "
@@ -22813,6 +23495,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,parcelle",
+    .id_keys = "parcelle",
     .description = "OpenDataSoft dataset '214400699_bien_sans_maitre' ('Biens sans "
       "maître sur la Commune de Guérande') on the European open-data "
       "portal data.capatlantique.fr (portal's own dataset). Records API "
@@ -22833,6 +23516,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_de_residence",
+    .id_keys = "zone_de_residence",
     .description = "OpenDataSoft dataset "
       "'pratiques_et_frequences_de_deplacement_secteur' ('EMC² : "
       "Pratiques et fréquences de déplacement des individus par secteur "
@@ -22854,6 +23538,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type,bornes_fontaines",
+    .id_keys = "bornes_fontaines",
     .description = "OpenDataSoft dataset 'bornes-fontaines' ('Bornes-fontaines') on "
       "the European open-data portal data.montreuil.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -22873,6 +23558,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'photographie-aerienne' ('Photographie "
       "aérienne') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -22936,6 +23622,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "funktion_nr",
     .description = "OpenDataSoft dataset "
       "'funktionen-4-stellig-im-budget-2023-stadt-st-gallen' "
       "('Funktionen (4-Stellig) im Budget 2023 Stadt St.Gallen') on the "
@@ -22958,6 +23645,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lga+period+risk_group",
     .description = "OpenDataSoft dataset "
       "'chronic-obstructive-pulmonary-disease-deaths' ('Chronic "
       "obstructive pulmonary disease deaths') on the European open-data "
@@ -22999,6 +23687,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "pourcentage",
     .description = "OpenDataSoft dataset "
       "'rerporting-restauration-collective-anglet-repartition-des-achats-alimentaires-se' "
       "('Reporting restauration collective scolaire Anglet (depuis "
@@ -23022,6 +23711,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'nombre-d-entreprises-dans-les-incubateurs' "
       "('Nombre d'entreprises dans les incubateurs') on the European "
       "open-data portal data.bep.be (portal's own dataset). Records API "
@@ -23041,6 +23731,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "uniqueid",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'future-growth-area' ('Future Growth Area') "
       "on the European open-data portal cityofsalinas.opendatasoft.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -23060,6 +23751,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "route_long_name,type_of_service,pickup_type,dropoff_type",
+    .id_keys = "trip_headsign",
     .description = "OpenDataSoft dataset 'bus-routes-nightrider' ('Bus Routes "
       "NightRider (PTV)') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -23120,6 +23812,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "appellation,commune,adresse2,adresse1",
+    .id_keys = "appellation",
     .description = "OpenDataSoft dataset "
       "'224900019_ateliers-de-co-reparation-en-maine-et-loire' "
       "('Ateliers de co-réparation en Maine-et-Loire') on the European "
@@ -23182,6 +23875,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'professionnels-de-sante' ('Professionnels "
       "de santé et de bien-être') on the European open-data portal "
       "data.fleurysurorne.fr (portal's own dataset). Records API "
@@ -23225,6 +23919,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stadtbezirk",
+    .id_keys = "stadtbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'sozialindikatoren-in-den-stadtbezirken-2023' "
       "('Sozialindikatoren in den Stadtbezirken 2023') on the European "
@@ -23264,6 +23959,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "date_d_evenement+nombre",
     .description = "OpenDataSoft dataset 'mariages-par-jour' ('Mariages par jour "
       "2020') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -23303,6 +23999,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset '34-nhra-number-of-private-pharmacies' "
       "('Number of Private Pharmacies.') on the European open-data "
       "portal www.data.gov.bh (portal's own dataset). Records API "
@@ -23323,6 +24020,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "seccion_agrarica_comarcal",
+    .id_keys = "seccion_agrarica_comarcal",
     .description = "OpenDataSoft dataset 'contratos-agricultura-ecologica-sac' "
       "('Contratos de agricultura ecológica en vigor por sección "
       "agraria comarcal') on the European open-data portal "
@@ -23366,6 +24064,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nb_pres_j01+nb_pres_j01c",
     .description = "OpenDataSoft dataset "
       "'antibiotiques-consommation-en-medecine-de-ville-departement' "
       "('Antibiotiques : Consommation en médecine de ville "
@@ -23388,6 +24087,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "innerorts",
     .description = "OpenDataSoft dataset "
       "'rhein-kreis-neuss-strassenverkehrsunfalle-mit-personenschaden-nach-ortslage' "
       "('Rhein-Kreis Neuss: Straßenverkehrsunfälle mit Personenschaden "
@@ -23410,6 +24110,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "wijknaam",
+    .id_keys = "wijkcode",
     .description = "OpenDataSoft dataset 'overzicht-oppervlaktes-per-wijk-den-haag' "
       "('Overzicht oppervlaktes per wijk Den Haag') on the European "
       "open-data portal den-haag-opendata.opendatasoft.com (portal's "
@@ -23430,6 +24131,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "ar+kommun+typ_av_avfall",
     .description = "OpenDataSoft dataset 'insamling-av-avfall-umea-regionen' "
       "('Insamling av avfall Umeå regionen') on the European open-data "
       "portal opendata.umea.se (portal's own dataset). Records API "
@@ -23450,6 +24152,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_pav,commune",
+    .id_keys = "latitude",
     .description = "OpenDataSoft dataset 'pav-cdcmc2024' ('Les Points d'Apport "
       "Volontaire du Minervois au Caroux 2024') on the European "
       "open-data portal www.herault-data.fr (portal's own dataset). "
@@ -23580,6 +24283,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "region_en,region_ar",
+    .id_keys = "value_in_aed",
     .description = "OpenDataSoft dataset 'import-volume-grouped-by-region' ('Import "
       "Volume Grouped by Region') on the European open-data portal "
       "data.ajman.ae (portal's own dataset). Records API Explore v2.1, "
@@ -23600,6 +24304,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_lieu,ad_lieu,com_lieu,type",
+    .id_keys = "id_local",
     .description = "OpenDataSoft dataset "
       "'arrets-de-covoiturage-ile-de-france-mobilites' ('Arrêts de "
       "covoiturage Île-de-France Mobilités') on the European open-data "
@@ -23662,6 +24367,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+stadtbezirk+thema",
     .description = "OpenDataSoft dataset 'prognose' ('Bevölkerungsprognose - "
       "Kommunalstatistik') on the European open-data portal "
       "opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -23682,6 +24388,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "structure,rue,ville,mail",
+    .id_keys = "structure",
     .description = "OpenDataSoft dataset 'etablissements-famille-social' "
       "('Structures proposant des services aux familles sur le "
       "périmètre de la Communauté urbaine de Dunkerque') on the "
@@ -23704,6 +24411,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "busbar_name,substation_name",
+    .id_keys = "busbar_name",
     .description = "OpenDataSoft dataset "
       "'spm-ltds-appendix-4-fault-levels-table-4-132kv-1ph-copy' ('SPM "
       "LTDS Appendix 4 Fault Levels (Table 4) 132kV 1ph - copy') on the "
@@ -23772,6 +24480,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_com",
     .description = "OpenDataSoft dataset '214402117_borne_elec' ('Borne de recharge "
       "de véhicules électriques sur La Turballe') on the European "
       "open-data portal data.capatlantique.fr (portal's own dataset). "
@@ -23791,6 +24500,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nombre_de_vp_du_menage",
+    .id_keys = "nombre_de_vp_du_menage",
     .description = "OpenDataSoft dataset 'donnees_principales_emc-vehicule' "
       "('Données_principales_EMC²-véhicule') on the European open-data "
       "portal www.karudata.com (portal's own dataset). Records API "
@@ -23811,6 +24521,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_iris,nom_com",
+    .id_keys = "dcomiris",
     .description = "OpenDataSoft dataset 'logement-en-2015-base-infracommunale-iris' "
       "('Logement en 2015 - Base infracommunale (IRIS)') on the "
       "European open-data portal data.montreuil.fr (portal's own "
@@ -23873,6 +24584,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_entite,entite",
+    .id_keys = "ins",
     .description = "OpenDataSoft dataset 'indice-de-dependance' ('Indice de "
       "dépendance') on the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -23893,6 +24605,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "preis+monat_jahr",
     .description = "OpenDataSoft dataset "
       "'gas-und-fernwaermepreise-der-stgaller-stadtwerke' ('Gas- und "
       "Fernwärmepreise der St.Galler Stadtwerke im Vergleich zum "
@@ -23915,6 +24628,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "date",
     .description = "OpenDataSoft dataset "
       "'national-electricity-consumption-2005-2020' ('National "
       "electricity consumption 2005 - 2020') on the European open-data "
@@ -23936,6 +24650,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nome_do_servico_de_urgencia,nome_da_valencia,unidade_hospitalar,endereco",
+    .id_keys = "codigo_postal+nome_da_valencia",
     .description = "OpenDataSoft dataset 'caracterizacao-das-valencias-de-urgencia' "
       "('Caracterização das Valências de Urgência') on the European "
       "open-data portal transparencia.sns.gov.pt (portal's own "
@@ -23982,6 +24697,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description",
+    .id_keys = "somme",
     .description = "OpenDataSoft dataset "
       "'le-bep-recycle-et-valorise-les-dechets-collectes0' ('Recettes "
       "de recyclage et de valorisation des déchets') on the European "
@@ -24022,6 +24738,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'libraries-copy' ('Libraries Locations') on "
       "the European open-data portal data.casey.vic.gov.au (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -24148,6 +24865,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site_web",
+    .id_keys = "nom_du_site_web",
     .description = "OpenDataSoft dataset 'sites-web-heberges-par-la-ville' ('Sites "
       "web hébergés par la Ville') on the European open-data portal "
       "data.fleurysurorne.fr (portal's own dataset). Records API "
@@ -24208,6 +24926,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "altersgruppen_jahre",
+    .id_keys = "altersgruppen",
     .description = "OpenDataSoft dataset "
       "'ds-bevolkerung-altersgruppen-nach-staatsangehoerigkeit-geschlecht-2016' "
       "('Hauptwohnbevölkerung Altersgruppen nach Staatsangehörigkeit "
@@ -24230,6 +24949,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "descrizione_zona,descrizione_quartiere",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset 'referendum-2011-risultati-quesito-03' "
       "('Referendum 2011 - risultati - Quesito 03') on the European "
       "open-data portal opendata.comune.bologna.it (portal's own "
@@ -24252,6 +24972,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "raison_sociale,type_produit_acquis",
+    .id_keys = "type_produit_acquis+siret+annee",
     .description = "OpenDataSoft dataset 'met-declaration-agec' ('Déclarations "
       "d'acquisitions de produits issus du réemploi, de la "
       "réutilisation ou intégrant des matières recyclées de Bordeaux "
@@ -24295,6 +25016,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'04-total-number-of-orphans-by-gender-and-year' ('Total Number "
       "of Sponsored Bahraini Orphans by Gender and Year') on the "
@@ -24360,6 +25082,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libgeo",
+    .id_keys = "libgeo+an_mesure",
     .description = "OpenDataSoft dataset "
       "'couvertures-vaccinales-archives-departement' ('Couvertures "
       "vaccinales : archives depuis 2004 (Département)') on the "
@@ -24382,6 +25105,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "strassen_name",
+    .id_keys = "strassen_name+bezirk_nr",
     .description = "OpenDataSoft dataset "
       "'dormagen-landtagswahl-2022-strassenverzeichnis' ('Dormagen: "
       "Landtagswahl-2022-Straßenverzeichnis') on the European open-data "
@@ -24422,6 +25146,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-123003-mariehem-studentbostader' "
       "('Energiförbrukning i Geografiska området 123003 (Mariehem "
@@ -24465,6 +25190,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_scientifique,nom_vernaculaire",
+    .id_keys = "nom_scientifique",
     .description = "OpenDataSoft dataset "
       "'ens-inventaire-des-plantes-vasculaires-lac-de-bordeneuve' ('ENS "
       "- Inventaire des plantes vasculaires - Lac de Bordeneuve') on "
@@ -24487,6 +25213,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dep_name,naf_section_name,reg_name",
+    .id_keys = "dep_code+naf_section_code",
     .description = "OpenDataSoft dataset "
       "'donnees-dep-prets-garantis-par-l-etat-covid19-france' ('Données "
       "relatives aux prêts garantis par l’État dans le cadre de "
@@ -24510,6 +25237,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "famille_d_organismes",
+    .id_keys = "famille_d_organismes",
     .description = "OpenDataSoft dataset "
       "'tarification-geographique-dans-les-contrats-individuels' "
       "('Datastory OC - 2.3 Part des bénéficiaires d'un contrat "
@@ -24593,6 +25321,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "num_loc",
     .description = "OpenDataSoft dataset 'permanence-espace-info-energie' "
       "('Permanence conseil France Renov'') on the European open-data "
       "portal data.seineouest.fr (portal's own dataset). Records API "
@@ -24613,6 +25342,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom+prenom",
     .description = "OpenDataSoft dataset "
       "'deuxieme-tour-des-elections-municipales-2020-dans-les-hautes-pyrenees' "
       "('Deuxième tour des élections municipales 2020 dans les "
@@ -24714,6 +25444,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_departement,commune",
+    .id_keys = "id_projet+code_produit",
     .description = "OpenDataSoft dataset 'simulaideurs-cout-des-travaux' "
       "('Simul'Aid€s - Coût des travaux') on the European open-data "
       "portal data.82amenagement.fr (portal's own dataset). Records API "
@@ -24734,6 +25465,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_lieu_d_execution,objet_du_marche_256_caracteres_maxi,type_de_prix,type_de_groupement_d_oe",
+    .id_keys = "identifiant_du_titulaire_ndeg_siret_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributai+date_notif_contrat_actes_modif_aaaa_mm_jj",
     .description = "OpenDataSoft dataset "
       "'2024_agglopolys-marches-publics-sup-40keur' ('2024_Agglopolys - "
       "marches publics sup 40Keur') on the European open-data portal "
@@ -24756,6 +25488,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom",
+    .id_keys = "coll_siret",
     .description = "OpenDataSoft dataset '264402447_liste_delib_pv_seance' ('Liste "
       "des délibérations et Procès-verbaux des conseils "
       "d'administration du CCAS de la commune du Croisic') on the "
@@ -24777,6 +25510,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'consommation-d-energie-primaire' "
       "('Consommation d'énergie primaire') on the European open-data "
       "portal www.karudata.com (portal's own dataset). Records API "
@@ -24796,6 +25530,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,objet,permanence,horaire",
+    .id_keys = "adresse",
     .description = "OpenDataSoft dataset 'lieux-d-acces-au-droit_montreuil' "
       "('Permanences d'Accès au Droit Montreuil') on the European "
       "open-data portal data.montreuil.fr (portal's own dataset). "
@@ -24815,6 +25550,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "exercice_budgetaire",
     .description = "OpenDataSoft dataset 'encours-de-la-dette' ('Encours de la "
       "dette') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -24897,6 +25633,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "sa2_name21",
+    .id_keys = "sa1_code21",
     .description = "OpenDataSoft dataset "
       "'abs-statistical-areas-level-1-boundaries-2021' ('ABS "
       "Statistical Areas Level 1 Boundaries - 2021') on the European "
@@ -24965,6 +25702,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ana_1_description_fr,type",
+    .id_keys = "ana_1_description_fr+movement_exerciseyear+type",
     .description = "OpenDataSoft dataset "
       "'le-bep-va-chercher-dimportants-subsides-pour-developper-ses-infrastructures-subs' "
       "('Subsides sur investissements zones d'activité économique et "
@@ -25006,6 +25744,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'customer-service-centres-copy' ('Customer "
       "Service Centre Locations') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -25047,6 +25786,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet",
+    .id_keys = "nombeneficiaire+referencedecision",
     .description = "OpenDataSoft dataset '214401515_subventions_liste' ('Subventions "
       "attribuées aux associations par la commune de "
       "Saint-André-des-Eaux') on the European open-data portal "
@@ -25068,6 +25808,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "date",
     .description = "OpenDataSoft dataset '224900019_apa-en-maine-et-loire' "
       "('Allocation Personnalisée à l'Autonomie (APA) à domicile en "
       "Maine-et-Loire') on the European open-data portal "
@@ -25133,6 +25874,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periode",
     .description = "OpenDataSoft dataset "
       "'statistiques-sur-les-inscriptions-aux-services-periscolaires-par-age-et-par-sexe' "
       "('Statistiques sur les inscriptions aux services périscolaires "
@@ -25196,6 +25938,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "wissenschaftlicher_name,art",
+    .id_keys = "art",
     .description = "OpenDataSoft dataset 'zoo-tierarten-2024' ('Zoo Tierarten - "
       "2024') on the European open-data portal open-data.dortmund.de "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -25216,6 +25959,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "descrizione_zona,descrizione_quartiere",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset 'elezioni-amministrative-2011-consiglio' "
       "('Elezioni amministrative 2011 - Voti alle liste per il "
       "Consiglio Comunale') on the European open-data portal "
@@ -25278,6 +26022,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "indicator",
+    .id_keys = "year+indicator",
     .description = "OpenDataSoft dataset "
       "'population-connected-to-wastewater-treatment-alskan-almwswlwn-bmaaljh-almyah-ala' "
       "('Population Connected to Wastewater Treatment') on the European "
@@ -25319,6 +26064,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "reference",
     .description = "OpenDataSoft dataset "
       "'invitation-to-tender-for-contracts-october-2023' ('Invitation "
       "to tender for contracts - October 2023') on the European "
@@ -25361,6 +26107,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'meerbusch-familien-freizeit-tour-sud' "
       "('Meerbusch: Familien-Freizeit-Radtour-Süd') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -25381,6 +26128,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "imgeo_type_plus",
+    .id_keys = "imgeo_objectbegin",
     .description = "OpenDataSoft dataset 'zendmasten' ('Zendmasten Den Haag') on the "
       "European open-data portal den-haag-opendata.opendatasoft.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -25401,6 +26149,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-102401-degernas' "
       "('Energiförbrukning i Geografiska området 102401 (Degernäs)') on "
@@ -25443,6 +26192,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_vernaculaire,nom_scientifique",
+    .id_keys = "nom_vernaculaire",
     .description = "OpenDataSoft dataset "
       "'ens-inventaire-des-plantes-vasculaires-gorges-de-la-save-et-vallee-de-la-seygoua' "
       "('ENS - Inventaire des plantes vasculaires - Gorges de la Save "
@@ -25545,6 +26295,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "month_ar+year",
     .description = "OpenDataSoft dataset 'auditing-ground-bridges-level' ('Auditing "
       "Ground Bridges Level') on the European open-data portal "
       "data.ajman.ae (portal's own dataset). Records API Explore v2.1, "
@@ -25565,6 +26316,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune",
+    .id_keys = "annee+commune",
     .description = "OpenDataSoft dataset 'aides-habitat-degrade' ('Aides financières "
       "pour la résorption de l’habitat dégradé et des copropriétés "
       "fragiles') on the European open-data portal data.seineouest.fr "
@@ -25586,6 +26338,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset "
       "'liste-des-decheteries-de-la-communaute-de-communes-pyrenees-vallees-des-gaves' "
       "('Liste des déchèteries de la Communauté de communes Pyrénées "
@@ -25607,6 +26360,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'grenzwanderung-teil-6' ('Grenzwanderung "
       "Teil 6') on the European open-data portal opendata.wuerzburg.de "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -25627,6 +26381,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee+libelle",
     .description = "OpenDataSoft dataset "
       "'bilan-dactivite-des-points-dapport-volontaire-presents-sur-le-perimetre-de-la-co' "
       "('Bilan d'activité des points d'apport volontaire') on the "
@@ -25689,6 +26444,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "categorie",
+    .id_keys = "categorie",
     .description = "OpenDataSoft dataset "
       "'agglopolys-nombre-et-capacite-des-campings-au-1er-janvier-2021' "
       "('Agglopolys - Nombre et capacité des campings au 1er janvier "
@@ -25712,6 +26468,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom",
+    .id_keys = "liste_delib_url",
     .description = "OpenDataSoft dataset '254401599_liste_delib_pv_seance' ('Liste "
       "des délibérations et Procès-verbaux des conseils municipaux du "
       "Syndicat Mixte de la Madeleine') on the European open-data "
@@ -25732,6 +26489,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "frequence_d_utilisation_des_lignes_urbaines",
+    .id_keys = "frequence_d_utilisation_des_lignes_urbaines",
     .description = "OpenDataSoft dataset 'donnees_principales_emc-frequence-2' "
       "('Données_principales_EMC² - Fréquence 2') on the European "
       "open-data portal www.karudata.com (portal's own dataset). "
@@ -25811,6 +26569,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nameger,namefre,namedut",
+    .id_keys = "tgid",
     .description = "OpenDataSoft dataset 'arrondissements-belgique' "
       "('Arrondissements belges - Limites administratives') on the "
       "European open-data portal spi-digitalwallonia.opendatasoft.com "
@@ -25831,6 +26590,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "einsatzkategorie_name",
+    .id_keys = "einsatzkategorie_nr+jahr_monat",
     .description = "OpenDataSoft dataset 'einsatzstatistik-feuerwehr-st-gallen' "
       "('Einsatzstatistik Feuerwehr St.Gallen') on the European "
       "open-data portal daten.stadt.sg.ch (portal's own dataset). "
@@ -25869,6 +26629,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "entidade+total_usf+tempo",
     .description = "OpenDataSoft dataset 'evolucao-do-numero-de-unidades-funcionais' "
       "('Unidades Funcionais') on the European open-data portal "
       "transparencia.sns.gov.pt (portal's own dataset). Records API "
@@ -25890,6 +26651,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lib_idpsc",
     .description = "OpenDataSoft dataset "
       "'prescriptions-lineaires-du-plan-local-d-urbanisme-en-vigueur-modification-5-appr' "
       "('Prescriptions linéaires du Plan Local d'Urbanisme (ABROGE) "
@@ -25913,6 +26675,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee+production_de_dechets_par_habitant_kgs",
     .description = "OpenDataSoft dataset 'production-de-dechets-par-habitant' "
       "('Production de déchets par habitant') on the European open-data "
       "portal data.bep.be (portal's own dataset). Records API Explore "
@@ -25932,6 +26695,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "uniqueid",
+    .id_keys = "firestation_no",
     .description = "OpenDataSoft dataset 'firedistricts' ('Fire Districts') on the "
       "European open-data portal cityofsalinas.opendatasoft.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -25951,6 +26715,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category",
+    .id_keys = "item+quarter",
     .description = "OpenDataSoft dataset 'financial-information-cash-flow' "
       "('Financial information - Cash Flow') on the European open-data "
       "portal data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -26014,6 +26779,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "raison_sociale,adresse,commune,adresse_electronique",
+    .id_keys = "raison_sociale",
     .description = "OpenDataSoft dataset "
       "'224900019_maisons-daccueil-specialisees-en-maine-et-loire' "
       "('Maisons d'accueil spécialisées en Maine-et-Loire') on the "
@@ -26077,6 +26843,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_du_departement",
     .description = "OpenDataSoft dataset "
       "'elections-legislatives-des-11-et-18-juin-2017-resultats-du-2nd-tour' "
       "('Elections législatives des 11 et 18 juin 2017 - Résultats du "
@@ -26119,6 +26886,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "area_name,area_type,area_code",
+    .id_keys = "area_code+date",
     .description = "OpenDataSoft dataset "
       "'year-6-prevalence-of-overweight-including-obesity-3-years-data-combined-birmingham-wards' "
       "('Year 6 prevalence of overweight (including obesity), 3 years "
@@ -26141,6 +26909,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "wahlraumbezeichnung",
+    .id_keys = "stimmbezirk",
     .description = "OpenDataSoft dataset 'fb33-bv-huckarde-20200913-stimmbezirke' "
       "('Kommunalwahl - Bezirksvertretungswahl Huckarde 2020') on the "
       "European open-data portal open-data.dortmund.de (portal's own "
@@ -26161,6 +26930,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zona_prossimita,areastat1,areastat2,areastat3",
+    .id_keys = "cod_zona_prossimita",
     .description = "OpenDataSoft dataset 'zone_urbanistiche' ('Zone di prossimità') "
       "on the European open-data portal opendata.comune.bologna.it "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -26181,6 +26951,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_beneficiaire,objet_de_la_subvention,reference_de_la_decision,date_s_ou_periode_s_de_versement",
+    .id_keys = "identification_du_beneficiaire",
     .description = "OpenDataSoft dataset 'pes_subventions_2019' ('Subventions "
       "conventionnées accordées par la Ville de Pessac en 2019') on the "
       "European open-data portal datahub.bordeaux-metropole.fr "
@@ -26222,6 +26993,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset '09-general-fertility-rate' ('General "
       "Fertility Rate') on the European open-data portal "
       "www.data.gov.bh (portal's own dataset). Records API Explore "
@@ -26304,6 +27076,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "monat",
+    .id_keys = "monat",
     .description = "OpenDataSoft dataset 'zs5-arbeitsmarkt-im-uberblick' "
       "('Rhein-Kreis Neuss: 2018 Arbeitsmarkt im Überblick') on the "
       "European open-data portal opendata.rhein-kreis-neuss.de "
@@ -26345,6 +27118,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-092310-roback-vastra' "
       "('Energiförbrukning i Geografiska området 092310 (Röbäck, "
@@ -26366,6 +27140,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "titre+labelss",
     .description = "OpenDataSoft dataset 'hotelleire-plein-air' ('Hôtellerie de "
       "plein air') on the European open-data portal www.herault-data.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -26386,6 +27161,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "route",
+    .id_keys = "abf+route+abd",
     .description = "OpenDataSoft dataset 'classes-trafic-poids-lourds' ('Classes de "
       "trafic véhicules poids lourds sur la voirie départementale en "
       "Haute-Garonne') on the European open-data portal "
@@ -26407,6 +27183,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ste_type",
+    .id_keys = "ste_iso3166_code+year",
     .description = "OpenDataSoft dataset 'georef-australia-state-millesime' ('States "
       "and territories - Vintage/Millésimé - Australia') on the "
       "European open-data portal hub.huwise.com (portal's own dataset). "
@@ -26428,6 +27205,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_contrats",
+    .id_keys = "famille_d_organismes+type_de_contrats+annee",
     .description = "OpenDataSoft dataset "
       "'datastory-oc-6-4-prise-en-charge-des-lentilles' ('Datastory OC "
       "- 6.4 Prise en charge des lentilles non remboursées par "
@@ -26452,6 +27230,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "raison_sociale,type_produit_acquis",
+    .id_keys = "montant_total+type_produit_acquis",
     .description = "OpenDataSoft dataset "
       "'achats-comportant-des-produits-recycles-reemployes-reutilises-ou-issus-de-dons-loi-agec-ville-de-tours-copie' "
       "('Achats comportant des produits recyclés, réemployés, "
@@ -26493,6 +27272,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "establishment_classification",
+    .id_keys = "establishment_classification",
     .description = "OpenDataSoft dataset 'guest-nights-classification' ('Guest "
       "Nights Classification') on the European open-data portal "
       "data.ajman.ae (portal's own dataset). Records API Explore v2.1, "
@@ -26512,6 +27292,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune",
+    .id_keys = "commune+annee",
     .description = "OpenDataSoft dataset 'composteurs-de-quartiers-reinstallation' "
       "('Composteurs de quartiers - Réinstallations') on the European "
       "open-data portal data.seineouest.fr (portal's own dataset). "
@@ -26532,6 +27313,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom,site,adresse,ville",
+    .id_keys = "id_secteur",
     .description = "OpenDataSoft dataset "
       "'departementdeshautespyrenees_secteurs-sites-des-mds' ('Secteurs "
       "des sites des Maisons Départementales de la Solidarité des "
@@ -26575,6 +27357,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "asien+eu",
     .description = "OpenDataSoft dataset "
       "'stadtbezirke_auslaender_staatsangehoerigkeit_2019' "
       "('Stadtbezirke Ausländer Staatsangehörigkeit') on the European "
@@ -26596,6 +27379,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "types_de_repas",
+    .id_keys = "types_de_repas",
     .description = "OpenDataSoft dataset "
       "'bilan-dactivite-de-lauberge-de-jeunesse-lescale-de-la-communaute-urbaine-de-dunk' "
       "('Bilan d'activité de l'auberge de jeunesse \"L'Escale\" de la "
@@ -26639,6 +27423,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,commune,sr,codenramed",
+    .id_keys = "sr",
     .description = "OpenDataSoft dataset 'zone-nra-med' ('Zone NRA-MeD') on the "
       "European open-data portal data.82amenagement.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -26659,6 +27444,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "prenoms",
+    .id_keys = "prenoms",
     .description = "OpenDataSoft dataset 'blois-2020-premiers-prenoms-masculins' "
       "('Blois - 2020 - premiers prénoms masculins') on the European "
       "open-data portal data.blois.agglopolys.fr (portal's own "
@@ -26700,6 +27486,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_de_residence",
+    .id_keys = "zone_de_residence",
     .description = "OpenDataSoft dataset "
       "'emc2-pratiques-et-frequences-de-deplacement-des-individus-par-epci' "
       "('EMC² : Pratiques et fréquences de déplacement des individus "
@@ -26722,6 +27509,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bv",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-presidentielles-1995-t2-par-bureau-de-vote' "
       "('Résultats des élections présidentielles 1995 T2 par bureau de "
@@ -26802,6 +27590,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ferien_feiertag_label,anlageleitung_adresse",
+    .id_keys = "anlage+datum_von",
     .description = "OpenDataSoft dataset 'hallenschliessplan-stadt-stgallen' "
       "('Hallenschliessplan Stadt St.Gallen') on the European open-data "
       "portal daten.stadt.sg.ch (portal's own dataset). Records API "
@@ -26821,6 +27610,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "industry_class_title,industry_group_title,industry_subdivision_title,industry_division_title",
+    .id_keys = "industry_class_code+industry_subdivision_code",
     .description = "OpenDataSoft dataset 'anzsic-hierarchy' ('ANZSIC hierarchy "
       "(2006)') on the European open-data portal data.peclet.com.au "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -26840,6 +27630,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "instituicao+tempo",
     .description = "OpenDataSoft dataset 'demora-media-antes-da-cirurgia' ('Demora "
       "Média antes da Cirurgia') on the European open-data portal "
       "transparencia.sns.gov.pt (portal's own dataset). Records API "
@@ -26884,6 +27675,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "environment_company_name,type_de_depense",
+    .id_keys = "montant+exercice",
     .description = "OpenDataSoft dataset 'le-bep-est-un-acteur-economique-important' "
       "('Charges du BEP') on the European open-data portal data.bep.be "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -26923,6 +27715,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lga_name",
+    .id_keys = "gisfid",
     .description = "OpenDataSoft dataset 'caseylga_boundary' ('City Of Casey "
       "Boundary') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -26963,6 +27756,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset '214401846_projets_urbains' ('Projets "
       "urbains de Saint-Nazaire') on the European open-data portal "
       "data.saintnazaireagglo.fr (portal's own dataset). Records API "
@@ -27002,6 +27796,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_association,lieu,manifestation",
+    .id_keys = "manifestation+date_debut",
     .description = "OpenDataSoft dataset 'manifestations-sportives-melun' "
       "('Manifestations sportives à Melun') on the European open-data "
       "portal data.melunvaldeseine.fr (portal's own dataset). Records "
@@ -27043,6 +27838,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_du_departement",
     .description = "OpenDataSoft dataset "
       "'elections-legislatives-des-11-et-18-juin-2017-resultats-du-1er-tour' "
       "('Elections législatives des 11 et 18 juin 2017 - Résultats du "
@@ -27087,6 +27883,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,area_type",
+    .id_keys = "denominator",
     .description = "OpenDataSoft dataset "
       "'stroke-prevalence-icp-outcomes-framework-birmingham-and-solihull' "
       "('Stroke prevalence - ICP Outcomes Framework - Birmingham and "
@@ -27109,6 +27906,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "wahlraum_bezeichnung,wahlraum_adresse,briefwahlbezirk",
+    .id_keys = "briefwahlbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'fb33-sb-lutgendortmund-20250328-briefwahlbezirke' "
       "('Seniorenbeiratswahl 2025 - Lütgendortmund') on the European "
@@ -27130,6 +27928,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-2021-consigli-circoscrizionali-quartiere-santo-stefano' "
       "('Elezioni amministrative 2021. Consigli Circoscrizionali - "
@@ -27151,6 +27950,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "capteur,evolution_hps,evolution_mjo,evolution_hpm",
+    .id_keys = "capteur",
     .description = "OpenDataSoft dataset 'comptage_trafic_2010' ('Comptage du trafic "
       "en 2010') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -27193,6 +27993,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'07-annually-intermediate-consumption-cp-value' ('Intermediate "
       "Consumption at Current Prices by Type of Economic Activity') on "
@@ -27216,6 +28017,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "denominacion,localidad",
+    .id_keys = "codigo",
     .description = "OpenDataSoft dataset 'centros-participantes-proa' ('Centros "
       "participantes en el Programa de orientación, avance y "
       "enriquecimiento educativo PROA+') on the European open-data "
@@ -27236,6 +28038,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "msoa_local_name,msoa11cd,msoa11nm,msoa11nmw",
+    .id_keys = "msoa11cd",
     .description = "OpenDataSoft dataset 'msoa-names' ('MSOA Names') on the European "
       "open-data portal data.leicester.gov.uk (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
@@ -27255,6 +28058,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'antibiotiques-resistance-en-etablissement-de-sante_fra' "
       "('Antibiotiques : Résistance en établissements de santé "
@@ -27277,6 +28081,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "stichtag",
     .description = "OpenDataSoft dataset "
       "'stadt-neuss-statistischer-bezirk-03-hafengebiet' ('Stadt Neuss: "
       "Statistischer Bezirk 03 - Hafengebiet') on the European "
@@ -27298,6 +28103,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "counter",
     .description = "OpenDataSoft dataset 'opslagtanks' ('Opslagtanks Den Haag') on "
       "the European open-data portal den-haag-opendata.opendatasoft.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -27318,6 +28124,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt+forbrukningstyp",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-112907-carlslid' "
       "('Energiförbrukning i Geografiska området 112907 (Carlslid)') on "
@@ -27384,6 +28191,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_com,nom_dept,nomcn,epci",
+    .id_keys = "insee_com",
     .description = "OpenDataSoft dataset "
       "'dotation-globale-de-fonctionnement-des-communes' ('Dotation "
       "globale de fonctionnement des communes 2014 - 2016') on the "
@@ -27405,6 +28213,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dixieme_de_niveau_de_vie",
+    .id_keys = "dixieme_de_niveau_de_vie",
     .description = "OpenDataSoft dataset 'graphique-er-ass_simplifie' "
       "('Graphique-ER-ASS_simplifié') on the European open-data portal "
       "data.drees.solidarites-sante.gouv.fr (portal's own dataset). "
@@ -27426,6 +28235,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'vehicules-faibles-emissions-renouvellement-parc-tmvl' ('Part "
       "des véhicules à faibles émissions dans le renouvellement du parc "
@@ -27507,6 +28317,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "code_article_et_libelle,libelle_article,code_fonction_et_libelle,libelle_fonction",
+    .id_keys = "enveloppe+code_article_et_libelle",
     .description = "OpenDataSoft dataset 'departementdeshautespyrenees_budget2018' "
       "('Budgets votés en 2018 au Département des Hautes-Pyrénées') on "
       "the European open-data portal opendata.ha-py.fr (portal's own "
@@ -27547,6 +28358,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "schule,anteil_digitale_raume_fest_installierter_beamer_grossbildmonitor_dauerhafte_dokumentenkamer_und_ethe,anteil_raume_mit_grossbilddarstellung_lt_medienentwicklungsplan,anteil_raume_mit_dokumentenkamera_lt_medienentwicklungsplan",
+    .id_keys = "schule",
     .description = "OpenDataSoft dataset "
       "'schulportrait-kategorie-f-digitalisierung-raeume' "
       "('Schulportrait - Kategorie F _ Digitalisierung - Räume') on the "
@@ -27569,6 +28381,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "communes,fusion_avec_dunkerque",
+    .id_keys = "communes",
     .description = "OpenDataSoft dataset "
       "'fusion-de-communes-avec-la-commune-de-dunkerque' ('Fusion de "
       "communes avec la commune de Dunkerque') on the European "
@@ -27636,6 +28449,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "donnees_d_etat_civil",
+    .id_keys = "donnees_d_etat_civil",
     .description = "OpenDataSoft dataset 'donnees-d-etat-civil-annuelles' ('Blois - "
       "données d'état civil 2023 (naissance, mariage, décès)') on the "
       "European open-data portal data.blois.agglopolys.fr (portal's own "
@@ -27658,6 +28472,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom",
+    .id_keys = "coll_siret",
     .description = "OpenDataSoft dataset '214401259_liste_delib_pv_seance' ('Liste "
       "des délibérations et Procès-verbaux des conseils municipaux de "
       "la commune de Piriac sur mer') on the European open-data portal "
@@ -27678,6 +28493,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "frequence_d_utilisation_des_lignes_interurbaines",
+    .id_keys = "frequence_d_utilisation_des_lignes_interurbaines",
     .description = "OpenDataSoft dataset 'donnees_principales_emc-frequence' "
       "('Données_principales_EMC²-fréquence 1') on the European "
       "open-data portal www.karudata.com (portal's own dataset). "
@@ -27698,6 +28514,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "column_1+column_4",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-municipales-2001-t2-par-bureau-de-vote' "
       "('Résultats des élections municipales 2001 T2 par bureau de "
@@ -27760,6 +28577,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "numero",
     .description = "OpenDataSoft dataset 'zones-de-secours' ('Zones de Secours') on "
       "the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -27802,6 +28620,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lga+period",
     .description = "OpenDataSoft dataset 'chronic-kidney-disease-deaths' ('Chronic "
       "kidney disease deaths') on the European open-data portal "
       "data.peclet.com.au (portal's own dataset). Records API Explore "
@@ -27843,6 +28662,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type",
+    .id_keys = "ogc_fid",
     .description = "OpenDataSoft dataset "
       "'localisation-des-stationnements-payants-sur-le-littoral' "
       "('Localisation des zones de stationnement payant sur le "
@@ -27865,6 +28685,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'nombre-de-formations-internes-dispensees' "
       "('Nombre de formations internes dispensées') on the European "
       "open-data portal data.bep.be (portal's own dataset). Records API "
@@ -27904,6 +28725,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "feature_name,feature_type,suburb,ward",
+    .id_keys = "feature_name",
     .description = "OpenDataSoft dataset 'airport_infrastructure_points' ('Airport "
       "Infrastructure (Locations)') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -27988,6 +28810,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_l_association,objet,adresse_siege,secteur",
+    .id_keys = "nom_de_l_association",
     .description = "OpenDataSoft dataset "
       "'annuaire-des-associations-le-mee-sur-seine' ('Annuaire des "
       "associations de Le Mée sur Seine') on the European open-data "
@@ -28031,6 +28854,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_methode_obs,libelle_qualification_obs,libelle_statut,libelle_continuite",
+    .id_keys = "date_obs",
     .description = "OpenDataSoft dataset "
       "'hauteurs-d-eau-de-l-orne-en-temps-reel-vigicrues' ('Vigicrues - "
       "Hauteurs d'eau de l'Orne en temps réel') on the European "
@@ -28074,6 +28898,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodlabel+areaidentifier",
     .description = "OpenDataSoft dataset 'permanent-exclusions-primary-number-wmca' "
       "('Permanent exclusions - primary (number) - WMCA') on the "
       "European open-data portal cityobservatory.birmingham.gov.uk "
@@ -28094,6 +28919,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "wahlraum_bezeichnung,wahlraum_adresse,briefwahlbezirk",
+    .id_keys = "briefwahlbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'fb33-sb-scharnhorst-20250328-briefwahlbezirke' "
       "('Seniorenbeiratswahl 2025 - Scharnhorst') on the European "
@@ -28176,6 +29002,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset "
       "'05-petroleum-products-in-refinery-factory-v1' ('Refinery "
       "Production (Thousands of US Barrels)') on the European open-data "
@@ -28197,6 +29024,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "fecha+id_opte_centro_de_consumo",
     .description = "OpenDataSoft dataset "
       "'consumo-de-biomasa-en-centros-de-la-administracion-autonomica-de-castilla-y-leon' "
       "('Consumo de biomasa en centros de la administración autonómica "
@@ -28218,6 +29046,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "address,library,monday_hours,wednesday_opening_hours",
+    .id_keys = "library",
     .description = "OpenDataSoft dataset 'library-opening-hours' ('Library Opening "
       "Hours') on the European open-data portal data.leicester.gov.uk "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -28281,6 +29110,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-174911-savars-omland-vastra' "
       "('Energiförbrukning i Geografiska området 174911 (Sävars omland, "
@@ -28303,6 +29133,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "inscrits+abstentions+exprimes",
     .description = "OpenDataSoft dataset "
       "'resultats-legislatives-2017-2nd-tour-resultats-par-bureau-de-vote' "
       "('RÉSULTATS LEGISLATIVES 2017 - 2nd TOUR - RÉSULTATS PAR bureaux "
@@ -28325,6 +29156,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisme,legende",
+    .id_keys = "legende",
     .description = "OpenDataSoft dataset 'atlas-photos-haute-montagne-du-luchonnais' "
       "('Atlas des paysages de la Haute-Garonne : photos de la "
       "Haute-Montagne du Luchonnais') on the European open-data portal "
@@ -28428,6 +29260,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "tradenamear,tradenameen",
+    .id_keys = "licensenumber",
     .description = "OpenDataSoft dataset 'license-in-ajman-area' ('License in Ajman "
       "(Area)') on the European open-data portal data.ajman.ae "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -28468,6 +29301,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom",
+    .id_keys = "cumuld+route",
     .description = "OpenDataSoft dataset "
       "'departementdeshautespyrenees_bornes_routes_departementales' "
       "('Bornes des Routes Départementales des Hautes-Pyrénées') on the "
@@ -28509,6 +29343,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "schule",
+    .id_keys = "schule",
     .description = "OpenDataSoft dataset "
       "'schulportrait-kategorie-c-ganztag-weitere-sonstige' "
       "('Schulportrait - Kategorie C _ Ganztag - Weitere_Sonstige') on "
@@ -28576,6 +29411,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_rue_ban,nom_commune_brut,nom_commune_ban,nom_residence",
+    .id_keys = "ndegdpe",
     .description = "OpenDataSoft dataset 'dpe-logements-existants-juillet-2021-2023' "
       "('DPE Logements existants (juillet 2021-2023)') on the European "
       "open-data portal data.82amenagement.fr (portal's own dataset). "
@@ -28596,6 +29432,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet_du_marche_256_caracteres_maxi,identification_du_titulaire_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributaires",
+    .id_keys = "ndegmarche",
     .description = "OpenDataSoft dataset "
       "'agglopolys-marches-publics-2022-less-than-40-000-eur-ht' "
       "('Agglopolys - marchés publics 2022 < 40 000 € HT') on the "
@@ -28618,6 +29455,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_secteur",
+    .id_keys = "date_txt+code_com",
     .description = "OpenDataSoft dataset '244400610_calendrier_collecte_encombrants' "
       "('Calendrier de collecte des encombrants pour le territoire de "
       "Cap Atlantique') on the European open-data portal "
@@ -28659,6 +29497,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "direction_name",
+    .id_keys = "date",
     .description = "OpenDataSoft dataset "
       "'comptage-mensuel-montreuil-croix-de-chavaux-vers-mairie' "
       "('Comptage Mensuel Montreuil - Croix de Chavaux vers Mairie') on "
@@ -28680,6 +29519,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_sect_prox,nom_quartier",
+    .id_keys = "nom_sect_prox",
     .description = "OpenDataSoft dataset 'secteurs-de-proximite' ('Secteurs de "
       "proximité') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -28721,6 +29561,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset "
       "'sous-regions-definies-par-la-cpdt-limites-administratives' "
       "('Sous régions définies par la CPDT - Limites administratives') "
@@ -28762,6 +29603,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category,topic,id",
+    .id_keys = "id+category",
     .description = "OpenDataSoft dataset 'suggest-dataset-abs' ('ABS dataset Request "
       "Form- List of Census Topics') on the European open-data portal "
       "data.peclet.com.au (portal's own dataset). Records API Explore "
@@ -28781,6 +29623,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "data",
     .description = "OpenDataSoft dataset 'indice-friesa' ('Índice FRIESA') on the "
       "European open-data portal transparencia.sns.gov.pt (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -28802,6 +29645,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bureau_vote",
+    .id_keys = "ogc_fid",
     .description = "OpenDataSoft dataset "
       "'resultats-du-second-tour-des-elections-departementales-de-2015-au-canton-bayonn0' "
       "('Résultats du second tour des élections départementales de 2015 "
@@ -28824,6 +29668,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'createurs-d-entreprises-accompagnes' "
       "('Créateurs d'entreprises accompagnés') on the European "
       "open-data portal data.bep.be (portal's own dataset). Records API "
@@ -28865,6 +29710,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "feature_name,feature_type,projection,suburb",
+    .id_keys = "feature_type",
     .description = "OpenDataSoft dataset 'airport_infrastructure' ('Airport "
       "Infrastructure Area') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -28969,6 +29815,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'communes_bourgesplus' "
       "('COMMUNES_BourgesPlus') on the European open-data portal "
       "data.bourgesplus.fr (portal's own dataset). Records API Explore "
@@ -29029,6 +29876,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,arealabel,areaidentifier,arealonglabel",
+    .id_keys = "arealabel+periodlabel",
     .description = "OpenDataSoft dataset "
       "'number-of-people-on-universal-credit-wmca-wards-2025' ('Number "
       "of people on Universal Credit - WMCA Wards (2025)') on the "
@@ -29050,6 +29898,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "madchen",
+    .id_keys = "madchen",
     .description = "OpenDataSoft dataset 'vierter-vorname-weiblich-2025' ('Vierter "
       "Vorname weiblich 2025') on the European open-data portal "
       "open-data.dortmund.de (portal's own dataset). Records API "
@@ -29069,6 +29918,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "anziani",
     .description = "OpenDataSoft dataset 'sportelli-sociali-utenti-annuali' "
       "('Sportelli Sociali - Utenti annuali') on the European open-data "
       "portal opendata.comune.bologna.it (portal's own dataset). "
@@ -29088,6 +29938,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_parking,nom_du_parking0,commune,ident_parking",
+    .id_keys = "nom_du_parking",
     .description = "OpenDataSoft dataset 'parkings_tarifs_2016' ('Parkings tarifs "
       "2016') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -29129,6 +29980,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "indiviuals_organization",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'05_bahraini-administrative-research-supported-by-the-institute-' "
       "('IPA - Bahraini Administrative Research Supported by the "
@@ -29170,6 +30022,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "area_name,category,occupation_current_105_categories",
+    .id_keys = "occupation_current_105_categories+area_code",
     .description = "OpenDataSoft dataset 'census-21-occupation-msoa' ('Census 21 - "
       "Occupation MSOA') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -29211,6 +30064,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'meerbusch-boule-plaetze' ('Meerbusch: "
       "Boule-Plätze') on the European open-data portal "
       "opendata.rhein-kreis-neuss.de (portal's own dataset). Records "
@@ -29230,6 +30084,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "imgeo_functie,imgeo_bronhouder",
+    .id_keys = "imgeo_functie",
     .description = "OpenDataSoft dataset 'spoor' ('Sporen Den Haag') on the European "
       "open-data portal den-haag-opendata.opendatasoft.com (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -29250,6 +30105,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-081702-rodasel' "
       "('Energiförbrukning i Geografiska området 081702 (Rödåsel)') on "
@@ -29335,6 +30191,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_contrat",
+    .id_keys = "familles_d_organismes+type_de_contrat+annee",
     .description = "OpenDataSoft dataset 'datastory-oc-7-1-part-reseau-dentaire' "
       "('Datastory OC - 5.1. Part de bénéficiaires d'un contrat dont "
       "l'organisme est lié à un réseau de soins dentaires') on the "
@@ -29356,6 +30213,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "ref",
     .description = "OpenDataSoft dataset 'cantons-metropole-val-de-loire' ('Cantons "
       "- Métropole Val de Loire') on the European open-data portal "
       "data.tours-metropole.fr (portal's own dataset). Records API "
@@ -29394,6 +30252,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "destination_country_english,destination_country_arabic,certificate_description_provided_by_customer_in_english,certificate_description_provided_by_customer_in_arabic",
+    .id_keys = "certificate_number_issue_by_the_ajman_chamber+aed_invoice_value_from_customer+code_of_product_mentioned_on_the_invoice",
     .description = "OpenDataSoft dataset 'export-by-goods-in-2018-copy' ('Export by "
       "Goods') on the European open-data portal data.ajman.ae (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -29434,6 +30293,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'departementdeshautespyrenees_populations_departement' "
       "('Population annuelle du département des Hautes Pyrénées') on "
@@ -29475,6 +30335,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+stadtbezirk",
     .description = "OpenDataSoft dataset 'stadtbezirke_wohnberechtigte_weiblich' "
       "('Stadtbezirke Wohnberechtigte weiblich') on the European "
       "open-data portal opendata.wuerzburg.de (portal's own dataset). "
@@ -29495,6 +30356,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_chambre",
+    .id_keys = "mois+jour+type_de_chambre",
     .description = "OpenDataSoft dataset "
       "'catalogue-de-prix-2017-de-lauberge-de-jeunesse-lescale' "
       "('Catalogue de prix 2017 de l'auberge de jeunesse \"l'Escale\" "
@@ -29517,6 +30379,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gsp",
+    .id_keys = "gsp",
     .description = "OpenDataSoft dataset 'spd-dfes-substation-polygons-gsp' ('SPD "
       "DFES Substation Polygons Grid Supply Point') on the European "
       "open-data portal spenergynetworks.opendatasoft.com (portal's own "
@@ -29537,6 +30400,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "semaine+cl_age90",
     .description = "OpenDataSoft dataset 'indicateurs-sur-les-variants-covid-19' "
       "('Indicateurs sur les variants Covid-19') on the European "
       "open-data portal data.82amenagement.fr (portal's own dataset). "
@@ -29557,6 +30421,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_l_a_c_lu,pra_c_nom_de_l_a_c_lu,libella_c_de_la_commune_de_rattachement",
+    .id_keys = "nom_de_l_a_c_lu",
     .description = "OpenDataSoft dataset "
       "'agglopolys-liste-des-membres-du-conseil-communautaire' "
       "('Agglopolys - liste des membres du conseil communautaire - "
@@ -29598,6 +30463,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_de_residence",
+    .id_keys = "zone_de_residence",
     .description = "OpenDataSoft dataset "
       "'emc2-modes-de-transport-et-utilisation-des-vehicules-par-individu-et-epci' "
       "('EMC²: Modes de transport et utilisation des véhicules par "
@@ -29679,6 +30545,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,adresse",
+    .id_keys = "nom_du_site",
     .description = "OpenDataSoft dataset 'centres-de-plannings-familiaux' ('Centres "
       "de plannings familiaux') on the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -29698,6 +30565,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisation,veranstaltung",
+    .id_keys = "ende+id",
     .description = "OpenDataSoft dataset 'kalender-natur-findet-stadt' ('Kalender "
       "Natur findet Stadt') on the European open-data portal "
       "daten.stadt.sg.ch (portal's own dataset). Records API Explore "
@@ -29718,6 +30586,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset "
       "'nsw-dwelling-and-population-projection-2031-aggregated' ('NSW "
       "Dwelling and Population projection 2031 - aggregated') on the "
@@ -29740,6 +30609,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "no_de_contactos_de_enfermagem_presenciais_qt+no_de_contactos_de_enfermagem_nao_presenciais_qt",
     .description = "OpenDataSoft dataset "
       "'evolucao-dos-contactos-de-enfermagem-nos-csp' ('Contactos de "
       "Enfermagem nos Cuidados de Saúde Primários') on the European "
@@ -29763,6 +30633,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bureau_vote",
+    .id_keys = "ogc_fid",
     .description = "OpenDataSoft dataset "
       "'resultats-du-second-tour-des-elections-departementales-de-2015-au-canton-bayonne' "
       "('Résultats du second tour des élections départementales de 2015 "
@@ -29785,6 +30656,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'indicateurs-secretariat-general' "
       "('Indicateurs Secrétariat Général') on the European open-data "
       "portal data.bep.be (portal's own dataset). Records API Explore "
@@ -29826,6 +30698,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "address,suburb,reserve",
+    .id_keys = "easting",
     .description = "OpenDataSoft dataset 'dog-friendly-spaces' ('Locations of Dog "
       "Friendly Spaces') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -29888,6 +30761,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "axe,plod,plof",
+    .id_keys = "cumulf",
     .description = "OpenDataSoft dataset "
       "'224900019_limitation-de-gabarit-en-maine-et-loire' ('Limitation "
       "de gabarit en Maine-et-Loire') on the European open-data portal "
@@ -29909,6 +30783,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "com_insee",
     .description = "OpenDataSoft dataset 'defibrillateurs-sgl' ('Défibrillateurs "
       "dans les équipements de Saint Germain Laxis') on the European "
       "open-data portal data.melunvaldeseine.fr (portal's own dataset). "
@@ -29929,6 +30804,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau,commune_nom,nom_election,nom_circonscription",
+    .id_keys = "code_bureau+candidat",
     .description = "OpenDataSoft dataset "
       "'resultatslegislatives_2022_1ertour_bourges_circonscription3' "
       "('Resultats Election Législative 1er Tour - 2022 - Ville de "
@@ -29989,6 +30865,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,area_type",
+    .id_keys = "denominator",
     .description = "OpenDataSoft dataset "
       "'preventable-diabetic-sight-loss-icp-outcomes-framework-birmingham-and-solihull' "
       "('Preventable diabetic sight loss - ICP Outcomes Framework - "
@@ -30010,6 +30887,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "jungen",
+    .id_keys = "jungen",
     .description = "OpenDataSoft dataset 'dritter-vorname-mannlich-2025' ('Dritter "
       "Vorname männlich 2025') on the European open-data portal "
       "open-data.dortmund.de (portal's own dataset). Records API "
@@ -30030,6 +30908,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "descrizione_zona,descrizione_quartiere",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-1999-affluenza-consiglio-comunale' "
       "('Elezioni amministrative 1999 - Affluenza (Consiglio "
@@ -30051,6 +30930,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_parking,nom_du_parking0,commune,ident_equipement_public",
+    .id_keys = "ident_equipement_public",
     .description = "OpenDataSoft dataset 'parkings-tarifs-2019' ('Parkings tarifs "
       "2019') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -30091,6 +30971,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset 'average-daily-water-consumption0' "
       "('Average Daily Water Consumption - Million Gallons') on the "
       "European open-data portal www.data.gov.bh (portal's own "
@@ -30112,6 +30993,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "subconcepto",
+    .id_keys = "subconcepto+codigo",
     .description = "OpenDataSoft dataset 'informacion-economica-circo-facyl' "
       "('Información económica de festivales de Cir&co y Fàcyl') on the "
       "European open-data portal analisis.datosabiertos.jcyl.es "
@@ -30132,6 +31014,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "post_title,type",
+    .id_keys = "row",
     .description = "OpenDataSoft dataset 'chief-officer-salaries' ('Chief Officer "
       "Salaries - FY2023/2024') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -30152,6 +31035,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "region_lib",
+    .id_keys = "region_lib+periode",
     .description = "OpenDataSoft dataset "
       "'diabete-incidence-du-diabete-type-1-chez-lenfant-par-periode-reg' "
       "('Diabète : Incidence du diabète type 1 chez l'enfant (Région)') "
@@ -30173,6 +31057,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "rettungspunktbezeichnung,ortsbeschreibung_des_rettungspunktes",
+    .id_keys = "rettungspunktbezeichnung",
     .description = "OpenDataSoft dataset 'grevenbroich-rettungspunkte' "
       "('Grevenbroich: Rettungspunkte') on the European open-data "
       "portal opendata.rhein-kreis-neuss.de (portal's own dataset). "
@@ -30213,6 +31098,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt+forbrukningstyp",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-123306-mariedal' "
       "('Energiförbrukning i Geografiska området 123306 (Mariedal)') on "
@@ -30235,6 +31121,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'pdesi-herault' ('Plan départemental des "
       "espaces sites et itinéraires') on the European open-data portal "
       "www.herault-data.fr (portal's own dataset). Records API Explore "
@@ -30255,6 +31142,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "descriptif_de_l_affaire",
+    .id_keys = "photos",
     .description = "OpenDataSoft dataset "
       "'sacs-a-proces-photos-de-laffaire-reference-2-b-11203' ('Sacs à "
       "procès - Photos de l'affaire référence 2 B 11203') on the "
@@ -30299,6 +31187,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "tableau",
+    .id_keys = "tableau",
     .description = "OpenDataSoft dataset "
       "'indicateurs-issus-du-premier-certificat-de-lenfant' "
       "('Indicateurs issus du premier certificat de l'enfant') on the "
@@ -30320,6 +31209,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'mairie-tmvl' ('Mairie - Tours Métropole "
       "Val de Loire') on the European open-data portal "
       "data.tours-metropole.fr (portal's own dataset). Records API "
@@ -30377,6 +31267,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,id_arretmin,localisation",
+    .id_keys = "id_arretmin",
     .description = "OpenDataSoft dataset 'arret-minute' ('Arrêts minute') on the "
       "European open-data portal data.seineouest.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -30418,6 +31309,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stat_name",
+    .id_keys = "stat",
     .description = "OpenDataSoft dataset 'tsunami-capable-tide-stations' ('Tsunami "
       "Capable Tide Stations') on the European open-data portal "
       "openenergyhub.ornl.gov (portal's own dataset). Records API "
@@ -30437,6 +31329,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+stadtbezirk",
     .description = "OpenDataSoft dataset 'stadtbezirke_bewegung_geburten' "
       "('Stadtbezirke Bewegung Geburten') on the European open-data "
       "portal opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -30518,6 +31411,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "empty",
+    .id_keys = "empty",
     .description = "OpenDataSoft dataset "
       "'blois-donnees-detat-civil-2018-naissance-mariage-deces' ('Blois "
       "- données d'état civil 2018 (naissance, mariage, décès)') on the "
@@ -30539,6 +31433,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau_vote,coll_nom,adresse_bureau_vote",
+    .id_keys = "code_bureau_vote",
     .description = "OpenDataSoft dataset '21440069900143_bureau_vote' ('Bureaux de "
       "vote de Guérande') on the European open-data portal "
       "data.capatlantique.fr (portal's own dataset). Records API "
@@ -30558,6 +31453,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "motif_destination_du_deplacement",
+    .id_keys = "motif_destination_du_deplacement",
     .description = "OpenDataSoft dataset 'donnees_principales_emc-motif' "
       "('Données_principales_EMC²-motif') on the European open-data "
       "portal www.karudata.com (portal's own dataset). Records API "
@@ -30577,6 +31473,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,ville,rs,rslongue",
+    .id_keys = "nofinesset",
     .description = "OpenDataSoft dataset 'pharmacies-de-montreuil' ('Pharmacies de "
       "Montreuil') on the European open-data portal data.montreuil.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -30596,6 +31493,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'plans-historiques' ('Plans historiques') "
       "on the European open-data portal data.cannes.com (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -30636,6 +31534,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_sec,cs102001",
+    .id_keys = "cs102001",
     .description = "OpenDataSoft dataset "
       "'revenus-medians-moyens-par-declaration-2020' ('Revenus "
       "médians/moyens par déclaration par secteur stat') on the "
@@ -30657,6 +31556,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "locker_name,city,location",
+    .id_keys = "end+user_id",
     .description = "OpenDataSoft dataset 'nutzung-boxup-stadt-st-gallen' ('Nutzung "
       "BoxUp Stadt St.Gallen') on the European open-data portal "
       "daten.stadt.sg.ch (portal's own dataset). Records API Explore "
@@ -30676,6 +31576,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "date",
     .description = "OpenDataSoft dataset 'rozelle-sydney-east-australia-air-quality' "
       "('rozelle-sydney east, australia-air-quality') on the European "
       "open-data portal data.peclet.com.au (portal's own dataset). "
@@ -30695,6 +31596,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodo",
     .description = "OpenDataSoft dataset 'evolucao-diaria-do-indice-icaro' "
       "('Evolução Diária do Índice ÍCARO') on the European open-data "
       "portal transparencia.sns.gov.pt (portal's own dataset). Records "
@@ -30715,6 +31617,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bureau_vote",
+    .id_keys = "num_bureau",
     .description = "OpenDataSoft dataset "
       "'resultats-du-premier-tour-des-elections-regionales-de-2015-a-anglet' "
       "('Résultats du premier tour des élections régionales de 2015 à "
@@ -30737,6 +31640,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'indicateurs-it' ('Indicateurs IT') on the "
       "European open-data portal data.bep.be (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
@@ -30776,6 +31680,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "route_long_name,dropoff_type,pickup_type,trip_headsign",
+    .id_keys = "gisfid",
     .description = "OpenDataSoft dataset 'dev-bus-routes-metro-ptv' ('Bus Routes "
       "Metro (PTV)') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -30839,6 +31744,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_nature,type_mvt",
+    .id_keys = "code_nature+exercice+type_mvt",
     .description = "OpenDataSoft dataset "
       "'224900019_compte-administratif-du-departement-de-maine-et-loire-archeologie' "
       "('Compte administratif du budget annexe du Département de "
@@ -30861,6 +31767,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "cadre_d_emplois",
+    .id_keys = "cadre_d_emplois+filiere+annee",
     .description = "OpenDataSoft dataset 'rsu_emplois_permanents_contractuels' "
       "('Rapport Social Unique : emplois permanents contractuels de la "
       "collectivité CA Melun Val de Seine') on the European open-data "
@@ -30901,6 +31808,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objectifs",
+    .id_keys = "objectifs",
     .description = "OpenDataSoft dataset 'agenda-2030-fleury-sur-orne' ('Agenda 2030 "
       "de la Ville de Fleury-sur-Orne') on the European open-data "
       "portal data.fleurysurorne.fr (portal's own dataset). Records API "
@@ -30941,6 +31849,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,area_type",
+    .id_keys = "date+imd+ethnicity",
     .description = "OpenDataSoft dataset "
       "'healthy-life-expectancy-female-icp-outcomes-framework-birmingham-and-solihull' "
       "('Healthy life expectancy (female) at 65yrs - ICP Outcomes "
@@ -30963,6 +31872,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stadtbezirk",
+    .id_keys = "stadtbezirk_nr",
     .description = "OpenDataSoft dataset "
       "'hauptwohnbevolkerung-nach-geschlecht-in-den-stadtbezirken-2024' "
       "('Hauptwohnbevölkerung nach Geschlecht in den Stadtbezirken "
@@ -30985,6 +31895,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nome_lista",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-2021-preferenze-lista-battistini-sindaco-bologna-ci-piac' "
       "('Elezioni amministrative 2021 - Preferenze lista BATTISTINI "
@@ -31048,6 +31959,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset '06-total-fertility-rate' ('Total Fertility "
       "Rate') on the European open-data portal www.data.gov.bh "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -31111,6 +32023,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nombre_de_travailleurs",
     .description = "OpenDataSoft dataset "
       "'expositions-professionnelles-produits-phytopharmaceutiques-ppp-france' "
       "('Expositions professionnelles : Produits phytopharmaceutiques "
@@ -31133,6 +32046,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'meerbusch-familien-freizeit-tour-nord' "
       "('Meerbusch: Familien-Freizeit-Radtour-Nord') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -31154,6 +32068,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gemeente,buurt",
+    .id_keys = "buurt",
     .description = "OpenDataSoft dataset "
       "'energie-in-beeld-per-buurt-den-haag-2008-2016' ('Energie in "
       "beeld per buurt Den Haag') on the European open-data portal "
@@ -31175,6 +32090,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt+forbrukningstyp",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-143703-tomtebo-norra' "
       "('Energiförbrukning i Geografiska området 143703 (Tomtebo, "
@@ -31240,6 +32156,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_cite,nom_francais_cite,cd_protection",
+    .id_keys = "cd_nom+nom_cite+cd_protection",
     .description = "OpenDataSoft dataset "
       "'especes-protegees-et-reglementees-referentiel' ('Espèces "
       "protégées et réglementées - Référentiel') on the European "
@@ -31262,6 +32179,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dep_lib",
+    .id_keys = "dep_23",
     .description = "OpenDataSoft dataset "
       "'datastory-badiane-carte-1-taux-d-encadrement-d-etp-en-personnel-soignant-pour-100-residents' "
       "('Datastory BADIANE Carte 1 - Taux d'encadrement d'ETP en "
@@ -31412,6 +32330,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "city_name,weather_description",
+    .id_keys = "dt",
     .description = "OpenDataSoft dataset "
       "'openweather-historische-wetterdatenrzburg-1979-2021' "
       "('OpenWeather Historische Wetterdaten') on the European "
@@ -31474,6 +32393,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_commune,nom_epci,nom_structure,nom_departement",
+    .id_keys = "code_insee_commune+code_postal_structure",
     .description = "OpenDataSoft dataset 'chalandise-espaces-conseil-faire' "
       "('Chalandise Espaces Conseil FAIRE') on the European open-data "
       "portal data.82amenagement.fr (portal's own dataset). Records API "
@@ -31494,6 +32414,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organismes",
+    .id_keys = "organismes",
     .description = "OpenDataSoft dataset "
       "'blois-subventions-2024-votees-au-budget-primitif' ('Blois - "
       "subventions 2024 votées au budget primitif') on the European "
@@ -31516,6 +32437,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,commune,type_aire",
+    .id_keys = "code_com+type_aire",
     .description = "OpenDataSoft dataset '244400610_aire_accueil_gdv' ('Aire "
       "d'accueil des gens du voyage sur le territoire de Cap "
       "Atlantique') on the European open-data portal "
@@ -31536,6 +32458,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "mode_urbain_principal",
+    .id_keys = "mode_urbain_principal",
     .description = "OpenDataSoft dataset 'donnees_principales_emc-modes' "
       "('Données_principales_EMC²-modes') on the European open-data "
       "portal www.karudata.com (portal's own dataset). Records API "
@@ -31555,6 +32478,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "counts",
     .description = "OpenDataSoft dataset "
       "'comptage-mensuel-15-av-pasteur-vers-chavaux' ('Comptage Mensuel "
       "15 av Pasteur vers Chavaux') on the European open-data portal "
@@ -31615,6 +32539,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,adresse,type",
+    .id_keys = "nom_du_site",
     .description = "OpenDataSoft dataset 'centres-de-reeducation-ambulatoire' "
       "('Centres de Rééducation Ambulatoire') on the European open-data "
       "portal spi-digitalwallonia.opendatasoft.com (portal's own "
@@ -31654,6 +32579,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lga",
+    .id_keys = "lga",
     .description = "OpenDataSoft dataset 'nsw-dwelling-projection-data-2031' ('NSW "
       "Dwelling projection data 2031') on the European open-data portal "
       "data.peclet.com.au (portal's own dataset). Records API Explore "
@@ -31674,6 +32600,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodo",
     .description = "OpenDataSoft dataset "
       "'acionamentos-de-meios-de-emergencia-medica' ('Evolução Diária "
       "dos Acionamentos de Meios de Emergência Médica') on the European "
@@ -31697,6 +32624,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lib_idzone",
     .description = "OpenDataSoft dataset "
       "'zonage-du-plan-local-d-urbanisme-en-vigueur-modification-6-approuve-le-09-07-202' "
       "('Zonage du Plan Local d'Urbanisme (EN VIGUEUR) Modification 6 "
@@ -31719,6 +32647,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "environment_company_name,type_de_depense",
+    .id_keys = "montant",
     .description = "OpenDataSoft dataset "
       "'le-pourcentage-de-la-masse-salariale-est-correct' ('Masse "
       "salariale du BEP') on the European open-data portal data.bep.be "
@@ -31759,6 +32688,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "document_title,type",
+    .id_keys = "document_title+meeting_date+minutetypename",
     .description = "OpenDataSoft dataset 'councillor-attendance' ('Councillor "
       "Attendance to Meetings') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -31821,6 +32751,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "insee",
     .description = "OpenDataSoft dataset "
       "'224900019_limites-communales-de-2016-en-maine-et-loire' "
       "('Limites communales de 2016 en Maine-et-Loire') on the European "
@@ -31882,6 +32813,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "identite",
+    .id_keys = "debut",
     .description = "OpenDataSoft dataset 'liste-des-maires-successifs' ('Liste des "
       "maires successifs') on the European open-data portal "
       "data.fleurysurorne.fr (portal's own dataset). Records API "
@@ -31924,6 +32856,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "area_name,area_type",
+    .id_keys = "count",
     .description = "OpenDataSoft dataset 'hypertension-qof-prevalence-icb' "
       "('Hypertension: QOF prevalence - ICB') on the European open-data "
       "portal cityobservatory.birmingham.gov.uk (portal's own dataset). "
@@ -31943,6 +32876,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "madchen,kommune",
+    .id_keys = "rang",
     .description = "OpenDataSoft dataset 'funfter-vorname-weiblich-2025' ('Fünfter "
       "Vorname weiblich 2025') on the European open-data portal "
       "open-data.dortmund.de (portal's own dataset). Records API "
@@ -31962,6 +32896,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "cap",
     .description = "OpenDataSoft dataset 'codici-avviamento-postale-cap' ('Codici "
       "Avviamento Postale (CAP)') on the European open-data portal "
       "opendata.comune.bologna.it (portal's own dataset). Records API "
@@ -32023,6 +32958,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset '05-applications-for-minors' ('Applications "
       "for Minors') on the European open-data portal www.data.gov.bh "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -32043,6 +32979,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "fecha+provincia+marca",
     .description = "OpenDataSoft dataset "
       "'vacunacion-covid-19-por-provincia-y-marca-de-vacuna-campana-23-24' "
       "('Vacunación COVID-19 por provincia y marca de vacuna Campaña "
@@ -32064,6 +33001,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "area_name,religion_category,category,religion",
+    .id_keys = "religion+area_code",
     .description = "OpenDataSoft dataset 'census-21-religion-msoa' ('Census 21 - "
       "Religion MSOA') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -32084,6 +33022,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nombre_de_travailleurs",
     .description = "OpenDataSoft dataset 'exposition-professionnelle-bruit-france' "
       "('Exposition professionnelle : Bruit (France)') on the European "
       "open-data portal odisse.santepubliquefrance.fr (portal's own "
@@ -32105,6 +33044,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "stichtag",
     .description = "OpenDataSoft dataset "
       "'stadt-neuss-statistischer-bezirk-11-selikum' ('Stadt Neuss: "
       "Statistischer Bezirk 11 - Selikum') on the European open-data "
@@ -32149,6 +33089,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt+forbrukningstyp",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-061309-umedalen-ostra' "
       "('Energiförbrukning i Geografiska området 061309 (Umedalen, "
@@ -32171,6 +33112,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "departement,categorie_a",
+    .id_keys = "incendies",
     .description = "OpenDataSoft dataset "
       "'interventions-realisees-par-les-services-dincendie-et-de-secours' "
       "('Interventions réalisées par les services d'incendie et de "
@@ -32193,6 +33135,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisme,legende",
+    .id_keys = "legende",
     .description = "OpenDataSoft dataset 'atlas-photos-collines-du-comminges' "
       "('Atlas des paysages de la Haute-Garonne : photos des Collines "
       "du Comminges') on the European open-data portal "
@@ -32233,6 +33176,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "departement_de_residence",
+    .id_keys = "code_departement",
     .description = "OpenDataSoft dataset 'er-ivg-carte-1' ('ER IVG - carte 1') on "
       "the European open-data portal "
       "data.drees.solidarites-sante.gouv.fr (portal's own dataset). "
@@ -32253,6 +33197,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_pdc,adresse_du_pdc,ville",
+    .id_keys = "nom_du_pdc+code_postal",
     .description = "OpenDataSoft dataset "
       "'collecte-solidaire-des-telephones-tours-metropole-val-de-loire' "
       "('Collecte solidaire des téléphones - Tours Métropole Val de "
@@ -32295,6 +33240,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category_ar,category_en",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset 'preventive-maintenance-operations' "
       "('Preventive Maintenance Operations') on the European open-data "
       "portal data.ajman.ae (portal's own dataset). Records API Explore "
@@ -32434,6 +33380,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_insee",
     .description = "OpenDataSoft dataset "
       "'unite-urbaine-selon-linsee-departement-de-tarn-et-garonne' "
       "('Unité urbaine selon l'INSEE - Département de Tarn-et-Garonne') "
@@ -32456,6 +33403,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "categories",
+    .id_keys = "categories",
     .description = "OpenDataSoft dataset "
       "'agglopolys-creations-dentreprises-activites-marchandes-hors-agriculture' "
       "('Agglopolys - créations d'entreprises (activités marchandes "
@@ -32478,6 +33426,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bgt_nom",
+    .id_keys = "bgt_mtreal",
     .description = "OpenDataSoft dataset '244400610-ca-transport' ('Compte Financier "
       "Unique (CFU) de Cap Atlantique - budget annexe transport') on "
       "the European open-data portal data.capatlantique.fr (portal's "
@@ -32499,6 +33448,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "mois+annee",
     .description = "OpenDataSoft dataset '202609_trans_trajets_covoiturage' ('Nombre "
       "de trajets en covoiturage en Guadeloupe par année et par mois') "
       "on the European open-data portal www.karudata.com (portal's own "
@@ -32519,6 +33469,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_college_long,adresse,code_uai",
+    .id_keys = "code_uai",
     .description = "OpenDataSoft dataset 'colleges-de-montreuil' ('Collèges de "
       "Montreuil') on the European open-data portal data.montreuil.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -32580,6 +33531,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,adresse,type",
+    .id_keys = "nom_du_site",
     .description = "OpenDataSoft dataset 'lieux-de-rencontre-familiaux' ('Lieux de "
       "rencontre familiaux') on the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -32619,6 +33571,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description,address,determination_type,dat_id",
+    .id_keys = "dat_id+address",
     .description = "OpenDataSoft dataset 'development_applications' ('City of Sydney "
       "Development Applications - 2013 - 2014') on the European "
       "open-data portal data.peclet.com.au (portal's own dataset). "
@@ -32639,6 +33592,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "encargos_sns_ambulatorio",
     .description = "OpenDataSoft dataset "
       "'despesa-com-medicamentos-no-ambulatorio-sns' ('Despesa com "
       "Medicamentos no Ambulatório') on the European open-data portal "
@@ -32682,6 +33636,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "trimestre",
+    .id_keys = "trimestre",
     .description = "OpenDataSoft dataset "
       "'nombre-de-fans-sur-les-reseaux-sociaux-du-bep' ('Nombre de fans "
       "sur les réseaux sociaux du BEP') on the European open-data "
@@ -32702,6 +33657,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "city,city_code,uniqueid",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'salinas-boundary' ('Salinas Boundary') on "
       "the European open-data portal cityofsalinas.opendatasoft.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -32722,6 +33678,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_code,zone_description,zone_group",
+    .id_keys = "gisfid",
     .description = "OpenDataSoft dataset 'planning-scheme-overlays-land-management' "
       "('Planning Scheme Overlays (Land Management)') on the European "
       "open-data portal data.casey.vic.gov.au (portal's own dataset). "
@@ -32786,6 +33743,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_projet,nom_du_contact,resume_descriptif,commune",
+    .id_keys = "nom_du_projet",
     .description = "OpenDataSoft dataset 'bd_gdiep' ('Aménagements intégrant la "
       "Gestion Durable et Intégrée des Eaux Pluviales en "
       "Maine-et-Loire') on the European open-data portal "
@@ -32806,6 +33764,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libgeo",
+    .id_keys = "codgeo",
     .description = "OpenDataSoft dataset 'donnees_insee_emploi_parcom' ('Indicateurs "
       "INSEE emploi') on the European open-data portal "
       "data.melunvaldeseine.fr (portal's own dataset). Records API "
@@ -32887,6 +33846,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr",
     .description = "OpenDataSoft dataset "
       "'veranderung-der-bevolkerung-in-den-stadtbezirken-seit-dem-jahr-2000' "
       "('Veränderung der Hauptwohnbevölkerung in den Stadtbezirken seit "
@@ -32908,6 +33868,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stato,nomevia1,nomevia2,nomevia3",
+    .id_keys = "ente",
     .description = "OpenDataSoft dataset 'zona-t-centro-storico' ('Zona T centro "
       "storico') on the European open-data portal "
       "opendata.comune.bologna.it (portal's own dataset). Records API "
@@ -32927,6 +33888,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_parking,commune,type_de_gestion,type_de_construction",
+    .id_keys = "identification_cub_du_parking",
     .description = "OpenDataSoft dataset 'parkings-donnees-techniques-2021' "
       "('Parkings données techniques 2021') on the European open-data "
       "portal datahub.bordeaux-metropole.fr (portal's own dataset). "
@@ -32968,6 +33930,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "aluminum_primary_materials_produced_locally_used_in_aluminium_industry_by_type_of_materials_in_metri",
+    .id_keys = "aluminum_primary_materials_produced_locally_used_in_aluminium_industry_by_type_of_materials_in_metri+year",
     .description = "OpenDataSoft dataset '04-aluminum-primary-materials' ('Aluminum "
       "Primary Materials Produced Locally Used in Aluminium Industry by "
       "Type of Materials - in Metric Ton') on the European open-data "
@@ -32990,6 +33953,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "denominacion,localidad",
+    .id_keys = "codigo",
     .description = "OpenDataSoft dataset "
       "'uao-alumnado-educativamente-vulnerable-cyl' ('Unidades de "
       "Acompañamiento y Orientación Personal y Familiar del alumnado "
@@ -33012,6 +33976,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "key_covid19_support_actions_for_care_homes",
+    .id_keys = "displayorder",
     .description = "OpenDataSoft dataset 'covid-19-support-to-providers' ('Covid 19 "
       "- Support to providers') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -33032,6 +33997,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "prop_surf_4cult",
     .description = "OpenDataSoft dataset "
       "'pesticides-exposition-environnementale-aux-insecticides-region' "
       "('Pesticides : exposition environnementale aux insecticides "
@@ -33098,6 +34064,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-164402-norrbyn' "
       "('Energiförbrukning i Geografiska området 164402 (Norrbyn)') on "
@@ -33120,6 +34087,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,parknom,parkadress,parkcode",
+    .id_keys = "parknom",
     .description = "OpenDataSoft dataset "
       "'stations-modulauto-de-montpellier-mediterranee-metropole' "
       "('Stations MODULAUTO de Montpellier Méditerranée Métropole') on "
@@ -33141,6 +34109,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisme,legende",
+    .id_keys = "legende",
     .description = "OpenDataSoft dataset 'ens-ferme-de-solamoure-photos' ('ENS - "
       "Ferme de Solamoure - Photos') on the European open-data portal "
       "data.haute-garonne.fr (portal's own dataset). Records API "
@@ -33180,6 +34149,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "tableau",
+    .id_keys = "tableau",
     .description = "OpenDataSoft dataset '500_morbidite-hospitaliere' ('Morbidité "
       "hospitalière') on the European open-data portal "
       "data.drees.solidarites-sante.gouv.fr (portal's own dataset). "
@@ -33200,6 +34170,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau_de_vote,nom_canton",
+    .id_keys = "code_bureau_vote",
     .description = "OpenDataSoft dataset "
       "'elections-2017-decoupage-des-bureaux-de-vote-tours' ('Elections "
       "2017 - Découpage des bureaux de vote - Tours') on the European "
@@ -33241,6 +34212,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "federal_infrastructure_assets+year",
     .description = "OpenDataSoft dataset '2021-2023-federal-infrastructure-assets' "
       "('2021-2023 Federal infrastructure assets') on the European "
       "open-data portal data.ajman.ae (portal's own dataset). Records "
@@ -33260,6 +34232,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,commune,type_mu,localisation",
+    .id_keys = "mobilier_code_terrain+localisation",
     .description = "OpenDataSoft dataset 'mobilier-daffichage-dopinion' ('Mobilier "
       "d'affichage d'opinion') on the European open-data portal "
       "data.seineouest.fr (portal's own dataset). Records API Explore "
@@ -33280,6 +34253,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_dechet",
+    .id_keys = "type_de_dechet",
     .description = "OpenDataSoft dataset "
       "'tonnages-dechets-2024-collectes-par-la-ccam-hors-eco-organismes' "
       "('Tonnages déchets 2024 collectés par la CCAM-hors eco "
@@ -33320,6 +34294,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "wert+jahr+stadtbezirk",
     .description = "OpenDataSoft dataset 'bevoelkerungsstand' ('Bevölkerungsstand - "
       "Kommunalstatistik') on the European open-data portal "
       "opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -33340,6 +34315,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_ecole,commune,perimetre",
+    .id_keys = "objectid+perimetre",
     .description = "OpenDataSoft dataset 'perimetre-scolaire-ecoles' ('perimètre "
       "scolaire des écoles de la ville de Dunkerque') on the European "
       "open-data portal data.dunkerque-agglo.fr (portal's own dataset). "
@@ -33381,6 +34357,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "idcomtxt,epci24txt",
+    .id_keys = "idcom",
     .description = "OpenDataSoft dataset "
       "'consommation-d-espace-naturels-agricoles-et-forestiers-du-1er-janvier-2009-au-1er-janvier-2024' "
       "('Consommation d'espace naturels agricoles et forestiers du 1er "
@@ -33403,6 +34380,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "raison_sociale,nom_membre",
+    .id_keys = "insee",
     .description = "OpenDataSoft dataset "
       "'liste-et-composition-des-epci-a-fiscalite-propre-en-loir-et-cher-dont-agglopolys' "
       "('Liste et composition des EPCI à fiscalité propre en Loir et "
@@ -33425,6 +34403,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_arret,gest_nom,commune",
+    .id_keys = "photo+nom_arret",
     .description = "OpenDataSoft dataset '254402738_arrets_transport_scolaire' "
       "('Arrêts du transport scolaire sur Cap Atlantique (Lila "
       "Presqu'ile)') on the European open-data portal "
@@ -33446,6 +34425,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type",
+    .id_keys = "tonnage+type",
     .description = "OpenDataSoft dataset 'gpmg_trafic_marchandises' ('Mouvements de "
       "marchandises et conteneurs passés par une infrastructure du "
       "GPMG') on the European open-data portal www.karudata.com "
@@ -33467,6 +34447,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "direction_name",
+    .id_keys = "date+counts",
     .description = "OpenDataSoft dataset '123-boulevard-aristide-briand-velos-in' "
       "('Comptage Mensuel 123 Boulevard Aristide Briand Vélos IN') on "
       "the European open-data portal data.montreuil.fr (portal's own "
@@ -33529,6 +34510,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,adresse",
+    .id_keys = "nom_du_site",
     .description = "OpenDataSoft dataset 'centres-medicaux-polycliniques-prive-e-s' "
       "('Centres médicaux/polycliniques privé(e)s') on the European "
       "open-data portal spi-digitalwallonia.opendatasoft.com (portal's "
@@ -33549,6 +34531,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "beginnt_am",
     .description = "OpenDataSoft dataset 'schulferien-feiertage-stadt-stgallen' "
       "('Schulferien und Feiertage Stadt St.Gallen') on the European "
       "open-data portal daten.stadt.sg.ch (portal's own dataset). "
@@ -33591,6 +34574,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "instituicao+tempo",
     .description = "OpenDataSoft dataset "
       "'taxa-de-mortalidade-por-avc-isquemico-e-hemorragico' "
       "('Mortalidade por AVC Isquémico e Hemorrágico') on the European "
@@ -33614,6 +34598,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bureau_vote",
+    .id_keys = "ogc_fid",
     .description = "OpenDataSoft dataset "
       "'resultats-du-premier-tour-des-elections-departementales-de-2015-au-canton-4-a-an' "
       "('Résultats du premier tour des élections départementales de "
@@ -33636,6 +34621,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'indicateurs-annuels-du-developpement-territorial' ('Indicateurs "
       "Annuels du Développement Territorial') on the European open-data "
@@ -33656,6 +34642,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'airport-influence-area' ('Airport "
       "Influence Area') on the European open-data portal "
       "cityofsalinas.opendatasoft.com (portal's own dataset). Records "
@@ -33676,6 +34663,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "title",
     .description = "OpenDataSoft dataset 'community-facilities-for-hire' ('Venues "
       "for Hire in Casey (Council and Community Facilities)') on the "
       "European open-data portal data.casey.vic.gov.au (portal's own "
@@ -33741,6 +34729,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type,libelles,titulaire",
+    .id_keys = "ndeg_marche+code_postal+tranches",
     .description = "OpenDataSoft dataset "
       "'224900019_marches-publics-du-departement-de-maine-et-loire' "
       "('Marchés publics du Département de Maine-et-Loire') on the "
@@ -33762,6 +34751,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "libgeo+annee",
     .description = "OpenDataSoft dataset 'flux-etablissement' ('Statistiques flux "
       "établissement') on the European open-data portal "
       "data.melunvaldeseine.fr (portal's own dataset). Records API "
@@ -33782,6 +34772,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau,commune_nom,nom_election",
+    .id_keys = "candidat+code_bureau",
     .description = "OpenDataSoft dataset "
       "'resultats-election-presidentielle-1er-tour-2022-bourges' "
       "('Resultats Election Presidentielle 1er Tour - 2022 - Ville de "
@@ -33803,6 +34794,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'recyclage-de-papiers' ('Recyclage de "
       "papiers') on the European open-data portal data.fleurysurorne.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -33842,6 +34834,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,area_type",
+    .id_keys = "denominator",
     .description = "OpenDataSoft dataset "
       "'seasonal-flu-vaccinations-in-over-65s-icp-outcomes-framework-birmingham-and-solihull' "
       "('Seasonal flu vaccinations in over 65s - ICP Outcomes Framework "
@@ -33863,6 +34856,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "jungen",
+    .id_keys = "jungen",
     .description = "OpenDataSoft dataset 'vierter-vorname-mannlich-2025' ('Vierter "
       "Vorname männlich 2025') on the European open-data portal "
       "open-data.dortmund.de (portal's own dataset). Records API "
@@ -33883,6 +34877,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "descrizione_zona,descrizione_quartiere",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-2004-affluenza-sindaco' ('Elezioni "
       "amministrative 2004 - Affluenza (Sindaco)') on the European "
@@ -33946,6 +34941,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset '2c-crude-divorce-rate' ('Crude Divorce "
       "Rate') on the European open-data portal www.data.gov.bh "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -33965,6 +34961,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "total+tipo_b",
     .description = "OpenDataSoft dataset 'maquinas-recreativas' ('Máquinas "
       "recreativas') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -33985,6 +34982,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ward",
+    .id_keys = "ward",
     .description = "OpenDataSoft dataset "
       "'children-in-absolute-low-income-households-by-ward-2021-22' "
       "('Children in Absolute low income households by ward 2021-22') "
@@ -34007,6 +35005,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_menage,indicateur",
+    .id_keys = "effectif_brut+ic",
     .description = "OpenDataSoft dataset "
       "'trouble-anxieux-generalise-indicateurs-du-barometre-2024' "
       "('Trouble anxieux généralisé : Indicateurs du Baromètre de Santé "
@@ -34029,6 +35028,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "column_3,id",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'rhein-kreis-neuss-bevolkerungsdichte' "
       "('Rhein-Kreis Neuss: Bevölkerungsdichte') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -34049,6 +35049,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "OpenbareRu,Postcode,Sleutel",
+    .id_keys = "OBJECTID",
     .description = "OpenDataSoft dataset 'stadsdeelkantoren-den-haag1' "
       "('Stadsdeelkantoren Den Haag') on the European open-data portal "
       "den-haag-opendata.opendatasoft.com (portal's own dataset). "
@@ -34069,6 +35070,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "ar+kommun",
     .description = "OpenDataSoft dataset "
       "'andel-av-insamling-och-transport-av-avfall-som-sker-med-fossilfria-drivmedel' "
       "('Andel av insamling och transport av avfall som sker med "
@@ -34090,6 +35092,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "text,handle",
+    .id_keys = "text",
     .description = "OpenDataSoft dataset 'quartiers-de-la-ville-dagde' ('Quartiers "
       "de la Ville d'Agde') on the European open-data portal "
       "www.herault-data.fr (portal's own dataset). Records API Explore "
@@ -34109,6 +35112,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisme,legende",
+    .id_keys = "taille_du_fichier_en_ko",
     .description = "OpenDataSoft dataset 'ens-ramier-de-palaminy-photos' ('ENS - "
       "Ramier de Palaminy - Photos') on the European open-data portal "
       "data.haute-garonne.fr (portal's own dataset). Records API "
@@ -34128,6 +35132,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_de_commune",
+    .id_keys = "departement_commune",
     .description = "OpenDataSoft dataset 'equip-sport-loisir-socio-com-2014' "
       "('Equipement sport, loisir par communes 2014') on the European "
       "open-data portal hub.huwise.com (portal's own dataset). Records "
@@ -34190,6 +35195,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "indfoy_ndural",
     .description = "OpenDataSoft dataset 'al_s_statuetu_nat' ('AL - Répartition des "
       "allocataires étudiants ou non-étudiants et leur statut "
       "(boursier, salarié) [National]') on the European open-data "
@@ -34210,6 +35216,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "license_state_date+company_status+company_legal_form",
     .description = "OpenDataSoft dataset 'companies-legal-form' ('Companies Legal "
       "Form') on the European open-data portal data.ajman.ae (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -34249,6 +35256,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,departement,region,nominstallation",
+    .id_keys = "energieannuelleglissanteinjectee+dateraccordement",
     .description = "OpenDataSoft dataset "
       "'installation-production-stockage-electricite-agrege-301125-departement65' "
       "('Installations de production et de stockage d'électricité dans "
@@ -34289,6 +35297,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "thema+stadtbezirk+jahr",
     .description = "OpenDataSoft dataset 'landtagswahlen' ('Landtagswahlen - "
       "Kommunalstatistik') on the European open-data portal "
       "opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -34351,6 +35360,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "intitule_plateforme,intitule_gare,intitule_fronton_de_gare,commune",
+    .id_keys = "code_plate_forme",
     .description = "OpenDataSoft dataset 'gares-de-voyageurs' ('Gares de voyageurs') "
       "on the European open-data portal data.82amenagement.fr (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -34371,6 +35381,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "prenoms",
+    .id_keys = "prenoms+nombre",
     .description = "OpenDataSoft dataset "
       "'liste-des-prenoms-feminins-et-masculins-2023' ('Liste des "
       "prénoms féminins et masculins 2023') on the European open-data "
@@ -34413,6 +35424,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_de_residence",
+    .id_keys = "zone_de_residence",
     .description = "OpenDataSoft dataset "
       "'emc2-pratiques-des-menages-vis-a-vis-de-lenergie-et-du-stationnement-par-secteur' "
       "('EMC² : Pratiques des ménages vis-à-vis de l'énergie et du "
@@ -34434,6 +35446,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_resident,zone,category",
+    .id_keys = "startdate+duree+horodateur",
     .description = "OpenDataSoft dataset 'tickets-horodateurs-copie' ('Tickets "
       "horodateurs 2020') on the European open-data portal "
       "data.montreuil.fr (portal's own dataset). Records API Explore "
@@ -34495,6 +35508,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,adresse",
+    .id_keys = "nom_du_site",
     .description = "OpenDataSoft dataset 'centres-psycho-medico-sociaux-cpms' "
       "('Centres psycho médico sociaux (CPMS)') on the European "
       "open-data portal spi-digitalwallonia.opendatasoft.com (portal's "
@@ -34558,6 +35572,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "instituicao+tempo",
     .description = "OpenDataSoft dataset "
       "'fraturas-da-anca-cirurgias-nas-primeiras-48h' ('Fraturas da "
       "Anca (Cirurgias nas primeiras 48h)') on the European open-data "
@@ -34602,6 +35617,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "uniqueid",
+    .id_keys = "censustrac",
     .description = "OpenDataSoft dataset 'opportunity-zones' ('Opportunity Zones') "
       "on the European open-data portal cityofsalinas.opendatasoft.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -34622,6 +35638,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "appno,permitno",
+    .id_keys = "appno",
     .description = "OpenDataSoft dataset "
       "'register-of-building-permit-applications-in-the-city-of-casey' "
       "('Register of Building Permit Applications City of Casey') on "
@@ -34665,6 +35682,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_bv,nom_commune,nom_circonscription,nom_canton",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "'214400301_secteurs-electoraux-la-chapelle-des-marais' "
       "('Secteurs électoraux - La Chapelle-des-Marais') on the European "
@@ -34708,6 +35726,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_ets,libelle_naf,libelle_regime,adresse_postale",
+    .id_keys = "code_aiot_ets",
     .description = "OpenDataSoft dataset 'installations-classees-camvs' "
       "('Installations classées pour la Protection de l'Environnement') "
       "on the European open-data portal data.melunvaldeseine.fr "
@@ -34729,6 +35748,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau,commune_nom,nom_election,nom_circonscription",
+    .id_keys = "pourcentage",
     .description = "OpenDataSoft dataset "
       "'resultats-election-legislative-2eme-tour-2022-ville-de-bourges-1ere-circonscript' "
       "('Resultats Election Législative 2eme Tour - 2022 - Ville de "
@@ -34789,6 +35809,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "school_name+ward_code",
     .description = "OpenDataSoft dataset 'sen-school-level-underlying-data' ('SEN "
       "School Level Underlying Data') on the European open-data portal "
       "cityobservatory.birmingham.gov.uk (portal's own dataset). "
@@ -34831,6 +35852,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset 'affluenze-referendum-2020' ('Referendum "
       "2020 - Riduzione numero parlamentari - affluenze') on the "
       "European open-data portal opendata.comune.bologna.it (portal's "
@@ -34851,6 +35873,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_parking,nom_du_parking0,commune,ident_equipement_public",
+    .id_keys = "ident_equipement_public",
     .description = "OpenDataSoft dataset 'parkings_tarifs_2015' ('Parkings tarifs "
       "2015') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -34891,6 +35914,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'14-live-births-by-nationality-groups-and-sex' ('Live Births by "
       "Nationality Groups and Sex') on the European open-data portal "
@@ -34912,6 +35936,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "fecha+provincia",
     .description = "OpenDataSoft dataset 'personas-vacunadas-covid' ('Personas "
       "vacunadas COVID-19 hasta el 23-09-2022') on the European "
       "open-data portal analisis.datosabiertos.jcyl.es (portal's own "
@@ -34956,6 +35981,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "taux_exposes",
     .description = "OpenDataSoft dataset 'expositions-professionnelles-formaldehyde' "
       "('Exposition professionnelle : Formaldéhyde') on the European "
       "open-data portal odisse.santepubliquefrance.fr (portal's own "
@@ -34977,6 +36003,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bevolkerung",
     .description = "OpenDataSoft dataset "
       "'stadt-neuss-statistischer-bezirk-28-rosellen' ('Stadt Neuss: "
       "Statistischer Bezirk 28 - Rosellen') on the European open-data "
@@ -35018,6 +36045,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-154110-obbola' "
       "('Energiförbrukning i Geografiska området 154110 (Obbola)') on "
@@ -35039,6 +36067,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,adresse,mel,horaires",
+    .id_keys = "commune",
     .description = "OpenDataSoft dataset 'lecture-publique-du-minervois-au-caroux' "
       "('Lecture Publique du Minervois au Caroux') on the European "
       "open-data portal www.herault-data.fr (portal's own dataset). "
@@ -35059,6 +36088,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisme,legende",
+    .id_keys = "legende",
     .description = "OpenDataSoft dataset 'atlas-photos-coteaux-de-montclar' ('Atlas "
       "des paysages de la Haute-Garonne : photos des Coteaux de "
       "Montclar') on the European open-data portal "
@@ -35100,6 +36130,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'evsi_vf_simplifie-vf' "
       "('EVSI_VF_simplifié-VF') on the European open-data portal "
       "data.drees.solidarites-sante.gouv.fr (portal's own dataset). "
@@ -35120,6 +36151,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ville,adresse,type",
+    .id_keys = "insee+nb_places",
     .description = "OpenDataSoft dataset "
       "'aires-daccueil-des-gens-du-voyage-tours-metropole-val-de-loire' "
       "('Aires d'accueil des gens du voyage - Tours Métropole Val de "
@@ -35142,6 +36174,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "indfoy_ndur",
     .description = "OpenDataSoft dataset 'ndur_s_qf_400_nat' ('Toutes prestations - "
       "Répartition des allocataires selon la prestation et le quotient "
       "familial [National]') on the European open-data portal "
@@ -35207,6 +36240,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_geographique",
     .description = "OpenDataSoft dataset "
       "'population-active-dans-les-hautes-pyrenees' ('Population active "
       "2021 dans les Hautes-Pyrénées') on the European open-data portal "
@@ -35266,6 +36300,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "cote+themes",
     .description = "OpenDataSoft dataset "
       "'periodiques-consultables-au-centre-de-la-memoire-urbaine-dagglomeration6archives' "
       "('Périodiques consultables au Centre de la Mémoire Urbaine "
@@ -35329,6 +36364,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "evenement",
+    .id_keys = "evenement",
     .description = "OpenDataSoft dataset "
       "'blois-donnees-detat-civil-2020-naissance-mariage-deces' ('Blois "
       "- données d'état civil 2020 (naissance, mariage, décès)') on the "
@@ -35480,6 +36516,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nachname,vorname,partei",
+    .id_keys = "stimmen",
     .description = "OpenDataSoft dataset "
       "'wahlen-stadtrat-stadtprasidentin-22-09-2024' ('Wahlen Stadtrat "
       "und Stadtpräsident/in St.Gallen 22.09.2024') on the European "
@@ -35500,6 +36537,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lga+period",
     .description = "OpenDataSoft dataset 'coronary-heart-disease-hospitalisation' "
       "('Coronary heart disease hospitalisation') on the European "
       "open-data portal data.peclet.com.au (portal's own dataset). "
@@ -35519,6 +36557,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tempo+instituicao",
     .description = "OpenDataSoft dataset 'consultas-em-telemedicina' ('Consultas em "
       "Telemedicina') on the European open-data portal "
       "transparencia.sns.gov.pt (portal's own dataset). Records API "
@@ -35540,6 +36579,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lib_idzone",
     .description = "OpenDataSoft dataset "
       "'plan-local-d-urbanisme-or-zonages-or-commune-d-anglet' ('Zonage "
       "du Plan Local d'Urbanisme (ABROGE) Modification 5 approuvé le "
@@ -35583,6 +36623,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "period_type,sub_division,column_2",
+    .id_keys = "sub_division+value+period",
     .description = "OpenDataSoft dataset 'department-budget' ('City Budget - "
       "Expenses by Department') on the European open-data portal "
       "cityofsalinas.opendatasoft.com (portal's own dataset). Records "
@@ -35602,6 +36643,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_code,zone_description,zone_group",
+    .id_keys = "gisfid",
     .description = "OpenDataSoft dataset 'planning-scheme-zones' ('Planning Scheme "
       "(Zones)') on the European open-data portal data.casey.vic.gov.au "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -35643,6 +36685,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_quartier,elu_de_quartier",
+    .id_keys = "numero",
     .description = "OpenDataSoft dataset '214401846_conseils-quartier-st-nazaire' "
       "('Conseils de quartiers sur le territoire de Saint-Nazaire') on "
       "the European open-data portal data.saintnazaireagglo.fr "
@@ -35684,6 +36727,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_zae,nom_sous_zone,commune,identifiant",
+    .id_keys = "perimetre_calcule",
     .description = "OpenDataSoft dataset 'zae' ('Zones d'Activités Economique - "
       "ZAE') on the European open-data portal data.melunvaldeseine.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -35724,6 +36768,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'lieux-dits' ('Lieux dits') on the European "
       "open-data portal data.fleurysurorne.fr (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
@@ -35765,6 +36810,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodlabel+areaidentifier",
     .description = "OpenDataSoft dataset "
       "'total-expenditure-on-building-control-per-head-wmca' ('Total "
       "expenditure on building control per head - WMCA') on the "
@@ -35786,6 +36832,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "madchen",
+    .id_keys = "madchen",
     .description = "OpenDataSoft dataset 'dritter-vorname-weiblich-2025' ('Dritter "
       "Vorname weiblich 2025') on the European open-data portal "
       "open-data.dortmund.de (portal's own dataset). Records API "
@@ -35806,6 +36853,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sezione+numero_cand",
     .description = "OpenDataSoft dataset "
       "'elezioni-politiche-2022-camera-dei-deputati-uni' ('Elezioni "
       "politiche 2022 - Camera dei Deputati - Uninominale') on the "
@@ -35869,6 +36917,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "number",
     .description = "OpenDataSoft dataset "
       "'number-of-arrival-from-gcc-countries-to-kingdom-of-bahrain' "
       "('Number of Arrivals from GCC Countries to the Kingdom of "
@@ -35891,6 +36940,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "fecha+codine+indicador",
     .description = "OpenDataSoft dataset "
       "'indicadores-de-riesgo-covid-19-por-provincias-250322' "
       "('Indicadores de riesgo COVID-19 por provincias desde el "
@@ -35912,6 +36962,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisation,contact_email_address,provider,summary",
+    .id_keys = "provider+organisation",
     .description = "OpenDataSoft dataset 'lcc_servicedata_mp_clean' "
       "('LCC_MyChoiceServiceData') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -35932,6 +36983,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "moyen_utilise+annee+sexe",
     .description = "OpenDataSoft dataset 'suicides-moyens-utilises-france' "
       "('Suicides : Moyens utilisés (France)') on the European "
       "open-data portal odisse.santepubliquefrance.fr (portal's own "
@@ -35953,6 +37005,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_der_einrichtung,strasse,stadtteil",
+    .id_keys = "name_der_einrichtung",
     .description = "OpenDataSoft dataset 'grevenbroich-kindertagesstaetten' "
       "('Grevenbroich: Kindertageseinrichtungen') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -35974,6 +37027,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "wijk",
+    .id_keys = "wijk",
     .description = "OpenDataSoft dataset 'voorzieningenwijkscore' ('Voorzieningen "
       "seniorvriendelijke stad Den Haag, wijkscores') on the European "
       "open-data portal den-haag-opendata.opendatasoft.com (portal's "
@@ -35995,6 +37049,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt+forbrukningstyp",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-174705-savar-vastra' "
       "('Energiförbrukning i Geografiska området 174705 (Sävar, "
@@ -36057,6 +37112,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "codecarto",
     .description = "OpenDataSoft dataset "
       "'donnee-375-vues-inspire-perimetres-de-reconnaissance-economique-wallonie' "
       "('Périmètres de reconnaissance économique - Wallonie') on the "
@@ -36098,6 +37154,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "quartier,secteur",
+    .id_keys = "code_quartier_ville_de_tours+date",
     .description = "OpenDataSoft dataset 'naissances-par-quartier-tours' "
       "('Naissances domiciliées par quartier - Tours') on the European "
       "open-data portal data.tours-metropole.fr (portal's own dataset). "
@@ -36139,6 +37196,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "project_name_english,project_name_arabic,management_company_name_in_arabic,management_company_name_in_english",
+    .id_keys = "project_id+year",
     .description = "OpenDataSoft dataset "
       "'management-companies-for-real-estate-development-projects' "
       "('Management companies for Real Estate Development Projects') on "
@@ -36160,6 +37218,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_ept,id",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'contours-du-territoire-gpso' ('Contours du "
       "Territoire GPSO') on the European open-data portal "
       "data.seineouest.fr (portal's own dataset). Records API Explore "
@@ -36180,6 +37239,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_geographique+annee",
     .description = "OpenDataSoft dataset "
       "'population-1876-2017-dans-les-hautes-pyrenees' ('Population "
       "1876-2017 dans les Hautes-Pyrénées') on the European open-data "
@@ -36201,6 +37261,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "cause_name,utility_name,end_date_time,start_date_time",
+    .id_keys = "row_id",
     .description = "OpenDataSoft dataset "
       "'energy-resources-ereliability-outages-public' ('Energy "
       "Resources - eReliability Outages - PUBLIC') on the European "
@@ -36222,6 +37283,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+stadtbezirk",
     .description = "OpenDataSoft dataset "
       "'stadtbezirke_bewegung_sterbefaelle_weiblich' ('Stadtbezirke "
       "Bewegung Sterbefälle weiblich') on the European open-data portal "
@@ -36284,6 +37346,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'population-departementale-2009-2020' "
       "('Population départementale 2009 - 2020') on the European "
       "open-data portal data.82amenagement.fr (portal's own dataset). "
@@ -36326,6 +37389,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_arret,gest_nom,commune",
+    .id_keys = "photo+nom_arret",
     .description = "OpenDataSoft dataset '254402738_arrets_transport_demande' "
       "('Arrêts du transport à la demande sur Cap Atlantique (Lila "
       "Presqu'ile)') on the European open-data portal "
@@ -36347,6 +37411,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_de_residence",
+    .id_keys = "zone_de_residence",
     .description = "OpenDataSoft dataset 'habitat-et-equipement-des-menages-epci' "
       "('EMC² : Habitat et équipement des ménages par EPCI') on the "
       "European open-data portal www.karudata.com (portal's own "
@@ -36428,6 +37493,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,adresse",
+    .id_keys = "adresse+nom_du_site",
     .description = "OpenDataSoft dataset 'consultations-one' ('Consultations ONE') "
       "on the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -36470,6 +37536,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "date",
     .description = "OpenDataSoft dataset 'capegrim_co2_data_download' ('CO2 measures "
       "- Cape Grim (Tasmania) 1976 to 2024') on the European open-data "
       "portal data.peclet.com.au (portal's own dataset). Records API "
@@ -36532,6 +37599,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'nombre-de-formations-dispensees-pour-les-administrateurs-par-intercommunale' "
       "('Nombre de formations dispensées pour les administrateurs (par "
@@ -36574,6 +37642,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "northing",
     .description = "OpenDataSoft dataset 'maternal-child-health-centre-boundaries' "
       "('Family Maternal Child Health Centre Boundaries') on the "
       "European open-data portal data.casey.vic.gov.au (portal's own "
@@ -36616,6 +37685,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "voie_adr,ville,adr_complete",
+    .id_keys = "fkid_adr",
     .description = "OpenDataSoft dataset '244400644_jour_collecte_2024' ('Jour de "
       "collecte à l'adresse de Saint-Nazaire Agglo 2024') on the "
       "European open-data portal data.saintnazaireagglo.fr (portal's "
@@ -36637,6 +37707,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_aide",
+    .id_keys = "date+type_aide",
     .description = "OpenDataSoft dataset "
       "'224900019_aides-sociales-pour-les-personnes-agees-en-maine-et-loire' "
       "('Aides sociales pour les personnes âgées en Maine-et-Loire') on "
@@ -36659,6 +37730,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_rue,quartier,type_stationnement,commune",
+    .id_keys = "num+precision_geo",
     .description = "OpenDataSoft dataset 'stationnements-pmr' ('Stationnements PMR "
       "(Personnes à Mobilité Réduite) sur Melun') on the European "
       "open-data portal data.melunvaldeseine.fr (portal's own dataset). "
@@ -36699,6 +37771,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'bornes-de-recharge-electrique' ('Bornes de "
       "recharge électrique') on the European open-data portal "
       "data.fleurysurorne.fr (portal's own dataset). Records API "
@@ -36741,6 +37814,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "value+periodlabel",
     .description = "OpenDataSoft dataset "
       "'fixed-period-exclusions-state-schools-pupils-wmca' ('Fixed "
       "period exclusions - state schools (pupils) - WMCA') on the "
@@ -36762,6 +37836,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "wahlraumbezeichnung",
+    .id_keys = "wahlbezirk",
     .description = "OpenDataSoft dataset "
       "'fb33-bundestagswahl-20170924-erststimme-wahlbezirke' "
       "('Bundestagswahl 2017 - Erststimme') on the European open-data "
@@ -36783,6 +37858,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "indirizzo,biblioteca",
+    .id_keys = "biblioteca",
     .description = "OpenDataSoft dataset 'performance-delle-biblioteche-comunali' "
       "('Performance delle Biblioteche comunali di Bologna') on the "
       "European open-data portal opendata.comune.bologna.it (portal's "
@@ -36847,6 +37923,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset '19-gdp-income-cp' ('Gross Domestic Product "
       "Current Prices - Income Approach') on the European open-data "
       "portal www.data.gov.bh (portal's own dataset). Records API "
@@ -36867,6 +37944,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "dosis_registradas_acumuladas+dosis_registradas",
     .description = "OpenDataSoft dataset 'dosis-vacunas-gripe-campana-2526' ('Dosis "
       "vacunas GRIPE Campaña 25/26') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -36887,6 +37965,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "fund",
+    .id_keys = "fund",
     .description = "OpenDataSoft dataset 'household-support-grant-hsg-data-phase-3' "
       "('Household Support Fund (HSF) Data Phase 3') on the European "
       "open-data portal data.leicester.gov.uk (portal's own dataset). "
@@ -36907,6 +37986,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "ps_12m_v",
     .description = "OpenDataSoft dataset "
       "'sante-mentale-pensees-suicidaires-et-tentatives-de-suicide_reg' "
       "('Santé mentale : Pensées suicidaires et tentatives de suicide "
@@ -36929,6 +38009,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bevolkerung",
     .description = "OpenDataSoft dataset "
       "'stadt-neuss-statistischer-bezirk-20-weissenberg' ('Stadt Neuss: "
       "Statistischer Bezirk 20 - Weißenberg') on the European open-data "
@@ -36950,6 +38031,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "branche",
+    .id_keys = "branche",
     .description = "OpenDataSoft dataset "
       "'energie-in-beeld-per-branche-den-haag-2008-2016' ('Energie in "
       "beeld per branche Den Haag') on the European open-data portal "
@@ -37011,6 +38093,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom+fonction",
     .description = "OpenDataSoft dataset "
       "'conseillers-departementaux-haute-garonne-2015' ('Conseillères "
       "et conseillers départementaux de la Haute-Garonne - mandat "
@@ -37032,6 +38115,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "rgn_name,ctry_name,rgn_type",
+    .id_keys = "rgn_name+year",
     .description = "OpenDataSoft dataset 'georef-united-kingdom-region-millesime' "
       "('Regions - Vintage/Millésimé - United Kingdom') on the European "
       "open-data portal hub.huwise.com (portal's own dataset). Records "
@@ -37052,6 +38136,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_contrats",
+    .id_keys = "value+annee",
     .description = "OpenDataSoft dataset "
       "'repartition-des-souscripteurs-par-age-selon-le-type-de-contrat-copie' "
       "('Datastory OC - 1.1 Âge des souscripteurs, par type de "
@@ -37074,6 +38159,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "route_long_name,route_type",
+    .id_keys = "route_long_name+route_short_name",
     .description = "OpenDataSoft dataset "
       "'reseau-fil-bleu-2021-2022-syndicat-des-mobilites' ('Réseau Fil "
       "Bleu 2021-2022 - Syndicat des Mobilités') on the European "
@@ -37095,6 +38181,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ppa_type,nomiris,nomcom",
+    .id_keys = "nomiris+numcomdo+ppa_type",
     .description = "OpenDataSoft dataset 'ppa_s_type_iris_f' ('PA - Répartition des "
       "allocataires selon le type de prestation [IRIS]') on the "
       "European open-data portal data.caf.fr (portal's own dataset). "
@@ -37114,6 +38201,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "month_ar+year",
     .description = "OpenDataSoft dataset 'determining-the-land-level' ('Determining "
       "the Land Level') on the European open-data portal data.ajman.ae "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -37134,6 +38222,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "animal",
+    .id_keys = "animal",
     .description = "OpenDataSoft dataset 'campus-saint-philippe-mdna' ('Observatoire "
       "de la biodiversité : Campus Saint-Philippe') on the European "
       "open-data portal data.seineouest.fr (portal's own dataset). "
@@ -37154,6 +38243,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_commune",
+    .id_keys = "codgeo+annee",
     .description = "OpenDataSoft dataset "
       "'statistiques-des-deces-de-2018-a-2024-dans-les-hautes-pyrenees' "
       "('Statistiques des décès de 2018 à 2024 dans les "
@@ -37176,6 +38266,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+stadtbezirk",
     .description = "OpenDataSoft dataset "
       "'stadtbezirke_deutsche_mit_migrationshintergrund_weiblich' "
       "('Stadtbezirke Deutsche mit Migrationshintergrund weiblich') on "
@@ -37198,6 +38289,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_ouvrage",
+    .id_keys = "id_sispea_ouvrage+annee",
     .description = "OpenDataSoft dataset "
       "'indicateur-dactivite-des-ouvrages-deau-potable-2009-2017' "
       "('Indicateurs d'activité des ouvrages d'eau potable sur la "
@@ -37241,6 +38333,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_des_communes_ou_epci_ayant_un_service_de_police_municipale,nom_departement",
+    .id_keys = "nom_des_communes_ou_epci_ayant_un_service_de_police_municipale",
     .description = "OpenDataSoft dataset 'police-municipale-effectifs-par-commune' "
       "('Police municipale : Effectifs par commune') on the European "
       "open-data portal data.82amenagement.fr (portal's own dataset). "
@@ -37261,6 +38354,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_lieu_d_execution,objet_du_marche_256_caracteres_maxi,type_code_lieu_d_execution,identification_du_titulaire_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributaires",
+    .id_keys = "objet_du_marche_256_caracteres_maxi+ndegmarche",
     .description = "OpenDataSoft dataset 'blois-marches-publics-2021-40-000-eur-ht' "
       "('Blois - marchés publics 2021 > 40 000 € HT') on the European "
       "open-data portal data.blois.agglopolys.fr (portal's own "
@@ -37303,6 +38397,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_d_itineraire_cyclable",
+    .id_keys = "type_d_itineraire_cyclable+annee",
     .description = "OpenDataSoft dataset '202501_velo_longueur-des-itineraires' "
       "('Longueurs des différents itinéraires cyclables de la "
       "Guadeloupe') on the European open-data portal www.karudata.com "
@@ -37323,6 +38418,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'repertoire-des-elus' ('Répertoire des "
       "élus') on the European open-data portal data.montreuil.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -37342,6 +38438,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "code_de_categorie,categorie,type_de_document",
+    .id_keys = "code_de_categorie",
     .description = "OpenDataSoft dataset 'documents-mediatheques-2021' ('Documents "
       "des médiathèques en 2021') on the European open-data portal "
       "data.cannes.com (portal's own dataset). Records API Explore "
@@ -37381,6 +38478,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,adresse,type",
+    .id_keys = "nom_du_site",
     .description = "OpenDataSoft dataset 'laboratoires-de-prelevement-sanguin' "
       "('Centres de prélèvements') on the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -37400,6 +38498,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'brunnenkataster' ('Brunnenkataster Stadt "
       "St.Gallen') on the European open-data portal daten.stadt.sg.ch "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -37420,6 +38519,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "region,lganame,shapeuuid,councilname",
+    .id_keys = "rid",
     .description = "OpenDataSoft dataset 'nsw-lga-boundaries-new' ('NSW "
       "Administrative Boundaries Theme - Local Government Area') on the "
       "European open-data portal data.peclet.com.au (portal's own "
@@ -37461,6 +38561,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "num_serie",
     .description = "OpenDataSoft dataset "
       "'localisation-des-defibrillateurs-sur-la-commune-danglet' "
       "('Localisation des défibrillateurs sur la commune d'Anglet') on "
@@ -37483,6 +38584,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'nombre-de-fiches-d-amelioration-ouvertes-iso-9001' ('Nombre de "
       "fiches d'amélioration ouvertes ISO 9001') on the European "
@@ -37523,6 +38625,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description,property_address",
+    .id_keys = "latitude",
     .description = "OpenDataSoft dataset 'public-art-work-pt-t1eam' ('Public "
       "Art-Work Pt T1EAM') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -37628,6 +38731,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau,commune_nom,nom_election,nom_circonscription",
+    .id_keys = "pourcentage",
     .description = "OpenDataSoft dataset "
       "'resultats_election_legislative_2024_ville_de_bourges_2eme_tour_1ere_circonscrip0' "
       "('Résultats Election législative 2ème Tour - 2024 - Ville de "
@@ -37649,6 +38753,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periode",
     .description = "OpenDataSoft dataset 'statistiques-garderie-periscolaire' "
       "('Statistiques garderie périscolaire') on the European open-data "
       "portal data.fleurysurorne.fr (portal's own dataset). Records API "
@@ -37709,6 +38814,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gebietsname",
+    .id_keys = "gebietsname",
     .description = "OpenDataSoft dataset 'stadtevergleich-gewerbe-2022' "
       "('Städtevergleich - Gewerbe 2022') on the European open-data "
       "portal open-data.dortmund.de (portal's own dataset). Records API "
@@ -37729,6 +38835,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nome_lista",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-2021-preferenze-lista-movimento-5-stelle-2050' "
       "('Elezioni amministrative 2021 - Preferenze lista MOVIMENTO 5 "
@@ -37750,6 +38857,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "intitule_chapitre,intitule_budget,partitionkey,rowkey",
+    .id_keys = "partitionkey",
     .description = "OpenDataSoft dataset 'budgetnomenc2010' ('Budget 2010 par "
       "nomenclature') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -37791,6 +38899,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "governorate,lmhfz",
+    .id_keys = "households",
     .description = "OpenDataSoft dataset "
       "'distribution-households-by-governorate-and-nationality-of-households-census-2020' "
       "('Distribution of Households by Governorate & Nationality of "
@@ -37812,6 +38921,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "titulo,lugar_de_celebracion",
+    .id_keys = "identificador+fecha_de_inicio",
     .description = "OpenDataSoft dataset 'calendario-eventos-ice' ('Calendario de "
       "eventos del ICE') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -37831,6 +38941,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ward",
+    .id_keys = "ward",
     .description = "OpenDataSoft dataset 'lsg-odp-ward-data' ('Local Support Grant "
       "Ward Data') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -37851,6 +38962,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "taux+nbcas",
     .description = "OpenDataSoft dataset "
       "'hepatite-a-donnees-de-la-declarations-obligatoire-region' "
       "('Hépatite A : Données de la déclarations obligatoire (Région)') "
@@ -37873,6 +38985,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stadtteil",
+    .id_keys = "datum",
     .description = "OpenDataSoft dataset 'grevenbroich-volks-und-heimatfeste-2026' "
       "('Grevenbroich: Volks- und Heimatfeste 2026') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -37914,6 +39027,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt+forbrukningstyp",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-1230-del-av-marieomradet' "
       "('Energiförbrukning i Geografiska området 1230 (del av "
@@ -37936,6 +39050,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_open_data",
+    .id_keys = "insee_com",
     .description = "OpenDataSoft dataset "
       "'repartition-des-15-24-ans-non-scolarises-selon-le-plus-haut-diplome-obtenu-en-20' "
       "('Répartition des 15-24 ans non-scolarisés selon le plus haut "
@@ -38000,6 +39115,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dixieme_de_niveau_de_vie",
+    .id_keys = "dixieme_de_niveau_de_vie",
     .description = "OpenDataSoft dataset 'graphique-er-ass' ('Graphique-ER-ASS') on "
       "the European open-data portal "
       "data.drees.solidarites-sante.gouv.fr (portal's own dataset). "
@@ -38041,6 +39157,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "national",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'nbpla_pe_nat' ('Nombre de places offertes "
       "pour les enfants de moins de 3 ans [National]') on the European "
       "open-data portal data.caf.fr (portal's own dataset). Records API "
@@ -38060,6 +39177,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "establishment_classification",
+    .id_keys = "establishment_classification",
     .description = "OpenDataSoft dataset 'reservation-rate' ('Rev Par') on the "
       "European open-data portal data.ajman.ae (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
@@ -38097,6 +39215,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet,nombeneficiaire",
+    .id_keys = "nombeneficiaire+dateconvention",
     .description = "OpenDataSoft dataset "
       "'subventions-de-la-communaute-d-agglomeration-tarbes-lourdes-pyrenees' "
       "('Subventions de la Communauté d'Agglomération Tarbes Lourdes "
@@ -38139,6 +39258,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "schule",
+    .id_keys = "schule",
     .description = "OpenDataSoft dataset "
       "'schulportrait-kategorie-g-inklusion-barrierefreiheit-nach-einschraenkung' "
       "('Schulportrait - Kategorie G _ Inklusion - Barrierefreiheit "
@@ -38161,6 +39281,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "rue,commune,type_symbo,type_rev",
+    .id_keys = "code_marqu",
     .description = "OpenDataSoft dataset "
       "'5-liste-des-marquages-routiers-ponctuels-sur-le-territoire-de-la-communaute-urba' "
       "('Liste des marquages routiers ponctuels sur le territoire de la "
@@ -38203,6 +39324,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "file",
     .description = "OpenDataSoft dataset "
       "'point-d-arret-bus-lio-gtfs-tarn-et-garonne' ('Point d'arrêt Bus "
       "LiO GTFS - Tarn-et-Garonne') on the European open-data portal "
@@ -38290,6 +39412,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_commercial,adresse,commune,typologie_etablissement",
+    .id_keys = "date_de_classement",
     .description = "OpenDataSoft dataset 'hotels-de-tourisme' ('Hôtels de tourisme') "
       "on the European open-data portal data.montreuil.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -38310,6 +39433,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "etablissement,classe,mediation",
+    .id_keys = "id+classe+mediation",
     .description = "OpenDataSoft dataset 'eac-lycees' ('Projets d’éducation "
       "artistique et culturelle dans les lycées') on the European "
       "open-data portal data.cannes.com (portal's own dataset). Records "
@@ -38352,6 +39476,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_entite,entite",
+    .id_keys = "ins",
     .description = "OpenDataSoft dataset "
       "'montant-moyen-des-credits-octroyes-au-cours-de-l-annee-par-personne-majeure' "
       "('Montant moyen des crédits octroyés au cours de l’année par "
@@ -38374,6 +39499,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset "
       "'wahrgenommene-sicherheit-stadt-stgallen-streetwise' "
       "('Wahrgenommene Sicherheit der Strassen in der Stadt St.Gallen "
@@ -38395,6 +39521,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "region",
+    .id_keys = "employed_total_persons+employed_total_females",
     .description = "OpenDataSoft dataset 'abs-labour-market-regions-sa4' ('Labour "
       "market regions (SA4)') on the European open-data portal "
       "data.peclet.com.au (portal's own dataset). Records API Explore "
@@ -38457,6 +39584,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'nombre-de-nouveaux-contentieux' ('Nombre "
       "de nouveaux contentieux') on the European open-data portal "
       "data.bep.be (portal's own dataset). Records API Explore v2.1, "
@@ -38476,6 +39604,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "station,address,uniqueid",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'law-enforcement-facilities' ('Law "
       "Enforcement Facilities') on the European open-data portal "
       "cityofsalinas.opendatasoft.com (portal's own dataset). Records "
@@ -38496,6 +39625,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lga_name,address,type,strname",
+    .id_keys = "lightid",
     .description = "OpenDataSoft dataset 'ausnet_unitedenergy_mvp4_streetlights' "
       "('AusNet Services and United Energy Street Lights') on the "
       "European open-data portal data.casey.vic.gov.au (portal's own "
@@ -38559,6 +39689,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_nature,type_mvt",
+    .id_keys = "code_nature+budget_supplementaire+exercice",
     .description = "OpenDataSoft dataset "
       "'224900019_budget-supplementaire-du-departement-de-maine-et-loire-archeologie' "
       "('Budget supplémentaire du budget annexe du Département de "
@@ -38580,6 +39711,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "libelle+photo",
     .description = "OpenDataSoft dataset 'points-d-interets' ('Points d'intérêts de "
       "l'agglomération') on the European open-data portal "
       "data.melunvaldeseine.fr (portal's own dataset). Records API "
@@ -38660,6 +39792,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,area_type",
+    .id_keys = "numerator+denominator",
     .description = "OpenDataSoft dataset "
       "'offer-of-support-and-treatment-for-smokers-icp-outcomes-framework-registered-locality' "
       "('Offer of support and treatment for smokers - ICP Outcomes "
@@ -38682,6 +39815,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr",
     .description = "OpenDataSoft dataset "
       "'fabido-kinderbetreuung-tageseinrichtungen-mit-besonderen-merkmalen-seit-2013' "
       "('FABIDO Kinderbetreuung - Tageseinrichtungen mit besonderen "
@@ -38704,6 +39838,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nome_lista",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-2021-preferenze-lista-3v-verita-liberta' "
       "('Elezioni amministrative 2021 - Preferenze lista 3V VERITA' "
@@ -38726,6 +39861,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset 'eg_raccordement_s' ('Périmètre de "
       "raccordement obligatoire au réseau de chaleur urbain') on the "
       "European open-data portal datahub.bordeaux-metropole.fr "
@@ -38768,6 +39904,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "disease_type",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'30-number-of-cancer-cases-among-bahrainis-by-sex-and-cancer-type' "
       "('Number of Cancer Cases among Bahrainis by Sex and Cancer "
@@ -38790,6 +39927,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "parejas_heterosexuales+ano",
     .description = "OpenDataSoft dataset 'uniones_de_hecho' ('Estadística del "
       "registro de parejas de hecho') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -38809,6 +39947,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ward",
+    .id_keys = "change_num",
     .description = "OpenDataSoft dataset 'community-support-grants-2019-21' "
       "('Community Support Grants by Ward 2019-21') on the European "
       "open-data portal data.leicester.gov.uk (portal's own dataset). "
@@ -38850,6 +39989,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "haushalte",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "'grevenbroich-haushalte-nach-seniorenstatus-des-haushalts' "
       "('Grevenbroich: Haushalte nach Seniorenstatus des Haushalts') on "
@@ -38893,6 +40033,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-071401-baggbole' "
       "('Energiförbrukning i Geografiska området 071401 (Baggböle)') on "
@@ -38915,6 +40056,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nbvp",
     .description = "OpenDataSoft dataset "
       "'donnees-du-parc-vehiculaire-conseil-departemental-de-l-herault' "
       "('Données du parc véhiculaire - Conseil départemental de "
@@ -38937,6 +40079,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisme,legende",
+    .id_keys = "legende",
     .description = "OpenDataSoft dataset 'atlas-photos-balcon-pyreneen' ('Atlas des "
       "paysages de la Haute-Garonne : photos du Balcon Pyrénéen') on "
       "the European open-data portal data.haute-garonne.fr (portal's "
@@ -38981,6 +40124,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "effectif+date",
     .description = "OpenDataSoft dataset "
       "'covid-19-avant-amelioration-resultats-nationaux-issus-des-appariements-entre-si-' "
       "('Covid-19 : avant amélioration, résultats nationaux issus des "
@@ -39004,6 +40148,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "'aides-etudiants-tours-metropole-val-de-loire' ('Aides pour les "
       "étudiants - COVID19 - Tours Métropole Val de Loire') on the "
@@ -39045,6 +40190,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "number_of_regular_taxis_trips",
     .description = "OpenDataSoft dataset 'taxi-trips' ('Taxi Trips') on the European "
       "open-data portal data.ajman.ae (portal's own dataset). Records "
       "API Explore v2.1, offset paging. ODS portal discovered via the "
@@ -39064,6 +40210,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'suivi-des-coproprietes' ('Suivi des "
       "copropriétés pour la rénovation énergétique') on the European "
       "open-data portal data.seineouest.fr (portal's own dataset). "
@@ -39084,6 +40231,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom,commune",
+    .id_keys = "insee_commune+annee",
     .description = "OpenDataSoft dataset "
       "'departementdeshautespyrenees_populations_communes' ('Population "
       "annuelle des communes du département des Hautes Pyrénées') on "
@@ -39127,6 +40275,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr",
     .description = "OpenDataSoft dataset 'sozialmonitoring-schwerbehinderung' "
       "('Sozialmonitoring - Drogenberatung') on the European open-data "
       "portal opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -39147,6 +40296,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,quartier,type,commune",
+    .id_keys = "adresse",
     .description = "OpenDataSoft dataset "
       "'mur-legal-d-expression-artistique-communaute-urbaine-de-dunkerque' "
       "('Murs légaux d'expression artistique - Communauté urbaine de "
@@ -39169,6 +40319,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "timestamp+gco2e+substation",
     .description = "OpenDataSoft dataset 'spen-weekly-substation-carbon-estimate' "
       "('SPEN Weekly Substation Carbon Estimate') on the European "
       "open-data portal spenergynetworks.opendatasoft.com (portal's own "
@@ -39213,6 +40364,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_lieu_d_execution,objet_du_marche_256_caracteres_maxi,type_code_lieu_d_execution,identification_du_titulaire_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributaires",
+    .id_keys = "objet_du_marche_256_caracteres_maxi",
     .description = "OpenDataSoft dataset "
       "'blois-marches-publics-2023-greater-than-40-000-eur-ht' ('Blois "
       "- marchés publics 2023 > 40 000 € HT') on the European open-data "
@@ -39234,6 +40386,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom",
+    .id_keys = "liste_delib_url+coll_siret",
     .description = "OpenDataSoft dataset '214400699_liste_delib_pv_seance' ('Liste "
       "des délibérations et Procès-verbaux des conseils municipaux de "
       "la commune de Guérande') on the European open-data portal "
@@ -39339,6 +40492,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "localite",
+    .id_keys = "localite+code",
     .description = "OpenDataSoft dataset 'code-postaux-belge' ('code-postaux-belge') "
       "on the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -39420,6 +40574,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "denomination_employeur,type_administration",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'les-10-remunerations-les-plus-elevees-des-agents-publics' "
       "('Somme des 10 rémunérations les plus élevées des agents publics "
@@ -39442,6 +40597,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'taux-de-satisfaction-des-missions' ('Taux "
       "de satisfaction des missions') on the European open-data portal "
       "data.bep.be (portal's own dataset). Records API Explore v2.1, "
@@ -39461,6 +40617,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "library_computer_usage",
+    .id_keys = "library_computer_usage",
     .description = "OpenDataSoft dataset 'library-computer-usage' ('Library Computer "
       "Usage') on the European open-data portal "
       "cityofsalinas.opendatasoft.com (portal's own dataset). Records "
@@ -39481,6 +40638,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "sa2_name21",
+    .id_keys = "sa2_code21",
     .description = "OpenDataSoft dataset 'seifa21_coc_sa2_economicresources_index' "
       "('SEIFA21 Economic Resources Index (SA2) ABS 2021') on the "
       "European open-data portal data.casey.vic.gov.au (portal's own "
@@ -39523,6 +40681,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "iddate",
     .description = "OpenDataSoft dataset "
       "'ex-vue-personnalisee-comptage-velo-et-pedestre-donnees-compteurs' "
       "('[Ex vue personnalisée] Comptage vélo et pédestre - Données "
@@ -39566,6 +40725,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "libelle",
     .description = "OpenDataSoft dataset 'metiers_19e_melun' ('Les fabriques du "
       "faubourg Saint Liesne au 19e siècle') on the European open-data "
       "portal data.melunvaldeseine.fr (portal's own dataset). Records "
@@ -39605,6 +40765,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'cooperations-internationales' "
       "('Coopérations internationales') on the European open-data "
       "portal data.fleurysurorne.fr (portal's own dataset). Records API "
@@ -39644,6 +40805,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodlabel+areaidentifier",
     .description = "OpenDataSoft dataset 'apprenticeship-achievements-under-19-wmca' "
       "('Apprenticeship achievements: Under 19 - WMCA') on the European "
       "open-data portal cityobservatory.birmingham.gov.uk (portal's own "
@@ -39687,6 +40849,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "vecchia_denominazione_quartiere",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-2016-preferenze-lista-cittadini-per-bologna' "
       "('Elezioni amministrative 2016 - Preferenze lista CITTADINI PER "
@@ -39708,6 +40871,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ident,hpm,hps,mjo",
+    .id_keys = "ident",
     .description = "OpenDataSoft dataset 'comptage_trafic_2013' ('Comptage du trafic "
       "en 2013') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -39750,6 +40914,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'07_-bah-adm-research-local-and-international-forums-2019-2023' "
       "('Bahraini Administrative Research that Participated in Local "
@@ -39773,6 +40938,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "provincia,prov",
+    .id_keys = "solicitud_contrasena",
     .description = "OpenDataSoft dataset 'jovenes-inscritos-en-garantia-juvenil' "
       "('Jóvenes inscritos en garantía juvenil') on the European "
       "open-data portal analisis.datosabiertos.jcyl.es (portal's own "
@@ -39816,6 +40982,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "moyen_utilise+annee+sexe",
     .description = "OpenDataSoft dataset "
       "'gestes-auto-infliges-moyens-utilises-ayant-mene-a-une-hospitalisation-france' "
       "('Gestes auto-infligés : Moyens utilisés ayant mené à une "
@@ -39838,6 +41005,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gebiet_name,wahl",
+    .id_keys = "wahl",
     .description = "OpenDataSoft dataset "
       "'dormagen-landratsstichwahl-2020-gemeindeergebnis' ('Dormagen: "
       "Landratsstichwahl-2020-Gemeindeergebnis') on the European "
@@ -39859,6 +41027,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "userid,vad_skulle_du_onska_for_din_stadsdel_om_20_ar",
+    .id_keys = "userid",
     .description = "OpenDataSoft dataset 'resultat-stadsdelsdialogen-2019-ovrigt' "
       "('Resultat stadsdelsdialogen 2019 Övrigt') on the European "
       "open-data portal opendata.umea.se (portal's own dataset). "
@@ -39878,6 +41047,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_service,nom_gima,adresse2",
+    .id_keys = "nom_service+nom_gima",
     .description = "OpenDataSoft dataset 'services-departementaux-herault' "
       "('Services départementaux de l'Hérault') on the European "
       "open-data portal www.herault-data.fr (portal's own dataset). "
@@ -39897,6 +41067,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisme,legende",
+    .id_keys = "taille_du_fichier_en_ko",
     .description = "OpenDataSoft dataset 'ens-foret-de-bouconne-photos' ('ENS - "
       "Forêt de Bouconne - Photos') on the European open-data portal "
       "data.haute-garonne.fr (portal's own dataset). Records API "
@@ -39916,6 +41087,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,departement,aire_geographique",
+    .id_keys = "ci+ida",
     .description = "OpenDataSoft dataset 'aire-geographique-des-igp' ('Aire "
       "géographique des IGP') on the European open-data portal "
       "hub.huwise.com (portal's own dataset). Records API Explore v2.1, "
@@ -39936,6 +41108,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "region",
+    .id_keys = "code_reg",
     .description = "OpenDataSoft dataset "
       "'er-causes-de-deces-tableau_pour_carte_regionales_tumeurs' ('ER "
       "Causes de décès - tableau_pour_carte_regionales_tumeurs') on the "
@@ -39958,6 +41131,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "rue,type,commune,zone_tarification",
+    .id_keys = "latitude",
     .description = "OpenDataSoft dataset "
       "'stationnement-tours-metropole-val-de-loire' ('Stationnement - "
       "Tours Métropole Val de Loire') on the European open-data portal "
@@ -39979,6 +41153,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "indfoy_ndur+indnbp_ndur",
     .description = "OpenDataSoft dataset 's_sitfam_d_nat' ('Toutes prestations - "
       "Répartition des allocataires selon la prestation et la situation "
       "familiale [National]') on the European open-data portal "
@@ -40081,6 +41256,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+stadtbezirk",
     .description = "OpenDataSoft dataset 'stadtbezirke_bewegung_sterbefaelle' "
       "('Stadtbezirke Bewegung Sterbefälle') on the European open-data "
       "portal opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -40101,6 +41277,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset "
       "'elus-du-conseil-de-la-communaute-urbaine-de-dunkerque' ('Élus "
       "du conseil de la communauté urbaine de Dunkerque') on the "
@@ -40163,6 +41340,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lieu",
+    .id_keys = "date+lieu",
     .description = "OpenDataSoft dataset 'sauvons-les-abeilles-en-2023' ('Sauvons "
       "les abeilles en 2023') on the European open-data portal "
       "data.blois.agglopolys.fr (portal's own dataset). Records API "
@@ -40183,6 +41361,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset '244400610_itineraires_cyclables' "
       "('Circuits vélo pour le territoire de Cap Atlantique') on the "
       "European open-data portal data.capatlantique.fr (portal's own "
@@ -40203,6 +41382,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "population",
     .description = "OpenDataSoft dataset "
       "'donnees-pour-calcul-de-l-intensite-energetique' ('Intensité "
       "énergétique') on the European open-data portal www.karudata.com "
@@ -40242,6 +41422,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "code_de_categorie,categorie,type_de_document",
+    .id_keys = "code_de_categorie",
     .description = "OpenDataSoft dataset 'documents-mediatheques-2020' ('Documents "
       "des médiathèques en 2020') on the European open-data portal "
       "data.cannes.com (portal's own dataset). Records API Explore "
@@ -40281,6 +41462,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site,adresse",
+    .id_keys = "nom_du_site",
     .description = "OpenDataSoft dataset 'postes-de-garde' ('Postes de garde') on "
       "the European open-data portal "
       "spi-digitalwallonia.opendatasoft.com (portal's own dataset). "
@@ -40323,6 +41505,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "instituicao_hospitalar",
+    .id_keys = "despesa",
     .description = "OpenDataSoft dataset 'custo-de-tratamento-mensal-por-doente' "
       "('Custo de Tratamento Mensal por Doente') on the European "
       "open-data portal transparencia.sns.gov.pt (portal's own "
@@ -40367,6 +41550,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'taux-de-presence-aux-conseils-d-administration' ('Taux de "
       "présence aux Conseils d'Administration') on the European "
@@ -40387,6 +41571,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'waterways0' ('Classified 303d Water "
       "Bodies') on the European open-data portal "
       "cityofsalinas.opendatasoft.com (portal's own dataset). Records "
@@ -40406,6 +41591,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "road_name,type",
+    .id_keys = "gisfid",
     .description = "OpenDataSoft dataset 'traffic-volume-survey-copy' ('Traffic "
       "Volume Survey') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -40467,6 +41653,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_aide",
+    .id_keys = "beneficiaires+date",
     .description = "OpenDataSoft dataset "
       "'224900019_prestation-de-compensation-du-handicap-en-maine-et-loire' "
       "('Prestation de Compensation du Handicap en Maine-et-Loire') on "
@@ -40488,6 +41675,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gml_id,niveau",
+    .id_keys = "gml_id",
     .description = "OpenDataSoft dataset 'couverture-reseau-mobile-internet-sfr' "
       "('Couverture réseau mobile internet SFR') on the European "
       "open-data portal data.melunvaldeseine.fr (portal's own dataset). "
@@ -40570,6 +41758,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodlabel+areaidentifier",
     .description = "OpenDataSoft dataset 'apprenticeship-starts-under-19-wmca' "
       "('Apprenticeship starts: Under 19 - WMCA') on the European "
       "open-data portal cityobservatory.birmingham.gov.uk (portal's own "
@@ -40591,6 +41780,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "flache_stadt,hauptwohnbevolkerung_stadt,einwohner_innen_stadt",
+    .id_keys = "rang",
     .description = "OpenDataSoft dataset "
       "'stadtevergleich-stellung-unter-den-25-grossten-stadten-2022' "
       "('Städtevergleich - Stellung unter den 25 größten Städten 2022') "
@@ -40613,6 +41803,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset 'elezioni-amministrative-2021-affluenza' "
       "('Elezioni amministrative 2021 - Affluenza') on the European "
       "open-data portal opendata.comune.bologna.it (portal's own "
@@ -40634,6 +41825,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description_programme,code_secteur_intervention,description_secteur_intervention,description_politique_dominante",
+    .id_keys = "partitionkey",
     .description = "OpenDataSoft dataset 'budgetpolpub2013' ('Budget 2013 par "
       "politique publique') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -40674,6 +41866,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "x_longitude+name",
     .description = "OpenDataSoft dataset 'travel-and-cargo-services' ('Travel and "
       "Cargo Services') on the European open-data portal "
       "www.data.gov.bh (portal's own dataset). Records API Explore "
@@ -40694,6 +41887,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "comercio_restaurantes_y_hospedaje_reparaciones_tipo_cotizacion_municipal",
     .description = "OpenDataSoft dataset "
       "'numero-de-licencias-del-iae-por-epigrafes-de-actividad' "
       "('Número de Licencias del I.A.E. por Epígrafes de actividad') on "
@@ -40716,6 +41910,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "reference+title",
     .description = "OpenDataSoft dataset "
       "'invitation-to-tender-for-contracts-june-2017' ('Invitation to "
       "tender for contracts June 2017') on the European open-data "
@@ -40736,6 +41931,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bloc",
+    .id_keys = "bloc",
     .description = "OpenDataSoft dataset 'ira-methodologies' ('IRA - Méthodologies') "
       "on the European open-data portal odisse.santepubliquefrance.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -40756,6 +41952,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bevolkerung",
     .description = "OpenDataSoft dataset "
       "'stadt-neuss-statistischer-bezirk-17-furth-sued' ('Stadt Neuss: "
       "Statistischer Bezirk 17 - Furth-Süd') on the European open-data "
@@ -40776,6 +41973,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "OpenbareRu,Postcode,Sleutel",
+    .id_keys = "OBJECTID",
     .description = "OpenDataSoft dataset 'zwembaden-den-haag1' ('Zwembaden Den "
       "Haag') on the European open-data portal "
       "den-haag-opendata.opendatasoft.com (portal's own dataset). "
@@ -40796,6 +41994,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt+forbrukningstyp",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-112911-carlshojd' "
       "('Energiförbrukning i Geografiska området 112911 (Carlshöjd)') "
@@ -40817,6 +42016,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'aeroports-de-lherault' ('Aéroports de "
       "l'Hérault') on the European open-data portal www.herault-data.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -40836,6 +42036,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisme,legende,dimensions_en_pixels",
+    .id_keys = "legende",
     .description = "OpenDataSoft dataset 'ens-mont-calem-photos' ('ENS - Mont Calem "
       "- Photos') on the European open-data portal "
       "data.haute-garonne.fr (portal's own dataset). Records API "
@@ -40878,6 +42079,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone",
+    .id_keys = "code_dep",
     .description = "OpenDataSoft dataset 'mh_tab_2024_morbidite_hospitaliere_cartes' "
       "('mh_tab_2024_morbidite_hospitaliere_cartes') on the European "
       "open-data portal data.drees.solidarites-sante.gouv.fr (portal's "
@@ -40918,6 +42120,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "dtreffre+sitfam_d+prepare_tx",
     .description = "OpenDataSoft dataset 'prepare_s_tx_sitfam_d_nat' ('PreParE - "
       "Répartition des allocataires selon le taux de PreParE et la "
       "situation familiale [National]') on the European open-data "
@@ -40938,6 +42141,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category_ar,category_en",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset 'number-of-rain-water-pimping-stations' "
       "('Number of Rain Water Pimping Stations') on the European "
       "open-data portal data.ajman.ae (portal's own dataset). Records "
@@ -40957,6 +42161,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse_du_point_de_collecte,commune",
+    .id_keys = "date_collecte+adresse_du_point_de_collecte",
     .description = "OpenDataSoft dataset 'suivi-collecte-des-d3e' ('Suivi collecte "
       "des D3E') on the European open-data portal data.seineouest.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -40976,6 +42181,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom,commune",
+    .id_keys = "insee",
     .description = "OpenDataSoft dataset 'planning-des-deploiements-ftth' ('Planning "
       "des déploiements FTTH') on the European open-data portal "
       "opendata.ha-py.fr (portal's own dataset). Records API Explore "
@@ -41017,6 +42223,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "haushaltsgroesse",
+    .id_keys = "haushaltsgroesse",
     .description = "OpenDataSoft dataset 'haushalte-kopieren' ('Haushalte - "
       "absolut') on the European open-data portal opendata.wuerzburg.de "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -41037,6 +42244,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "filiere_de_formation+capacite_de_l_etablissement_par_formation+code_uai_de_l_etablissement",
     .description = "OpenDataSoft dataset "
       "'formations-enseignement-superieur-perimetre-de-la-cud-parcoursup' "
       "('formations d'enseignement supérieur périmètre de la CUD "
@@ -41078,6 +42286,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_departement,nom_region",
+    .id_keys = "nombre_de_residences_principales",
     .description = "OpenDataSoft dataset "
       "'logements-et-logements-sociaux-dans-les-departements' "
       "('Logements et logements sociaux dans les départements') on the "
@@ -41100,6 +42309,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "motif_de_decision",
+    .id_keys = "decision_ndeg",
     .description = "OpenDataSoft dataset "
       "'vineuil-41350-decisions-du-maire-prises-par-delegation-du-conseil-municipal' "
       "('Vineuil (41350) - Liste des décisions du maire prises par "
@@ -41123,6 +42333,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "secteur,date_txt",
+    .id_keys = "date_txt",
     .description = "OpenDataSoft dataset "
       "'244400610_calendrier_collecte_dechets_verts' ('Calendrier de "
       "collecte des déchets verts pour la commune de La "
@@ -41144,6 +42355,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'valeur-energetique-des-ressources-importees' ('Valeur "
       "énergétique des ressources importées') on the European open-data "
@@ -41184,6 +42396,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "exercice_budgetaire",
     .description = "OpenDataSoft dataset 'evolution-fiscalite' ('Evolution de la "
       "fiscalité') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -41263,6 +42476,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lga+period",
     .description = "OpenDataSoft dataset 'dementia-hospitalisations' ('Dementia "
       "hospitalisations') on the European open-data portal "
       "data.peclet.com.au (portal's own dataset). Records API Explore "
@@ -41282,6 +42496,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "instituicao+tempo",
     .description = "OpenDataSoft dataset 'cirurgias-em-ambulatorio' ('Cirurgias em "
       "Ambulatório') on the European open-data portal "
       "transparencia.sns.gov.pt (portal's own dataset). Records API "
@@ -41302,6 +42517,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lb_voie_ext,co_mup",
+    .id_keys = "co_mup",
     .description = "OpenDataSoft dataset 'listes-des-boites-aux-lettres-la-poste' "
       "('Mobilier urbain : boîtes aux lettres La Poste sur la commune "
       "d'Anglet') on the European open-data portal "
@@ -41323,6 +42539,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_entite,entite",
+    .id_keys = "ins",
     .description = "OpenDataSoft dataset 'nombre-relatif-dhabitants-en-2033' "
       "('Nombre relatif d'habitants en 2033') on the European open-data "
       "portal data.bep.be (portal's own dataset). Records API Explore "
@@ -41343,6 +42560,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location,uniqueid",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'family-and-community-resource-centers' "
       "('Family and Community Resource Centers') on the European "
       "open-data portal cityofsalinas.opendatasoft.com (portal's own "
@@ -41428,6 +42646,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ls_designation,ls_nom_com,ls_adresse,ls_structure",
+    .id_keys = "id_so_locaux_solidarite",
     .description = "OpenDataSoft dataset "
       "'224900019_maisons-departementales-des-solidarites-en-maine-et-loire' "
       "('Maisons départementales des solidarités du Département de "
@@ -41450,6 +42669,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "categorie",
+    .id_keys = "nbre_emplois_permanents_formes+categorie",
     .description = "OpenDataSoft dataset 'rsu_effectifs_formes' ('Rapport Social "
       "Unique : Agents ayant suivi une formation') on the European "
       "open-data portal data.melunvaldeseine.fr (portal's own dataset). "
@@ -41512,6 +42732,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodlabel+areaidentifier",
     .description = "OpenDataSoft dataset "
       "'1-or-more-fixed-period-exclusions-state-schools-percentage-pupils-wmca' "
       "('1 or more fixed period exclusions - state schools (% pupils) - "
@@ -41534,6 +42755,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "'umgebungslarmkatierung-iv-2022-strassen-lden' "
       "('Umgebungslärmkartierung IV 2022 - Straßen "
@@ -41556,6 +42778,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-2021-preferenze-lista-bfc-bologna-forum-civico-insieme-p' "
       "('Elezioni amministrative 2021 - Preferenze lista BFC BOLOGNA "
@@ -41620,6 +42843,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "age_group+trtyb_lzwj_lhly_llzwj+ljnsy",
     .description = "OpenDataSoft dataset "
       "'marriage-cases-by-nationality-age-groups-and-present-marriage-order-of-husband' "
       "('Marriage Cases by Nationality, Age Groups & Present Marriage "
@@ -41642,6 +42866,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "fecha+provincia+marca",
     .description = "OpenDataSoft dataset 'vacunas-recibidas-covid-19-campana-23-24' "
       "('Vacunas recibidas COVID-19 Campaña 23-24') on the European "
       "open-data portal analisis.datosabiertos.jcyl.es (portal's own "
@@ -41663,6 +42888,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "details,trade_unions_represented",
+    .id_keys = "trade_unions_represented+details",
     .description = "OpenDataSoft dataset "
       "'transparency-code-trade-union-facility-time-201718' "
       "('Transparency Code - Trade union facility time 2017/18') on the "
@@ -41685,6 +42911,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "reglib",
+    .id_keys = "reglib",
     .description = "OpenDataSoft dataset "
       "'pollution-de-l-air-impact-du-no2-et-des-pm2-5_mortalite_reg' "
       "('Pollution de l'air : impact du NO2 et des PM2,5 sur la "
@@ -41707,6 +42934,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gebiet_name",
+    .id_keys = "gebiet_nr",
     .description = "OpenDataSoft dataset "
       "'dormagen-burgermeisterwahl-2020-wahlbezirke' ('Dormagen: "
       "Bürgermeisterwahl-2020-Wahlbezirke') on the European open-data "
@@ -41750,6 +42978,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-154003-kassjobergsomradet' "
       "('Energiförbrukning i Geografiska området 154003 "
@@ -41792,6 +43021,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisme,legende",
+    .id_keys = "legende",
     .description = "OpenDataSoft dataset "
       "'atlas-photos-collines-resserrees-du-lauragais' ('Atlas des "
       "paysages de la Haute-Garonne : photos des Collines resserrées du "
@@ -41834,6 +43064,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "poste+financeur+annee",
     .description = "OpenDataSoft dataset 'cns_financement' ('Les comptes de la santé "
       "- Répartition par financeur') on the European open-data portal "
       "data.drees.solidarites-sante.gouv.fr (portal's own dataset). "
@@ -41853,6 +43084,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "region,epci",
+    .id_keys = "epci",
     .description = "OpenDataSoft dataset 'scot' ('Le SCOT') on the European "
       "open-data portal data.tours-metropole.fr (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
@@ -41872,6 +43104,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "dtreffre+age_10+prepare_tx",
     .description = "OpenDataSoft dataset 'prepare_s_tx_age_10_nat' ('PreParE - "
       "Répartition des allocataires selon le taux de PreParE et l'âge "
       "[National]') on the European open-data portal data.caf.fr "
@@ -41892,6 +43125,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "heavy_mechanical+heavy_bus",
     .description = "OpenDataSoft dataset "
       "'count-of-private-and-public-vehicles-registered-according-to-the-type-of-vehicle' "
       "('Count of Private and Public Vehicles Registered') on the "
@@ -41912,6 +43146,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "adresse",
     .description = "OpenDataSoft dataset 'acteurs-location' ('Acteurs de la "
       "location') on the European open-data portal data.seineouest.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -41932,6 +43167,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_commune,nom_canton,nom_epci",
+    .id_keys = "code_insee+annee",
     .description = "OpenDataSoft dataset "
       "'naissances-et-deces-domicilies-depuis-2008-dans-les-hautes-pyrenees' "
       "('Naissances et décès domiciliés depuis 2008 dans les "
@@ -41954,6 +43190,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "co2_lbs_mwh2+co2_lbs_mwh1",
     .description = "OpenDataSoft dataset "
       "'hourly-energy-emission-factors-for-electricity-generation-in-the-united-states' "
       "('Hourly Energy Emission Factors for Electricity Generation in "
@@ -41995,6 +43232,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "appellation_officielle,denomination_principale,adresse,commune",
+    .id_keys = "appellation_officielle",
     .description = "OpenDataSoft dataset 'universites_cud' ('Universités de "
       "l'Agglomération') on the European open-data portal "
       "data.dunkerque-agglo.fr (portal's own dataset). Records API "
@@ -42037,6 +43275,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone",
+    .id_keys = "date+zone",
     .description = "OpenDataSoft dataset "
       "'indicateurs-de-trafic-journaliers-france-et-regions-en-situation-de-covid-19' "
       "('Indicateurs de trafic journaliers France et Régions, en "
@@ -42059,6 +43298,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet_du_marche_256_caracteres_maxi,identification_du_titulaire_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributaires",
+    .id_keys = "objet_du_marche_256_caracteres_maxi+date_publication",
     .description = "OpenDataSoft dataset "
       "'agglopolys-marches-publics-2023-less-than-40-000-eur-ht' "
       "('Agglopolys - marchés publics 2023 < 40 000 € HT') on the "
@@ -42080,6 +43320,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom,delib_objet",
+    .id_keys = "delib_id+delib_url",
     .description = "OpenDataSoft dataset '214400723_deliberations_liste' "
       "('Délibérations de la commune d'Herbignac') on the European "
       "open-data portal data.capatlantique.fr (portal's own dataset). "
@@ -42100,6 +43341,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_de_residence",
+    .id_keys = "zone_de_residence",
     .description = "OpenDataSoft dataset "
       "'modes_de_transport_et_utilisation_des_vehicules_secteur' "
       "('EMC²: Modes de transport et utilisation des véhicules par "
@@ -42121,6 +43363,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "bureau",
     .description = "OpenDataSoft dataset 'fond-de-carte-des-bureaux-de-vote-2012' "
       "('Fond de carte des bureaux de vote / jeu 2012') on the European "
       "open-data portal data.montreuil.fr (portal's own dataset). "
@@ -42242,6 +43485,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodo",
     .description = "OpenDataSoft dataset 'teleconsultas-atraves-da-plataforma-live' "
       "('Teleconsultas através da Plataforma Live') on the European "
       "open-data portal transparencia.sns.gov.pt (portal's own "
@@ -42284,6 +43528,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "date",
     .description = "OpenDataSoft dataset "
       "'nombre-d-etudiants-entrepreneurs-accompagnes' ('Nombre "
       "d'étudiants entrepreneurs accompagnés') on the European "
@@ -42324,6 +43569,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description,address,path_type_usage,melwayref",
+    .id_keys = "gisfid",
     .description = "OpenDataSoft dataset 'sharedusepaths_ply_t1eam' ('Shared Use "
       "Paths') on the European open-data portal data.casey.vic.gov.au "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -42386,6 +43632,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "epci_nom",
+    .id_keys = "epci_siren",
     .description = "OpenDataSoft dataset "
       "'224900019_intercommunalites-de-maine-et-loire' "
       "('Intercommunalités de Maine-et-Loire') on the European "
@@ -42406,6 +43653,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "title",
     .description = "OpenDataSoft dataset 'datavizgallery' ('Liste des visualisations "
       "dataviz') on the European open-data portal "
       "data.melunvaldeseine.fr (portal's own dataset). Records API "
@@ -42447,6 +43695,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "empty",
     .description = "OpenDataSoft dataset "
       "'statistiques-de-l-espace-public-numerique-epn' ('Fréquentation "
       "de l'Espace Public Numérique (EPN)') on the European open-data "
@@ -42468,6 +43717,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodlabel+areaidentifier",
     .description = "OpenDataSoft dataset "
       "'percentage-of-care-users-who-receive-direct-payments-wmca' "
       "('Percentage of care users who receive direct payments - WMCA') "
@@ -42489,6 +43739,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "jungen",
+    .id_keys = "jungen",
     .description = "OpenDataSoft dataset "
       "'fb33-vornamen-rangliste-dritter-vorname-mannlich-2021' "
       "('Dritter Vorname 2021') on the European open-data portal "
@@ -42509,6 +43760,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "shape_area",
     .description = "OpenDataSoft dataset 'zone' ('Zone 30 precedenti (NZ30 (zone))') "
       "on the European open-data portal opendata.comune.bologna.it "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -42528,6 +43780,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_parking,nom_du_parking0,commune,ident_parking",
+    .id_keys = "ident_parking",
     .description = "OpenDataSoft dataset 'parkings-tarifs-2020' ('Parkings tarifs "
       "2020') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -42569,6 +43822,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset '2b-general-marriage-rate' ('General "
       "Marriage Rate') on the European open-data portal www.data.gov.bh "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -42589,6 +43843,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "dosis_registradas_acumuladas+dosis_registradas",
     .description = "OpenDataSoft dataset 'dosis-vacunas-gripe-campana-2425' ('Dosis "
       "vacunas GRIPE Campaña 24/25') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -42608,6 +43863,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "chart_label",
+    .id_keys = "observation",
     .description = "OpenDataSoft dataset 'census-21-english-proficiency-ward' "
       "('Census 21 - English proficiency ward') on the European "
       "open-data portal data.leicester.gov.uk (portal's own dataset). "
@@ -42628,6 +43884,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "denomin_hdo+nb_hdo",
     .description = "OpenDataSoft dataset 'hernie-discale-lombaire-dep' ('Hernie "
       "discale lombaire (Département)') on the European open-data "
       "portal odisse.santepubliquefrance.fr (portal's own dataset). "
@@ -42669,6 +43926,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "locatie,project,periode_aard",
+    .id_keys = "vindplaatsnummer",
     .description = "OpenDataSoft dataset 'archeologischevindplaatsen' "
       "('Archeologische vindplaatsen Den Haag') on the European "
       "open-data portal den-haag-opendata.opendatasoft.com (portal's "
@@ -42690,6 +43948,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-133401-universitetet' "
       "('Energiförbrukning i Geografiska området 133401 "
@@ -42711,6 +43970,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_open_data,taux_de_chomage_declaratif_au_recensement_des_15_24_ans_2017",
+    .id_keys = "insee_com",
     .description = "OpenDataSoft dataset 'emplois-15-24ans-herault' ('Emplois 15-24 "
       "ans Hérault - 2017') on the European open-data portal "
       "www.herault-data.fr (portal's own dataset). Records API Explore "
@@ -42731,6 +43991,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisme,legende",
+    .id_keys = "taille_du_fichier_en_ko",
     .description = "OpenDataSoft dataset "
       "'ens-gorges-de-la-save-vallee-de-la-seygouade-photos' ('ENS - "
       "Gorges de la Save et vallée de la Seygouade - Photos') on the "
@@ -42775,6 +44036,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tranche+sexe",
     .description = "OpenDataSoft dataset 'penstotnet-retrdd-distrib' ('Distribution "
       "de la pension mensuelle nette totale des retraités de droit "
       "direct, fin 2016') on the European open-data portal "
@@ -42796,6 +44058,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,commune,type",
+    .id_keys = "adresse+code_postal",
     .description = "OpenDataSoft dataset "
       "'sanitaires-publics-tours-metropole-val-de-loire' ('Sanitaires "
       "publics - Tours Métropole Val de Loire') on the European "
@@ -42817,6 +44080,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'nbpla_pe_nat_hist' ('Nombre de places "
       "offertes pour les enfants de moins de 3 ans - historique "
       "2017-2022 [National]') on the European open-data portal "
@@ -42858,6 +44122,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_l_etablissement_scolaire,nom_du_conservatoire_partenaire,adresse_de_l_etablissement_scolaire,commune",
+    .id_keys = "nom_de_l_etablissement_scolaire+filiere",
     .description = "OpenDataSoft dataset "
       "'conservatoires-classes-a-horaires-amenages' ('Conservatoires - "
       "Classes à horaires aménagés') on the European open-data portal "
@@ -42879,6 +44144,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_geographique+population_code",
     .description = "OpenDataSoft dataset "
       "'niveau-de-diplome-de-la-population-dans-les-hautes-pyrenees' "
       "('Niveau de diplôme de la population dans les Hautes-Pyrénées "
@@ -42923,6 +44189,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+thema+stadtbezirk",
     .description = "OpenDataSoft dataset 'altersstruktur' ('Altersstruktur - "
       "Kommunalstatistik') on the European open-data portal "
       "opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -42943,6 +44210,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lieu,match,date_du_match",
+    .id_keys = "match",
     .description = "OpenDataSoft dataset "
       "'agenda-des-clubs-de-sport-de-haut-niveau-soutenus-par-la-communaute-urbaine-de-d' "
       "('Agenda à domicile des clubs de sport de haut niveau soutenus "
@@ -43006,6 +44274,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "empty",
+    .id_keys = "empty",
     .description = "OpenDataSoft dataset "
       "'agglopolys-blois-nombre-et-capacite-des-hotels-au-1er-janvier-2022' "
       "('Agglopolys Blois - Nombre et capacité des hôtels au 1er "
@@ -43028,6 +44297,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom,delib_objet,pref_id",
+    .id_keys = "coll_siret",
     .description = "OpenDataSoft dataset '264402447_deliberations_liste' "
       "('Délibérations du CCAS de la commune du Croisic') on the "
       "European open-data portal data.capatlantique.fr (portal's own "
@@ -43048,6 +44318,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nature_lib",
+    .id_keys = "nature_code+sous_fonction_code",
     .description = "OpenDataSoft dataset "
       "'budget-principal-2023-de-la-region-guadeloupe' ('Budget "
       "principal 2023 de la Région Guadeloupe') on the European "
@@ -43068,6 +44339,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "stop_name,type_ndeg,stop_id",
+    .id_keys = "stop_id+id",
     .description = "OpenDataSoft dataset 'lieux-darret-de-montreuil-bus-et-metro' "
       "('Lieux d'arrêt de Montreuil (bus et métro)') on the European "
       "open-data portal data.montreuil.fr (portal's own dataset). "
@@ -43087,6 +44359,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "budget_annexe",
+    .id_keys = "montant",
     .description = "OpenDataSoft dataset 'budgets-annexes-2021' ('Budgets annexes "
       "2021') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -43128,6 +44401,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type",
+    .id_keys = "id+sumheavy",
     .description = "OpenDataSoft dataset 'traffic-stats-telraam' ('Dispositifs de "
       "comptage Telraam - Statistiques - Arrondissement de Liège') on "
       "the European open-data portal "
@@ -43148,6 +44422,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "datum+bezeichnung",
     .description = "OpenDataSoft dataset 'velozahlungen-stadt-stgallen' "
       "('Velozählungen Stadt St.Gallen ab 2018') on the European "
       "open-data portal daten.stadt.sg.ch (portal's own dataset). "
@@ -43187,6 +44462,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodo",
     .description = "OpenDataSoft dataset "
       "'evolucao-mensal-do-no-de-chamadas-atendidas-no-centro-de-informacao-antivenenos' "
       "('Evolução Mensal do N.º de Chamadas Atendidas no Centro de "
@@ -43209,6 +44485,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "'places-de-stationnement-reservees-au-taxi-sur-la-commune-d-anglet' "
       "('Stations de taxis sur la commune d'Anglet') on the European "
@@ -43271,6 +44548,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "feature_name,feature_type",
+    .id_keys = "easting",
     .description = "OpenDataSoft dataset 'airport_infrastructure0' ('Airport "
       "Infrastructure (Runways)') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -43333,6 +44611,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lib_com",
+    .id_keys = "insee+lib_mds",
     .description = "OpenDataSoft dataset "
       "'224900019_beneficiaires-du-rsa-par-commune-en-maine-et-loire' "
       "('Bénéficiaires du revenu de solidarité active (RSA) par commune "
@@ -43354,6 +44633,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_com,type_lcz",
+    .id_keys = "objectid+insee_com",
     .description = "OpenDataSoft dataset 'ilots-chaleur' ('IIots de chaleur Urbains "
       "(ICU)') on the European open-data portal data.melunvaldeseine.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -43394,6 +44674,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "ndegpanneau+bureau_de_vote",
     .description = "OpenDataSoft dataset "
       "'election-presidentielle-2017-resultats-par-bureaux-de-vote-tour-1' "
       "('Election présidentielle 2017 Résultats par bureaux de vote – "
@@ -43437,6 +44718,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "strasse",
+    .id_keys = "strasse+hausnummerbereich",
     .description = "OpenDataSoft dataset "
       "'fb33-2022-strassenverzeichnis-stimmbezirke-landtagswahl' "
       "('Straßenverzeichnis - Landtagswahl 2022') on the European "
@@ -43457,6 +44739,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "localizzazioni_lista",
+    .id_keys = "richiesta_ndeg_prot+localizzazioni_lista",
     .description = "OpenDataSoft dataset 'autorizzazioni-sismiche' ('Autorizzazioni "
       "sismiche rilasciate') on the European open-data portal "
       "opendata.comune.bologna.it (portal's own dataset). Records API "
@@ -43517,6 +44800,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "age_groups_of_wife+l_thsyl_lmy_llzwj+jnsy_lzwj",
     .description = "OpenDataSoft dataset "
       "'marriage-cases-by-nationality-highest-educational-attainment-and-age-groups-of-w' "
       "('Marriage Cases by Nationality, Highest Educational Attainment "
@@ -43560,6 +44844,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "population",
     .description = "OpenDataSoft dataset 'leicester-population-percentage' "
       "('Leicester Population - Percentage') on the European open-data "
       "portal data.leicester.gov.uk (portal's own dataset). Records API "
@@ -43622,6 +44907,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "corporatie",
+    .id_keys = "corporatie",
     .description = "OpenDataSoft dataset 'corporatiebezit' ('Corporatiebezit Den "
       "Haag') on the European open-data portal "
       "den-haag-opendata.opendatasoft.com (portal's own dataset). "
@@ -43642,6 +44928,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-081701-tavelsjo' "
       "('Energiförbrukning i Geografiska området 081701 (Tavelsjö)') on "
@@ -43685,6 +44972,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisme,legende",
+    .id_keys = "legende",
     .description = "OpenDataSoft dataset 'ens-zone-humide-de-salliet-photos' ('ENS - "
       "Zone humide de Salliet - Photos') on the European open-data "
       "portal data.haute-garonne.fr (portal's own dataset). Records API "
@@ -43725,6 +45013,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone",
+    .id_keys = "code_dep",
     .description = "OpenDataSoft dataset 'mh_tab_2023_morbidite_hospitaliere_cartes' "
       "('mh_tab_2023_morbidite_hospitaliere_cartes') on the European "
       "open-data portal data.drees.solidarites-sante.gouv.fr (portal's "
@@ -43807,6 +45096,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location_city,location_convocationlabel,location_address2,commune",
+    .id_keys = "collection_date",
     .description = "OpenDataSoft dataset 'efs-don-sang' ('Dons du sang - Lieux et "
       "dates de collecte') on the European open-data portal "
       "data.seineouest.fr (portal's own dataset). Records API Explore "
@@ -43868,6 +45158,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'grenzwanderung-teil-5' ('Grenzwanderung "
       "Teil 5') on the European open-data portal opendata.wuerzburg.de "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -43888,6 +45179,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "equipement",
     .description = "OpenDataSoft dataset "
       "'associations-et-equipements-culturels-soutenus-par-la-communaute-urbaine-de-dunk' "
       "('Associations et équipements culturels soutenus par la "
@@ -43951,6 +45243,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_l_elu,libelle_de_la_categorie_socio_professionnelle,libelle_de_la_commune,prenom_de_l_elu",
+    .id_keys = "nom_de_l_elu",
     .description = "OpenDataSoft dataset "
       "'blois-liste-des-elus-membres-du-conseil-municipal' ('Blois - "
       "liste des membres du conseil municipal - mandat 2020/2026') on "
@@ -43994,6 +45287,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ad1_site,l_ville_site,l_ville_acteur,l_region",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "'sinoe-r-annuaire-des-decheteries-dma-en-guadeloupe' ('SINOE ® - "
       "Annuaire des déchèteries DMA en Guadeloupe') on the European "
@@ -44034,6 +45328,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "quartier",
+    .id_keys = "mois+quartier",
     .description = "OpenDataSoft dataset 'signalements-par-quartier' ('Signalements "
       "d'anomalie par quartier') on the European open-data portal "
       "data.cannes.com (portal's own dataset). Records API Explore "
@@ -44096,6 +45391,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,hestia_beschreibung",
+    .id_keys = "egid+adresse",
     .description = "OpenDataSoft dataset 'hestia-fernwaermestrategie' "
       "('Fernwärmestrategie der Stadt St.Gallen (Hestia)') on the "
       "European open-data portal daten.stadt.sg.ch (portal's own "
@@ -44158,6 +45454,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "ogc_fid",
     .description = "OpenDataSoft dataset 'zones-30-anglet' ('Zones de circulation 30 "
       "km/h - Anglet') on the European open-data portal "
       "anglet-opendatapaysbasque.opendatasoft.com (portal's own "
@@ -44220,6 +45517,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "evc_description,feature_type",
+    .id_keys = "gisfid",
     .description = "OpenDataSoft dataset 'biodiversity_significance' ('Biodiversity "
       "Significance') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -44261,6 +45559,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_bv,nom_commune,nom_circonscription,nom_canton",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "'214401689_secteurs-electoraux-saint-joachim' ('Secteurs "
       "électoraux - Saint-Joachim') on the European open-data portal "
@@ -44282,6 +45581,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "s_anc_nom,s_anc_nom_epci,s_anc_type",
+    .id_keys = "id_e_struct_anc",
     .description = "OpenDataSoft dataset "
       "'224900019_assainissement-non-collectif-en-maine-et-loire' "
       "('Structures compétentes en assainissement non-collectif en "
@@ -44303,6 +45603,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libgeo",
+    .id_keys = "codgeo",
     .description = "OpenDataSoft dataset 'donnees_insee_logements_parcom' "
       "('Indicateurs INSEE logements') on the European open-data portal "
       "data.melunvaldeseine.fr (portal's own dataset). Records API "
@@ -44364,6 +45665,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodlabel+areaidentifier",
     .description = "OpenDataSoft dataset "
       "'no-of-minor-planning-application-decisions-pas-only-quarterly-wmca' "
       "('No. of minor planning application decisions (PAs only) - "
@@ -44386,6 +45688,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gebietsname",
+    .id_keys = "gebietsname",
     .description = "OpenDataSoft dataset "
       "'stadtevergleich-arbeitslose-und-sozialversicherungspflichtig-beschaftigte-am-ort-der-arbeit-2023' "
       "('Städtevergleich - Arbeitslose und sozialversicherungspflichtig "
@@ -44408,6 +45711,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'referendum-2022-quesito-02-limiti-custodia' ('Referendum 2022 - "
       "Quesito 02 - Limiti alla custodia cautelare') on the European "
@@ -44471,6 +45775,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'18-live-births-by-religion-nationality-and-sex' ('Live Births "
       "by Religion, Nationality and Sex') on the European open-data "
@@ -44533,6 +45838,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "indicateur",
+    .id_keys = "ic+nouvelles_regions",
     .description = "OpenDataSoft dataset "
       "'activite-physique-indicateurs-du-barometre-de-sante-publique-detail-region' "
       "('Activité physique : Indicateurs du Baromètre de Santé publique "
@@ -44555,6 +45861,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "familienstand",
+    .id_keys = "familienstand",
     .description = "OpenDataSoft dataset "
       "'bevoelkerung-nach-familienstand-31-12-2024' ('Grevenbroich: "
       "Bevölkerung nach Familienstand 31.12.2024') on the European "
@@ -44596,6 +45903,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "circuit",
+    .id_keys = "longueur",
     .description = "OpenDataSoft dataset 'circuits-oenotouristiques-de-lherault' "
       "('Circuits Oenotouristiques de l’Hérault') on the European "
       "open-data portal www.herault-data.fr (portal's own dataset). "
@@ -44615,6 +45923,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisme,legende,dimensions_en_pixels,auteur",
+    .id_keys = "taille_du_fichier_en_ko",
     .description = "OpenDataSoft dataset 'ens-parc-de-ranse-photos' ('ENS - Parc de "
       "Ranse - Photos') on the European open-data portal "
       "data.haute-garonne.fr (portal's own dataset). Records API "
@@ -44635,6 +45944,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lb_voie_ext,co_mup,lb_com",
+    .id_keys = "co_mup",
     .description = "OpenDataSoft dataset 'laposte_boiterue' ('Liste des boîtes aux "
       "lettres de rue France métropolitaine et DOM avec heure limite de "
       "dépôt') on the European open-data portal hub.huwise.com "
@@ -44656,6 +45966,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "repartition_des_ehpad_selon_quelques_caracteristiques_et_leur_categorie_juridique",
+    .id_keys = "repartition_des_ehpad_selon_quelques_caracteristiques_et_leur_categorie_juridique",
     .description = "OpenDataSoft dataset "
       "'data-drees-ad-badiane-part-d-ehpad-avec-un-medecin-coordonnateur' "
       "('data drees AD Badiane - Part d'Ehpad avec un médecin "
@@ -44678,6 +45989,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "title_fr,scope_name_fr,status_name_fr,photo",
+    .id_keys = "photo+id",
     .description = "OpenDataSoft dataset 'budget-participatif-suivi-projets-tours' "
       "('Budget participatif - Suivi des projets - Tours') on the "
       "European open-data portal data.tours-metropole.fr (portal's own "
@@ -44718,6 +46030,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category_en,category_ar",
+    .id_keys = "number_of_issued_reports_from_bml+month_ar",
     .description = "OpenDataSoft dataset 'municipality' ('Building materials testing "
       "laboratory reports for Ajman Municipality and Planning "
       "Department') on the European open-data portal data.ajman.ae "
@@ -44738,6 +46051,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type,conservatoire_de_ville_d_avray_chaville,discipline",
+    .id_keys = "discipline",
     .description = "OpenDataSoft dataset 'conservatoires-les-disciplines-proposees' "
       "('Conservatoires - Disciplines proposées') on the European "
       "open-data portal data.seineouest.fr (portal's own dataset). "
@@ -44758,6 +46072,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "volume_du_bac_ordures_menageres",
     .description = "OpenDataSoft dataset "
       "'grille-dotation-des-bacs-roulants-2023-ccam' ('CCAM-Grille de "
       "dotation des bacs roulants 2023') on the European open-data "
@@ -44800,6 +46115,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "schule,barrierefreier_zugang_zum_gebaude_stammgebaude",
+    .id_keys = "schule",
     .description = "OpenDataSoft dataset "
       "'schulportrait-kategorie-g-inklusion-gebaeudezugang' "
       "('Schulportrait - Kategorie G _ Inklusion - Gebäudezugang') on "
@@ -44822,6 +46138,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "structure,rue,adresse,commune",
+    .id_keys = "structure+annee",
     .description = "OpenDataSoft dataset "
       "'nombre-dadherents-actifs-par-structure-membre-du-reseau-des-balises' "
       "('Nombre d'adhérents actifs par structure membre du réseau des "
@@ -44864,6 +46181,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "territoire",
     .description = "OpenDataSoft dataset "
       "'territoires-labellises-ecomobilite-en-occitanie' ('Territoires "
       "labellisés Ecomobilité en Occitanie') on the European open-data "
@@ -44909,6 +46227,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "kilometre",
     .description = "OpenDataSoft dataset '244400610_circuits-rando' ('Circuits de "
       "randonnées pour le territoire de Cap Atlantique') on the "
       "European open-data portal data.capatlantique.fr (portal's own "
@@ -44929,6 +46248,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "titre",
     .description = "OpenDataSoft dataset 'ressources-du-soe' ('Ressources du SOE') "
       "on the European open-data portal www.karudata.com (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -44948,6 +46268,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "image",
     .description = "OpenDataSoft dataset 'videos-publiees' ('Vidéos publiées par la "
       "ville de Montreuil') on the European open-data portal "
       "data.montreuil.fr (portal's own dataset). Records API Explore "
@@ -44968,6 +46289,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_expo,exposition",
+    .id_keys = "nbre_de_visiteurs",
     .description = "OpenDataSoft dataset 'expositions-pamocc' ('Expositions "
       "organisées par le pôle d'art moderne et contemporain') on the "
       "European open-data portal data.cannes.com (portal's own "
@@ -45094,6 +46416,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bureau_vote",
+    .id_keys = "num_bureau",
     .description = "OpenDataSoft dataset "
       "'resultats-du-second-tour-des-elections-regionales-de-2015-a-anglet' "
       "('Résultats du second tour des élections régionales de 2015 à "
@@ -45116,6 +46439,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_bois,origine_bois",
+    .id_keys = "origine_bois",
     .description = "OpenDataSoft dataset 'essaimage-production-locale-de-plaquettes' "
       "('Essaimage - Production locale de plaquettes') on the European "
       "open-data portal data.bep.be (portal's own dataset). Records API "
@@ -45135,6 +46459,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code",
     .description = "OpenDataSoft dataset 'runway-protection-zones' ('Runway "
       "Protection Zones') on the European open-data portal "
       "cityofsalinas.opendatasoft.com (portal's own dataset). Records "
@@ -45194,6 +46519,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_bv,nom_commune,nom_circonscription,nom_canton",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset '214401325_secteurs-electoraux-pornichet' "
       "('Secteurs électoraux - Pornichet') on the European open-data "
       "portal data.saintnazaireagglo.fr (portal's own dataset). Records "
@@ -45214,6 +46540,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset "
       "'224900019_centres-de-planification-et-deducation-familiale-en-maine-et-loire' "
       "('Centres de santé sexuelle (CSS) en Maine-et-Loire') on the "
@@ -45255,6 +46582,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau,commune_nom,nom_election,nom_circonscription",
+    .id_keys = "code_bureau+candidat",
     .description = "OpenDataSoft dataset "
       "'resultats_election_legislative_2024_ville_de_bourges_1er_tour_2eme_circonscript0' "
       "('Résultats Election Législative 1er Tour - 2024 - Ville de "
@@ -45276,6 +46604,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_la_salle",
+    .id_keys = "nom_de_la_salle",
     .description = "OpenDataSoft dataset 'salles-a-louer-pour-des-evenements' "
       "('Salles à louer pour des événements') on the European open-data "
       "portal data.fleurysurorne.fr (portal's own dataset). Records API "
@@ -45297,6 +46626,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "area_name,area_type",
+    .id_keys = "lower_ci_95_0_limit",
     .description = "OpenDataSoft dataset "
       "'population-vaccination-coverage-meningococcal-acwy-conjugate-vaccine-menacwy-14-to-15-years-wmca' "
       "('Population vaccination coverage: Meningococcal ACWY conjugate "
@@ -45319,6 +46649,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "wissenschaftlicher_name,art",
+    .id_keys = "art",
     .description = "OpenDataSoft dataset 'zoo-tierarten-2023' ('Zoo Tierarten - "
       "2023') on the European open-data portal open-data.dortmund.de "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -45339,6 +46670,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "numero_iscritti+id+anno_scolastico",
     .description = "OpenDataSoft dataset "
       "'numero-iscritti-ai-servizi-integrativi-scolastici-scuola-infanzia-privata' "
       "('Numero iscritti ai servizi integrativi scolastici della scuola "
@@ -45402,6 +46734,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "land_use_category,area",
+    .id_keys = "n+area+month",
     .description = "OpenDataSoft dataset '01-land-use-statistics' ('Land Use Monthly "
       "Statistics by Land Use Category and Governorate') on the "
       "European open-data portal www.data.gov.bh (portal's own "
@@ -45423,6 +46756,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "personas_vacunadas+fecha+provincia",
     .description = "OpenDataSoft dataset "
       "'personas-vacunadas-diariamente-frente-a-la-gripe-campana-2526' "
       "('Personas vacunadas diariamente frente a la gripe. Campaña "
@@ -45444,6 +46778,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "member_name,member_type",
+    .id_keys = "member_name",
     .description = "OpenDataSoft dataset 'members-expenses-2023-onwards' ('Members "
       "expenses 2024 - 2025') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -45464,6 +46799,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "titre+theme",
     .description = "OpenDataSoft dataset 'spf-odisse-ma-region-documents' ('SPF - "
       "Odisse - Ma région - Documents') on the European open-data "
       "portal odisse.santepubliquefrance.fr (portal's own dataset). "
@@ -45484,6 +46820,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zeitstempel",
+    .id_keys = "bogen",
     .description = "OpenDataSoft dataset 'dormagen-buergerbeteiligung-opendata' "
       "('Dormagen: Bürgerbeteiligung OpenData') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -45527,6 +46864,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-050802-stadsliden' "
       "('Energiförbrukning i Geografiska området 050802 (Stadsliden)') "
@@ -45571,6 +46909,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "intitule",
     .description = "OpenDataSoft dataset 'amenagements-ens-test-ods' ('Aménagements "
       "à disposition du public dans les Espaces naturels sensibles "
       "(ENS) de Haute-Garonne') on the European open-data portal "
@@ -45614,6 +46953,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'retraite_graphique-1-age-conjoncturel-moyen-de-depart-a-la-retraite-selon-le-se0' "
       "('Retraite_Graphique-1-Âge conjoncturel moyen de départ à la "
@@ -45636,6 +46976,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "gpx+name",
     .description = "OpenDataSoft dataset 'circuit-de-randonnee-pedestre' ('Tracés "
       "des circuits Randonnées pédestres - Tours Métropole') on the "
       "European open-data portal data.tours-metropole.fr (portal's own "
@@ -45677,6 +47018,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year+quarter",
     .description = "OpenDataSoft dataset 'gcr-2018' ('Gross Crane Rate - GCR') on "
       "the European open-data portal data.ajman.ae (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -45696,6 +47038,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "saison+id",
     .description = "OpenDataSoft dataset 'nombre-de-disciplines-par-conservatoire' "
       "('Conservatoires - Nombre de disciplines') on the European "
       "open-data portal data.seineouest.fr (portal's own dataset). "
@@ -45715,6 +47058,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_dechet",
+    .id_keys = "type_de_dechet",
     .description = "OpenDataSoft dataset "
       "'tonnages-dechets-2022-collectes-par-la-ccam' ('CCAM-Tonnages "
       "déchets collectés-2022') on the European open-data portal "
@@ -45755,6 +47099,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "value_variable_label,2_variable_label,1_variable_label,time_label",
+    .id_keys = "value_variable_label",
     .description = "OpenDataSoft dataset 'wiz_stadtleben' ('wiz_stadtleben') on the "
       "European open-data portal opendata.wuerzburg.de (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -45776,6 +47121,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "structure,rue,adresse,ville",
+    .id_keys = "structure",
     .description = "OpenDataSoft dataset 'services_parsonnes_agees' ('Structures "
       "proposant des services aux personnes âgées sur le périmètre de "
       "la Communauté urbaine de Dunkerque') on the European open-data "
@@ -45818,6 +47164,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_commune",
+    .id_keys = "code_commune_insee",
     .description = "OpenDataSoft dataset "
       "'diagnostic-d-acces-aux-soins-urgents-au-31-12-2019' "
       "('Diagnostic d'accès aux soins urgents au 31/12/2019') on the "
@@ -45840,6 +47187,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "prenoms",
+    .id_keys = "prenoms",
     .description = "OpenDataSoft dataset "
       "'liste-des-prenoms-feminins-et-masculins-2024-blois' ('Liste des "
       "prénoms féminins et masculins 2024 Blois') on the European "
@@ -45862,6 +47210,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom,delib_objet,pref_id",
+    .id_keys = "coll_siret",
     .description = "OpenDataSoft dataset '264402231_deliberations_liste' "
       "('Délibérations du CCAS de la commune de Piriac-sur-Mer') on the "
       "European open-data portal data.capatlantique.fr (portal's own "
@@ -45905,6 +47254,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "num_finess_et",
     .description = "OpenDataSoft dataset 'centres-de-sante' ('Centres de santé') on "
       "the European open-data portal data.montreuil.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -45964,6 +47314,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+monat+standort",
     .description = "OpenDataSoft dataset 'heizgradtage-st-galler-stadtwerke' "
       "('Heizgradtage St.Galler Stadtwerke') on the European open-data "
       "portal daten.stadt.sg.ch (portal's own dataset). Records API "
@@ -46003,6 +47354,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tempo",
     .description = "OpenDataSoft dataset 'conta-do-servico-nacional-de-saude' "
       "('Conta do Serviço Nacional de Saúde') on the European open-data "
       "portal transparencia.sns.gov.pt (portal's own dataset). Records "
@@ -46046,6 +47398,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune",
+    .id_keys = "commune",
     .description = "OpenDataSoft dataset 'feux-de-sante-commerciale' ('Feux de santé "
       "commerciale') on the European open-data portal data.bep.be "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -46126,6 +47479,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet,nombeneficiaire",
+    .id_keys = "nombeneficiaire+datesperiodeversement",
     .description = "OpenDataSoft dataset '214401689_subventions_liste' ('Subventions "
       "attribuées aux associations par la commune de Saint-Joachim') on "
       "the European open-data portal data.saintnazaireagglo.fr "
@@ -46147,6 +47501,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_aide",
+    .id_keys = "date+type_aide+nature_aide",
     .description = "OpenDataSoft dataset "
       "'224900019_aides-sociales-pour-les-personnes-handicapees-en-maine-et-loire' "
       "('Aides sociales pour les personnes handicapées en "
@@ -46209,6 +47564,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "liste_conduite_par",
+    .id_keys = "liste_conduite_par",
     .description = "OpenDataSoft dataset "
       "'resultats-des-elections-municipales-et-communautaires-2014' "
       "('Résultats des élections municipales et communautaires 2014') "
@@ -46231,6 +47587,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,area_type",
+    .id_keys = "numerator",
     .description = "OpenDataSoft dataset "
       "'school-readiness-icp-outcomes-framework-birmingham-and-solihull' "
       "('School readiness - ICP Outcomes Framework - Birmingham and "
@@ -46252,6 +47609,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "strasse,wahlraumbezeichnung,wahlraum,wahlraum_zusatz",
+    .id_keys = "wahlraumbezeichnung",
     .description = "OpenDataSoft dataset 'fb33-rvr-20250914-stimmbezirke' "
       "('RvR-Verbandsversammlungswahl 2025') on the European open-data "
       "portal open-data.dortmund.de (portal's own dataset). Records API "
@@ -46272,6 +47630,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "vecchia_denominazione_quartiere",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset "
       "'elezioni-amministrative-2016-preferenze-lista-partito-comunista-dei-lavoratori' "
       "('Elezioni amministrative 2016 - Preferenze lista PARTITO "
@@ -46360,6 +47719,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nombre,codigo,provincia,email",
+    .id_keys = "codigo",
     .description = "OpenDataSoft dataset 'registro-de-centrales-de-reserva' "
       "('Registro de centrales de reserva') on the European open-data "
       "portal analisis.datosabiertos.jcyl.es (portal's own dataset). "
@@ -46379,6 +47739,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "religion_category,category,religion",
+    .id_keys = "religion+area_code",
     .description = "OpenDataSoft dataset 'census-21-religion-ward-level' ('Census 21 "
       "- Religion Ward Level') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -46421,6 +47782,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset "
       "'stadt-neuss-eifelverein-og-neuss-wanderweg-a-1' ('Stadt Neuss: "
       "Eifelverein OG Neuss Wanderweg A 1') on the European open-data "
@@ -46463,6 +47825,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "underkatergori_sv,coicop_kategorier_och_koder",
+    .id_keys = "underkatergori_sv",
     .description = "OpenDataSoft dataset "
       "'hushallens-klimatavtryck-i-umea-2019-konsumtionskompassen' "
       "('Hushållens klimatavtryck i Umeå 2019, Konsumtionskompassen') "
@@ -46484,6 +47847,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'perimetre-du-geoparc' ('Périmètre du "
       "Géoparc Terres d'Hérault') on the European open-data portal "
       "www.herault-data.fr (portal's own dataset). Records API Explore "
@@ -46504,6 +47868,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "photos",
     .description = "OpenDataSoft dataset 'sacs-a-proces-photos-reference-2-b-962' "
       "('Sacs à procès - Photos de l'affaire référence 2 B 962') on the "
       "European open-data portal data.haute-garonne.fr (portal's own "
@@ -46525,6 +47890,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "departement,region",
+    .id_keys = "departement",
     .description = "OpenDataSoft dataset "
       "'sinoer-collecte-dechets-menagers-et-assimiles-2015' ('SINOE® - "
       "Collecte Déchets ménagers et Assimilés - 2015') on the European "
@@ -46546,6 +47912,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dixieme_de_niveau_de_vie",
+    .id_keys = "dixieme_de_niveau_de_vie",
     .description = "OpenDataSoft dataset 'graphique-er-suicide-complet' "
       "('Graphique-ER-Suicide-Complet') on the European open-data "
       "portal data.drees.solidarites-sante.gouv.fr (portal's own "
@@ -46567,6 +47934,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "enseigne,adresse,type",
+    .id_keys = "enseigne+type",
     .description = "OpenDataSoft dataset 'photographe-and-photomaton-ville-de-tours' "
       "('Photographe & Photomaton - Ville de Tours') on the European "
       "open-data portal data.tours-metropole.fr (portal's own dataset). "
@@ -46628,6 +47996,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_comm,nom_comm_min",
+    .id_keys = "code_insee",
     .description = "OpenDataSoft dataset 'plu-de-gpso' ('Contour des communes de "
       "GPSO') on the European open-data portal data.seineouest.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -46688,6 +48057,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+stadtbezirk",
     .description = "OpenDataSoft dataset 'stadtbezirke_medianalter' ('Stadtbezirke "
       "Medianalter') on the European open-data portal "
       "opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -46709,6 +48079,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_la_photo,type_doc,cote,analyse",
+    .id_keys = "cote",
     .description = "OpenDataSoft dataset "
       "'1914-1918-dans-le-dunkerquois-selection-de-photographies0' "
       "('1914-1918 dans le Dunkerquois : sélection de photographies "
@@ -46796,6 +48167,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_parc,coll_nom,vocation",
+    .id_keys = "nom_parc",
     .description = "OpenDataSoft dataset '244400610_parcs-activites' ('Zones "
       "d'Activités Economiques pour le territoire de Cap Atlantique') "
       "on the European open-data portal data.capatlantique.fr (portal's "
@@ -46817,6 +48189,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_de_residence",
+    .id_keys = "zone_de_residence",
     .description = "OpenDataSoft dataset "
       "'emc2-analyse-des-modes-de-transport-et-motifs-de-deplacement-epci' "
       "('EMC² : Analyse des modes de transport et motifs de déplacement "
@@ -46858,6 +48231,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_autorisation_programme",
+    .id_keys = "libelle_autorisation_programme",
     .description = "OpenDataSoft dataset 'projets-dinvestissement-bp-2019' ('Projets "
       "d'investissement inscrits au BP 2019') on the European open-data "
       "portal data.cannes.com (portal's own dataset). Records API "
@@ -46919,6 +48293,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "suburb_name,suburb",
+    .id_keys = "potable_kl",
     .description = "OpenDataSoft dataset "
       "'sydney-water-consumption-fy-2021-22-suburb' ('Sydney Water "
       "consumption FY-2021-22 (Suburb)') on the European open-data "
@@ -46985,6 +48360,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_donnee",
+    .id_keys = "montant",
     .description = "OpenDataSoft dataset "
       "'la-cotisation-publique-communale-et-provinciale-ne-coute-pas-cher' "
       "('Cotisation à l'habitant des communes et de la Province de "
@@ -47006,6 +48382,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone,uniqueid",
+    .id_keys = "globalid",
     .description = "OpenDataSoft dataset 'zoning' ('Zoning') on the European "
       "open-data portal cityofsalinas.opendatasoft.com (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -47026,6 +48403,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "breed",
+    .id_keys = "gisfid",
     .description = "OpenDataSoft dataset 'animal-registrations' ('Animal "
       "Registrations in City of Casey (Insights)') on the European "
       "open-data portal data.casey.vic.gov.au (portal's own dataset). "
@@ -47067,6 +48445,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom,enfant_prenom",
+    .id_keys = "enfant_prenom+annee+enfant_sexe",
     .description = "OpenDataSoft dataset '214401846_prenoms_liste' ('Prénoms des "
       "enfants nés à Saint Nazaire') on the European open-data portal "
       "data.saintnazaireagglo.fr (portal's own dataset). Records API "
@@ -47087,6 +48466,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zs_code",
+    .id_keys = "zs_code",
     .description = "OpenDataSoft dataset "
       "'224900019_etat-davancement-deploiement-du-reseau-anjou-fibre' "
       "('État d'avancement du déploiement du réseau Anjou Fibre') on "
@@ -47132,6 +48512,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau,commune_nom,nom_election,bureau",
+    .id_keys = "nb_voix+code_bureau",
     .description = "OpenDataSoft dataset "
       "'resultats-election-presidentielle-2e-tour-2022-bourges' "
       "('Resultats Election Presidentielle 2e Tour - 2022 - Ville de "
@@ -47174,6 +48555,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,area_type",
+    .id_keys = "numerator",
     .description = "OpenDataSoft dataset "
       "'prevalence-of-depression-and-anxiety-in-adults-icp-outcomes-framework-birmingham-and-solihull' "
       "('Prevalence of depression in adults - ICP Outcomes Framework - "
@@ -47196,6 +48578,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr",
     .description = "OpenDataSoft dataset "
       "'niederlassungen-nach-wirtschaftsabschnitten' ('Niederlassungen "
       "nach Wirtschaftsabschnitten seit 2007') on the European "
@@ -47216,6 +48599,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "localizzazioni_lista",
+    .id_keys = "richiesta_ndeg_prot+localizzazioni_lista",
     .description = "OpenDataSoft dataset 'permessi-di-costruire-rilasciati' "
       "('Permessi di costruire') on the European open-data portal "
       "opendata.comune.bologna.it (portal's own dataset). Records API "
@@ -47276,6 +48660,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "value_million_bd",
     .description = "OpenDataSoft dataset 'a-annual-foreign-trade-statistics' "
       "('Annual Foreign Trade Statistics') on the European open-data "
       "portal www.data.gov.bh (portal's own dataset). Records API "
@@ -47335,6 +48720,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tx+libgeo",
     .description = "OpenDataSoft dataset 'syndrome-du-canal-carpien-incidence' "
       "('Syndrome du canal carpien : Incidence (Département)') on the "
       "European open-data portal odisse.santepubliquefrance.fr "
@@ -47356,6 +48742,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset "
       "'stadt-neuss-eifelverein-og-neuss-wanderweg-a-2-kopieren' "
       "('Stadt Neuss: Eifelverein OG Neuss Wanderweg A 3') on the "
@@ -47400,6 +48787,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-113001-carlslund' "
       "('Energiförbrukning i Geografiska området 113001 (Carlslund)') "
@@ -47421,6 +48809,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset 'plateformes' ('CD34_PRM_Plateforme_SARF') "
       "on the European open-data portal www.herault-data.fr (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -47441,6 +48830,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "instance+organisme+nom",
     .description = "OpenDataSoft dataset "
       "'representation-des-conseillers-departementaux-dans-les-organismes-exterieurs' "
       "('Représentation des conseillers départementaux dans les "
@@ -47462,6 +48852,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_dep,nom_reg,type_dequipement,categorie",
+    .id_keys = "codgeo+code_epci+type_dequipement",
     .description = "OpenDataSoft dataset 'bpe-2017' ('Base permanente des "
       "équipements 2017') on the European open-data portal "
       "hub.huwise.com (portal's own dataset). Records API Explore v2.1, "
@@ -47482,6 +48873,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "regime+annee+sexe",
     .description = "OpenDataSoft dataset 'invalidite-pensmoy-dd' ('Pension "
       "d'invalidité de droit direct moyenne') on the European open-data "
       "portal data.drees.solidarites-sante.gouv.fr (portal's own "
@@ -47562,6 +48954,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "saison+id",
     .description = "OpenDataSoft dataset 'personnel-des-conservatoires' "
       "('Conservatoires - Personnels pédagogiques, administratifs et "
       "techniques') on the European open-data portal data.seineouest.fr "
@@ -47583,6 +48976,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "insee",
     .description = "OpenDataSoft dataset 'departementdeshautespyrenees_sessad' "
       "('Secteurs des Services d’Éducation Spéciale et de Soins A "
       "Domicile des Hautes-Pyrénées') on the European open-data portal "
@@ -47622,6 +49016,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+thema+stadtbezirk",
     .description = "OpenDataSoft dataset 'bewegung' ('Bevölkerungsbewegung - "
       "Kommunalstatistik') on the European open-data portal "
       "opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -47642,6 +49037,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse",
+    .id_keys = "tonnage_cartons",
     .description = "OpenDataSoft dataset "
       "'bilan-dactivite-des-decheteries-de-la-communaute-urbaine-de-dunkerque' "
       "('Bilan d'activité des déchèteries de la Communauté urbaine de "
@@ -47685,6 +49081,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "xd+cumulf+tmja",
     .description = "OpenDataSoft dataset "
       "'trafic-moyen-journalier-annuel-sur-le-reseau-routier-national' "
       "('Trafic moyen journalier annuel sur le réseau routier "
@@ -47707,6 +49104,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "intitule_deliberation",
+    .id_keys = "ndeg_deliberation",
     .description = "OpenDataSoft dataset "
       "'vineuil-41350-deliberations-du-conseil-municipal-adoptees-en-2021' "
       "('Vineuil (41350) - délibérations du conseil municipal adoptées "
@@ -47729,6 +49127,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_com",
     .description = "OpenDataSoft dataset '244400610_pan_depart_rando' ('Panneaux de "
       "départ des circuits de randonnées pour le territoire de Cap "
       "Atlantique') on the European open-data portal "
@@ -47750,6 +49149,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_de_residence",
+    .id_keys = "zone_de_residence",
     .description = "OpenDataSoft dataset 'habitat_et_equipement_des_menages_secteur' "
       "('EMC² : Habitat et équipement des ménages par secteur de "
       "tirage') on the European open-data portal www.karudata.com "
@@ -47770,6 +49170,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "children_title,children_address,children_content",
+    .id_keys = "children_title",
     .description = "OpenDataSoft dataset 'les-marches' ('Les marchés') on the "
       "European open-data portal data.montreuil.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -47789,6 +49190,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_mouvement,nature",
+    .id_keys = "nature_code+chapitre_code+type_de_mouvement",
     .description = "OpenDataSoft dataset 'budget-primitif-2016' ('​Budget primitif "
       "2016') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -47830,6 +49232,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "abfuhrgebiet",
+    .id_keys = "pdf",
     .description = "OpenDataSoft dataset 'abfuhrdaten-stadt-stgallen-pdf-lookup' "
       "('Abfuhrdaten Stadt St.Gallen - pdf lookup') on the European "
       "open-data portal daten.stadt.sg.ch (portal's own dataset). "
@@ -47850,6 +49253,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "region",
+    .id_keys = "sa1_main16",
     .description = "OpenDataSoft dataset "
       "'nsw-heat-vulnerability-index-to-abs-statistical-area-level-1-2016' "
       "('NSW Heat Vulnerability Index to ABS Statistical Area Level 1 "
@@ -47894,6 +49298,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "ogc_fid",
     .description = "OpenDataSoft dataset 'zones-de-rencontre-20-km-h-anglet' ('Zones "
       "de rencontre 20 km/h - Anglet') on the European open-data portal "
       "anglet-opendatapaysbasque.opendatasoft.com (portal's own "
@@ -47914,6 +49319,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "secteur",
+    .id_keys = "annee+secteur",
     .description = "OpenDataSoft dataset 'focus-23' ('Participations IDEFIN dans "
       "ORES ASSETS') on the European open-data portal data.bep.be "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -47953,6 +49359,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description,application_category,application_number,plnpermitaddress",
+    .id_keys = "application_number",
     .description = "OpenDataSoft dataset "
       "'planning-permit-applications-register-only' ('Planning Permit "
       "Application Register') on the European open-data portal "
@@ -47996,6 +49403,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset '244400644_circuits_rando_carene' "
       "('Circuits de randonnées sur le territoire de Saint-Nazaire "
       "Agglo') on the European open-data portal "
@@ -48017,6 +49425,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "pr_libelle,pr_plod",
+    .id_keys = "pr_libelle+pr_axe",
     .description = "OpenDataSoft dataset "
       "'224900019_points-de-reperes-des-routes-departementales-en-maine-et-loire' "
       "('Points de repères des routes départementales en "
@@ -48061,6 +49470,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau,nom_canton,commune_nom,nom_election",
+    .id_keys = "pourcentage",
     .description = "OpenDataSoft dataset "
       "'resultats-election-legislative-2eme-tour-2022-ville-de-bourges-3eme-circonscript' "
       "('Resultats Election Législative 2eme Tour - 2022 - Ville de "
@@ -48082,6 +49492,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "id,code",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'sections' ('Sections') on the European "
       "open-data portal data.fleurysurorne.fr (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
@@ -48101,6 +49512,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "areaidentifier,arealabel",
+    .id_keys = "areaidentifier+periodlabel",
     .description = "OpenDataSoft dataset 'percentage-cannot-speak-english-wmca' "
       "('Percentage main language is not English: Cannot speak English "
       "- WMCA') on the European open-data portal "
@@ -48121,6 +49533,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr",
     .description = "OpenDataSoft dataset 'haushalte-nach-haushaltstyp-ab-2016' "
       "('Haushalte nach Haushaltstyp seit 2016') on the European "
       "open-data portal open-data.dortmund.de (portal's own dataset). "
@@ -48141,6 +49554,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "loc11_nome,indirizzo,plesso,partkey",
+    .id_keys = "numprog",
     .description = "OpenDataSoft dataset "
       "'elezioni-europee-2019-elenco-seggi-elettorali' ('Elezioni "
       "europee 2019 - Elenco seggi elettorali') on the European "
@@ -48206,6 +49620,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'10-arrivals-and-departures-in-air-and-sea-and-causeway' "
       "('Arrivals and departures at ports by air, sea and land') on the "
@@ -48228,6 +49643,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nombre_del_organismo,calle,e_mail",
+    .id_keys = "identificador",
     .description = "OpenDataSoft dataset "
       "'registro-de-comunidades-castellanas-y-leonesas' ('Registro de "
       "Comunidades castellanas y leonesas') on the European open-data "
@@ -48268,6 +49684,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "revenu",
+    .id_keys = "revenu",
     .description = "OpenDataSoft dataset 'tabagisme-prevalence-selon-le-revenu' "
       "('Tabac : Prévalence selon le revenu') on the European open-data "
       "portal odisse.santepubliquefrance.fr (portal's own dataset). "
@@ -48287,6 +49704,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "kurs,uhrzeit,standort",
+    .id_keys = "index",
     .description = "OpenDataSoft dataset 'stadt-neuss-sport-im-park' ('Stadt Neuss: "
       "Sport im Park') on the European open-data portal "
       "opendata.rhein-kreis-neuss.de (portal's own dataset). Records "
@@ -48327,6 +49745,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-154006-djupviksandvik' "
       "('Energiförbrukning i Geografiska området 154006 "
@@ -48349,6 +49768,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lieu,adresse,commune,bureau",
+    .id_keys = "bureau",
     .description = "OpenDataSoft dataset "
       "'localisation-des-bureaux-de-vote-de-nissan-lez-enserune' "
       "('Localisation des bureaux de vote de Nissan lez enserune') on "
@@ -48372,6 +49792,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_sous_unite_paysagere,organisme,legende",
+    .id_keys = "legende",
     .description = "OpenDataSoft dataset "
       "'atlas-des-paysages-de-la-haute-garonne-photos-8-sous-unites-agglo-toulousaine' "
       "('Atlas des paysages de la Haute-Garonne : photos des 8 "
@@ -48394,6 +49815,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "code_ogr+code_naf",
     .description = "OpenDataSoft dataset 'pole-emploi-rome-arborescence-principale' "
       "('Pôle Emploi - ROME - Arborescence Principale') on the European "
       "open-data portal hub.huwise.com (portal's own dataset). Records "
@@ -48414,6 +49836,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "trimestres_cotises_au_titre_de_l_emploi",
     .description = "OpenDataSoft dataset "
       "'nombre-moyen-et-nature-des-trimestres-valides-selon-lage-en-2012-et-2013' "
       "('Nombre moyen et nature des trimestres validés selon l’âge, en "
@@ -48477,6 +49900,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "museum_name,ticket_type",
+    .id_keys = "ticket_type+museum_name",
     .description = "OpenDataSoft dataset 'ticket-type-open-data' ('Ticket Type Open "
       "Data') on the European open-data portal data.ajman.ae (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -48497,6 +49921,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset "
       "'reglementation-et-arretes-sur-la-commune-de-marnes-la-coquette' "
       "('Règlementation et arrêtés sur la commune de "
@@ -48560,6 +49985,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr",
     .description = "OpenDataSoft dataset 'mach-mit_alle0' ('mach-mit_alle') on the "
       "European open-data portal opendata.wuerzburg.de (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -48580,6 +50006,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,adherents_a_la_centrale_d_achat",
+    .id_keys = "adherents_a_la_centrale_d_achat",
     .description = "OpenDataSoft dataset 'adherents-centrale-achat-public-cud' "
       "('Liste des adhérents de la centrale d'achat communautaire') on "
       "the European open-data portal data.dunkerque-agglo.fr (portal's "
@@ -48622,6 +50049,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "denomination_principale,commune,departement,secteur",
+    .id_keys = "tri",
     .description = "OpenDataSoft dataset "
       "'effectifs-d-eleves-par-niveau-et-nombre-de-classes-par-ecole' "
       "('Effectifs d’élèves par niveau et nombre de classes par école') "
@@ -48644,6 +50072,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "ndeg_delib",
     .description = "OpenDataSoft dataset "
       "'blois-deliberations-du-conseil-municipal-annees-2020-et-suivantes' "
       "('Blois - délibérations du conseil municipal - année 2020') on "
@@ -48733,6 +50162,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_de_mouvement,nature",
+    .id_keys = "nature_code+chapitre_code+type_de_mouvement",
     .description = "OpenDataSoft dataset 'budget-primitif-2015' ('Budget primitif "
       "2015') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -48792,6 +50222,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "image_link",
     .description = "OpenDataSoft dataset 'queensland-historical-photos-collection' "
       "('Queensland Historical Photos collection') on the European "
       "open-data portal data.peclet.com.au (portal's own dataset). "
@@ -48853,6 +50284,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "'proportion-nouvelles-fiches-d-amelioration-fiches-cloturees-iso9001-en' "
       "('Proportion nouvelles fiches d'amélioration/fiches clôturées "
@@ -48893,6 +50325,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description,legacyassetnumber",
+    .id_keys = "assetnumber",
     .description = "OpenDataSoft dataset 'council_trees_pt_t1eam' ('City of Casey "
       "owned Trees') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -48934,6 +50367,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "station_id",
     .description = "OpenDataSoft dataset "
       "'244400644_ecovelo_gbfs_station_information' ('Stations vélycéo "
       "électriques - informations') on the European open-data portal "
@@ -48955,6 +50389,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset "
       "'224900019_structures-denseignement-artistique-en-maine-et-loire' "
       "('Structures d'enseignement artistique en Maine-et-Loire') on "
@@ -48977,6 +50412,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "libelle+annee_maj",
     .description = "OpenDataSoft dataset 'sentiers-pedestres' ('Sentiers pédestres "
       "traversant ou sur Melun Val de Seine') on the European open-data "
       "portal data.melunvaldeseine.fr (portal's own dataset). Records "
@@ -48997,6 +50433,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_bureau,commune_nom,nom_election,nom_circonscription",
+    .id_keys = "nb_voix+code_bureau",
     .description = "OpenDataSoft dataset "
       "'resultats_election_legislative_2024_ville_de_bourges_2eme_tour_3eme_circonscrip0' "
       "('Résultats Election législative 2ème Tour - 2024 - Ville de "
@@ -49019,6 +50456,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "denomination_de_l_etablissement,libelle_de_la_voie_de_l_etablissement,type_de_voie_de_l_etablissement,complement_d_adresse_de_l_etablissement",
+    .id_keys = "denomination_de_l_etablissement",
     .description = "OpenDataSoft dataset 'commerces' ('Commerces ouverts de première "
       "nécessité pendant le confinement - Covid-19') on the European "
       "open-data portal data.fleurysurorne.fr (portal's own dataset). "
@@ -49039,6 +50477,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodlabel+areaidentifier",
     .description = "OpenDataSoft dataset '4g-premises-signal-from-2-operators-wmca' "
       "('4G premises: signal from 2 operators - WMCA') on the European "
       "open-data portal cityobservatory.birmingham.gov.uk (portal's own "
@@ -49059,6 +50498,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bezeichnung_produktbereich",
+    .id_keys = "lfd",
     .description = "OpenDataSoft dataset 'fb20-haushaltsplan-2020-2021' "
       "('Haushaltsplan 2020-2021') on the European open-data portal "
       "open-data.dortmund.de (portal's own dataset). Records API "
@@ -49079,6 +50519,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset 'referendum-2011-affluenza-quesito-02' "
       "('Referendum 2011 - affluenza - Quesito 02') on the European "
       "open-data portal opendata.comune.bologna.it (portal's own "
@@ -49138,6 +50579,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "x_longitude",
     .description = "OpenDataSoft dataset 'police-and-fire-department' ('Police and "
       "Fire Department') on the European open-data portal "
       "www.data.gov.bh (portal's own dataset). Records API Explore "
@@ -49158,6 +50600,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "litros+ano",
     .description = "OpenDataSoft dataset 'produccion-leche-sectores' ('Producción "
       "primaria del sector lácteo') on the European open-data portal "
       "analisis.datosabiertos.jcyl.es (portal's own dataset). Records "
@@ -49177,6 +50620,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "population",
     .description = "OpenDataSoft dataset 'leicester-population-count' ('Leicester "
       "Population - Count') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -49197,6 +50641,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "ps_12m_v",
     .description = "OpenDataSoft dataset "
       "'sante-mentale-pensees-suicidaires-et-tentatives-de-suicide_fra' "
       "('Santé mentale : Pensées suicidaires et tentatives de suicide "
@@ -49238,6 +50683,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "rijrichtin,tussen_ter,locatie",
+    .id_keys = "x+rijrichtin",
     .description = "OpenDataSoft dataset 'snelheidsdisplays' ('Snelheidsdisplays Den "
       "Haag') on the European open-data portal "
       "den-haag-opendata.opendatasoft.com (portal's own dataset). "
@@ -49258,6 +50704,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-193610-nydalsjon' "
       "('Energiförbrukning i Geografiska området 193610 (Nydalsjön)') "
@@ -49279,6 +50726,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_port,commune",
+    .id_keys = "nom_port",
     .description = "OpenDataSoft dataset 'ports-de-lherault' ('Ports de l'Hérault') "
       "on the European open-data portal www.herault-data.fr (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -49299,6 +50747,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_commune,nom_departement,nom_region",
+    .id_keys = "code_insee",
     .description = "OpenDataSoft dataset "
       "'jeux-olympiques-2024-communes-labellisees-terre-de-jeux-haute-garonne' "
       "('Jeux Olympiques 2024 : communes labellisées Terre de Jeux en "
@@ -49321,6 +50770,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dep_name,reg_name,size_class_name",
+    .id_keys = "total",
     .description = "OpenDataSoft dataset "
       "'aides-entreprises-covid-19-france-effectifs' ('Aides aux "
       "entreprises dans le cadre de l'épidémie de COVID-19 en France - "
@@ -49362,6 +50812,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "aire_en_m+code_insee",
     .description = "OpenDataSoft dataset "
       "'espaces-verts-tours-metropole-val-de-loire' ('Espaces verts - "
       "Tours Métropole Val de Loire') on the European open-data portal "
@@ -49402,6 +50853,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type,mode",
+    .id_keys = "lat",
     .description = "OpenDataSoft dataset 'rashidiya-15mn-walk' ('SMART CITY_15' "
       "Walk') on the European open-data portal data.ajman.ae (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -49422,6 +50874,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "proces_verbal",
     .description = "OpenDataSoft dataset "
       "'seances-du-conseil-municipal-de-marnes-la-coquette' ('Séances "
       "du conseil municipal de Marnes-la-Coquette') on the European "
@@ -49442,6 +50895,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_station,nom_commune,nom_epci,coll_nom",
+    .id_keys = "code_sandre",
     .description = "OpenDataSoft dataset 'stations-depurations-des-hautes-pyrenees' "
       "('Stations d’épurations des Hautes-Pyrénées') on the European "
       "open-data portal opendata.ha-py.fr (portal's own dataset). "
@@ -49461,6 +50915,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "uid",
+    .id_keys = "uid",
     .description = "OpenDataSoft dataset 'maryland-outage-data-zip-code' ('Maryland "
       "Outage Data (Zip Code)') on the European open-data portal "
       "openenergyhub.ornl.gov (portal's own dataset). Records API "
@@ -49481,6 +50936,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "schule,externes_schwimmbad_fusslaufige_entfernung_vom_schulgebaude",
+    .id_keys = "schule",
     .description = "OpenDataSoft dataset "
       "'schulportrait-kategorie-b-schulgebaeude-schwimmen' "
       "('Schulportrait - Kategorie B _ Schulgebäude - Schwimmen') on "
@@ -49504,6 +50960,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,type_d_unite_d_hebergement",
+    .id_keys = "commune+type_d_unite_d_hebergement+classification",
     .description = "OpenDataSoft dataset "
       "'quantitatif-des-hebergements-touristiques-de-la-communaute-urbaine-de-dunkerque-' "
       "('Capacités des hébergements touristiques de la Communauté "
@@ -49527,6 +50984,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category,primary_substation",
+    .id_keys = "primary_substation+category",
     .description = "OpenDataSoft dataset "
       "'spd-ltds-appendix-6-connection-activity-table-6' ('SPD LTDS "
       "Appendix 6 Connection Activity (Table 6)') on the European "
@@ -49568,6 +51026,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_lieu_d_execution,objet_du_marche_256_caracteres_maxi,type_code_lieu_d_execution,identification_du_titulaire_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributaires",
+    .id_keys = "objet_du_marche_256_caracteres_maxi+identification_du_titulaire_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributaires",
     .description = "OpenDataSoft dataset "
       "'agglopolys-marches-publics-2020-40-000-eur-ht0' ('Agglopolys - "
       "marchés publics 2020 > 40 000 € HT') on the European open-data "
@@ -49646,6 +51105,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'equipements-publics' ('Equipements publics "
       "cannois') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -49708,6 +51168,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "age_group+year",
     .description = "OpenDataSoft dataset 'nsw-population-by-age-groups' ('NSW "
       "Population by age groups') on the European open-data portal "
       "data.peclet.com.au (portal's own dataset). Records API Explore "
@@ -49728,6 +51189,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "utentes_inscritos_csp+total_utentes_com_mdf_atribuido+total_utentes_sem_mdf_atribuido",
     .description = "OpenDataSoft dataset "
       "'utentes-inscritos-em-cuidados-de-saude-primarios' ('Utentes "
       "Inscritos em Cuidados de Saúde Primários') on the European "
@@ -49750,6 +51212,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "indicateur_egalite_femmes_hommes_ville_d_anglet",
+    .id_keys = "ordre",
     .description = "OpenDataSoft dataset 'ecart_rem_femme-hommes-anglet-2026' "
       "('Indicateurs écarts de rémunération femmes hommes - Ville "
       "d'Anglet (données 2025)') on the European open-data portal "
@@ -49771,6 +51234,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "environment_company_name,type_de_depense",
+    .id_keys = "montant",
     .description = "OpenDataSoft dataset "
       "'le-fonctionnement-des-instances-ne-coute-pas-cher' ('Coût de "
       "fonctionnement des instances') on the European open-data portal "
@@ -49810,6 +51274,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "address,service_description,provider,service_hours1",
+    .id_keys = "northing",
     .description = "OpenDataSoft dataset 'emergency-food-relief-groups' ('Emergency "
       "Food Relief Groups') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -49893,6 +51358,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_l_evenement,lieu,adresse,commune",
+    .id_keys = "date_debut+nom_de_l_evenement",
     .description = "OpenDataSoft dataset 'calendrier-des-manifestations-lro' "
       "('Agenda culturel sur la commune de La Rochette') on the "
       "European open-data portal data.melunvaldeseine.fr (portal's own "
@@ -49955,6 +51421,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "areaidentifier,arealabel",
+    .id_keys = "areaidentifier+periodlabel",
     .description = "OpenDataSoft dataset "
       "'gross-value-added-gva-all-industries-birmingham-wards' ('Gross "
       "value added (GVA): All industries - Birmingham Wards') on the "
@@ -49976,6 +51443,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr",
     .description = "OpenDataSoft dataset 'ds-straftaten-nach-art-seit-1990' "
       "('Straftaten nach Art') on the European open-data portal "
       "open-data.dortmund.de (portal's own dataset). Records API "
@@ -49996,6 +51464,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "descrizione_zona,descrizione_quartiere",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset 'referendum-2005-affluenza-quesito-01' "
       "('Referendum 2005 - affluenza - Quesito 01') on the European "
       "open-data portal opendata.comune.bologna.it (portal's own "
@@ -50017,6 +51486,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "designation,partitionkey,rowkey,timestamp",
+    .id_keys = "partitionkey",
     .description = "OpenDataSoft dataset 'bor_museegoupil' ('Collections du musée "
       "Goupil de Bordeaux 2015') on the European open-data portal "
       "datahub.bordeaux-metropole.fr (portal's own dataset). Records "
@@ -50058,6 +51528,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "indicator",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset '06b-inbound-visitors-by-type-of-trip' "
       "('Inbound Visitors by Type of Trip - Annual') on the European "
       "open-data portal www.data.gov.bh (portal's own dataset). Records "
@@ -50078,6 +51549,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "fecha+centro",
     .description = "OpenDataSoft dataset 'datos-visitantes-centro-fundacion-siglo' "
       "('Datos de visitantes por centro de la Fundación Siglo') on the "
       "European open-data portal analisis.datosabiertos.jcyl.es "
@@ -50098,6 +51570,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site_name,primary_address,site_type0,site_main_function",
+    .id_keys = "site_uprn",
     .description = "OpenDataSoft dataset 'local-authority-land-2022' ('Local "
       "Authority Land 2022') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -50118,6 +51591,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nombre_de_diagnostics_de_sida",
     .description = "OpenDataSoft dataset "
       "'sida-diagnostics-dinfection-de-sida-france' ('SIDA : "
       "Diagnostics de sida (France)') on the European open-data portal "
@@ -50139,6 +51613,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset 'meerbusch-radtour-osterath-drumherum' "
       "('Meerbusch: Radtour Osterath drumherum') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -50181,6 +51656,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-092219-flygfaltet' "
       "('Energiförbrukning i Geografiska området 092219 (Flygfältet)') "
@@ -50203,6 +51679,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_site_et_periode,type_de_subvention,beneficiaires,ndeg_de_dossier_2016",
+    .id_keys = "nom_du_site_et_periode",
     .description = "OpenDataSoft dataset "
       "'subventions-au-titre-des-fouilles-archeologiques-siar-2016-2020' "
       "('Liste des aides accordées au titre des fouilles archéologiques "
@@ -50225,6 +51702,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_nom",
+    .id_keys = "commune_insee+code_postal",
     .description = "OpenDataSoft dataset 'code-postal-haute-garonne' ('Code postal : "
       "base officielle des codes postaux en Haute-Garonne') on the "
       "European open-data portal data.haute-garonne.fr (portal's own "
@@ -50245,6 +51723,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "settle_name,region_name,subdis_name,dis_name",
+    .id_keys = "settle_name",
     .description = "OpenDataSoft dataset 'georef-israel-settlement-millesime' "
       "('Settlement - Vintage/Millésimé - Israel') on the European "
       "open-data portal hub.huwise.com (portal's own dataset). Records "
@@ -50286,6 +51765,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,type_source,reference_pl",
+    .id_keys = "reference_pl",
     .description = "OpenDataSoft dataset 'points-lumineux-tmvl' ('Points Lumineux - "
       "Tours Métropole Val de Loire') on the European open-data portal "
       "data.tours-metropole.fr (portal's own dataset). Records API "
@@ -50306,6 +51786,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "txcouv_reg+txcouv_am_ind_reg",
     .description = "OpenDataSoft dataset 'txcouv_pe_reg_hist' ('Taux de couverture "
       "d'accueil du jeune enfant - historique 2017-2022 [Région]') on "
       "the European open-data portal data.caf.fr (portal's own "
@@ -50326,6 +51807,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year+quarter",
     .description = "OpenDataSoft dataset 'vor-2018' ('Vessel Operation Rate - VOR') "
       "on the European open-data portal data.ajman.ae (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -50367,6 +51849,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "espece_nom,coll_nom,libelle_du_site",
+    .id_keys = "espece_nom+dat_saisie",
     .description = "OpenDataSoft dataset "
       "'comptages-des-especes-ornithologiques-depuis-2015-au-lac-de-puydarrieux' "
       "('Comptages des espèces ornithologiques depuis 2015 au lac de "
@@ -50388,6 +51871,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "communitydescriptor+reportedstarttime+utility_id",
     .description = "OpenDataSoft dataset 'odin-real-time-outages-county' ('ODIN "
       "Real-time Outages (County)') on the European open-data portal "
       "openenergyhub.ornl.gov (portal's own dataset). Records API "
@@ -50407,6 +51891,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "count",
     .description = "OpenDataSoft dataset 'fahrradzaehlung-verteilung' "
       "('Fahrradzählung - Verteilung') on the European open-data portal "
       "opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -50471,6 +51956,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_com,nom_epci,nom_dept,nom_region",
+    .id_keys = "insee_com",
     .description = "OpenDataSoft dataset "
       "'logements-vacants-du-parc-prive-par-anciennete-de-vacance-par-commune-et-par-epc' "
       "('Logements vacants du parc privé par ancienneté de vacance, par "
@@ -50493,6 +51979,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_lieu_d_execution,objet_du_marche_256_caracteres_maxi,type_code_lieu_d_execution,identification_du_titulaire_en_cas_de_marche_multi_attributaire_indiquer_tous_les_attributaires",
+    .id_keys = "objet_du_marche_256_caracteres_maxi+donnees_relatives_aux_modifications_du_contrat_maximum_256_caracteres",
     .description = "OpenDataSoft dataset "
       "'agglopolys-marches-publics-2023-greater-than-40-000-eur-ht' "
       "('Agglopolys - marchés publics 2023 > 40 000 € HT') on the "
@@ -50515,6 +52002,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "adresse",
     .description = "OpenDataSoft dataset '244400610_eqp_sport_culture_cap' "
       "('Equipements sportifs et culturels communautaires présents sur "
       "le territoire de Cap Atlantique') on the European open-data "
@@ -50535,6 +52023,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset 'production-electricite-guadeloupe' "
       "('Production Electricité-Guadeloupe') on the European open-data "
       "portal www.karudata.com (portal's own dataset). Records API "
@@ -50634,6 +52123,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "title",
     .description = "OpenDataSoft dataset 'live-traffic-cameras' ('Live traffic "
       "cameras NSW') on the European open-data portal "
       "data.peclet.com.au (portal's own dataset). Records API Explore "
@@ -50653,6 +52143,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodo",
     .description = "OpenDataSoft dataset 'no-de-entidades-inspecionadas-auditadas' "
       "('Entidades Inspecionadas e Auditadas') on the European "
       "open-data portal transparencia.sns.gov.pt (portal's own "
@@ -50697,6 +52188,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "date",
     .description = "OpenDataSoft dataset 'presence-du-bep-dans-la-presse' ('Présence "
       "du BEP dans la presse') on the European open-data portal "
       "data.bep.be (portal's own dataset). Records API Explore v2.1, "
@@ -50737,6 +52229,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "feature_type",
+    .id_keys = "gisfid",
     .description = "OpenDataSoft dataset 'legal-point-discharge-pt' ('Legal Point "
       "Discharge (Drainage Pt)') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -50778,6 +52271,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset '214401846_vfe_public' ('Part des véhicules "
       "propres dans le renouvellement du parc de la Ville de "
       "Saint-Nazaire') on the European open-data portal "
@@ -50799,6 +52293,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "insee",
     .description = "OpenDataSoft dataset "
       "'224900019_limites-communales-2000-2012-maine-et-loire' "
       "('Limites communales de 2000 à 2012 en Maine-et-Loire') on the "
@@ -50820,6 +52315,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "id_map",
     .description = "OpenDataSoft dataset 'ppri' ('Plan Prévention Risque "
       "d'Innondation') on the European open-data portal "
       "data.melunvaldeseine.fr (portal's own dataset). Records API "
@@ -50859,6 +52355,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset 'limites-communes' ('Limites communales') "
       "on the European open-data portal data.fleurysurorne.fr (portal's "
       "own dataset). Records API Explore v2.1, offset paging. ODS "
@@ -50879,6 +52376,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,area_type",
+    .id_keys = "denominator",
     .description = "OpenDataSoft dataset "
       "'smoking-at-the-time-of-delivery-icp-outcomes-framework-birmingham-and-solihull' "
       "('Smoking at the time of delivery - ICP Outcomes Framework - "
@@ -50924,6 +52422,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "descrizione_zona,descrizione_quartiere",
+    .id_keys = "sezione",
     .description = "OpenDataSoft dataset 'elezioni-europee-1999-dati-votanti' "
       "('Elezioni europee 1999 - Dati votanti') on the European "
       "open-data portal opendata.comune.bologna.it (portal's own "
@@ -50988,6 +52487,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'12-cumulitive-number-of-gcc-nationals-owning-real-estate' "
       "('Number of GCC Nationals Owning Real Estate in the Kingdom of "
@@ -51032,6 +52532,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "reference+title",
     .description = "OpenDataSoft dataset "
       "'invitation-to-tender-for-contracts-march-2019' ('Invitation to "
       "tender for contracts March 2019') on the European open-data "
@@ -51054,6 +52555,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "reglib",
+    .id_keys = "reg",
     .description = "OpenDataSoft dataset "
       "'pollution-de-l-air-impact-sur-la-survenue-de-maladie-du-no2-et-des-pm2-5-anthro_region' "
       "('Pollution de l'air : impact sur la survenue de maladie du NO2 "
@@ -51077,6 +52579,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gebiet_name,wahl",
+    .id_keys = "wahl",
     .description = "OpenDataSoft dataset 'dormagen-bundestagswahl-2021-gesamt' "
       "('Dormagen: Bundestagswahl-2021-gesamt') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -51119,6 +52622,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-1746-del-av-savar' "
       "('Energiförbrukning i Geografiska området 1746 (del av Sävar)') "
@@ -51162,6 +52666,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "ctcd",
     .description = "OpenDataSoft dataset "
       "'collectivite-territoriale-cd-haute-garonne-insee-2022' ('Code "
       "officiel géographique Insee 2022 : Haute-Garonne') on the "
@@ -51183,6 +52688,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "rip_name,rip_name_upper,rip_name_lower,rip_type",
+    .id_keys = "rip_code+year",
     .description = "OpenDataSoft dataset "
       "'georef-italy-ripartizione-geografica-millesime' ('Gruppi di "
       "regioni - Vintage/Millésimé - Italy') on the European open-data "
@@ -51226,6 +52732,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bgt_nature_label,bgt_contnat_label,bgt_fonction_label,bgt_nom",
+    .id_keys = "bgt_credouv+bgt_nature_label",
     .description = "OpenDataSoft dataset "
       "'compte-administratif-du-budget-annexe-npnru-budget-tours' "
       "('Compte administratif du budget annexe NPNRU - Tours') on the "
@@ -51307,6 +52814,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "liste_des_dechets_acceptes_dans_les_dechetteries_de_la_ccam",
+    .id_keys = "liste_des_dechets_acceptes_dans_les_dechetteries_de_la_ccam",
     .description = "OpenDataSoft dataset "
       "'liste-des-dechets-acceptes-dans-les-dechetteries-de-la-ccam' "
       "('Liste des déchets acceptés dans les déchetteries de la CCAM') "
@@ -51328,6 +52836,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+thema+stadtbezirk",
     .description = "OpenDataSoft dataset 'migration' ('Migration - "
       "Kommunalstatistik') on the European open-data portal "
       "opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -51452,6 +52961,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "precisions",
     .description = "OpenDataSoft dataset 'composteurs-de-quartiers' ('Composteurs de "
       "quartiers') on the European open-data portal data.montreuil.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -51471,6 +52981,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_autorisation_programme",
+    .id_keys = "libelle_autorisation_programme",
     .description = "OpenDataSoft dataset 'projets-dinvestissement-bp-2023' ('Projets "
       "d'investissement inscrits au BP 2023') on the European open-data "
       "portal data.cannes.com (portal's own dataset). Records API "
@@ -51532,6 +53043,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "locality",
+    .id_keys = "locality+domestic_10kw_kw_capacity",
     .description = "OpenDataSoft dataset 'solar-pv-institute' ('Solar energy - "
       "Australian PV institute') on the European open-data portal "
       "data.peclet.com.au (portal's own dataset). Records API Explore "
@@ -51552,6 +53064,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "periodo+item+regiao",
     .description = "OpenDataSoft dataset "
       "'distribuicao-da-reserva-estrategica-de-medicamentos' ('Evolução "
       "Mensal da Distribuição da Reserva Estratégica de Medicamentos') "
@@ -51597,6 +53110,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "participation+annee",
     .description = "OpenDataSoft dataset 'focus-24' ('Participations IDEFIN dans "
       "l'énergie') on the European open-data portal data.bep.be "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -51617,6 +53131,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dac_category,county,approxloc",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "'sb-535-disadvantaged-communities-2022-within-salinas' ('SB 535 "
       "Disadvantaged Communities 2022 Within Salinas') on the European "
@@ -51639,6 +53154,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "sa1_code21",
     .description = "OpenDataSoft dataset 'cen21_coc_sa1_usualresidentspopdensity' "
       "('Usual Residents Population Density (SA1) ABS 2021') on the "
       "European open-data portal data.casey.vic.gov.au (portal's own "
@@ -51704,6 +53220,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "insee",
     .description = "OpenDataSoft dataset "
       "'224900019_limites-communales-de-2018-en-maine-et-loire' "
       "('Limites communales de 2018 en Maine-et-Loire') on the European "
@@ -51724,6 +53241,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune",
+    .id_keys = "montant_travaux_en_eur",
     .description = "OpenDataSoft dataset 'renovation-du-parc-prive' ('Rénovation du "
       "parc privé') on the European open-data portal "
       "data.melunvaldeseine.fr (portal's own dataset). Records API "
@@ -51766,6 +53284,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lien_vers_le_document",
     .description = "OpenDataSoft dataset "
       "'rapports-dactivite-du-centre-socioculturel' ('Rapports "
       "d'activité du centre socioculturel') on the European open-data "
@@ -51787,6 +53306,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,oa21cd,lsoa21cd,lsoa21nm",
+    .id_keys = "oa21cd",
     .description = "OpenDataSoft dataset 'boundaries-oa-2021-wmca' ('Boundaries - OA "
       "(2021) - WMCA') on the European open-data portal "
       "cityobservatory.birmingham.gov.uk (portal's own dataset). "
@@ -51807,6 +53327,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "bundestagswahlkreis,landtagswahlkreis,stadtbezirk,typ",
+    .id_keys = "briefwahlbezirk",
     .description = "OpenDataSoft dataset "
       "'fb33-sb-lutgendortmund-20150320-briefwahlbezirke' "
       "('Seniorenbeiratswahl 2015 - Lütgendortmund') on the European "
@@ -51827,6 +53348,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "indirizzo,farmacia,area_stati",
+    .id_keys = "civkey",
     .description = "OpenDataSoft dataset 'farmacie' ('Farmacie') on the European "
       "open-data portal opendata.comune.bologna.it (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -51890,6 +53412,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset "
       "'04_percentage-number-of-males-and-females-in-training-courses_iga' "
       "('Percentage number of males and females in National Leadership "
@@ -51912,6 +53435,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "titulo",
+    .id_keys = "titulo",
     .description = "OpenDataSoft dataset 'catalogo-de-informacion-publica' "
       "('Catálogo de información pública') on the European open-data "
       "portal analisis.datosabiertos.jcyl.es (portal's own dataset). "
@@ -51931,6 +53455,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lower_tier_local_authorities_code,sexual_orientation_9_categories",
+    .id_keys = "observation",
     .description = "OpenDataSoft dataset 'census-2021-sexual-orientation' ('Census "
       "2021 - Sexual orientation') on the European open-data portal "
       "data.leicester.gov.uk (portal's own dataset). Records API "
@@ -51951,6 +53476,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "indicateur",
+    .id_keys = "ic",
     .description = "OpenDataSoft dataset "
       "'tiques-borreliose-lyme-indicateurs-du-barometre-2024' ('Tiques "
       "et borréliose de Lyme : Indicateurs du Baromètre de Santé "
@@ -51973,6 +53499,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ortsteil",
+    .id_keys = "ortsteil",
     .description = "OpenDataSoft dataset 'dormagen-altersstruktur-nach-stadtteilen' "
       "('Dormagen: Altersstruktur nach Stadtteilen') on the European "
       "open-data portal opendata.rhein-kreis-neuss.de (portal's own "
@@ -52013,6 +53540,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-174912-taftea-omland' "
       "('Energiförbrukning i Geografiska området 174912 (Täfteå "
@@ -52144,6 +53672,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "numqp24,nomqpv,nomcom",
+    .id_keys = "numqp24+numcomdo+sitfam",
     .description = "OpenDataSoft dataset 'ndurcmg_s_sitfam_qpv_f' ('CMG - "
       "Répartition des allocataires selon le type de CMG et la "
       "situation familiale [QPV]') on the European open-data portal "
@@ -52164,6 +53693,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "tradenamear,tradenameen,activitiyar,activitiyen",
+    .id_keys = "licensenumber",
     .description = "OpenDataSoft dataset 'license-in-ajman-activities' ('License in "
       "Ajman (Activities)') on the European open-data portal "
       "data.ajman.ae (portal's own dataset). Records API Explore v2.1, "
@@ -52203,6 +53733,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom,site,adresse,ville",
+    .id_keys = "id_secteur",
     .description = "OpenDataSoft dataset "
       "'departementdeshautespyrenees_sites-des-maisons-departementales-de-la-solidarite' "
       "('Sites des Maisons Départementales de la Solidarité des "
@@ -52225,6 +53756,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "schule",
+    .id_keys = "schule",
     .description = "OpenDataSoft dataset "
       "'schulportrait-kategorie-c-ganztag-schulisch' ('Schulportrait - "
       "Kategorie C _ Ganztag - Schulisch') on the European open-data "
@@ -52267,6 +53799,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "field+description",
     .description = "OpenDataSoft dataset "
       "'spen_data_quality_volumes_by_market_segment' ('Volumes by "
       "Market Segment (SPEN_027) Data Quality Checks') on the European "
@@ -52288,6 +53821,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_geographique",
+    .id_keys = "code_geographique",
     .description = "OpenDataSoft dataset 'population-communale-entre-1867-et-2020' "
       "('Population communale entre 1867 et 2020') on the European "
       "open-data portal data.82amenagement.fr (portal's own dataset). "
@@ -52308,6 +53842,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "ndeg_delib",
     .description = "OpenDataSoft dataset "
       "'agglopolys-deliberations-du-conseil-communautaire-annee-2022' "
       "('Agglopolys - délibérations du conseil communautaire - année "
@@ -52330,6 +53865,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom",
+    .id_keys = "ordre_du_jour",
     .description = "OpenDataSoft dataset '214401754_deliberations_odj' ('Ordres du "
       "Jour des conseils municipaux de la commune de Saint-Lyphard') on "
       "the European open-data portal data.capatlantique.fr (portal's "
@@ -52350,6 +53886,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset 'theatres' ('Théâtres') on the European "
       "open-data portal data.montreuil.fr (portal's own dataset). "
       "Records API Explore v2.1, offset paging. ODS portal discovered "
@@ -52368,6 +53905,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nombre_naissances",
     .description = "OpenDataSoft dataset 'naissances-de-2008-a-auj' ('Naissances de "
       "2008 à 2021') on the European open-data portal data.cannes.com "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -52407,6 +53945,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "massnahme",
+    .id_keys = "massnahme",
     .description = "OpenDataSoft dataset 'smarte-stadt-st-gallen-projekte' ('Smarte "
       "Stadt St.Gallen - Projekte') on the European open-data portal "
       "daten.stadt.sg.ch (portal's own dataset). Records API Explore "
@@ -52426,6 +53965,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "lga+period",
     .description = "OpenDataSoft dataset 'alcohol-attributed-deaths' ('Alcohol "
       "Attributed Deaths') on the European open-data portal "
       "data.peclet.com.au (portal's own dataset). Records API Explore "
@@ -52446,6 +53986,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "instituicao+tempo",
     .description = "OpenDataSoft dataset 'partos-e-cesarianas' ('Partos e Cesarianas "
       "nos Cuidados de Saúde Hospitalares') on the European open-data "
       "portal transparencia.sns.gov.pt (portal's own dataset). Records "
@@ -52489,6 +54030,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annee+tonnage_maximum_de_dechets_residuels_habitant",
     .description = "OpenDataSoft dataset "
       "'tonnage-maximum-de-dechets-residuels-par-habitant' ('Tonnage "
       "maximum de déchets résiduels par habitant') on the European "
@@ -52531,6 +54073,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "property_address,feature_type,signage_category,a_signtype",
+    .id_keys = "gisfid",
     .description = "OpenDataSoft dataset 'park-reserve-signage-pt-t1eam' ('Park "
       "Reserve Signage Pt T1EAM') on the European open-data portal "
       "data.casey.vic.gov.au (portal's own dataset). Records API "
@@ -52594,6 +54137,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_nature,type_mvt",
+    .id_keys = "code_nature+exercice+type_mvt",
     .description = "OpenDataSoft dataset "
       "'224900019_budget-primitif-du-departement-de-maine-et-loire-archeologie' "
       "('Budget primitif du budget annexe du Département de "
@@ -52615,6 +54159,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_ligne,type_ligne",
+    .id_keys = "libelle_ligne",
     .description = "OpenDataSoft dataset 'lignes-de-bus' ('Lignes de bus') on the "
       "European open-data portal data.melunvaldeseine.fr (portal's own "
       "dataset). Records API Explore v2.1, offset paging. ODS portal "
@@ -52676,6 +54221,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "local_authority_name,arealabel,areaidentifier,arealonglabel",
+    .id_keys = "arealabel+periodlabel",
     .description = "OpenDataSoft dataset "
       "'percentage-main-language-is-not-english-can-speak-english-well-wmca-wards-2025' "
       "('Percentage main language is not English: Can speak English "
@@ -52698,6 +54244,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "projektnummer",
     .description = "OpenDataSoft dataset "
       "'baumassnahmen-arbeitsprogramm-des-tiefbauamtes-im-jahr-2025-veranderungsbericht-' "
       "('Baumaßnahmen - Arbeitsprogramm des Tiefbauamtes im Jahr 2025 - "
@@ -52720,6 +54267,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "main_project,credit,luogo,data",
+    .id_keys = "main_project",
     .description = "OpenDataSoft dataset 'art_city_bologna_-_main_project_2019' "
       "('ART CITY Bologna - Main Project 2019') on the European "
       "open-data portal opendata.comune.bologna.it (portal's own "
@@ -52740,6 +54288,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "titre",
     .description = "OpenDataSoft dataset 'nos-reutilisations' ('Nos réutilisations') "
       "on the European open-data portal datahub.bordeaux-metropole.fr "
       "(portal's own dataset). Records API Explore v2.1, offset paging. "
@@ -52779,6 +54328,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "n",
     .description = "OpenDataSoft dataset "
       "'06_bahraini-administrative-research-issued-from-the-master-program-2018-20220' "
       "('Bahraini Administrative Research Issued from the Master "
@@ -52801,6 +54351,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "no_muestras_realizadas+no_muestras_programadas",
     .description = "OpenDataSoft dataset "
       "'control-oficial-de-productos-alimenticios-provincias' ('Control "
       "oficial de productos alimenticios - provincias') on the European "
@@ -52823,6 +54374,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "title",
     .description = "OpenDataSoft dataset "
       "'invitation-to-tender-for-contracts-june-2026' ('Invitation to "
       "tender for contracts - June 2026') on the European open-data "
@@ -52844,6 +54396,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nbtest_vhc",
     .description = "OpenDataSoft dataset "
       "'hepatites-b-et-c-depistages-et-diagnostics-region' ('Hépatites "
       "B et C : Dépistages et Diagnostics (Région)') on the European "
@@ -52866,6 +54419,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "nr",
     .description = "OpenDataSoft dataset "
       "'dormagen-landtagswahl-2017-kommunale-ebene' ('Dormagen: "
       "Landtagswahl 2017 Kommunale Ebene') on the European open-data "
@@ -52907,6 +54461,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "tidpunkt",
     .description = "OpenDataSoft dataset "
       "'energiforbrukning-i-geografiska-omradet-133404-universitetssjukhuset' "
       "('Energiförbrukning i Geografiska området 133404 "
@@ -52950,6 +54505,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_academie,description,zone",
+    .id_keys = "date_fin",
     .description = "OpenDataSoft dataset "
       "'calendrier-scolaire-annee-2024-2025-zone-c-academie-de-toulouse' "
       "('Calendrier scolaire 2024-2025 en Zone C - Académie de "
@@ -52992,6 +54548,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "annees",
     .description = "OpenDataSoft dataset "
       "'dd_effectifs_medecins_en_activite_2012-a-2026' "
       "('DD_Effectifs_médecins_en_activité_2012 à 2026') on the "
@@ -53036,6 +54593,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "aah_age_1",
+    .id_keys = "indben_aah+aah_age_1+dtreffre",
     .description = "OpenDataSoft dataset 'aah_s_complaah_age_1_nat' ('AAH - "
       "Répartition des allocataires selon le complément d'AAH et l'âge "
       "[National]') on the European open-data portal data.caf.fr "
@@ -53056,6 +54614,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category_ar,category_en",
+    .id_keys = "year",
     .description = "OpenDataSoft dataset 'main-entrances-of-the-emirate' ('Main "
       "Entrances of The Emirate') on the European open-data portal "
       "data.ajman.ae (portal's own dataset). Records API Explore v2.1, "
@@ -53118,6 +54677,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "jahr+stadtbezirk",
     .description = "OpenDataSoft dataset 'stadtbezirke_greyingindex' ('Stadtbezirke "
       "Greying-Index') on the European open-data portal "
       "opendata.wuerzburg.de (portal's own dataset). Records API "
@@ -53138,6 +54698,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description_marche,ville,localisation,opening_hours",
+    .id_keys = "lien_modif",
     .description = "OpenDataSoft dataset "
       "'marches-de-la-communaute-urbaine-de-dunkerque' ('Marchés de la "
       "communauté urbaine de Dunkerque') on the European open-data "
@@ -53179,6 +54740,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_la_gare,intitule_gare,departement",
+    .id_keys = "code_uic",
     .description = "OpenDataSoft dataset "
       "'csv-lang-fr-and-timezone-europe-2fberlin-and-use_labels-true-and-delimiter-3b' "
       "('Fréquentation en gares') on the European open-data portal "
@@ -53223,6 +54785,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "coll_nom,delib_objet",
+    .id_keys = "delib_url",
     .description = "OpenDataSoft dataset '214402117_deliberations_liste' "
       "('Délibérations de la commune de La Turballe') on the European "
       "open-data portal data.capatlantique.fr (portal's own dataset). "
@@ -53261,6 +54824,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_danomalie",
+    .id_keys = "date+type_danomalie",
     .description = "OpenDataSoft dataset 'signalements-par-type' ('Signalements "
       "d'anomalie par type') on the European open-data portal "
       "data.cannes.com (portal's own dataset). Records API Explore "
@@ -53280,6 +54844,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description,dataset",
+    .id_keys = "count",
     .description = "OpenDataSoft dataset 'dataset_roadmap0' ('SP ENW - Dataset "
       "Roadmap') on the European open-data portal "
       "electricitynorthwest.opendatasoft.com (portal's own dataset). "
@@ -53300,6 +54865,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,denomination,intitule,label,bezeichnung,nome",
+    .id_keys = "measured_at_new+device_id",
     .description = "OpenDataSoft dataset "
       "'fuellstandsensoren-glassammelstellen-braunglas' "
       "('Füllstandsensoren Glassammelstellen (Braunglas) Stadt "
@@ -53321,6 +54887,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lga",
+    .id_keys = "lga",
     .description = "OpenDataSoft dataset 'nsw-population-projection-2031-lga-level0' "
       "('NSW Population projection 2031 LGA level') on the European "
       "open-data portal data.peclet.com.au (portal's own dataset). "
@@ -53341,6 +54908,7 @@ static const hp_source HP3B64_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "contrato_publico_de_aprovisionamento",
+    .id_keys = "referencia_do_acordo_quadro",
     .description = "OpenDataSoft dataset 'acordos-quadro-na-area-da-saude' ('Acordos "
       "Quadro e Sistemas de Aquisição Dinâmicos na área de Bens e "
       "Serviços da Saúde') on the European open-data portal "

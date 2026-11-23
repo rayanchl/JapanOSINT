@@ -1135,27 +1135,6 @@ static const hp_source HP3B68_ASIA[] = {
       "from the authoring container. tools/probe_hp_batch.py verdict "
       "2026-11-16: PASS, 25 feed items." },
 
-  { .id = "JO68_ASIA_TW_UDN_COM_32FDD", .name = "聯合新聞網：觸動未來 新識力 (udn.com)",
-    .name_ja = "聯合新聞網：觸動未來 新識力",
-    .category = "news", .portal = "https://udn.com/",
-    .record_type = "news",
-    .tags = "\"taiwan\",\"press\",\"news\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://udn.com/rssfeed/news/2/6638?ch=news",
-    .adaptive_interval = 1,
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Probe reading 2026-11-16: 20 items, RSS feed, newest item "
-      "2026-11-16. A feed the publisher itself serves, taken from its "
-      "own RSS directory or documented feed path; reachable keyless "
-      "from the authoring container. tools/probe_hp_batch.py verdict "
-      "2026-11-16: PASS, 20 feed items." },
-
   { .id = "JO68_ASIA_TW_TAIWAN_GOV_TW_DB604", .name = "News and Releases - The E-government Entry Point of Taiwan "
       "(www.taiwan.gov.tw)",
     .name_ja = "News and Releases - The E-government Entry Point of Taiwan",
@@ -5440,27 +5419,6 @@ static const hp_source HP3B68_ASIA[] = {
       "set. tools/probe_hp_batch.py verdict 2026-11-16: PASS, 29 "
       "matching anchors." },
 
-  { .id = "JO68_ASIA_TW_FIRE_E_LAND_GOV_TW_CDB0E", .name = "宜蘭縣政府-消防局 (fire.e-land.gov.tw) — homepage notices",
-    .name_ja = "宜蘭縣政府-消防局",
-    .category = "government", .portal = "https://fire.e-land.gov.tw/",
-    .record_type = "government-notice",
-    .tags = "\"taiwan\",\"government\",\"tw\",\"notice\"",
-    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://fire.e-land.gov.tw/Default.aspx",
-    .base = "https://fire.e-land.gov.tw",
-    .href_must = "News_Content.aspx",
-    .interval = 21600,
-    .timeout_ms = 30000,
-    .description = "Dated notice and news articles linked from the homepage of "
-      "fire.e-land.gov.tw, the site that titles itself '宜蘭縣政府-消防局'. "
-      "Probe reading 2026-11-16: 10 anchors (10 distinct hrefs) whose "
-      "href carries the site's own article shape 'News_Content.aspx' "
-      "and a label of 12+ bytes. Seeded from Wikidata's "
-      "official-website (P856) statement for a Taiwan body; the site "
-      "root declares no RSS feed that parsed, so the homepage's own "
-      "article links are the record set. tools/probe_hp_batch.py "
-      "verdict 2026-11-16: PASS, 12 matching anchors." },
-
   { .id = "JO68_ASIA_TW_GANGSHAN_KCG_GOV_TW_9304A", .name = "高雄市岡山區公所全球資訊服務網 (gangshan.kcg.gov.tw) — homepage notices",
     .name_ja = "高雄市岡山區公所全球資訊服務網",
     .category = "government", .portal = "https://gangshan.kcg.gov.tw/",
@@ -5736,27 +5694,6 @@ static const hp_source HP3B68_ASIA[] = {
       "root declares no RSS feed that parsed, so the homepage's own "
       "article links are the record set. tools/probe_hp_batch.py "
       "verdict 2026-11-16: PASS, 41 matching anchors." },
-
-  { .id = "JO68_ASIA_TW_JIAOSI_E_LAND_GOV_TW_C7294", .name = "宜蘭縣礁溪鄉公所 (jiaosi.e-land.gov.tw) — homepage notices",
-    .name_ja = "宜蘭縣礁溪鄉公所",
-    .category = "government", .portal = "https://jiaosi.e-land.gov.tw/",
-    .record_type = "government-notice",
-    .tags = "\"taiwan\",\"government\",\"tw\",\"notice\"",
-    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://jiaosi.e-land.gov.tw/",
-    .base = "https://jiaosi.e-land.gov.tw",
-    .href_must = "News_Content.aspx",
-    .interval = 21600,
-    .timeout_ms = 30000,
-    .description = "Dated notice and news articles linked from the homepage of "
-      "jiaosi.e-land.gov.tw, the site that titles itself '宜蘭縣礁溪鄉公所'. "
-      "Probe reading 2026-11-16: 15 anchors (15 distinct hrefs) whose "
-      "href carries the site's own article shape 'News_Content.aspx' "
-      "and a label of 12+ bytes. Seeded from Wikidata's "
-      "official-website (P856) statement for a Taiwan body; the site "
-      "root declares no RSS feed that parsed, so the homepage's own "
-      "article links are the record set. tools/probe_hp_batch.py "
-      "verdict 2026-11-16: PASS, 15 matching anchors." },
 
   { .id = "JO68_ASIA_KR_JINSIL_GO_KR_E59F3", .name = "진실·화해를위한과거사정리위원회 (jinsil.go.kr) — homepage notices",
     .name_ja = "진실·화해를위한과거사정리위원회",
@@ -6220,27 +6157,6 @@ static const hp_source HP3B68_ASIA[] = {
       "root declares no RSS feed that parsed, so the homepage's own "
       "article links are the record set. tools/probe_hp_batch.py "
       "verdict 2026-11-16: PASS, 5 matching anchors." },
-
-  { .id = "JO68_ASIA_TW_NHRC_CY_GOV_TW_E9F70", .name = "國家人權委員會 (nhrc.cy.gov.tw) — homepage notices",
-    .name_ja = "國家人權委員會",
-    .category = "government", .portal = "https://nhrc.cy.gov.tw/",
-    .record_type = "government-notice",
-    .tags = "\"taiwan\",\"government\",\"tw\",\"notice\"",
-    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nhrc.cy.gov.tw/",
-    .base = "https://nhrc.cy.gov.tw",
-    .href_must = "News_Content.aspx",
-    .interval = 21600,
-    .timeout_ms = 30000,
-    .description = "Dated notice and news articles linked from the homepage of "
-      "nhrc.cy.gov.tw, the site that titles itself '國家人權委員會'. Probe "
-      "reading 2026-11-16: 41 anchors (35 distinct hrefs) whose href "
-      "carries the site's own article shape 'News_Content.aspx' and a "
-      "label of 12+ bytes. Seeded from Wikidata's official-website "
-      "(P856) statement for a Taiwan body; the site root declares no "
-      "RSS feed that parsed, so the homepage's own article links are "
-      "the record set. tools/probe_hp_batch.py verdict 2026-11-16: "
-      "PASS, 37 matching anchors." },
 
   { .id = "JO68_ASIA_KR_NIH_GO_KR_923A7", .name = "U-CMS V2.0 (nih.go.kr) — homepage notices",
     .name_ja = "U-CMS V2.0",
@@ -7638,29 +7554,6 @@ static const hp_source HP3B68_ASIA[] = {
       "the record set. tools/probe_hp_batch.py verdict 2026-11-16: "
       "PASS, 20 matching anchors." },
 
-  { .id = "JO68_ASIA_TW_E_LAND_GOV_TW_B3649", .name = "宜蘭縣政府全球資訊網 - Yilan County Government (www.e-land.gov.tw) — "
-      "homepage notices",
-    .name_ja = "宜蘭縣政府全球資訊網 - Yilan County Government",
-    .category = "government", .portal = "https://www.e-land.gov.tw/",
-    .record_type = "government-notice",
-    .tags = "\"taiwan\",\"government\",\"tw\",\"notice\"",
-    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.e-land.gov.tw/",
-    .base = "https://www.e-land.gov.tw",
-    .href_must = "News_Content.aspx",
-    .interval = 21600,
-    .timeout_ms = 30000,
-    .description = "Dated notice and news articles linked from the homepage of "
-      "www.e-land.gov.tw, the site that titles itself '宜蘭縣政府全球資訊網 - "
-      "Yilan County Government'. Probe reading 2026-11-16: 45 anchors "
-      "(42 distinct hrefs) whose href carries the site's own article "
-      "shape 'News_Content.aspx' and a label of 12+ bytes. Seeded from "
-      "Wikidata's official-website (P856) statement for a Taiwan body; "
-      "the site root declares no RSS feed that parsed, so the "
-      "homepage's own article links are the record set. "
-      "tools/probe_hp_batch.py verdict 2026-11-16: PASS, 44 matching "
-      "anchors." },
-
   { .id = "JO68_ASIA_KR_ESLC_GO_KR_55F4B", .name = "대통령 소속 경제사회노동위원회 (www.eslc.go.kr) — homepage notices",
     .name_ja = "대통령 소속 경제사회노동위원회",
     .category = "government", .portal = "http://www.eslc.go.kr/",
@@ -8020,48 +7913,6 @@ static const hp_source HP3B68_ASIA[] = {
       "homepage's own article links are the record set. "
       "tools/probe_hp_batch.py verdict 2026-11-16: PASS, 55 matching "
       "anchors." },
-
-  { .id = "JO68_ASIA_TW_ILCCB_GOV_TW_10210", .name = "宜蘭縣政府-文化局 (www.ilccb.gov.tw) — homepage notices",
-    .name_ja = "宜蘭縣政府-文化局",
-    .category = "government", .portal = "https://www.ilccb.gov.tw/",
-    .record_type = "government-notice",
-    .tags = "\"taiwan\",\"government\",\"tw\",\"notice\"",
-    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ilccb.gov.tw/Default.aspx",
-    .base = "https://www.ilccb.gov.tw",
-    .href_must = "News_Content.aspx",
-    .interval = 21600,
-    .timeout_ms = 30000,
-    .description = "Dated notice and news articles linked from the homepage of "
-      "www.ilccb.gov.tw, the site that titles itself '宜蘭縣政府-文化局'. Probe "
-      "reading 2026-11-16: 25 anchors (25 distinct hrefs) whose href "
-      "carries the site's own article shape 'News_Content.aspx' and a "
-      "label of 12+ bytes. Seeded from Wikidata's official-website "
-      "(P856) statement for a Taiwan body; the site root declares no "
-      "RSS feed that parsed, so the homepage's own article links are "
-      "the record set. tools/probe_hp_batch.py verdict 2026-11-16: "
-      "PASS, 26 matching anchors." },
-
-  { .id = "JO68_ASIA_TW_ILCPB_GOV_TW_9A80B", .name = "警察局 (www.ilcpb.gov.tw) — homepage notices",
-    .name_ja = "警察局",
-    .category = "government", .portal = "https://www.ilcpb.gov.tw/",
-    .record_type = "government-notice",
-    .tags = "\"taiwan\",\"government\",\"tw\",\"notice\"",
-    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ilcpb.gov.tw/",
-    .base = "https://www.ilcpb.gov.tw",
-    .href_must = "News_Content.aspx",
-    .interval = 21600,
-    .timeout_ms = 30000,
-    .description = "Dated notice and news articles linked from the homepage of "
-      "www.ilcpb.gov.tw, the site that titles itself '警察局'. Probe "
-      "reading 2026-11-16: 8 anchors (8 distinct hrefs) whose href "
-      "carries the site's own article shape 'News_Content.aspx' and a "
-      "label of 12+ bytes. Seeded from Wikidata's official-website "
-      "(P856) statement for a Taiwan body; the site root declares no "
-      "RSS feed that parsed, so the homepage's own article links are "
-      "the record set. tools/probe_hp_batch.py verdict 2026-11-16: "
-      "PASS, 8 matching anchors." },
 
   { .id = "JO68_ASIA_KR_INCHEON_GO_KR_1FDBA", .name = "홈> / 인천광역시 대표 (www.incheon.go.kr) — homepage notices",
     .name_ja = "홈> / 인천광역시 대표",
@@ -8807,27 +8658,6 @@ static const hp_source HP3B68_ASIA[] = {
       "RSS feed that parsed, so the homepage's own article links are "
       "the record set. tools/probe_hp_batch.py verdict 2026-11-16: "
       "PASS, 20 matching anchors." },
-
-  { .id = "JO68_ASIA_TW_LOTONG_GOV_TW_E75AD", .name = "宜蘭縣羅東鎮公所 (www.lotong.gov.tw) — homepage notices",
-    .name_ja = "宜蘭縣羅東鎮公所",
-    .category = "government", .portal = "https://www.lotong.gov.tw/",
-    .record_type = "government-notice",
-    .tags = "\"taiwan\",\"government\",\"tw\",\"notice\"",
-    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lotong.gov.tw/",
-    .base = "https://www.lotong.gov.tw",
-    .href_must = "News_Content.aspx",
-    .interval = 21600,
-    .timeout_ms = 30000,
-    .description = "Dated notice and news articles linked from the homepage of "
-      "www.lotong.gov.tw, the site that titles itself '宜蘭縣羅東鎮公所'. Probe "
-      "reading 2026-11-16: 27 anchors (27 distinct hrefs) whose href "
-      "carries the site's own article shape 'News_Content.aspx' and a "
-      "label of 12+ bytes. Seeded from Wikidata's official-website "
-      "(P856) statement for a Taiwan body; the site root declares no "
-      "RSS feed that parsed, so the homepage's own article links are "
-      "the record set. tools/probe_hp_batch.py verdict 2026-11-16: "
-      "PASS, 26 matching anchors." },
 
   { .id = "JO68_ASIA_TW_LUZHU_TYCG_GOV_TW_7240C", .name = "桃園市蘆竹區公所 (www.luzhu.tycg.gov.tw) — homepage notices",
     .name_ja = "桃園市蘆竹區公所",
@@ -9742,27 +9572,6 @@ static const hp_source HP3B68_ASIA[] = {
       "the record set. tools/probe_hp_batch.py verdict 2026-11-16: "
       "PASS, 25 matching anchors." },
 
-  { .id = "JO68_ASIA_TW_SUAO_GOV_TW_17D48", .name = "宜蘭縣蘇澳鎮公所 (www.suao.gov.tw) — homepage notices",
-    .name_ja = "宜蘭縣蘇澳鎮公所",
-    .category = "government", .portal = "https://www.suao.gov.tw/",
-    .record_type = "government-notice",
-    .tags = "\"taiwan\",\"government\",\"tw\",\"notice\"",
-    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.suao.gov.tw/",
-    .base = "https://www.suao.gov.tw",
-    .href_must = "News_Content.aspx",
-    .interval = 21600,
-    .timeout_ms = 30000,
-    .description = "Dated notice and news articles linked from the homepage of "
-      "www.suao.gov.tw, the site that titles itself '宜蘭縣蘇澳鎮公所'. Probe "
-      "reading 2026-11-16: 12 anchors (11 distinct hrefs) whose href "
-      "carries the site's own article shape 'News_Content.aspx' and a "
-      "label of 12+ bytes. Seeded from Wikidata's official-website "
-      "(P856) statement for a Taiwan body; the site root declares no "
-      "RSS feed that parsed, so the homepage's own article links are "
-      "the record set. tools/probe_hp_batch.py verdict 2026-11-16: "
-      "PASS, 12 matching anchors." },
-
   { .id = "JO68_ASIA_TW_TAIAN_GOV_TW_556EA", .name = "泰安鄉公所 (www.taian.gov.tw) — homepage notices",
     .name_ja = "泰安鄉公所",
     .category = "government", .portal = "https://www.taian.gov.tw/",
@@ -9846,27 +9655,6 @@ static const hp_source HP3B68_ASIA[] = {
       "RSS feed that parsed, so the homepage's own article links are "
       "the record set. tools/probe_hp_batch.py verdict 2026-11-16: "
       "PASS, 23 matching anchors." },
-
-  { .id = "JO68_ASIA_TW_TFRI_GOV_TW_FF5D9", .name = "農業部林業試驗所 (www.tfri.gov.tw) — homepage notices",
-    .name_ja = "農業部林業試驗所",
-    .category = "government", .portal = "https://www.tfri.gov.tw/",
-    .record_type = "government-notice",
-    .tags = "\"taiwan\",\"government\",\"tw\",\"notice\"",
-    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tfri.gov.tw/",
-    .base = "https://www.tfri.gov.tw",
-    .href_must = "News_Content.aspx",
-    .interval = 21600,
-    .timeout_ms = 30000,
-    .description = "Dated notice and news articles linked from the homepage of "
-      "www.tfri.gov.tw, the site that titles itself '農業部林業試驗所'. Probe "
-      "reading 2026-11-16: 35 anchors (35 distinct hrefs) whose href "
-      "carries the site's own article shape 'News_Content.aspx' and a "
-      "label of 12+ bytes. Seeded from Wikidata's official-website "
-      "(P856) statement for a Taiwan body; the site root declares no "
-      "RSS feed that parsed, so the homepage's own article links are "
-      "the record set. tools/probe_hp_batch.py verdict 2026-11-16: "
-      "PASS, 35 matching anchors." },
 
   { .id = "JO68_ASIA_TW_TNCSEC_GOV_TW_772B3", .name = "國立臺南生活美學館 (www.tncsec.gov.tw) — homepage notices",
     .name_ja = "國立臺南生活美學館",
@@ -10330,27 +10118,6 @@ static const hp_source HP3B68_ASIA[] = {
       "RSS feed that parsed, so the homepage's own article links are "
       "the record set. tools/probe_hp_batch.py verdict 2026-11-16: "
       "PASS, 21 matching anchors." },
-
-  { .id = "JO68_ASIA_TW_YUANSHAN_GOV_TW_1BA37", .name = "宜蘭縣員山鄉公所 (www.yuanshan.gov.tw) — homepage notices",
-    .name_ja = "宜蘭縣員山鄉公所",
-    .category = "government", .portal = "https://www.yuanshan.gov.tw/",
-    .record_type = "government-notice",
-    .tags = "\"taiwan\",\"government\",\"tw\",\"notice\"",
-    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.yuanshan.gov.tw/",
-    .base = "https://www.yuanshan.gov.tw",
-    .href_must = "News_Content.aspx",
-    .interval = 21600,
-    .timeout_ms = 30000,
-    .description = "Dated notice and news articles linked from the homepage of "
-      "www.yuanshan.gov.tw, the site that titles itself '宜蘭縣員山鄉公所'. "
-      "Probe reading 2026-11-16: 24 anchors (24 distinct hrefs) whose "
-      "href carries the site's own article shape 'News_Content.aspx' "
-      "and a label of 12+ bytes. Seeded from Wikidata's "
-      "official-website (P856) statement for a Taiwan body; the site "
-      "root declares no RSS feed that parsed, so the homepage's own "
-      "article links are the record set. tools/probe_hp_batch.py "
-      "verdict 2026-11-16: PASS, 24 matching anchors." },
 
   { .id = "JO68_ASIA_TW_ZHONGHE_NTPC_GOV_TW_C1F0C", .name = "新北市中和區公所 (www.zhonghe.ntpc.gov.tw) — homepage notices",
     .name_ja = "新北市中和區公所",
@@ -12385,30 +12152,6 @@ static const hp_source HP3B68_ASIA[] = {
       "tools/probe_hp_batch.py verdict 2026-11-16: PASS, 1 records on "
       "the first page." },
 
-  { .id = "JO68_ASIA_TW_TPEX_BOND_ISSBD10_DATA", .name = "Taipei Exchange OpenAPI — "
-      "國際債券(寶島債券)-本國發行人及第一、二上市(櫃)公司之外國發行人發行資料下載",
-    .name_ja = "國際債券(寶島債券)-本國發行人及第一、二上市(櫃)公司之外國發行人發行資料下載",
-    .category = "corporate", .portal = "https://www.tpex.org.tw/openapi/",
-    .record_type = "bond-record",
-    .tags = "\"taiwan\",\"securities\",\"tpex\",\"exchange\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tpex.org.tw/openapi/v1/bond_ISSBD10_data",
-    .array_path = ".",
-    .id_keys = "IssuerCode+BondCode+Date+IssueDate+MaturityDate+ListingDate+TenorYear+TenorMonth+PutOptionDate+OutstandingChangeDate+Conversion/ExchangePeriodStartDate+Conversion/ExchangePeriodEndDate",
-    .interval = 86400,
-    .timeout_ms = 60000,
-    .title_keys = "IssuerName",
-    .description = "Taipei Exchange open-data endpoint /bond_ISSBD10_data "
-      "('國際債券(寶島債券)-本國發行人及第一、二上市(櫃)公司之外國發行人發行資料下載', swagger tag '債券'). "
-      "Probe reading 2026-11-16: 221 records in one keyless request "
-      "(234239 bytes), 129 distinct whole records; the key "
-      "IssuerCode+BondCode+Date+IssueDate+MaturityDate+ListingDate+TenorYear+TenorMonth+PutOptionDate+OutstandingChangeDate+Conversion/ExchangePeriodStartDate+Conversion/ExchangePeriodEndDate "
-      "is distinct on 129 of them. Fields: Date, IssuerCode, "
-      "IssuerName, BondCode, BondType, SeriesNumber, TrancheNumber, "
-      "IssueDate…. Listed in the publisher's own swagger; no row in the "
-      "tree reads it. tools/probe_hp_batch.py verdict 2026-11-16: PASS, "
-      "221 records on the first page." },
-
   { .id = "JO68_ASIA_TW_TWSE_OPENDATA_T187AP06_L_BASI", .name = "Taiwan Stock Exchange OpenAPI — 上市公司綜合損益表(金融業)",
     .name_ja = "上市公司綜合損益表(金融業)",
     .category = "corporate", .portal = "https://openapi.twse.com.tw/",
@@ -12829,30 +12572,6 @@ static const hp_source HP3B68_ASIA[] = {
       "CurrentMonthRanking…. Listed in the publisher's own swagger; no "
       "row in the tree reads it. tools/probe_hp_batch.py verdict "
       "2026-11-16: PASS, 854 records on the first page." },
-
-  { .id = "JO68_ASIA_TW_TPEX_MOPSFIN_T187AP30_O", .name = "Taipei Exchange OpenAPI — 上櫃公司獨立董監事兼任情形彙總表",
-    .name_ja = "上櫃公司獨立董監事兼任情形彙總表",
-    .category = "corporate", .portal = "https://www.tpex.org.tw/openapi/",
-    .record_type = "corporate-disclosure",
-    .tags = "\"taiwan\",\"securities\",\"tpex\",\"exchange\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap30_O",
-    .array_path = ".",
-    .id_keys = "SecuritiesCompanyCode+Date+就任日期+職稱+Name+目前兼任其他公司名稱+其他公司職稱",
-    .interval = 86400,
-    .timeout_ms = 120000,
-    .title_keys = "CompanyName",
-    .description = "Taipei Exchange open-data endpoint /mopsfin_t187ap30_O "
-      "('上櫃公司獨立董監事兼任情形彙總表', swagger tag '公司治理'). Probe reading "
-      "2026-11-16: 10609 records in one keyless request (4376194 "
-      "bytes), 9424 distinct whole records; the key "
-      "SecuritiesCompanyCode+Date+就任日期+職稱+Name+目前兼任其他公司名稱+其他公司職稱 is "
-      "distinct on 9418 of them (the remainder share every identifier "
-      "and date column; the engine's in-page guard separates them by "
-      "content). Fields: Date, 序號, SecuritiesCompanyCode, CompanyName, "
-      "職稱, Name, 就任日期, 主要現職…. Listed in the publisher's own swagger; no "
-      "row in the tree reads it. tools/probe_hp_batch.py verdict "
-      "2026-11-16: PASS, 10609 records on the first page." },
 
   { .id = "JO68_ASIA_TW_TPEX_TPEX_INDEX_CONSTI", .name = "Taipei Exchange OpenAPI — 櫃買指數成分股",
     .name_ja = "櫃買指數成分股",
@@ -14381,30 +14100,6 @@ static const hp_source HP3B68_ASIA[] = {
       "reads it. tools/probe_hp_batch.py verdict 2026-11-16: PASS, 3 "
       "records on the first page." },
 
-  { .id = "JO68_ASIA_TW_TWSE_OPENDATA_T187AP30_L", .name = "Taiwan Stock Exchange OpenAPI — 上市公司獨立董監事兼任情形彙總表",
-    .name_ja = "上市公司獨立董監事兼任情形彙總表",
-    .category = "corporate", .portal = "https://openapi.twse.com.tw/",
-    .record_type = "corporate-disclosure",
-    .tags = "\"taiwan\",\"securities\",\"twse\",\"exchange\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://openapi.twse.com.tw/v1/opendata/t187ap30_L",
-    .array_path = ".",
-    .id_keys = "公司代號+就任日期+職稱+姓名+目前兼任其他公司名稱+其他公司職稱",
-    .interval = 86400,
-    .timeout_ms = 120000,
-    .title_keys = "公司名稱",
-    .description = "Taiwan Stock Exchange open-data endpoint /opendata/t187ap30_L "
-      "('上市公司獨立董監事兼任情形彙總表', swagger tag '公司治理'). Probe reading "
-      "2026-11-16: 14217 records in one keyless request (6239801 "
-      "bytes), 12049 distinct whole records; the key "
-      "公司代號+就任日期+職稱+姓名+目前兼任其他公司名稱+其他公司職稱 is distinct on 12044 of them "
-      "(the remainder share every identifier and date column; the "
-      "engine's in-page guard separates them by content). Fields: 出表日期, "
-      "序號, 公司代號, 公司名稱, 職稱, 姓名, 就任日期, 主要現職…. Listed in the publisher's "
-      "own swagger; no row in the tree reads it. "
-      "tools/probe_hp_batch.py verdict 2026-11-16: PASS, 14217 records "
-      "on the first page." },
-
   { .id = "JO68_ASIA_TW_TPEX_BDDOS216UTF", .name = "Taipei Exchange OpenAPI — 美元固定利率不可贖回國際債券理論價格",
     .name_ja = "美元固定利率不可贖回國際債券理論價格",
     .category = "corporate", .portal = "https://www.tpex.org.tw/openapi/",
@@ -15265,28 +14960,6 @@ static const hp_source HP3B68_ASIA[] = {
       "publisher's own swagger; no row in the tree reads it. "
       "tools/probe_hp_batch.py verdict 2026-11-16: PASS, 1 records on "
       "the first page." },
-
-  { .id = "JO68_ASIA_TW_TWSE_OPENDATA_T187AP46_L_11", .name = "Taiwan Stock Exchange OpenAPI — 上市公司企業ESG資訊揭露彙總資料-產品生命週期",
-    .name_ja = "上市公司企業ESG資訊揭露彙總資料-產品生命週期",
-    .category = "corporate", .portal = "https://openapi.twse.com.tw/",
-    .record_type = "corporate-disclosure",
-    .tags = "\"taiwan\",\"securities\",\"twse\",\"exchange\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://openapi.twse.com.tw/v1/opendata/t187ap46_L_11",
-    .array_path = ".",
-    .id_keys = "公司代號+報告年度",
-    .interval = 86400,
-    .timeout_ms = 60000,
-    .title_keys = "公司名稱",
-    .description = "Taiwan Stock Exchange open-data endpoint /opendata/t187ap46_L_11 "
-      "('上市公司企業ESG資訊揭露彙總資料-產品生命週期', swagger tag '公司治理'). Probe reading "
-      "2026-11-16: 790 records in one keyless request (233360 bytes), "
-      "790 distinct whole records; the key 公司代號+報告年度 is distinct on 790 "
-      "of them. Fields: 出表日期, 報告年度, 公司代號, 公司名稱, "
-      "產品生命週期管理之揭露：報廢產品及電子廢棄物之重量(公噸(t)), "
-      "產品生命週期管理之揭露：含報廢產品及電子廢棄物之再循環之百分比. Listed in the publisher's own "
-      "swagger; no row in the tree reads it. tools/probe_hp_batch.py "
-      "verdict 2026-11-16: PASS, 790 records on the first page." },
 
   { .id = "JO68_ASIA_TW_TPEX_MOPSFIN_T187AP06_O_CI", .name = "Taipei Exchange OpenAPI — 上櫃公司綜合損益表(一般業)",
     .name_ja = "上櫃公司綜合損益表(一般業)",
@@ -16367,27 +16040,6 @@ static const hp_source HP3B68_ASIA[] = {
       "tree reads it. tools/probe_hp_batch.py verdict 2026-11-16: PASS, "
       "15 records on the first page." },
 
-  { .id = "JO68_ASIA_TW_TWSE_OPENDATA_T187AP46_L_21", .name = "Taiwan Stock Exchange OpenAPI — 上市公司企業ESG資訊揭露彙總資料-職業安全衛生",
-    .name_ja = "上市公司企業ESG資訊揭露彙總資料-職業安全衛生",
-    .category = "corporate", .portal = "https://openapi.twse.com.tw/",
-    .record_type = "corporate-disclosure",
-    .tags = "\"taiwan\",\"securities\",\"twse\",\"exchange\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://openapi.twse.com.tw/v1/opendata/t187ap46_L_21",
-    .array_path = ".",
-    .id_keys = "公司代號+報告年度",
-    .interval = 86400,
-    .timeout_ms = 60000,
-    .title_keys = "公司名稱",
-    .description = "Taiwan Stock Exchange open-data endpoint /opendata/t187ap46_L_21 "
-      "('上市公司企業ESG資訊揭露彙總資料-職業安全衛生', swagger tag '公司治理'). Probe reading "
-      "2026-11-16: 1078 records in one keyless request (308238 bytes), "
-      "1078 distinct whole records; the key 公司代號+報告年度 is distinct on "
-      "1078 of them. Fields: 出表日期, 報告年度, 公司代號, 公司名稱, 職業災害人數及比率-人數, "
-      "職業災害人數及比率-比率, 火災件數(件), 火災死傷人數(人)…. Listed in the publisher's own "
-      "swagger; no row in the tree reads it. tools/probe_hp_batch.py "
-      "verdict 2026-11-16: PASS, 1078 records on the first page." },
-
   { .id = "JO68_ASIA_TW_TPEX_TPEX_WARRANT_GOLD_QUTS", .name = "Taipei Exchange OpenAPI — 黃金現貨權證收盤行情",
     .name_ja = "黃金現貨權證收盤行情",
     .category = "corporate", .portal = "https://www.tpex.org.tw/openapi/",
@@ -16581,30 +16233,6 @@ static const hp_source HP3B68_ASIA[] = {
       "AskVolume, Close…. Listed in the publisher's own swagger; no row "
       "in the tree reads it. tools/probe_hp_batch.py verdict "
       "2026-11-16: PASS, 13843 records on the first page." },
-
-  { .id = "JO68_ASIA_TW_TPEX_MOPSFIN_T187AP11_R", .name = "Taipei Exchange OpenAPI — 興櫃公司董監事持股餘額明細資料",
-    .name_ja = "興櫃公司董監事持股餘額明細資料",
-    .category = "corporate", .portal = "https://www.tpex.org.tw/openapi/",
-    .record_type = "corporate-disclosure",
-    .tags = "\"taiwan\",\"securities\",\"tpex\",\"exchange\",\"open-data\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap11_R",
-    .array_path = ".",
-    .id_keys = "SecuritiesCompanyCode+Date+資料年月+職稱+姓名",
-    .interval = 86400,
-    .timeout_ms = 60000,
-    .title_keys = "CompanyName",
-    .description = "Taipei Exchange open-data endpoint /mopsfin_t187ap11_R "
-      "('興櫃公司董監事持股餘額明細資料', swagger tag '公司治理'). Probe reading "
-      "2026-11-16: 6947 records in one keyless request (2631365 bytes), "
-      "6799 distinct whole records; the key "
-      "SecuritiesCompanyCode+Date+資料年月+職稱+姓名 is distinct on 6790 of "
-      "them (the remainder share every identifier and date column; the "
-      "engine's in-page guard separates them by content). Fields: Date, "
-      "資料年月, SecuritiesCompanyCode, CompanyName, 職稱, 姓名, 選任時持股, 目前持股…. "
-      "Listed in the publisher's own swagger; no row in the tree reads "
-      "it. tools/probe_hp_batch.py verdict 2026-11-16: PASS, 6947 "
-      "records on the first page." },
 
   { .id = "JO68_ASIA_IN_AGS_LA_UPADTED_25062025_WFL1_0_00383", .name = "Andhra Pradesh Capital Region Development Authority (APCRDA) — "
       "LA_Updated_26052025 (ArcGIS layer 0)",

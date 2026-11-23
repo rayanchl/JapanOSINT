@@ -1445,22 +1445,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=1000: page 0 100 members / 0.2 MB / 2 s, ms:SYS_UUID+ms:SYS_VERSIO distinct on all of them; the layer's numberMatched is 100, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_343FA08C37", .name = "mapy.geoportal.gov.pl — W12_Przystan_morska "
       "[ms:W12_Przystan_morska]",
     .name_ja = "mapy.geoportal.gov.pl — W12_Przystan_morska [ms:W12_Przystan_morska]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW12_Przystan_morska&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW12_Przystan_morska&count=1000&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:SYS_UUID+ms:SYS_VERSIO",
+    .title_keys = "ms:FULL_NAME,ms:SHORT_NAME,ms:SYS_UUID",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 1000,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:W12_Przystan_morska' "
       "('W12_Przystan_morska') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 100 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -1538,21 +1543,26 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=1000: page 0 40 members / 0.3 MB / 3 s, ms:PORT_ID distinct on all of them; the layer's numberMatched is 40, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_698D772761", .name = "mapy.geoportal.gov.pl — W11_Port_morski [ms:W11_Port_morski]",
     .name_ja = "mapy.geoportal.gov.pl — W11_Port_morski [ms:W11_Port_morski]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW11_Port_morski&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW11_Port_morski&count=1000&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:PORT_ID",
+    .title_keys = "ms:FULL_NAME,ms:SHORT_NAME,ms:PORT_ID",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 1000,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:W11_Port_morski' ('W11_Port_morski') "
       "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GeoJSON, the layer's "
+      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
       "numberMatched was 40 on 2026-11-14. Enumerated from the server's "
       "own GetCapabilities. Each feature carries its geometry and "
       "attributes. NOTE: GeoServer refuses startIndex without a primary "
@@ -1677,21 +1687,26 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=1000: page 0 10 members / 0.1 MB / 2 s, ms:SYS_UUID+ms:SYS_VERSIO distinct on all of them; the layer's numberMatched is 10, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_1F93962241", .name = "mapy.geoportal.gov.pl — W10_Reda [ms:W10_Reda]",
     .name_ja = "mapy.geoportal.gov.pl — W10_Reda [ms:W10_Reda]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW10_Reda&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW10_Reda&count=1000&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:SYS_UUID+ms:SYS_VERSIO",
+    .title_keys = "ms:FULL_NAME,ms:SHORT_NAME,ms:SYS_UUID",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 1000,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:W10_Reda' ('W10_Reda') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 10 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 10 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -1843,22 +1858,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "GetCapabilities. Each feature carries its geometry and "
       "attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=1000: page 0 151 members / 0.7 MB / 4 s, ms:SYS_UUID distinct on all of them; the layer's numberMatched is 151, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_5C2B40858A", .name = "mapy.geoportal.gov.pl — W09_Pas_techniczny "
       "[ms:W09_Pas_techniczny]",
     .name_ja = "mapy.geoportal.gov.pl — W09_Pas_techniczny [ms:W09_Pas_techniczny]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW09_Pas_techniczny&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW09_Pas_techniczny&count=1000&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:SYS_UUID",
+    .title_keys = "ms:FULL_NAME,ms:SHORT_NAME,ms:SYS_UUID",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 1000,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:W09_Pas_techniczny' "
       "('W09_Pas_techniczny') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 151 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -1983,21 +2003,26 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=1000: page 0 65 members / 0.5 MB / 4 s, ms:SYS_UUID distinct on all of them; the layer's numberMatched is 65, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_CF56D32F41", .name = "mapy.geoportal.gov.pl — W08_Pas_ochronny [ms:W08_Pas_ochronny]",
     .name_ja = "mapy.geoportal.gov.pl — W08_Pas_ochronny [ms:W08_Pas_ochronny]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW08_Pas_ochronny&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW08_Pas_ochronny&count=1000&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:SYS_UUID",
+    .title_keys = "ms:FULL_NAME,ms:SHORT_NAME,ms:SYS_UUID",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 1000,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:W08_Pas_ochronny' ('W08_Pas_ochronny') "
       "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GeoJSON, the layer's "
+      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
       "numberMatched was 65 on 2026-11-14. Enumerated from the server's "
       "own GetCapabilities. Each feature carries its geometry and "
       "attributes. NOTE: GeoServer refuses startIndex without a primary "
@@ -2153,22 +2178,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=1000: page 0 456 members / 2.5 MB / 5 s, ms:FID distinct on all of them; the layer's numberMatched is 456, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_62EE37558C", .name = "mapy.geoportal.gov.pl — W07_Pas_nadbrzezny "
       "[ms:W07_Pas_nadbrzezny]",
     .name_ja = "mapy.geoportal.gov.pl — W07_Pas_nadbrzezny [ms:W07_Pas_nadbrzezny]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW07_Pas_nadbrzezny&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW07_Pas_nadbrzezny&count=1000&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:FID",
+    .title_keys = "ms:FULL_NAME,ms:SHORT_NAME,ms:FID",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 1000,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:W07_Pas_nadbrzezny' "
       "('W07_Pas_nadbrzezny') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 456 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -2295,22 +2325,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=1000: page 0 649 members / 2.1 MB / 5 s, ms:SYS_UUID distinct on all of them; the layer's numberMatched is 649, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_70EB33A814", .name = "mapy.geoportal.gov.pl — W06_Morskie_linie_brzegowe "
       "[ms:W06_Morskie_linie_brzegowe]",
     .name_ja = "mapy.geoportal.gov.pl — W06_Morskie_linie_brzegowe [ms:W06_Morskie_linie_brzegowe]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW06_Morskie_linie_brzegowe&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW06_Morskie_linie_brzegowe&count=1000&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:SYS_UUID",
+    .title_keys = "ms:FULL_NAME,ms:SHORT_NAME,ms:SYS_UUID",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 1000,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:W06_Morskie_linie_brzegowe' "
       "('W06_Morskie_linie_brzegowe') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 649 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -2412,22 +2447,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=100: page 0 1 members / 0.1 MB / 3 s, ms:SYS_UUID distinct on all of them; the layer's numberMatched is 1, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_B1A014A31E", .name = "mapy.geoportal.gov.pl — W05_Strefa_przylegla "
       "[ms:W05_Strefa_przylegla]",
     .name_ja = "mapy.geoportal.gov.pl — W05_Strefa_przylegla [ms:W05_Strefa_przylegla]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW05_Strefa_przylegla&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW05_Strefa_przylegla&count=100&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:SYS_UUID",
+    .title_keys = "ms:FULL_NAME,ms:SHORT_NAME,ms:SYS_UUID",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 100,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:W05_Strefa_przylegla' "
       "('W05_Strefa_przylegla') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 1 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -2552,23 +2592,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "key, so this row reads one page (count=1000) and discloses the "
       "remainder rather than paging." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=250: page 0 1 members / 0.0 MB / 2 s, ms:IIP_IDENTY distinct on all of them; the layer's numberMatched is 1, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_250C9A5151", .name = "mapy.geoportal.gov.pl — W04_Wylaczna_strefa_ekonomiczna "
       "[ms:W04_Wylaczna_strefa_ekonomiczna]",
     .name_ja = "mapy.geoportal.gov.pl — W04_Wylaczna_strefa_ekonomiczna [ms:W04_Wylaczna_strefa_ekonomiczna]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW04_Wylaczna_strefa_ekonomiczna&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW04_Wylaczna_strefa_ekonomiczna&count=250&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 250,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:W04_Wylaczna_strefa_ekonomiczna' "
       "('W04_Wylaczna_strefa_ekonomiczna') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 1 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 1 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -2693,23 +2738,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "own GetCapabilities. Each feature carries its geometry and "
       "attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 1 members / 1.2 MB / 5 s, ms:FID distinct on all of them; the layer's numberMatched is 1, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_790F2F46AD", .name = "mapy.geoportal.gov.pl — W03_Morskie_wody_wewnetrzne "
       "[ms:W03_Morskie_wody_wewnetrzne]",
     .name_ja = "mapy.geoportal.gov.pl — W03_Morskie_wody_wewnetrzne [ms:W03_Morskie_wody_wewnetrzne]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW03_Morskie_wody_wewnetrzne&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW03_Morskie_wody_wewnetrzne&count=10&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:FID",
+    .title_keys = "ms:SHORT_NAME,ms:FID",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 10,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:W03_Morskie_wody_wewnetrzne' "
       "('W03_Morskie_wody_wewnetrzne') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 1 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 1 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -2882,22 +2932,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=250: page 0 1 members / 0.0 MB / 4 s, ms:IIP_IDENTY distinct on all of them; the layer's numberMatched is 1, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_9B96A10A99", .name = "mapy.geoportal.gov.pl — W02_Morze_terytorialne_RP "
       "[ms:W02_Morze_terytorialne_RP]",
     .name_ja = "mapy.geoportal.gov.pl — W02_Morze_terytorialne_RP [ms:W02_Morze_terytorialne_RP]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW02_Morze_terytorialne_RP&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW02_Morze_terytorialne_RP&count=250&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 250,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:W02_Morze_terytorialne_RP' "
       "('W02_Morze_terytorialne_RP') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 1 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -2999,6 +3054,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "2026-11-14. Enumerated from the server's own GetCapabilities. "
       "Each feature carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=1000: page 0 1 members / 0.0 MB / 2 s, ms:IIP_IDENTY distinct on all of them; the layer's numberMatched is 1, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_D667609820", .name = "mapy.geoportal.gov.pl — "
       "W01_Linia_podstawowa_morza_terytorialnego "
       "[ms:W01_Linia_podstawowa_morza_terytorialnego]",
@@ -3006,18 +3062,22 @@ static const hp_source HP3B63_EUWFS[] = {
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW01_Linia_podstawowa_morza_terytorialnego&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AW01_Linia_podstawowa_morza_terytorialnego&count=1000&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 1000,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type "
       "'ms:W01_Linia_podstawowa_morza_terytorialnego' "
       "('W01_Linia_podstawowa_morza_terytorialnego') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 1 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 1 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -3172,23 +3232,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=5: page 0 5 members / 7.2 MB / 14 s, ms:MIASTO distinct on all of them; startIndex=5 answers 3 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_CA68BDAE64", .name = "mapy.geoportal.gov.pl — U11_Urzad_zeglugi_srodladowej "
       "[ms:U11_Urzad_zeglugi_srodladowej]",
     .name_ja = "mapy.geoportal.gov.pl — U11_Urzad_zeglugi_srodladowej [ms:U11_Urzad_zeglugi_srodladowej]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU11_Urzad_zeglugi_srodladowej&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU11_Urzad_zeglugi_srodladowej&count=5&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:MIASTO",
+    .title_keys = "ms:MIASTO",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 5,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:U11_Urzad_zeglugi_srodladowej' "
       "('U11_Urzad_zeglugi_srodladowej') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 8 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 8 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -3290,21 +3355,26 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=25: page 0 4 members / 1.2 MB / 5 s, ms:SYS_UUID+ms:SYS_VERSIO distinct on all of them; the layer's numberMatched is 4, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_C7DE9F843D", .name = "mapy.geoportal.gov.pl — U10_Urzad_morski [ms:U10_Urzad_morski]",
     .name_ja = "mapy.geoportal.gov.pl — U10_Urzad_morski [ms:U10_Urzad_morski]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU10_Urzad_morski&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU10_Urzad_morski&count=25&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:SYS_UUID+ms:SYS_VERSIO",
+    .title_keys = "ms:FULL_NAME,ms:SHORT_NAME,ms:SYS_UUID",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 25,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:U10_Urzad_morski' ('U10_Urzad_morski') "
       "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GeoJSON, the layer's "
+      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
       "numberMatched was 4 on 2026-11-14. Enumerated from the server's "
       "own GetCapabilities. Each feature carries its geometry and "
       "attributes. NOTE: GeoServer refuses startIndex without a primary "
@@ -3507,6 +3577,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=5: page 0 5 members / 8.2 MB / 13 s, ms:RZGW_KOD distinct on all of them; startIndex=5 answers 5 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_FF07360A2F", .name = "mapy.geoportal.gov.pl — "
       "U09_Regionalny_zarzad_gospodarki_wodnej_PGWWP "
       "[ms:U09_Regionalny_zarzad_gospodarki_wodnej_PGWWP]",
@@ -3514,18 +3585,22 @@ static const hp_source HP3B63_EUWFS[] = {
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU09_Regionalny_zarzad_gospodarki_wodnej_PGWWP&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU09_Regionalny_zarzad_gospodarki_wodnej_PGWWP&count=5&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:RZGW_KOD",
+    .title_keys = "ms:RZGW,ms:RZGW_KOD",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 5,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type "
       "'ms:U09_Regionalny_zarzad_gospodarki_wodnej_PGWWP' "
       "('U09_Regionalny_zarzad_gospodarki_wodnej_PGWWP') from the "
       "Poland national/regional geoportal mapy.geoportal.gov.pl. "
-      "GetFeature as GeoJSON, the layer's numberMatched was 11 on "
+      "GetFeature as GML 3.2, the layer's numberMatched was 11 on "
       "2026-11-14. Enumerated from the server's own GetCapabilities. "
       "Each feature carries its geometry and attributes. NOTE: "
       "GeoServer refuses startIndex without a primary key, so this row "
@@ -3843,22 +3918,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=25: page 0 25 members / 11.1 MB / 16 s, ms:ZZ_MIASTO distinct on all of them; startIndex=25 answers 25 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_C0FD068714", .name = "mapy.geoportal.gov.pl — U08_Zarzad_zlewni_PGWWP "
       "[ms:U08_Zarzad_zlewni_PGWWP]",
     .name_ja = "mapy.geoportal.gov.pl — U08_Zarzad_zlewni_PGWWP [ms:U08_Zarzad_zlewni_PGWWP]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU08_Zarzad_zlewni_PGWWP&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU08_Zarzad_zlewni_PGWWP&count=25&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:ZZ_MIASTO",
+    .title_keys = "ms:RZGW,ms:ZZ_MIASTO",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 25,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:U08_Zarzad_zlewni_PGWWP' "
       "('U08_Zarzad_zlewni_PGWWP') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 50 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -4126,6 +4206,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 10 members / 7.4 MB / 11 s, ms:IIP_IDENTY distinct on all of them; startIndex=10 answers 7 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_5546525826", .name = "mapy.geoportal.gov.pl — "
       "U07_Regionalna_dyrekcja_lasow_panstwowych "
       "[ms:U07_Regionalna_dyrekcja_lasow_panstwowych]",
@@ -4133,18 +4214,22 @@ static const hp_source HP3B63_EUWFS[] = {
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU07_Regionalna_dyrekcja_lasow_panstwowych&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU07_Regionalna_dyrekcja_lasow_panstwowych&count=10&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 10,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type "
       "'ms:U07_Regionalna_dyrekcja_lasow_panstwowych' "
       "('U07_Regionalna_dyrekcja_lasow_panstwowych') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 17 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 17 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -4655,21 +4740,26 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=100: page 0 100 members / 11.9 MB / 16 s, ms:IIP_IDENTY distinct on all of them; startIndex=100 answers 100 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_22502A329D", .name = "mapy.geoportal.gov.pl — U06_Nadlesnictwo [ms:U06_Nadlesnictwo]",
     .name_ja = "mapy.geoportal.gov.pl — U06_Nadlesnictwo [ms:U06_Nadlesnictwo]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU06_Nadlesnictwo&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU06_Nadlesnictwo&count=100&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 100,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:U06_Nadlesnictwo' ('U06_Nadlesnictwo') "
       "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GeoJSON, the layer's "
+      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
       "numberMatched was 429 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -4866,23 +4956,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 10 members / 7.4 MB / 15 s, ms:IIP_IDENTY distinct on all of them; startIndex=10 answers 6 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_22DA9A8B16", .name = "mapy.geoportal.gov.pl — U05_Izba_administracji_skarbowej "
       "[ms:U05_Izba_administracji_skarbowej]",
     .name_ja = "mapy.geoportal.gov.pl — U05_Izba_administracji_skarbowej [ms:U05_Izba_administracji_skarbowej]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU05_Izba_administracji_skarbowej&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU05_Izba_administracji_skarbowej&count=10&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 10,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:U05_Izba_administracji_skarbowej' "
       "('U05_Izba_administracji_skarbowej') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 16 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 16 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -5151,22 +5246,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "without a primary key, so this row reads one page (count=1000) "
       "and discloses the remainder rather than paging." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 10 members / 7.3 MB / 15 s, ms:REGON distinct on all of them; startIndex=10 answers 6 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_4566704F06", .name = "mapy.geoportal.gov.pl — U04_Urzad_celno-skarbowy "
       "[ms:U04_Urzad_celno-skarbowy]",
     .name_ja = "mapy.geoportal.gov.pl — U04_Urzad_celno-skarbowy [ms:U04_Urzad_celno-skarbowy]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU04_Urzad_celno-skarbowy&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU04_Urzad_celno-skarbowy&count=10&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:REGON",
+    .title_keys = "ms:NAZWA,ms:REGON",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 10,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:U04_Urzad_celno-skarbowy' "
       "('U04_Urzad_celno-skarbowy') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 16 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -5366,23 +5466,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 10 members / 6.4 MB / 13 s, ms:IIP_IDENTY distinct on all of them; startIndex=10 answers 10 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_6540AD6963", .name = "mapy.geoportal.gov.pl — U03_Wyspecjalizowany_urzad_skarbowy "
       "[ms:U03_Wyspecjalizowany_urzad_skarbowy]",
     .name_ja = "mapy.geoportal.gov.pl — U03_Wyspecjalizowany_urzad_skarbowy [ms:U03_Wyspecjalizowany_urzad_skarbowy]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU03_Wyspecjalizowany_urzad_skarbowy&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU03_Wyspecjalizowany_urzad_skarbowy&count=10&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 10,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:U03_Wyspecjalizowany_urzad_skarbowy' "
       "('U03_Wyspecjalizowany_urzad_skarbowy') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 20 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 20 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -5805,22 +5910,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=25: page 0 25 members / 6.0 MB / 12 s, ms:IIP_IDENTY distinct on all of them; startIndex=25 answers 25 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_1216ED6E1F", .name = "mapy.geoportal.gov.pl — U02_Urzad_skarbowy "
       "[ms:U02_Urzad_skarbowy]",
     .name_ja = "mapy.geoportal.gov.pl — U02_Urzad_skarbowy [ms:U02_Urzad_skarbowy]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU02_Urzad_skarbowy&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU02_Urzad_skarbowy&count=25&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 25,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:U02_Urzad_skarbowy' "
       "('U02_Urzad_skarbowy') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 379 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -6043,22 +6153,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=25: page 0 25 members / 14.7 MB / 26 s, ms:IIP_IDENTY distinct on all of them; startIndex=25 answers 4 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_EFBFE0377D", .name = "mapy.geoportal.gov.pl — U01_Archiwum_panstwowe "
       "[ms:U01_Archiwum_panstwowe]",
     .name_ja = "mapy.geoportal.gov.pl — U01_Archiwum_panstwowe [ms:U01_Archiwum_panstwowe]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU01_Archiwum_panstwowe&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AU01_Archiwum_panstwowe&count=25&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 25,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:U01_Archiwum_panstwowe' "
       "('U01_Archiwum_panstwowe') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 29 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -6875,6 +6990,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=100: page 0 100 members / 7.3 MB / 14 s, ms:IIP_IDENTY distinct on all of them; startIndex=100 answers 100 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_F913E365C7", .name = "mapy.geoportal.gov.pl — "
       "K13_Obszar_dzialania_szefa_obrony_cywilnej_gminy "
       "[ms:K13_Obszar_dzialania_szefa_obrony_cywilnej_gminy]",
@@ -6882,18 +6998,22 @@ static const hp_source HP3B63_EUWFS[] = {
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK13_Obszar_dzialania_szefa_obrony_cywilnej_gminy&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK13_Obszar_dzialania_szefa_obrony_cywilnej_gminy&count=100&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 100,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type "
       "'ms:K13_Obszar_dzialania_szefa_obrony_cywilnej_gminy' "
       "('K13_Obszar_dzialania_szefa_obrony_cywilnej_gminy') from the "
       "Poland national/regional geoportal mapy.geoportal.gov.pl. "
-      "GetFeature as GeoJSON, the layer's numberMatched was 2477 on "
+      "GetFeature as GML 3.2, the layer's numberMatched was 2477 on "
       "2026-11-14. Enumerated from the server's own GetCapabilities. "
       "Each feature carries its geometry and attributes. NOTE: "
       "GeoServer refuses startIndex without a primary key, so this row "
@@ -7210,6 +7330,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=50: page 0 50 members / 10.8 MB / 19 s, ms:IIP_IDENTY distinct on all of them; startIndex=50 answers 50 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_085E4D858F", .name = "mapy.geoportal.gov.pl — "
       "K12_Obszar_dzialania_szefa_obrony_cywilnej_powiatu "
       "[ms:K12_Obszar_dzialania_szefa_obrony_cywilnej_powiatu]",
@@ -7217,18 +7338,22 @@ static const hp_source HP3B63_EUWFS[] = {
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK12_Obszar_dzialania_szefa_obrony_cywilnej_powiatu&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK12_Obszar_dzialania_szefa_obrony_cywilnej_powiatu&count=50&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 50,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type "
       "'ms:K12_Obszar_dzialania_szefa_obrony_cywilnej_powiatu' "
       "('K12_Obszar_dzialania_szefa_obrony_cywilnej_powiatu') from the "
       "Poland national/regional geoportal mapy.geoportal.gov.pl. "
-      "GetFeature as GeoJSON, the layer's numberMatched was 380 on "
+      "GetFeature as GML 3.2, the layer's numberMatched was 380 on "
       "2026-11-14. Enumerated from the server's own GetCapabilities. "
       "Each feature carries its geometry and attributes. NOTE: "
       "GeoServer refuses startIndex without a primary key, so this row "
@@ -7400,6 +7525,7 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 10 members / 7.7 MB / 15 s, ms:IIP_IDENTY distinct on all of them; startIndex=10 answers 6 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_0CB5DAD632", .name = "mapy.geoportal.gov.pl — "
       "K11_Obszar_dzialania_szefa_obrony_cywilnej_wojewodztwa "
       "[ms:K11_Obszar_dzialania_szefa_obrony_cywilnej_wojewodztwa]",
@@ -7407,18 +7533,22 @@ static const hp_source HP3B63_EUWFS[] = {
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK11_Obszar_dzialania_szefa_obrony_cywilnej_wojewodztwa&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK11_Obszar_dzialania_szefa_obrony_cywilnej_wojewodztwa&count=10&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 10,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type "
       "'ms:K11_Obszar_dzialania_szefa_obrony_cywilnej_wojewodztwa' "
       "('K11_Obszar_dzialania_szefa_obrony_cywilnej_wojewodztwa') from "
       "the Poland national/regional geoportal mapy.geoportal.gov.pl. "
-      "GetFeature as GeoJSON, the layer's numberMatched was 16 on "
+      "GetFeature as GML 3.2, the layer's numberMatched was 16 on "
       "2026-11-14. Enumerated from the server's own GetCapabilities. "
       "Each feature carries its geometry and attributes. NOTE: "
       "GeoServer refuses startIndex without a primary key, so this row "
@@ -7543,23 +7673,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=25: page 0 2 members / 0.8 MB / 4 s, ms:IIP_IDENTY distinct on all of them; the layer's numberMatched is 2, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_F90EC462FB", .name = "mapy.geoportal.gov.pl — K10_Dywizjon_strazy_granicznej "
       "[ms:K10_Dywizjon_strazy_granicznej]",
     .name_ja = "mapy.geoportal.gov.pl — K10_Dywizjon_strazy_granicznej [ms:K10_Dywizjon_strazy_granicznej]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK10_Dywizjon_strazy_granicznej&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK10_Dywizjon_strazy_granicznej&count=25&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 25,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:K10_Dywizjon_strazy_granicznej' "
       "('K10_Dywizjon_strazy_granicznej') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 2 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 2 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -7808,23 +7943,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=100: page 0 94 members / 26.9 MB / 44 s, ms:IIP_IDENTY distinct on all of them; the layer's numberMatched is 94, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_E1BAFE398C", .name = "mapy.geoportal.gov.pl — K09_Placowka_strazy_granicznej "
       "[ms:K09_Placowka_strazy_granicznej]",
     .name_ja = "mapy.geoportal.gov.pl — K09_Placowka_strazy_granicznej [ms:K09_Placowka_strazy_granicznej]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK09_Placowka_strazy_granicznej&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK09_Placowka_strazy_granicznej&count=100&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 100,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:K09_Placowka_strazy_granicznej' "
       "('K09_Placowka_strazy_granicznej') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 94 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 94 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -8019,23 +8159,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "reads one page (count=1000) and discloses the remainder rather "
       "than paging." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=5: page 0 5 members / 6.7 MB / 13 s, ms:IIP_IDENTY distinct on all of them; startIndex=5 answers 4 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_7B7AABDED0", .name = "mapy.geoportal.gov.pl — K08_Oddzial_strazy_granicznej "
       "[ms:K08_Oddzial_strazy_granicznej]",
     .name_ja = "mapy.geoportal.gov.pl — K08_Oddzial_strazy_granicznej [ms:K08_Oddzial_strazy_granicznej]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK08_Oddzial_strazy_granicznej&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK08_Oddzial_strazy_granicznej&count=5&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 5,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:K08_Oddzial_strazy_granicznej' "
       "('K08_Oddzial_strazy_granicznej') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 9 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 9 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -8332,23 +8477,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=25: page 0 25 members / 6.3 MB / 13 s, ms:IIP_IDENTY distinct on all of them; startIndex=25 answers 25 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_72CF828D03", .name = "mapy.geoportal.gov.pl — K07_Komenda_powiatowa_strazy_pozarnej "
       "[ms:K07_Komenda_powiatowa_strazy_pozarnej]",
     .name_ja = "mapy.geoportal.gov.pl — K07_Komenda_powiatowa_strazy_pozarnej [ms:K07_Komenda_powiatowa_strazy_pozarnej]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK07_Komenda_powiatowa_strazy_pozarnej&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK07_Komenda_powiatowa_strazy_pozarnej&count=25&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 25,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:K07_Komenda_powiatowa_strazy_pozarnej' "
       "('K07_Komenda_powiatowa_strazy_pozarnej') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 337 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 337 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -8451,23 +8601,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=5: page 0 5 members / 3.2 MB / 8 s, ms:IIP_IDENTY distinct on all of them; startIndex=5 answers 5 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_81F52C4849", .name = "mapy.geoportal.gov.pl — K06_Komenda_wojewodzka_strazy_pozarnej "
       "[ms:K06_Komenda_wojewodzka_strazy_pozarnej]",
     .name_ja = "mapy.geoportal.gov.pl — K06_Komenda_wojewodzka_strazy_pozarnej [ms:K06_Komenda_wojewodzka_strazy_pozarnej]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK06_Komenda_wojewodzka_strazy_pozarnej&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK06_Komenda_wojewodzka_strazy_pozarnej&count=5&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 5,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:K06_Komenda_wojewodzka_strazy_pozarnej' "
       "('K06_Komenda_wojewodzka_strazy_pozarnej') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 16 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 16 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -8858,22 +9013,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "2026-11-14. Enumerated from the server's own GetCapabilities. "
       "Each feature carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=100: page 0 100 members / 11.7 MB / 21 s, ms:JPT_ID distinct on all of them; startIndex=100 answers 100 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_87EE2B9669", .name = "mapy.geoportal.gov.pl — K05_Komisariat_policji "
       "[ms:K05_Komisariat_policji]",
     .name_ja = "mapy.geoportal.gov.pl — K05_Komisariat_policji [ms:K05_Komisariat_policji]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK05_Komisariat_policji&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK05_Komisariat_policji&count=100&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:JPT_ID",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:JPT_ID",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 100,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:K05_Komisariat_policji' "
       "('K05_Komisariat_policji') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 607 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -8998,23 +9158,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "key, so this row reads one page (count=1000) and discloses the "
       "remainder rather than paging." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=250: page 0 7 members / 0.3 MB / 3 s, ms:IIP_IDENTY distinct on all of them; the layer's numberMatched is 7, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_A811508443", .name = "mapy.geoportal.gov.pl — K04_Komenda_rejonowa_policji "
       "[ms:K04_Komenda_rejonowa_policji]",
     .name_ja = "mapy.geoportal.gov.pl — K04_Komenda_rejonowa_policji [ms:K04_Komenda_rejonowa_policji]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK04_Komenda_rejonowa_policji&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK04_Komenda_rejonowa_policji&count=250&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 250,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:K04_Komenda_rejonowa_policji' "
       "('K04_Komenda_rejonowa_policji') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 7 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 7 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -9095,23 +9260,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=25: page 0 1 members / 0.5 MB / 3 s, ms:IIP_IDENTY distinct on all of them; the layer's numberMatched is 1, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_6A7D6C6093", .name = "mapy.geoportal.gov.pl — K03_Komenda_stoleczna_policji "
       "[ms:K03_Komenda_stoleczna_policji]",
     .name_ja = "mapy.geoportal.gov.pl — K03_Komenda_stoleczna_policji [ms:K03_Komenda_stoleczna_policji]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK03_Komenda_stoleczna_policji&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK03_Komenda_stoleczna_policji&count=25&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 25,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:K03_Komenda_stoleczna_policji' "
       "('K03_Komenda_stoleczna_policji') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 1 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 1 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -9525,23 +9695,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "GetCapabilities. Each feature carries its geometry and "
       "attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=25: page 0 25 members / 6.1 MB / 13 s, ms:IIP_IDENTY distinct on all of them; startIndex=25 answers 25 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_3419A396FA", .name = "mapy.geoportal.gov.pl — K02_Komenda_powiatowa_policji "
       "[ms:K02_Komenda_powiatowa_policji]",
     .name_ja = "mapy.geoportal.gov.pl — K02_Komenda_powiatowa_policji [ms:K02_Komenda_powiatowa_policji]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK02_Komenda_powiatowa_policji&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK02_Komenda_powiatowa_policji&count=25&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 25,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:K02_Komenda_powiatowa_policji' "
       "('K02_Komenda_powiatowa_policji') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 336 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 336 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -9716,23 +9891,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 10 members / 7.4 MB / 15 s, ms:IIP_IDENTY distinct on all of them; startIndex=10 answers 6 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_A84F14253C", .name = "mapy.geoportal.gov.pl — K01_Komenda_wojewodzka_policji "
       "[ms:K01_Komenda_wojewodzka_policji]",
     .name_ja = "mapy.geoportal.gov.pl — K01_Komenda_wojewodzka_policji [ms:K01_Komenda_wojewodzka_policji]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK01_Komenda_wojewodzka_policji&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AK01_Komenda_wojewodzka_policji&count=10&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 10,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:K01_Komenda_wojewodzka_policji' "
       "('K01_Komenda_wojewodzka_policji') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 16 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 16 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -10078,22 +10258,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=25: page 0 25 members / 6.5 MB / 13 s, ms:IIP_IDENTY distinct on all of them; startIndex=25 answers 25 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_319995EEF2", .name = "mapy.geoportal.gov.pl — P03_Prokuratura_rejonowa "
       "[ms:P03_Prokuratura_rejonowa]",
     .name_ja = "mapy.geoportal.gov.pl — P03_Prokuratura_rejonowa [ms:P03_Prokuratura_rejonowa]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AP03_Prokuratura_rejonowa&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AP03_Prokuratura_rejonowa&count=25&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 25,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:P03_Prokuratura_rejonowa' "
       "('P03_Prokuratura_rejonowa') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 358 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -10297,22 +10482,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "from the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 10 members / 5.6 MB / 12 s, ms:IIP_IDENTY distinct on all of them; startIndex=10 answers 10 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_ABCECFC1DB", .name = "mapy.geoportal.gov.pl — P02_Prokuratura_okregowa "
       "[ms:P02_Prokuratura_okregowa]",
     .name_ja = "mapy.geoportal.gov.pl — P02_Prokuratura_okregowa [ms:P02_Prokuratura_okregowa]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AP02_Prokuratura_okregowa&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AP02_Prokuratura_okregowa&count=10&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 10,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:P02_Prokuratura_okregowa' "
       "('P02_Prokuratura_okregowa') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 46 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -10466,22 +10656,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 10 members / 10.0 MB / 19 s, ms:IIP_IDENTY distinct on all of them; startIndex=10 answers 1 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_952709FC36", .name = "mapy.geoportal.gov.pl — P01_Prokuratura_regionalna "
       "[ms:P01_Prokuratura_regionalna]",
     .name_ja = "mapy.geoportal.gov.pl — P01_Prokuratura_regionalna [ms:P01_Prokuratura_regionalna]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AP01_Prokuratura_regionalna&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AP01_Prokuratura_regionalna&count=10&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 10,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:P01_Prokuratura_regionalna' "
       "('P01_Prokuratura_regionalna') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 11 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -10656,23 +10851,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 10 members / 7.4 MB / 14 s, ms:IIP_IDENTY distinct on all of them; startIndex=10 answers 6 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_EC1F58CE0C", .name = "mapy.geoportal.gov.pl — S04_Wojewodzki_sad_administracyjny "
       "[ms:S04_Wojewodzki_sad_administracyjny]",
     .name_ja = "mapy.geoportal.gov.pl — S04_Wojewodzki_sad_administracyjny [ms:S04_Wojewodzki_sad_administracyjny]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AS04_Wojewodzki_sad_administracyjny&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AS04_Wojewodzki_sad_administracyjny&count=10&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 10,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:S04_Wojewodzki_sad_administracyjny' "
       "('S04_Wojewodzki_sad_administracyjny') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 16 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 16 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -11138,21 +11338,26 @@ static const hp_source HP3B63_EUWFS[] = {
       "without a primary key, so this row reads one page (count=1000) "
       "and discloses the remainder rather than paging." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=50: page 0 50 members / 11.8 MB / 22 s, ms:IIP_IDENTY distinct on all of them; startIndex=50 answers 50 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_25825639CF", .name = "mapy.geoportal.gov.pl — S03_Sad_rejonowy [ms:S03_Sad_rejonowy]",
     .name_ja = "mapy.geoportal.gov.pl — S03_Sad_rejonowy [ms:S03_Sad_rejonowy]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AS03_Sad_rejonowy&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AS03_Sad_rejonowy&count=50&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 50,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:S03_Sad_rejonowy' ('S03_Sad_rejonowy') "
       "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GeoJSON, the layer's "
+      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
       "numberMatched was 318 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -11372,21 +11577,26 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 10 members / 5.8 MB / 12 s, ms:JPT_ID distinct on all of them; startIndex=10 answers 10 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_D19F3382AA", .name = "mapy.geoportal.gov.pl — S02_Sad_okregowy [ms:S02_Sad_okregowy]",
     .name_ja = "mapy.geoportal.gov.pl — S02_Sad_okregowy [ms:S02_Sad_okregowy]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AS02_Sad_okregowy&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AS02_Sad_okregowy&count=10&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:JPT_ID",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:JPT_ID",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 10,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:S02_Sad_okregowy' ('S02_Sad_okregowy') "
       "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GeoJSON, the layer's "
+      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
       "numberMatched was 47 on 2026-11-14. Enumerated from the server's "
       "own GetCapabilities. Each feature carries its geometry and "
       "attributes. NOTE: GeoServer refuses startIndex without a primary "
@@ -11487,22 +11697,27 @@ static const hp_source HP3B63_EUWFS[] = {
       "2026-11-14. Enumerated from the server's own GetCapabilities. "
       "Each feature carries its geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 10 members / 9.8 MB / 18 s, ms:IIP_IDENTY distinct on all of them; startIndex=10 answers 1 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_03A8BA007F", .name = "mapy.geoportal.gov.pl — S01_Sad_apelacyjny "
       "[ms:S01_Sad_apelacyjny]",
     .name_ja = "mapy.geoportal.gov.pl — S01_Sad_apelacyjny [ms:S01_Sad_apelacyjny]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AS01_Sad_apelacyjny&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AS01_Sad_apelacyjny&count=10&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 10,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:S01_Sad_apelacyjny' "
       "('S01_Sad_apelacyjny') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 11 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
@@ -13230,23 +13445,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=500: page 0 500 members / 9.2 MB / 14 s, ms:REJ distinct on all of them; startIndex=500 answers 500 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_FD6C94F68F", .name = "mapy.geoportal.gov.pl — R01_Granice_rejonow_statystycznych "
       "[ms:R01_Granice_rejonow_statystycznych]",
     .name_ja = "mapy.geoportal.gov.pl — R01_Granice_rejonow_statystycznych [ms:R01_Granice_rejonow_statystycznych]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AR01_Granice_rejonow_statystycznych&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AR01_Granice_rejonow_statystycznych&count=500&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:REJ",
+    .title_keys = "ms:REJ",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 500,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:R01_Granice_rejonow_statystycznych' "
       "('R01_Granice_rejonow_statystycznych') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 35577 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 35577 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -13576,23 +13796,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=500: page 0 500 members / 6.0 MB / 12 s, ms:IIP_IDENTY distinct on all of them; startIndex=500 answers 500 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_745D11429A", .name = "mapy.geoportal.gov.pl — A06_Granice_obrebow_ewidencyjnych "
       "[ms:A06_Granice_obrebow_ewidencyjnych]",
     .name_ja = "mapy.geoportal.gov.pl — A06_Granice_obrebow_ewidencyjnych [ms:A06_Granice_obrebow_ewidencyjnych]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA06_Granice_obrebow_ewidencyjnych&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA06_Granice_obrebow_ewidencyjnych&count=500&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 500,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:A06_Granice_obrebow_ewidencyjnych' "
       "('A06_Granice_obrebow_ewidencyjnych') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 54267 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 54267 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -13729,23 +13954,28 @@ static const hp_source HP3B63_EUWFS[] = {
       "without a primary key, so this row reads one page (count=1000) "
       "and discloses the remainder rather than paging." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=100: page 0 100 members / 6.1 MB / 13 s, ms:IIP_IDENTY distinct on all of them; startIndex=100 answers 100 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_4F2D5AB02C", .name = "mapy.geoportal.gov.pl — A05_Granice_jednostek_ewidencyjnych "
       "[ms:A05_Granice_jednostek_ewidencyjnych]",
     .name_ja = "mapy.geoportal.gov.pl — A05_Granice_jednostek_ewidencyjnych [ms:A05_Granice_jednostek_ewidencyjnych]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA05_Granice_jednostek_ewidencyjnych&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA05_Granice_jednostek_ewidencyjnych&count=100&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 100,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:A05_Granice_jednostek_ewidencyjnych' "
       "('A05_Granice_jednostek_ewidencyjnych') from the Poland "
       "national/regional geoportal mapy.geoportal.gov.pl. GetFeature as "
-      "GeoJSON, the layer's numberMatched was 3227 on 2026-11-14. "
+      "GML 3.2, the layer's numberMatched was 3227 on 2026-11-14. "
       "Enumerated from the server's own GetCapabilities. Each feature "
       "carries its geometry and attributes. NOTE: GeoServer refuses "
       "startIndex without a primary key, so this row reads one page "
@@ -13797,21 +14027,26 @@ static const hp_source HP3B63_EUWFS[] = {
       "without a primary key, so this row reads one page (count=1000) "
       "and discloses the remainder rather than paging." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=250: page 0 250 members / 7.4 MB / 14 s, ms:IIP_IDENTY distinct on all of them; startIndex=250 answers 250 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_315FECC89D", .name = "mapy.geoportal.gov.pl — A04_Granice_miast [ms:A04_Granice_miast]",
     .name_ja = "mapy.geoportal.gov.pl — A04_Granice_miast [ms:A04_Granice_miast]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA04_Granice_miast&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA04_Granice_miast&count=250&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 250,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:A04_Granice_miast' "
       "('A04_Granice_miast') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 1050 on 2026-11-14. Enumerated from "
       "the server's own GetCapabilities. Each feature carries its "
       "geometry and attributes. NOTE: GeoServer refuses startIndex "
@@ -13928,87 +14163,107 @@ static const hp_source HP3B63_EUWFS[] = {
       "startIndex without a primary key, so this row reads one page "
       "(count=1000) and discloses the remainder rather than paging." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=100: page 0 100 members / 6.8 MB / 14 s, ms:IIP_IDENTY distinct on all of them; startIndex=100 answers 100 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_E71B5AB900", .name = "mapy.geoportal.gov.pl — A03_Granice_gmin [ms:A03_Granice_gmin]",
     .name_ja = "mapy.geoportal.gov.pl — A03_Granice_gmin [ms:A03_Granice_gmin]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA03_Granice_gmin&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA03_Granice_gmin&count=100&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 100,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:A03_Granice_gmin' ('A03_Granice_gmin') "
       "from the Poland national/regional geoportal "
-      "mapy.geoportal.gov.pl. GetFeature as GeoJSON, the layer's "
+      "mapy.geoportal.gov.pl. GetFeature as GML 3.2, the layer's "
       "numberMatched was 2479 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
       "primary key, so this row reads one page (count=1000) and "
       "discloses the remainder rather than paging." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=50: page 0 50 members / 10.5 MB / 19 s, ms:IIP_IDENTY distinct on all of them; startIndex=50 answers 50 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_969FA4BA90", .name = "mapy.geoportal.gov.pl — A02_Granice_powiatow "
       "[ms:A02_Granice_powiatow]",
     .name_ja = "mapy.geoportal.gov.pl — A02_Granice_powiatow [ms:A02_Granice_powiatow]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA02_Granice_powiatow&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA02_Granice_powiatow&count=50&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 50,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:A02_Granice_powiatow' "
       "('A02_Granice_powiatow') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 380 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
       "primary key, so this row reads one page (count=1000) and "
       "discloses the remainder rather than paging." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=10: page 0 10 members / 7.3 MB / 15 s, ms:IIP_IDENTY distinct on all of them; startIndex=10 answers 6 more, no key shared with page 0. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_F221892145", .name = "mapy.geoportal.gov.pl — A01_Granice_wojewodztw "
       "[ms:A01_Granice_wojewodztw]",
     .name_ja = "mapy.geoportal.gov.pl — A01_Granice_wojewodztw [ms:A01_Granice_wojewodztw]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA01_Granice_wojewodztw&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA01_Granice_wojewodztw&count=10&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 10,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:A01_Granice_wojewodztw' "
       "('A01_Granice_wojewodztw') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 16 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "
       "primary key, so this row reads one page (count=1000) and "
       "discloses the remainder rather than paging." },
 
+  /* 2026-11-16: MapServer refuses outputFormat=application/json for this layer (400, 'not a permitted output format') and GetCapabilities lists GML only, so the row reads the default GML 3.2 in HP_XML mode, one wfs:member per record. Measured at count=5: page 0 1 members / 2.0 MB / 6 s, ms:IIP_IDENTY distinct on all of them; the layer's numberMatched is 1, one page. Field names are the layer's own (ms: prefix, truncated to 10 characters by the publisher). NOT yet run through the engine. */
   { .id = "JO63_EUWFS_06B702C5B2", .name = "mapy.geoportal.gov.pl — A00_Granice_panstwa "
       "[ms:A00_Granice_panstwa]",
     .name_ja = "mapy.geoportal.gov.pl — A00_Granice_panstwa [ms:A00_Granice_panstwa]",
     .category = "geospatial", .portal = "https://mapy.geoportal.gov.pl",
     .record_type = "gis-feature",
     .tags = "\"wfs\",\"inspire\",\"europe\",\"pl\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA00_Granice_panstwa&outputFormat=application%2Fjson&count=1000",
-    .array_path = "features",
-    .id_keys = "id",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://mapy.geoportal.gov.pl/wss/service/PZGIK/PRG/WFS/AdministrativeBoundaries?service=WFS&version=2.0.0&request=GetFeature&typenames=ms%3AA00_Granice_panstwa&count=5&startIndex=0",
+    .array_path = "wfs:member",
+    .id_keys = "ms:IIP_IDENTY",
+    .title_keys = "ms:JPT_NAZWA_,ms:JPT_NAZWA1,ms:IIP_IDENTY",
+    .page_param = "startIndex",
+    .page_resume = 1,
+    .page_size = 5,
+    .page_zero_based = 1,
+    .timeout_ms = 120000,
     .interval = 604800,
-    .timeout_ms = 45000,
-    .title_keys = "properties.name,properties.naam,properties.nom,properties.nome,properties.nome_com,properties.gemeinde,properties.libelle,properties.namn,properties.nimi,id",
     .description = "WFS 2.0 feature type 'ms:A00_Granice_panstwa' "
       "('A00_Granice_panstwa') from the Poland national/regional "
-      "geoportal mapy.geoportal.gov.pl. GetFeature as GeoJSON, the "
+      "geoportal mapy.geoportal.gov.pl. GetFeature as GML 3.2, the "
       "layer's numberMatched was 1 on 2026-11-14. Enumerated from the "
       "server's own GetCapabilities. Each feature carries its geometry "
       "and attributes. NOTE: GeoServer refuses startIndex without a "

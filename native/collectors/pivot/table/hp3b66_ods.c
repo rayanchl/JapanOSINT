@@ -53,6 +53,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_decheterie,nom_exploitant,libelle_type_sinoe_exploitant,adresse_decheterie",
+    .id_keys = "code_postal_decheterie",
     .description = "OpenDataSoft dataset annuaire-des-decheteries-de-la-cangt on "
       "opendata.cangt.fr (long-tail portal)." },
 
@@ -70,6 +71,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_de_la_voie_du_terrain,denomination_d_un_demandeur_avere_en_tant_que_personne_morale,lieu_dit_du_terrain,code_d_activite_principale_de_l_etablissement_d_un_demandeur_avere_en_tant_que_personne_morale",
+    .id_keys = "numero_d_enregistrement_de_la_dau+numero_parcelle_cadastrale_1",
     .description = "OpenDataSoft dataset "
       "liste-des-autorisations-durbanisme-creant-des-locaux-non-residentiels-cangt "
       "on opendata.cangt.fr (long-tail portal)." },
@@ -105,6 +107,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label",
+    .id_keys = "famille_de_metiers+mois",
     .description = "OpenDataSoft dataset "
       "demandeurs-d-emploi-inscrits-fin-mai-2023-a-pole-emploi-par-famille-de-metiers-e "
       "on opendata.cangt.fr (long-tail portal)." },
@@ -123,6 +126,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label",
+    .id_keys = "titre",
     .description = "OpenDataSoft dataset "
       "lignes-et-arrets-du-reseau-de-transport-urbain-de-la-cangt on "
       "opendata.cangt.fr (long-tail portal)." },
@@ -140,6 +144,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "route_short_name,route_long_name,route_id,route_color",
+    .id_keys = "route_id",
     .description = "OpenDataSoft dataset "
       "lignes-du-reseau-de-transport-urbain-de-la-cangt-tungt on "
       "opendata.cangt.fr (long-tail portal)." },
@@ -173,6 +178,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_officiel_commune_arrondissement_municipal,nom_officiel_departement,nom_officiel_epci",
+    .id_keys = "annee_de_reference_geographique+code_officiel_commune",
     .description = "OpenDataSoft dataset "
       "populations-legales-communes-cangt-2015-2023 on "
       "opendata.cangt.fr (long-tail portal)." },
@@ -191,6 +197,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_professionnel,nom_officiel_region,nom_officiel_departement,nom_officiel_epci",
+    .id_keys = "nom_du_professionnel",
     .description = "OpenDataSoft dataset medecins-public-cangt on opendata.cangt.fr "
       "(long-tail portal)." },
 
@@ -224,6 +231,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,type_fs,lib_fs,lib_com",
+    .id_keys = "id_fs",
     .description = "OpenDataSoft dataset france-services-cangt on opendata.cangt.fr "
       "(long-tail portal)." },
 
@@ -241,6 +249,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_epci,type_parc",
+    .id_keys = "nombre_foyers_alf",
     .description = "OpenDataSoft dataset aide-logement-cangt on opendata.cangt.fr "
       "(long-tail portal)." },
 
@@ -275,6 +284,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_departement",
+    .id_keys = "annee_de_revenus",
     .description = "OpenDataSoft dataset foyers-fiscaux-guadeloupe on "
       "opendata.cangt.fr (long-tail portal)." },
 
@@ -292,6 +302,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label",
+    .id_keys = "total+mois",
     .description = "OpenDataSoft dataset "
       "demandeurs-d-emploi-inscrits-en-mai-2023-a-pole-emploi-par-commune-et-par-niveau "
       "on opendata.cangt.fr (long-tail portal)." },
@@ -309,6 +320,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet,referencedecision,nombeneficiaire",
+    .id_keys = "referencedecision",
     .description = "OpenDataSoft dataset subventions-versees-cangt on "
       "opendata.cangt.fr (long-tail portal)." },
 
@@ -326,6 +338,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "libelle_de_la_voie_du_terrain,denomination_d_un_demandeur_avere_en_tant_que_personne_morale,lieu_dit_du_terrain,code_d_activite_principale_de_l_etablissement_d_un_demandeur_avere_en_tant_que_personne_morale",
+    .id_keys = "numero_d_enregistrement_de_la_dau+numero_parcelle_cadastrale_1",
     .description = "OpenDataSoft dataset "
       "autorisations-durbanisme-creant-des-logements-depuis2013-cangt "
       "on opendata.cangt.fr (long-tail portal)." },
@@ -379,6 +392,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label",
+    .id_keys = "mois+sexe_age",
     .description = "OpenDataSoft dataset "
       "demandeurs-d-emploi-inscrits-fin-mai-2023-a-pole-emploi-par-sexe_age-et-par-comm "
       "on opendata.cangt.fr (long-tail portal)." },
@@ -397,6 +411,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label",
+    .id_keys = "total+mois",
     .description = "OpenDataSoft dataset "
       "demandeurs-d-emploi-inscrits-en-fin-de-mois-a-pole-emploi-par-commune-et-rsa "
       "on opendata.cangt.fr (long-tail portal)." },
@@ -415,6 +430,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset lieux-de-mediation-numeriques-cangt on "
       "opendata.cangt.fr (long-tail portal)." },
 
@@ -450,6 +466,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_site,commune",
+    .id_keys = "nom_site",
     .description = "OpenDataSoft dataset "
       "liste-des-bornes-d-apport-volontaires-sur-le-territoire-de-la-cangt "
       "on opendata.cangt.fr (long-tail portal)." },
@@ -488,6 +505,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label",
+    .id_keys = "mois",
     .description = "OpenDataSoft dataset "
       "demandeurs-d-emploi-inscrits-en-fin-de-mois-a-pole-emploi-par-commune-2016-2023- "
       "on opendata.cangt.fr (long-tail portal)." },
@@ -506,6 +524,7 @@ static const hp_source HP3B66_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "denomination,categorie,commune",
+    .id_keys = "denomination",
     .description = "OpenDataSoft dataset "
       "points-d-interet-touristiques-du-territoire-de-la-cangt on "
       "opendata.cangt.fr (long-tail portal)." },

@@ -36,6 +36,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset medailles_reconnaissance_erkenning on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -54,6 +55,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "index",
     .description = "OpenDataSoft dataset "
       "commerces-bruxellois-acceptant-la-zinne-monnaie-locale-bruxelloise "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -73,6 +75,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "url",
     .description = "OpenDataSoft dataset reseaux-sociaux on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -91,6 +94,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset bxl_consommation_energetique on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -108,6 +112,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "da_c_clarations_de_naissance",
     .description = "OpenDataSoft dataset bxl_demographie_140306_annee on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -162,6 +167,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset "
       "consultations-pour-enfants-kind-en-gezin-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -181,6 +187,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "address_fr",
     .description = "OpenDataSoft dataset academies-neerlandophones-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -199,6 +206,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "anna_c_e",
     .description = "OpenDataSoft dataset "
       "projection-de-levolution-de-la-population-des-seniors-bruxellois "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -218,6 +226,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,rue_,type_code",
+    .id_keys = "name_fr+rue_+postaloperator",
     .description = "OpenDataSoft dataset points-postaux0 on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -236,6 +245,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "population_total",
     .description = "OpenDataSoft dataset "
       "population-par-groupe-de-nationalite-d-origine on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -255,6 +265,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset "
       "points-de-collecte-parcs-a-containers-recypark on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -274,6 +285,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "type_d_election",
+    .id_keys = "date",
     .description = "OpenDataSoft dataset nombre-d-electeurs-belges-et-etrangers on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -329,6 +341,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "nom+locatie",
     .description = "OpenDataSoft dataset bxl_food_trucks_commerces_ambulants on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -348,6 +361,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "taf_tap_code",
     .description = "OpenDataSoft dataset "
       "bornes-eau-potable-gratuite-des-gares-sncb-gratis-drinkwatertappunten-van-nmbs-stations "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -367,6 +381,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "category_fr,category_nl,category_en",
+    .id_keys = "apparts_studios_surface_totale",
     .description = "OpenDataSoft dataset "
       "superficies-et-loyers-logements-regie-fonciere-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -387,6 +402,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "ifu_type,ref,statistical_sector_fr,statistical_sector_nl",
+    .id_keys = "id_vivaqua",
     .description = "OpenDataSoft dataset "
       "bornes-d-eau-potable-gerees-par-la-region-drinkwatertappunten-beheerd-door-het-gewest-vivaqua "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -407,6 +423,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,commune_fr,commune_nl",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "surveillance-de-la-qualite-chimique-et-physico-chimique-des-eaux-de-surface-en-r "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -427,6 +444,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_commune,commune_fr_nl,region,region_nl",
+    .id_keys = "postal_code+refnis_code",
     .description = "OpenDataSoft dataset "
       "codes-postaux-et-codes-ins-communes-belges-20250101 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -445,6 +463,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "costume_fr,contexte_fr,contexte_nl,contexte_en",
+    .id_keys = "reference",
     .description = "OpenDataSoft dataset habillages-de-manneken-pis on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -463,6 +482,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset salles-de-spectacle-concert on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -500,6 +520,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_fr,zone_nl,zone_en,type_fr",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "places-de-parking-kiss-and-ride-recencees-par-bruxelles-mobilite-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -519,6 +540,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,gml_id,inspire_id",
+    .id_keys = "gml_id",
     .description = "OpenDataSoft dataset zones-de-police-rbc on opendata.brussel.be, "
       "a portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -537,6 +559,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "informatie_dragers",
+    .id_keys = "informatie_dragers",
     .description = "OpenDataSoft dataset "
       "informatiedragers-in-de-nederlandstalige-bibliotheken on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -556,6 +579,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "monument",
+    .id_keys = "monument",
     .description = "OpenDataSoft dataset monuments-funeraires-du-cimetiere-de-laeken "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -613,6 +637,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "categorie",
+    .id_keys = "nombre",
     .description = "OpenDataSoft dataset "
       "statistiques-sur-les-produits-et-services-delivres-aux-citoyens-par-la-ville-de- "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -632,6 +657,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset cours-alphabetisation-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -650,6 +676,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "city",
+    .id_keys = "city+active_users",
     .description = "OpenDataSoft dataset "
       "nombre-visiteurs-site-web-ville-de-bruxelles-par-ville-commune-aantal-bezoekers-website-stad-brussel-per-stad-gemeente "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -669,6 +696,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "address_fr+name_fr",
     .description = "OpenDataSoft dataset "
       "milieux-accueil-petite-enfance-one-kindengezin-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -688,6 +716,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "partie_de_commune_fr_nl,commune_fr_nl,region_fr,region_nl",
+    .id_keys = "c_nis6",
     .description = "OpenDataSoft dataset "
       "codes-ins6-des-parties-de-communes-belges-20250101 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -729,6 +758,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "region",
+    .id_keys = "date+code",
     .description = "OpenDataSoft dataset "
       "pandemie-covid-19-statistiques-hospitalisations-traitement-arretees-au-27-juin-2023 "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -748,6 +778,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "elementid",
     .description = "OpenDataSoft dataset "
       "aires-de-jeux-et-espaces-sportifs-geres-par-la-ville-de-bruxelles "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -786,6 +817,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,name_fr_nl,category_fr",
+    .id_keys = "_goid",
     .description = "OpenDataSoft dataset dogzones on opendata.brussel.be, a portal "
       "new to the tree in batch 67 (own dataset). Explore v2.1 records, "
       "offset paging." },
@@ -805,6 +837,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,name_en,address_fr",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "auberges-de-jeunesse-recensees-par-hub-brussels on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -824,6 +857,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "naam_van_het_gebouw,adresse,type,commune",
+    .id_keys = "registratienummer+naam_van_het_gebouw",
     .description = "OpenDataSoft dataset "
       "defibrillateurs-installes-par-la-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -842,6 +876,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,gemeente,jours_et_heures_d_ouverture,dagen_en_openingsuren",
+    .id_keys = "commune",
     .description = "OpenDataSoft dataset cimetieres on opendata.brussel.be, a portal "
       "new to the tree in batch 67 (own dataset). Explore v2.1 records, "
       "offset paging." },
@@ -860,6 +895,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_commune,region_fr,region_nl,region_en",
+    .id_keys = "postal_code+refnis_code",
     .description = "OpenDataSoft dataset codes-ins-nis-postaux-belgique on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -878,6 +914,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "producteur,producteur2,producer",
+    .id_keys = "producteur",
     .description = "OpenDataSoft dataset thermographie-aerienne-ville-de-bruxelles "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -896,6 +933,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "device_name,adresse_fr,adresse_nl,commune",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "capteurs-de-flux-velos-et-trottinettes-geres-par-bruxelles-mobilite "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -935,6 +973,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "address_fr,address_nl,category_fr,category_nl",
+    .id_keys = "google_maps+category_fr+url_fr",
     .description = "OpenDataSoft dataset medecins-generalistes-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -952,6 +991,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_du_comite_proprete,naam_netheidscomite,nom_de_la_structure_d_accueil,naam_ontvangststructuur",
+    .id_keys = "nom_du_comite_proprete",
     .description = "OpenDataSoft dataset comites-proprete on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -970,6 +1010,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "page_title_and_screen_class",
+    .id_keys = "page_title_and_screen_class+year",
     .description = "OpenDataSoft dataset "
       "nombre-visiteurs-vues-par-page-site-web-ville-de-bruxelles-aantal-bezoekers-weergaven-per-pagina-website-stad-brussel "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -989,6 +1030,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "mouvements_depuis_une_autre_commune_belge_immigrations_internes",
     .description = "OpenDataSoft dataset "
       "mouvement-de-la-population-depuis-1992-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1008,6 +1050,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "address_fr",
     .description = "OpenDataSoft dataset academies-francophones-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1026,6 +1069,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "address_fr",
     .description = "OpenDataSoft dataset consultations-pour-enfants-one-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1065,6 +1109,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "src_name_fr,src_name_nl,src_address_nl,address_fr",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset bruxelles_bureaux_de_police on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1122,6 +1167,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description,adresse,adres,lieu",
+    .id_keys = "description",
     .description = "OpenDataSoft dataset bruxelles_lieux_culturels on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1140,6 +1186,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "address_fr,address_nl,type_fr,type_nl",
+    .id_keys = "address_fr",
     .description = "OpenDataSoft dataset bruxelles_canisite on opendata.brussel.be, "
       "a portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -1177,6 +1224,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset theatres on opendata.brussel.be, a portal "
       "new to the tree in batch 67 (own dataset). Explore v2.1 records, "
       "offset paging." },
@@ -1292,6 +1340,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune,gemeente",
+    .id_keys = "femmes_pc",
     .description = "OpenDataSoft dataset "
       "evolution-moyenne-annuelle-demandeurs-d-emploi-inoccupes-par-commune-genre-niveau-etudes-rbc "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -1311,6 +1360,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "taf_tap_code",
     .description = "OpenDataSoft dataset "
       "gares-arrets-de-train-et-departs-temps-reel-treinstations-stopplaatsen-en-realtime-vertrekken "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -1330,6 +1380,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "biens_et_peb_rue_et_ndeg,biens_et_peb_quartier,biens_et_peb_categorie_de_logement,categorie_en",
+    .id_keys = "biens_et_peb_lot",
     .description = "OpenDataSoft dataset "
       "logements-passifs-et-basse-energie-regie-fonciere-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1349,6 +1400,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "categorie_principale_fr,categorie_principale_nl",
+    .id_keys = "categorie_principale_code+annee",
     .description = "OpenDataSoft dataset permis-urbanisme-delivres-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1386,6 +1438,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,location_fr,location_nl",
+    .id_keys = "_goid",
     .description = "OpenDataSoft dataset potagers-collectifs-collectieve-moestuinen "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -1462,6 +1515,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse_fr_en,adresse_nl,lieu_fr,lieu_nl",
+    .id_keys = "id_fr",
     .description = "OpenDataSoft dataset institutions_europeennes_ue on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1480,6 +1534,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset maisons-des-enfants-huizen-voor-het-kind on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1498,6 +1553,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "adresse,adres,commune,gemeente",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "panneaux-d-affichage-electoral-de-la-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1538,6 +1594,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,inspire_id",
+    .id_keys = "ogc_fid",
     .description = "OpenDataSoft dataset "
       "limites-administratives-des-communes-en-region-de-bruxelles-capitale "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -1557,6 +1614,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "google_maps",
     .description = "OpenDataSoft dataset parcs_et_jardins_publics on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1710,6 +1768,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,address_fr,address_nl,type_fr",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset "
       "reseau-chiens-admis-de-la-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1787,6 +1846,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_fr_en,nom_nl,adresse_fr_en,adresse_nl",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "aide-numerique-sur-le-territoire-de-la-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1843,6 +1903,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_de_la_fresque,naam_fresco_nl,adresse_fr,adres_nl",
+    .id_keys = "nom_de_la_fresque",
     .description = "OpenDataSoft dataset bruxelles_parcours_bd on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1861,6 +1922,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "address_fr,address_nl,type_fr,type_nl",
+    .id_keys = "address_fr",
     .description = "OpenDataSoft dataset points-de-collecte-textiles-vetements-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -1879,6 +1941,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset bureaux-accueil-primo-arrivants-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -1934,6 +1997,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "parti",
+    .id_keys = "voix",
     .description = "OpenDataSoft dataset "
       "resultats-des-elections-communales-ville-de-bruxelles-depuis-1976 "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -1952,6 +2016,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "homme",
     .description = "OpenDataSoft dataset "
       "1970_1981_1991_1992_now_pop_vbx_genre_source_statbel on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -1972,6 +2037,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,address_fr,address_nl,category_fr",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset "
       "salles-de-cinema-et-autres-lieux-de-projection on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2052,6 +2118,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "number",
     .description = "OpenDataSoft dataset "
       "disponibilite-en-temps-reel-des-velos-villo-rbc on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2071,6 +2138,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "total",
     .description = "OpenDataSoft dataset "
       "projection_population_hf_2025_2034_ibsa_par_age on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2090,6 +2158,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "nombre_de_declarations_de_revenus_nets_imposables_nuls",
     .description = "OpenDataSoft dataset 2005_2021_pop_vbx_revenus_source_statbel on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2108,6 +2177,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "afdeling",
+    .id_keys = "afdeling",
     .description = "OpenDataSoft dataset "
       "gebruikers-van-de-nederlandstalige-bibliotheken on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2127,6 +2197,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,address_fr,address_nl,type_fr",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset recycleries-ressourceries-repaircafes-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -2163,6 +2234,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "francais",
     .description = "OpenDataSoft dataset suiveurs-des-comptes-twitter on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2181,6 +2253,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset ludotheques-en-region-de-bruxelles-capitale "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -2199,6 +2272,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "gebruik",
+    .id_keys = "gebruik",
     .description = "OpenDataSoft dataset "
       "uitleningen-en-raadplegingen-in-de-nederlandstalige-bibliotheken "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -2238,6 +2312,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset centres-planning-familial-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2295,6 +2370,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset bxl_demo_evolutionpop_tranchesage on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2312,6 +2388,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "lieu,place,plaats",
+    .id_keys = "lieu",
     .description = "OpenDataSoft dataset poubellesintelligentes on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2330,6 +2407,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "annee",
     .description = "OpenDataSoft dataset "
       "projection_population_hf_2025_2034_ibsa_par_annee on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2349,6 +2427,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset maisons-de-repos-pour-personnes-agees-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -2385,6 +2464,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "dechets_en_tonnes,aantal_ton_afval,tons_of_waste",
+    .id_keys = "dechets_en_tonnes",
     .description = "OpenDataSoft dataset dechets on opendata.brussel.be, a portal "
       "new to the tree in batch 67 (own dataset). Explore v2.1 records, "
       "offset paging." },
@@ -2422,6 +2502,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset maisons-medicales-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2440,6 +2521,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "enseignement_fondamental_basisonderwijs",
     .description = "OpenDataSoft dataset "
       "nombre-deleves-dans-les-ecoles-gerees-par-la-ville-de-bruxelles "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -2460,6 +2542,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset "
       "centres-culturels-francophones-et-neerlandophones-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2517,6 +2600,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "prenom+annee",
     .description = "OpenDataSoft dataset "
       "prenoms-les-plus-populaires-ville-de-bruxelles on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2535,6 +2619,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset arrets-waterbus on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -2553,6 +2638,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "anna_c_e",
     .description = "OpenDataSoft dataset "
       "projection-de-levolution-de-la-population-bruxelloise-avec-soldes "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -2611,6 +2697,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,commune_gemeente,type_fr",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset pompes-a-velo on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -2629,6 +2716,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset "
       "monuments-commemoratifs-de-la-guerre-de-1914-1918 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2667,6 +2755,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset citoyens-dhonneur1 on opendata.brussel.be, "
       "a portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -2685,6 +2774,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_nl,name_fr,street_source_fr,street_source_nl",
+    .id_keys = "name_nl",
     .description = "OpenDataSoft dataset marches-alimentaires-region-bruxelloise on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2703,6 +2793,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "commune_fr,commune_nl,thematicid,localid",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "surveillance-de-la-qualite-biologique-des-eaux-de-surface-en-rbc "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -2741,6 +2832,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset hopitaux-generaux on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -2873,6 +2965,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "objet_de_l_etude,bruxelles_departement_brussel_departement,voorwerp_van_de_studie,auteur_de_l_etude_personne_morale_ou_physique_a_qui_l_etude_a_ete_confiee_auteur_van_de_studie_recht",
+    .id_keys = "cout_de_l_etude_tvac_en_euro_kost_van_de_studie_btwi_in_euro+auteur_de_l_etude_personne_morale_ou_physique_a_qui_l_etude_a_ete_confiee_auteur_van_de_studie_recht",
     .description = "OpenDataSoft dataset "
       "etudes-ville-de-bruxelles-studies-stad-brussel-2022 on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -2892,6 +2985,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset bibliotheques_publiques_francophones_vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2931,6 +3025,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "address_fr,address_nl",
+    .id_keys = "google_maps",
     .description = "OpenDataSoft dataset bruxelles_distributeurs_bancaires on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2949,6 +3044,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "prenom",
+    .id_keys = "prenom+frequence",
     .description = "OpenDataSoft dataset pop_vbx_prenoms_naissances on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -2966,6 +3062,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "id_reg_iot",
     .description = "OpenDataSoft dataset webcams on opendata.brussel.be, a portal "
       "new to the tree in batch 67 (own dataset). Explore v2.1 records, "
       "offset paging." },
@@ -2984,6 +3081,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset "
       "bruxelles_centre_administratif_et_bureaux_de_liaison on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3003,6 +3101,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset stations-carsharing-cambio-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3039,6 +3138,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,adres_,commune_gemeente",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset bruxelles_parkings_publics on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3057,6 +3157,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset bibliotheques_publiques_neerlandophones_vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
       "(own dataset). Explore v2.1 records, offset paging." },
@@ -3095,6 +3196,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "zone_fr,zone_nl,zone_en,type_fr",
+    .id_keys = "gid",
     .description = "OpenDataSoft dataset "
       "places-de-parking-poids-lourds-recensees-par-bruxelles-mobilite-vbx "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -3114,6 +3216,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom_fr,address_fr,address_nl,management_fr",
+    .id_keys = "nom_fr",
     .description = "OpenDataSoft dataset "
       "points-de-collecte-compost-composts-de-quartier-worms-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3191,6 +3294,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset centres-maisons-de-jeunes-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3209,6 +3313,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset marches-plein-air-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3227,6 +3332,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description_fr,description_nl,address_fr,address_nl",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset bornes-mybxl-vbx on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -3283,6 +3389,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "municipality",
+    .id_keys = "municipality+visitors+year",
     .description = "OpenDataSoft dataset "
       "nombre-visiteurs-site-web-ville-de-bruxelles-par-commune-belgique-aantal-bezoekers-website-stad-brussel-per-gemeente-belgie "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -3301,6 +3408,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,name_fr_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset grands_quartiers_vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3320,6 +3428,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,address_fr,address_nl,openinghours_fr",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset ecoles-devoirs-fr-one-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3397,6 +3506,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "google_maps+activities_fr",
     .description = "OpenDataSoft dataset espaces-sportifs-publics-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3415,6 +3525,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,category_fr,category_nl",
+    .id_keys = "google_maps",
     .description = "OpenDataSoft dataset espaces-publics-de-sejour-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3433,6 +3544,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "categorie_principale_fr,categorie_principale_nl",
+    .id_keys = "categorie_principale_code+annee",
     .description = "OpenDataSoft dataset "
       "demandes-de-permis-urbanisme-introduites-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3452,6 +3564,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "country",
+    .id_keys = "country+year",
     .description = "OpenDataSoft dataset "
       "nombre-visiteurs-site-web-ville-de-bruxelles-par-pays-2009-2013-aantal-bezoekers-website-stad-brussel-per-land-2009-2013 "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -3491,6 +3604,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "name_fr,name_nl,address_fr,address_nl",
+    .id_keys = "name_fr",
     .description = "OpenDataSoft dataset bureaux-cpas-bruxelles-vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
       "dataset). Explore v2.1 records, offset paging." },
@@ -3546,6 +3660,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "nom",
     .description = "OpenDataSoft dataset bruxelles_musees on opendata.brussel.be, a "
       "portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -3582,6 +3697,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "country",
+    .id_keys = "country+year",
     .description = "OpenDataSoft dataset "
       "nombre-visiteurs-site-web-ville-de-bruxelles-par-pays-aantal-bezoekers-website-stad-brussel-per-land "
       "on opendata.brussel.be, a portal new to the tree in batch 67 "
@@ -3601,6 +3717,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "address_fr,address_nl",
+    .id_keys = "id",
     .description = "OpenDataSoft dataset "
       "distributeurs_graines_contraceptives_pigeons_vbx on "
       "opendata.brussel.be, a portal new to the tree in batch 67 (own "
@@ -3677,6 +3794,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset flood-study-cubberla-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3695,6 +3813,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site_name,location_description",
+    .id_keys = "site_no",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2014-2015 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -3713,6 +3832,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "suburb_proper,suburb_upper,suburb_lower,suburb_proper_ods_admin_divisions",
+    .id_keys = "index",
     .description = "OpenDataSoft dataset suburb-name-text-lookup on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3731,6 +3851,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site_name,location_description",
+    .id_keys = "site_no",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2013-2014 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -3750,6 +3871,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site_name,location_description",
+    .id_keys = "site_no",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2016-2017 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -3769,6 +3891,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset superseded-flood-study-lota-creek-oct-2014 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
       "batch 67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3787,6 +3910,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-airport-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -3805,6 +3929,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "GlobalID",
     .description = "OpenDataSoft dataset planned-burns-2020 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3823,6 +3948,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-enoggera-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -3841,6 +3967,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "area_of_bl+block_no",
     .description = "OpenDataSoft dataset planned-burns-2022 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3858,6 +3985,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "parkname,locality",
+    .id_keys = "globalid_1",
     .description = "OpenDataSoft dataset planned-burns-2025 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3893,6 +4021,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset flood-study-wolston-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -3911,6 +4040,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site_name,location_description",
+    .id_keys = "site_no",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2022-2023 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -3930,6 +4060,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-upper-bulimba-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -3949,6 +4080,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site_name,location_description",
+    .id_keys = "site_no",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2018-2019 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -3986,6 +4118,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-middle-bulimba-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4024,6 +4157,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-transport-air-quality-corridor-overlay-tunnel-ventilation-stack-buffer "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4043,6 +4177,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "project_description,project_type,ltip_id",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-ltip-other-plans-stormwater-backflow-prevention-device on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4062,6 +4197,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description,lp,lp_prec,lp_prec_code",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-neighbourhood-plan-indicative-precinct "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
       "batch 67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4080,6 +4216,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-key-civic-space-and-iconic-vista-overlay on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4100,6 +4237,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-critical-infrastructure-movement-network-overlay-assets-infrastructure-move "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4119,6 +4257,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-transport-air-quality-corridor-overlay-tunnel-ventilation-stack "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4138,6 +4277,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-extractive-resources-overlay-mining-tenement on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4177,6 +4317,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "project_description,project_type,ltip_id,ltip_cattype",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-ltip-other-plans-stormwater-natural-channel-areas on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4197,6 +4338,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-airport-environs-overlay-bird-bat-strike-zone-public-safety-bird-bat-strike "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4216,6 +4358,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-pullen-pullen-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4236,6 +4379,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "project_description,project_type,lgip_id,suburb_reference",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-active-and-public-transport-future-ferry-terminal-new-and-upgrade "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4275,6 +4419,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "cat_desc,ovl_cat,ovl2_desc,ovl2_cat",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-transport-air-quality-corridor-overlay-transport-air-quality-corridor-a "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4294,6 +4439,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "project_description,project_type,lgip_id,lgip_grid_mapref",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-stormwater-existing-natural-bioretention-swale on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4313,6 +4459,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-service-catchments-transport-road-network on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4331,6 +4478,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "parkname",
+    .id_keys = "globalid_1",
     .description = "OpenDataSoft dataset planned-burns-history on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4386,6 +4534,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description,cat_desc,ovl_cat,ovl2_desc",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-regional-infrastructure-corridors-substations-major-tport-infras-clem-7 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4423,6 +4572,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site_name,location_description",
+    .id_keys = "site_no",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2024-2025 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4460,6 +4610,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "trips_e_scooters",
     .description = "OpenDataSoft dataset e-mobility-trip-numbers on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4478,6 +4629,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-lower-bulimba-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4516,6 +4668,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description,ovl2_desc,ovl2_cat",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-waterway-corridors-overlay-brisbane-river-corridor-section-boundary "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4573,6 +4726,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset flood-study-cabbage-tree-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4591,6 +4745,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-water-resource-catchments-overlay on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4608,6 +4763,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "street_name,street_type,street_suffix,suburb",
+    .id_keys = "index",
     .description = "OpenDataSoft dataset street-names-with-suburbs on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4626,6 +4782,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "project_description,project_type,ltip_id,suburb_reference",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-ltip-comm-purposes-network-overlay-park-point-specific-location "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4644,6 +4801,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "locality,area,reserve,suburb",
+    .id_keys = "locality+area",
     .description = "OpenDataSoft dataset planned-burns-2015 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4662,6 +4820,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site_name,location_description",
+    .id_keys = "site_no",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2015-2016 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4681,6 +4840,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site_name,location_description",
+    .id_keys = "site_no",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2021-2022 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4720,6 +4880,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site_name,location_description",
+    .id_keys = "site_no",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2023-2024 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -4739,6 +4900,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "search_term",
+    .id_keys = "total_users+search_term+date",
     .description = "OpenDataSoft dataset "
       "corporate-website-analytics-top-100-search-terms on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -4777,6 +4939,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset flood-study-perrin-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4888,6 +5051,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset flood-study-brighton-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4966,6 +5130,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "organisation_recipient,project",
+    .id_keys = "index",
     .description = "OpenDataSoft dataset grants-recipients on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -4984,6 +5149,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "month",
+    .id_keys = "month",
     .description = "OpenDataSoft dataset "
       "brisbane-citycycle-membership-and-trip-numbers on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -5023,6 +5189,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-airport-environs-overlay-aviation-facilities-airport-boundary "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -5042,6 +5209,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-wolston-sandy-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -5061,6 +5229,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "source",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "flood-awareness-area-identified-for-review-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -5158,6 +5327,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-norman-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -5196,6 +5366,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset flood-study-toowong-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5214,6 +5385,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset waterway-catchment-basin-areas on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5308,6 +5480,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location,formatteddatetime",
+    .id_keys = "web_link",
     .description = "OpenDataSoft dataset green-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5325,6 +5498,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "date",
     .description = "OpenDataSoft dataset bikeway-counts on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5381,6 +5555,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset flood-study-hemmant-lytton on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5417,6 +5592,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset flood-study-albany-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5552,6 +5728,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location,formatteddatetime",
+    .id_keys = "web_link",
     .description = "OpenDataSoft dataset gold-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5569,6 +5746,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location,formatteddatetime",
+    .id_keys = "web_link",
     .description = "OpenDataSoft dataset creative-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5587,6 +5765,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site_name,location_description",
+    .id_keys = "site_no",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2012-2013 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -5739,6 +5918,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location,formatteddatetime,subject,venue",
+    .id_keys = "web_link",
     .description = "OpenDataSoft dataset films-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5775,6 +5955,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "name",
     .description = "OpenDataSoft dataset waste-transfer-stations on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5830,6 +6011,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-airport-environs-overlay-australian-noise-exposure-forecast-anef "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -5904,6 +6086,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location,formatteddatetime",
+    .id_keys = "web_link",
     .description = "OpenDataSoft dataset gold-kids-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -5921,6 +6104,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location,formatteddatetime",
+    .id_keys = "web_link",
     .description = "OpenDataSoft dataset mob-events on www.data.brisbane.qld.gov.au, "
       "a portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -5975,6 +6159,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "common_name,botanical_name",
+    .id_keys = "index",
     .description = "OpenDataSoft dataset street-tree-species on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6012,6 +6197,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset flood-study-kedron-brook on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6067,6 +6253,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location,formatteddatetime,subject,bookings",
+    .id_keys = "web_link",
     .description = "OpenDataSoft dataset business-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6085,6 +6272,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "street_name,key,suburb,suburb_list",
+    .id_keys = "key",
     .description = "OpenDataSoft dataset traffic-cctv-cameras on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6103,6 +6291,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-city-core-frame-parking-area-boundary "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
       "batch 67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6121,6 +6310,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "project_description,project_type,lgip_id,lgip_grid_mapref",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-active-and-public-transport-future-green-bridge "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -6140,6 +6330,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "flood-awareness-area-identified-for-review-overland-flow on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -6178,6 +6369,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "date+hour+mobile_zone",
     .description = "OpenDataSoft dataset parking-occupancy-forecasting-2023-2024 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6195,6 +6387,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location,formatteddatetime",
+    .id_keys = "web_link",
     .description = "OpenDataSoft dataset music-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6251,6 +6444,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "item_title,item_title_list,description,location",
+    .id_keys = "index",
     .description = "OpenDataSoft dataset public-art on www.data.brisbane.qld.gov.au, "
       "a portal new to the tree in batch 67 (own dataset). Explore v2.1 "
       "records, offset paging." },
@@ -6286,6 +6480,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location,formatteddatetime",
+    .id_keys = "web_link",
     .description = "OpenDataSoft dataset brisbane-botanic-gardens-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6303,6 +6498,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "street,category,tar_zone,loc_desc",
+    .id_keys = "meter_no",
     .description = "OpenDataSoft dataset brisbane-parking-meters on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6338,6 +6534,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-lgip-priority-infrastructure-area on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6484,6 +6681,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location,suburb",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset bike-repair-stations on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6501,6 +6699,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location,formatteddatetime,subject,bookings",
+    .id_keys = "web_link",
     .description = "OpenDataSoft dataset brisbane-city-council-events on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6555,6 +6754,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "project_description,project_type,lgip_id,lgip_grid_mapref",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset cp14-lgip-pfti-stormwater-future-sqid on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6611,6 +6811,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description,flag_code",
+    .id_keys = "flag_code",
     .description = "OpenDataSoft dataset brisbane-city-plan-2014-qpp-codes on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6721,6 +6922,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "project_description,project_type,lgip_id,lgip_cattype",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-lgip-pfti-stormwater-future-rehabilitation on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -6740,6 +6942,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description",
+    .id_keys = "objectid",
     .description = "OpenDataSoft dataset "
       "cp14-extractive-resources-key-resource-area-resource-processing-area "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -6758,6 +6961,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "description",
+    .id_keys = "index",
     .description = "OpenDataSoft dataset grants-program-summary on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6851,6 +7055,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "suburb,suburb_list",
+    .id_keys = "suburb+destination",
     .description = "OpenDataSoft dataset council-cabs-schedule on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6888,6 +7093,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "location_name,location_name_description,location_id_description,sensor_type",
+    .id_keys = "gauge+measured_text",
     .description = "OpenDataSoft dataset "
       "telemetry-sensors-rainfall-and-stream-heights-observations on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -6907,6 +7113,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "nom,name,libelle,titre,title,label,naam",
+    .id_keys = "measured",
     .description = "OpenDataSoft dataset "
       "telemetry-sensors-rainfall-and-stream-heights on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -6943,6 +7150,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset flood-study-nundah-creek on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
       "67 (own dataset). Explore v2.1 records, offset paging." },
@@ -6961,6 +7169,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset "
       "superseded-flood-study-bulimba-creek-oct-2014 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -6980,6 +7189,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-tingalpa-res-east-sub-model "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -6999,6 +7209,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-jindalee-sub-model on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -7018,6 +7229,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset "
       "superseded-flood-study-kedron-brook-sep-2014 on "
       "www.data.brisbane.qld.gov.au, a portal new to the tree in batch "
@@ -7037,6 +7249,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "site_name,location_description",
+    .id_keys = "site_no",
     .description = "OpenDataSoft dataset "
       "waterway-health-recreational-enterococci-monitoring-results-2019-2020 "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
@@ -7056,6 +7269,7 @@ static const hp_source HP3B67_ODS[] = {
     .page_size = 100,
     .timeout_ms = 40000,
     .title_keys = "attribute_description,attribute",
+    .id_keys = "attribute",
     .description = "OpenDataSoft dataset "
       "flood-study-citywide-overland-flow-tingalpa-res-west-sub-model "
       "on www.data.brisbane.qld.gov.au, a portal new to the tree in "
