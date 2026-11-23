@@ -1,0 +1,8 @@
+# s_bugfix
+Build: ld -r of obj/**/*.o minus the object under test (read-only), then
+`cc -O2 -Wall -Wextra -Wno-unused-parameter -pthread -Ithird_party -iquote . -iquote collectors/sources tests/unit/test_X.c <partial.o> -o <scratch>/t_X $(make -s print-ldlibs) $(make -s print-cflags)`; run `JO_DB=<scratch>/X.db t_X`. All four: "all passed", rc=0.
+
+1. lib/jsonstream.c js_scan (~line 190): the array's own `]` after a trailing scalar hit the `}`/`]` branch and took depth to -1 (never 0). Fix: `]` at depth 0 closes the scalar element (end=i, `]` left in buffer for the separator pass). Object elements unchanged (their own `}` closes at depth 1->0). Test: KNOWN BUG helper removed; asserts done and scanned==2 for ["a","b"], scanned==3 for [1,2,3] byte-by-byte. (Bare scalars are not emitted as records: that is jsonlist_emit's rule, unchanged.)
+2. lib/sgp4.c: jday epoch fix already present; Vallado vectors pass as hard ok(). Polar: sgp4_geodetic used r/cos(lat) (0/0); now |lat|>45deg uses z/sin(lat) - aC(1-e2) -> ~643 km at pole. known_bug helper removed.
+3. core/respcache.c: key stored truncated (63) but strcmp'd whole. Added rc_norm(): keys >=64 chars become first 31 chars + "~"+FNV-1a64 hex of whole key; used in get/put/drop. Test: long key retrievable, keys differing at pos 100 independent, re-put replaces, drop works.
+4. lib/ws.c: hostgate_url_check + fragment bound were already present in this checkout. Added no-network tests (before the no-WS skip): ws://169.254.169.254, wss://metadata.google.internal refused -1; with JO_HTTP_BLOCK_PRIVATE=1, ws://127.0.0.1 and ws://10.0.0.5 refused -1. Live cases still SKIP (libcurl 8.5.0 has no ws).
