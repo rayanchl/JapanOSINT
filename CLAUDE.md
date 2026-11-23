@@ -5,7 +5,7 @@ Rules and pointers only. Dated measurement history lives in `docs/history/`
 contradicts this file, this file is current. Both core rules are one idea: what
 we display is exactly what we actually obtained.
 
-**Registered source count: 105,229** (measured 2026-11-16, `make source-count`).
+**Registered source count: 105,228** (measured 2026-11-23, `make source-count`; the `geojson-file` test fixture is now behind `JO_TEST_PODS`).
 That number is dated; `make source-count` and `native/tools/registry-floor.txt`
 (plus `source-floor.txt`) are authoritative. A count is a reading of one tree:
 measure after every merge and re-record both floors (`make source-floor-record
