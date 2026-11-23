@@ -71,6 +71,31 @@ int main(void) {
     char *ej = camera_proxy_fetch(&g_db, "nope", &img, &n, ct, sizeof ct, &st);
     assert(ej && st == 404); free(ej); }
 
+  /* API-17: only camera records are proxied. A news item that carries an
+   * image URL, addressed by its full uid or by a bare id, is a 404 and its URL
+   * is never dialled; a row of the other camera record_type name is still
+   * served (it reaches the upstream refusal, a 502, not a 404). */
+  { sqlite3_stmt *s;
+    assert(sqlite3_prepare_v2(g_db.h,
+      "INSERT OR REPLACE INTO intel_items(uid,source_id,title,fetched_at,"
+      "record_type,properties) VALUES('news-feed|a1','news-feed','n',"
+      "'2026-10-06T00:00:00Z','article',"
+      "'{\"image\":\"http://127.0.0.1:9/x.jpg\"}')", -1, &s, NULL) == SQLITE_OK);
+    assert(sqlite3_step(s) == SQLITE_DONE); sqlite3_finalize(s);
+    assert(sqlite3_prepare_v2(g_db.h,
+      "INSERT OR REPLACE INTO intel_items(uid,source_id,title,fetched_at,"
+      "record_type,properties) VALUES('camera-discovery|cd1','camera-discovery',"
+      "'n','2026-10-06T00:00:00Z','camera-discovery',"
+      "'{\"url\":\"http://127.0.0.1:9/x.jpg\"}')", -1, &s, NULL) == SQLITE_OK);
+    assert(sqlite3_step(s) == SQLITE_DONE); sqlite3_finalize(s); }
+  { unsigned char *img = NULL; size_t n = 0; char ct[64]; int st = 0;
+    char *ej = camera_proxy_fetch(&g_db, "news-feed|a1", &img, &n, ct, sizeof ct, &st);
+    assert(ej && st == 404 && strstr(ej, "camera not found")); free(ej);
+    st = 0;           /* a bare id is prefixed with camera-discovery| */
+    ej = camera_proxy_fetch(&g_db, "a1", &img, &n, ct, sizeof ct, &st);
+    assert(ej && st == 404); free(ej); }
+  expect_generic("cd1");
+
   /* The removed env opt-in is ignored: still refused, still generic. */
   setenv("JO_CAMERA_ALLOW_LAN", "1", 1);
   expect_generic("loop");

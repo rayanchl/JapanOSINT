@@ -15,6 +15,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <time.h>
+#include "../lib/jocore.h"
 
 #define IVEC_SID "_image_embed"
 /* Images per POST, and raw bytes per POST before base64 (×4/3 on the wire).
@@ -55,13 +56,6 @@ static long env_long(const char *k, long dflt) {
   char *end = NULL;
   long v = strtol(e, &end, 10);
   return (end && end != e && v > 0) ? v : dflt;
-}
-
-static void iso_now(char *buf, size_t n) {
-  time_t t = time(NULL);
-  struct tm tm;
-  gmtime_r(&t, &tm);
-  strftime(buf, n, "%Y-%m-%dT%H:%M:%S.000Z", &tm);
 }
 
 /* Blob root, matching evidence.c exactly. */
@@ -881,7 +875,7 @@ int image_vec_tick(db_handle *db, http_client *http, int max_walk) {
   camera_stills_migrate(db);
   image_vec_migrate(db);
   char now[40];
-  iso_now(now, sizeof now);
+  jo_iso_now_ms0(now, sizeof now);
   char why[600];
   if (vecindex_refused(db, s, why, sizeof why)) {
     fprintf(stderr, "[image-vec] refused: %s\n", why);

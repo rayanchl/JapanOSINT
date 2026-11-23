@@ -9,6 +9,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <math.h>
+#include "../lib/jocore.h"
 #define UA "JapanOSINT/1.0 (github.com/rayanchl/JapanOSINT)"
 
 static cJSON *rate_num(long su,long fa){ long t=su+fa;
@@ -30,19 +31,6 @@ static void col_int(cJSON *o, const char *k, sqlite3_stmt *s, int i){
 static void col_real(cJSON *o, const char *k, sqlite3_stmt *s, int i){
   if (sqlite3_column_type(s,i)==SQLITE_NULL) cJSON_AddNullToObject(o,k);
   else cJSON_AddNumberToObject(o,k,sqlite3_column_double(s,i));
-}
-/* UTC ISO-8601 ms timestamp into `out` (>=40 bytes). */
-static void iso_now(char *out, size_t cap){
-  time_t now=time(NULL); struct tm g; gmtime_r(&now,&g);
-  struct timespec sp; clock_gettime(CLOCK_REALTIME,&sp);
-  /* Modulos, not defensiveness: %0Nd widths are minimums, so without them
-   * -Wformat-truncation must assume 11-20 characters per field. They are
-   * identity for every value gmtime_r/clock_gettime can return. */
-  snprintf(out,cap,"%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-    (unsigned)(g.tm_year+1900) % 10000u,(unsigned)(g.tm_mon+1) % 100u,
-    (unsigned)g.tm_mday % 100u,(unsigned)g.tm_hour % 100u,
-    (unsigned)g.tm_min % 100u,(unsigned)g.tm_sec % 100u,
-    (unsigned)(sp.tv_nsec/1000000) % 1000u);
 }
 /* Build a {"error":"code"} body (malloc'd). */
 static char *err_json(const char *code){
@@ -302,7 +290,7 @@ char *maintenance_list(db_handle *db, const char *name, const char *source_id,
 
   cJSON *pg=NULL;
   cJSON *arr=ml_page(db->h,L,arg,limit,offset,&pg);
-  char ts[40]; iso_now(ts,sizeof ts);
+  char ts[40]; jo_iso_now(ts,sizeof ts);
   cJSON *o=cJSON_CreateObject();
   cJSON_AddItemToObject(o,"data",arr);
   cJSON_AddItemToObject(o,"page",pg);
@@ -358,7 +346,7 @@ char *maintenance_digest(db_handle *db, int hours) {
   }
   sqlite3_finalize(s);
 
-  char ts[40]; iso_now(ts,sizeof ts);
+  char ts[40]; jo_iso_now(ts,sizeof ts);
   cJSON *o=cJSON_CreateObject();
   cJSON_AddStringToObject(o,"generated_at",ts);
   cJSON_AddNumberToObject(o,"window_hours",hours);
@@ -435,7 +423,7 @@ char *maintenance_source_detail(db_handle *db, const char *source_id){
   sqlite3_finalize(s);
   if (!src) return NULL;  /* unknown source → caller replies 404 */
 
-  char ts[40]; iso_now(ts,sizeof ts);
+  char ts[40]; jo_iso_now(ts,sizeof ts);
   cJSON *o=cJSON_CreateObject();
   cJSON_AddStringToObject(o,"generated_at",ts);
   cJSON_AddItemToObject(o,"source",src);

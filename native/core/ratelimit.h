@@ -37,6 +37,8 @@
 #ifndef JO_RATELIMIT_H
 #define JO_RATELIMIT_H
 
+#include <stddef.h>
+
 /* Route classes. Counters for different classes never share a slot, so a
  * burst of JWKS probes cannot lock a caller out of break-glass. */
 typedef enum {
@@ -63,6 +65,26 @@ typedef enum {
  * the whole seconds left in the current window on a denial, 0 on an allow. */
 int ratelimit_allow(rl_class cls, const char *key, int limit, int window_sec,
                     int *retry_after_sec);
+
+/* The identity a client is throttled under (API-11). `peer` is the TCP peer's
+ * text address; `xff` the raw X-Forwarded-For header or NULL. X-Forwarded-For
+ * is believed ONLY when the peer is listed in $JO_TRUSTED_PROXIES (comma
+ * separated exact addresses); then the right-most entry that is not itself a
+ * trusted proxy is the client. An untrusted peer's header is ignored whole, so
+ * a client cannot choose its own bucket by sending one. IPv4 text is
+ * normalised, IPv6 collapses to its /64 ("2001:db8:0:1::/64") so one host
+ * cannot mint 2^64 buckets; an unparseable value falls back to the peer. */
+void ratelimit_client_key(const char *peer, const char *xff,
+                          char *out, size_t cap);
+
+/* Break-glass attempt gate: 5 per client key per 60 s, then a GLOBAL ceiling
+ * ($JO_BREAKGLASS_GLOBAL_PER_MIN, default 60, 0 disables) over every key, so
+ * spraying 512 distinct /64s cannot walk the code space. The client bucket is
+ * charged first: a refused client does not spend the shared ceiling, and both
+ * are fixed windows, so a refusal never lasts past one window after the
+ * attacker stops. Returns 1 to proceed; 0 with *retry_after_sec set. */
+int ratelimit_breakglass_allow(const char *peer, const char *xff,
+                               int *retry_after_sec);
 
 /* Observability for /api/status: total denials since boot. */
 long ratelimit_denials(void);

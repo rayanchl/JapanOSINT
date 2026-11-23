@@ -88,7 +88,7 @@ static int listen_any(int *port) {
   return s;
 }
 
-static long long now_ms(void) { return mono_ms(); }
+static long long now_ms(void) { return jo_mono_ms(); }
 
 /* ---- a background job that occupies the worker ---------------------------- */
 typedef struct { const char *base; int timeout, hi; int rc; llm_worker_info wi; } bg;

@@ -26,15 +26,8 @@
 #include <string.h>
 #include <sys/time.h>
 #include <time.h>
+#include "../lib/jocore.h"
 
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u);
-}
 static unsigned long long fnv_str(unsigned long long h, const char *s) {
   for (const unsigned char *p = (const unsigned char *)(s ? s : ""); *p; p++)
     h = (h ^ *p) * 1099511628211ULL;
@@ -317,7 +310,7 @@ char *sourceapi_summary(db_handle *db, const char *id, int refresh) {
   llm.bound_queue_wait = 1;          /* a page is waiting; never queue forever */
   char model[128]; model_name(&llm, http, model, sizeof model);
   const char *model_key = model[0] ? model : "unknown";
-  char now[32]; iso_now(now, sizeof now);
+  char now[32]; jo_iso_now_s(now, sizeof now);
 
   if (!refresh) {
     char *hit = cached_summary(db, id, fp, model_key);

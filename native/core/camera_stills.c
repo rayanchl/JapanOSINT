@@ -94,6 +94,7 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
+#include "../lib/jocore.h"
 
 #ifndef JO_REPO_ROOT
 #define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
@@ -155,12 +156,6 @@ static char *cs_err(int *st, int code, const char *msg) {
   char *j = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
   return j;
-}
-
-static long long now_ms(void) {
-  struct timespec ts;
-  clock_gettime(CLOCK_MONOTONIC, &ts);
-  return (long long)ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
 }
 
 /* Case-insensitive substring, for URL shape heuristics. */
@@ -1548,14 +1543,14 @@ int camera_stills_capture_batch(db_handle *db, http_client *http, int limit,
   int nh = 0;
   int host_cap = cfg_host_per_tick();
 
-  long long deadline = now_ms() + cfg_tick_budget_ms();
+  long long deadline = jo_mono_ms() + cfg_tick_budget_ms();
   int done = 0, failed = 0, attempted = 0, host_deferred = 0, budget_left = 0;
   for (int i = 0; i < due.n && attempted < limit; i++) {
     if (cancel && *cancel) break;
     /* A wall-clock ceiling on the whole tick. One slow camera cannot push the
      * tick into the next one; the targets that did not get their turn stay due
      * and are picked up first next time, because the order is oldest-due. */
-    if (now_ms() > deadline) { budget_left = due.n - i; break; }
+    if (jo_mono_ms() > deadline) { budget_left = due.n - i; break; }
 
     char hk[256];
     host_key(due.v[i].url, hk, sizeof hk);

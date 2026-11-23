@@ -27,6 +27,7 @@
 #include "../third_party/cJSON.h"
 #include "csv.h"            /* csv_decode_sjis() — the Shift_JIS leg of jo_get */
 #include "feedlib.h"        /* feed_url_host_is_jp() — the gate on that leg   */
+#include "ws.h"             /* ws_last_oversize_dropped*() — jo_ws_oversize_notice */
 
 #include <ctype.h>
 #include <math.h>
@@ -407,6 +408,45 @@ static inline void jo_iso_now(char *o, size_t n) {
            (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 
+/* ---- the other formats core/ wrote with private copies (ARC-05) ----------
+ * jo_iso_now() above is the millisecond form. Seven more files in core/ kept a
+ * private helper because they write a DIFFERENT shape, and the shape is part of
+ * what they store or compare, so each is a named variant here rather than a
+ * flag. Output is byte-identical to the copies they replace (pinned by
+ * tests/unit/test_jocore_time.c). Every field is reduced to its printed width
+ * for the same -Wformat-truncation reason as jo_iso_now.
+ *
+ *   jo_iso_now_s     2026-11-23T04:05:06Z          seconds, no fraction
+ *   jo_iso_now_ms0   2026-11-23T04:05:06.000Z      the milliseconds written as
+ *                                                  zeros (image/entity vec)
+ *   jo_sql_now       2026-11-23 04:05:06           datetime('now') shape, which
+ *                                                  evidence.c hashes and stores
+ * All three read the wall clock with time(); on the impossible gmtime failure
+ * they write an empty string rather than a date assembled from the stack. */
+static inline void jo_fmt_utc_(char *o, size_t n, int sep, const char *frac) {
+  if (!o || n == 0) return;
+  o[0] = 0;
+  time_t t = time(NULL);
+  struct tm tm;
+  if (gmtime_r(&t, &tm) == NULL) return;
+  snprintf(o, n, "%04u-%02u-%02u%c%02u:%02u:%02u%s",
+           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+           (unsigned)tm.tm_mday % 100u, sep, (unsigned)tm.tm_hour % 100u,
+           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u, frac);
+}
+static inline void jo_iso_now_s(char *o, size_t n)   { jo_fmt_utc_(o, n, 'T', "Z"); }
+static inline void jo_iso_now_ms0(char *o, size_t n) { jo_fmt_utc_(o, n, 'T', ".000Z"); }
+static inline void jo_sql_now(char *o, size_t n)     { jo_fmt_utc_(o, n, ' ', ""); }
+
+/* CLOCK_MONOTONIC in milliseconds: the clock for deadlines, windows and ages
+ * that a wall-clock step (NTP, container resume) must not move. Nine private
+ * copies in core/ became this. (hostgate.c keeps its own: it adds a test skew.) */
+static inline long long jo_mono_ms(void) {
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  return (long long)ts.tv_sec * 1000LL + ts.tv_nsec / 1000000LL;
+}
+
 /* `days` before now as a bare ISO date (UTC) — the `from=` half of every
  * windowed API query. On the (impossible in practice) gmtime failure it writes
  * "0000-00-00" rather than a plausible date: a wrong window is worse than an
@@ -731,6 +771,34 @@ static inline void jo_truncation_notice(intel_sink *sink, const char *source_id,
                                         const char *remedy) {
   jo_truncation_notice_ex(sink, source_id, query, (long)used, available,
                           reason, remedy, NULL);
+}
+
+/* A WebSocket collector's disclosure of what lib/ws.c refused to buffer: a
+ * message over $JO_WS_MAX_MSG_BYTES is dropped whole (LIB-18, ARC-01), so the
+ * rows the run emitted are not everything the peer sent. Call after
+ * ws_collect() with the number of rows emitted; files nothing when nothing was
+ * dropped. The count of messages and their bytes go out as data (rule 2), not
+ * as the stderr line ws.c also writes. */
+static inline void jo_ws_oversize_notice_n(intel_sink *sink, const char *source_id,
+                                           const char *endpoint, long used,
+                                           int dropped, size_t bytes, size_t ceiling) {
+  if (dropped <= 0) return;
+  cJSON *x = cJSON_CreateObject();
+  if (x) {
+    cJSON_AddNumberToObject(x, "messages_dropped", (double)dropped);
+    cJSON_AddNumberToObject(x, "bytes_dropped", (double)bytes);
+    cJSON_AddNumberToObject(x, "max_message_bytes", (double)ceiling);
+  }
+  jo_truncation_notice_ex(sink, source_id, endpoint, used, -1,
+    "websocket messages over the per-message ceiling were dropped whole",
+    "raise JO_WS_MAX_MSG_BYTES if the upstream's messages are legitimately larger",
+    x);
+}
+static inline void jo_ws_oversize_notice(intel_sink *sink, const char *source_id,
+                                         const char *endpoint, long used) {
+  jo_ws_oversize_notice_n(sink, source_id, endpoint, used,
+                          ws_last_oversize_dropped(),
+                          ws_last_oversize_dropped_bytes(), ws_message_ceiling());
 }
 
 #endif /* JO_CORE_H */

@@ -40,6 +40,7 @@
 #include <string.h>
 #include <strings.h>
 #include <time.h>
+#include "../lib/jocore.h"
 
 #define CC_SEP            '\x01'   /* block separator; survives html_strip()  */
 #define CC_REFKEY_MAX     512
@@ -149,18 +150,6 @@ static void sha256_norm(const char *text, char out[65]) {
                    CC_NORM_VERSION, inner);
   if (n < 0 || (size_t)n >= sizeof pre) n = (int)strlen(pre);
   sha256_hex_bytes(pre, (size_t)n, out);
-}
-static void now_utc_sql(char out[20]) {
-  time_t t = time(NULL);
-  struct tm g;
-  gmtime_r(&t, &g);
-  strftime(out, 20, "%Y-%m-%d %H:%M:%S", &g);
-}
-static void now_iso(char out[32]) {
-  time_t t = time(NULL);
-  struct tm g;
-  gmtime_r(&t, &g);
-  strftime(out, 32, "%Y-%m-%dT%H:%M:%SZ", &g);
 }
 static unsigned fnv32(const char *s) {
   unsigned h = 2166136261u;
@@ -1204,7 +1193,7 @@ static void emit_change(db_handle *db, const char *sid, const char *key,
    * one overwritten row; the second keeps a page that oscillates between two
    * states over hours from folding every visit to state B onto one item. */
   char uid[512], iso[32];
-  now_iso(iso);
+  jo_iso_now_s(iso, sizeof iso);
   snprintf(uid, sizeof uid, "%.200s|content_change|%08x|%.12s|%lld",
            sid, fnv32(key), new_sha, (long long)time(NULL));
 
@@ -1348,7 +1337,7 @@ static int capture_inner(db_handle *db, const char *source_id,
   if (stored) { memcpy(stored, text, store_len); stored[store_len] = 0; }
 
   char ts[20];
-  now_utc_sql(ts);
+  jo_sql_now(ts, sizeof ts);
 
   if (!have_prev) {
     /* A first sighting is not a change: it establishes the baseline silently. */

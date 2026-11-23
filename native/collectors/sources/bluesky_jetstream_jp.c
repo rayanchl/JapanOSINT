@@ -6,6 +6,7 @@
  * features emitted via the geojson sink. */
 #include "source.h"
 #include "lib/ws.h"
+#include "lib/jocore.h"
 #include "lib/geojson.h"
 #include "third_party/cJSON.h"
 #include <stdio.h>
@@ -98,6 +99,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   bsky_ud u = { cJSON_CreateArray(), max };
   ws_collect(WS_URL, NULL, window, max, on_msg, &u);       /* err → 0 rows */
   int n = geojson_emit_features(sink, "bluesky-jetstream-jp", u.features);
+  jo_ws_oversize_notice(sink, "bluesky-jetstream-jp", WS_URL, n > 0 ? n : 0);
   cJSON_Delete(u.features);
   fprintf(stderr, "[bluesky-jetstream-jp] emitted %d\n", n);
   return n >= 0 ? 0 : -1;

@@ -12,6 +12,7 @@
 #include <string.h>
 #include <sqlite3.h>
 #include <time.h>
+#include "../lib/jocore.h"
 
 /* One embedding request per this many cards. Same default as the intel pod:
  * large enough that ~18,900 cards is ~590 requests, small enough that a
@@ -217,13 +218,6 @@ static char *svec_meta_get(db_handle *db, const char *k) {
 
 static void svec_sig_key(char *out, size_t cap, int kind) {
   snprintf(out, cap, "sig_%s", source_kind_name((source_kind)kind));
-}
-
-static void now_iso(char *at, size_t cap) {
-  time_t t = time(NULL);
-  struct tm tm;
-  gmtime_r(&t, &tm);
-  strftime(at, cap, "%Y-%m-%dT%H:%M:%SZ", &tm);
 }
 
 /* Is kind `kind` ready for the registry as it stands right now? */
@@ -548,7 +542,7 @@ int service_vec_build(db_handle *db) {
   vecindex_ensure_side_tables(db, &svec_spec);
   svec_meta_set(db, "state", "building");
   char now[40];
-  now_iso(now, sizeof now);
+  jo_iso_now_s(now, sizeof now);
   long budget = svec_max_per_run();
   if (budget == 0) budget = -1;                  /* -1 = no cap */
   vecindex_stats st = {0};

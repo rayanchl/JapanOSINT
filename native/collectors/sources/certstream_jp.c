@@ -10,6 +10,7 @@
  * fields / filters are faithful; documented post-parity. */
 #include "source.h"
 #include "lib/ws.h"
+#include "lib/jocore.h"
 #include "_timefmt.inc"
 #include "third_party/cJSON.h"
 #include <stdio.h>
@@ -23,16 +24,6 @@
 #define MAX_EVENTS 500
 
 typedef struct { cJSON *events; } cs_ud;
-
-static void now_iso(char *o, size_t n) {        /* new Date().toISOString() */
-  struct timeval tv; gettimeofday(&tv, NULL);
-  if (!o || n == 0) return;
-  o[0] = 0;
-  char base[32];
-  if (!jo_time_fmt((time_t)tv.tv_sec, "%Y-%m-%dT%H:%M:%S", base, sizeof base))
-    return;                          /* stays empty; the caller emits null */
-  snprintf(o, n, "%s.%03dZ", base, (int)(tv.tv_usec / 1000));
-}
 
 static const char *so(cJSON *o, const char *k) {
   cJSON *v = o ? cJSON_GetObjectItem(o, k) : NULL;
@@ -65,7 +56,7 @@ static int on_msg(const char *data, size_t len, void *udp) {
   cJSON *subj = cJSON_GetObjectItem(leaf, "subject");
   cJSON *iss  = cJSON_GetObjectItem(leaf, "issuer");
   cJSON *src  = d ? cJSON_GetObjectItem(d, "source") : NULL;
-  char iso[40]; now_iso(iso, sizeof iso);
+  char iso[40]; jo_iso_now(iso, sizeof iso);
 
   cJSON *ev = cJSON_CreateObject();
   cJSON_AddItemToObject(ev, "ts", iso[0] ? cJSON_CreateString(iso)
@@ -206,6 +197,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     i++;
   }
   cJSON_Delete(u.events);
+  jo_ws_oversize_notice(sink, "certstream-jp", WS_URL, n);
   fprintf(stderr, "[certstream-jp] emitted %d\n", n);
   return n >= 0 ? 0 : -1;
 }
