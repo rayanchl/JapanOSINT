@@ -1,0 +1,747 @@
+id_or_url	stage	reason
+JO68_ASIA_TW_E_LAND_GOV_TW_B3649	emit	EMITS_NOTHING: no records reached intel_items — but it FETCHED 234874 bytes over 1 request(s) and found no records in them, so this is a body that is not what the row expects 
+JO68_ASIA_TW_FIRE_E_LAND_GOV_TW_CDB0E	emit	EMITS_NOTHING: no records reached intel_items — but it FETCHED 114565 bytes over 1 request(s) and found no records in them, so this is a body that is not what the row expects 
+JO68_ASIA_TW_ILCCB_GOV_TW_10210	emit	EMITS_NOTHING: no records reached intel_items — but it FETCHED 119968 bytes over 1 request(s) and found no records in them, so this is a body that is not what the row expects 
+JO68_ASIA_TW_ILCPB_GOV_TW_9A80B	emit	EMITS_NOTHING: no records reached intel_items — but it FETCHED 112892 bytes over 1 request(s) and found no records in them, so this is a body that is not what the row expects 
+JO68_ASIA_TW_JIAOSI_E_LAND_GOV_TW_C7294	emit	EMITS_NOTHING: no records reached intel_items — but it FETCHED 100781 bytes over 1 request(s) and found no records in them, so this is a body that is not what the row expects 
+JO68_ASIA_TW_LOTONG_GOV_TW_E75AD	emit	EMITS_NOTHING: no records reached intel_items — but it FETCHED 109784 bytes over 1 request(s) and found no records in them, so this is a body that is not what the row expects 
+JO68_ASIA_TW_NHRC_CY_GOV_TW_E9F70	emit	EMITS_NOTHING: no records reached intel_items — but it FETCHED 175047 bytes over 1 request(s) and found no records in them, so this is a body that is not what the row expects 
+JO68_ASIA_TW_SUAO_GOV_TW_17D48	emit	EMITS_NOTHING: no records reached intel_items — but it FETCHED 119618 bytes over 1 request(s) and found no records in them, so this is a body that is not what the row expects 
+JO68_ASIA_TW_TFRI_GOV_TW_FF5D9	emit	EMITS_NOTHING: no records reached intel_items — but it FETCHED 176028 bytes over 1 request(s) and found no records in them, so this is a body that is not what the row expects 
+JO68_ASIA_TW_TPEX_BOND_ISSBD10_DATA	emit	COLLISION: 92 of 221 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR 
+JO68_ASIA_TW_TPEX_MOPSFIN_T187AP11_R	emit	COLLISION: 148 of 6947 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) O
+JO68_ASIA_TW_TPEX_MOPSFIN_T187AP30_O	emit	COLLISION: 1185 of 10609 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys)
+JO68_ASIA_TW_TWSE_OPENDATA_T187AP30_L	emit	COLLISION: 2168 of 14217 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys)
+JO68_ASIA_TW_TWSE_OPENDATA_T187AP46_L_11	emit	FETCH_FAILED: HTTP 307 | remedy: re-run; if the status persists the endpoint has moved or retired
+JO68_ASIA_TW_TWSE_OPENDATA_T187AP46_L_21	emit	FETCH_FAILED: HTTP 307 | remedy: re-run; if the status persists the endpoint has moved or retired
+JO68_ASIA_TW_UDN_COM_32FDD	emit	COLLISION: 19 of 20 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR t
+JO68_ASIA_TW_YUANSHAN_GOV_TW_1BA37	emit	EMITS_NOTHING: no records reached intel_items — but it FETCHED 130324 bytes over 1 request(s) and found no records in them, so this is a body that is not what the row expects 
+https://dart.fss.or.kr/api/todayRSS.xml	asia-probe	PROBE_ERR | RemoteDisconnected: Remote end closed connection without res (two readings)
+https://www.knruhs.telangana.gov.in/feed/	asia-probe	PROBE_NET_ERR | [Errno 104] Connection reset by peer (two readings)
+https://sti.huizhou.gov.cn/	asia-probe	PROBE_NET_ERR | [Errno 104] Connection reset by peer (two readings)
+https://www.boluo.gov.cn/	asia-probe	PROBE_NET_ERR | [Errno 104] Connection reset by peer (two readings)
+https://www.by.gov.cn/	asia-probe	PROBE_NET_ERR | [Errno 104] Connection reset by peer (two readings)
+http://www.furong.gov.cn/	asia-probe	PROBE_HTTP_ERR | Service Unavailable (two readings)
+https://www.haiyang.gov.cn/	asia-probe	PROBE_NET_ERR | [Errno 104] Connection reset by peer (two readings)
+https://www.huidong.gov.cn/	asia-probe	PROBE_NET_ERR | [Errno 104] Connection reset by peer (two readings)
+https://www.li-xian.gov.cn/	asia-probe	PROBE_NET_ERR | [Errno 104] Connection reset by peer (two readings)
+http://www.lishi.gov.cn/	asia-probe	PROBE_HTTP_ERR | Service Unavailable (two readings)
+https://www.nanchong.gov.cn/	asia-probe	PROBE_NET_ERR | [Errno 104] Connection reset by peer (two readings)
+https://www.wangdu.gov.cn/	asia-probe	PROBE_NET_ERR | [Errno 104] Connection reset by peer (two readings)
+https://www.wengyuan.gov.cn/	asia-probe	PROBE_NET_ERR | [Errno 104] Connection reset by peer (two readings)
+https://www.whjhq.gov.cn/	asia-probe	PROBE_NET_ERR | [Errno 104] Connection reset by peer (two readings)
+http://www.yuhua.gov.cn/	asia-probe	PROBE_HTTP_ERR | Service Unavailable (two readings)
+https://adoormunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://aiihph.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://aiipmr.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://aim.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://alappuzhamunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://aluvamunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://amethi.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict NET_ERR
+https://amreli.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://anand.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://anantnag.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://anthoormunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://arunachalforests.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://arunpol.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://atarijodhpur.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://attingalmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://balrampur.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://banaskantha.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://bandipore.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://barabanki.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://bsah.delhi.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://bsi.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://bsur.bihar.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://budgam.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://bulandshahar.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://burdwanmunicipality.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://cab.tycg.gov.tw/	asia-probe	PROBE_TIMEOUT | timeout (two readings)
+https://cbfcindia.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://censusindia.gov.in/census.website/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://cgswc.cg.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://chalakudymunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://changanasserymunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://chavakkadmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://chengannurmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://cherthalamunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://chitradurga.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://chitturthathamangalam.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://cht.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://ciba.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://cirg.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://coal.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://coimbatore.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://cpcri.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://csgrc.res.in/web/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://csp.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://csrtiber.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://cstri.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://dae.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://dbrait.andamannicobar.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://dcsem.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://dehradun.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://delhi.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://devbhumidwarka.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://dfe.gov.in/accredited-institutions	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://dghs.mohfw.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://dhar.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://dk.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://dmetodisha.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://eastchamparan.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://eastgarohills.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://eastkhasihills.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://education.sikkim.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://eloormunicipality.lsgkerala.gov.in/en	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://en.435.culture.ntpc.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=xmdoc/cont matched static/navigation or undated document links on spot check; probe verdict PASS
+https://en.culture.ntpc.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=xmdoc/cont matched static/navigation or undated document links on spot check; probe verdict PASS
+https://en.tshs.ntpc.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=xmdoc/cont matched static/navigation or undated document links on spot check; probe verdict PASS
+https://english.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://erattupettamunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+http://esaharyana.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://ettumanoormunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://fb.tycg.gov.tw/	asia-probe	PROBE_TIMEOUT | timeout (two readings)
+https://ferokemunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://fmuniversity.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://ganderbal.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://gbnagar.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://gbpihed.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://ghaziabad.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://gmch.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://gujarat.neva.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://gurugram.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://guruvayoormunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://hardoi.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://haripadmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://hartrans.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://hcraj.nic.in/hcraj/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://heavyindustries.gov.in/en	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://heritage.ahmedabadcity.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://hoshiarpur.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://hpsirmaur.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://iasst.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://ifgtb.icfre.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://ignca.gov.in/divisionss/kalanidhi/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://indore.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://insaindia.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://instpath.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://irittymunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://iwst.icfre.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://jaljeevanmission.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://jnarddc.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kalamasserymunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kalpettamunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kanhangadmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kannauj.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kanniyakumari.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kanpurdehat.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kargil.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kasaragodmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kattapanamunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kayamkulammunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kheda.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kodungalloormunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://koduvallymunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kondottymunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://koothuparambamunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kothamangalammunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kottayammunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kozhikode.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://ksrec.kerala.gov.in/website/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kulgam.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kunnamkulammunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kurukshetra.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://kushinagar.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://lalitkala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://livestock.kerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://lmc.up.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://madurai.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict NET_ERR
+http://mahapolice.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mahe.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mahoba.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://makaias.gov.in/museum.html	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://malappuram.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://malappurammunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mamit.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mananthavadymunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://manjerimunicipality.lsgkerala.gov.in/en	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mannarkkadmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mansa.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mattannurmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mausam.imd.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mavelikaramunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mbmc.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mcabohar.punjab.gov.in/Home	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mcbarnala.punjab.gov.in/Home	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mcbathinda.punjab.gov.in/Home/Index	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mchoshiarpur.punjab.gov.in/Home/Index	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mcludhiana.punjab.gov.in//Home/Index	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mcmoga.punjab.gov.in/Home/Index	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mcmohali.punjab.gov.in/Home/Index	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mcpathankot.punjab.gov.in/Home/Index	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mcpatiala.punjab.gov.in/Home/Index	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mcphagwara.punjab.gov.in/Home/Index	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://meerut.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://megahvt.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mib.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://mizoram.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://moga.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mpmmcc.tmc.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mpvidhansabha.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mukkammunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://mumbaipolice.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://museumandzoo.kerala.gov.in/index.php/institution/thiruvananthapuram/sree-chithra-art-gallery	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://muvattupuzhamunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://nagpur.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://ndc.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://necouncil.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://nedumangadmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://neyyattinkaramunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://nibe.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://nise.res.in/hi	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://nmi.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://northgarohills.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://northparavurmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://ottapalammunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://palamunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://panipat.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://panoormunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://papumpare.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://paradipport.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://parappanangadimunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://paravurmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://pathanamthittamunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://pattambimunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://payyanurmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://perinthalmannamunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://perumbavoormunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://pharmacy.mponline.gov.in/Portal/services/pharmacy/home.aspx	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://piravommunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://ponnanimunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://pulwama.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://punalurmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://punerailwaypolice.gov.in/mr	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict HTTP_ERR
+https://rajouri.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://rashtrapatibhavan.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://ribhoi.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://salem.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://scert.delhi.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://scert.epunjabschool.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://shopian.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://shornurmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://sirsa.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://sitapur.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://siwan.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict NET_ERR
+https://sjvn.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://southgarohills.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://sreekandapurammunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://sribs.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://sulthanbatherymunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://taliparambamunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://tanurmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://teaboard.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://thalasserymunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://thc.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://thcdc.hakka.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://thoubal.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://thrippunithuramunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+http://thsti.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://tirurangadimunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://tirurmunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+http://udyogaadhaar.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://unnao.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://uppolice.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://urdb.tycg.gov.tw/	asia-probe	PROBE_TIMEOUT | timeout (two readings)
+https://uttarakannada.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://vadakaramunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://vaikommunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://varkalamunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://virudhunagar.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict NET_ERR
+https://wadakancherymunicipality.lsgkerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://wcd.gujarat.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.ada.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict HTTP_ERR
+https://www.agriculture.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+http://ampri.res.in/hi/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.animal.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.artcenter.ntpc.gov.tw/xmdoc/cont?xsmsid=0G269628885538810196	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=xmdoc/cont matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.bade.tycg.gov.tw/	asia-probe	PROBE_TIMEOUT | timeout (two readings)
+https://www.beitun.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.bis.gov.in/?lang=hi	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.blf.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.bose.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.cazri.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.cci.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.ccmc.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.ccourt.go.kr/site/kor/main.do	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=bIdx= matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.cens.res.in/en/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.central.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.cgcri.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.cgivladi.gov.in/page/indo-russian-s-and-t-cooperation/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.chungbuk.go.kr/www/index.do	asia-probe	PROBE_ERR | RemoteDisconnected: Remote end closed connection without res (two readings)
+http://www.cifri.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://cirb.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.civil.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.cmet.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.confucius.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.construction.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://crridom.gov.in/hi	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.csr.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.csrtiber.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.csrtimys.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.cttc.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.culture.ntpc.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=xmdoc/cont matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.culture.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.cwprs.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.dadu.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.dajia.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.dali.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.daya.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.dgca.gov.in/digigov-portal/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.dgll.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.dongshi.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.drmr.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.east.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.epb.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.eso.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.fengyuan.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.fsi.nic.in/hindi/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://gcp.goa.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.gep-en.ntpc.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=xmdoc/cont matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.gep.ntpc.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=xmdoc/cont matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.gg.go.kr/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=bIdx= matched static/navigation or undated document links on spot check; probe verdict TIMEOUT
+https://www.gmch.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/node/ matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.gmrt.ncra.tifr.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.goa.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.greentribunal.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.guanyin.tycg.gov.tw/	asia-probe	PROBE_TIMEOUT | timeout (two readings)
+https://www.hakka.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.health.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.heast.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.heping.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.houli.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.hri.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.iacs.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.icmr.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.igib.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.iimc.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.ilosh.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.indemb-oman.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.ipd.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.ipft.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.iprc.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.ivri.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.labor.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.lbsnaa.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.linfamily.ntpc.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=xmdoc/cont matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.longjing.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.longtan.tycg.gov.tw/	asia-probe	PROBE_TIMEOUT | timeout (two readings)
+http://www.makaias.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.manage.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.mmrda.maharashtra.gov.in/mr	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.moef.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.moj.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.mol.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.museumandzoo.kerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.nantun.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.nari-icmr.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://nationallibrary.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.nbagr.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.nbair.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.nbfgr.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.nbri.res.in/hi	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.ncra.tifr.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.ndmc.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.nec.go.kr/site/nec/main.do	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=bIdx= matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.neeri.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://neigrihms.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.news.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.nhrc.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.nib.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://nii.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.nirjaft.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.nirt.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.north.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.nph.go.kr/nph/main/main.do	asia-probe	PROBE_ERR | RemoteDisconnected: Remote end closed connection without res (two readings)
+https://www.nrsc.gov.in/nrscnew/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.osha.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.peda.gov.in/main/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.pocheon.go.kr/gsm/index.do	asia-probe	PROBE_HTTP_ERR | Service Unavailable (two readings)
+https://www.qingshui.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.rcb.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.rdec.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+http://rmrc.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.rmrcbbsr.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.sac.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.sainikschoolpunglwa.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://schooleducationharyana.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://seepz.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://serc.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.shalu.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.shengang.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.shigang.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.sikkim.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.south.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://spices.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.sport.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.sshm.ntpc.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=xmdoc/cont matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.ssimphal.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.taiping.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.tanzi.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.tea.ntpc.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=xmdoc/cont matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.tifr.res.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.tmc.kerala.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.tourism.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.trichycorporation.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.ttsb.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.ud.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.ursc.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.vecc.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.vismuseum.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.west.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.wrs.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.wufeng.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.wuqi.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.wuri.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.xinshe.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.xitun.taichung.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=/post matched static/navigation or undated document links on spot check; probe verdict PASS
+https://www.xzcac.ntpc.gov.tw/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=xmdoc/cont matched static/navigation or undated document links on spot check; probe verdict PASS
+http://www.yeonje.go.kr/main.do	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=bIdx= matched static/navigation or undated document links on spot check; probe verdict PASS
+https://yamunanagar.nic.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict NET_ERR
+https://yanam.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://yavatmal.gov.in/	asia-probe	HELD_BACK_NAV_OR_DOC_SHAPE | href shape href_must=.pdf matched static/navigation or undated document links on spot check; probe verdict PASS
+https://openapi.twse.com.tw/v1/opendata/t187ap32_L	asia-probe	PROBE_HTTP_ERR | Temporary Redirect (two readings)
+https://openapi.twse.com.tw/v1/opendata/t187ap11_P	asia-probe	PROBE_HTTP_ERR | Temporary Redirect (two readings)
+https://cap-sources.s3.amazonaws.com/in-ndma-en/rss.xml	asia-probe	STALE | curated-feed: newest 2018-12-06
+https://rbi.org.in/AnnualReportMain_rss.xml	asia-probe	STALE | curated-feed: newest 2024-05-30
+https://www.bok.or.kr/portal/bbs/B0000338/news.rss?menuNo=200761	asia-probe	STALE | curated-feed: newest 2024-06-24
+https://www.bok.or.kr/portal/bbs/P0000528/news.rss?menuNo=200434	asia-probe	STALE | curated-feed: newest 2023-09-03
+https://www.sisain.co.kr/rss/allArticle.xml	asia-probe	STALE | curated-feed: newest 2024-06-18
+https://feeds.feedburner.com/cnaFirstNews	asia-probe	STALE | curated-feed: newest 2025-05-05
+http://www.people.com.cn/rss/politics.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/world.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/finance.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/society.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/legal.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/military.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/haixia.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/edu.xml	asia-probe	STALE | curated-feed: newest 2016-04-05
+http://www.people.com.cn/rss/culture.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/scitech.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/opinion.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/energy.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/env.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/health.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/it.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/auto.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/house.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/sports.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/ent.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/media.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/game.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/hm.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/dangshi.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/cpc.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/renshi.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/theory.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.people.com.cn/rss/ywkx.xml	asia-probe	STALE | curated-feed: newest 2016-04-05
+http://en.people.cn/rss/90000.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://en.people.cn/rss/90785.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://en.people.cn/rss/90777.xml	asia-probe	STALE | curated-feed: newest 2025-06-05
+http://www.china.org.cn/rss/1201719.xml	asia-probe	STALE | curated-feed: newest 2025-04-22
+https://www.chinafile.com/rss.xml	asia-probe	STALE | curated-feed: newest 2012-10-24
+https://www.hongkongfp.com/feed/	asia-probe	TAKEOVER_SUSPECT | curated-feed: Hong Kong Free Press HKFP
+http://cbmr.res.in/feedback.php	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <meta ht
+http://gandhismriti.gov.in/rss.xml	asia-probe	STALE | homepage-feed: newest 2024-11-13
+http://niam.res.in/rss.xml	asia-probe	STALE | homepage-feed: newest 2019-07-31
+http://nscd.gov.in/hi/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+http://rtdc.tourism.rajasthan.gov.in/Client/Feedback.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.
+http://www.cmeri.res.in/rss.xml	asia-probe	STALE | homepage-feed: newest 2017-03-09
+http://www.nias.go.kr/front/feedSearchMain.do?cmCode=M250218151518906	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="
+https://afrch.forest.gov.tw/rss	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="zh-Hant-TW" xmlns="http://www.w3.org/1999/xhtml"
+https://aiipmr.gov.in/Pages/Feedback.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en"> <head><meta charset="utf-8" /><meta nam
+https://atarijodhpur.res.in/feed/	asia-probe	HTTP_000 | homepage-feed: curl: (35) Recv failure: Connection reset by peer
+https://birac.nic.in/birac_feedback.php	asia-probe	NOT_A_FEED | homepage-feed: <input type="hidden" name="hidrandom" id="hidrandom" value="43f5370c4e29eff93eeb
+https://bitm.gov.in/feed/	asia-probe	HTTP_000 | homepage-feed: curl: (35) Recv failure: Connection reset by peer
+https://cbfcindia.gov.in/feedback.php	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <meta co
+https://ciirc.res.in/feed/	asia-probe	STALE | homepage-feed: newest 2023-09-05
+https://cirb.res.in/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://cstri.res.in/?feed=comments-rss2	asia-probe	EMPTY_FEED | homepage-feed: 
+https://cstri.res.in/?feed=rss2	asia-probe	STALE | homepage-feed: newest 2023-10-30
+https://education.nagaland.gov.in/feed/	asia-probe	HTTP_500 | homepage-feed: 
+https://education.sikkim.gov.in/GeneralSection/Feedback.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.
+https://en.mofa.gov.tw/Rss.aspx?n=101	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml"
+https://en.mofa.gov.tw/Rss.aspx?n=1447	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml"
+https://gpwd.mnd.gov.tw/RSS.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="zh-tw"> <head lang="zh-tw"><title> 國防部政治作戰局-首頁
+https://hsinchu.forest.gov.tw/rss	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="html" lang="zh-Hant-TW"> <head><meta charset="UTF
+https://iasst.gov.in/feed/	asia-probe	STALE | homepage-feed: newest 2023-03-29
+https://insaindia.res.in/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://insaindia.res.in/home/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://instem.res.in/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://iora.gujarat.gov.in/feedback.aspx	asia-probe	HTTP_000 | homepage-feed: curl: (35) Recv failure: Connection reset by peer
+https://jnarddc.gov.in/en/Feedback.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en" xmlns="http://www.w3.org/1999/xhtml"> <head><m
+https://lgdirectory.gov.in/citizenFeedback.do?OWASP_CSRFTOKEN=5HN8-RM2J-GQDR-24U3-18M9-4AV5-W10O-SS2U	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en-US" class="dyn detail-main-page dir-ltr conten
+https://lgdirectory.gov.in/citizenFeedback.do?OWASP_CSRFTOKEN=9UZP-R9YO-ZJ77-54U3-D4GJ-J6R6-986Y-M6JI	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en-US" class="dyn detail-main-page dir-ltr conten
+https://lhmc-hosp.gov.in/feedback.php?lang=1	asia-probe	HTTP_000 | homepage-feed: curl: (28) Operation timed out after 30002 milliseconds with 0 bytes received
+https://manipur.gov.in/?feed=comments-rss2	asia-probe	STALE | homepage-feed: newest 2019-08-19
+https://manipureducation.gov.in/about/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://mausam.imd.gov.in/responsive/feedback/feedback.php	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <title>F
+https://meecl.nic.in/index.php/feed/	asia-probe	HTTP_000 | homepage-feed: curl: (28) Operation timed out after 30001 milliseconds with 0 bytes received
+https://momamanipur.mn.gov.in/feed/	asia-probe	STALE | homepage-feed: newest 2024-11-06
+https://nhrc.cy.gov.tw/Feedback_Process.aspx?n=9919&sms=0	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml"
+https://nhrc.cy.gov.tw/Feedback_Select.aspx?n=9923&sms=0	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml"
+https://nigt.re.kr/gtck/rss.do	asia-probe	EMPTY_FEED | homepage-feed: 
+https://paradipport.gov.in/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://ppisr.res.in/feed/	asia-probe	STALE | homepage-feed: newest 2025-08-11
+https://py.gov.in/rss.xml	asia-probe	STALE | homepage-feed: newest 2024-10-28
+https://serc.res.in/rss.xml	asia-probe	HTTP_403 | homepage-feed: 
+https://sugarcane.res.in/?feed=comments-rss2	asia-probe	EMPTY_FEED | homepage-feed: 
+https://sugarcane.res.in/?feed=rss2	asia-probe	STALE | homepage-feed: newest 2025-04-25
+https://taiwanauj.nat.gov.tw/rss.php	asia-probe	NOT_A_FEED | homepage-feed: <script>window.location.href = '/rss';</script>
+https://taiwaninfo.nat.gov.tw/rss.php	asia-probe	NOT_A_FEED | homepage-feed: <script>window.location.href = '/rss';</script>
+https://tcnr.wda.gov.tw/Rss.aspx?n=7F3F8546BAB1C281&sms=36A0BB334ECB4011	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-hant-
+https://thmr.wda.gov.tw/Rss.aspx?n=08ADECCA86537C23&sms=36A0BB334ECB4011	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-hant-
+https://tour.yunlin.gov.tw/mainssl/uploads/yunlin/backend.xml	asia-probe	HTTP_404 | homepage-feed: 
+https://uhangridinopia.haenam.go.kr/rss/rss.php	asia-probe	NOT_A_FEED | homepage-feed: RSS 보기가 가능한 게시판이 없습니다.
+https://welfarepension.lsgkerala.gov.in/DBTPensionersSearch.aspx	asia-probe	HTTP_000 | homepage-feed: curl: (60) SSL certificate problem: self-signed certificate in certificate chain
+More details here: 	asia-probe	 | homepage-feed: 
+https://www.assembly.go.kr/portal/rss/rss/searchRss.do?menuNo=600251	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="ko"> <head> <title>RSS / 알림마당 / 대한민국 국회 홈페이지</ti
+https://www.barc.gov.in/rss_barc.xml	asia-probe	DUP_TREE | homepage-feed: 
+https://www.beinan.gov.tw/%e9%a6%96%e9%a0%81/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://www.bisr.res.in/audi_feedback.php	asia-probe	NOT_A_FEED | homepage-feed: <!-- Main Header --> <!-- Main Menu --> <!-- #############
+https://www.bose.res.in/Feedback.jsp	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en"> <head> <!--Jagadish code start --> <
+https://www.brics2026.gov.in/feed/	asia-probe	HTTP_403 | homepage-feed: 
+https://www.caa.gov.tw/RssNewsContent.aspx?a=165&ngid=1&lang=1	asia-probe	DUP_TREE | homepage-feed: 
+https://www.caa.gov.tw/RssNewsContent.aspx?a=166&ngid=2&lang=1	asia-probe	DUP_TREE | homepage-feed: 
+https://www.caa.gov.tw/RssNewsContent.aspx?a=168&ngid=4&lang=1	asia-probe	DUP_TREE | homepage-feed: 
+https://www.caa.gov.tw/RssNewsContent.aspx?a=169&ngid=5&lang=1	asia-probe	DUP_TREE | homepage-feed: 
+https://www.caa.gov.tw/RssNewsContent.aspx?a=170&ngid=6&lang=1	asia-probe	DUP_TREE | homepage-feed: 
+https://www.cbc.gov.tw/tw/rss-302-1.xml	asia-probe	HTTP_000 | homepage-feed: curl: (35) Recv failure: Connection reset by peer
+https://www.cdc.gov.tw/En/RSS	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en"> <head> <title>RSS - Taiwan Centers for Dis
+https://www.cgcri.res.in/feed/	asia-probe	STALE | homepage-feed: newest 2025-06-04
+https://www.cgivladi.gov.in/feedback.php	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en-US"> <head> <title>Feedback / Consulate Genera
+https://www.chcsec.gov.tw/RSS.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml" la
+https://www.chpb.gov.tw/StaticPage/RSS	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="zh-Hant-TW" class="no-js"> <head> <meta cha
+https://www.cksmh.gov.tw/RSS.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml" la
+https://www.cksmh.gov.tw/rss.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml" la
+https://www.cmlre.gov.in/rss.xml	asia-probe	STALE | homepage-feed: newest 2023-07-03
+https://www.fda.gov.tw:443/TC/RSS.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-Hant-
+https://www.fia.gov.tw/Rss	asia-probe	NOT_A_FEED | homepage-feed: <!doctype html> <html lang="zh-Hant-TW"> <
+https://www.fnp.gov.tw/Rss	asia-probe	NOT_A_FEED | homepage-feed: <!doctype html> <html lang="zh-Hant-TW"> <
+https://www.forest.gov.tw/rss	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="html" data-darkmode="1" lang="zh-Hant-TW"> <head>
+https://www.fsc.gov.tw/ch/main.jsp?websitelink=rss.jsp&mtitle=RSS	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <!-- saved from url=(0040)http://v3.bootcss.com/examples/ca
+https://www.greentribunal.gov.in/rss.xml	asia-probe	DUP_TREE | homepage-feed: 
+https://www.hbcse.tifr.res.in/rss.xml	asia-probe	HTTP_000 | homepage-feed: curl: (35) Recv failure: Connection reset by peer
+https://www.hccc.gov.tw/zh-tw/Home/RSS	asia-probe	DUP_TREE | homepage-feed: 
+https://www.hccp.gov.tw/ch/home.jsp?id=135&parentpath=0,2&mcustomize=rss.jsp	asia-probe	NOT_A_FEED | homepage-feed: <!-- 程式名稱：home.jsp 說明： 開發者：Nash 開發日期：2016/3/23 修改者： 修改日期： 版本：ver1.0 --
+https://www.ib.gov.tw/ch/main.jsp?websitelink=rss.jsp&mtitle=RSS	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <!--[if (gte IE 9)/!(IE)]><!--> <html class="not-ie no-
+https://www.iot.gov.tw/zh_tw/siteinfo/proclaim/rss	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="zh_tw" class="orbit"> <head> <meta http-equiv="Conte
+https://www.k12ea.gov.tw/Tw/Unique/RSS	asia-probe	DUP_TREE | homepage-feed: 
+https://www.kcc.gov.tw/Rss.aspx?n=136&sms=0	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml" la
+https://www.kipf.re.kr/bbs/kor_Customer_Feedback.do;jsessionid=95E11B8985FB99EB0BFE54BAADCE0E65	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang='ko'> <he
+https://www.kma.go.kr/kma/guide/feedback.jsp	asia-probe	HTTP_000 | homepage-feed: curl: (35) Recv failure: Connection reset by peer
+https://www.mkport.gov.tw/Bulletin/FeedbackList.aspx?1=1&MenuID=F523D2475D2F5F37	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w
+https://www.mlvillage.gov.tw/NewsRss.aspx?Parser=9,3,123	asia-probe	EMPTY_FEED | homepage-feed: 
+https://www.mof.gov.tw/Rss	asia-probe	HTTP_000 | homepage-feed: curl: (35) Recv failure: Connection reset by peer
+https://www.mofa.gov.tw/Rss.aspx?n=101	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml"
+https://www.mofa.gov.tw/Rss.aspx?n=1447	asia-probe	HTTP_000 | homepage-feed: curl: (35) Recv failure: Connection reset by peer
+https://www.moi.gov.tw/RSS.aspx?n=12363	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml"
+https://www.ncess.gov.in/feedback_form.php	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en"> <head> <meta name="viewport" co
+https://www.ncfta.gov.tw/RSS.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml" la
+https://www.nib.gov.in/feedback.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml" lang="en"> <h
+https://www.nib.gov.in/rss.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml" lang="en"> <h
+https://www.niot.res.in/niot_feedback.php	asia-probe	NOT_A_FEED | homepage-feed: <!doctype html> <html class="no-js" lang="zxx"> <head> <meta charset="u
+https://www.nrsc.gov.in/nrscnew/feedback.php	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8" /> <meta
+https://www.ntbca.gov.tw/Rss	asia-probe	NOT_A_FEED | homepage-feed: <!doctype html> <html lang="zh-Hant-TW"> <
+https://www.ntepb.gov.tw/NewsRss.aspx	asia-probe	DUP_TREE | homepage-feed: 
+https://www.peda.gov.in/main/feedback.php	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta http-eq
+https://www.taimali.gov.tw/home/index.php?format=feed&type=atom	asia-probe	EMPTY_FEED | homepage-feed: 
+https://www.taimali.gov.tw/home/index.php?format=feed&type=rss	asia-probe	EMPTY_FEED | homepage-feed: 
+https://www.tainan.gov.tw/rss.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml" la
+https://www.taiwan.gov.tw/rss_intro.php	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.or
+https://www.tajmahal.gov.in/feedback.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!doctype html> <html lang="en"> <head><title> Feedback </title><meta
+https://www.tlm.taichung.gov.tw/Eng/NewsRSS.aspx	asia-probe	EMPTY_FEED | homepage-feed: 
+https://www.tna.gov.tw/StaticPage/RSS	asia-probe	NOT_A_FEED | homepage-feed: <!-- 經典：contents_wrap-classic --> <!-- 飛安：contents_wrap-safety -->
+https://www.tncsec.gov.tw/RSS.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml" la
+https://www.ttcsec.gov.tw/RSS.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml" la
+https://www.ttjfng.gov.tw/home/index.php?format=feed&type=rss	asia-probe	STALE | homepage-feed: newest 2018-06-14
+https://www.ttypg.gov.tw/home/index.php?format=feed&type=atom	asia-probe	EMPTY_FEED | homepage-feed: 
+https://www.ttypg.gov.tw/home/index.php?format=feed&type=rss	asia-probe	EMPTY_FEED | homepage-feed: 
+https://www.typl.gov.tw/zh-tw/RSS	asia-probe	NOT_A_FEED | homepage-feed: <!doctype html> <html lang="zh-tw"> <head> <meta name="viewport" cont
+https://www.ursc.gov.in/feedback.jsp	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en"> <head> <title>Feedback</title> <li
+https://yct168.wda.gov.tw/Rss.aspx?n=1C5595E1CCB626DC&sms=36A0BB334ECB4011	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-hant-
+https://playinmatch.plus/feed/	asia-probe	TAKEOVER_SUSPECT | homepage-feed: Playinmatch
+https://csgrc.res.in/feed/	asia-probe	STALE | homepage-feed: newest 2024-04-03
+https://ddnews.gov.in/feed/	asia-probe	HTTP_000 | homepage-feed: curl: (28) Operation timed out after 30002 milliseconds with 0 bytes received
+https://dic.gov.in/feed/	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en-US"> <head> <!-- Meta Tags --> <meta charset=
+https://corianderleaf.co.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://ignca.gov.in/feed/	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <!--[if IE 7]> <html class="ie ie7" lang="en-US"> <!
+https://biharexpress.in/feed/	asia-probe	HTTP_410 | homepage-feed: 
+https://jnarddc.gov.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+http://nscd.gov.in/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://www.rmrcbbsr.gov.in/feed/	asia-probe	STALE | homepage-feed: newest 2022-04-26
+https://kscste.kerala.gov.in/feed/	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en-GB"> <head> <meta name="MobileOptimized" content=
+http://119.gg.go.kr/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://meecl.nic.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://ncsc.nic.in/feed/	asia-probe	HTTP_500 | homepage-feed: 
+https://ntca.gov.in/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://prasarbharati.gov.in/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://nehrusciencecentre.gov.in/feed/	asia-probe	STALE | homepage-feed: newest 2022-10-13
+https://www.ongjin.go.kr/feed/	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="ko"> <head> <meta charset="UTF-8"> <title>요청하신 홈페
+https://coem.kerala.gov.in/feed/	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en-GB"> <head> <meta name="MobileOptimized" conten
+https://gcp.goa.gov.in/feed/	asia-probe	HTTP_403 | homepage-feed: 
+https://4socio.com/feed/	asia-probe	STALE | homepage-feed: newest 2021-04-04
+https://natpac.kerala.gov.in/feed/	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en-GB"> <head> <meta charset="UTF-8">
+https://www.nbagr.res.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://kudremukhore.co.in/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://www.goa.gov.in/feed/	asia-probe	STALE | homepage-feed: newest 2016-06-24
+https://livestock.kerala.gov.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://upayngo.org/feed/	asia-probe	STALE | homepage-feed: newest 2020-05-02
+https://cstri.res.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://vedicheritage.gov.in/feed/	asia-probe	NOT_A_FEED | homepage-feed: ﻿<!DOCTYPE html> <!--[if IE 7]> <html class="ie ie7" lang="en-US"> <![endif]-
+https://cmerti.res.in/feed/	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE HTML> <html lang="en-US"> <head> <meta charset="UTF-8"> <meta
+https://prasanthigram.sssihms.org/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://iccs.res.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://kwa.kerala.gov.in/feed/	asia-probe	HTTP_000 | homepage-feed: curl: (35) Recv failure: Connection reset by peer
+https://rscbhopal.gov.in/feed/	asia-probe	STALE | homepage-feed: newest 2022-01-08
+https://ciba.res.in/feed/	asia-probe	HTTP_000 | homepage-feed: curl: (35) Recv failure: Connection reset by peer
+http://sugarcane.res.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://www.bis.gov.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://mnre.gov.in/feed/	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html><html class="default-theme" lang="en"><head><meta charSet="utf-8"
+https://manipur.gov.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://m.fafa117mudah.com/feed/	asia-probe	STALE | homepage-feed: newest 2025-01-01
+https://adch.ac.in/feed/	asia-probe	STALE | homepage-feed: newest 2025-07-31
+https://www.dst.gov.in/feed/	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html><html class="default-theme" lang="en"><head><meta charSet="utf-8"
+https://hitclub6868.cx/feed/	asia-probe	TAKEOVER_SUSPECT | homepage-feed: HITCLUB – Vị Thế Cạnh Tranh Trong Phân Khúc Game Đổi Thưởng
+https://chavakkadmunicipality.lsgkerala.gov.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://mostbetworld.net/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://seepz.gov.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+http://www.nias.go.kr/front/feedSearchDtl.do?cmCode=M250218151518906®Code=	asia-probe	HTTP_400 | rss-index-feed: 
+https://jnarddc.gov.in/hindi/Feedback.aspx	asia-probe	NOT_A_FEED | rss-index-feed: <!DOCTYPE html> <html lang="hi" xmlns="http://www.w3.org/1999/xhtml"> <head id
+https://www.fda.gov.tw:443/TC/rss.aspx	asia-probe	NOT_A_FEED | rss-index-feed: <!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-Hant-
+https://www.hccp.gov.tw/ch/hotkey_print.jsp?mtitle=RSS%E8%A8%82%E9%96%B1&contentlink=ap/rss.jsp&dataserno=&mserno=null&id=135&contentid=135&page=null	asia-probe	NOT_A_FEED | rss-index-feed: <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "https://www.w3
+https://www.mofa.gov.tw/Rss.aspx?n=1447	asia-probe	NOT_A_FEED | rss-index-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml"
+https://www.nrsc.gov.in/nrscnew/feedback.php?lang_code=en	asia-probe	NOT_A_FEED | rss-index-feed: <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8" /> <meta
+https://www.nrsc.gov.in/nrscnew/feedback.php?lang_code=hi	asia-probe	NOT_A_FEED | rss-index-feed: <!DOCTYPE html> <html lang="hi"> <head> <meta charset="utf-8" /> <meta
+http://icfire.nhi.go.kr/crs/schedule/crsScheduleList.do;jsessionid=RSG36CgqAYWCWPN3fain58Sb.node111	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="ko"> <head> <title
+https://ampri.res.in/hi/?feed=comments-rss2	asia-probe	EMPTY_FEED | homepage-feed: 
+https://ampri.res.in/hi/?feed=rss2	asia-probe	EMPTY_FEED | homepage-feed: 
+https://feedback.chshb.gov.tw/feedback.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml"> <head><meta
+https://gmch.gov.in/rss.xml	asia-probe	STALE | homepage-feed: newest 2018-08-14
+https://radio.kasi.re.kr/feedback.php	asia-probe	NOT_A_FEED | homepage-feed: <!doctype html> <html lang="ko"> <head> <meta charset="utf-8"> <meta n
+https://taitung.forest.gov.tw/rss	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="html" lang="zh-Hant-TW"> <head><meta charset="UTF
+https://www.bamid.gov.tw/RSS.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml" la
+https://www.banking.gov.tw/ch/main.jsp?websitelink=rss.jsp&mtitle=RSS	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <!--[if (gte IE 9)/!(IE)]><!--> <html class="not-ie no-
+https://www.cmc.gov.tw/rss	asia-probe	HTTP_000 | homepage-feed: curl: (35) Recv failure: Connection reset by peer
+https://www.dogr.res.in/index.php?format=feed&type=atom	asia-probe	HTTP_000 | homepage-feed: curl: (56) CONNECT tunnel failed, response 502
+https://www.dogr.res.in/index.php?format=feed&type=rss	asia-probe	HTTP_000 | homepage-feed: curl: (56) CONNECT tunnel failed, response 502
+https://www.e-land.gov.tw/RSS.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html id="FormHtml" xmlns="http://www.w3.org/1999/xhtml"
+https://www.feb.gov.tw/ch/main.jsp?websitelink=rss.jsp&mtitle=RSS	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <!--[if (gte IE 9)/!(IE)]><!--> <html class="not-ie no-
+https://www.gmch.gov.in/rss.xml	asia-probe	STALE | homepage-feed: newest 2018-08-14
+https://www.ils.res.in/feed/	asia-probe	STALE | homepage-feed: newest 2024-09-11
+https://www.ivri.nic.in/Technologies/FeedTechnologies.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang = "en"> <head><meta charset="utf-8" /><meta h
+https://www.ivri.nic.in/feedback/feedback.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html> <head><title> </title><meta charset="utf-8" />
+https://www.ivri.nic.in/otherpages/feedbackSystem.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang = "en"> <head><meta charset="utf-8" /><meta h
+https://www.ivri.nic.in/services/AnimFeed.aspx	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang = "en"> <head><meta charset="utf-8" /><meta h
+https://www.kosac.re.kr/menus/252/sns/instagram/feed	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html><html lang="ko"><head><meta charSet="utf-8"/><meta name="viewport
+https://www.namr.gov.tw/ch/home.jsp?id=63&parentpath=0,9&mcustomize=rss.jsp	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <!-- saved from url=(0040)http://v3.bootcss.com/examples/
+https://www.nhclac.gov.tw/RSS.aspx	asia-probe	HTTP_403 | homepage-feed: 
+https://www.ntbna.gov.tw/Rss	asia-probe	HTTP_000 | homepage-feed: curl: (35) Recv failure: Connection reset by peer
+https://www.tifrh.res.in/feed/	asia-probe	EMPTY_FEED | homepage-feed: 
+https://sribs.res.in/feed/	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en-GB"> <head> <meta charset="UTF-8"> <meta name
+http://ampri.res.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://rfri.icfre.gov.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://www.iigm.res.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://tallbird.in/feed/	asia-probe	HTTP_404 | homepage-feed: 
+https://kscste.kerala.gov.in/feed/	asia-probe	NOT_A_FEED | homepage-feed: <!DOCTYPE html> <html lang="en-GB"> <head> <meta name="MobileOptimized" content=
+https://openapi.twse.com.tw/v1/exchangeReport/TWT84U	asia-probe	HTTP_307 | tw-openapi: endpoint in the swagger answers a redirect, not data
+https://openapi.twse.com.tw/v1/opendata/t187ap07_X_mim	asia-probe	HTTP_307 | tw-openapi: endpoint in the swagger answers a redirect, not data
+https://openapi.twse.com.tw/v1/exchangeReport/FMNPTK_ALL	asia-probe	HTTP_307 | tw-openapi: endpoint in the swagger answers a redirect, not data
+https://openapi.twse.com.tw/v1/exchangeReport/STOCK_FIRST	asia-probe	HTTP_307 | tw-openapi: endpoint in the swagger answers a redirect, not data
+https://openapi.twse.com.tw/v1/block/BFIAUU_y	asia-probe	HTTP_307 | tw-openapi: endpoint in the swagger answers a redirect, not data
+https://openapi.twse.com.tw/v1/opendata/t187ap29_A_L	asia-probe	HTTP_307 | tw-openapi: endpoint in the swagger answers a redirect, not data
+https://openapi.twse.com.tw/v1/opendata/OpenData_BRK01	asia-probe	HTTP_307 | tw-openapi: endpoint in the swagger answers a redirect, not data
+https://openapi.twse.com.tw/v1/opendata/t187ap37_L	asia-probe	HTTP_307 | tw-openapi: endpoint in the swagger answers a redirect, not data
+https://openapi.twse.com.tw/v1/exchangeReport/BFI61U	asia-probe	HTTP_307 | tw-openapi: endpoint in the swagger answers a redirect, not data
+https://openapi.twse.com.tw/v1/opendata/t187ap20	asia-probe	HTTP_307 | tw-openapi: endpoint in the swagger answers a redirect, not data
+https://openapi.twse.com.tw/v1/opendata/t187ap43_L	asia-probe	HTTP_307 | tw-openapi: endpoint in the swagger answers a redirect, not data
+https://openapi.twse.com.tw/v1/opendata/t187ap16_L	asia-probe	HTTP_307 | tw-openapi: endpoint in the swagger answers a redirect, not data
+https://www.tpex.org.tw/openapi/v1/tpex_warrant_suspend_today	asia-probe	EMPTY_RESULTSET | tw-openapi: 
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/2	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/3	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/7	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/10	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/13	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/25	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/26	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/27	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/28	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/29	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/30	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/33	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/34	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/35	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/36	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/37	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/38	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/39	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/41	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/42	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/43	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/45	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/46	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/47	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/48	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/49	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/50	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/51	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/53	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/54	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/55	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/MUgNYKTZniVQUZ8C/arcgis/rest/services/Juidco/FeatureServer/57	asia-probe	EMPTY_OR_ERROR | arcgis: {'count': 0}
+https://services7.arcgis.com/PVhiR1dVuMSOD2an/arcgis/rest/services/Bangalore_Wards/FeatureServer	asia-probe	SERVICE_ERROR | arcgis: {"code": 499, "message": "Token Required", "messageCode": "SB_0006", "details": 
+https://services7.arcgis.com/PVhiR1dVuMSOD2an/arcgis/rest/services/Enriched_Ward_Zone_PD/FeatureServer	asia-probe	SERVICE_ERROR | arcgis: {"code": 499, "message": "Token Required", "messageCode": "SB_0006", "details": 
+https://services7.arcgis.com/PVhiR1dVuMSOD2an/arcgis/rest/services/Enriched_Ward_Zone_PD_Hotspots_Bulletin_1/FeatureServer	asia-probe	SERVICE_ERROR | arcgis: {"code": 499, "message": "Token Required", "messageCode": "SB_0006", "details": 
+https://services7.arcgis.com/PVhiR1dVuMSOD2an/arcgis/rest/services/Enriched_Ward_Zone_PD_Hotspots_Bulletin_2/FeatureServer	asia-probe	SERVICE_ERROR | arcgis: {"code": 499, "message": "Token Required", "messageCode": "SB_0006", "details": 
+https://services7.arcgis.com/PVhiR1dVuMSOD2an/arcgis/rest/services/Ward_Zone/FeatureServer	asia-probe	SERVICE_ERROR | arcgis: {"code": 499, "message": "Token Required", "messageCode": "SB_0006", "details": 
+https://services7.arcgis.com/PVhiR1dVuMSOD2an/arcgis/rest/services/Ward_Zone_API/FeatureServer	asia-probe	SERVICE_ERROR | arcgis: {"code": 499, "message": "Token Required", "messageCode": "SB_0006", "details": 
+amc.gov.in	asia-probe	HAS_FEED_ROW | homepage-html: https://amc.gov.in/
+fri.icfre.gov.in	asia-probe	HAS_FEED_ROW | homepage-html: https://fri.icfre.gov.in/hindi/
+haryanaassembly.gov.in	asia-probe	HAS_FEED_ROW | homepage-html: https://haryanaassembly.gov.in/
+www.cmeri.res.in	asia-probe	HAS_FEED_ROW | homepage-html: http://www.cmeri.res.in/
+www.ey.gov.tw	asia-probe	HAS_FEED_ROW | homepage-html: https://www.ey.gov.tw/en/Member_Info.aspx?n=9D8DE2B443B545C3&s=28FDA1134172509E
+www.hrd.gov.tw	asia-probe	HAS_FEED_ROW | homepage-html: https://www.hrd.gov.tw/
+www.knruhs.telangana.gov.in	asia-probe	HAS_FEED_ROW | homepage-html: https://www.knruhs.telangana.gov.in/
+JO68_JPDIS_4D293B9508	jpdisaster-probe	https://services8.arcgis.com/rGc6Kyg1ETR5TWY9/arcgis/rest/services/1114%E7%81%BD%E5%AE%B3VC/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&orderByFields=FID%20ASC&resultRecordCount=1000&f=json | PATH_UNRESOLVED | PATH_UNRESOLVED | array_path 'features' not present in th
+JO68_JPDIS_B7740C751F	jpdisaster-probe	https://services.arcgis.com/VZFBz62gxB8VrbIS/arcgis/rest/services/2024_Rolwaling_map_WFL1/FeatureServer/10/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&orderByFields=OBJECTID_1%20ASC&resultRecordCount=1000&f=json | TOO_BIG | TOO_BIG | over probe cap
+JO68_CAM_JP_KAWABOU_4701	webcams	https://www.river.go.jp/kawabou/file/files/obslist/obs/preflist/4701.json | EMPTY | 沖縄県: prefecture file answers but lists 0 cameras
+JO68_CAM_AGS_7ad302f2	webcams	https://services1.arcgis.com/PRoAPGnMSUqvTrzq/arcgis/rest/services/TrafficCameraLocationsView/FeatureServer/0 | EXCLUDED_BY_REVIEW | Montgomery County, Texas IT-GIS / Traffic Camera Locations View: left out on review (see report)
+JO68_CAM_AGS_677d4842	webcams	https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/StormResponse_TrafficCameras/FeatureServer/0 | EXCLUDED_BY_REVIEW | City of Seattle ArcGIS Online / WinterWeatherResponse_TrafficCameras: left out on review (see report)
+JO68_CAM_AGS_03a353cf	webcams	https://services1.arcgis.com/XannvQVnsM1hoZyv/arcgis/rest/services/Webcam/FeatureServer/0 | EXCLUDED_BY_REVIEW | I.D.T. della Lombardia / Webcam: left out on review (see report)
+-	webcams	https://verkehr.autobahn.de/o/autobahn/A1/services/webcam | EMPTY | "Autobahn GmbH API answers {""webcam"":[]} for A1,A2,A3,A7,A9,A100 on 2026-11-16: endpoint live, no cameras published"
+-	webcams	https://its.txdot.gov/its/DistrictIts/GetCctvStatusListByDistrict?districtCode=AUS | SHAPE_UNSUPPORTED | TxDOT ITS: cameras nested in an object keyed by roadway name; no array_path can name every roadway
+-	webcams	https://oktraffic.org/api/CameraPoles | NO_URL_FIELD | 229 camera poles with id/name only, no image or stream URL in the listing
+-	webcams	https://eismoinfo.lt/weather-conditions-service | NOT_A_CAMERA_LIST | road weather stations; no camera image field found
+-	webcams	https://weathercams.faa.gov/api/sites | AUTH_REQUIRED | HTTP 401 Unauthorized
+-	webcams	https://www.wsdot.com/Traffic/api/HighwayCameras/HighwayCamerasREST.svc/GetCamerasAsJson | AUTH_REQUIRED | HTTP 401, access code required
+-	webcams	https://api.qldtraffic.qld.gov.au/v1/webcams | AUTH_REQUIRED | HTTP 401 without apikey
+-	webcams	https://eapps.ncdot.gov/services/traffic-prod/v1/cameras/ | MOVED | endpoint retired 2026-05-27 per its own message; successor not identified
+-	webcams	https://511nj.org/api/client/camera/getCameraDataByTourId | HTTP_403 | access denied page
+-	webcams	https://www.quebec511.info/Carte/Element.ashx?action=Camera | HTTP_403 | bot wall; the MTQ WFS layer is registered instead
+-	webcams	https://infocar.dgt.es/datex2/dgt/CCTVSiteTablePublication/all/content.xml | HTTP_502 | legacy DGT path; nap.dgt.es publication already in tree
+-	webcams	https://static.data.gov.hk/td/traffic-snapshot-images/code/Traffic_Camera_Locations_En.csv | DUPLICATE | same master list as the XML already registered (JO29A_CAM_HK_TD_TRAFFIC_SNAPSHOTS)
+-	webcams	https://tie.digitraffic.fi/api/weathercam/v1/stations | DUPLICATE | already in tree
+-	webcams	https://api.tfl.gov.uk/Place/Type/JamCam | DUPLICATE | already in tree
+-	webcams	https://trafficnz.info/service/traffic/rest/4/cameras/all | DUPLICATE | already in tree
+-	webcams	https://tripcheck.com/Scripts/map/data/cctvinventory.js | DUPLICATE | already in tree
+-	webcams	https://tmc.deldot.gov/json/videocamera.json | DUPLICATE | already in tree
+-	webcams	https://www.ndbc.noaa.gov/buoycams.php | DUPLICATE | already in tree
+-	webcams	https://api.data.gov.sg/v1/transport/traffic-images | DUPLICATE | already in tree
+-	webcams	https://data.austintexas.gov/resource/b4k4-adkb.json | DUPLICATE | already in tree
+-	webcams	https://data.calgary.ca/resource/k7p9-kppz.json | DUPLICATE | already in tree
+-	webcams	https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/web-cam-url-links/records | DUPLICATE | already in tree
+-	webcams	https://opendata.maryland.gov/resource/hua3-qc8n.json | SEMANTIC_DUP | Maryland open-data copy of CHART cameras (451); the CHART feed itself (553) is registered
+-	webcams	https://www.mto.gov.on.ca/kml/trafficcameras.kml | SEMANTIC_DUP | MTO cameras already read through 511on.ca in tree; not probed
+-	webcams	ArcGIS Online search: ~220 further camera layers | NOT_OPERATOR_PUBLISHED | re-uploads of DOT/DGT/NZTA/MLIT camera lists by third parties (Esri demo orgs, universities, consultants, other agencies) or layers with no attributable org; one (City of Santa Monica) carried internal credentialed device UR
+-	webcams	search.ckan.jp: 43 Japanese camera CSV/JSON resources | DUPLICATE_OR_NO_URL | live-camera CSVs of Tokyo (建設局/港湾局), 京丹後市, 徳島県 etc. already in tree; 防犯/見守りカメラ location files carry no image URL and are not public webcams
