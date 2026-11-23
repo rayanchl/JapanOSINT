@@ -45,7 +45,8 @@ import argparse, glob, json, os, re, shutil, sqlite3, subprocess, sys, threading
 from concurrent.futures import ThreadPoolExecutor
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from audit_registry_emit import warm_template, checkpoint, NEEDS_ENTITY  # noqa: E402
+from audit_registry_emit import NEEDS_ENTITY  # noqa: E402
+from jo_registry import warm_template, checkpoint  # noqa: E402
 
 NOTICE = "collector-truncation-notice"
 FAILURE = "collector-fetch-failure"

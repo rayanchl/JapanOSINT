@@ -116,7 +116,7 @@ OBJS     := $(patsubst %.c,$(OBJ)/%.o,$(SRCS)) \
 
 .PHONY: all clean selftest unit authtest pagewalktest htmlparsetest tsan tsan-test tsan-sched asan asan-test \
         collectors-def collectors-def-check batch-gates \
-        lint-sources lint-baseline source-count
+        lint-sources lint-baseline source-count tools-selftest
 all: $(BIN)
 
 $(OBJ)/third_party/sqlite3.o: third_party/sqlite3.c
@@ -166,6 +166,11 @@ $(BIN): $(OBJS) $(OBJLIST)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $@ $(LDLIBS)
 	@echo "built $@"
+
+# Offline self-test of the Python audit tools (OPS-13): fake binary, no network.
+tools-selftest:
+	python3 -W error -m py_compile tools/*.py
+	python3 tools/test_audit_tools.py
 
 selftest: $(BIN)
 	./$(BIN) --selftest

@@ -78,6 +78,8 @@ import tempfile
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from jo_registry import list_sources, checkpoint, warm_template, LIST  # noqa: E402  (one registry/binary helper, OPS-13)
 
 # `[sched] <id> run rc=<rc> records=<n> <ms>ms stored=<s>` — `stored=` is
 # appended after the duration (core/scheduler.c explains why it is not next to
@@ -100,7 +102,7 @@ RUN_NOTICES = re.compile(r"\bnotices=(\d+)")
 # The byte count is already on the run line; printing it turns an opaque
 # class into a ranked list.
 RUN_BYTES = re.compile(r"\bbytes=(\d+) requests=(\d+)")
-LIST = re.compile(r"^(\S+)\s+collector=(\S+)\s+interval=(-?\d+)\s*$")
+# LIST (the --list-sources line) lives in jo_registry now.
 # hpengine's own line, kept because it separates "the upstream had nothing"
 # from "we threw away what it gave us" — a distinction `records=0` cannot make.
 HP_EMIT = re.compile(r"\[hp:[^\]]+\] emitted (\d+) of (\d+) available")
@@ -134,55 +136,6 @@ _lock = threading.Lock()
 
 COLUMNS = ["id", "verdict", "shell_rc", "sched_rc", "emitted", "stored",
            "db_rows", "available", "secs", "note"]
-
-
-def list_sources(binpath, db):
-    """Ask the BINARY what is registered. -> [(id, collector, interval)]"""
-    env = dict(os.environ, JO_DB=db, JO_FTS_REBUILD="0")
-    p = subprocess.run([binpath, "--list-sources"], capture_output=True,
-                       text=True, env=env, timeout=600)
-    out = []
-    for line in (p.stdout or "").splitlines():
-        m = LIST.match(line.rstrip())
-        if m:
-            out.append((m.group(1), m.group(2), int(m.group(3))))
-    if not out:
-        raise SystemExit("--list-sources produced no parseable rows; refusing "
-                         "to report on a source list this tool did not get.\n"
-                         + (p.stderr or "")[-800:])
-    return out
-
-
-def checkpoint(path):
-    """Fold the WAL back into the main file. Without this a template is copied
-    without whatever its last writer left in the -wal, and every run starts
-    from a database that is missing the migrations that were just applied."""
-    con = sqlite3.connect(path)
-    con.execute("PRAGMA wal_checkpoint(TRUNCATE)")
-    con.close()
-
-
-def warm_template(binpath, path):
-    """A database with the schema applied, every migration run and the sources
-    table seeded — the state a real deployment is in before a collector runs.
-
-    Built by booting the binary once against an empty file. Doing it here, once,
-    rather than per source is worth ~1.5 s x N and, more importantly, makes
-    every run start from an IDENTICAL database, so a difference between two
-    sources is a difference between the sources."""
-    for suf in ("", "-wal", "-shm"):
-        try:
-            os.unlink(path + suf)
-        except OSError:
-            pass
-    env = dict(os.environ, JO_DB=path, JO_FTS_REBUILD="0")
-    p = subprocess.run([binpath, "--list-sources"], capture_output=True,
-                       text=True, env=env, timeout=900)
-    if not os.path.exists(path):
-        raise SystemExit("could not build a warm template DB at %s\n%s"
-                         % (path, (p.stderr or "")[-800:]))
-    checkpoint(path)
-    return path
 
 
 def build_cmd(a, sid):

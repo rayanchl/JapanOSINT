@@ -39,7 +39,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # split_opts() and a FIRST-wins opt() lookup, while the generator resolved the
 # same duplicated key last-wins — and so reported OSM_API_CHANGESETS_BLACKSEA,
 # which runs daily, as a row that can never run. See tools/manifest.py.
-from manifest import COLS, parse_opts                      # noqa: E402
+from manifest import COLS, parse_opts, iter_lines                      # noqa: E402
 
 # mirrors hp_uses_entity() exactly: every entity token starts "{q" (case
 # sensitive) EXCEPT the raw POST form "{Q}", which hp_uses_entity() checks
@@ -53,24 +53,12 @@ ENTITY_TOKEN = re.compile(r"\{q|\{Q\}")
 
 
 def rows(path):
-    """(lno, raw, row|None, malformed) — a line that LOOKS like a row and is
-    not comes back flagged rather than silently indistinguishable from a
-    comment, because "skipped" and "checked and clean" are not the same
-    answer and this file used to give the second one for both."""
-    for lno, line in enumerate(io.open(path, encoding="utf-8"), 1):
-        # rstrip \r too, matching manifest.iter_lines(): manifest .txt files
-        # are not covered by .gitattributes' `eol=lf`, so a CRLF checkout
-        # leaves \r riding on the last column (opts). --fix below rewrites
-        # rows from these fields, so an un-stripped \r would get baked into
-        # the file as data at the join point.
-        s = line.rstrip("\n").rstrip("\r")
-        if not s.strip() or s.lstrip().startswith("#"):
-            yield lno, s, None, False
-            continue
-        if s.count("|") != len(COLS) - 1:
-            yield lno, s, None, True
-            continue
-        yield lno, s, dict(zip(COLS, s.split("|"))), False
+    """(lno, raw, row|None, malformed) -- manifest.iter_lines (THE manifest
+    reader) reshaped. A line that LOOKS like a row and is not comes back
+    flagged rather than silently indistinguishable from a comment, because
+    "skipped" and "checked and clean" are not the same answer."""
+    for lno, raw, kind, r in iter_lines(path):
+        yield lno, raw, (r if kind == "row" else None), kind == "bad"
 
 
 # How often a static source is worth re-fetching. A blanket number would be
