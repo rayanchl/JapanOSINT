@@ -144,7 +144,7 @@ static int reiwa_date(const char *s, const char *end, char *out, size_t cap) {
   return 1;
 }
 
-#define MAX_CASES 512   /* exhaustive-ok: bounds the dedupe memory only; a case past it is still emitted and the sink upserts on its uid */
+#define MAX_CASES 512
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char *idx = feed_get_text(ctx->http, MAFF_URL, 15000);
@@ -158,7 +158,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
    * outbreak list. Walk down from the newest until a season page yields cases
    * (at most MAX_SEASONS pages), rather than stopping at the first. */
   int below = 1000, tried = 0, fetched_ok = 0;
-  const int MAX_SEASONS = 3;
+  const int MAX_SEASONS = 3;   /* exhaustive-ok: bounds how many EMPTY season pages are tried before the one that lists cases; not a record cap */
   while (tried < MAX_SEASONS) {
   char season_url[512]; int season_no = 0;
   int have = newest_season_url(idx, season_url, sizeof season_url, below, &season_no);
