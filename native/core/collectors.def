@@ -67,7 +67,7 @@ COLLECTOR("grp_unassigned", "Unassigned — add to core/collectors.def", "未分
           "Collectors the registry carries that collectors.def does not list yet. Should be empty.", NULL)
 
 /* ── collectors (parent = group) ─────────────────────────────────────── */
-/* Government & public administration: 136 collector(s), 25488 sources */
+/* Government & public administration: 137 collector(s), 26261 sources */
 COLLECTOR("frgov_mairies", "France — mairies (municipal councils)", "フランス — 市町村役場", "Town halls (mairies, mairies déléguées) from the service-public.fr local directory; municipal news feeds.", "grp_government")  /* 6442 src; local-gov 6442 */
 COLLECTOR("hp3b44_usgov", "usgov (batch 44)", NULL, NULL, "grp_government")  /* 2072 src; government 2072 */
 COLLECTOR("hp3b44_ukgov", "ukgov (batch 44)", NULL, NULL, "grp_government")  /* 1726 src; government 1726 */
@@ -75,6 +75,7 @@ COLLECTOR("hp3b47_wdgov", "wdgov (batch 47)", NULL, NULL, "grp_government")  /* 
 COLLECTOR("government", "Government feeds", "政府・自治体フィード", "Scheduled feeds from national and municipal government sites.", "grp_government")  /* 1505 src; government 1075, local-gov 180, transparency 61 */
 COLLECTOR("frgov_social", "France — municipal social action (CCAS) & care services", "フランス — 社会福祉・自立支援", "CCAS/CIAS, departmental disability and autonomy houses (MDPH, MDA), elder-care information points, family and housing advice.", "grp_government")  /* 1162 src; local-gov 1162 */
 COLLECTOR("hp3b43_jprss", "jprss (batch 43)", NULL, NULL, "grp_government")  /* 1152 src; government 1152 */
+COLLECTOR("hp3b68_asia", "asia (batch 68)", NULL, NULL, "grp_government")  /* 773 src; government 388, corporate 272, news 43 */
 COLLECTOR("itgov_comuni", "Italy — comuni (municipalities)", "イタリア — 市町村", NULL, "grp_government")  /* 675 src; local-gov 675 */
 COLLECTOR("frgov_services_citoyens", "France — citizen, youth & employment information services", "フランス — 市民・若者・雇用情報窓口", "Missions locales, Info Jeunes, CIO/BIO, maisons de l'emploi, France services, France Rénov', GRETA.", "grp_government")  /* 612 src; government 612 */
 COLLECTOR("hp3b57_jpmuni", "jpmuni (batch 57)", NULL, NULL, "grp_government")  /* 606 src; government 606 */
@@ -368,16 +369,16 @@ COLLECTOR("pa_public-finance", "Panama — public finance", NULL, NULL, "grp_pro
 COLLECTOR("pk_anti-corruption", "Pakistan — anti corruption", NULL, NULL, "grp_procurement")  /* 1 src; anti-corruption 1 */
 COLLECTOR("pl_procurement", "Poland — procurement", NULL, NULL, "grp_procurement")  /* 1 src; procurement 1 */
 
-/* Open data portals & statistics: 77 collector(s), 25302 sources */
-COLLECTOR("hp3b67_socrata", "socrata (batch 67)", NULL, NULL, "grp_opendata")  /* 4856 src; open-data 4856 */
+/* Open data portals & statistics: 77 collector(s), 24817 sources */
+COLLECTOR("hp3b67_socrata", "socrata (batch 67)", NULL, NULL, "grp_opendata")  /* 4809 src; open-data 4809 */
 COLLECTOR("hp3b66_socrata", "socrata (batch 66)", NULL, NULL, "grp_opendata")  /* 3627 src; open-data 3627 */
-COLLECTOR("hp3b65_ods", "ods (batch 65)", NULL, NULL, "grp_opendata")  /* 2580 src; open-data 2580 */
-COLLECTOR("hp3b64_ods", "ods (batch 64)", NULL, NULL, "grp_opendata")  /* 2575 src; open-data 2575 */
-COLLECTOR("hp3b64_ckands", "ckands (batch 64)", NULL, NULL, "grp_opendata")  /* 2197 src; open-data 2197 */
-COLLECTOR("hp3b65_ckands", "ckands (batch 65)", NULL, NULL, "grp_opendata")  /* 2063 src; open-data 2063 */
-COLLECTOR("hp3b66_ckands", "ckands (batch 66)", NULL, NULL, "grp_opendata")  /* 1910 src; open-data 1910 */
+COLLECTOR("hp3b65_ods", "ods (batch 65)", NULL, NULL, "grp_opendata")  /* 2530 src; open-data 2530 */
+COLLECTOR("hp3b64_ods", "ods (batch 64)", NULL, NULL, "grp_opendata")  /* 2412 src; open-data 2412 */
+COLLECTOR("hp3b64_ckands", "ckands (batch 64)", NULL, NULL, "grp_opendata")  /* 2109 src; open-data 2109 */
+COLLECTOR("hp3b65_ckands", "ckands (batch 65)", NULL, NULL, "grp_opendata")  /* 1992 src; open-data 1992 */
 COLLECTOR("hp3b63_euods", "euods (batch 63)", NULL, NULL, "grp_opendata")  /* 1859 src; open-data 1859 */
-COLLECTOR("hp3b67_ckands", "ckands (batch 67)", NULL, NULL, "grp_opendata")  /* 1249 src; open-data 1249 */
+COLLECTOR("hp3b66_ckands", "ckands (batch 66)", NULL, NULL, "grp_opendata")  /* 1849 src; open-data 1849 */
+COLLECTOR("hp3b67_ckands", "ckands (batch 67)", NULL, NULL, "grp_opendata")  /* 1244 src; open-data 1244 */
 COLLECTOR("hp3b67_ods", "ods (batch 67)", NULL, NULL, "grp_opendata")  /* 377 src; open-data 377 */
 COLLECTOR("europe_data", "European open data", "欧州オープンデータ", NULL, "grp_opendata")  /* 343 src; opendata 343 */
 COLLECTOR("fr_opendata", "France — open data", "フランス オープンデータ", NULL, "grp_opendata")  /* 287 src; opendata 261, government 11, registry 6 */
@@ -586,13 +587,14 @@ COLLECTOR("hp3_sigint", "sigint (hp3 table)", NULL, NULL, "grp_telecom")  /* 14 
 COLLECTOR("hp3b19_iana", "iana (batch 19)", NULL, NULL, "grp_telecom")  /* 6 src; infrastructure 4, reference 1, telecom 1 */
 COLLECTOR("osint_telecom", "OSINT pivots — telecom", "OSINTピボット — telecom", "Hand-written entity pivots whose category is telecom (collectors/sources/, DEFR/DEF rows).", "grp_telecom")  /* 6 src; telecom 6 */
 
-/* Infrastructure, energy & utilities: 29 collector(s), 7527 sources */
+/* Infrastructure, energy & utilities: 30 collector(s), 7613 sources */
 COLLECTOR("hp3b61_us", "us (batch 61)", NULL, NULL, "grp_infrastructure")  /* 3908 src; infrastructure 1358, geospatial 829, safety 816 */
 COLLECTOR("hp3b60_us", "us (batch 60)", NULL, NULL, "grp_infrastructure")  /* 2495 src; infrastructure 945, safety 652, geospatial 476 */
 COLLECTOR("itgov_servizi_pubblici", "Italy — public-service operators & utilities", "イタリア — 公共サービス事業者", "IPA 'gestori di pubblici servizi' and public companies: water, waste, transport, energy and port operators.", "grp_infrastructure")  /* 463 src; utility 463 */
 COLLECTOR("infrastructure", "Infrastructure", "インフラ", NULL, "grp_infrastructure")  /* 196 src; outage 56, utility 32, routing 30 */
 COLLECTOR("hp3b30_jpscada", "Japan — SCADA and infrastructure telemetry (batch 30)", "日本 SCADA・インフラ", NULL, "grp_infrastructure")  /* 93 src; transport 47, infrastructure 36, weather 6 */
 COLLECTOR("hp3b19_energyenv", "energyenv (batch 19)", NULL, NULL, "grp_infrastructure")  /* 87 src; energy 59, environment 18, space 5 */
+COLLECTOR("hp3b68_webcams", "webcams (batch 68)", NULL, NULL, "grp_infrastructure")  /* 86 src; infrastructure 81, webcam 5 */
 COLLECTOR("energy", "Energy & commodities", "エネルギー・資源", NULL, "grp_infrastructure")  /* 77 src; energy-grid 71, commodities 3, statistics 3 */
 COLLECTOR("hp3b25_jpinfra", "jpinfra (batch 25)", NULL, NULL, "grp_infrastructure")  /* 63 src; infrastructure 63 */
 COLLECTOR("hp3b39_jp39", "jp39 (batch 39)", NULL, NULL, "grp_infrastructure")  /* 28 src; infrastructure 24, finance 2, consumer-safety 1 */
@@ -705,7 +707,8 @@ COLLECTOR("vn_geography", "Vietnam — geography", NULL, NULL, "grp_geo")  /* 3 
 COLLECTOR("br_geography", "Brazil — geography", NULL, NULL, "grp_geo")  /* 2 src; geography 2 */
 COLLECTOR("osm", "OpenStreetMap — taginfo & changesets", "OpenStreetMap タグ・変更セット", NULL, "grp_geo")  /* 2 src; civilian 2 */
 
-/* Crime, policing, defense & conflict: 18 collector(s), 901 sources */
+/* Crime, policing, defense & conflict: 19 collector(s), 5100 sources */
+COLLECTOR("hp3b68_jpdisaster", "jpdisaster (batch 68)", NULL, NULL, "grp_safety")  /* 4199 src; safety 1707, environment 1648, infrastructure 803 */
 COLLECTOR("hp3b49_jpwpfire", "Japan — fire departments & fire-chief associations (batch 49)", "日本 消防本部・消防長会", NULL, "grp_safety")  /* 177 src; public-safety 177 */
 COLLECTOR("frgov_securite", "France — police, fire & rescue, access to justice", "フランス — 警察・消防・司法アクセス", "Municipal police, SDIS fire and rescue, maritime rescue, victim-support and access-to-law offices, customs.", "grp_safety")  /* 169 src; public-safety 169 */
 COLLECTOR("hp3b25_jppolice", "Japan — prefectural police (batch 25)", "日本 都道府県警察", NULL, "grp_safety")  /* 117 src; police 107, government 5, cyber 3 */

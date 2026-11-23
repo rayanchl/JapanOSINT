@@ -525,26 +525,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_B7CB6EE7F2", .name = "opendata.fcgov.com - Fort Collins Public Incident Log",
-    .name_ja = "opendata.fcgov.com - Fort Collins Public Incident Log",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/ht5q-h5ms.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset ht5q-h5ms (Fort Collins Public Incident Log) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_95D9DCB519", .name = "opendata.maryland.gov - eMaryland Marketplace Bids - Fiscal Year "
       "2018",
     .name_ja = "opendata.maryland.gov - eMaryland Marketplace Bids - Fiscal Year 2018",
@@ -5131,27 +5111,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_50AF3DF345", .name = "opendata.fcgov.com - 2020 Fort Collins City Employee Base Pay",
-    .name_ja = "opendata.fcgov.com - 2020 Fort Collins City Employee Base Pay",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/nit5-kfur.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset nit5-kfur (2020 Fort Collins City Employee Base "
-      "Pay) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_B472BA32B0", .name = "opendata.maryland.gov - Reported Sewer Overflows",
     .name_ja = "opendata.maryland.gov - Reported Sewer Overflows",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -9230,26 +9189,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_C16EF495F7", .name = "opendata.fcgov.com - Fort Collins Council Expenses",
-    .name_ja = "opendata.fcgov.com - Fort Collins Council Expenses",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/x5rb-imrq.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset x5rb-imrq (Fort Collins Council Expenses) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_0716354331", .name = "opendata.maryland.gov - Violent Crime & Property Crime by "
       "County: 1975 to Present",
     .name_ja = "opendata.maryland.gov - Violent Crime & Property Crime by County: 1975 to Present",
@@ -12857,27 +12796,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "domains), selected most-viewed first, round-robin across "
       "domains." },
 
-  { .id = "JO67_SOCRATA_7F9410ECDC", .name = "opendata.fcgov.com - 2017 Fort Collins City Employee Earnings",
-    .name_ja = "opendata.fcgov.com - 2017 Fort Collins City Employee Earnings",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/ix3f-8s6j.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset ix3f-8s6j (2017 Fort Collins City Employee "
-      "Earnings) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_A53301D303", .name = "opendata.maryland.gov - MD COVID-19 - Total Cases Statewide",
     .name_ja = "opendata.maryland.gov - MD COVID-19 - Total Cases Statewide",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -16324,27 +16242,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_04E2D1F8E5", .name = "opendata.fcgov.com - 2024 Fort Collins City Employee Base Pay",
-    .name_ja = "opendata.fcgov.com - 2024 Fort Collins City Employee Base Pay",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/rgxe-nfe5.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset rgxe-nfe5 (2024 Fort Collins City Employee Base "
-      "Pay) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_2F18A3058E", .name = "opendata.maryland.gov - MD COVID-19 - Total Confirmed Deaths "
       "Statewide",
     .name_ja = "opendata.maryland.gov - MD COVID-19 - Total Confirmed Deaths Statewide",
@@ -19548,27 +19445,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_EDBD32D2D1", .name = "opendata.fcgov.com - 2025 Fort Collins City Employee Base Pay",
-    .name_ja = "opendata.fcgov.com - 2025 Fort Collins City Employee Base Pay",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/3ahc-jpuf.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset 3ahc-jpuf (2025 Fort Collins City Employee Base "
-      "Pay) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_5C0CB6DD11", .name = "opendata.maryland.gov - Violent Crime & Property Crime by "
       "Municipality: 2000 to Present",
     .name_ja = "opendata.maryland.gov - Violent Crime & Property Crime by Municipality: 2000 to Present",
@@ -22458,26 +22334,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_A661F29C4B", .name = "opendata.fcgov.com - City of Fort Collins Building IDs",
-    .name_ja = "opendata.fcgov.com - City of Fort Collins Building IDs",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/ytk2-zimb.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset ytk2-zimb (City of Fort Collins Building IDs) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_1D71FC22BC", .name = "opendata.maryland.gov - Maryland Foreclosure Notice Data by "
       "County",
     .name_ja = "opendata.maryland.gov - Maryland Foreclosure Notice Data by County",
@@ -25225,27 +25081,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_857B086465", .name = "opendata.fcgov.com - 2018 Fort Collins City Employee Earnings",
-    .name_ja = "opendata.fcgov.com - 2018 Fort Collins City Employee Earnings",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/q73q-23qk.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset q73q-23qk (2018 Fort Collins City Employee "
-      "Earnings) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_6AA7662180", .name = "opendata.maryland.gov - Violent Crime & Property Crime Statewide "
       "Totals: 1975 to Present",
     .name_ja = "opendata.maryland.gov - Violent Crime & Property Crime Statewide Totals: 1975 to Present",
@@ -27945,27 +27780,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "domains), selected most-viewed first, round-robin across "
       "domains." },
 
-  { .id = "JO67_SOCRATA_C0F9A02320", .name = "opendata.fcgov.com - 2022 Fort Collins City Employee Base Pay",
-    .name_ja = "opendata.fcgov.com - 2022 Fort Collins City Employee Base Pay",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/dap4-c2ia.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset dap4-c2ia (2022 Fort Collins City Employee Base "
-      "Pay) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_7EE5384BF7", .name = "opendata.maryland.gov - Zip Code Lookup Table",
     .name_ja = "opendata.maryland.gov - Zip Code Lookup Table",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -30515,27 +30329,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "domains), selected most-viewed first, round-robin across "
       "domains." },
 
-  { .id = "JO67_SOCRATA_9DE86743FF", .name = "opendata.fcgov.com - 2019 Fort Collins City Employee Earnings",
-    .name_ja = "opendata.fcgov.com - 2019 Fort Collins City Employee Earnings",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/fbnn-74xe.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset fbnn-74xe (2019 Fort Collins City Employee "
-      "Earnings) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_AA463451DE", .name = "opendata.maryland.gov - MDOT/MVA Electric and Plug-in Hybrid "
       "Vehicle Registrations by County as of each month end",
     .name_ja = "opendata.maryland.gov - MDOT/MVA Electric and Plug-in Hybrid Vehicle Registrations by County as of each month end",
@@ -32913,27 +32706,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "domains), selected most-viewed first, round-robin across "
       "domains." },
 
-  { .id = "JO67_SOCRATA_66D6287AE7", .name = "opendata.fcgov.com - Fort Collins City Facilities Utility Use",
-    .name_ja = "opendata.fcgov.com - Fort Collins City Facilities Utility Use",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/igj4-de4p.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset igj4-de4p (Fort Collins City Facilities Utility "
-      "Use) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_76071DA428", .name = "opendata.maryland.gov - MD COVID-19 - Cases by County",
     .name_ja = "opendata.maryland.gov - MD COVID-19 - Cases by County",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -35256,26 +35028,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_A1F212E32E", .name = "opendata.fcgov.com - Fort Collins Solar Installations",
-    .name_ja = "opendata.fcgov.com - Fort Collins Solar Installations",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/3ku5-x4k9.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset 3ku5-x4k9 (Fort Collins Solar Installations) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_C165C1110A", .name = "opendata.maryland.gov - Historic Clean Energy Grant Awards",
     .name_ja = "opendata.maryland.gov - Historic Clean Energy Grant Awards",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -37561,26 +37313,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "domains), selected most-viewed first, round-robin across "
       "domains." },
 
-  { .id = "JO67_SOCRATA_40D774B302", .name = "opendata.fcgov.com - Fort Collins OpenBook Vendors",
-    .name_ja = "opendata.fcgov.com - Fort Collins OpenBook Vendors",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/6eq5-g3gk.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset 6eq5-g3gk (Fort Collins OpenBook Vendors) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_3923AEE100", .name = "opendata.maryland.gov - MVA Vehicle Sales Counts by Month for "
       "Calendar Year 2002 through August 2026",
     .name_ja = "opendata.maryland.gov - MVA Vehicle Sales Counts by Month for Calendar Year 2002 through August 2026",
@@ -39865,27 +39597,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_B644A1C1EF", .name = "opendata.fcgov.com - Fort Collins Floodwarning Rain Gage Data",
-    .name_ja = "opendata.fcgov.com - Fort Collins Floodwarning Rain Gage Data",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/g87z-rviz.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset g87z-rviz (Fort Collins Floodwarning Rain Gage "
-      "Data) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_39A5086A85", .name = "opendata.maryland.gov - Anne Arundel County Crime Rate By Type",
     .name_ja = "opendata.maryland.gov - Anne Arundel County Crime Rate By Type",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -42116,26 +41827,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "domains), selected most-viewed first, round-robin across "
       "domains." },
 
-  { .id = "JO67_SOCRATA_7FA76C6D6F", .name = "opendata.fcgov.com - City of Fort Collins Water Demand",
-    .name_ja = "opendata.fcgov.com - City of Fort Collins Water Demand",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/ia5t-gxxe.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset ia5t-gxxe (City of Fort Collins Water Demand) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_9E926A3F85", .name = "opendata.maryland.gov - MVA VEHICLE REGISTRATION by COUNTY from "
       "2010 to 2023",
     .name_ja = "opendata.maryland.gov - MVA VEHICLE REGISTRATION by COUNTY from 2010 to 2023",
@@ -44320,28 +44011,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_0B52F30812", .name = "opendata.fcgov.com - Fort Collins Homeless/Transient Police "
-      "Contacts",
-    .name_ja = "opendata.fcgov.com - Fort Collins Homeless/Transient Police Contacts",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/htfg-p5ej.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset htfg-p5ej (Fort Collins Homeless/Transient "
-      "Police Contacts) on opendata.fcgov.com. SODA /resource records, "
-      "$offset paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_5913335D69", .name = "opendata.maryland.gov - Choose Maryland: Compare Counties - "
       "Quality Of Life",
     .name_ja = "opendata.maryland.gov - Choose Maryland: Compare Counties - Quality Of Life",
@@ -46425,26 +46094,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "(43,369 datasets, 285 domains), selected most-viewed first, "
       "round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_5C5CBA67C4", .name = "opendata.fcgov.com - City of Fort Collins Water Quality",
-    .name_ja = "opendata.fcgov.com - City of Fort Collins Water Quality",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/8n27-taq6.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset 8n27-taq6 (City of Fort Collins Water Quality) "
-      "on opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_49B363D6DB", .name = "opendata.maryland.gov - Dataset Freshness",
     .name_ja = "opendata.maryland.gov - Dataset Freshness",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -48516,27 +48165,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_8E5CBD689D", .name = "opendata.fcgov.com - 2021 Fort Collins City Employee Base Pay",
-    .name_ja = "opendata.fcgov.com - 2021 Fort Collins City Employee Base Pay",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/8k7k-3hwc.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset 8k7k-3hwc (2021 Fort Collins City Employee Base "
-      "Pay) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_DE4A2D7F0F", .name = "opendata.maryland.gov - County Board of Education - Spending "
       "Disclosures",
     .name_ja = "opendata.maryland.gov - County Board of Education - Spending Disclosures",
@@ -50561,27 +50189,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_97AE4BC93B", .name = "opendata.fcgov.com - Fort Collins Published Asset Inventory",
-    .name_ja = "opendata.fcgov.com - Fort Collins Published Asset Inventory",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/hjfc-8qj5.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset hjfc-8qj5 (Fort Collins Published Asset "
-      "Inventory) on opendata.fcgov.com. SODA /resource records, "
-      "$offset paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_37AC57E7FE", .name = "opendata.maryland.gov - Maryland Notices of Intent to Foreclose "
       "by Zip Code",
     .name_ja = "opendata.maryland.gov - Maryland Notices of Intent to Foreclose by Zip Code",
@@ -52598,26 +52205,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_40FFF7E1E7", .name = "opendata.fcgov.com - Fort Collins OpenBook Departments",
-    .name_ja = "opendata.fcgov.com - Fort Collins OpenBook Departments",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/mf2v-ctau.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset mf2v-ctau (Fort Collins OpenBook Departments) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_B9208DB8BE", .name = "opendata.maryland.gov - Maryland Road Closures",
     .name_ja = "opendata.maryland.gov - Maryland Road Closures",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -54588,26 +54175,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "domains), selected most-viewed first, round-robin across "
       "domains." },
 
-  { .id = "JO67_SOCRATA_0B00869D79", .name = "opendata.fcgov.com - Fort Collins UCR Crime Totals",
-    .name_ja = "opendata.fcgov.com - Fort Collins UCR Crime Totals",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/c2i2-fbh4.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset c2i2-fbh4 (Fort Collins UCR Crime Totals) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_335E8932AC", .name = "opendata.maryland.gov - Power Outages - Zipcode",
     .name_ja = "opendata.maryland.gov - Power Outages - Zipcode",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -56557,28 +56124,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_D32CEDF1AD", .name = "opendata.fcgov.com - Fort Collins OpenData Asset Timeline - "
-      "Datatypes",
-    .name_ja = "opendata.fcgov.com - Fort Collins OpenData Asset Timeline - Datatypes",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/m2p7-i4pg.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset m2p7-i4pg (Fort Collins OpenData Asset Timeline "
-      "- Datatypes) on opendata.fcgov.com. SODA /resource records, "
-      "$offset paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_C32821810F", .name = "opendata.maryland.gov - Choose Maryland: Compare Counties - "
       "Demographics",
     .name_ja = "opendata.maryland.gov - Choose Maryland: Compare Counties - Demographics",
@@ -58462,26 +58007,6 @@ static const hp_source HP3B67_SOCRATA[] = {
     .title_keys = "name,title,nombre,nom,label,:id",
     .description = "Socrata dataset kpav-sd4t (Jobs NYC Postings) on "
       "data.cityofnewyork.us. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
-  { .id = "JO67_SOCRATA_A2D9CFB60A", .name = "opendata.fcgov.com - Fort Collins OpenBook Service Areas",
-    .name_ja = "opendata.fcgov.com - Fort Collins OpenBook Service Areas",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/ruch-kajf.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset ruch-kajf (Fort Collins OpenBook Service Areas) "
-      "on opendata.fcgov.com. SODA /resource records, $offset paging, "
       "keyed on :id. From a complete scroll of the api.us.socrata.com "
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
@@ -60381,28 +59906,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_06A732A565", .name = "opendata.fcgov.com - Fort Collins Floodwarning Stream Gage Stage "
-      "& Flow Data",
-    .name_ja = "opendata.fcgov.com - Fort Collins Floodwarning Stream Gage Stage & Flow Data",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/f5as-vvbj.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset f5as-vvbj (Fort Collins Floodwarning Stream Gage "
-      "Stage & Flow Data) on opendata.fcgov.com. SODA /resource "
-      "records, $offset paging, keyed on :id. From a complete scroll of "
-      "the api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_6B3A3A1084", .name = "opendata.maryland.gov - MD COVID-19 - MASTER Case Tracker",
     .name_ja = "opendata.maryland.gov - MD COVID-19 - MASTER Case Tracker",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -62269,28 +61772,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "scroll of the api.us.socrata.com federated catalogue (43,369 "
       "datasets, 285 domains), selected most-viewed first, round-robin "
       "across domains." },
-
-  { .id = "JO67_SOCRATA_782E761378", .name = "opendata.fcgov.com - Fort Collins Water Rate History (no use "
-      "reduction)",
-    .name_ja = "opendata.fcgov.com - Fort Collins Water Rate History (no use reduction)",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/jyyq-ub9w.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset jyyq-ub9w (Fort Collins Water Rate History (no "
-      "use reduction)) on opendata.fcgov.com. SODA /resource records, "
-      "$offset paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
 
   { .id = "JO67_SOCRATA_022E5C9690", .name = "opendata.maryland.gov - Power Outages - County",
     .name_ja = "opendata.maryland.gov - Power Outages - County",
@@ -64160,26 +63641,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "domains), selected most-viewed first, round-robin across "
       "domains." },
 
-  { .id = "JO67_SOCRATA_214FBA7DFD", .name = "opendata.fcgov.com - Fort Collins OpenBook Funds",
-    .name_ja = "opendata.fcgov.com - Fort Collins OpenBook Funds",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/369w-9876.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset 369w-9876 (Fort Collins OpenBook Funds) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_5235E3CEB3", .name = "opendata.maryland.gov - GOPI Resource MM - MTA Average Weekday "
       "Ridership",
     .name_ja = "opendata.maryland.gov - GOPI Resource MM - MTA Average Weekday Ridership",
@@ -66036,28 +65497,6 @@ static const hp_source HP3B67_SOCRATA[] = {
     .title_keys = "name,title,nombre,nom,label,:id",
     .description = "Socrata dataset uvpi-gqnh (2015 Street Tree Census - Tree Data) "
       "on data.cityofnewyork.us. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
-  { .id = "JO67_SOCRATA_8B51035945", .name = "opendata.fcgov.com - Support Fort Collins Business during "
-      "COVID-19",
-    .name_ja = "opendata.fcgov.com - Support Fort Collins Business during COVID-19",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/my5h-qknb.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset my5h-qknb (Support Fort Collins Business during "
-      "COVID-19) on opendata.fcgov.com. SODA /resource records, $offset "
       "paging, keyed on :id. From a complete scroll of the "
       "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
       "domains), selected most-viewed first, round-robin across "
@@ -67922,28 +67361,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "domains), selected most-viewed first, round-robin across "
       "domains." },
 
-  { .id = "JO67_SOCRATA_17BC134C67", .name = "opendata.fcgov.com - Daily Fort Collins OpenData Portal "
-      "Analytics",
-    .name_ja = "opendata.fcgov.com - Daily Fort Collins OpenData Portal Analytics",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/nud3-h3q5.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset nud3-h3q5 (Daily Fort Collins OpenData Portal "
-      "Analytics) on opendata.fcgov.com. SODA /resource records, "
-      "$offset paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_40B7A39611", .name = "opendata.maryland.gov - MD COVID-19 - Cases by ZIP Code",
     .name_ja = "opendata.maryland.gov - MD COVID-19 - Cases by ZIP Code",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -69777,26 +69194,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
       "domains), selected most-viewed first, round-robin across "
       "domains." },
-
-  { .id = "JO67_SOCRATA_9B6BA2FD54", .name = "opendata.fcgov.com - Access Fort Collins Data",
-    .name_ja = "opendata.fcgov.com - Access Fort Collins Data",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/ckbp-tcy4.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset ckbp-tcy4 (Access Fort Collins Data) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
 
   { .id = "JO67_SOCRATA_CC59689006", .name = "opendata.maryland.gov - Community Development Block Grant Awards "
       "(CDBG) FY 2011-2025",
@@ -71640,26 +71037,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_08580E0760", .name = "opendata.fcgov.com - City of Fort Collins Wastewater",
-    .name_ja = "opendata.fcgov.com - City of Fort Collins Wastewater",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/dn37-qz6d.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset dn37-qz6d (City of Fort Collins Wastewater) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_47D66638E3", .name = "opendata.maryland.gov - MVA Vehicle Registrations by County as "
       "of Each Month End from January 2023 to October 2026",
     .name_ja = "opendata.maryland.gov - MVA Vehicle Registrations by County as of Each Month End from January 2023 to October 2026",
@@ -73444,26 +72821,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "domains), selected most-viewed first, round-robin across "
       "domains." },
 
-  { .id = "JO67_SOCRATA_B550F62095", .name = "opendata.fcgov.com - Fort Collins OpenBook Expense Type",
-    .name_ja = "opendata.fcgov.com - Fort Collins OpenBook Expense Type",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/ujzg-88b3.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset ujzg-88b3 (Fort Collins OpenBook Expense Type) "
-      "on opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_B85037C9F5", .name = "opendata.maryland.gov - MD iMAP (3) GIS Services - Service "
       "Request Counts",
     .name_ja = "opendata.maryland.gov - MD iMAP (3) GIS Services - Service Request Counts",
@@ -75219,26 +74576,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_36F19042BF", .name = "opendata.fcgov.com - Fort Collins Shelter Service Data",
-    .name_ja = "opendata.fcgov.com - Fort Collins Shelter Service Data",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/u8nn-nj59.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset u8nn-nj59 (Fort Collins Shelter Service Data) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_CEAC041F4B", .name = "opendata.maryland.gov - Number of businesses in the State",
     .name_ja = "opendata.maryland.gov - Number of businesses in the State",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -76972,27 +76309,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_606A6C1905", .name = "opendata.fcgov.com - 2016 Fort Collins City Employee Earnings",
-    .name_ja = "opendata.fcgov.com - 2016 Fort Collins City Employee Earnings",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/xd7s-sc5s.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset xd7s-sc5s (2016 Fort Collins City Employee "
-      "Earnings) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_FD4A6D6F85", .name = "opendata.maryland.gov - Getting Started with the Open Data "
       "Portal",
     .name_ja = "opendata.maryland.gov - Getting Started with the Open Data Portal",
@@ -78714,27 +78030,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "domains), selected most-viewed first, round-robin across "
       "domains." },
 
-  { .id = "JO67_SOCRATA_44585BB0B5", .name = "opendata.fcgov.com - Daily Fort Collins OpenBook Analytics",
-    .name_ja = "opendata.fcgov.com - Daily Fort Collins OpenBook Analytics",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/y7nd-j6up.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset y7nd-j6up (Daily Fort Collins OpenBook "
-      "Analytics) on opendata.fcgov.com. SODA /resource records, "
-      "$offset paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_CB1CF77602", .name = "opendata.maryland.gov - Choose Maryland: Compare Counties - "
       "Taxes",
     .name_ja = "opendata.maryland.gov - Choose Maryland: Compare Counties - Taxes",
@@ -80437,28 +79732,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
       "domains), selected most-viewed first, round-robin across "
       "domains." },
-
-  { .id = "JO67_SOCRATA_3788B544D5", .name = "opendata.fcgov.com - Support Fort Collins Business during "
-      "COVID-19 Product Options search data",
-    .name_ja = "opendata.fcgov.com - Support Fort Collins Business during COVID-19 Product Options search data",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/b6e9-22f8.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset b6e9-22f8 (Support Fort Collins Business during "
-      "COVID-19 Product Options search data) on opendata.fcgov.com. "
-      "SODA /resource records, $offset paging, keyed on :id. From a "
-      "complete scroll of the api.us.socrata.com federated catalogue "
-      "(43,369 datasets, 285 domains), selected most-viewed first, "
-      "round-robin across domains." },
 
   { .id = "JO67_SOCRATA_02FC0A97A1", .name = "opendata.maryland.gov - MD COVID-19 - Confirmed Deaths by Age "
       "Distribution",
@@ -82187,27 +81460,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "(43,369 datasets, 285 domains), selected most-viewed first, "
       "round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_753EB9F1BB", .name = "opendata.fcgov.com - 2010 Fort Collins City Employee Earnings",
-    .name_ja = "opendata.fcgov.com - 2010 Fort Collins City Employee Earnings",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/su29-rxw3.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset su29-rxw3 (2010 Fort Collins City Employee "
-      "Earnings) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_A36C3EF6A2", .name = "opendata.maryland.gov - MVA Valid Driver Licenses: Age "
       "Stratification by County FY2010 - FY2026",
     .name_ja = "opendata.maryland.gov - MVA Valid Driver Licenses: Age Stratification by County FY2010 - FY2026",
@@ -83894,27 +83146,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "keyed on :id. From a complete scroll of the api.us.socrata.com "
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
-
-  { .id = "JO67_SOCRATA_34C215DEF7", .name = "opendata.fcgov.com - 2023 Fort Collins City Employee Base Pay",
-    .name_ja = "opendata.fcgov.com - 2023 Fort Collins City Employee Base Pay",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/yney-zfys.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset yney-zfys (2023 Fort Collins City Employee Base "
-      "Pay) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
 
   { .id = "JO67_SOCRATA_C799E52636", .name = "opendata.maryland.gov - Maryland State Police Performance "
       "Dashboard - Quarterly Data",
@@ -85605,28 +84836,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_804F874A50", .name = "opendata.fcgov.com - Weekly Fort Collins OpenData Portal "
-      "Analytics",
-    .name_ja = "opendata.fcgov.com - Weekly Fort Collins OpenData Portal Analytics",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/it47-5a8q.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset it47-5a8q (Weekly Fort Collins OpenData Portal "
-      "Analytics) on opendata.fcgov.com. SODA /resource records, "
-      "$offset paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_9349F20FBE", .name = "opendata.maryland.gov - Maryland and Jurisdictions Population "
       "Estimates 2020-2025",
     .name_ja = "opendata.maryland.gov - Maryland and Jurisdictions Population Estimates 2020-2025",
@@ -87315,28 +86524,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "domains), selected most-viewed first, round-robin across "
       "domains." },
 
-  { .id = "JO67_SOCRATA_E8A85AC308", .name = "opendata.fcgov.com - Support Fort Collins Business during "
-      "COVID-19 Availability search data",
-    .name_ja = "opendata.fcgov.com - Support Fort Collins Business during COVID-19 Availability search data",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/s7qn-e795.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset s7qn-e795 (Support Fort Collins Business during "
-      "COVID-19 Availability search data) on opendata.fcgov.com. SODA "
-      "/resource records, $offset paging, keyed on :id. From a complete "
-      "scroll of the api.us.socrata.com federated catalogue (43,369 "
-      "datasets, 285 domains), selected most-viewed first, round-robin "
-      "across domains." },
-
   { .id = "JO67_SOCRATA_5C662DC0AC", .name = "opendata.maryland.gov - Reported Sewer Overflows (New for 2023)",
     .name_ja = "opendata.maryland.gov - Reported Sewer Overflows (New for 2023)",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -89012,27 +88199,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "keyed on :id. From a complete scroll of the api.us.socrata.com "
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
-
-  { .id = "JO67_SOCRATA_D816F20FB9", .name = "opendata.fcgov.com - Fort Collins Quarterly Employment and Wages",
-    .name_ja = "opendata.fcgov.com - Fort Collins Quarterly Employment and Wages",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/x56t-7p4g.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset x56t-7p4g (Fort Collins Quarterly Employment and "
-      "Wages) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
 
   { .id = "JO67_SOCRATA_BDC5C9CCFE", .name = "opendata.maryland.gov - MTA Fiscal Year Ridership",
     .name_ja = "opendata.maryland.gov - MTA Fiscal Year Ridership",
@@ -90716,27 +89882,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_A250E96062", .name = "opendata.fcgov.com - 2014 Fort Collins City Employee Earnings",
-    .name_ja = "opendata.fcgov.com - 2014 Fort Collins City Employee Earnings",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/qdtu-ajia.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset qdtu-ajia (2014 Fort Collins City Employee "
-      "Earnings) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_6E796C8AD3", .name = "opendata.maryland.gov - Surface Water Quality Assessments",
     .name_ja = "opendata.maryland.gov - Surface Water Quality Assessments",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -92407,26 +91552,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_1F2747516F", .name = "opendata.fcgov.com - Fort Collins Alexa Abbreviations",
-    .name_ja = "opendata.fcgov.com - Fort Collins Alexa Abbreviations",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/cemb-9ttp.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset cemb-9ttp (Fort Collins Alexa Abbreviations) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_B2DC5FF860", .name = "opendata.maryland.gov - Parcel Points",
     .name_ja = "opendata.maryland.gov - Parcel Points",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -94086,28 +93211,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_D4D34904DD", .name = "opendata.fcgov.com - Fort Collins Water Rate History (with use "
-      "reduction)",
-    .name_ja = "opendata.fcgov.com - Fort Collins Water Rate History (with use reduction)",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/ccfx-fb99.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset ccfx-fb99 (Fort Collins Water Rate History (with "
-      "use reduction)) on opendata.fcgov.com. SODA /resource records, "
-      "$offset paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_B3A932E85A", .name = "opendata.maryland.gov - School Assessment Outcomes and Higher "
       "Education Degrees - School Years 2005/06 through 2013/14",
     .name_ja = "opendata.maryland.gov - School Assessment Outcomes and Higher Education Degrees - School Years 2005/06 through 2013/14",
@@ -95750,26 +94853,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "domains), selected most-viewed first, round-robin across "
       "domains." },
 
-  { .id = "JO67_SOCRATA_F0188F8F02", .name = "opendata.fcgov.com - Current Building Permits",
-    .name_ja = "opendata.fcgov.com - Current Building Permits",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/fvgz-viez.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset fvgz-viez (Current Building Permits) on "
-      "opendata.fcgov.com. SODA /resource records, $offset paging, "
-      "keyed on :id. From a complete scroll of the api.us.socrata.com "
-      "federated catalogue (43,369 datasets, 285 domains), selected "
-      "most-viewed first, round-robin across domains." },
-
   { .id = "JO67_SOCRATA_D95E58AEDF", .name = "opendata.maryland.gov - Maryland Annual Vehicle Miles of Travel",
     .name_ja = "opendata.maryland.gov - Maryland Annual Vehicle Miles of Travel",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -97391,27 +96474,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "keyed on :id. From a complete scroll of the api.us.socrata.com "
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
-
-  { .id = "JO67_SOCRATA_DA11F2A794", .name = "opendata.fcgov.com - Weekly Fort Collins OpenBook Analytics",
-    .name_ja = "opendata.fcgov.com - Weekly Fort Collins OpenBook Analytics",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/b86c-q8r9.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset b86c-q8r9 (Weekly Fort Collins OpenBook "
-      "Analytics) on opendata.fcgov.com. SODA /resource records, "
-      "$offset paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
 
   { .id = "JO67_SOCRATA_E950671CCC", .name = "opendata.maryland.gov - Employment, Unemployment, and Labor "
       "Force Data",
@@ -99064,28 +98126,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
 
-  { .id = "JO67_SOCRATA_EB93130F80", .name = "opendata.fcgov.com - Fort Collins OpenData Asset Timeline - "
-      "Categories",
-    .name_ja = "opendata.fcgov.com - Fort Collins OpenData Asset Timeline - Categories",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/g95p-dtf8.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset g95p-dtf8 (Fort Collins OpenData Asset Timeline "
-      "- Categories) on opendata.fcgov.com. SODA /resource records, "
-      "$offset paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
-
   { .id = "JO67_SOCRATA_4D78E2D96C", .name = "opendata.maryland.gov - Public Drainage Association Ditches",
     .name_ja = "opendata.maryland.gov - Public Drainage Association Ditches",
     .category = "open-data", .portal = "https://opendata.maryland.gov/",
@@ -100687,27 +99727,6 @@ static const hp_source HP3B67_SOCRATA[] = {
       "keyed on :id. From a complete scroll of the api.us.socrata.com "
       "federated catalogue (43,369 datasets, 285 domains), selected "
       "most-viewed first, round-robin across domains." },
-
-  { .id = "JO67_SOCRATA_4B009ACFBD", .name = "opendata.fcgov.com - Fort Collins West Nile Mosquito Traps",
-    .name_ja = "opendata.fcgov.com - Fort Collins West Nile Mosquito Traps",
-    .category = "open-data", .portal = "https://opendata.fcgov.com/",
-    .record_type = "dataset-record",
-    .tags = "\"socrata\",\"open-data\",\"government\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcgov.com/resource/us38-2gbe.json?%24select=%2A%2C%3Aid&%24order=%3Aid&%24limit=100&%24offset=0",
-    .array_path = ".",
-    .id_keys = ":id",
-    .interval = 604800,
-    .page_param = "$offset",
-    .page_size = 100,
-    .timeout_ms = 40000,
-    .title_keys = "name,title,nombre,nom,label,:id",
-    .description = "Socrata dataset us38-2gbe (Fort Collins West Nile Mosquito "
-      "Traps) on opendata.fcgov.com. SODA /resource records, $offset "
-      "paging, keyed on :id. From a complete scroll of the "
-      "api.us.socrata.com federated catalogue (43,369 datasets, 285 "
-      "domains), selected most-viewed first, round-robin across "
-      "domains." },
 
   { .id = "JO67_SOCRATA_3875294B6D", .name = "opendata.maryland.gov - Licensed Animal Control Facility for "
       "Fiscal Year 2018 (July 1, 2017 through June 30, 2018)",

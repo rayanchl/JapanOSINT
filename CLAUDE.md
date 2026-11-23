@@ -349,6 +349,15 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
+**The registered count is 109,801** (2026-11-23, `make source-count`, both
+floors re-recorded): batches 58–67 took it to 105,229, and batch 68 added 5,058
+and removed 486 (`native/collectors/OSINT_SOURCES_BATCH_68_REPAIRS_JPDISASTER_ASIA.md`).
+One lesson from it belongs here: **on an hpengine row with no `id_keys`, the
+TITLE is the identity, so a title-key change is an identity change.** Giving
+4,862 OpenDataSoft rows real titles collapsed records that share one (109 of
+200 stored) until the rows were keyed on a tuple measured unique. Re-run a row
+through the engine after a title pass, exactly as after a URL change.
+
 **The registered count is 61,527** (2026-10-30, `make source-count`, both
 floors re-recorded from that build): 57,905 plus **batch 57's 3,622 Japanese
 rows** — eight beats in `collectors/pivot/table/hp3b57_*.c`, every one measured
