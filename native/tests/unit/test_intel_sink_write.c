@@ -160,7 +160,9 @@ int main(void) {
     char *te = text1("SELECT title_en FROM intel_items WHERE uid=?1", U);
     assert(te && strcmp(te, "Osaka observation point") == 0);
     free(te);
-    assert(text1("SELECT translated_at FROM intel_items WHERE uid=?1", U));
+    char *ta = text1("SELECT translated_at FROM intel_items WHERE uid=?1", U);
+    assert(ta);
+    free(ta);
   }
   printf("  changed text clears the translation, unchanged keeps it: ok\n");
 
