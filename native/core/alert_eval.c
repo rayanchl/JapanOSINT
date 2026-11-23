@@ -15,6 +15,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include "lib/joenv.h"
 
 /* How often the cache may re-probe alert_rules for a generation change. The
  * cost of staleness is bounded: a rule edited now starts matching within this
@@ -1243,8 +1244,7 @@ static void *sweep_thread(void *arg) {
     return NULL;
   }
   int interval = SWEEP_DEFAULT_SEC;
-  const char *e = getenv("JO_ALERT_SWEEP_SEC");
-  if (e && *e) { int v = atoi(e); if (v > 0) interval = v; }
+  interval = jo_env_int_strict("JO_ALERT_SWEEP_SEC", interval, 1, INT_MAX);
   while (!g_sweep_stop) {
     alert_eval_sweep_entities(&own);
     /* semantic rules saved while the embedding server was down, or whose

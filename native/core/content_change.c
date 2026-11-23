@@ -40,6 +40,7 @@
 #include <string.h>
 #include <strings.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 #define CC_SEP            '\x01'   /* block separator; survives html_strip()  */
 #define CC_REFKEY_MAX     512
@@ -74,12 +75,6 @@
 
 /* ── environment (read once; these sit on the per-fetch path) ─────────────── */
 
-static long long env_ll(const char *name, long long dflt, long long lo) {
-  const char *e = getenv(name);
-  if (!e || !*e) return dflt;
-  long long v = strtoll(e, NULL, 10);
-  return v >= lo ? v : dflt;
-}
 static int cc_disabled(void) {
   static int v = -1;
   if (v < 0) v = getenv("JO_NO_CONTENT_CHANGE") ? 1 : 0;
@@ -87,23 +82,23 @@ static int cc_disabled(void) {
 }
 static long long max_doc(void) {
   static long long v = -1;
-  if (v < 0) v = env_ll("JO_CCHANGE_MAX_DOC_BYTES", CC_DEFAULT_MAX_DOC, 4096);
+  if (v < 0) v = jo_env_ll_strict("JO_CCHANGE_MAX_DOC_BYTES", CC_DEFAULT_MAX_DOC, 4096, LLONG_MAX);
   return v;
 }
 static long long text_max(void) {
   static long long v = -1;
-  if (v < 0) v = env_ll("JO_CCHANGE_TEXT_MAX", CC_DEFAULT_TEXT_MAX, 1024);
+  if (v < 0) v = jo_env_ll_strict("JO_CCHANGE_TEXT_MAX", CC_DEFAULT_TEXT_MAX, 1024, LLONG_MAX);
   return v;
 }
 static long long diff_max(void) {
   static long long v = -1;
-  if (v < 0) v = env_ll("JO_CCHANGE_DIFF_MAX", CC_DEFAULT_DIFF_MAX, 512);
+  if (v < 0) v = jo_env_ll_strict("JO_CCHANGE_DIFF_MAX", CC_DEFAULT_DIFF_MAX, 512, LLONG_MAX);
   return v;
 }
 static int keep_n(void) {
   static int v = -1;
   if (v < 0) {
-    v = (int)env_ll("JO_CCHANGE_KEEP", CC_DEFAULT_KEEP, 1);
+    v = (int)jo_env_ll_strict("JO_CCHANGE_KEEP", CC_DEFAULT_KEEP, 1, LLONG_MAX);
     if (v > 100) v = 100;
   }
   return v;
@@ -111,7 +106,7 @@ static int keep_n(void) {
 static int max_age_days(void) {
   static int v = -1;
   if (v < 0) {
-    v = (int)env_ll("JO_CCHANGE_MAX_AGE_DAYS", CC_DEFAULT_AGE_DAYS, 1);
+    v = (int)jo_env_ll_strict("JO_CCHANGE_MAX_AGE_DAYS", CC_DEFAULT_AGE_DAYS, 1, LLONG_MAX);
     if (v > 3650) v = 3650;
   }
   return v;

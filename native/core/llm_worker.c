@@ -11,6 +11,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include "lib/joenv.h"
 
 typedef struct llm_job {
   const llm_worker_req *req;  /* borrowed: the caller blocks until done */
@@ -49,21 +50,13 @@ static long long mono_ms(void) {
   return (long long)t.tv_sec * 1000LL + t.tv_nsec / 1000000L;
 }
 
-static long env_long(const char *k, long dflt, long lo) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  char *end = NULL;
-  long n = strtol(v, &end, 10);
-  if (!end || end == v || *end) return dflt;
-  return n < lo ? lo : n;
-}
 
 int llm_worker_queue_max(void) {
-  return (int)env_long("JO_LLM_QUEUE_MAX", 64, 1);
+  return (int)jo_env_long("JO_LLM_QUEUE_MAX", 64, 1, LONG_MAX);
 }
 
 int llm_worker_queue_wait_ms(int timeout_ms) {
-  long f = env_long("JO_LLM_QUEUE_WAIT_FACTOR", 4, 1);
+  long f = jo_env_long("JO_LLM_QUEUE_WAIT_FACTOR", 4, 1, LONG_MAX);
   long long t = (long long)(timeout_ms > 0 ? timeout_ms : 30000) * f;
   return t > 0x7fffffff ? 0x7fffffff : (int)t;
 }

@@ -27,6 +27,7 @@
  */
 #include "pagewalk.h"
 #include "feedlib.h"
+#include "joenv.h"
 #include "jocore.h"        /* jo_memmem(), the notice's cJSON helpers */
 #include "../core/url_override.h"
 #include <stdio.h>
@@ -83,13 +84,11 @@
  * operator's brake did not reach the 300 VGEO rows — see the 2026-11-16 note
  * in docs on what that changed. */
 int pw_page_ceiling(const char *legacy_env, int declared) {
-  const char *e = getenv("JO_PAGE_MAX");
-  int v = (e && *e) ? atoi(e) : 0;
+  int v = jo_env_int_strict("JO_PAGE_MAX", 0, 1, INT_MAX);
   if (v > 0) return v;
   if (declared > 0) return declared;
   if (legacy_env) {
-    e = getenv(legacy_env);
-    v = (e && *e) ? atoi(e) : 0;
+    v = jo_env_int_strict(legacy_env, 0, 1, INT_MAX);
     if (v > 0) return v;
   }
   return JO_PAGE_MAX_DEFAULT;
@@ -99,13 +98,9 @@ int pw_page_ceiling(const char *legacy_env, int declared) {
  * which is wrong for a source carrying its own measured ceiling — the reader
  * would go looking for an environment variable nobody set. */
 const char *pw_ceiling_name(const char *legacy_env, int declared) {
-  const char *e = getenv("JO_PAGE_MAX");
-  if (e && *e && atoi(e) > 0) return "JO_PAGE_MAX";
+  if (jo_env_int_strict("JO_PAGE_MAX", 0, 1, INT_MAX) > 0) return "JO_PAGE_MAX";
   if (declared > 0)           return "this source's own measured ceiling";
-  if (legacy_env) {
-    e = getenv(legacy_env);
-    if (e && *e && atoi(e) > 0) return legacy_env;
-  }
+  if (legacy_env && jo_env_int_strict(legacy_env, 0, 1, INT_MAX) > 0) return legacy_env;
   return "the pagewalk default";
 }
 

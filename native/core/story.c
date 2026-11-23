@@ -8,21 +8,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 /* Pending rows drained per hook call, at most (each costs two KNNs). */
 #define STORY_DRAIN_MAX 64
 
-static int env_int(const char *k, int dflt) {
-  const char *e = getenv(k);
-  int v = (e && *e) ? atoi(e) : 0;
-  return v > 0 ? v : dflt;
-}
 
 /* core/thresholds.c: runtime override > JO_STORY_TAU > STORY_TAU_DEFAULT. */
 double story_tau(void)        { return threshold_get("story_tau"); }
-int    story_max_members(void){ return env_int("JO_STORY_MAX_MEMBERS", STORY_MAX_MEMBERS_DEFAULT); }
-int    novelty_days(void)     { return env_int("JO_NOVELTY_DAYS", NOVELTY_DAYS_DEFAULT); }
-static int budget_ms(void)    { return env_int("JO_STORY_BUDGET_MS", STORY_BUDGET_MS_DEFAULT); }
+int    story_max_members(void){ return jo_env_int_strict("JO_STORY_MAX_MEMBERS", STORY_MAX_MEMBERS_DEFAULT, 1, INT_MAX); }
+int    novelty_days(void)     { return jo_env_int_strict("JO_NOVELTY_DAYS", NOVELTY_DAYS_DEFAULT, 1, INT_MAX); }
+static int budget_ms(void)    { return jo_env_int_strict("JO_STORY_BUDGET_MS", STORY_BUDGET_MS_DEFAULT, 1, INT_MAX); }
 
 void story_migrate(db_handle *db) {
   ensure_column(db, "intel_items", "story_id", "TEXT");

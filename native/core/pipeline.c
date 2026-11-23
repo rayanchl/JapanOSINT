@@ -18,6 +18,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <pthread.h>
+#include "lib/joenv.h"
 
 /* first balanced {...} → cJSON (== JS extractJson). */
 static cJSON *extract_json(const char *raw) {
@@ -47,9 +48,7 @@ static cJSON *extract_json(const char *raw) {
  * the operator can match it to their host without a rebuild; the default is
  * unchanged so no existing deployment moves. */
 static int llm_timeout_ms(void) {
-  const char *e = getenv("JO_LLM_TIMEOUT_MS");
-  int v = (e && *e) ? atoi(e) : 0;
-  return v > 0 ? v : 60000;
+  return jo_env_int_strict("JO_LLM_TIMEOUT_MS", 60000, 1, INT_MAX);
 }
 
 /* A bounded, single-line, printable excerpt of whatever the model DID say, for
@@ -388,9 +387,7 @@ static void *dispatch_worker(void *arg) {
  * `records_shown`, `record_count` and `prompt_truncated` stated in-band, so the
  * model knows what it is not being shown instead of assuming it saw it all. */
 static int prompt_records_per_service(void) {
-  const char *e = getenv("JO_PROMPT_RECORDS_PER_SERVICE");
-  int v = (e && *e) ? atoi(e) : 0;
-  return v > 0 ? v : 8;
+  return jo_env_int_strict("JO_PROMPT_RECORDS_PER_SERVICE", 8, 1, INT_MAX);
 }
 
 /* WHICH records fill the bound: the first ones (positional, the upstream's
@@ -442,10 +439,7 @@ static void run_tasks(osint_request *rp, db_handle *db, llm_client *llm,
   if (tl->n <= 0) return;
 
   int fanout = 6;
-  const char *fe = getenv("JO_OSINT_FANOUT");
-  if (fe) fanout = atoi(fe);
-  if (fanout < 1)  fanout = 1;
-  if (fanout > 16) fanout = 16;
+  fanout = jo_env_int("JO_OSINT_FANOUT", fanout, 1, 16);
   if (fanout > tl->n) fanout = tl->n;
 
   disp_pool p = {0};

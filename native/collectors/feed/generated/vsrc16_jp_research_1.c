@@ -8,6 +8,7 @@
 #include "_verified_macros.inc"
 #include "lib/jocore.h"
 #include "lib/rss_atom.h"
+#include "lib/joenv.h"
 
 /* J-STAGE WebAPI pages on start (1-based) and count (at most 1,000 — count=2000
  * answers WARN_002), and states the whole match set in
@@ -21,9 +22,7 @@
  * JO_PAGE_MAX pages (default 20) per run; when that stops a walk short of the
  * total, the shortfall is a collector-truncation-notice. */
 static int jstage_count(void) {
-  const char *e = getenv("JO_RSS_MAX_ITEMS");
-  int v = e ? atoi(e) : 0;
-  return (v > 0 && v < 500) ? v : 500;     /* never past what rss_collect keeps */
+  return jo_env_int_strict("JO_RSS_MAX_ITEMS", 500, 1, 499);     /* never past what rss_collect keeps */
 }
 
 static long jstage_total(const source_ctx *c, const char *base) {
@@ -50,8 +49,7 @@ static int jstage_walk(const source_ctx *c, intel_sink *s, const char *id,
     if (n >= 0) fprintf(stderr, "[%s] emitted %d (unpaged list)\n", id, n);
     return n;
   }
-  const char *pm = getenv("JO_PAGE_MAX");
-  int page_max = pm && atoi(pm) > 0 ? atoi(pm) : 20;
+  int page_max = jo_env_int_strict("JO_PAGE_MAX", 20, 1, INT_MAX);
   long total = jstage_total(c, base);
   const int count = jstage_count();
   int emitted = 0, pages = 0, stopped = 0;

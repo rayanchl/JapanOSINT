@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 /* An open-addressing table text-hash -> vector, so a record embedded for one
  * prompt view is not sent again for the next view of the same run. */
@@ -20,9 +21,7 @@ struct prompt_rank {
 };
 
 static int rerank_max(void) {
-  const char *e = getenv("JO_PROMPT_RERANK_MAX");
-  int v = (e && *e) ? atoi(e) : 0;
-  return v > 0 ? v : PROMPT_RERANK_MAX_DEFAULT;
+  return jo_env_int_strict("JO_PROMPT_RERANK_MAX", PROMPT_RERANK_MAX_DEFAULT, 1, INT_MAX);
 }
 
 prompt_rank *prompt_rank_new(const char *query) {

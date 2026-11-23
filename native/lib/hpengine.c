@@ -29,6 +29,7 @@
 #include <time.h>       /* {date…} and {ago:N} tokens: time() */
 #include <unistd.h>     /* usleep: page_delay_ms */
 #include <pthread.h>    /* the lazily-sorted spec table (hp_lookup) */
+#include "joenv.h"
 
 /* Bounds exist only to keep one pathological response from exhausting memory —
  * they are NOT an editorial filter. Per the exhaustive-use rule
@@ -1313,19 +1314,14 @@ static int hp_record_cap(const hp_source *s) {
 static int hp_detail_budget(const hp_source *s) {
   if (!s->detail_url) return 0;
   if (s->detail_max > 0) return s->detail_max;
-  const char *e = getenv("JO_HP_DETAIL_MAX");
-  int v = (e && *e) ? atoi(e) : 0;
-  return v > 0 ? v : HP_DETAIL_MAX_DEF;
+  return jo_env_int_strict("JO_HP_DETAIL_MAX", HP_DETAIL_MAX_DEF, 1, INT_MAX);
 }
 
 /* Seconds of detail fetching one run may spend; 0 = no clock. Applies to a
  * row's explicit detail_max too: that is the author's ceiling on COUNT, and
  * says nothing about how long a slow host may hold the run. */
 static int hp_detail_secs(void) {
-  const char *e = getenv("JO_HP_DETAIL_SEC");
-  if (!e || !*e) return HP_DETAIL_SEC_DEF;
-  int v = atoi(e);
-  return v > 0 ? v : 0;
+  return jo_env_int("JO_HP_DETAIL_SEC", HP_DETAIL_SEC_DEF, 0, INT_MAX);
 }
 
 static double hp_mono_sec(void) {

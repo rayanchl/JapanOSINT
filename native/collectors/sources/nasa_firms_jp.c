@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 #define TIMEOUT_MS 20000
 
@@ -52,8 +53,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *sensor = getenv("FIRMS_SENSOR");
   if (!sensor || !*sensor) sensor = "VIIRS_NOAA20_NRT";
   int days = 1;
-  const char *ds = getenv("FIRMS_DAYS");
-  if (ds && *ds) { int d = atoi(ds); days = d > 10 ? 10 : d; }
+  days = jo_env_int("FIRMS_DAYS", days, INT_MIN, 10);
 
   char url[512];
   snprintf(url, sizeof url,

@@ -32,6 +32,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include "lib/joenv.h"
 
 /* id windows for the full value_domain backfill. Big enough that the per-batch
  * transaction overhead disappears, small enough that a cancel is honoured
@@ -347,11 +348,7 @@ typedef struct {
 } mon_row;
 
 static int max_hits(void) {
-  const char *e = getenv("JO_BREACH_MONITOR_MAX_HITS");
-  long v = (e && *e) ? strtol(e, NULL, 10) : DEFAULT_MAX_HITS;
-  if (v < 1) v = 1;
-  if (v > 100000) v = 100000;
-  return (int)v;
+  return jo_env_int("JO_BREACH_MONITOR_MAX_HITS", DEFAULT_MAX_HITS, 1, 100000);
 }
 
 /* Write the alert_events row alert_deliver.c's enqueue_pending() drains. The

@@ -37,7 +37,7 @@ static const char *oig_cell(const cJSON *row, const char *key) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int mb = sanc_env_int("JO_SANC_OIG_MB", 4);
+  int mb = jo_env_int_strict("JO_SANC_OIG_MB", 4, 1, INT_MAX);
   char range[64];
   snprintf(range, sizeof range, "Range: bytes=0-%lld", (long long)mb * 1048576LL - 1LL);
 
@@ -60,7 +60,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(text);
   if (!rows) return -1;
 
-  int max_rows = sanc_env_int("JO_SANC_MAX_ROWS", 5000);
+  int max_rows = jo_env_int_strict("JO_SANC_MAX_ROWS", 5000, 1, INT_MAX);
   int n = 0, rest = 0;
   const cJSON *r;
   cJSON_ArrayForEach(r, rows) {

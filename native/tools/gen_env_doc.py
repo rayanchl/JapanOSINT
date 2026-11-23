@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Generate docs/ENVIRONMENT.md: every environment variable the native tree reads.
 
-Scans native/{core,lib,collectors,main.c,registry.c} for getenv("NAME") and the
-helper forms env_int/env_long/env_ll/env_double/env_days/env_pos/env_nonempty/
-env_truthy/env_str/jo_env/sanc_env_int ("NAME", default). A default is reported
-only when the call site spells a literal; otherwise the cell says "-". It is a
+Scans native/{core,lib,collectors,main.c,registry.c} for getenv("NAME"), the
+ONE typed reader lib/joenv.h (jo_env_ll/long/int/double[_strict], jo_env_bool,
+jo_env_str: "NAME", default, min, max) and the few surviving domain wrappers
+(env_days) / jo_env. A default is reported only when the call site spells a
+literal; the accepted range is reported from the reader's min/max when the call
+site spells them (a name or an expression of capitals, e.g. INT_MAX). It is a
 static scan, so a name built at runtime (snprintf into a buffer, then getenv) is
 NOT seen — the page says so.
 
@@ -19,9 +21,39 @@ OUT = os.path.join(os.path.dirname(NATIVE), "docs", "ENVIRONMENT.md")
 ROOTS = ["core", "lib", "collectors", "main.c", "registry.c"]
 EXTS = (".c", ".h", ".inc")
 
-HELPERS = r"(?:getenv|jo_env|env_int|env_long|env_ll|env_double|env_days|env_pos|env_nonempty|env_truthy|env_str|sanc_env_int)"
-CALL = re.compile(r'\b(' + HELPERS + r')\s*\(\s*"([A-Z][A-Z0-9_]*)"\s*(?:,\s*([^,)]*(?:\([^)]*\))?[^,)]*))?')
+READER = r"jo_env_(?:ll|long|int|double)(?:_strict)?|jo_env_bool|jo_env_str"
+HELPERS = r"(?:getenv|jo_env|env_days|" + READER + r")"
+CALL = re.compile(r'\b(' + HELPERS + r')\s*\(\s*"([A-Z][A-Z0-9_]*)"')
 NUM = re.compile(r'^\(?-?\d[\d.]*[uUlLfF]*\)?$|^"[^"]*"$|^(?:true|false)$')
+# A page-ceiling knob handed to lib/pagewalk.c as a string (pw_page_ceiling /
+# pw_walk_list legacy_env); pagewalk reads it with jo_env_int_strict(1..INT_MAX).
+LEGACY_PAGE = re.compile(r'^[^/\n]*"(JO_[A-Z0-9_]+_PAGE_MAX)"', re.M)
+BOUND = re.compile(r'^[-+*/<>()\sA-Z0-9_.]+$')
+
+
+def call_args(text, i):
+    """Top-level comma-separated args of the call whose '(' precedes index i's
+    first argument (i = end of the matched NAME literal)."""
+    out, depth, cur, instr = [], 0, "", None
+    while i < len(text):
+        ch = text[i]
+        if instr:
+            cur += ch
+            if ch == "\\": cur += text[i + 1]; i += 1
+            elif ch == instr: instr = None
+        elif ch in "\"'":
+            instr = ch; cur += ch
+        elif ch == "(":
+            depth += 1; cur += ch
+        elif ch == ")":
+            if depth == 0: out.append(cur.strip()); return out
+            depth -= 1; cur += ch
+        elif ch == "," and depth == 0:
+            out.append(cur.strip()); cur = ""
+        else:
+            cur += ch
+        i += 1
+    return out
 
 
 def files():
@@ -38,6 +70,7 @@ def files():
 def scan():
     where = collections.defaultdict(set)
     defaults = collections.defaultdict(set)
+    ranges = collections.defaultdict(set)
     for path in sorted(set(files())):
         rel = os.path.relpath(path, NATIVE).replace(os.sep, "/")
         try:
@@ -45,16 +78,28 @@ def scan():
         except OSError:
             continue
         for m in CALL.finditer(text):
-            fn, name, dflt = m.group(1), m.group(2), m.group(3)
+            fn, name = m.group(1), m.group(2)
             where[name].add(rel)
-            if fn != "getenv" and fn != "jo_env" and dflt is not None:
-                d = dflt.strip()
-                if NUM.match(d):
-                    defaults[name].add(d)
-    return where, defaults
+            if fn in ("getenv", "jo_env"):
+                continue
+            args = call_args(text, m.end())          # args after the NAME literal
+            if args and args[0] == "":                # `"NAME", d` -> ["", " d", ...]
+                args = args[1:]
+            dflt = args[0] if args else None
+            if dflt is not None and NUM.match(dflt):
+                defaults[name].add(dflt)
+            if re.fullmatch(READER, fn) and len(args) >= 3 and fn not in ("jo_env_bool", "jo_env_str"):
+                lo, hi = args[1], args[2]
+                if BOUND.match(lo) and BOUND.match(hi):
+                    ranges[name].add("%s..%s" % (lo, hi))
+        for m in LEGACY_PAGE.finditer(text):
+            if m.group(1) != "JO_PAGE_MAX":
+                where[m.group(1)].add(rel)
+                ranges[m.group(1)].add("1..INT_MAX")
+    return where, defaults, ranges
 
 
-def render(where, defaults):
+def render(where, defaults, ranges):
     def fmt_files(fs):
         fs = sorted(fs)
         # Collectors are numerous; collapse a long list rather than print 400 paths.
@@ -68,27 +113,31 @@ def render(where, defaults):
         "(or the script) to refresh. -->",
         "",
         "Every variable the native tree reads, found by a static scan of `core/`, `lib/`, "
-        "`collectors/`, `main.c` and `registry.c` for `getenv(\"NAME\")` and the "
-        "`env_int`/`env_long`/`env_ll`/`env_double`/`env_days`/`env_pos`/`env_nonempty`/`env_truthy`/"
-        "`env_str`/`jo_env`/`sanc_env_int` helpers. **Default** is shown only where the call site "
-        "spells a literal (a blank means the default is computed, handled by the caller, or the "
-        "variable is optional). Names assembled at runtime are not seen by a text scan.",
+        "`collectors/`, `main.c` and `registry.c` for `getenv(\"NAME\")` and "
+        "the typed reader `lib/joenv.h` (`jo_env_ll`/`jo_env_long`/`jo_env_int`/`jo_env_double`, "
+        "their `_strict` forms, `jo_env_bool`, `jo_env_str`) and `jo_env`. **Default** is shown only where "
+        "the call site spells a literal (a blank means the default is computed, handled by the caller, or "
+        "the variable is optional). **Range** is the reader's min..max as spelled at the call site: "
+        "unset/empty gives the default, garbage gives the default with one stderr line, and out of range "
+        "is clamped (or, for `_strict` readers, gives the default). Names assembled at runtime are not "
+        "seen by a text scan.",
         "",
         "%d variables. A first-boot subset, with example values, is in `.env.example`." % len(where),
         "",
-        "| Variable | Default | Read in |",
-        "| --- | --- | --- |",
+        "| Variable | Default | Range | Read in |",
+        "| --- | --- | --- | --- |",
     ]
     for name in sorted(where):
         d = ", ".join("`%s`" % x for x in sorted(defaults.get(name, ())))
-        out.append("| `%s` | %s | %s |" % (name, d or "", fmt_files(where[name])))
+        r = ", ".join("`%s`" % x for x in sorted(ranges.get(name, ())))
+        out.append("| `%s` | %s | %s | %s |" % (name, d or "", r, fmt_files(where[name])))
     out.append("")
     return "\n".join(out)
 
 
 def main():
-    where, defaults = scan()
-    text = render(where, defaults)
+    where, defaults, ranges = scan()
+    text = render(where, defaults, ranges)
     if "--check" in sys.argv:
         cur = open(OUT, encoding="utf-8").read() if os.path.exists(OUT) else None
         if cur != text:

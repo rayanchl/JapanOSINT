@@ -29,6 +29,7 @@
 #include "lib/feedlib.h"
 #include "lib/csv.h"
 #include "geoeo_common.inc"
+#include "lib/joenv.h"
 
 /* 0 = the whole series, which is the default.
  *
@@ -67,8 +68,7 @@ static int hemisphere(const source_ctx *ctx, intel_sink *sink, const char *dir,
   }
 
   int total = cJSON_GetArraySize(rows);
-  const char *te = getenv("JO_NSIDC_TAIL");
-  int tail = (te && *te) ? atoi(te) : NSIDC_TAIL;
+  int tail = jo_env_int("JO_NSIDC_TAIL", NSIDC_TAIL, INT_MIN, INT_MAX);
   int first = 1;                       /* index 0 is the UNITS line, not data */
   if (tail > 0 && total - tail > first) first = total - tail;
 

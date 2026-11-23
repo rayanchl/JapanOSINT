@@ -120,6 +120,7 @@
 #include <string.h>
 #include <sys/time.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 #define EMBED_DONE_TABLE "intel_vec_done"
 #define EMBED_SID        "embedding-backfill"
@@ -167,24 +168,17 @@ static const vecindex_spec legacy_spec = {
 
 /* ---- env knobs ----------------------------------------------------------- */
 
-static long env_long(const char *k, long dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  char *end = NULL;
-  long n = strtol(v, &end, 10);
-  return (end && end != v) ? n : dflt;
-}
 
 const char *embed_base_url(void)  { return vecindex_base_url(); }
 const char *embed_query_url(void) { return vecindex_query_url(); }
 
-static long since_days(void)  { long d = env_long("JO_EMBED_SINCE_DAYS", 180); return d > 0 ? d : 180; }
-static int  batch_size(void)  { long b = env_long("JO_EMBED_BATCH", 32); return (b > 0 && b <= 256) ? (int)b : 32; }
-static int  max_per_run(void) { long m = env_long("JO_EMBED_MAX_PER_RUN", 2000); return m > 0 ? (int)m : 2000; }
-static int  max_chars(void)   { long m = env_long("JO_EMBED_MAX_CHARS", 1000); return (m >= 64) ? (int)m : 1000; }
+static long since_days(void)  { long d = jo_env_long("JO_EMBED_SINCE_DAYS", 180, LONG_MIN, LONG_MAX); return d > 0 ? d : 180; }
+static int  batch_size(void)  { long b = jo_env_long("JO_EMBED_BATCH", 32, LONG_MIN, LONG_MAX); return (b > 0 && b <= 256) ? (int)b : 32; }
+static int  max_per_run(void) { long m = jo_env_long("JO_EMBED_MAX_PER_RUN", 2000, LONG_MIN, LONG_MAX); return m > 0 ? (int)m : 2000; }
+static int  max_chars(void)   { long m = jo_env_long("JO_EMBED_MAX_CHARS", 1000, LONG_MIN, LONG_MAX); return (m >= 64) ? (int)m : 1000; }
 /* Rows LOOKED AT per tick (embedded + checked-unchanged + skipped-failed). */
 static long max_walk(void) {
-  long w = env_long("JO_EMBED_MAX_WALK", 0);
+  long w = jo_env_long("JO_EMBED_MAX_WALK", 0, LONG_MIN, LONG_MAX);
   return w > 0 ? w : 25L * max_per_run();
 }
 
@@ -594,7 +588,7 @@ static void refresh_counts(db_handle *db, const char *since, const char *types,
    * so it is refreshed at most hourly, and the timestamp of the count travels
    * with it. */
   char at[64];
-  long refresh = env_long("JO_EMBED_ELIGIBLE_REFRESH_SEC", 3600);
+  long refresh = jo_env_long("JO_EMBED_ELIGIBLE_REFRESH_SEC", 3600, LONG_MIN, LONG_MAX);
   if (!force && meta_get(db, "eligible_counted_at", at, sizeof at) && at[0]) {
     long long then = parse_iso_ms(at);
     if (then > 0 && wall_ms() - then < refresh * 1000LL) return;

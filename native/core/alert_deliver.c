@@ -36,6 +36,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include "lib/joenv.h"
 
 #define MAX_ATTEMPTS   5
 #define DRAIN_BATCH    50
@@ -507,9 +508,7 @@ typedef struct {
 } pending_event;
 
 static void enqueue_pending(db_handle *db) {
-  long lookback = 3600;
-  const char *lb = getenv("JO_ALERT_DELIVER_LOOKBACK_SEC");
-  if (lb && *lb) { long v = strtol(lb, NULL, 10); if (v >= 60) lookback = v; }
+  long lookback = jo_env_long_strict("JO_ALERT_DELIVER_LOOKBACK_SEC", 3600, 60, LONG_MAX);
   char horizon[48];
   snprintf(horizon, sizeof horizon, "-%ld seconds", lookback);
 
@@ -703,12 +702,7 @@ static void *deliver_thread(void *arg) {
     fprintf(stderr, "[alert-deliver] cannot open its own DB connection; delivery off\n");
     return NULL;
   }
-  int interval = 5;
-  const char *iv = getenv("JO_ALERT_DELIVER_INTERVAL_SEC");
-  if (iv && *iv) {
-    long v = strtol(iv, NULL, 10);
-    if (v >= 1 && v <= 300) interval = (int)v;
-  }
+  int interval = jo_env_int_strict("JO_ALERT_DELIVER_INTERVAL_SEC", 5, 1, 300);
   while (!g_stop) {
     enqueue_pending(&own);
     drain_once(&own);

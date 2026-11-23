@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "lib/joenv.h"
 
 /* TOKYO_LON/TOKYO_LAT deliberately removed — see the note at the feature
  * builder. Do not reintroduce a fallback coordinate for indicators. */
@@ -66,10 +67,8 @@ static int jp_relevant(cJSON *ioc) {
 
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
   (void)ud;
-  const char *ds = getenv("THREATFOX_DAYS");
-  long days = (ds && *ds) ? strtol(ds, NULL, 10) : 3;
-  const char *cs = getenv("THREATFOX_MIN_CONFIDENCE");
-  long min_conf = (cs && *cs) ? strtol(cs, NULL, 10) : 75;
+  long days = jo_env_long_strict("THREATFOX_DAYS", 3, 1, LONG_MAX);
+  long min_conf = jo_env_long("THREATFOX_MIN_CONFIDENCE", 75, 0, 100);
 
   char body[128];
   snprintf(body, sizeof body, "{\"query\":\"get_iocs\",\"days\":%ld}", days);

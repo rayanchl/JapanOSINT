@@ -48,6 +48,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 static char *urlenc(const char *s) {
   static const char hx[] = "0123456789ABCDEF";
@@ -172,9 +173,7 @@ static int walk(cJSON *doc, intel_sink *s, int *seen) {
 #define NVD_CPE_PAGE 2000
 
 static int nvd_page_max(void) {
-  const char *e = getenv("JO_NVD_CPE_PAGE_MAX");
-  int v = e ? atoi(e) : 0;
-  return v > 0 ? v : 25;
+  return jo_env_int_strict("JO_NVD_CPE_PAGE_MAX", 25, 1, INT_MAX);
 }
 
 static void nvd_pause(int keyed) {

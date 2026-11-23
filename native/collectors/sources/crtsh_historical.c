@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 /* DEFAULT_TARGETS (process.env.CRTSH_TARGETS comma list overrides). */
 static const char *const DEFAULT_TARGETS[] = {
@@ -44,9 +45,7 @@ static cJSON *dup_or_null(cJSON *r, const char *k) {
 
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
   (void)key; (void)ud;
-  const char *pe = getenv("CRTSH_PER_TARGET");
-  long per_target = (pe && *pe) ? strtol(pe, NULL, 10) : 60;
-  if (per_target <= 0) per_target = 60;
+  long per_target = jo_env_long_strict("CRTSH_PER_TARGET", 60, 1, LONG_MAX);
 
   cJSON *features = cJSON_CreateArray();
   for (int qi = 0; qi < N_DEFAULT_TARGETS; qi++) {

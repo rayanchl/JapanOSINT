@@ -24,6 +24,7 @@
 #include "core/httpclient.h"
 #include "lib/feedlib.h"   /* feed_hash_key, for guid_reused feeds */
 #include "lib/jocore.h"    /* jo_trunc_notice, for the item-cap disclosure */
+#include "lib/joenv.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,12 +48,6 @@
 
 /* ------------------------------------------------------------------ env --- */
 
-static inline int sanc_env_int(const char *name, int dflt) {
-  const char *v = getenv(name);
-  if (!v || !*v) return dflt;
-  int n = atoi(v);
-  return n > 0 ? n : dflt;
-}
 
 /* ----------------------------------------------------------------- http --- */
 
@@ -621,7 +616,7 @@ static inline int sanc_feed_run(const source_ctx *ctx, intel_sink *sink,
    * per fetch and the old default silently discarded 1,311 real docket
    * entries every run. When the cap still bites, the shortfall is disclosed
    * below as a collector-truncation-notice rather than a log line (rule 2). */
-  int max_items = sanc_env_int("JO_SANC_MAX_ITEMS", 2000);
+  int max_items = jo_env_int_strict("JO_SANC_MAX_ITEMS", 2000, 1, INT_MAX);
   int n = 0, uncounted = 0;
   for (int pass = 0; pass < 2 && n == 0; pass++) {
     const char *item_tag = pass == 0 ? "item" : "entry";
@@ -827,7 +822,7 @@ static inline int sanc_opensanctions_run(const source_ctx *ctx, intel_sink *sink
            "https://data.opensanctions.org/datasets/latest/%s/entities.ftm.json",
            cfg->dataset);
 
-  int mb = sanc_env_int("JO_SANC_OS_MB", 12);
+  int mb = jo_env_int_strict("JO_SANC_OS_MB", 12, 1, INT_MAX);
   char range[64];
   snprintf(range, sizeof range, "Range: bytes=0-%lld",
            (long long)mb * 1024LL * 1024LL - 1LL);
@@ -838,7 +833,7 @@ static inline int sanc_opensanctions_run(const source_ctx *ctx, intel_sink *sink
                              range, NULL, 120000, tag, &len, &status);
   if (!body) return -1;                                /* real fetch failure */
 
-  int max_rows = sanc_env_int("JO_SANC_MAX_ROWS", 5000);
+  int max_rows = jo_env_int_strict("JO_SANC_MAX_ROWS", 5000, 1, INT_MAX);
   int n = 0, seen = 0;
   char *p = body;
   char *stop = body + len;

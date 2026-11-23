@@ -9,6 +9,7 @@
 #include <sys/time.h>
 #include <poll.h>
 #include <strings.h>
+#include "joenv.h"
 
 /* One reassembled message may not grow past this (LIB-18). The buffer used to
  * grow without limit until the window closed, so a peer streaming one endless
@@ -16,9 +17,7 @@
  * dropped WHOLE and counted — never delivered truncated, which would hand the
  * callback half a JSON document. */
 static size_t ws_max_msg(void) {
-  const char *e = getenv("JO_WS_MAX_MSG_BYTES");
-  if (e && *e) { long long v = atoll(e); if (v >= 1024) return (size_t)v; }
-  return (size_t)16 << 20;
+  return (size_t)jo_env_ll_strict("JO_WS_MAX_MSG_BYTES", 16LL << 20, 1024, LLONG_MAX);
 }
 
 static __thread int g_oversize_dropped;

@@ -142,7 +142,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(head);
 
   /* ---- 2. the tail window, where the newest DistinctParty blocks live ---- */
-  int tail_mb = sanc_env_int("JO_SANC_SDN_TAIL_MB", 48);
+  int tail_mb = jo_env_int_strict("JO_SANC_SDN_TAIL_MB", 48, 1, INT_MAX);
   char range[64];
   snprintf(range, sizeof range, "Range: bytes=-%lld", (long long)tail_mb * 1048576LL);
 
@@ -153,7 +153,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!tail) { free(ftypes); free(subtypes); free(ptypes); return -1; }
   const char *tend = tail + tlen;
 
-  int max_rows = sanc_env_int("JO_SANC_MAX_ROWS", 5000);
+  int max_rows = jo_env_int_strict("JO_SANC_MAX_ROWS", 5000, 1, INT_MAX);
   int n = 0, parties = 0;
   const char *cur = tail;
   sanc_el party;

@@ -14,6 +14,7 @@
 #include <math.h>
 #include "source_trust.h"
 #include "../lib/jocore.h"   /* jo_iso_now */
+#include "lib/joenv.h"
 
 /* explicit column order shared by item-by-uid and list-items so rows can be
  * read by fixed index (== rowToItem field access in intelStore.js). */
@@ -228,19 +229,6 @@ char *intelapi_item_by_uid(db_handle *db, const char *uid) {
 
 enum { SORT_DATE = 0, SORT_RELEVANCE, SORT_TRUST };
 
-static long env_long(const char *k, long dflt, long lo, long hi) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  long x = atol(v);
-  if (x < lo) x = lo;
-  if (x > hi) x = hi;
-  return x;
-}
-static double env_double(const char *k, double dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  return atof(v);
-}
 
 /* Source-trust table, cached for JO_RERANK_TRUST_TTL seconds (default 300).
  * source_trust_load() is two GROUP BYs over fetch_log — cheap per /api/status
@@ -251,7 +239,7 @@ static const source_trust *trust_table(db_handle *db, int *n_out) {
   static int n = 0;
   static time_t at = 0;
   time_t now = time(NULL);
-  long ttl = env_long("JO_RERANK_TRUST_TTL", 300, 0, 86400);
+  long ttl = jo_env_long("JO_RERANK_TRUST_TTL", 300, 0, 86400);
   if (!tbl || now - at >= ttl) {
     free(tbl); tbl = NULL; n = 0;
     tbl = source_trust_load(db, &n);
@@ -520,8 +508,8 @@ char *intelapi_list_items_st(db_handle *db, const intel_items_query *Q,
       "are no full-text hits to rank");
   }
 
-  long window = env_long("JO_RERANK_WINDOW", 500, 10, 5000);
-  long total_cap = env_long("JO_TOTAL_CAP", 10000, 100, 10000000);
+  long window = jo_env_long("JO_RERANK_WINDOW", 500, 10, 5000);
+  long total_cap = jo_env_long("JO_TOTAL_CAP", 10000, 100, 10000000);
   int fetch_n = sort == SORT_TRUST ? (int)window : safe;
 
   /* FROM clause. With q the FTS hits come from an inner query that also
@@ -577,9 +565,9 @@ char *intelapi_list_items_st(db_handle *db, const intel_items_query *Q,
   /* Trust rerank inputs, loaded once per call. */
   int ntrust = 0;
   const source_trust *ttab = sort == SORT_TRUST ? trust_table(db, &ntrust) : NULL;
-  double half_life = env_double("JO_RERANK_HALFLIFE_DAYS", 90.0);
-  double decay_floor = env_double("JO_RERANK_DECAY_FLOOR", 0.10);
-  double unrated = env_double("JO_RERANK_UNRATED_FACTOR", 0.75);
+  double half_life = jo_env_double("JO_RERANK_HALFLIFE_DAYS", 90.0, -DBL_MAX, DBL_MAX);
+  double decay_floor = jo_env_double("JO_RERANK_DECAY_FLOOR", 0.10, -DBL_MAX, DBL_MAX);
+  double unrated = jo_env_double("JO_RERANK_UNRATED_FACTOR", 0.75, -DBL_MAX, DBL_MAX);
   if (half_life <= 0) half_life = 90.0;
   time_t now = time(NULL);
 

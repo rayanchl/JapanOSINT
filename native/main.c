@@ -16,6 +16,7 @@
  *
  * An unrecognised flag or a missing operand is an error (exit 2), never a
  * silent fall-through to the self-test — see the validation block in main(). */
+#include "lib/joenv.h"
 #include "core/db.h"
 #include "core/cadence.h"
 #include "core/source_interval.h"
@@ -441,8 +442,7 @@ int main(int argc, char **argv) {
   if (!selftest) {
     /* P3 serve path: no heavy preamble (integrity scan + 5s llm probe would
      * delay the listener). PORT env overrides; default 4000. */
-    const char *pe = getenv("PORT");
-    int port = pe && *pe ? atoi(pe) : 4000;
+    int port = jo_env_int("PORT", 4000, 0, 65535);
     /* Best-effort: load the breach catalog so breaches surface as intel sources.
      * Idempotent upsert; a missing file just logs and continues. The committed
      * seed TSV is the source of truth and needs no Node preprocessing step, so

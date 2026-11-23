@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 /* QUERY default 'geo.country:"Japan"' (NETLAS_QUERY override), SIZE default
  * 100 (NETLAS_LIMIT). url = base + ?q=<enc>&size=<n>; "Japan" enc → %22Japan%22
@@ -52,8 +53,7 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
   (void)ud;
   const char *q = getenv("NETLAS_QUERY");
   if (!q || !*q) q = "geo.country:\"Japan\"";
-  const char *szs = getenv("NETLAS_LIMIT");
-  long size = (szs && *szs) ? strtol(szs, NULL, 10) : 100;
+  long size = jo_env_long_strict("NETLAS_LIMIT", 100, 1, LONG_MAX);
   char enc[512];
   urlenc(q, enc, sizeof enc);
   char url[768];

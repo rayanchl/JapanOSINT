@@ -8,11 +8,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 long llmcache_ttl(void) {
-  const char *e = getenv("JO_LLM_CACHE_TTL_SEC");
-  long v = (e && *e) ? atol(e) : 0;
-  return v > 0 ? v : 0;
+  return jo_env_long_strict("JO_LLM_CACHE_TTL_SEC", 0, 1, LONG_MAX);
 }
 
 /* One remembered answer per base URL is enough: the suggest path talks to one

@@ -212,7 +212,7 @@ audit-sources:
 hptest:
 	@mkdir -p bin
 	$(CC) $(CFLAGS) -o bin/hpengine_test tests/hpengine_test.c lib/hpengine.c lib/datetok.c \
-	  lib/csv.c lib/htmlparse.c lib/seenset.c lib/xlsx.c lib/zipread.c lib/jsonlist.c lib/pagewalk.c \
+	  lib/csv.c lib/htmlparse.c lib/seenset.c lib/xlsx.c lib/zipread.c lib/jsonlist.c lib/pagewalk.c lib/joenv.c \
 	  collectors/pivot/table/hp_uk_deep.c \
 	  third_party/cJSON.c $(ICONV_LIB) -lz
 	./bin/hpengine_test
@@ -228,7 +228,7 @@ rsstest:
 	@mkdir -p bin
 	$(CC) $(CFLAGS) -o bin/rss_atom_test tests/rss_atom_test.c lib/rss_atom.c \
 	  lib/feedlib.c lib/csv.c lib/hpengine.c lib/datetok.c lib/htmlparse.c \
-	  lib/seenset.c lib/xlsx.c lib/zipread.c lib/jsonlist.c lib/pagewalk.c \
+	  lib/seenset.c lib/xlsx.c lib/zipread.c lib/jsonlist.c lib/pagewalk.c lib/joenv.c \
 	  collectors/pivot/table/hp_uk_deep.c \
 	  third_party/cJSON.c $(LDLIBS) $(ICONV_LIB) -lz
 	./bin/rss_atom_test
@@ -252,7 +252,7 @@ htmlparsetest:
 .PHONY: pagewalktest
 pagewalktest:
 	@mkdir -p bin
-	$(CC) $(CFLAGS) -o bin/pagewalk_test tests/pagewalk_test.c lib/pagewalk.c \
+	$(CC) $(CFLAGS) -o bin/pagewalk_test tests/pagewalk_test.c lib/pagewalk.c lib/joenv.c \
 	  third_party/cJSON.c
 	./bin/pagewalk_test
 	python3 tests/paging_core_single.py
@@ -380,7 +380,7 @@ FUZZ_FLAGS := -O1 -g -fno-omit-frame-pointer -fsanitize=fuzzer,address,undefined
               $(PKG_CFLAGS) $(MECAB_CFLAGS) -Ithird_party -iquote . -iquote collectors/sources
 FUZZ_RSS_SRCS := lib/rss_atom.c lib/feedlib.c lib/csv.c lib/hpengine.c lib/datetok.c \
                  lib/htmlparse.c lib/seenset.c lib/xlsx.c lib/zipread.c lib/jsonlist.c \
-                 lib/pagewalk.c collectors/pivot/table/hp_uk_deep.c third_party/cJSON.c
+                 lib/pagewalk.c lib/joenv.c collectors/pivot/table/hp_uk_deep.c third_party/cJSON.c
 .PHONY: fuzz-build fuzz-smoke
 fuzz-build:
 	@command -v $(FUZZ_CC) >/dev/null || { echo "fuzz: $(FUZZ_CC) not found (clang with -fsanitize=fuzzer required)"; exit 1; }
@@ -414,6 +414,7 @@ env-doc-check:
 # and can only ratchet down — see tools/lint_sources.py's header.
 lint-sources:
 	python3 tools/lint_sources.py
+	python3 tools/lint_env_readers.py
 
 # Re-record the baseline after a batch of fixes lands.
 lint-baseline:

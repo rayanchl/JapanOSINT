@@ -37,6 +37,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 #define SRC "gios-poland-air"
 
@@ -67,8 +68,7 @@ static int wanted(const char *code) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   int budget = 15;
-  const char *env = getenv("JO_GIOS_STATIONS");
-  if (env && *env) { int b = atoi(env); if (b > 0) budget = b; }
+  budget = jo_env_int_strict("JO_GIOS_STATIONS", budget, 1, INT_MAX);
 
   /* The whole station list, every page of it, gathered into one array. */
   cJSON *sdoc = cJSON_CreateArray();

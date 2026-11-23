@@ -1,4 +1,5 @@
 /* core/sweepapi.c — see header. */
+#include "lib/joenv.h"
 #include "sweepapi.h"
 #include "collcache.h"
 #include "camera_store.h"
@@ -136,9 +137,7 @@ char *sweepapi_build(db_handle *db, const char *id) {
  * nationwide stitched FC is intentionally NOT served (it is ~300MB for
  * unified-trains and unusable for a single map response). */
 static int sweep_limit(void) {
-  const char *e = getenv("JO_SWEEP_LIMIT");
-  int v = e ? atoi(e) : 0;
-  return (v > 0) ? v : 10000;
+  return jo_env_int_strict("JO_SWEEP_LIMIT", 10000, 1, INT_MAX);
 }
 static char *cold_points_fc(db_handle *db, const char *id) {
   int LIM = sweep_limit();

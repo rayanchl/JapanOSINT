@@ -36,6 +36,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 #define SRC "climatetrace-assets"
 #define WANT_GAS "co2e_100yr"
@@ -190,8 +191,7 @@ static int collect_page(const source_ctx *ctx, intel_sink *sink, int offset,
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   int max_pages = CT_MAX_PAGES;
-  const char *penv = getenv("JO_CLIMATETRACE_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  max_pages = jo_env_int_strict("JO_CLIMATETRACE_PAGES", max_pages, 1, INT_MAX);
 
   int total = 0, fetched = 0, offset = 0, pages = 0, more_pending = 0;
   long assets_seen = 0;

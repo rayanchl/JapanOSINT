@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "_source_macros.inc"
+#include "lib/joenv.h"
 
 RSSX(fin_coindesk, "coindesk", "CoinDesk", "CoinDesk", "finance_press", "economy",
   "https://www.coindesk.com/arc/outboundfeeds/rss/", "en", "[\"economy\",\"crypto\",\"markets\"]", 3600,
@@ -147,8 +148,7 @@ static int te_emit(intel_sink *s, cJSON *e) {
 
 static int run_fin_trading_econ(const source_ctx *c, intel_sink *s) {
   int pages = TE_PAGES;
-  const char *penv = getenv("JO_TRADINGECON_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) pages = v; }
+  pages = jo_env_int_strict("JO_TRADINGECON_PAGES", pages, 1, INT_MAX);
 
   int n = 0, start = 0, got_pages = 0, more_pending = 0;
   char url[160];

@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 /* ASF returns the scene footprint as WKT, e.g.
  *   POLYGON ((129.837 46.42, 130.015 45.849, ... , 129.837 46.42))
@@ -72,8 +73,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
    * full we say so with a collector-truncation-notice below rather than
    * letting the shortfall be invisible. */
   int max_results = ALOS_MAX_RESULTS;
-  const char *menv = getenv("JO_ALOS_MAX_RESULTS");
-  if (menv && *menv) { int m = atoi(menv); if (m > 0) max_results = m; }
+  max_results = jo_env_int_strict("JO_ALOS_MAX_RESULTS", max_results, 1, INT_MAX);
 
   char url[256];
   snprintf(url, sizeof url,

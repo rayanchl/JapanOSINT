@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 /* Pessimistic on purpose — see llm_ctx_chars() in llm.h. Ids, JSON and
  * Japanese all tokenize worse than the ~4 bytes/token English average, and
@@ -158,19 +159,12 @@ static char *post_json(llm_client *c, const char *path, cJSON *body,
  * {"value":"i","type":"image"} junk-entity bug. A modest repeat penalty plus a
  * top-k / nucleus / min-p floor stops the loop without hurting normal output.
  * Overridable via env so the floor can be tuned without a rebuild. */
-static double env_double(const char *k, double dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  char *end = NULL;
-  double d = strtod(v, &end);
-  return (end && end != v) ? d : dflt;
-}
 static void add_sampler_defaults(cJSON *b) {
-  cJSON_AddNumberToObject(b, "repeat_penalty", env_double("LLM_REPEAT_PENALTY", 1.15));
-  cJSON_AddNumberToObject(b, "repeat_last_n", env_double("LLM_REPEAT_LAST_N", 256));
-  cJSON_AddNumberToObject(b, "top_k", env_double("LLM_TOP_K", 40));
-  cJSON_AddNumberToObject(b, "top_p", env_double("LLM_TOP_P", 0.95));
-  cJSON_AddNumberToObject(b, "min_p", env_double("LLM_MIN_P", 0.05));
+  cJSON_AddNumberToObject(b, "repeat_penalty", jo_env_double("LLM_REPEAT_PENALTY", 1.15, -DBL_MAX, DBL_MAX));
+  cJSON_AddNumberToObject(b, "repeat_last_n", jo_env_double("LLM_REPEAT_LAST_N", 256, -DBL_MAX, DBL_MAX));
+  cJSON_AddNumberToObject(b, "top_k", jo_env_double("LLM_TOP_K", 40, -DBL_MAX, DBL_MAX));
+  cJSON_AddNumberToObject(b, "top_p", jo_env_double("LLM_TOP_P", 0.95, -DBL_MAX, DBL_MAX));
+  cJSON_AddNumberToObject(b, "min_p", jo_env_double("LLM_MIN_P", 0.05, -DBL_MAX, DBL_MAX));
 }
 
 /* See llm.h. Cached PER SERVER (base_url): the interactive/suggest client and

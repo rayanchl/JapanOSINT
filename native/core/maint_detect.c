@@ -5,19 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
-static int env_int(const char *k, int dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  int n = atoi(v);
-  return n > 0 ? n : dflt;
-}
-static double env_double(const char *k, double dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  double d = atof(v);
-  return d > 0.0 ? d : dflt;
-}
 
 long fetch_log_write(db_handle *db, const char *source_id, const char *status,
                      int records, long duration_ms, const char *error) {
@@ -161,8 +150,8 @@ void anomaly_detect(db_handle *db, const char *source_id, long fetch_log_id,
   } else {
     double mean = 0.0;
     int have_baseline = records_baseline(h, source_id, &mean);
-    double drop_frac = env_double("DETECT_DROP_FRAC", 0.5);
-    long dur_outlier = env_int("DETECT_DURATION_OUTLIER_MS", 10000);
+    double drop_frac = jo_env_double_strict("DETECT_DROP_FRAC", 0.5, DBL_MIN, DBL_MAX);
+    long dur_outlier = jo_env_int_strict("DETECT_DURATION_OUTLIER_MS", 10000, 1, INT_MAX);
     if (have_baseline && (double)records < mean * (1.0 - drop_frac)) {
       verdict = "records_drop";
       snprintf(reason_buf, sizeof reason_buf,
@@ -181,7 +170,7 @@ void anomaly_detect(db_handle *db, const char *source_id, long fetch_log_id,
        * the FLEET asserting health it never verified. */
       int ever = 0;
       long runs = run_history(h, source_id, &ever);
-      long need = env_int("DETECT_BARREN_RUNS", 10);
+      long need = jo_env_int_strict("DETECT_BARREN_RUNS", 10, 1, INT_MAX);
       if (!ever && runs >= need) {
         verdict = "never_produced";
         snprintf(reason_buf, sizeof reason_buf,
@@ -197,7 +186,7 @@ void anomaly_detect(db_handle *db, const char *source_id, long fetch_log_id,
        * this collector normally is. Only fall back to the flat threshold while
        * no baseline exists yet. */
       double dmean = 0.0;
-      double factor = env_double("DETECT_DURATION_FACTOR", 3.0);
+      double factor = jo_env_double_strict("DETECT_DURATION_FACTOR", 3.0, DBL_MIN, DBL_MAX);
       int have_dur = duration_baseline(h, source_id, &dmean);
       long limit = have_dur ? (long)(dmean * factor) : dur_outlier;
       if (have_dur && limit < dur_outlier) limit = dur_outlier;

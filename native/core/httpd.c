@@ -74,6 +74,7 @@
 #include <string.h>
 #include <sys/time.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 static db_handle *g_db;
 
@@ -1002,9 +1003,7 @@ static long long g_wk_refused = 0;
 static int worker_cap(void) {
   static int cap = -1;
   if (cap >= 0) return cap;
-  const char *e = getenv("JO_HTTP_MAX_WORKERS");
-  cap = (e && *e) ? atoi(e) : WBODY_SLOTS;
-  if (cap < 1) cap = 1;
+  cap = jo_env_int("JO_HTTP_MAX_WORKERS", WBODY_SLOTS, 1, INT_MAX);
   if (cap > WBODY_SLOTS)
     fprintf(stderr, "[httpd] JO_HTTP_MAX_WORKERS=%d exceeds the %d reply-parking "
                     "slots: past that a finished reply can be evicted before it "
@@ -1041,9 +1040,7 @@ static __thread int t_wk_worker;     /* 1 on a thread started by worker_spawn   
 static int user_worker_cap(void) {
   static int cap = -1;
   if (cap >= 0) return cap;
-  const char *e = getenv("JO_HTTP_USER_WORKERS");
-  cap = (e && *e) ? atoi(e) : 4;
-  if (cap < 0) cap = 0;
+  cap = jo_env_int("JO_HTTP_USER_WORKERS", 4, 0, INT_MAX);
   return cap;
 }
 
@@ -1699,9 +1696,8 @@ typedef struct {
  * dashboard, and the numbers move on collector runs. 10 s collapses the
  * thundering herd of app-start requests without anyone noticing the age. */
 static int fleet_ttl(void) {
-  const char *e = getenv("JO_FLEET_CACHE_SEC");
-  int v = (e && *e) ? atoi(e) : 10;
-  return v < 0 ? 0 : v;                      /* 0 disables the cache */
+  int v = jo_env_int("JO_FLEET_CACHE_SEC", 10, 0, INT_MAX);
+  return v;                      /* 0 disables the cache */
 }
 
 static void fleet_params(struct mg_http_message *hm, fleet_arg *fa) {

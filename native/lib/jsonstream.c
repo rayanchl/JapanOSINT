@@ -1,5 +1,6 @@
 /* lib/jsonstream.c — see jsonstream.h. */
 #include "jsonstream.h"
+#include "joenv.h"
 #include "jsonlist.h"
 #include "jsonbig.h"
 #include "core/hostgate.h"
@@ -244,8 +245,7 @@ int jsonstream_emit(intel_sink *sink, const char *source_id, const char *url,
   memset(&c, 0, sizeof c);
   c.sink = sink; c.source_id = source_id; c.record_type = record_type;
   c.lang = lang; c.tags_json = tags_json; c.path = path;
-  const char *env = getenv("JO_JSONSTREAM_MAX_RECORDS");
-  c.max_records = (env && *env) ? strtol(env, NULL, 10) : 0;
+  c.max_records = jo_env_long_strict("JO_JSONSTREAM_MAX_RECORDS", 0, 1, LONG_MAX);
 
   http_client_global_init();
   CURL *e = curl_easy_init();

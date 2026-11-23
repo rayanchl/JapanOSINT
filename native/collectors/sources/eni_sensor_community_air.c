@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 #define SRC "sensor-community-air"
 
@@ -47,8 +48,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   /* 0 = no bound: every sensor the feed carried. Only an operator setting
    * $JO_SENSORCOMMUNITY_MAX makes this non-zero, and that case is disclosed. */
   int operator_bound = 0;
-  const char *capenv = getenv("JO_SENSORCOMMUNITY_MAX");
-  if (capenv && *capenv) { int c = atoi(capenv); if (c > 0) operator_bound = c; }
+  operator_bound = jo_env_int_strict("JO_SENSORCOMMUNITY_MAX", operator_bound, 1, INT_MAX);
 
   cJSON *doc = feed_get_json(ctx->http,
                              "https://data.sensor.community/static/v2/data.json",

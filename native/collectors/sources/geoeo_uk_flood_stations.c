@@ -30,6 +30,7 @@
 #include "lib/feedlib.h"
 #include "lib/jocore.h"          /* jo_trunc_notice — the shared R7 disclosure */
 #include "geoeo_common.inc"
+#include "lib/joenv.h"
 
 #define EA_STATIONS                                                           \
   "https://environment.data.gov.uk/flood-monitoring/id/stations"              \
@@ -175,8 +176,7 @@ static int stations_page(const source_ctx *ctx, intel_sink *sink, int *emitted,
 /* Walk the offsets until the EA stops handing back full pages. */
 static int stations(const source_ctx *ctx, intel_sink *sink, int *emitted) {
   int max_pages = EA_MAX_PAGES;
-  const char *penv = getenv("JO_EA_STATION_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  max_pages = jo_env_int_strict("JO_EA_STATION_PAGES", max_pages, 1, INT_MAX);
 
   int total_seen = 0, offset = 0;
   for (int page = 0; page < max_pages; page++) {

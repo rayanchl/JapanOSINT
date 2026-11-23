@@ -19,11 +19,11 @@
  *
  * Earlier triage, kept for the record: */
 #include "lib/jocore.h"
+#include "lib/joenv.h"
 static int jps_walk(const source_ctx *c, intel_sink *s, const char *id,
                     const char *base, const char *tags) {
   int page_max = 20;   /* exhaustive-ok: JO_PAGE_MAX runaway ceiling (pagewalk's default), remainder disclosed as a truncation notice */
-  const char *pm = getenv("JO_PAGE_MAX");
-  if (pm && atoi(pm) > 0) page_max = atoi(pm);
+  page_max = jo_env_int_strict("JO_PAGE_MAX", page_max, 1, INT_MAX);
   long size = jsonlist_query_int(base, "size");
   if (size <= 0) size = 20;
   size_t cap = strlen(base) + 64;

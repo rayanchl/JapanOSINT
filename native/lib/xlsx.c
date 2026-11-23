@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "joenv.h"
 
 /* ── growable byte buffer ─────────────────────────────────────────────────── */
 typedef struct { char *p; size_t n, cap; } xb;
@@ -342,9 +343,7 @@ static void parse_ref(const char *r, unsigned *col, unsigned *row) {
  * 1,898-byte workbook produced 3 GB of CSV. Measured in pass 1 from the
  * encoded size of each referenced string, before any output is built. */
 static size_t max_bytes(void) {
-  const char *e = getenv("JO_XLSX_MAX_BYTES");
-  if (e && *e) { long long v = atoll(e); if (v > 0) return (size_t)v; }
-  return (size_t)512 << 20;
+  return (size_t)jo_env_ll_strict("JO_XLSX_MAX_BYTES", 512LL << 20, 1, LLONG_MAX);
 }
 
 /* Bytes `s` occupies as one CSV cell (quote doubling and the wrapping quotes
@@ -358,9 +357,7 @@ static size_t csv_cell_cost(const char *s) {
 }
 
 static size_t max_cells(void) {
-  const char *e = getenv("JO_XLSX_MAX_CELLS");
-  if (e && *e) { long long v = atoll(e); if (v > 0) return (size_t)v; }
-  return 2000000;
+  return (size_t)jo_env_ll_strict("JO_XLSX_MAX_CELLS", 2000000, 1, LLONG_MAX);
 }
 
 /* RFC 4180: quote when the cell holds the delimiter, a quote, CR or LF. */

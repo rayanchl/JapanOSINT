@@ -16,6 +16,7 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
+#include "lib/joenv.h"
 
 #ifndef JO_REPO_ROOT
 #define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
@@ -67,20 +68,14 @@ static const char *root_dir(void) {
   const char *e = getenv("JO_EVIDENCE_DIR");
   return (e && *e) ? e : JO_REPO_ROOT "/data/evidence";
 }
-static long long env_ll(const char *name, long long dflt, long long lo) {
-  const char *e = getenv(name);
-  if (!e || !*e) return dflt;
-  long long v = strtoll(e, NULL, 10);
-  return v >= lo ? v : dflt;
-}
 
 static long long g_max_bytes, g_max_blob;
 static int       g_ev_disabled;
 static pthread_once_t g_env_once = PTHREAD_ONCE_INIT;
 
 static void ev_env_probe(void) {
-  g_max_bytes   = env_ll("JO_EVIDENCE_MAX_BYTES", EV_DEFAULT_MAX_BYTES, 1024 * 1024);
-  g_max_blob    = env_ll("JO_EVIDENCE_MAX_BLOB_BYTES", EV_DEFAULT_MAX_BLOB, 1024);
+  g_max_bytes   = jo_env_ll_strict("JO_EVIDENCE_MAX_BYTES", EV_DEFAULT_MAX_BYTES, 1024 * 1024, LLONG_MAX);
+  g_max_blob    = jo_env_ll_strict("JO_EVIDENCE_MAX_BLOB_BYTES", EV_DEFAULT_MAX_BLOB, 1024, LLONG_MAX);
   g_ev_disabled = getenv("JO_NO_EVIDENCE") ? 1 : 0;
 }
 static long long max_bytes(void) {
@@ -1089,7 +1084,7 @@ static void *gc_thread(void *arg) {
     fprintf(stderr, "[evidence] cannot open its own DB connection; gc off\n");
     return NULL;
   }
-  int interval = (int)env_ll("JO_EVIDENCE_GC_INTERVAL_SEC", EV_GC_DEFAULT_SEC, 60);
+  int interval = (int)jo_env_ll_strict("JO_EVIDENCE_GC_INTERVAL_SEC", EV_GC_DEFAULT_SEC, 60, LLONG_MAX);
   if (interval > 86400) interval = 86400;
   /* One pass shortly after boot: it replaces the DB-derived byte estimate with
    * a stat()ed total, so capture is not throttled by a stale over-count. */

@@ -83,6 +83,7 @@
 #include <strings.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include "lib/joenv.h"
 
 #ifndef JO_REPO_ROOT
 #define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
@@ -122,14 +123,6 @@ static char *dupcol(sqlite3_stmt *s, int i) {
   return c ? strdup(c) : NULL;
 }
 
-static int env_int(const char *k, int dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  char *end = NULL;
-  long n = strtol(v, &end, 10);
-  if (end == v) return dflt;
-  return (int)n;
-}
 
 static void sha256_hex(const void *b, size_t n, char out[65]) {
   unsigned char d[SHA256_DIGEST_LENGTH];
@@ -867,7 +860,7 @@ static char *build_cmd(const char *tmpl, const char *path) {
  * absent tool — NULL, EXIF only — and MEDIA_NO_TOOLS remains this module's own
  * knob. */
 static char *run_capture(const char *cmd, size_t maxb, size_t *outlen) {
-  int tmo = env_int("MEDIA_TOOL_TIMEOUT_MS", 20000);
+  int tmo = jo_env_int("MEDIA_TOOL_TIMEOUT_MS", 20000, INT_MIN, INT_MAX);
   if (tmo < 1000) tmo = 1000;
   const char *const argv[] = { "/bin/sh", "-c", cmd, NULL };
   unsigned char *out = NULL;
@@ -1103,7 +1096,7 @@ int media_ocr_file(const char *path, char **out_text, double *out_conf) {
   pthread_mutex_unlock(&g_tool_lock);
   if (!have) return 0;
 
-  int maxb = env_int("MEDIA_OCR_MAX_BYTES", 65536);
+  int maxb = jo_env_int("MEDIA_OCR_MAX_BYTES", 65536, INT_MIN, INT_MAX);
   if (maxb < 256) maxb = 256;
 
   char *cmd = build_cmd(tmpl, path);
@@ -1460,7 +1453,7 @@ int media_discover_for_item(db_handle *db, const char *item_uid) {
   }
   if (!have) { free(props); free(body); free(link); return -1; }
 
-  int max = env_int("MEDIA_MAX_PER_ITEM", 8);
+  int max = jo_env_int("MEDIA_MAX_PER_ITEM", 8, INT_MIN, INT_MAX);
   if (max < 1) max = 1;
   if (max > 64) max = 64;
 
@@ -1507,7 +1500,7 @@ int media_discover_batch(db_handle *db, int limit, volatile int *cancel) {
   if (!db || !db->h) return 0;
   media_migrate(db);
   sqlite3 *h = db->h;
-  if (limit <= 0) limit = env_int("MEDIA_DISCOVER_BATCH", 200);
+  if (limit <= 0) limit = jo_env_int("MEDIA_DISCOVER_BATCH", 200, INT_MIN, INT_MAX);
   if (limit <= 0) limit = 200;
 
   char **uids = calloc((size_t)limit, sizeof *uids);
@@ -1574,7 +1567,7 @@ int media_geo_reapply(db_handle *db, int limit, volatile int *cancel) {
   if (!db || !db->h) return 0;
   media_migrate(db);
   sqlite3 *h = db->h;
-  if (limit <= 0) limit = env_int("MEDIA_GEO_BATCH", 200);
+  if (limit <= 0) limit = jo_env_int("MEDIA_GEO_BATCH", 200, INT_MIN, INT_MAX);
   if (limit <= 0) limit = 200;
 
   typedef struct { char *uid; double lat, lon; } grow;
@@ -1789,7 +1782,7 @@ int media_fts_sync(db_handle *db, int limit, volatile int *cancel) {
   if (!db || !db->h) return 0;
   media_migrate(db);
   sqlite3 *h = db->h;
-  if (limit <= 0) limit = env_int("MEDIA_FTS_BATCH", 500);
+  if (limit <= 0) limit = jo_env_int("MEDIA_FTS_BATCH", 500, INT_MIN, INT_MAX);
   if (limit <= 0) limit = 500;
 
   char cursor[600];
@@ -1966,11 +1959,11 @@ int media_analyze_batch(db_handle *db, http_client *http, int limit,
   if (!db || !db->h) return 0;
   media_migrate(db);
   sqlite3 *h = db->h;
-  if (limit <= 0) limit = env_int("MEDIA_ANALYZE_BATCH", 25);
+  if (limit <= 0) limit = jo_env_int("MEDIA_ANALYZE_BATCH", 25, INT_MIN, INT_MAX);
   if (limit <= 0) limit = 25;
-  long maxb = env_int("MEDIA_MAX_BYTES", 8 * 1024 * 1024);
+  long maxb = jo_env_int("MEDIA_MAX_BYTES", 8 * 1024 * 1024, INT_MIN, INT_MAX);
   if (maxb < 4096) maxb = 4096;
-  int tmo = env_int("MEDIA_TIMEOUT_MS", 15000);
+  int tmo = jo_env_int("MEDIA_TIMEOUT_MS", 15000, INT_MIN, INT_MAX);
   if (tmo < 1000) tmo = 1000;
 
   /* Turn OFF httpclient.c's automatic evidence hook for this thread. The

@@ -62,6 +62,7 @@
 #include <string.h>
 #include <time.h>
 #include "_timefmt.inc"
+#include "lib/joenv.h"
 
 static const char *const SOC_UA[] = {
   "User-Agent: JapanOSINT-native/1.0 (OSINT research collector; +https://github.com/)",
@@ -238,9 +239,7 @@ REGISTER_SOURCE(soc_nuget_def)
 #define HEXPM_PAGE_MAX  20   /* exhaustive-ok: page-walk ceiling; an early stop emits a collector-truncation-notice, and $JO_HEXPM_PAGE_MAX raises it */
 
 static int hexpm_page_max(void) {
-  const char *e = getenv("JO_HEXPM_PAGE_MAX");
-  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
-  return HEXPM_PAGE_MAX;
+  return jo_env_int_strict("JO_HEXPM_PAGE_MAX", HEXPM_PAGE_MAX, 1, INT_MAX);
 }
 
 static int hexpm_emit_page(intel_sink *sink, const cJSON *doc, const char *q) {

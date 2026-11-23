@@ -108,7 +108,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (pd) { sanc_mmddyyyy(pd, pubiso, sizeof pubiso); free(pd); }
   }
 
-  int max_rows = sanc_env_int("JO_SANC_MAX_ROWS", 5000);
+  int max_rows = jo_env_int_strict("JO_SANC_MAX_ROWS", 5000, 1, INT_MAX);
   int n = 0;
   const char *cur = xml;
   sanc_el entry;

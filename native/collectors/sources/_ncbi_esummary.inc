@@ -25,6 +25,7 @@
 #include "_verified_macros.inc"
 #include "lib/jocore.h"
 #include <time.h>
+#include "lib/joenv.h"
 
 static inline void ncbi_pause(void) {
   struct timespec ts = { 0, 350000000L };
@@ -59,8 +60,7 @@ static inline int ncbi_esummary_walk(const source_ctx *c, intel_sink *s,
   long retmax = jsonlist_query_int(esearch, "retmax");
   if (retmax <= 0) retmax = 20;                       /* esearch's own default */
   int page_max = 20;   /* exhaustive-ok: JO_PAGE_MAX runaway ceiling (pagewalk's default), remainder disclosed as a truncation notice */
-  const char *pm = getenv("JO_PAGE_MAX");
-  if (pm && atoi(pm) > 0) page_max = atoi(pm);
+  page_max = jo_env_int_strict("JO_PAGE_MAX", page_max, 1, INT_MAX);
 
   size_t cap = strlen(esearch) + 40;
   char *url = malloc(cap);

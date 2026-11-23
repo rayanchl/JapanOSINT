@@ -9,6 +9,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <math.h>
+#include "lib/joenv.h"
 #define UA "JapanOSINT/1.0 (github.com/rayanchl/JapanOSINT)"
 
 static cJSON *rate_num(long su,long fa){ long t=su+fa;
@@ -388,10 +389,8 @@ char *maintenance_digest(db_handle *db, int hours) {
   /* llmConcurrencySnapshot — C LLM runtime has no shared queue gauge; report
    * the configured limits with zeroed live counters (honest, stable shape). */
   cJSON *cc=cJSON_CreateObject();
-  int hl=getenv("LLM_HEAVY_CONCURRENCY")?atoi(getenv("LLM_HEAVY_CONCURRENCY")):1;
-  int ml=getenv("LLM_MID_CONCURRENCY")?atoi(getenv("LLM_MID_CONCURRENCY")):2;
-  if (hl<1)hl=1;
-  if (ml<1)ml=1;
+  int hl=jo_env_int("LLM_HEAVY_CONCURRENCY",1,1,INT_MAX);
+  int ml=jo_env_int("LLM_MID_CONCURRENCY",2,1,INT_MAX);
   cJSON *hv=cJSON_CreateObject();
   cJSON_AddNumberToObject(hv,"limit",hl); cJSON_AddNumberToObject(hv,"inflight",0);
   cJSON_AddNumberToObject(hv,"waiting",0); cJSON_AddItemToObject(cc,"heavy",hv);

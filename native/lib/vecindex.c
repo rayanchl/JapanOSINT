@@ -13,17 +13,11 @@
 #include <string.h>
 #include <stdarg.h>
 #include <sys/time.h>
+#include "joenv.h"
 
 /* Failed rows listed in a coverage block. The count is always complete. */
 #define FAIL_SAMPLE 5
 
-static long env_long(const char *k, long dflt) {
-  const char *v = getenv(k);
-  if (!v || !*v) return dflt;
-  char *end = NULL;
-  long n = strtol(v, &end, 10);
-  return (end && end != v) ? n : dflt;
-}
 
 static long long wall_ms(void) {
   struct timeval tv;
@@ -114,7 +108,7 @@ int vecindex_live_model(char *out, size_t cap) {
   static long long cached_at = 0;
   const char *base = vecindex_base_url();
   long long now = wall_ms();
-  long ttl = env_long("JO_EMBED_MODEL_CHECK_TTL_MS", 10000);
+  long ttl = jo_env_long("JO_EMBED_MODEL_CHECK_TTL_MS", 10000, LONG_MIN, LONG_MAX);
   pthread_mutex_lock(&mu);
   if (base && cached_at && now - cached_at < ttl &&
       !strcmp(cached_base, base) && !getenv("JO_EMBED_MODEL")) {
@@ -154,7 +148,7 @@ int vecindex_live_query_model(char *out, size_t cap) {
   static char ok_b[512], ok_q[512];
   static long long ok_at = 0;
   long long now = wall_ms();
-  long ttl = env_long("JO_EMBED_MODEL_CHECK_TTL_MS", 10000);
+  long ttl = jo_env_long("JO_EMBED_MODEL_CHECK_TTL_MS", 10000, LONG_MIN, LONG_MAX);
   pthread_mutex_lock(&mu);
   int hit = ok_at && now - ok_at < ttl && !strcmp(ok_b, b) && !strcmp(ok_q, q);
   pthread_mutex_unlock(&mu);

@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 #define SRC "luchtmeetnet-nl"
 #define MAXST 128
@@ -188,19 +189,16 @@ static int lm_page(const source_ctx *ctx, intel_sink *sink, st_t *cache,
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   int budget = MAXST;
-  const char *env = getenv("JO_LUCHTMEETNET_STATIONS");
-  if (env && *env) { int b = atoi(env); if (b > 0 && b <= MAXST) budget = b; }
+  budget = jo_env_int_strict("JO_LUCHTMEETNET_STATIONS", budget, 1, MAXST);
 
   int max_pages = LM_MAX_PAGES;
-  const char *penv = getenv("JO_LUCHTMEETNET_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  max_pages = jo_env_int_strict("JO_LUCHTMEETNET_PAGES", max_pages, 1, INT_MAX);
 
   /* Pin the window explicitly, so `page` survives the 302 (see the header
    * note), and keep it to the run cadence so the walk can actually reach the
    * last page. */
   long window = LM_WINDOW_SEC;
-  const char *wenv = getenv("JO_LUCHTMEETNET_WINDOW_SEC");
-  if (wenv && *wenv) { long w = atol(wenv); if (w > 0) window = w; }
+  window = jo_env_long_strict("JO_LUCHTMEETNET_WINDOW_SEC", window, 1, LONG_MAX);
   time_t now = time(NULL);
   char start[32], end[32];
   /* ISO-8601 UTC, the shape the API's own redirect uses. The window has to be

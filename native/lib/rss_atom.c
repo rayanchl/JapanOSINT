@@ -1,4 +1,5 @@
 #include "rss_atom.h"
+#include "joenv.h"
 #include "jocore.h"     /* jo_strcasestr: portable case-insensitive search */
 #include "osintemit.h"  /* jo_shape_notice: a disclosure as data, not a log line */
 #include "../core/httpclient.h"
@@ -459,9 +460,7 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
    * 4,995 items (3,539 rows, 10 s) on every poll, which is a duration_outlier
    * every hour for data that changed by a handful of entries. Cap the per-run
    * item count; feeds are newest-first, so this keeps the fresh end. */
-  const char *cap_env = getenv("JO_RSS_MAX_ITEMS");
-  int max_items = cap_env ? atoi(cap_env) : 500;
-  if (max_items <= 0) max_items = 500;
+  int max_items = jo_env_int_strict("JO_RSS_MAX_ITEMS", 500, 1, INT_MAX);
   /* When the cap bites we keep WALKING the feed — only the per-item field
    * extraction is skipped — so `scanned` is the real count of items the feed
    * offered and the disclosure below can say "N of M" instead of "N of ?".

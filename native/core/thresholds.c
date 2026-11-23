@@ -16,6 +16,7 @@
 #include "relevance.h"      /* RELEV_SIM_MIN               */
 #include "suggest.h"        /* SUGGEST_MIN_COS             */
 #include "camera_dupes.h"   /* CAM_DUP_COSINE_MIN          */
+#include "lib/joenv.h"
 
 /* Defined beside their callers (static there); the values are repeated here
  * and the callers read through threshold_get(), so these are the only copy
@@ -102,11 +103,10 @@ static double clampd(double v, double lo, double hi) {
 /* The env layer, read every call (as the modules did): a value that does not
  * parse, or is outside [min,max], is ignored — the old per-module rule. */
 static int env_value(const threshold_def *d, double *out) {
-  const char *e = getenv(d->env);
-  if (!e || !*e) return 0;
-  char *end = NULL;
-  double v = strtod(e, &end);
-  if (!end || end == e || !isfinite(v) || v < d->min || v > d->max) return 0;
+  /* NAN is the "no usable value" sentinel: unset, empty, unparsable and
+   * out-of-range all come back as NAN from the strict reader. */
+  double v = jo_env_double_strict(d->env, NAN, d->min, d->max);
+  if (isnan(v)) return 0;
   *out = v;
   return 1;
 }

@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 #define ARCH_URL   "https://security.archlinux.org/json"
 #define ALPINE_URL "https://secdb.alpinelinux.org/v3.21/main.json"
@@ -76,9 +77,7 @@
 #define DISTRO_PAGE_MAX 200   /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
 
 static int distro_page_max(void) {
-  const char *e = getenv("JO_DISTRO_PAGE_MAX");
-  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
-  return DISTRO_PAGE_MAX;
+  return jo_env_int_strict("JO_DISTRO_PAGE_MAX", DISTRO_PAGE_MAX, 1, INT_MAX);
 }
 
 /* Join an array of strings into "a, b, c" (bounded). */

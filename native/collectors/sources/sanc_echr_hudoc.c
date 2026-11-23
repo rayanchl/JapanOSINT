@@ -37,6 +37,7 @@
  */
 #include "sanc_common.inc"
 #include "lib/seenset.h"
+#include "lib/joenv.h"
 
 #define HUDOC_QUERY \
   "https://hudoc.echr.coe.int/app/query/results?query=contentsitename%3DECHR%20AND%20" \
@@ -50,9 +51,7 @@
 #define HUDOC_PAGE_MAX  20   /* exhaustive-ok: disclosed page ceiling; an early stop emits a collector-truncation-notice against resultcount, and $JO_HUDOC_PAGE_MAX raises it */
 
 static int hudoc_page_max(void) {
-  const char *e = getenv("JO_HUDOC_PAGE_MAX");
-  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
-  return HUDOC_PAGE_MAX;
+  return jo_env_int_strict("JO_HUDOC_PAGE_MAX", HUDOC_PAGE_MAX, 1, INT_MAX);
 }
 
 /* Emit every judgment on one page. `seen` spans the whole walk so the EN/FR

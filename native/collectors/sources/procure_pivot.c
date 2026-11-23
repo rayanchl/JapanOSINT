@@ -36,6 +36,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 /* Emit one row. `data` is TAKEN OVER (printed, then deleted). Returns 1 if
  * emitted. body == properties so the FTS mirror in core/intel.c indexes the
@@ -90,9 +91,7 @@ static void pp_iso_to_us(const char *iso, char *out, size_t n) {
 #define PP_PAGE_MAX 20   /* exhaustive-ok: page-walk ceiling; a stop with pages left emits a collector-truncation-notice, and $JO_PROCURE_PAGE_MAX raises it */
 
 static int pp_page_max(void) {
-  const char *e = jo_env("JO_PROCURE_PAGE_MAX");
-  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
-  return PP_PAGE_MAX;
+  return jo_env_int_strict("JO_PROCURE_PAGE_MAX", PP_PAGE_MAX, 1, INT_MAX);
 }
 
 /* The upstream's own declared total for a search, or -1 when it declines to
@@ -481,11 +480,7 @@ static int run_contract_expiry(const source_ctx *ctx, intel_sink *sink) {
   if (!jo_looks_like_keyword(ctx->entity)) return 0;
 
   int days = 365;
-  const char *cfg = jo_env("JO_CONTRACT_EXPIRY_DAYS");
-  if (cfg) {
-    int v = atoi(cfg);
-    if (v > 0 && v <= 3650) days = v;
-  }
+  days = jo_env_int_strict("JO_CONTRACT_EXPIRY_DAYS", days, 1, 3650);
   char today[16], horizon[16];
   jo_days_ago_iso(0, today, sizeof today);
   jo_days_ago_iso(-days, horizon, sizeof horizon);   /* negative → forward */

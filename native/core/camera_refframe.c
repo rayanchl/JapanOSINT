@@ -14,16 +14,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/joenv.h"
 
 #define RF_HOSTS_MAX 64              /* distinct hosts tracked per tick      */
 
-static long env_long(const char *k, long dflt) {
-  const char *e = getenv(k);
-  if (!e || !*e) return dflt;
-  char *end = NULL;
-  long v = strtol(e, &end, 10);
-  return (end && end != e && v > 0) ? v : dflt;
-}
 
 static char *dupcol(sqlite3_stmt *s, int i) {
   const char *t = (const char *)sqlite3_column_text(s, i);
@@ -172,10 +166,10 @@ int camera_refframe_tick(db_handle *db, http_client *http, volatile int *cancel)
   camera_stills_migrate(db);          /* intel_items.capture_stills          */
   image_vec_migrate(db);              /* image_vec_meta holds the cursor     */
   camera_refframe_migrate(db);
-  int walk = (int)env_long("JO_REFFRAME_MAX_WALK", 2000);
-  int per_tick = (int)env_long("JO_REFFRAME_PER_TICK", 20);
-  int per_host = (int)env_long("JO_REFFRAME_HOST_PER_TICK", 2);
-  long max_age = env_long("JO_REFFRAME_MAX_AGE_SEC", 604800);
+  int walk = (int)jo_env_long_strict("JO_REFFRAME_MAX_WALK", 2000, 1, LONG_MAX);
+  int per_tick = (int)jo_env_long_strict("JO_REFFRAME_PER_TICK", 20, 1, LONG_MAX);
+  int per_host = (int)jo_env_long_strict("JO_REFFRAME_HOST_PER_TICK", 2, 1, LONG_MAX);
+  long max_age = jo_env_long_strict("JO_REFFRAME_MAX_AGE_SEC", 604800, 1, LONG_MAX);
 
   long long after = vecindex_meta_long(db, vs, "refframe_cursor");
   if (after < 0) after = 0;

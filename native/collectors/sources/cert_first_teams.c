@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/joenv.h"
 
 #define FIRST_PAGE_SIZE 100
 /* Runaway guard, not an editorial bound: the walk normally ends on `total`
@@ -94,8 +95,7 @@ static int run(const source_ctx *c, intel_sink *s) {
   int total_rows = 0, pages_ok = 0;
   double total = -1;
   int max_pages = FIRST_MAX_PAGES, hit_ceiling = 0, walked_out = 0, mid_fail = 0;
-  const char *penv = getenv("JO_FIRST_MAX_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  max_pages = jo_env_int_strict("JO_FIRST_MAX_PAGES", max_pages, 1, INT_MAX);
   char url[160];
 
   for (int page = 0; page < max_pages; page++) {
