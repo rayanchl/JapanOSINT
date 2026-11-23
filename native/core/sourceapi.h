@@ -42,6 +42,10 @@ typedef struct {
                            * ok — the one filter a reader wants when the
                            * question is "what is not working".              */
   const char *grade;      /* A..F, or "unrated"                              */
+  const char *credkey;    /* a credential NAME (/api/keys): only the sources
+                           * that need it. Declared (hpengine key_env, the
+                           * credtab req/any rows) or recorded (a gated
+                           * notice naming it). meta.credential says how many. */
   int         has_items;  /* 1 = only sources with stored items; 0 = all     */
   const char *sort;       /* name (default) | id | items | fetched | grade |
                            * collector | interval                            */

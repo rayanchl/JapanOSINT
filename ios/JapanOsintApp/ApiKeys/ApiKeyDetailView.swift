@@ -20,9 +20,10 @@ struct ApiKeyDetailView: View {
     @State private var revealedValue: String?
     @State private var newValue: String = ""
     @State private var workingRow: KeyRow
-    /// Sources the SERVER reports as waiting for this key (a filtered, paged
-    /// search of `health=gated`, whose rows carry `credentials_required`), not
-    /// a scan of the whole registry. Best-effort.
+    /// Sources the SERVER reports as needing this key (`/api/sources/search?key=`:
+    /// the source's own key_env, the credential table, or a recorded gated
+    /// notice), not a scan of the whole registry. `usingTotal` is the server's
+    /// matched count. Best-effort.
     @State private var usingRows: [SourceSearchRow] = []
     @State private var usingTotal: Int?
     @State private var usingLoading = false
@@ -56,25 +57,16 @@ struct ApiKeyDetailView: View {
         usingLoading = true
         defer { usingLoading = false }
         var q = SourceSearchQuery()
-        q.health = "gated"
-        var found: [SourceSearchRow] = []
-        var offset = 0
-        // Walk the gated sources 500 at a time (a bounded number of pages) and
-        // keep those that name this key.
-        for _ in 0..<10 {
-            do {
-                let env = try await api.searchSources(q, limit: 500, offset: offset)
-                let rows = env.data ?? []
-                found += rows.filter { $0.health?.credentials_required?.contains(row.name) == true }
-                offset += rows.count
-                if env.page?.has_more != true || rows.isEmpty { break }
-            } catch {
-                usingError = error.localizedDescription
-                break
-            }
+        q.key = row.name
+        q.sort = "id"
+        do {
+            let env = try await api.searchSources(q, limit: Self.usingMax, offset: 0)
+            let rows = env.data ?? []
+            usingTotal = env.page?.total ?? rows.count
+            usingRows = rows
+        } catch {
+            usingError = error.localizedDescription
         }
-        usingTotal = found.count
-        usingRows = Array(found.prefix(Self.usingMax))
     }
 
     /// Shown when Reveal returns no value. For workspace scope an admin-set
@@ -264,7 +256,7 @@ struct ApiKeyDetailView: View {
                     .font(.caption)
                     .foregroundStyle(theme.warning)
             } else if usingRows.isEmpty {
-                Text("No source is currently waiting for this key.")
+                Text("No registered source declares or reports a need for this key.")
                     .font(.caption)
                     .foregroundStyle(theme.textMuted)
             } else {
@@ -275,15 +267,15 @@ struct ApiKeyDetailView: View {
                     }
                 }
                 if let total = usingTotal, total > usingRows.count {
-                    Text("Showing \(usingRows.count) of \(total) sources waiting for this key.")
+                    Text("Showing \(usingRows.count) of \(total) sources that use this key.")
                         .font(.caption2)
                         .foregroundStyle(theme.textMuted)
                 }
             }
         } header: {
-            Text("Waiting for this key")
+            Text(usingTotal.map { "Used by \($0) source\($0 == 1 ? "" : "s")" } ?? "Used by")
         } footer: {
-            Text("Sources the server reports as gated on this key. A source whose key is already set is no longer gated and is not listed. Tap one to open its detail.")
+            Text("Sources the server reports as needing this key, whether or not they are waiting on it now. Tap one to open its detail.")
                 .font(.caption2)
         }
     }

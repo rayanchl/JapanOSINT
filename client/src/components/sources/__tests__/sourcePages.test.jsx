@@ -18,7 +18,7 @@ import SourcesListPage, { readFilters, writeFilters } from '../SourcesListPage.j
 import SourceDetailPage, { SummaryCard, SettingsSection } from '../SourceDetailPage.jsx';
 import CollectorsPage, { groupCollectors } from '../../collectors/CollectorsPage.jsx';
 import CadenceCard, { describePolicy } from '../CadenceCard.jsx';
-import { fmtInterval, fmtBytes, measured, kindLabel, splitTemplate, searchPath, NOT_MEASURED } from '../../../utils/sourceFormat.js';
+import { fmtInterval, fmtBytes, measured, kindLabel, splitTemplate, searchPath, policyLabel, NOT_MEASURED } from '../../../utils/sourceFormat.js';
 
 vi.mock('../../panels/SourcesPanel.jsx', () => ({ default: () => null }));
 
@@ -331,6 +331,41 @@ describe('SettingsSection — interval_sec', () => {
     expect(screen.getByText(/default 6h \(the system-wide policy\)|default 6 h \(the system-wide policy\)/)).toBeTruthy();
     expect(screen.getByText(/^15m|^15 min/)).toBeTruthy();                 // in effect, as an interval not a byte count
     expect(screen.getByRole('spinbutton').value).toBe('900');
+  });
+});
+
+describe('cadence policy: realtime', () => {
+  it('labels every policy string the scheduler reports, realtime included', () => {
+    expect(policyLabel('realtime')).toMatch(/real-time.*exempt/);
+    expect(policyLabel('global')).toMatch(/global/);
+    expect(policyLabel('clamped')).toMatch(/clamped/);
+    expect(policyLabel(undefined)).toBe('declared');
+    expect(policyLabel('somethingNew')).toBe('somethingNew');   // an unknown string is shown, not hidden
+  });
+  it('says which sources a global interval leaves alone', () => {
+    expect(describePolicy({ global_interval_sec: 21600, realtime_max_sec: 300 })).toMatch(/every 6.?h.*real-time/);
+    expect(describePolicy({ global_interval_sec: 21600, realtime_max_sec: 0 })).not.toMatch(/real-time/);
+  });
+  it('carries the credential filter in the search URL', () => {
+    expect(searchPath({ key: 'SHODAN_API_KEY' })).toBe('/api/sources/search?key=SHODAN_API_KEY');
+  });
+  it('lets an operator edit the real-time limit', async () => {
+    const puts = [];
+    globalThis.fetch = vi.fn(async (input, init) => {
+      const body = (init?.method === 'PUT')
+        ? (puts.push(JSON.parse(init.body)), { ok: true })
+        : { policy: { global_interval_sec: 21600, min_interval_sec: 0, max_interval_sec: 0, realtime_max_sec: 300, mode: 'global' }, source: 'db', estimate: null };
+      return new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });
+    });
+    render(<MemoryRouter><CadenceCard canEdit /></MemoryRouter>);
+    await waitFor(() => expect(screen.getByText('Change')).toBeTruthy());
+    fireEvent.click(screen.getByText('Change'));
+    const box = screen.getByLabelText(/real-time limit/);
+    expect(box.value).toBe('300');
+    fireEvent.change(box, { target: { value: '120' } });
+    fireEvent.click(screen.getByText('Save'));
+    await waitFor(() => expect(puts.length).toBe(1));
+    expect(puts[0].realtime_max_sec).toBe(120);
   });
 });
 

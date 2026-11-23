@@ -153,6 +153,11 @@ typedef struct {
 extern const pw_pager PW_PAGERS[];                     /* THE pager table */
 const pw_pager *pw_pager_find(const char *size_param);
 long  pw_declared_size(const char *url, unsigned uses);
+/* The first PW_PAGERS size spelling (PWP_DECL) the URL declares, or NULL; *size gets its value.
+ * core/pagination_probe.c reads this instead of keeping a size list of its own. */
+const char *pw_declared_size_param(const char *url, long *size);
+/* 1 when the URL already carries a cursor spelling from the cursor table (offset, page, ...). */
+int   pw_url_has_cursor(const char *url);
 long  pw_declared_size_below(const char *url, unsigned uses, long below);   /* first size in (0, below) */  /* the size the URL declares, or -1 */
 
 #define PW_RESOLVE_PATHS 1u   /* also resolve a bare relative path ("../x"); see pw_resolve_url */

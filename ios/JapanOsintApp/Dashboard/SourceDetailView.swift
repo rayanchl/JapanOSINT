@@ -386,7 +386,7 @@ struct SourceDetailView: View {
         let s = d.schedule
         let policyText: String = {
             guard let p = s?.policyInterval else { return "—" }
-            return SourceFormat.interval(p) + " (" + (s?.policy ?? "policy") + ")"
+            return SourceFormat.interval(p) + " (" + SourceFormat.policy(s?.policy ?? "policy") + ")"
         }()
         let nextDueText: String = {
             guard let due = s?.next_due else { return "—" }
@@ -546,6 +546,9 @@ struct SourceDetailView: View {
                 }
                 if let hi = c.policy?.max_interval_sec, hi > 0 {
                     kv("Ceiling", SourceFormat.interval(Double(hi)))
+                }
+                if let rt = c.policy?.realtime_max_sec, rt > 0 {
+                    kv("Real-time limit", SourceFormat.interval(Double(rt)))
                 }
                 if let e = c.estimate {
                     kv("Runs a day, declared", SourceFormat.count(e.runs_per_day_declared))
