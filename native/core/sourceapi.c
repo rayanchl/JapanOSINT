@@ -508,7 +508,7 @@ static cJSON *sched_json(const sched_t *r, const source_def *d, long long now) {
   if (ov > 0) cJSON_AddNumberToObject(o, "overrideInterval", (double)ov);
   else cJSON_AddNullToObject(o, "overrideInterval");
   cJSON_AddStringToObject(o, "cadenceBasis", declared <= 0 ? "on demand" : ov > 0 ? "override"
-                          : strcmp(mode, "declared") ? "policy"
+                          : (strcmp(mode, "declared") && strcmp(mode, "realtime")) ? "policy"
                           : (adaptive && r && r->freshness > 0) ? "measured" : "declared");
   long run = sched_next_delay(&sst, &pol, d);
   if (run > 0) cJSON_AddNumberToObject(o, "runInterval", (double)run);

@@ -222,7 +222,7 @@ char *source_interval_json(db_handle *db, const char *id, int can_write) {
    * a row the cache refused (out of range) is not what runs */
   const char *basis = declared <= 0 ? "on demand"
                     : source_interval_for(id) > 0 ? "override"
-                    : strcmp(mode, "declared") ? "policy"
+                    : (strcmp(mode, "declared") && strcmp(mode, "realtime")) ? "policy"
                     : measured > 0 ? "measured" : "declared";
   cJSON *o = cJSON_CreateObject();
   cJSON_AddStringToObject(o, "source", id);
