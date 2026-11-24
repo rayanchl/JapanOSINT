@@ -1,0 +1,20 @@
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+br-cnpjws-publica	OK	0	0	5	5	5	5	0.7	
+datacite-dois-by-client	OK	0	0	100	101	100	100	25.4	
+sas-ckan-au-recent	OK	0	0	1000	1001	1000	-1	16.0	
+au-acnc-annual-information-statement-2024	OK	0	0	2000	2001	2000	-1	11.7	
+au-gov-contracts-historical	OK	0	0	2000	2001	2000	-1	8.9	
+au-apvma-pubcris-products	OK	0	0	2000	2001	2000	-1	5.5	
+TWSE_QFII_TOP20	FETCH_FAILED	0	0	1	1	0	-1	1.8	HTTP 307 | remedy: re-run; if the status persists the endpoint has moved or retired
+INFORM_RISK_COUNTRIES	OK	0	0	6887	6887	6887	6887	4.1	
+JO45_WP_SAITAMACCI_USERS	OK	0	0	4	4	4	4	3.3	
+JO45_WP_LIBRARYPREFYAMAGUCHI_MEIJIISHIN	OK	0	0	85	85	85	85	2.0	
+JO47_FR_E965154F_3E2B_4D29_8035_D2C88D9DAC47	OK	0	0	10	10	10	10	3.0	
+lat-camara-votacoes-json	OK	0	0	2000	2001	2000	-1	93.6	
+JO58_AGS_EU_BACKGROUND_BACKGROUND_DY_0_7729DE	FETCH_FAILED	1	-1	1	1	0	-1	21.7	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the 
+reddit-group-cyber	FETCH_FAILED	1	-1	1	1	0	-1	0.5	transport none recorded; 0 of 1 hosts answered; silent: www.reddit.com; 266 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+au-asic-afs-licensees	OK	0	0	2000	2002	2000	2000	129.7	
+us-b50-samhsa-gov-newsroom-press-announcements	FETCH_FAILED	1	-1	1	1	0	-1	0.5	transport none recorded; 0 of 1 hosts answered; silent: www.samhsa.gov; 118 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+JO48_IGO_Q5636894	FETCH_FAILED	1	-1	1	1	0	-1	60.4	NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: re-run; if the status persists the endpoint has moved or retired
+gleif-lei-ultimate-children	OK	0	0	410	411	410	410	145.2	
+reddit-group-africa	FETCH_FAILED	1	-1	1	1	0	-1	60.2	transport none recorded; 0 of 1 hosts answered; silent: www.reddit.com; 266 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
