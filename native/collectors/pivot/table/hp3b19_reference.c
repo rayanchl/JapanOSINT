@@ -532,7 +532,13 @@ static const hp_source HP3B19_REFERENCE[] = {
     .record_type = "semiconductor-fab",
     .tags = "\"semiconductor\",\"industry\",\"wikidata\",\"geo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://query.wikidata.org/sparql?query=SELECT%20%3Fitem%20%3FitemLabel%20%3FcountryLabel%20%3Flat%20%3Flon%20%3FoperatorLabel%20%3Finception%20WHERE%20%7B%0A%20%20%3Fitem%20wdt%3AP31/wdt%3AP279%2A%20wd%3AQ1058914%20.%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP17%20%3Fcountry%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20p%3AP625/psv%3AP625%20%3Fc%20.%20%3Fc%20wikibase%3AgeoLatitude%20%3Flat%20%3B%20wikibase%3AgeoLongitude%20%3Flon%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP137%20%3Foperator%20%7D%0A%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP571%20%3Finception%20%7D%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%2Cmul%22%20%7D%0A%7D%20LIMIT%20500&format=json",
+    /* CLASS CORRECTED 2026-11-24: this row asked for wd:Q1058914, whose label is
+       "software company" (measured 2026-11-16), so it stored software
+       companies as fabs — every gate green, since records were emitted and
+       stored. Q4168959 is "semiconductor fabrication plant", resolved through
+       Wikidata's own search API rather than recalled. Same GROUP BY ?item
+       query as the other three rows: one row per item. */
+    .url = "https://query.wikidata.org/sparql?query=SELECT%20%3Fitem%20%28%3Fil%20AS%20%3FitemLabel%29%20%28%3Fcl%20AS%20%3FcountryLabel%29%20%28geof%3Alatitude%28%3Fc%29%20AS%20%3Flat%29%20%28geof%3Alongitude%28%3Fc%29%20AS%20%3Flon%29%20%28%3Fol%20AS%20%3FoperatorLabel%29%20%3Finception%20WHERE%20%7B%0A%20%20%7B%20SELECT%20%3Fitem%20%28SAMPLE%28%3FitemLabel%29%20AS%20%3Fil%29%20%28GROUP_CONCAT%28DISTINCT%20%3FcountryLabel%3B%20separator%3D%22%3B%20%22%29%20AS%20%3Fcl%29%20%28GROUP_CONCAT%28DISTINCT%20%3FoperatorLabel%3B%20separator%3D%22%3B%20%22%29%20AS%20%3Fol%29%20%28MIN%28%3Finc%29%20AS%20%3Finception%29%20%28MIN%28%3Fcn%29%20AS%20%3Fc%29%20WHERE%20%7B%0A%20%20%20%20%7B%20SELECT%20%3Fitem%20%3FitemLabel%20%3FcountryLabel%20%3FoperatorLabel%20%3Finc%20%3Fcn%20WHERE%20%7B%0A%20%20%20%20%20%20%3Fitem%20wdt%3AP31%20wd%3AQ4168959%20.%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP17%20%3Fcountry%20%7D%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP625%20%3Fcn%20%7D%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP137%20%3Foperator%20%7D%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fitem%20wdt%3AP571%20%3Finc%20%7D%0A%20%20%20%20%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%2Cmul%22%20%7D%0A%20%20%20%20%7D%20%7D%0A%20%20%7D%20GROUP%20BY%20%3Fitem%20LIMIT%2020000%20%7D%0A%7D&format=json",
     .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
     .array_path = "results.bindings",
     .id_keys = "item.value",
