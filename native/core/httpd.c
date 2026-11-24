@@ -1,4 +1,5 @@
 #include "httpd.h"
+#include "loopdl.h"
 #include "auth.h"
 #include "intelapi.h"
 #include "respcache.h"
@@ -2505,7 +2506,7 @@ static int route_gate_enforce(struct mg_connection *c, struct mg_http_message *h
   return 1;
 }
 
-static void fn(struct mg_connection *c, int ev, void *ev_data) {
+static void fn_dispatch(struct mg_connection *c, int ev, void *ev_data) {
   if (ev == MG_EV_POLL) { search_stream_poll(c); xs_on_io(c); return; }
   if (ev == MG_EV_WRITE) { xs_on_io(c); return; }   /* a streamed export drained */
   if (ev == MG_EV_CLOSE) { search_stream_close(c); xs_on_close(c->id); return; }
@@ -5696,8 +5697,27 @@ static void httpd_install_signal_handlers(void) {
   sigaction(SIGPIPE, &ign, NULL);
 }
 
+/* The event-loop entry. A request that runs SQLite on this thread is bounded by
+ * JO_LOOP_QUERY_MS (core/loopdl.c): an overrun is interrupted, whatever the
+ * route made of the failed query is withdrawn from the send buffer, and the
+ * client is told 503 and why, rather than every client waiting behind it. */
+static void fn(struct mg_connection *c, int ev, void *ev_data) {
+  if (ev != MG_EV_HTTP_MSG) { fn_dispatch(c, ev, ev_data); return; }
+  size_t sent0 = c->send.len;
+  loopdl_arm();
+  fn_dispatch(c, ev, ev_data);
+  if (loopdl_disarm() && c->send.len >= sent0) {
+    c->send.len = sent0;
+    fprintf(stderr, "[httpd] request exceeded JO_LOOP_QUERY_MS (%ld ms): 503\n", loopdl_ms());
+    char hb[CORS_HDR_MAX + 96];
+    snprintf(hb, sizeof hb, "Content-Type: application/json\r\nRetry-After: 5\r\n%s", cors_h(c));
+    mg_http_reply(c, 503, hb, "%s", loopdl_body());
+  }
+}
+
 int httpd_serve(db_handle *db, int port) {
   g_db = db;
+  loopdl_install(db->h);   /* armed per request by fn() */
   auth_init();
   struct mg_mgr mgr;
   mg_mgr_init(&mgr);

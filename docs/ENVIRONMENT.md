@@ -4,7 +4,7 @@
 
 Every variable the native tree reads, found by a static scan of `core/`, `lib/`, `collectors/`, `main.c` and `registry.c` for `getenv("NAME")` and the typed reader `lib/joenv.h` (`jo_env_ll`/`jo_env_long`/`jo_env_int`/`jo_env_double`, their `_strict` forms, `jo_env_bool`, `jo_env_str`) and `jo_env`. **Default** is shown only where the call site spells a literal (a blank means the default is computed, handled by the caller, or the variable is optional). **Range** is the reader's min..max as spelled at the call site: unset/empty gives the default, garbage gives the default with one stderr line, and out of range is clamped (or, for `_strict` readers, gives the default). Names assembled at runtime are not seen by a text scan.
 
-477 variables. A first-boot subset, with example values, is in `.env.example`.
+478 variables. A first-boot subset, with example values, is in `.env.example`.
 
 | Variable | Default | Range | Read in |
 | --- | --- | --- | --- |
@@ -216,6 +216,7 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_LLM_QUEUE_MAX` | `64` | `1..LONG_MAX` | `core/llm_worker.c` |
 | `JO_LLM_QUEUE_WAIT_FACTOR` | `4` | `1..LONG_MAX` | `core/llm_worker.c` |
 | `JO_LLM_TIMEOUT_MS` | `60000` | `1..INT_MAX` | `core/pipeline.c` |
+| `JO_LOOP_QUERY_MS` |  | `0..3600000` | `core/loopdl.c` |
 | `JO_LUCHTMEETNET_PAGES` |  | `1..INT_MAX` | `collectors/sources/eni_luchtmeetnet_nl.c` |
 | `JO_LUCHTMEETNET_STATIONS` |  | `1..MAXST` | `collectors/sources/eni_luchtmeetnet_nl.c` |
 | `JO_LUCHTMEETNET_WINDOW_SEC` |  | `1..LONG_MAX` | `collectors/sources/eni_luchtmeetnet_nl.c` |
