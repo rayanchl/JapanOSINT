@@ -43,6 +43,29 @@ int main(void) {
   setenv("OPENALEX_API_KEY", "", 1);
   expect("https://api.openalex.org/works", NULL);
 
+  /* $JO_CONTACT_MAILTO: the two polite-pool hosts and nowhere else. */
+  unsetenv("OPENALEX_API_KEY");
+  unsetenv("JO_CONTACT_MAILTO");
+  expect("https://api.crossref.org/works?rows=1", NULL);            /* unset: untouched */
+  setenv("JO_CONTACT_MAILTO", "ops+osint@example.org", 1);
+  expect("https://api.crossref.org/works?rows=1",
+         "https://api.crossref.org/works?rows=1&mailto=ops+osint@example.org");
+  expect("https://api.openalex.org/works",
+         "https://api.openalex.org/works?mailto=ops+osint@example.org");
+  expect("https://api.crossref.org/works?mailto=someone@else.org", NULL);   /* never twice */
+  expect("https://api.crossref.org.evil.example/works", NULL);
+  expect("http://api.crossref.org/works", NULL);
+  expect("https://api.datacite.org/works", NULL);
+  setenv("OPENALEX_API_KEY", "k1", 1);                              /* both, on OpenAlex only */
+  expect("https://api.openalex.org/works",
+         "https://api.openalex.org/works?mailto=ops+osint@example.org&api_key=k1");
+  expect("https://api.crossref.org/works",
+         "https://api.crossref.org/works?mailto=ops+osint@example.org");
+  setenv("JO_CONTACT_MAILTO", "not-an-address", 1);                 /* no @: ignored */
+  expect("https://api.crossref.org/works", NULL);
+  setenv("JO_CONTACT_MAILTO", "a@b.org&x=1", 1);                    /* cannot smuggle */
+  expect("https://api.crossref.org/works", NULL);
+
   printf("test_http_optional_key: all ok\n");
   return 0;
 }

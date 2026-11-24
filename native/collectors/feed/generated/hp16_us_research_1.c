@@ -170,16 +170,13 @@ static const hp_source T[] = {
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
-  { .id = "unpaywall-doi",
-    .name = "Unpaywall OA location for a DOI",
-    .collector = "us_research", .category = "research",
-    .description = "For any Crossref DOI: best_oa_location and first_oa_location with host_type (publisher vs repository), licence, OA date, landing page and PDF url, plus the full oa_locations array listing every repository copy found. Requires an email query param, not a key.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"us\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.unpaywall.org/v2/10.7717/peerj.4375?email=rayanchouialkessal@gmail.com",
-    .array_path = "z_authors",
-    .detail_url = "https://api.unpaywall.org/v2/{v}?email=rayanchouialkessal@gmail.com", .detail_key = "doi",
-    .page_walk = 1,
-    .interval = 86400, .free_tier = 1 },
+  /* unpaywall-doi REMOVED 2026-11-24: a scheduled row frozen on ONE DOI
+     (10.7717/peerj.4375) that emitted that paper's nine authors once a day,
+     keyed on the first scalar `author_position` (3 distinct of 9), with a
+     detail hop whose key `doi` no author record carries (measured NO_KEY
+     2026-11-16). The lookup it was a probe of is UNPAYWALL_DOI
+     (hp3_research.c), which answers for any DOI. Its URLs also carried a
+     personal address. */
 
 };
 HP_REGISTER_TABLE(T)

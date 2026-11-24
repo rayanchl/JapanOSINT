@@ -652,29 +652,74 @@ static int tls_cause_of(CURLcode rc, long verify, const char *msg) {
  * one. Returns a malloc'd URL, or NULL for "send it as written" (other host,
  * no key, a URL that already carries api_key, or a key with a character that
  * could not be a key). The host test is exact, so the key never reaches
- * another server, including a url-override's target. */
-char *http_optional_key_url(const char *url) {
-  static const char HOST[] = "://api.openalex.org";
-  if (!url) return NULL;
-  const char *h = strstr(url, HOST);
-  if (!h || (strncmp(url, "https", (size_t)(h - url)) != 0) || h - url != 5)
-    return NULL;
-  char after = h[sizeof HOST - 1];
-  if (after != '/' && after != '?' && after != 0) return NULL;
-  const char *key = getenv("OPENALEX_API_KEY");
-  if (!key || !*key) return NULL;
-  for (const char *p = key; *p; p++)
-    if (!((*p >= '0' && *p <= '9') || (*p >= 'a' && *p <= 'z') ||
-          (*p >= 'A' && *p <= 'Z') || *p == '-' || *p == '_' || *p == '.'))
-      return NULL;
-  if (strstr(url, "?api_key=") || strstr(url, "&api_key=")) return NULL;
+ * another server, including a url-override's target.
+ *
+ * $JO_CONTACT_MAILTO rides the same path for api.openalex.org and
+ * api.crossref.org: see the note inside. */
+/* Is `url` exactly https://<host>, followed by a path, a query or nothing? */
+static int url_is_https_host(const char *url, const char *host) {
+  if (strncmp(url, "https://", 8) != 0) return 0;
+  size_t n = strlen(host);
+  if (strncmp(url + 8, host, n) != 0) return 0;
+  char after = url[8 + n];
+  return after == '/' || after == '?' || after == 0;
+}
+
+/* Append `name=value` to `url`'s query, before any fragment. malloc'd. */
+static char *url_add_param(const char *url, const char *name, const char *value) {
   const char *frag = strchr(url, '#');
   size_t base = frag ? (size_t)(frag - url) : strlen(url);
-  size_t cap = strlen(url) + strlen(key) + 16;
+  size_t cap = strlen(url) + strlen(name) + strlen(value) + 4;
   char *out = malloc(cap);
   if (!out) return NULL;
-  snprintf(out, cap, "%.*s%capi_key=%s%s", (int)base, url,
-           memchr(url, '?', base) ? '&' : '?', key, frag ? frag : "");
+  snprintf(out, cap, "%.*s%c%s=%s%s", (int)base, url,
+           memchr(url, '?', base) ? '&' : '?', name, value, frag ? frag : "");
+  return out;
+}
+
+static int url_has_param(const char *url, const char *name) {
+  char pat[48];
+  snprintf(pat, sizeof pat, "?%s=", name);
+  if (strstr(url, pat)) return 1;
+  pat[0] = '&';
+  return strstr(url, pat) != NULL;
+}
+
+/* A value safe to put in a query string unescaped: a key, or an address. No
+ * `&`, `=`, `#`, `%`, space or control byte can pass, so a variable cannot
+ * smuggle a second parameter onto the request. */
+static int optional_value_ok(const char *v, int allow_at) {
+  if (!v || !*v || strlen(v) > 200) return 0;
+  for (const char *p = v; *p; p++)
+    if (!((*p >= '0' && *p <= '9') || (*p >= 'a' && *p <= 'z') ||
+          (*p >= 'A' && *p <= 'Z') || *p == '-' || *p == '_' || *p == '.' ||
+          (allow_at && (*p == '@' || *p == '+'))))
+      return 0;
+  return 1;
+}
+
+char *http_optional_key_url(const char *url) {
+  if (!url) return NULL;
+  int openalex = url_is_https_host(url, "api.openalex.org");
+  int crossref = url_is_https_host(url, "api.crossref.org");
+  if (!openalex && !crossref) return NULL;
+  char *out = NULL;
+  /* The operator's contact address for the two scholarly APIs that run a
+   * "polite pool" keyed on one. It lived in eleven committed row URLs until
+   * 2026-11-24 — a personal address in the repository, sent by every clone.
+   * It is the DEPLOYMENT's to state now: unset, the requests are anonymous. */
+  const char *mail = getenv("JO_CONTACT_MAILTO");
+  if (optional_value_ok(mail, 1) && strchr(mail, '@') &&
+      !url_has_param(url, "mailto"))
+    out = url_add_param(url, "mailto", mail);
+  if (openalex) {
+    const char *key = getenv("OPENALEX_API_KEY");
+    const char *cur = out ? out : url;
+    if (optional_value_ok(key, 0) && !url_has_param(cur, "api_key")) {
+      char *k = url_add_param(cur, "api_key", key);
+      if (k) { free(out); out = k; }
+    }
+  }
   return out;
 }
 

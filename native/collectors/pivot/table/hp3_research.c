@@ -145,7 +145,13 @@ static const hp_source HP3_RESEARCH[] = {
     .record_type = "open-access-record",
     .tags = "\"research\",\"openaccess\",\"doi\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.unpaywall.org/v2/{q}?email=rayanchouialkessal@gmail.com",
+    /* email={key} from $JO_CONTACT_MAILTO, 2026-11-24. Unpaywall REQUIRES an
+       email parameter, and this URL carried a personal address in the
+       repository. It is the deployment's to supply now; unset, the row is
+       gated and says so (a needs-credential notice), which is honest where an
+       address nobody chose to send is not. */
+    .key_env = "JO_CONTACT_MAILTO",
+    .url = "https://api.unpaywall.org/v2/{q}?email={key}",
     .description = "Whether a given DOI has a legally free full text and where it is "
       "hosted, with every open location, its version, licence and host "
       "type. The route from a paywalled citation to a readable copy, "
