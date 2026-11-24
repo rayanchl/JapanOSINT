@@ -355,6 +355,18 @@ jobs:
   # declared sources, and test_service_vec indexes all 58,055 source cards
   # five times at ~65 s each. Those are O(registry) by design, so making them
   # cheap is a question about what they should cover, not a build fix.
+  #
+  # AND THAT TEST DOUBLED WITH THE REGISTRY (2026-11-24, run 43830436833 on
+  # PR #75, read from the job's own timestamps as above): the job took 73.0
+  # min, and test_source_category was **34.6 min of it — 2,076 s, from 765 s**
+  # when the registry held 58,055 sources and now 105,208. Every other test
+  # together was 35.1 min (test_service_vec 435 s, test_sourceindexapi 390 s,
+  # the rest under 3 min each). Several runs before that one were cancelled at
+  # the 90-min ceiling, on main as well as on PRs. So the test runs in a job
+  # of its own: each half has the whole ceiling, and the next doubling of the
+  # registry costs that test's job and nothing else. Two JOBS rather than a
+  # matrix so the existing `thread-sanitizer` check keeps its name for any
+  # branch protection that requires it.
   thread-sanitizer:
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -375,6 +387,30 @@ jobs:
 
       - name: Unit tests under ThreadSanitizer
         working-directory: native
+        env:
+          JO_UNIT_SKIP: '^test_source_category$'
+        run: make tsan-test
+
+  # test_source_category under TSan, split out of the job above (see there).
+  thread-sanitizer-source-category:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libcurl4-openssl-dev libssl-dev libmecab-dev mecab zlib1g-dev \
+            mecab-ipadic-utf8 util-linux
+
+      - name: test_source_category under ThreadSanitizer
+        working-directory: native
+        env:
+          JO_UNIT_ONLY: '^test_source_category$'
         run: make tsan-test
 
   # 57 JS files, a tracked lockfile and a vitest block that was configured in

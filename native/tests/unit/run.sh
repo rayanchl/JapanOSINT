@@ -176,6 +176,10 @@ for src in tests/unit/test_*.c; do
   # JO_UNIT_ONLY=<regex>: run only the tests whose name matches (the suite is
   # ~8 minutes; a change to one module should not need all of it to iterate).
   if [ -n "${JO_UNIT_ONLY:-}" ] && ! [[ $name =~ $JO_UNIT_ONLY ]]; then continue; fi
+  # JO_UNIT_SKIP=<regex>: the complement, so a CI job can be split in two by
+  # one regex — the TSan job runs test_source_category in a job of its own,
+  # because that one test is half the suite's time under the sanitiser.
+  if [ -n "${JO_UNIT_SKIP:-}" ] && [[ $name =~ $JO_UNIT_SKIP ]]; then continue; fi
   # Which object does this test include? (duplicate symbols if also linked.)
   under=$(under_of "$src")
   objs=$(objs_for "$under")

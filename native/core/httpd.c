@@ -1,6 +1,7 @@
 #include "httpd.h"
 #include "../lib/jocore.h"
 #include "auth.h"
+#include "clientip.h"
 #include "intelapi.h"
 #include "respcache.h"
 #include "statusapi.h"
@@ -1898,6 +1899,27 @@ static void *srcrun_thread(void *vp) {
   return NULL;
 }
 
+/* THE CLIENT'S ADDRESS, for per-IP limits and audit rows: the socket's peer,
+ * or — only when that peer is a proxy named in $JO_TRUSTED_PROXIES — the first
+ * untrusted address in X-Forwarded-For, read from the right (core/clientip.h).
+ * Every X-Forwarded-For header is joined, because a client can send its own
+ * and a proxy appends another; the rightmost entries are the ones a proxy
+ * wrote. One function, so no per-IP limit can read the address another way. */
+static void req_client_ip(struct mg_connection *c, struct mg_http_message *hm,
+                          char *out, size_t n) {
+  char peer[64] = {0};
+  mg_snprintf(peer, sizeof peer, "%M", mg_print_ip, &c->rem);
+  char xff[1024]; size_t xl = 0; xff[0] = 0;
+  for (int i = 0; hm && i < MG_MAX_HTTP_HEADERS && hm->headers[i].name.len; i++) {
+    struct mg_str nm = hm->headers[i].name, v = hm->headers[i].value;
+    if (mg_strcasecmp(nm, mg_str("X-Forwarded-For"))) continue;
+    if (xl + v.len + 2 >= sizeof xff) { xl = 0; xff[0] = 0; break; }  /* too long: peer */
+    if (xl) xff[xl++] = ',';
+    memcpy(xff + xl, v.buf, v.len); xl += v.len; xff[xl] = 0;
+  }
+  clientip_resolve(peer, xl ? xff : NULL, out, n);
+}
+
 /* Every request a break-glass token authenticates is an audit row (M3): the
  * token is operator-equivalent and bypasses the IdP, so the log of what it was
  * used for is the only account of it. Chained under the 'platform' tenant,
@@ -1905,7 +1927,7 @@ static void *srcrun_thread(void *vp) {
 static void audit_break_glass_request(struct mg_connection *c,
                                       struct mg_http_message *hm) {
   char ip[64] = {0};
-  mg_snprintf(ip, sizeof ip, "%M", mg_print_ip, &c->rem);
+  req_client_ip(c, hm, ip, sizeof ip);
   char *path = mg_mprintf("%.*s", (int)hm->uri.len, hm->uri.buf);
   char *meth = mg_mprintf("%.*s", (int)hm->method.len, hm->method.buf);
   cJSON *pl = cJSON_CreateObject();
@@ -2338,7 +2360,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     struct mg_str *h = mg_http_get_header(hm, "User-Agent");
     if (h && h->len < sizeof ua) { memcpy(ua, h->buf, h->len); ua[h->len] = 0; }
     char ip[64] = {0};
-    mg_snprintf(ip, sizeof ip, "%M", mg_print_ip, &c->rem);
+    req_client_ip(c, hm, ip, sizeof ip);
     /* Pre-auth TOTP compare, so an unthrottled caller gets to walk 10^6 codes
      * against a ±1-step window. 5 attempts/minute/IP leaves a fat-fingered
      * operator room and makes brute force take longer than the emergency it
@@ -2805,7 +2827,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         char rsn[640] = {0}, ip[64] = {0};
         if (mg_http_get_var(&hm->query, "reason", rsn, sizeof rsn) == -3) {
           reply_json(c, 400, "{\"error\":\"reason_too_long\"}"); return; }
-        mg_snprintf(ip, sizeof ip, "%M", mg_print_ip, &c->rem);
+        req_client_ip(c, hm, ip, sizeof ip);
         int st = 500;
         char *body = breach_adapter_reveal_audited(g_db, pe, usr.id, usr.email,
                                                    rsn, ip, &st);
@@ -3833,7 +3855,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
       }
       char ip[64] = {0};
-      mg_snprintf(ip, sizeof ip, "%M", mg_print_ip, &c->rem);
+      req_client_ip(c, hm, ip, sizeof ip);
       { int retry = 0;
         if (!ratelimit_allow(RL_ISOCHRONE, ip, 12, 60, &retry)) {
           char rb[96];

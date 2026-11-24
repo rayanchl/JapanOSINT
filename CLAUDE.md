@@ -4901,6 +4901,21 @@ failing tests repaired. What it guarantees, and the knobs it adds:
   `_detail_pending`, and the run files a `detail-truncation` notice with the
   counts. Every mode deepens, not only JSON.
 
+**The client address behind a reverse proxy is `JO_TRUSTED_PROXIES`**
+(2026-11-24, `core/clientip.{c,h}`): every per-IP limit and audit row used the
+socket's peer, which behind nginx is the proxy for every request — one shared
+break-glass and isochrone bucket. `X-Forwarded-For` is believed ONLY from a
+peer in that list (addresses or CIDR blocks), read from the RIGHT so an
+address the client wrote itself is never taken; unset, the peer is the client
+as before. `httpd.c`'s `req_client_ip()` is the one reader — **a new per-IP
+limit calls it, never `mg_print_ip` on `c->rem`**. `test_clientip.c`.
+
+**`test_source_category` has a TSan job of its own** (2026-11-24): it grew
+from 765 s to 2,076 s under the sanitiser as the registry went from 58,055 to
+105,208, half of a 73-minute job, and runs near the 90-minute ceiling had been
+cancelled. `tests/unit/run.sh` takes `JO_UNIT_SKIP=<regex>` beside
+`JO_UNIT_ONLY` for the split.
+
 The concurrency gate (`tools/ci_concurrency_gate.sh`) keeps three `/api/status`
 LOOPS running for `LOAD_SEC` (12 s) rather than three single requests: a build
 now takes ~0.25 s, which left the old gate passing or failing on timing. CI

@@ -265,7 +265,35 @@ cost estimate all read one decision (3,149 realtime rows and 19 pods exempt).
   `docs/threshold-labels.jsonl` for `measure_thresholds.py --labels`. The
   labels themselves are the owner's to make, on the production database.
 
-## Still open
+## Closed on 2026-11-24
 
-* `twitter-geo` caps its own database read at 5,000.
-* Rate limits keyed on client IP behind a proxy.
+* **`twitter-geo` reads every geocoded post, over a cycle.**
+  * It read `ORDER BY fetched_at DESC LIMIT 5000`, so every geocoded post
+    older than the newest 5,000 dropped out of the layer, silently.
+  * It now walks a keyset on `(fetched_at, uid)` oldest-first, 5,000 a run,
+    storing its position. Once caught up it reads only what arrived since.
+  * `uid` breaks ties on `fetched_at`. Without it, posts sharing a timestamp
+    at a slice boundary are skipped; the test fails that way (checked).
+  * While behind, each run files a truncation notice giving the slice and
+    the slice plus what remains. `test_twitter_geo.c` pins all of it.
+* **The real client address behind a reverse proxy.**
+  * `JO_TRUSTED_PROXIES` takes comma-separated addresses or CIDR blocks.
+  * Only from a peer in that list is `X-Forwarded-For` believed. It is read
+    from the right, skipping trusted hops, so an address the client wrote
+    itself is never taken. A malformed entry stops at the last trusted hop.
+  * Unset, nothing changes.
+  * One function (`req_client_ip`) feeds all four places `core/httpd.c` read
+    the peer: break-glass's TOTP limit and its audit row, the isochrone limit
+    and the breach-reveal audit row.
+  * Measured on the running server, 14 isochrone requests each:
+    * trusted proxy, 14 different forwarded clients: no 429;
+    * trusted proxy, one client: 429 from the 13th;
+    * variable unset, the same 14 forged headers: 429 from the 13th, one
+      bucket as before.
+  * `test_clientip.c` pins the rules.
+* **The TSan CI job is split in two.** `test_source_category` was 34.6 of
+  that job's 73 minutes, up from 12.75 when the registry was half its size.
+  It runs in its own job now (`JO_UNIT_ONLY` / the new `JO_UNIT_SKIP` in
+  `tests/unit/run.sh`), so each half has the whole 90-minute ceiling.
+
+Nothing from rounds two and three remains open in this file.
