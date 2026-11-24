@@ -369,14 +369,14 @@ COLLECTOR("pa_public-finance", "Panama — public finance", NULL, NULL, "grp_pro
 COLLECTOR("pk_anti-corruption", "Pakistan — anti corruption", NULL, NULL, "grp_procurement")  /* 1 src; anti-corruption 1 */
 COLLECTOR("pl_procurement", "Poland — procurement", NULL, NULL, "grp_procurement")  /* 1 src; procurement 1 */
 
-/* Open data portals & statistics: 77 collector(s), 24817 sources */
-COLLECTOR("hp3b67_socrata", "socrata (batch 67)", NULL, NULL, "grp_opendata")  /* 4809 src; open-data 4809 */
+/* Open data portals & statistics: 77 collector(s), 24662 sources */
+COLLECTOR("hp3b67_socrata", "socrata (batch 67)", NULL, NULL, "grp_opendata")  /* 4655 src; open-data 4655 */
 COLLECTOR("hp3b66_socrata", "socrata (batch 66)", NULL, NULL, "grp_opendata")  /* 3627 src; open-data 3627 */
 COLLECTOR("hp3b65_ods", "ods (batch 65)", NULL, NULL, "grp_opendata")  /* 2530 src; open-data 2530 */
 COLLECTOR("hp3b64_ods", "ods (batch 64)", NULL, NULL, "grp_opendata")  /* 2412 src; open-data 2412 */
 COLLECTOR("hp3b64_ckands", "ckands (batch 64)", NULL, NULL, "grp_opendata")  /* 2109 src; open-data 2109 */
 COLLECTOR("hp3b65_ckands", "ckands (batch 65)", NULL, NULL, "grp_opendata")  /* 1992 src; open-data 1992 */
-COLLECTOR("hp3b63_euods", "euods (batch 63)", NULL, NULL, "grp_opendata")  /* 1859 src; open-data 1859 */
+COLLECTOR("hp3b63_euods", "euods (batch 63)", NULL, NULL, "grp_opendata")  /* 1858 src; open-data 1858 */
 COLLECTOR("hp3b66_ckands", "ckands (batch 66)", NULL, NULL, "grp_opendata")  /* 1849 src; open-data 1849 */
 COLLECTOR("hp3b67_ckands", "ckands (batch 67)", NULL, NULL, "grp_opendata")  /* 1244 src; open-data 1244 */
 COLLECTOR("hp3b67_ods", "ods (batch 67)", NULL, NULL, "grp_opendata")  /* 377 src; open-data 377 */

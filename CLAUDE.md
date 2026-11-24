@@ -349,7 +349,16 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 109,801** (2026-11-23, `make source-count`, both
+**The registered count is 109,647** (2026-11-24): 109,801 less 154 Socrata
+rows on seven domains that no longer resolve in public DNS. The same pass found
+that **all 8,282 Socrata rows of batches 66 and 67 failed on page 2**: the URL
+spelt the offset `%24offset` and the row declared `page_param = "$offset"`, so
+the engine appended a second offset instead of replacing the first and Socrata
+answered 400. **`page_param` must be spelt exactly as the URL spells it**, and a
+sweep braked at `JO_PAGE_MAX=2` reads such a row as OK because page 1 stores —
+read the truncation notice, or run `audit_cycle_advance.py`.
+
+**The registered count was 109,801** (2026-11-23, `make source-count`, both
 floors re-recorded): batches 58–67 took it to 105,229, and batch 68 added 5,058
 and removed 486 (`native/collectors/OSINT_SOURCES_BATCH_68_REPAIRS_JPDISASTER_ASIA.md`).
 One lesson from it belongs here: **on an hpengine row with no `id_keys`, the
