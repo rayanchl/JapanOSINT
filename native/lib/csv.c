@@ -88,8 +88,23 @@ static char *csv_strip_banner(const char *text, char delim, const char *prefix,
   return out;
 }
 
+/* The BOM rule csv_parse_impl() states — "it belongs to the FILE, not to its
+ * first column name … so every caller and every mode sees the same text" —
+ * held for csv_parse_x() only. csv_parse(), csv_parse_d() and csv_parse_dc()
+ * (33 call sites, the whole VCSV fleet among them) kept it, so the Federal
+ * Reserve's enforcement file stored its first column as "\xEF\xBB\xBF"
+ * "Effective Date" and a key naming `Effective Date` resolved on no row.
+ * Found 2026-11-24. One helper, called by all three. */
+static const char *csv_skip_bom(const char *text) {
+  if (text && (unsigned char)text[0] == 0xEF && (unsigned char)text[1] == 0xBB &&
+      (unsigned char)text[2] == 0xBF)
+    return text + 3;
+  return text;
+}
+
 cJSON *csv_parse_dc(const char *text, int headers, char delim,
                     const char *comment) {
+  text = csv_skip_bom(text);
   if (!text || !comment || !*comment) return csv_parse_d(text, headers, delim);
   char *stripped = csv_strip_banner(text, delim, comment, headers);
   cJSON *r = csv_parse_d(stripped ? stripped : text, headers, delim);
@@ -278,6 +293,7 @@ static cJSON *csv_name_rows(cJSON *rows) {
 }
 
 cJSON *csv_parse_d(const char *text, int headers, char delim) {
+  text = csv_skip_bom(text);
   char d[2] = { delim, 0 };
   cJSON *rows = csv_rows(text, d, 0);
   return headers ? csv_name_rows(rows) : rows;

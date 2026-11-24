@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "_vjson_idkeys.inc"
 
 /* jpx-tokyo-t{131229,132209,131199,132101,132225}-shisetsu: these five
  * facility CSVs share Tokyo's common POI schema, whose second column is
@@ -191,11 +192,14 @@ VCSV(jpx_tokyo_t131016_chusha, "jpx-tokyo-t131016-chusha", "千代田区 — car
   "ja", "[\"japan\",\"tokyo\",\"opendata\",\"geodata\",\"local-gov\"]", 86400,
   "Point layer of car parks published by 千代田区 with per-record coordinates.");
 
-VCSV(jpx_tokyo_t131016_shisetsu, "jpx-tokyo-t131016-shisetsu", "千代田区 — public facilities", "千代田区 公共施設一覧",
+/* Keyed 名称+所在地_連結表記, MEASURED 2026-11-16 on the whole file: 229 of 229
+   (its "ID" column is empty on every row). */
+VCSV_IDKEYS(jpx_tokyo_t131016_shisetsu, "jpx-tokyo-t131016-shisetsu", "千代田区 — public facilities", "千代田区 公共施設一覧",
   "government", "local-gov",
   "https://www.opendata.metro.tokyo.lg.jp/chiyoda/131016_01public_facility.csv",
   "ja", "[\"japan\",\"tokyo\",\"opendata\",\"geodata\",\"local-gov\"]", 86400,
-  "Point layer of public facilities published by 千代田区 with per-record coordinates.");
+  "Point layer of public facilities published by 千代田区 with per-record coordinates.",
+  "名称+所在地_連結表記");
 
 VCSV_STRIP_BOGUS_ID(jpx_tokyo_t131016_toilet, "jpx-tokyo-t131016-toilet", "千代田区 — public toilets", "千代田区 公衆トイレ一覧",
   "government", "local-gov",
@@ -251,11 +255,14 @@ VCSV(jpx_tokyo_t131164_toilet, "jpx-tokyo-t131164-toilet", "豊島区 — public
   "ja", "[\"japan\",\"tokyo\",\"opendata\",\"geodata\",\"local-gov\"]", 86400,
   "Point layer of public toilets published by 豊島区 with per-record coordinates.");
 
-VCSV_STRIP_BOGUS_ID(jpx_tokyo_t131199_shisetsu, "jpx-tokyo-t131199-shisetsu", "板橋区 — public facilities", "板橋区 公共施設一覧",
+/* Keyed 名称+所在地_連結表記, MEASURED 2026-11-16 on the whole file: 142 of 142.
+   The key replaces the uid, so the bogus-ID strip is no longer needed here. */
+VCSV_IDKEYS(jpx_tokyo_t131199_shisetsu, "jpx-tokyo-t131199-shisetsu", "板橋区 — public facilities", "板橋区 公共施設一覧",
   "government", "local-gov",
   "https://www.opendata.metro.tokyo.lg.jp/itabashi/131199_public_facility.csv",
   "ja", "[\"japan\",\"tokyo\",\"opendata\",\"geodata\",\"local-gov\"]", 86400,
-  "Point layer of public facilities published by 板橋区 with per-record coordinates.");
+  "Point layer of public facilities published by 板橋区 with per-record coordinates.",
+  "名称+所在地_連結表記");
 
 VCSV(jpx_tokyo_t131199_toilet, "jpx-tokyo-t131199-toilet", "板橋区 — public toilets", "板橋区 公衆トイレ一覧",
   "government", "local-gov",
