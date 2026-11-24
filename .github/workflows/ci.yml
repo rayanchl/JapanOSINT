@@ -376,9 +376,15 @@ jobs:
   # declared sources, and test_service_vec indexes all 58,055 source cards
   # five times at ~65 s each. Those are O(registry) by design, so making them
   # cheap is a question about what they should cover, not a build fix.
+  #
+  # 2026-11-23: the registry is 109,801 sources, nearly twice what the figures
+  # above were measured on, and those O(registry) tests scaled with it. Main's
+  # own run for batch 68 took 83.6 min; the next run on the same tree was
+  # cancelled at 90 inside test_source_category. The ceiling is 150 so the job
+  # reports a result; the real fix is still what those two tests cover.
   thread-sanitizer:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 150
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
