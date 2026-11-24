@@ -108,10 +108,10 @@ static const hp_source T[] = {
     .name = "NDL Digital Collections - IIIF Presentation manifest",
     .collector = "jp_research", .category = "research",
     .description = "IIIF 2.x manifest for a digitised NDL item: label, metadata array (Persistent ID info:ndljp/pid/NNNN, Title, Creator, Publisher, Date, call number, rights), attribution, license, and the sequence of canvases with per-page image service URLs. Turns any NDL pid seen in a search result into page-level scanned imagery.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "ja",
+    .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\"", .lang = "ja",
     .url = "https://dl.ndl.go.jp/api/iiif/1032509/manifest.json",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key holds a whole URL that was percent-encoded into a path segment (404/400 on every hop). docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "structures",
-    .detail_url = "https://dl.ndl.go.jp/api/iiif/{v}/manifest.json", .detail_key = "id",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

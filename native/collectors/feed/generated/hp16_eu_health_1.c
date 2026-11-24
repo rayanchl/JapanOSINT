@@ -17,10 +17,10 @@ static const hp_source T[] = {
     .name = "Europe PMC citations of an article",
     .collector = "eu_health", .category = "health",
     .description = "246 citing records for one MED id, each with id, source (MED/PPR/PMC), citationType, title, authorString, journal, year, page and citedByCount - i.e. the citing works already hydrated, including preprints. Forward-citation hop the tree lacked.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "health-record", .tags = "\"eu\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "health-record", .tags = "\"eu\",\"health\",\"batch16\"", .lang = "en",
     .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/29456894/citations?format=json&pageSize=25",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key resolved on NO list record, so every record was stamped _detail_error for a detail that was never requested. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "citationlist.citation",
-    .detail_url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/{v}/citations?format=json&pageSize=100", .detail_key = "pmid",
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
@@ -40,10 +40,10 @@ static const hp_source T[] = {
     .name = "Europe PMC reference list of an article",
     .collector = "eu_health", .category = "health",
     .description = "The parsed and matched reference list: each reference with its own id/source, title, authors, journal, year, volume, pages, citedOrder and a match flag showing whether Europe PMC resolved it to a real record.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "health-record", .tags = "\"eu\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "health-record", .tags = "\"eu\",\"health\",\"batch16\"", .lang = "en",
     .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/29456894/references?format=json&pageSize=25",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key resolved on NO list record, so every record was stamped _detail_error for a detail that was never requested. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "referencelist.reference",
-    .detail_url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/{v}/references?format=json&pageSize=100", .detail_key = "pmid",
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 
@@ -62,10 +62,10 @@ static const hp_source T[] = {
     .name = "Europe PMC works by grant ID",
     .collector = "eu_health", .category = "health",
     .description = "108 publications acknowledging one specific grant reference. Grant->outputs hop: takes a grant number from UKRI/GtR, ORCID fundings or a CV and returns the papers it produced.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "health-record", .tags = "\"eu\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "health-record", .tags = "\"eu\",\"health\",\"batch16\"", .lang = "en",
     .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%28GRANT_ID%3A%22MR%2FN013468%2F1%22%29&format=json",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key resolved on NO list record, so every record was stamped _detail_error for a detail that was never requested. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "resultlist.result",
-    .detail_url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%28GRANT_ID%3A%22{v}%22%29&resultType=core&format=json", .detail_key = "grantId",
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 

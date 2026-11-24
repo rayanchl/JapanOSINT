@@ -109,12 +109,12 @@ static const hp_source T[] = {
     .name = "NHTSA vPIC — all registered vehicle manufacturers",
     .collector = "us_transport", .category = "transport",
     .description = "100 manufacturers per page. Per row: Mfr_ID, Mfr_Name, Mfr_CommonName, Country, VehicleTypes[] with IsPrimary flag. The enumeration list whose Mfr_Name feeds the manufacturer-detail hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\"", .lang = "en",
     .url = "https://vpic.nhtsa.dot.gov/api/vehicles/GetAllManufacturers?format=json&page=1",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): the detail answered 200 with HTML or XML, which a JSON hop cannot merge, so every hop was a request that stamped _detail_error. docs/detail-hop-unkeyed-2026-11-16.tsv */
     /* id_keys MEASURED 2026-11-16 on one list page: 100/100; was the title VehicleTypes.0.Name, 17 distinct of 100. */
     .id_keys = "Mfr_ID",
     .array_path = "results",
-    .detail_url = "https://vpic.nhtsa.dot.gov/api/vehicles/GetManufacturerDetails/{v}?format=json", .detail_key = "Mfr_Name",
     .page_param = "page", .page_start = 1, .page_max = 20,   /* declared by the row's own URL */
     .interval = 3600, .free_tier = 1 },
 

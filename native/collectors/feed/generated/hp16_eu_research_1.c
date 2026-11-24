@@ -117,10 +117,10 @@ static const hp_source T[] = {
     .name = "OpenAIRE research product by DOI/PID (detail)",
     .collector = "eu_research", .category = "research",
     .description = "Resolves any persistent identifier to OpenAIRE's deduplicated record: full author list each with ORCID and its provenance (orcid vs orcid_pending), instances across every repository holding it, licence, and links to funding projects.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\"", .lang = "en",
     .url = "https://api.openaire.eu/graph/v1/researchProducts?pid=10.7717/peerj.4375",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key resolved on NO list record, so every record was stamped _detail_error for a detail that was never requested. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "results",
-    .detail_url = "https://api.openaire.eu/graph/v1/researchProducts?pid={v}", .detail_key = "doi",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

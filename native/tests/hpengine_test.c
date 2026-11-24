@@ -291,6 +291,12 @@ static const hp_source T[] = {
     .detail_url = "https://x.test/detail/{v}", .detail_key = "num", .detail_max = 2,
     .record_type = "t-deep", .free_tier = 1, .description = "d" },
 
+  { .id = "T_DEEP_PATH", .name = "detail value is a site-relative path",
+    .url = "https://x.test/plist?q={q}", .array_path = "items",
+    .title_keys = "name", .id_keys = "link",
+    .detail_url = "https://x.test/api/content{v}", .detail_key = "link",
+    .record_type = "t-deep", .free_tier = 1, .description = "d" },
+
   { .id = "T_AUTO", .name = "auto array discovery", .url = "https://x.test/auto?q={q}",
     .record_type = "t-auto", .free_tier = 1, .description = "d" },
 
@@ -1295,6 +1301,20 @@ int main(void) {
   ok(strstr(g_cap[0].props, "\"detail.person.name\":\"Nils\"") != NULL, "detail hop merged (1)");
   ok(strstr(g_cap[1].props, "\"detail.role\":\"ceo\"") != NULL, "detail hop merged (2)");
   ok(g_ncalls == 3, "one list call + one detail call per record");
+
+  /* 2a-path. A detail value that is a site-relative path keeps its slashes
+   * (GOV.UK's `link`); each segment is still encoded. Fails against the old
+   * line, which asked for /api/content%2Fcma-cases%2Fa%20b and merged nothing.
+   * The control is every other detail test here: a value with no leading
+   * slash is encoded whole, as before. */
+  fx_reset();
+  fx_add("/plist", 200, "{\"items\":[{\"name\":\"A\",\"link\":\"/cma-cases/a b\"}]}");
+  fx_add("/api/content/cma-cases/a%20b", 200, "{\"role\":\"case\"}");
+  rc = run_source("T_DEEP_PATH", "acme");
+  ok(rc == 0 && g_ncap == 1 && g_ncalls == 2 &&
+     strstr(g_cap[0].props, "\"detail.role\":\"case\"") != NULL &&
+     !strstr(g_cap[0].props, "_detail_error"),
+     "2a-path: a path-valued detail key keeps its slashes");
 
   /* 2b. the detail hop is sent with the row's own headers. It used to be sent
    * with none, so a row that authenticates by header got 401/403 on every hop

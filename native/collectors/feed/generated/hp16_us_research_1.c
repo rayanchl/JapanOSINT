@@ -163,10 +163,10 @@ static const hp_source T[] = {
     .name = "Semantic Scholar paper with references+citations expanded",
     .collector = "us_research", .category = "research",
     .description = "175KB in one request: the paper plus its authors with S2 authorIds AND the titles of every reference and every citing paper inline via the nested fields syntax. Three graph hops for one request. Keyless but rate-limited - the sibling /paper/search returned HTTP 429 during this probe, so expect intermittent throttling (S2_API_KEY raises limits).  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"us\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "research-record", .tags = "\"us\",\"research\",\"batch16\"", .lang = "en",
     .url = "https://api.semanticscholar.org/graph/v1/paper/DOI:10.7717/peerj.4375?fields=title,authors,references.title,citations.title",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key resolved on NO list record, so every record was stamped _detail_error for a detail that was never requested. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "citations",
-    .detail_url = "https://api.semanticscholar.org/graph/v1/paper/DOI:{v}?fields=title,abstract,authors,externalIds,references.title,references.externalIds,citations.title,citations.externalIds", .detail_key = "doi",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

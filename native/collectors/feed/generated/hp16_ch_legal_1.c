@@ -17,10 +17,10 @@ static const hp_source T[] = {
     .name = "entscheidsuche.ch - all Swiss court decisions (Elasticsearch proxy)",
     .collector = "ch_legal", .category = "legal",
     .description = "Open Elasticsearch proxy over 53 shards covering federal and all cantonal Swiss courts; 10,000+ hits on a single keyword. Each hit's _source gives: date, court hierarchy array (canton/court/collection), multilingual abstract (de/fr/it), multilingual title, reference/keywords array, source id, AND an attachment object containing content_type, language, the decision PDF content_url and - critically - the ENTIRE extracted PDF text inline. One request yields both the index row and the full decision body; the content_url is the verified PDF detail hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "legal-record", .tags = "\"ch\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "de",
+    .record_type = "legal-record", .tags = "\"ch\",\"legal\",\"batch16\"", .lang = "de",
     .url = "https://entscheidsuche.ch/_search.php?q=Kartell",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key resolved on NO list record, so every record was stamped _detail_error for a detail that was never requested. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "hits.hits",
-    .detail_url = "{v}", .detail_key = "attachment.content_url",
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 

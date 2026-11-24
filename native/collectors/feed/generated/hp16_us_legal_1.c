@@ -83,9 +83,9 @@ static const hp_source T[] = {
     .name = "Caselaw Access Project — cases in a volume",
     .collector = "us_legal", .category = "legal",
     .description = "Every case in one reporter volume: id, name, name_abbreviation, decision_date, docket_number, first_page/last_page, citations[] (type official/parallel, cite), court object, jurisdiction, and the file_name that forms the case-detail path. Second hop of the CAP chain.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\"", .lang = "en",
     .url = "https://static.case.law/a2d/100/CasesMetadata.json",
-    .detail_url = "https://static.case.law/a2d/100/cases/{v}.json", .detail_key = "file_name",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key resolved on NO list record, so every record was stamped _detail_error for a detail that was never requested. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 

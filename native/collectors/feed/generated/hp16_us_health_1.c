@@ -45,10 +45,10 @@ static const hp_source T[] = {
     .name = "CMS Open Data — DCAT catalogue",
     .collector = "us_health", .category = "health",
     .description = "3 MB Project Open Data catalogue for data.cms.gov. Per dataset: title, description, accrualPeriodicity, contactPoint, describedBy (data dictionary URL), and distribution[] where the entry carrying description:'latest' holds the STABLE accessURL https://data.cms.gov/data-api/v1/dataset/{uuid}/data. This is the authoritative way to resolve the provider-enrollment, ownership, change-of-ownership and revalidation dataset uuids used below.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\"", .lang = "en",
     .url = "https://data.cms.gov/data.json",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key holds a whole URL that was percent-encoded into a path segment (404/400 on every hop). docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "dataset",
-    .detail_url = "https://data.cms.gov/data-api/v1/dataset/{v}/data?size=100", .detail_key = "accessURL",
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 

@@ -17,10 +17,10 @@ static const hp_source T[] = {
     .name = "ESMA — national securities-regulator sanctions register (1,378 docs)",
     .collector = "eu_legal", .category = "legal",
     .description = "Every sanction imposed by an EU national competent authority under MiFID/MAR/UCITS/AIFMD etc.: sn_entityName (with an embedded href to the entity's upreg detail page), sn_entityEsmaID, sn_sanctionLegalFrameworkName, sn_date, sn_ncaCodeFullName + sn_sanctioningNCACode (e.g. CZ_CNB Czech National Bank), sn_countryName, sn_nature/sn_natureFullName (ADSM administrative sanction and measure). The enforcement-actions layer sitting on top of the ESMA entity register.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "legal-record", .tags = "\"eu\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "legal-record", .tags = "\"eu\",\"legal\",\"batch16\"", .lang = "en",
     .url = "https://registers.esma.europa.eu/solr/esma_registers_sanctions/select?q=*:*&wt=json&rows=500",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): the detail answered 200 with HTML or XML, which a JSON hop cannot merge, so every hop was a request that stamped _detail_error. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "response.docs",
-    .detail_url = "https://registers.esma.europa.eu/publication/details?core=esma_registers_upreg&docId=ae{v}", .detail_key = "sn_entityEsmaID",
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 

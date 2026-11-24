@@ -17,10 +17,10 @@ static const hp_source T[] = {
     .name = "GLEIF direct-child RELATIONSHIP records",
     .collector = "ch_corporate", .category = "corporate",
     .description = "All 330 direct-subsidiary relationship edges for a parent LEI as relationship objects (start/end node, type, status, validity and accounting periods) rather than plain child records - the dated corporate-structure graph beneath a group.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .record_type = "corporate-record", .tags = "\"ch\",\"corporate\",\"batch16\"", .lang = "en",
     .url = "https://api.gleif.org/api/v1/lei-records/7LTWFZYICNSX8D621K86/direct-child-relationships?page[size]=15",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): its detail_key resolved on NO list record, so every record was stamped _detail_error for a detail that was never requested. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "data",
-    .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}/direct-child-relationships?page[size]=50", .detail_key = "lei",
     .page_walk = 1,
     .page_max = 22,   /* 324 records at 15 a page, measured 2026-10-12; the 20-page default reached 300 */
     .interval = 86400, .free_tier = 1 },

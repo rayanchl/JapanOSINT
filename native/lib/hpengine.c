@@ -1486,6 +1486,35 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
   int whole = !strncmp(s->detail_url, "{v}", 3) &&
               (!strncmp(idbuf, "https://", 8) || !strncmp(idbuf, "http://", 7));
   char *enc = whole ? NULL : hp_urlenc(idbuf);
+  /* A value that is a site-relative PATH ("/cma-cases/some-case" — GOV.UK's
+   * search hands back each hit's `link` that way and its content API is
+   * /api/content<that path>) keeps its slashes. Encoded whole it became
+   * "content%2Fcma-cases%2F…", which is a different resource and a 404 on
+   * every hop: eight uk-govuk-search-* rows, measured 2026-11-16. Each
+   * SEGMENT is still encoded, so nothing but `/` passes through. */
+  if (enc && idbuf[0] == '/') {
+    size_t n = strlen(idbuf);
+    char *penc = malloc(n * 3 + 1);
+    if (penc) {
+      size_t j = 0;
+      const char *seg = idbuf;
+      while (*seg) {
+        const char *sl = strchr(seg, '/');
+        size_t sn = sl ? (size_t)(sl - seg) : strlen(seg);
+        char one[256];
+        if (sn >= sizeof one) sn = sizeof one - 1;
+        memcpy(one, seg, sn); one[sn] = 0;
+        char *e1 = hp_urlenc(one);
+        if (e1) { size_t el = strlen(e1); memcpy(penc + j, e1, el); j += el; free(e1); }
+        if (!sl) break;
+        penc[j++] = '/';
+        seg = sl + 1;
+      }
+      penc[j] = 0;
+      free(enc);
+      enc = penc;
+    }
+  }
   char *url = hp_expand(s->detail_url, st->vars, "v", enc ? enc : idbuf);
   free(enc);
   if (!url) return;

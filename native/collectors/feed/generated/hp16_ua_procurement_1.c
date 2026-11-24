@@ -29,10 +29,10 @@ static const hp_source T[] = {
     .name = "ProZorro — awards under a tender",
     .collector = "ua_procurement", .category = "procurement",
     .description = "The award hop: for a given tender, the qualification decisions naming the winning supplier, award status, value, and the signed award documents with direct public.docs.openprocurement.org download URLs. This is where 'notice' becomes 'contractor'.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "procurement-record", .tags = "\"ua\",\"procurement\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "uk",
+    .record_type = "procurement-record", .tags = "\"ua\",\"procurement\",\"batch16\"", .lang = "uk",
     .url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/d9116ce196ce4cfea5d32707db82035b/awards",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): the list record id is a child (award/bid/contract/question) id and the hop asked the TENDER endpoint for it: 404 "tender_id Not Found" on every hop. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "data",
-    .detail_url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/{v}/awards", .detail_key = "id",
     .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
@@ -40,10 +40,10 @@ static const hp_source T[] = {
     .name = "ProZorro — bids submitted to a tender",
     .collector = "ua_procurement", .category = "procurement",
     .description = "12.4 KB of the actual bids on a tender: bidder identity, bid status, offered value, and every submitted PDF with a working document URL. Losing bidders are exposed too, which is what makes collusion and single-bid patterns detectable.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "procurement-record", .tags = "\"ua\",\"procurement\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "uk",
+    .record_type = "procurement-record", .tags = "\"ua\",\"procurement\",\"batch16\"", .lang = "uk",
     .url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/d9116ce196ce4cfea5d32707db82035b/bids",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): the list record id is a child (award/bid/contract/question) id and the hop asked the TENDER endpoint for it: 404 "tender_id Not Found" on every hop. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "data",
-    .detail_url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/{v}/bids", .detail_key = "id",
     .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
@@ -51,10 +51,10 @@ static const hp_source T[] = {
     .name = "ProZorro — contracts signed under a tender",
     .collector = "ua_procurement", .category = "procurement",
     .description = "Contracts concluded from a tender: status, itemised deliverables with descriptions and quantities, contract value and period, and the link back to the award.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "procurement-record", .tags = "\"ua\",\"procurement\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "uk",
+    .record_type = "procurement-record", .tags = "\"ua\",\"procurement\",\"batch16\"", .lang = "uk",
     .url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/d9116ce196ce4cfea5d32707db82035b/contracts",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): the list record id is a child (award/bid/contract/question) id and the hop asked the TENDER endpoint for it: 404 "tender_id Not Found" on every hop. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "data",
-    .detail_url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/{v}/contracts", .detail_key = "id",
     .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
@@ -62,10 +62,10 @@ static const hp_source T[] = {
     .name = "ProZorro — clarification questions on a tender",
     .collector = "ua_procurement", .category = "procurement",
     .description = "The clarification thread on a tender: each question's author, text, date asked and the buyer's answer. Tailored-specification complaints surface here before any formal challenge exists.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "procurement-record", .tags = "\"ua\",\"procurement\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "uk",
+    .record_type = "procurement-record", .tags = "\"ua\",\"procurement\",\"batch16\"", .lang = "uk",
     .url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/d9116ce196ce4cfea5d32707db82035b/questions",
+    /* DETAIL HOP REMOVED 2026-11-24 (measured 2026-11-16): the list record id is a child (award/bid/contract/question) id and the hop asked the TENDER endpoint for it: 404 "tender_id Not Found" on every hop. docs/detail-hop-unkeyed-2026-11-16.tsv */
     .array_path = "data",
-    .detail_url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/{v}/questions", .detail_key = "id",
     .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
