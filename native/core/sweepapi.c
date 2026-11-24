@@ -145,14 +145,15 @@ static char *cold_points_fc(db_handle *db, const char *id) {
   cJSON_AddStringToObject(fc, "type", "FeatureCollection");
   cJSON *feats = cJSON_AddArrayToObject(fc, "features");
   sqlite3_stmt *st = NULL;
-  int n = 0;
+  int n = 0, capped = 0;
   if (sqlite3_prepare_v2(db->h,
         "SELECT lat,lon,geometry,properties FROM intel_items "
         "WHERE source_id=?1 AND lat IS NOT NULL LIMIT ?2",
         -1, &st, NULL) == SQLITE_OK) {
     sqlite3_bind_text(st, 1, id, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(st, 2, LIM);
+    sqlite3_bind_int64(st, 2, (sqlite3_int64) LIM + 1);   /* one past: is there more? */
     while (sqlite3_step(st) == SQLITE_ROW) {
+      if (n >= LIM) { capped = 1; break; }   /* `capped` is true only when a row was left out */
       const char *gj = (const char *)sqlite3_column_text(st, 2);
       const char *pj = (const char *)sqlite3_column_text(st, 3);
       cJSON *f = cJSON_CreateObject();
@@ -181,7 +182,7 @@ static char *cold_points_fc(db_handle *db, const char *id) {
   cJSON_AddNumberToObject(meta, "recordCount", n);
   cJSON_AddBoolToObject(meta, "live", 0);
   cJSON_AddStringToObject(meta, "cache_status", "cold");
-  cJSON_AddBoolToObject(meta, "capped", n >= LIM);
+  cJSON_AddBoolToObject(meta, "capped", capped);
   cJSON_AddStringToObject(meta, "description",
     "Cold map cache — bounded points until the scheduled prebuild runs.");
   char *out = cJSON_PrintUnformatted(fc);
