@@ -1581,6 +1581,36 @@ static const hp_source HP3B19_DEFENCE[] = {
       "hydroacoustic one and is required before any recorded waveform "
       "from these stations can be interpreted" },
 
+
+  { .id = "IRIS_IMS_CHANNEL_EPOCHS", .name = "EarthScope IRIS DMC — IM network channel epochs (keyed)",
+    .name_ja = "IRIS IMネットワーク channel エポック一覧",
+    .category = "infrastructure", .portal = "https://service.earthscope.org",
+    .record_type = "monitoring-channel-epoch",
+    .tags = "\"ctbto\",\"ims\",\"seismic\",\"monitoring\",\"nuclear\",\"channel\"",
+    .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    /* The identity-bearing half of a deliberate PAIR with IRIS_IMS_CHANNELS,
+       added 2026-11-24. The XML row's Channel record does not carry its
+       Station or Network (they are parent elements), so it has no key; this
+       text form is one pipe-delimited line per channel epoch WITH the codes:
+       Network|Station|Location|Channel|Lat|Lon|Elev|Depth|Azimuth|Dip|
+       SensorDescription|Scale|ScaleFreq|ScaleUnits|SampleRate|StartTime|
+       EndTime. Measured 2026-11-16: 985 lines, and
+       Network+Station+Location+Channel+StartTime is 985 of 985 (584 without
+       StartTime — a channel is re-opened under the same code). What this form
+       lacks is in the XML row: sensor and datalogger descriptions, clock
+       drift, calibration units, comments. */
+    .url = "https://service.earthscope.org/fdsnws/station/1/query?net=IM&level=channel&format=text&nodata=404",
+    .csv_delim = "pipe", .csv_comment = "#", .csv_no_header = 1,
+    .id_keys = "col0+col1+col2+col3+col15",
+    .title_keys = "col1,col3",
+    .lat_key = "col4", .lon_key = "col5",
+    .date_keys = "col15",
+    .interval = 604800,
+    .description = "One record per channel epoch of the IM (International "
+      "Miscellaneous / CTBTO IMS-affiliated) network, with network, station, "
+      "location and channel codes, coordinates, elevation, depth, azimuth, "
+      "dip, sensor description, scale, sample rate and the epoch's start and "
+      "end. The keyed companion of the XML channel-metadata row." },
   { .id = "IAEA_NDS_GROUND_STATES", .name = "IAEA Nuclear Data Services — ground state properties of all "
       "known nuclides",
     .name_ja = "IAEA核データ 全核種基底状態",

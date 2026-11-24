@@ -1606,7 +1606,60 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 60,603** (2026-11-23, `make source-count`, the
+**The registered count is 60,603** (2026-11-24, `make source-count`, the
+binary's registry agreeing, both floors re-recorded) — the same number as the
+day before by coincidence: `unpaywall-doi` left (a scheduled row frozen on one
+DOI, the authoring probe of the `UNPAYWALL_DOI` lookup) and
+`IRIS_IMS_CHANNEL_EPOCHS` arrived. What that pass did, each engine-confirmed:
+
+* **A personal address is out of the repository: `$JO_CONTACT_MAILTO`.**
+  Eleven OpenAlex/Crossref URLs carried one as `mailto=` and three Unpaywall
+  URLs as `email=`. `http_optional_key_url()` (`core/httpclient.c`) appends
+  `mailto=` on the wire for `api.openalex.org` and `api.crossref.org` only when
+  the variable is set — never in a logged URL, never twice, never for another
+  host (`test_http_optional_key.c`). Unpaywall REQUIRES an address, so
+  `UNPAYWALL_DOI` is `email={key}` under `key_env = JO_CONTACT_MAILTO` and is
+  gated, saying so, when it is unset. Two collectors announcing
+  `mailto:osint@example.org` — an address nobody reads — no longer do. **A
+  contact address is the deployment's to state, like a key; one committed in a
+  row is sent by every clone.** (`core/host_agents.def`'s SEC entry is the
+  owner's own decision of 2026-10-24 and is unchanged.)
+* **`csv_parse`, `csv_parse_d` and `csv_parse_dc` kept a UTF-8 BOM on the first
+  column's name**, while `csv_parse_x` had stripped it since 2026-09-19 under a
+  comment saying "every caller and every mode sees the same text". 33 call
+  sites, the whole VCSV fleet among them: the Fed enforcement file's first
+  column was stored as `\xEF\xBB\xBF` + `Effective Date`, so a key naming it
+  resolved on no row. One helper for all three (`test_csv.c`). The "other
+  copies" lesson, in the parser that states the rule.
+* **`VCSV_IDKEYS`** (`_vjson_idkeys.inc`) gives a CSV row a key. Two things
+  about the shim that the first attempt got wrong: it REPLACES the uid, so the
+  in-page guard's `|c:` suffix does not survive it and **a shimmed key must
+  reach the ceiling on its own** (a four-column key on the Fed file stored
+  2,858 of 2,900; all nine columns store 2,898, the two short being
+  byte-identical rows); and a header name containing a comma cannot be
+  declared at all, because a key list splits on it — which is why the FSA
+  unregistered-dealer workbook stays unkeyed, with the reason in the row.
+* **Three rows stored the wrong thing with every gate green.**
+  `WD_SEMICONDUCTOR_FABS` asked for a class whose label is "software company";
+  `gov-ch-fedlex-sparql` shipped its probe, `SELECT * {?s ?p ?o} LIMIT 20`,
+  and stored the triple store's own system triples as Swiss law; and
+  `WORLD_NEWS_RSS` dropped 249 of 878 served items at a 40-per-feed bound.
+  Each is fixed against a measurement (55 fabs; the 500 newest `jolux:Act`;
+  979 items from 26 feeds). **A row's NAME is a claim about its query — read
+  one stored title.** And on the Fedlex store, `ORDER BY` an aggregate alias
+  (`MAX(?d) AS ?date`) silently mis-orders: group on the plain variable.
+* **A path-valued detail key keeps its slashes** (`hp_deepen`, `hptest`
+  2a-path): GOV.UK's search returns `link` as `/cma-cases/…` and the hop
+  encoded it to `content%2Fcma-cases%2F…`, a 404 on every record of eight
+  rows. 25 other hops that could never merge anything are removed, each with
+  its reason in the row; `uk-tfl-line-stoppoints` needed `array_path = "."`.
+* `JO32_REG_HOKKAIDO_INDUSTRIAL_WASTE_TRANSPORT` follows its landing page now
+  (`index_url`): the workbook is re-attached under a new path each edition, and
+  the row had answered 404. 5,571 stored.
+* **Still open:** Overpass `remark` — every mirror was unreachable from this
+  container on a second day (2026-11-24), so it is still unmeasured.
+
+**The registered count was 60,603** (2026-11-23, `make source-count`, the
 binary's registry agreeing, both floors re-recorded): 60,619 less sixteen rows,
 every one a second reading of something the tree already reads — fourteen from
 the scheduled-filter sweep (rule 4d), `JPOD_DATAGOJP_INDEX`, and
