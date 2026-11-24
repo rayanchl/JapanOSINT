@@ -1179,6 +1179,7 @@ typedef struct {
    * honest empty) can be applied to it unchanged. */
   int   upstream_error;
   long  err_code;
+  char  err_msg[256];       /* the document's own message, quoted in the notice */
   /* The response was HTTP 200 but its body could not be read in the row's
    * declared mode at all (a JSON row handed an HTML error or challenge page).
    * On page 1 that is the honest empty it always was; on a LATER page it is a
@@ -2204,29 +2205,57 @@ static char *hp_jsonp_inner(const char *body) {
   return out;
 }
 
+/* Name the refusal a non-parsing 200 body is wearing, from ITS OWN words.
+ * Shared by every mode that can be handed an interstitial where a feed was
+ * expected (JSON, and XML/CSV/NDJSON via hp_body_is_html_doc), so the shape is
+ * classified once and a new wall's phrase is added in one place. */
+static void hp_classify_refusal_body(hp_run_state *st, const char *body) {
+  /* A 200 that is really a refusal. Only the words a rate limiter puts in a
+   * page it serves INSTEAD of the data — not "limit", which is a legitimate
+   * parameter name and appears in half the URLs in this tree. */
+  if (jo_strcasestr(body, "rate limit") || jo_strcasestr(body, "rate-limit") ||
+      jo_strcasestr(body, "too many requests"))
+    st->unreadable_ratelimit = 1;
+  /* And a 200 that is really a BOT WALL. Same rule as above: only the words
+   * the wall puts in the page it serves INSTEAD of the data, and each of
+   * these is a vendor's own interstitial title rather than anything a data
+   * body would carry. Not "access denied", which is a phrase real records
+   * (permit decisions, FOI logs) do carry. "requires JS enabled and cookies"
+   * is the <noscript> text of the cookie wall archives.meurthe-et-moselle.fr
+   * answers rss.xml with (measured 2026-11-24: 229 bytes, text/html, a
+   * bot_mitigation_cookie, and a script that redirects to a token URL). */
+  else if (jo_strcasestr(body, "Pardon Our Interruption") ||
+           jo_strcasestr(body, "Checking your browser") ||
+           jo_strcasestr(body, "Attention Required") ||
+           jo_strcasestr(body, "cf-browser-verification") ||
+           jo_strcasestr(body, "JS enabled and cookies") ||
+           jo_strcasestr(body, "captcha"))
+    st->unreadable_botwall = 1;
+}
+
+/* A body whose root is an HTML document. A row declared as XML, CSV or NDJSON
+ * is a feed, and a feed never opens with <html>: a 200 that does is a page
+ * served INSTEAD of it (cookie wall, maintenance page, login redirect). The
+ * old path read such a body in the row's own mode, found no records and
+ * answered rc=0 with nothing filed — an empty source, to everything downstream.
+ * Only the ROOT is tested, never "contains <html" anywhere, so a feed that
+ * embeds HTML in an item is untouched. */
+static int hp_body_is_html_doc(const char *body) {
+  if (!body) return 0;
+  const unsigned char *p = (const unsigned char *)body;
+  if (p[0] == 0xEF && p[1] == 0xBB && p[2] == 0xBF) p += 3;
+  while (*p && isspace(*p)) p++;
+  return strncasecmp((const char *)p, "<html", 5) == 0 ||
+         strncasecmp((const char *)p, "<!doctype html", 14) == 0;
+}
+
 static int hp_run_json(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
   char *jsonp = hp_jsonp_inner(body);                  /* see hp_jsonp_inner */
   cJSON *doc = jo_json_parse(jsonp ? jsonp : body);
   free(jsonp);
   if (!doc) {
-    /* A 200 that is really a refusal. Only the words a rate limiter puts in a
-     * page it serves INSTEAD of the data — not "limit", which is a legitimate
-     * parameter name and appears in half the URLs in this tree. */
-    if (jo_strcasestr(body, "rate limit") || jo_strcasestr(body, "rate-limit") ||
-        jo_strcasestr(body, "too many requests"))
-      st->unreadable_ratelimit = 1;
-    /* And a 200 that is really a BOT WALL. Same rule as above: only the words
-     * the wall puts in the page it serves INSTEAD of the data, and each of
-     * these is a vendor's own interstitial title rather than anything a data
-     * body would carry. Not "access denied", which is a phrase real records
-     * (permit decisions, FOI logs) do carry. */
-    else if (jo_strcasestr(body, "Pardon Our Interruption") ||
-             jo_strcasestr(body, "Checking your browser") ||
-             jo_strcasestr(body, "Attention Required") ||
-             jo_strcasestr(body, "cf-browser-verification") ||
-             jo_strcasestr(body, "captcha"))
-      st->unreadable_botwall = 1;
+    hp_classify_refusal_body(st, body);
     fprintf(stderr, "[hp:%s] non-JSON body%s\n", s->id,
             st->unreadable_ratelimit ? " — it is a RATE-LIMIT page served as 200"
           : st->unreadable_botwall   ? " — it is a BOT-WALL page served as 200"
@@ -2330,6 +2359,7 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     if (hp_json_error_doc(doc, emsg, sizeof emsg, &ecode)) {
       st->upstream_error = 1;
       st->err_code = ecode;
+      snprintf(st->err_msg, sizeof st->err_msg, "%s", emsg);
       fprintf(stderr, "[hp:%s] HTTP 200 carrying an error document: code=%ld %s\n",
               s->id, ecode, emsg);
       cJSON_Delete(doc);
@@ -5214,6 +5244,21 @@ dated_restart:;
                : hp_body_to_utf8(s, page_url, rawb, rawlen);
     const char *pbody = utf8 ? utf8 : rawb;
     char *xcsv = NULL;
+    /* A page served where a feed was expected: not parsed in the row's mode at
+     * all, and flagged so a first-page run files the fetch-failure notice
+     * (rate-limit / bot-wall named from the page's own words). */
+    int html_for_feed = !zip_body &&
+        (s->mode == HP_XML || s->mode == HP_CSV || s->mode == HP_NDJSON) &&
+        hp_body_is_html_doc(pbody);
+    if (html_for_feed) {
+      hp_classify_refusal_body(&st, pbody);
+      st.unreadable = 1;
+      fprintf(stderr, "[hp:%s] the body is an HTML document, not a %s feed%s\n",
+              s->id, s->mode == HP_XML ? "XML" : s->mode == HP_CSV ? "CSV" : "NDJSON",
+              st.unreadable_ratelimit ? " — it is a RATE-LIMIT page served as 200"
+            : st.unreadable_botwall   ? " — it is a BOT-WALL page served as 200" : "");
+      out = st.emitted;
+    } else
     switch (s->mode) {
       case HP_HTML: out = hp_run_html(&st, pbody); break;
       case HP_CSV:  out = hp_run_csv(&st, pbody);  break;
@@ -5886,13 +5931,31 @@ date_step_back:
                         "screen or the environment — SEC answers 403 to a "
                         "User-Agent without one");
     hard_error = 0;       /* gated is a state, not a failure — rc 0 like key_env */
-  } else if (out == 0 && (first_status != 200 || st.unreadable) && !first_nodata) {
+  } else if (out == 0 && (first_status != 200 || st.unreadable || st.upstream_error) &&
+             !first_nodata &&
+             /* An error document that says "nothing matched" in the upstream's
+              * own words (the 404 rule above, read from the document's code and
+              * message instead of the transport status) is the same honest empty. */
+             !(st.upstream_error && hp_status_is_declared_empty(st.err_code, st.err_msg))) {
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "source_id", s->id);
     cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
     cJSON_AddStringToObject(p, "url", url ? url : "");
     cJSON_AddNumberToObject(p, "http_status", (double)first_status);
     cJSON_AddBoolToObject(p, "body_parsed", !st.unreadable);
+    /* HTTP 200 whose body was an ERROR DOCUMENT ({"error":{"code":..,
+     * "message":..}}): the upstream's own words, quoted, so the notice says
+     * what was said rather than what we guess it meant. */
+    char errline[400]; errline[0] = 0;
+    const int err_doc = first_status == 200 && st.upstream_error;
+    if (err_doc) {
+      if (st.err_code >= 0) cJSON_AddNumberToObject(p, "upstream_error_code", (double)st.err_code);
+      cJSON_AddStringToObject(p, "upstream_error_message", st.err_msg);
+      snprintf(errline, sizeof errline,
+        "the upstream answered 200 with an ERROR DOCUMENT instead of the data — "
+        "a refusal wearing a success status (code %ld: %.200s)",
+        st.err_code, st.err_msg);
+    }
     /* D1-bis: "the request failed at the transport level" sent a reader to
      * guess, and of 30 hosts written off that way 24 were one fixable cause.
      * Named only when there IS a TLS verdict, so a connect refusal or a
@@ -5917,6 +5980,7 @@ date_step_back:
         ? http_tls_cause_label(first_tls)
       : first_status == -1
         ? "the request failed at the transport level"
+      : err_doc ? errline
       : first_status == 200 && st.unreadable_ratelimit
         ? "the upstream answered 200 with a RATE-LIMIT page instead of the "
           "data — a refusal wearing a success status, which no status check "
@@ -5942,6 +6006,12 @@ date_step_back:
       : first_status == 401 || first_status == 403
         ? "the upstream refused this client: check whether the row needs a "
           "credential (key_env) or a User-Agent it is not sending"
+      : err_doc
+        ? "the endpoint refused the request in its own body (quoted in "
+          "upstream_error_message): act on what it says — a message that the "
+          "item is gone or inaccessible means re-point or retire the row, one "
+          "about quota is a pacing question, one about access is a credential "
+          "question"
       : first_status == 200 && st.unreadable_ratelimit
         ? "rate limited behind a 200: give the host a per-host minimum gap in "
           "core/hostgate.c. Measure the budget before choosing one — a gap "
@@ -5966,6 +6036,10 @@ date_step_back:
       snprintf(title, sizeof title,
                "%s stored nothing: a bot wall answered 200 instead of the data",
                s->id);
+    else if (err_doc)
+      snprintf(title, sizeof title,
+               "%s stored nothing: the upstream answered 200 with an error "
+               "document (code %ld)", s->id, st.err_code);
     else if (first_status == 200)
       snprintf(title, sizeof title,
                "%s stored nothing: the body did not parse in its declared mode",

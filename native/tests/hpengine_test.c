@@ -2177,13 +2177,15 @@ int main(void) {
   fx_reset();
   fx_add("/ed?q=", 200, "{\"error\":{\"code\":429,\"message\":\"quota exceeded\"}}");
   rc = run_source("T_ERRDOC", "x");
-  ok(g_ncap == 0, "an HTTP-200 error document stores nothing");
+  ok(g_ncap == 1 && cap_count("collector-fetch-failure", NULL) == 1,
+     "an HTTP-200 error document stores no finding — only the one fetch-failure notice quoting it");
   ok(rc == 0, "a 4xx/429-class error code is an honest empty, like an HTTP 404");
 
   fx_reset();
   fx_add("/ed?q=", 200, "{\"error\":{\"code\":500,\"message\":\"boom\"}}");
   rc = run_source("T_ERRDOC", "x");
-  ok(rc == -1 && g_ncap == 0, "a 5xx-class error document errors like an HTTP 500");
+  ok(rc == -1 && g_ncap == 1 && cap_count("collector-fetch-failure", NULL) == 1,
+     "a 5xx-class error document errors like an HTTP 500, and files the notice");
 
   /* No code at all: unclassifiable, so it is reported as an error rather than
    * as a successful empty run — "found nothing" and "was never checked" must
@@ -2191,7 +2193,8 @@ int main(void) {
   fx_reset();
   fx_add("/ed?q=", 200, "{\"error\":\"rate limited\"}");
   rc = run_source("T_ERRDOC", "x");
-  ok(rc == -1 && g_ncap == 0, "an error document with no code is an errored run, not an empty one");
+  ok(rc == -1 && g_ncap == 1 && cap_count("collector-fetch-failure", NULL) == 1,
+     "an error document with no code is an errored run, not an empty one, and is disclosed");
 
   /* The same envelope reaching a row that declares NO array_path — the
    * root-record fallback is exactly the path that fabricated the record.
@@ -2206,7 +2209,8 @@ int main(void) {
     "{\"error\":{\"code\":400,\"message\":\"Cannot perform query. Invalid query "
     "parameters.\",\"details\":[\"'Invalid field: BOGUS_FIELD' parameter is invalid\"]}}");
   rc = run_source("T_AUTO", "x");
-  ok(g_ncap == 0, "the root-record fallback no longer files an error envelope as a finding");
+  ok(g_ncap == 1 && cap_count("collector-fetch-failure", NULL) == 1 && cap_count("t-auto", NULL) == 0,
+     "the root-record fallback no longer files an error envelope as a finding (only the notice)");
 
   /* A declared array_path that does not resolve: the response is not the shape
    * the row expects, and guessing at it is what produced the garbage record. */
@@ -4460,6 +4464,104 @@ int main(void) {
        "45b: an unparseable 200 whose text merely says 'access denied' is not "
        "reported as a bot wall");
     (void)rc; }
+
+  /* 45c. SRC-04, shape 1: A COOKIE WALL SERVED AS 200 WHERE A FEED WAS
+   *      EXPECTED. archives.meurthe-et-moselle.fr answers rss.xml with 229
+   *      bytes of text/html (measured 2026-11-24): a script that redirects to a
+   *      token URL and a <noscript> saying the site "requires JS enabled and
+   *      cookies". The XML driver read it, found no <target>, and the run was
+   *      rc=0 records=0 with nothing filed — an empty source. Now the root being
+   *      an HTML document is enough to call it a page served instead of the
+   *      feed, and the wall's own words name it. */
+  fx_reset();
+  fx_add("/x?", 200,
+         "<html lang=\"en\"><head></head><body><script>window.location.href="
+         "'/redirect_RP4RLU2Y/rss.xml';</script><noscript>This website requires "
+         "JS enabled and cookies</noscript></body></html>");
+  rc = run_source("T_XML", "acme");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt && g_ncap == 1 &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL &&
+       strstr(nt->props, "\"body_parsed\":false") != NULL &&
+       strstr(nt->props, "the endpoint may have moved") == NULL,
+       "45c: a cookie wall served as 200 where an XML feed was expected files "
+       "ONE fetch-failure notice and is named a bot wall from its own words");
+    (void)rc; }
+
+  /* 45d. Any other HTML page where a feed was expected is a failed fetch too,
+   *      reported as unparseable (not as a wall it never claimed to be). */
+  fx_reset();
+  fx_add("/x?", 200, "\xEF\xBB\xBF  <!DOCTYPE html><html><body>Down for maintenance"
+                     "</body></html>");
+  rc = run_source("T_XML", "acme");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt && g_ncap == 1 &&
+       strstr(nt->props, "BOT-WALL") == NULL && strstr(nt->props, "RATE-LIMIT") == NULL &&
+       strstr(nt->props, "did not parse in this row's declared mode") != NULL,
+       "45d: a maintenance page in place of an XML feed is a failed fetch, "
+       "behind a BOM and whitespace too, and is not called a wall");
+    (void)rc; }
+  fx_reset();
+  fx_add("x.test/f.csv", 200, "<html><body>Please enable cookies</body></html>");
+  rc = run_source("T_CSV", "ACME");
+  ok(cap_count("collector-fetch-failure", NULL) == 1 && g_ncap == 1,
+     "45d: and an HTML page in place of a CSV is a failed fetch, not rows of markup");
+
+  /* 45e. The control: a feed that merely EMBEDS html, and a feed with zero
+   *      items, are not refusals. Only the document ROOT is tested. */
+  fx_reset();
+  fx_add("/x?", 200,
+         "<?xml version=\"1.0\"?><root><target><ref>r1</ref><name>&lt;html&gt;"
+         "<b>bold</b></name></target></root>");
+  rc = run_source("T_XML", "acme");
+  ok(rc == 0 && cap_count("t-xml", NULL) == 1 && cap_count("collector-fetch-failure", NULL) == 0,
+     "45e: an XML feed that carries html in a field is read normally");
+  fx_reset();
+  fx_add("/x?", 200, "<?xml version=\"1.0\"?><root></root>");
+  rc = run_source("T_XML", "acme");
+  ok(cap_count("collector-fetch-failure", NULL) == 0,
+     "45e: a well-formed feed with no items is not a fetch failure");
+
+  /* 45f. SRC-04, shape 2: AN ARCGIS ERROR ENVELOPE SERVED AS 200. A removed
+   *      FeatureServer layer answers {"error":{"code":499,"message":"Item does
+   *      not exist or is inaccessible."}} with HTTP 200. The engine logged it,
+   *      decided a 4xx code reads as the honest empty a 404 does — and a 404
+   *      files a notice while this filed nothing (rc=0 records=0). The notice is
+   *      now filed with the upstream's own code and message, quoted. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "{\"error\":{\"code\":499,\"message\":\"Item does not exist or is "
+         "inaccessible.\",\"details\":[]}}");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-fetch-failure", &nt) == 1 && nt && g_ncap == 1 &&
+       strstr(nt->props, "\"upstream_error_code\":499") != NULL &&
+       strstr(nt->props, "Item does not exist or is inaccessible.") != NULL &&
+       strstr(nt->props, "ERROR DOCUMENT") != NULL &&
+       strstr(nt->props, "the endpoint may have moved") == NULL &&
+       strstr(nt->title, "error document (code 499)") != NULL,
+       "45f: a 200 carrying an error envelope with a 4xx code files ONE notice "
+       "quoting the code and the message (rc stays 0: a 4xx is not a hard error)");
+    (void)rc; }
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "{\"error\":{\"code\":500,\"message\":\"Unexpected error\"}}");
+  rc = run_source("T_URLSIZE", NULL);
+  ok(rc == -1 && cap_count("collector-fetch-failure", NULL) == 1,
+     "45f: a 5xx error envelope stays a hard error (rc -1) and is disclosed");
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "{\"error\":{\"code\":404,\"message\":\"No matching records\"}}");
+  rc = run_source("T_URLSIZE", NULL);
+  ok(rc == 0 && cap_count("collector-fetch-failure", NULL) == 0,
+     "45g: an error envelope that says 'no matching' in the upstream's own "
+     "words is the honest empty, not a failure");
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "{\"error\":null,\"items\":[{\"id\":1,\"name\":\"a\"}]}");
+  rc = run_source("T_URLSIZE", NULL);
+  ok(rc == 0 && cap_count("t-urlsize", NULL) == 1 && cap_count("collector-fetch-failure", NULL) == 0,
+     "45g: `error: null` beside records is a success and is read as one");
 
   /* 46. THE UPSTREAM'S OWN NO-DATA ANSWER IS AN HONEST EMPTY, not a refusal.
    *     FDSN's `nodata` parameter names the status a service must use for an
