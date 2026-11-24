@@ -3,8 +3,9 @@
  * REFERENCE source.c for the MLIT KSJ family (lib/mlit_ksj.h).
  * Primary live path only: env MLIT_N02_GEOJSON_URL → mirrors. The OSM
  * Overpass fallback + _meta envelope are dropped per HARD RULE 8 /
- * the documented JSON_API fallback-drop decision (0 rows when no MLIT
- * mirror responds is correctness-neutral, same as every other port). */
+ * the documented JSON_API fallback-drop decision. When no MLIT mirror
+ * responds the run fails (rc -1, disclosed by the scheduler) rather than
+ * reading as an empty source (rule 1; lib/mlit_ksj.c). */
 #include "source.h"
 #include "lib/mlit_ksj.h"
 

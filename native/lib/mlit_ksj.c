@@ -200,13 +200,18 @@ static cJSON *normalize(const ksj_cfg *cfg, cJSON *f, int i) {
   return feat;
 }
 
+/* `*read_ok` is set when the URL answered with a feature array, even an empty
+ * or fully-filtered one: that is an upstream's own "nothing", whereas a URL
+ * that did not answer, or answered with something that is not a feature
+ * collection, is a failed fetch (rule 1). */
 static cJSON *try_url(http_client *http, const char *url, const ksj_cfg *cfg,
-                      int abolished_only) {
+                      int abolished_only, int *read_ok) {
   cJSON *data = feed_get_json(http, url, 30000);
   if (!data) return NULL;
   cJSON *raw = cJSON_IsArray(data) ? data
              : cJSON_GetObjectItemCaseSensitive(data, "features");
   if (!cJSON_IsArray(raw)) { cJSON_Delete(data); return NULL; }
+  *read_ok = 1;
 
   cJSON *out = cJSON_CreateArray();
   int i = 0;
@@ -237,13 +242,26 @@ int mlit_ksj_collect(const source_ctx *ctx, intel_sink *sink,
   if (!cfg) { fprintf(stderr, "[mlit] unknown code %s\n", code); return -1; }
 
   cJSON *features = NULL;
+  int read_ok = 0;
   const char *env_url = env_key ? getenv(env_key) : NULL;
   if (env_url && *env_url)
-    features = try_url(ctx->http, env_url, cfg, abolished_only);
+    features = try_url(ctx->http, env_url, cfg, abolished_only, &read_ok);
   for (int m = 0; !features && m < n_mirrors; m++)
-    features = try_url(ctx->http, mirrors[m], cfg, abolished_only);
+    features = try_url(ctx->http, mirrors[m], cfg, abolished_only, &read_ok);
 
-  if (!features) features = cJSON_CreateArray();   /* live=false → 0 rows */
+  if (!features) {
+    /* Rule 1: every URL refused, was unreachable or was not a feature
+     * collection. This used to fall through to "0 rows, rc 0", which reads as
+     * an empty source. rc<0 lets the scheduler file the fetch-failure notice. */
+    if (!read_ok) {
+      fprintf(stderr, "[%s] no MLIT %s feature collection could be read "
+                      "(env %s%s, %d mirror(s))\n", ctx->source_id, code,
+              env_key ? env_key : "-", (env_url && *env_url) ? " set" : " unset",
+              n_mirrors);
+      return -1;
+    }
+    features = cJSON_CreateArray();   /* answered, and held nothing to keep */
+  }
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[%s] emitted %d\n", ctx->source_id, n);
