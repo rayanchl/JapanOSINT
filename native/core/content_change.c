@@ -805,11 +805,22 @@ char *content_change_normalize(const void *body, size_t body_len,
     /* Non-markup (JSON, CSV, plain text): keep the document's own line
      * structure, and do NOT decode entities — "&amp;" inside a JSON string is
      * literal content there, not markup. */
-    flat = malloc(body_len + 2);
+    /* JSON is tokenized on whitespace like everything else, so a compact
+     * `{"updated":"2026-01-02T03:04:05Z"}` is ONE token and its timestamp
+     * never reached the date rule: a watched JSON payload then reported a
+     * change on every fetch. For a JSON-looking document the quote is
+     * therefore a token boundary (padded with spaces; the quote itself was
+     * already stripped as punctuation by tok_core, so nothing else is lost). */
+    size_t i0 = 0;
+    while (i0 < body_len && isspace((unsigned char)raw[i0])) i0++;
+    int json = (content_type && ci_has(content_type, "json")) ||
+               (i0 < body_len && (raw[i0] == '{' || raw[i0] == '['));
+    flat = malloc(body_len * (json ? 3 : 1) + 2);
     if (!flat) return NULL;
     size_t o = 0;
     for (size_t i = 0; i < body_len; i++) {
       char c = raw[i];
+      if (json && c == '"') { flat[o++] = ' '; flat[o++] = '"'; flat[o++] = ' '; continue; }
       flat[o++] = (c == '\n' || c == '\r') ? CC_SEP : c;
     }
     flat[o] = 0;
