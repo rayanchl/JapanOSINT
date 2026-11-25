@@ -45,9 +45,13 @@ export function useSearchSuggestions(query) {
   // Render-visible copy of `asked` (the ref stays the synchronous once-only guard).
   const [askedSnap, setAskedSnap] = useState(() => new Set());
 
+  // A query too short to suggest on drops the answer on show (derived while
+  // rendering, not by an effect).
+  if (q.length < SUGGEST_MIN_CHARS && set !== null) setSet(null);
+
   // The fast path: one non-expanded request per settled query.
   useEffect(() => {
-    if (q.length < SUGGEST_MIN_CHARS) { setSet(null); return undefined; }
+    if (q.length < SUGGEST_MIN_CHARS) return undefined;
     let alive = true;
     const t = setTimeout(async () => {
       const s = await fetchSuggestionSet(q);
@@ -81,8 +85,9 @@ export function useSearchSuggestions(query) {
   }, []);
 
   // The long pause, noted per query and reset by every change.
+  const [pauseQ, setPauseQ] = useState(q);
+  if (pauseQ !== q) { setPauseQ(q); setPausedOn(null); }
   useEffect(() => {
-    setPausedOn(null);
     if (q.length < SUGGEST_MIN_CHARS) return undefined;
     const t = setTimeout(() => setPausedOn(q), SUGGEST_EXPAND_PAUSE_MS);
     return () => clearTimeout(t);
@@ -105,8 +110,9 @@ export function useSearchSuggestions(query) {
 export function useRun(requestId) {
   const [run, setRun] = useState(() => getRun(requestId));
   const [error, setError] = useState(null);
+  const [errorFor, setErrorFor] = useState(requestId);
+  if (errorFor !== requestId) { setErrorFor(requestId); setError(null); }
   useEffect(() => {
-    setError(null);
     if (!requestId) return undefined;
     if (!getRun(requestId)) attachRun(requestId).catch((e) => setError(e));
     return subscribe(() => setRun(getRun(requestId)));
@@ -122,17 +128,24 @@ export function useRun(requestId) {
  * `error` keeps the two apart all the way to the render. */
 export function useEntitySearch(q, type) {
   const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(() => (q || '').trim() !== '');
   const [error, setError] = useState(null);
   // The query the current `results` answer. `loading` is false on the render
   // before the debounce starts, so "not loading" alone does not mean the
   // results belong to the box's text — a caller recording a search needs this.
   const [resolved, setResolved] = useState(null);
+  const query = (q || '').trim();
+  // A new query (or type) resets the answer on show: derived while rendering.
+  const reqKey = `${query}\u0000${type || ''}`;
+  const [prevReqKey, setPrevReqKey] = useState(reqKey);
+  if (prevReqKey !== reqKey) {
+    setPrevReqKey(reqKey);
+    if (!query) { setResults([]); setError(null); setResolved(null); setLoading(false); }
+    else setLoading(true);
+  }
   useEffect(() => {
-    const query = (q || '').trim();
-    if (!query) { setResults([]); setError(null); setResolved(null); return undefined; }
+    if (!query) return undefined;
     let alive = true;
-    setLoading(true);
     const t = setTimeout(async () => {
       try {
         const url = `/api/entities/search?q=${encodeURIComponent(query)}${type ? `&type=${type}` : ''}`;
@@ -146,7 +159,7 @@ export function useEntitySearch(q, type) {
       finally { if (alive) setLoading(false); }
     }, 250);
     return () => { alive = false; clearTimeout(t); };
-  }, [q, type]);
+  }, [query, type]);
   return { results, loading, error, resolved };
 }
 
@@ -166,35 +179,53 @@ export function useEntity(type, id) {
   // are statements about the entity, and a failed request stated nothing.
   const [errors, setErrors] = useState({ profile: null, graph: null, mentions: null });
 
-  const load = useCallback(async () => {
-    setLoading(true);
+  // One read of profile + graph + mentions; pure (no state), so the effect and
+  // the imperative reload share it. A failed part falls back to its empty value
+  // and records its message in `errors`.
+  const fetchAll = useCallback(async () => {
+    const out = { profile: null, graph: { nodes: [], edges: [] }, mentions: [] };
     const next = { profile: null, graph: null, mentions: null };
-    const take = async (settled, key, onOk, onFail) => {
-      if (settled.status === 'rejected') {
-        next[key] = settled.reason?.message || 'request failed';
-        onFail();
-        return;
-      }
+    const take = async (settled, key, onOk) => {
+      if (settled.status === 'rejected') { next[key] = settled.reason?.message || 'request failed'; return; }
       const res = settled.value;
-      if (!res.ok) { next[key] = `HTTP ${res.status}`; onFail(); return; }
+      if (!res.ok) { next[key] = `HTTP ${res.status}`; return; }
       try { onOk(await res.json()); }
-      catch (e) { next[key] = e.message || 'unreadable response'; onFail(); }
+      catch (e) { next[key] = e.message || 'unreadable response'; }
     };
-    try {
-      const [p, g, m] = await Promise.allSettled([
-        fetch(apiUrl(`/api/entities/${type}/${id}`)),
-        fetch(apiUrl(`/api/entities/${type}/${id}/graph?depth=${depth}`)),
-        fetch(apiUrl(`/api/entities/${type}/${id}/mentions?limit=${MENTION_LIMIT}`)),
-      ]);
-      await take(p, 'profile', (j) => setProfile(j), () => setProfile(null));
-      await take(g, 'graph', (j) => setGraph(j), () => setGraph({ nodes: [], edges: [] }));
-      await take(m, 'mentions', (j) => setMentions(j.mentions || []), () => setMentions([]));
-    } finally {
-      setErrors(next);
-      setLoading(false);
-    }
+    const [p, g, m] = await Promise.allSettled([
+      fetch(apiUrl(`/api/entities/${type}/${id}`)),
+      fetch(apiUrl(`/api/entities/${type}/${id}/graph?depth=${depth}`)),
+      fetch(apiUrl(`/api/entities/${type}/${id}/mentions?limit=${MENTION_LIMIT}`)),
+    ]);
+    await take(p, 'profile', (j) => { out.profile = j; });
+    await take(g, 'graph', (j) => { out.graph = j; });
+    await take(m, 'mentions', (j) => { out.mentions = j.mentions || []; });
+    return { out, next };
   }, [type, id, depth]);
 
-  useEffect(() => { load(); }, [load]);
+  const apply = useCallback(({ out, next }) => {
+    setProfile(out.profile);
+    setGraph(out.graph);
+    setMentions(out.mentions);
+    setErrors(next);
+    setLoading(false);
+  }, []);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    apply(await fetchAll());
+  }, [fetchAll, apply]);
+
+  // A new (type, id, depth) starts a load: flagged while rendering.
+  const entityKey = `${type}/${id}/${depth}`;
+  const [prevEntityKey, setPrevEntityKey] = useState(entityKey);
+  if (prevEntityKey !== entityKey) { setPrevEntityKey(entityKey); setLoading(true); }
+
+  // State is set only from the async continuation; a superseded read is dropped.
+  useEffect(() => {
+    let alive = true;
+    fetchAll().then((r) => { if (alive) apply(r); });
+    return () => { alive = false; };
+  }, [fetchAll, apply]);
   return { profile, graph, mentions, depth, setDepth, loading, errors, reload: load };
 }

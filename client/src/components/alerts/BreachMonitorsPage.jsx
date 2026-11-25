@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import useLoadOnChange from '../../hooks/useLoadOnChange.js';
 import { Link } from 'react-router-dom';
 import { LuRefreshCw, LuShieldPlus, LuTrash2, LuShieldCheck, LuShieldAlert, LuLock } from 'react-icons/lu';
 import { api, errorMessage, ApiError } from '../../api/client.js';
@@ -52,7 +53,7 @@ export default function BreachMonitorsPage() {
   const [open, setOpen] = useState(null);
   const [busy, setBusy] = useState(null);
 
-  const load = async (cursor) => {
+  const load = useCallback(async (cursor) => {
     setLoading(true); setError(null);
     try {
       const j = await api.get('/api/breach-monitors', { query: { limit: 100, cursor } });
@@ -61,8 +62,8 @@ export default function BreachMonitorsPage() {
       setPage(j?.page || null);
     } catch (e) { setError(e); }
     finally { setLoading(false); }
-  };
-  useEffect(() => { load(); }, []);
+  }, []);
+  useLoadOnChange(load);
 
   const del = async () => {
     const m = confirmDel; setConfirmDel(null); setBusy(m.id);
@@ -275,7 +276,8 @@ function AddMonitorSheet({ open, adminRole, onClose, onCreated }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [remedy, setRemedy] = useState(null);
-  useEffect(() => { if (open) { setError(null); setRemedy(null); } }, [open]);
+  const [wasOpen, setWasOpen] = useState(open);
+  if (wasOpen !== open) { setWasOpen(open); if (open) { setError(null); setRemedy(null); } }
 
   const save = async () => {
     setError(null); setRemedy(null);

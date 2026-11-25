@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { LuRefreshCw } from 'react-icons/lu';
 import { api } from '../../api/client.js';
@@ -54,17 +54,22 @@ export default function CollectorDetailPage() {
   const q = sp.get('q') || '';
   const sort = sp.get('sort') || 'name';
   const [draft, setDraft] = useState(q);
-  useEffect(() => { setDraft(q); }, [q]);
+  // The URL's q drives the box: re-seed the draft when it changes (derived while rendering).
+  const [draftQ, setDraftQ] = useState(q);
+  if (draftQ !== q) { setDraftQ(q); setDraft(q); }
   const base = `/api/collectors/${encodeURIComponent(key)}?limit=50${q ? `&q=${encodeURIComponent(q)}` : ''}&sort=${encodeURIComponent(sort)}`;
   const head = useApi(base);
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(null);
   const [more, setMore] = useState({ busy: false, error: null });
-  useEffect(() => {
+  // A fresh head response replaces the paged rows (derived while rendering).
+  const [rowsOf, setRowsOf] = useState(null);
+  if (rowsOf !== head.data) {
     const src = head.data?.sources;
+    setRowsOf(head.data);
     setRows(Array.isArray(src?.data) ? src.data : []);
     setPage(src?.page || null);
-  }, [head.data]);
+  }
   const loadMore = async () => {
     if (!page?.has_more) return;
     setMore({ busy: true, error: null });

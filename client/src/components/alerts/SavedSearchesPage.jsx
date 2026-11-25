@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LuRefreshCw, LuPlay, LuPencil, LuTrash2, LuBellRing, LuPin, LuPinOff, LuHistory, LuEraser } from 'react-icons/lu';
 import { api, errorMessage, ApiError } from '../../api/client.js';
@@ -162,10 +162,12 @@ export default function SavedSearchesPage() {
 }
 
 function RenameSheet({ search, onClose, onSaved }) {
-  const [name, setName] = useState('');
+  const [name, setName] = useState(search?.name || '');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
-  useEffect(() => { if (search) { setName(search.name || ''); setError(null); } }, [search]);
+  // A different search to rename re-seeds the draft (derived while rendering).
+  const [seededFor, setSeededFor] = useState(search);
+  if (seededFor !== search) { setSeededFor(search); if (search) { setName(search.name || ''); setError(null); } }
   const save = async () => {
     setSaving(true); setError(null);
     try { await api.patch(`/api/saved-searches/${encodeURIComponent(search.id)}`, { name: name.trim() }); toast('Renamed', { tone: 'accent' }); onSaved(); }
@@ -188,7 +190,11 @@ function ToAlertSheet({ search, onClose, onCreated }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [why, setWhy] = useState(null);
-  useEffect(() => { if (search) { setName(''); setChannels([emptyChannel('email')]); setError(null); setWhy(null); } }, [search]);
+  const [seededFor, setSeededFor] = useState(search);
+  if (seededFor !== search) {
+    setSeededFor(search);
+    if (search) { setName(''); setChannels([emptyChannel('email')]); setError(null); setWhy(null); }
+  }
 
   const create = async () => {
     setError(null); setWhy(null);

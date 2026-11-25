@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import useLoadOnChange from '../../hooks/useLoadOnChange.js';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { LuRefreshCw, LuMapPin, LuFileText, LuAtSign, LuBell, LuX } from 'react-icons/lu';
@@ -117,7 +118,7 @@ export default function TimelinePage() {
     } finally { if (my === seq.current) setLoading(false); }
   }, [win, tooWide, buildQuery, focused]);
 
-  useEffect(() => { load(); }, [load]);
+  useLoadOnChange(load);
 
   const loadMore = async () => {
     if (!cursor || loadingMore) return;

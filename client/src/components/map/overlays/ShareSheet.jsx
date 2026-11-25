@@ -25,11 +25,18 @@ export default function ShareSheet({ open, onClose, mapRef, layers, timeWindow }
   const [link, setLink] = useState(null);
   const [state, setState] = useState(null);
 
+  // Closing drops the minted link and the view it described: derived while rendering.
+  const [wasOpen, setWasOpen] = useState(open);
+  if (wasOpen !== open) { setWasOpen(open); if (!open) { setLink(null); setState(null); } }
+
   useEffect(() => {
-    if (!open) { setLink(null); setState(null); return; }
+    if (!open) return undefined;
+    let live = true;
     const s = currentViewState(mapRef, layers, timeWindow);
-    setState(s);
-    mint(s).then((r) => setLink(r)).catch(() => { /* error state rendered */ });
+    // Both state writes come from async callbacks, never the effect body.
+    queueMicrotask(() => { if (live) setState(s); });
+    mint(s).then((r) => { if (live) setLink(r); }).catch(() => { /* error state rendered */ });
+    return () => { live = false; };
     // Mint once per open; the sheet shows the view as it was when opened.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);

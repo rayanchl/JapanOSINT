@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 /**
  * Project a geographic coordinate to screen pixels on a MapLibre map,
@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
  * the map is ready or when `lngLat` is not a finite pair.
  */
 export default function useMapProjection(mapRef, lngLat) {
-  const [pos, setPos] = useState(null);
+  const [proj, setProj] = useState(null);
   // Depend on the two NUMBERS, never on the array's identity. Callers build
   // `[lon, lat]` inline, and with the array as the dependency every render
   // re-ran this effect, whose synchronous setPos() forced another render —
@@ -17,27 +17,20 @@ export default function useMapProjection(mapRef, lngLat) {
 
   useEffect(() => {
     const map = mapRef?.current;
-    if (!map || lng === undefined || lat === undefined) {
-      setPos(null);
-      return undefined;
-    }
-    if (!Number.isFinite(lng) || !Number.isFinite(lat)) {
-      setPos(null);
-      return undefined;
-    }
+    if (!map || !Number.isFinite(lng) || !Number.isFinite(lat)) return undefined;
 
     let frame = 0;
     const update = () => {
       frame = 0;
       const p = map.project([lng, lat]);
-      setPos({ x: p.x, y: p.y });
+      setProj({ lng, lat, x: p.x, y: p.y });
     };
     const schedule = () => {
       if (frame) return;
       frame = requestAnimationFrame(update);
     };
 
-    update();
+    schedule();   // first projection arrives from a frame callback, not the effect body
     map.on('move', schedule);
     map.on('moveend', update);
     map.on('resize', update);
@@ -50,5 +43,10 @@ export default function useMapProjection(mapRef, lngLat) {
     };
   }, [mapRef, lng, lat]);
 
-  return pos;
+  // A projection is shown only for the coordinates it was computed for, so a
+  // changed or invalid point reads null instead of the previous point's pixels.
+  return useMemo(
+    () => (proj && proj.lng === lng && proj.lat === lat ? { x: proj.x, y: proj.y } : null),
+    [proj, lng, lat],
+  );
 }

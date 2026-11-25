@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { LuPencil, LuTrash2, LuFileText, LuRefreshCw, LuPinOff, LuArrowLeft, LuMessageSquare, LuExternalLink } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
@@ -257,14 +257,13 @@ function NotesPane({ caseId, canWrite, who }) {
   const path = `/api/annotations?case_id=${encodeURIComponent(caseId)}&include_deleted=1`;
   const { rows, hasMore, error, loading, loadingMore, reload, loadMore } = usePaged(path, { limit: 200 });
   const items = usePaged(`/api/cases/${encodeURIComponent(caseId)}/items`, { limit: 100 });
-  const [target, setTarget] = useState('');
+  // The note attaches to the first pinned item until the user picks another: derived, not synced.
+  const [picked, setTarget] = useState('');
+  const firstRow = items.rows[0];
+  const target = picked || (firstRow ? `${firstRow.ref_type}\u0000${firstRow.ref_id}` : '');
   const [body, setBody] = useState('');
   const [busy, setBusy] = useState(false);
   const [postError, setPostError] = useState(null);
-
-  useEffect(() => {
-    if (!target && items.rows.length) setTarget(`${items.rows[0].ref_type}\u0000${items.rows[0].ref_id}`);
-  }, [items.rows, target]);
 
   const add = async () => {
     const [ref_type, ref_id] = target.split('\u0000');
@@ -398,7 +397,9 @@ function MembersPane({ caseId, members, canManage, onChanged }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
   const ws = useApi(canManage ? '/api/members' : null, { deps: [canManage] });
-  useEffect(() => setDraft(members), [members]);
+  // A new roster from the parent replaces the local draft (derived while rendering).
+  const [draftOf, setDraftOf] = useState(members);
+  if (draftOf !== members) { setDraftOf(members); setDraft(members); }
 
   const wsMembers = useMemo(() => {
     const d = ws.data;
@@ -479,9 +480,12 @@ function EditCaseSheet({ open, onClose, caseRow, onSaved }) {
   const [priority, setPriority] = useState(caseRow.priority ?? 0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
-  useEffect(() => {
+  // (Re)opening, or a refreshed case row, re-seeds the form (derived while rendering).
+  const [seeded, setSeeded] = useState({ open, caseRow });
+  if (seeded.open !== open || seeded.caseRow !== caseRow) {
+    setSeeded({ open, caseRow });
     if (open) { setName(caseRow.name || ''); setSummary(caseRow.summary || ''); setStatus(caseRow.status || 'open'); setPriority(caseRow.priority ?? 0); setError(null); }
-  }, [open, caseRow]);
+  }
 
   const save = async () => {
     setBusy(true); setError(null);
@@ -604,7 +608,8 @@ function ReportSheet({ open, onClose, caseRow }) {
 function DeleteCaseSheet({ open, onClose, caseRow, onConfirm }) {
   const [typed, setTyped] = useState('');
   const [busy, setBusy] = useState(false);
-  useEffect(() => { if (open) setTyped(''); }, [open]);
+  const [wasOpen, setWasOpen] = useState(open);
+  if (wasOpen !== open) { setWasOpen(open); if (open) setTyped(''); }
   const ok = typed.trim() === (caseRow.name || '').trim() || typed.trim() === 'DELETE';
   return (
     <Sheet open={open} onClose={onClose} title="Delete case" width="max-w-md" footer={(

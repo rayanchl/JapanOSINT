@@ -33,10 +33,9 @@ export default [
       "react/no-unescaped-entities": "error",
       "react/display-name": "error",
       "react-hooks/exhaustive-deps": "error",
-      // eslint-plugin-react-hooks v7 ships React-Compiler rules. set-state-in-effect
-      // still reports the fetch-then-setState / reset-on-prop-change pattern in
-      // ~58 places; it stays "warn" until those are restructured.
-      "react-hooks/set-state-in-effect": "warn",
+      // eslint-plugin-react-hooks v7 ships React-Compiler rules. The fetch-then-
+      // setState / reset-on-prop-change findings are all restructured (0 left).
+      "react-hooks/set-state-in-effect": "error",
       "react-hooks/refs": "error",
       "react-hooks/use-memo": "error",
       "react-hooks/static-components": "error",

@@ -13,7 +13,7 @@ export default function StationPopup({ properties }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!stationUid) { setError('No stationUid'); return; }
+    if (!stationUid) return undefined;
     let cancelled = false;
     (async () => {
       try {
@@ -28,7 +28,8 @@ export default function StationPopup({ properties }) {
     return () => { cancelled = true; };
   }, [stationUid]);
 
-  if (error) return <div className="text-xs text-red-400">{error}</div>;
+  const shownError = stationUid ? error : 'No stationUid';
+  if (shownError) return <div className="text-xs text-red-400">{shownError}</div>;
   if (!data) return <div className="text-xs text-gray-500">Loading…</div>;
 
   const now = new Date();

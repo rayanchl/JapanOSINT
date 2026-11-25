@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { LuRefreshCw, LuRotateCcw, LuSave } from 'react-icons/lu';
 import { api, ApiError } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
@@ -38,7 +38,9 @@ export function ThresholdRow({ t, onSaved }) {
   const [draft, setDraft] = useState(String(t.value));
   const [busy, setBusy] = useState(null);
   const [err, setErr] = useState(null);
-  useEffect(() => { setDraft(String(t.value)); }, [t.value]);
+  // The server's value changed (a save or reset landed): the draft follows (derived while rendering).
+  const [draftOf, setDraftOf] = useState(t.value);
+  if (draftOf !== t.value) { setDraftOf(t.value); setDraft(String(t.value)); }
 
   const invalid = validateThreshold(draft, t.min, t.max);
   const dirty = !invalid && Number(draft) !== t.value;
@@ -85,7 +87,9 @@ export function ThresholdRow({ t, onSaved }) {
 export default function ThresholdsTab() {
   const { data, error, loading, reload } = useApi('/api/admin/thresholds');
   const [rows, setRows] = useState([]);
-  useEffect(() => { setRows(Array.isArray(data?.data) ? data.data : []); }, [data]);
+  // A fresh response replaces the local rows (derived while rendering).
+  const [rowsOf, setRowsOf] = useState(null);
+  if (rowsOf !== data) { setRowsOf(data); setRows(Array.isArray(data?.data) ? data.data : []); }
   const replace = (row) => { if (row?.key) setRows((rs) => rs.map((r) => (r.key === row.key ? row : r))); };
 
   return (

@@ -21,20 +21,21 @@ function sceneBadge(v) {
 }
 
 function StillFrame({ still, onClose }) {
-  const [img, setImg] = useState({ status: 'loading', src: null, why: null });
+  // The answer carries the still it belongs to; another still reads as loading (no reset effect).
+  const [answer, setAnswer] = useState({ id: null, status: 'loading', src: null, why: null });
+  const img = answer.id === still.id ? answer : { status: 'loading', src: null, why: null };
   const [similar, setSimilar] = useState(false);   // image→image, on demand
   useEffect(() => {
     let cancelled = false;
     let objectUrl = null;
-    setImg({ status: 'loading', src: null, why: null });
     fetchStillObjectUrl(still.id)
       .then((u) => {
         if (cancelled) { URL.revokeObjectURL(u); return; }
         objectUrl = u;
-        setImg({ status: 'ok', src: u, why: null });
+        setAnswer({ id: still.id, status: 'ok', src: u, why: null });
       })
       .catch((e) => {
-        if (!cancelled) setImg({ status: 'failed', src: null, why: e?.message || 'failed' });
+        if (!cancelled) setAnswer({ id: still.id, status: 'failed', src: null, why: e?.message || 'failed' });
       });
     return () => {
       cancelled = true;
